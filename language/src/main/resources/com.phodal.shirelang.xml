@@ -31,17 +31,14 @@
                                 order="first"
                                 implementationClass="com.phodal.shirelang.completion.ShireCompletionContributor"/>
 
-<!--        <completion.contributor language="Shire"-->
-<!--                                order="after ShireCompletionContributor"-->
-<!--                                implementationClass="com.phodal.shirelang.completion.UserCustomCompletionContributor"/>-->
+        <completion.contributor language="Shire"
+                                order="after ShireCompletionContributor"
+                                implementationClass="com.phodal.shirelang.completion.UserCustomCompletionContributor"/>
 
-<!--        <lang.foldingBuilder language="Shire"-->
-<!--                             implementationClass="com.phodal.shirelang.folding.ShireCustomVariableFoldingBuilder"/>-->
-<!--        <lang.foldingBuilder language="Shire"-->
-<!--                             implementationClass="com.phodal.shirelang.folding.ShireFileReferenceFoldingBuilder"/>-->
+        <lang.foldingBuilder language="Shire"
+                             implementationClass="com.phodal.shirelang.folding.ShireCustomVariableFoldingBuilder"/>
 
-<!--        <languageInjector implementation="com.phodal.shirelang.ShireLanguageInjector"/>-->
-
+        <languageInjector implementation="com.phodal.shirelang.ShireLanguageInjector"/>
 
 <!--        <configurationType implementation="com.phodal.shirelang.run.ShiresConfigurationType"/>-->
 <!--        <programRunner implementation="com.phodal.shirelang.run.ShiresProgramRunner"/>-->
