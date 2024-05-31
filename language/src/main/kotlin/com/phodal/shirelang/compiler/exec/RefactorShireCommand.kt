@@ -45,9 +45,9 @@ import com.phodal.shirelang.psi.ShireFile
  *
  * This class is designed to be used within a refactoring tool or plugin that provides built-in refactoring commands.
  * It demonstrates how to handle different refactoring scenarios*/
-class RefactorInsCommand(val myProject: Project, private val argument: String, private val textSegment: String) :
-    InsCommand {
-    override suspend fun execute(): String? {
+class RefactorShireCommand(val myProject: Project, private val argument: String, private val textSegment: String) :
+    ShireCommand {
+    override suspend fun doExecute(): String? {
         var currentEditFile: PsiFile? = null
         val editor = FileEditorManager.getInstance(myProject).selectedTextEditor
         if (editor != null) {

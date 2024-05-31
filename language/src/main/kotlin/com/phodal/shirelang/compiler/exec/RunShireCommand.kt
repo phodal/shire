@@ -11,8 +11,8 @@ import com.phodal.shirelang.utils.lookupFile
  * @property argument The name of the file to find and run tests for.
  *
  */
-class RunInsCommand(val myProject: Project, private val argument: String) : InsCommand {
-    override suspend fun execute(): String? {
+class RunShireCommand(val myProject: Project, private val argument: String) : ShireCommand {
+    override suspend fun doExecute(): String? {
         val virtualFile = myProject.lookupFile(argument.trim()) ?: return "$SHIRE_ERROR: File not found: $argument"
         try {
 //            val psiFile: PsiFile =

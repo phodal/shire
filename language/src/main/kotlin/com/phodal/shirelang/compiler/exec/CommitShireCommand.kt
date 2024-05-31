@@ -3,8 +3,8 @@ package com.phodal.shirelang.compiler.exec
 import com.intellij.openapi.project.Project
 import com.phodal.shirelang.utils.Code
 
-class CommitInsCommand(val myProject: Project, val code: String) : InsCommand {
-    override suspend fun execute(): String {
+class CommitShireCommand(val myProject: Project, val code: String) : ShireCommand {
+    override suspend fun doExecute(): String {
         val commitMsg = Code.parse(code).text
 
 //        val changeListManager = ChangeListManager.getInstance(myProject)

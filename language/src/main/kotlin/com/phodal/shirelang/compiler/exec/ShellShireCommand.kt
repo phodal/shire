@@ -17,8 +17,8 @@ import com.phodal.shirelang.utils.lookupFile
  * @param myProject The current project context.
  * @param argument The path to the file within the project whose content should be executed as a shell command.
  */
-class ShellInsCommand(val myProject: Project, private val argument: String) : InsCommand {
-    override suspend fun execute(): String? {
+class ShellShireCommand(val myProject: Project, private val argument: String) : ShireCommand {
+    override suspend fun doExecute(): String? {
         val virtualFile = myProject.lookupFile(argument.trim()) ?: return "$SHIRE_ERROR: File not found: $argument"
         val psiFile = PsiManager.getInstance(myProject).findFile(virtualFile) as? ShFile
 //        val settings: RunnerAndConfigurationSettings? = ShellRunService().createRunSettings(myProject, virtualFile, psiFile)

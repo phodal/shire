@@ -7,8 +7,8 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.phodal.shirelang.completion.dataprovider.FileFunc
 import com.phodal.shirelang.utils.canBeAdded
 
-class FileFuncInsCommand(val myProject: Project, val prop: String) : InsCommand {
-    override suspend fun execute(): String? {
+class FileFuncShireCommand(val myProject: Project, val prop: String) : ShireCommand {
+    override suspend fun doExecute(): String? {
         val (functionName, args) = parseRegex(prop)
             ?: return """$SHIRE_ERROR: file-func is not in the format @file-func:<functionName>(<arg1>, <arg2>, ...)
             |Example: @file-func:regex(".*\.kt")

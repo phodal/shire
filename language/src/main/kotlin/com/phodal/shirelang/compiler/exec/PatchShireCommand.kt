@@ -10,10 +10,9 @@ import com.intellij.openapi.vcs.changes.patch.ApplyPatchDefaultExecutor
 import com.intellij.openapi.vcs.changes.patch.MatchPatchPaths
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.util.containers.MultiMap
-import com.phodal.shirelang.compiler.exec.InsCommand
 
-class PatchInsCommand(val myProject: Project, val prop: String, val codeContent: String) : InsCommand {
-    override suspend fun execute(): String? {
+class PatchShireCommand(val myProject: Project, val prop: String, val codeContent: String) : ShireCommand {
+    override suspend fun doExecute(): String? {
         FileDocumentManager.getInstance().saveAllDocuments()
 
         val shelfExecutor = ApplyPatchDefaultExecutor(myProject)

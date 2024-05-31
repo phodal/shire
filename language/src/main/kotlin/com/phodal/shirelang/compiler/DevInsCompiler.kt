@@ -161,27 +161,27 @@ class ShireCompiler(
     }
 
     private fun processingCommand(commandNode: BuiltinCommand, prop: String, used: ShireUsed, fallbackText: String) {
-        val command: InsCommand = when (commandNode) {
+        val command: ShireCommand = when (commandNode) {
             BuiltinCommand.FILE -> {
-                FileInsCommand(myProject, prop)
+                FileShireCommand(myProject, prop)
             }
 
             BuiltinCommand.REV -> {
-                RevInsCommand(myProject, prop)
+                RevShireCommand(myProject, prop)
             }
 
             BuiltinCommand.SYMBOL -> {
                 result.isLocalCommand = true
-                SymbolInsCommand(myProject, prop)
+                SymbolShireCommand(myProject, prop)
             }
 
             BuiltinCommand.WRITE -> {
                 result.isLocalCommand = true
                 val devInCode: CodeBlockElement? = lookupNextCode(used)
                 if (devInCode == null) {
-                    PrintInsCommand("/" + commandNode.commandName + ":" + prop)
+                    PrintShireCommand("/" + commandNode.commandName + ":" + prop)
                 } else {
-                    WriteInsCommand(myProject, prop, devInCode.text, used)
+                    WriteShireCommand(myProject, prop, devInCode.text, used)
                 }
             }
 
@@ -189,9 +189,9 @@ class ShireCompiler(
                 result.isLocalCommand = true
                 val devInCode: CodeBlockElement? = lookupNextCode(used)
                 if (devInCode == null) {
-                    PrintInsCommand("/" + commandNode.commandName + ":" + prop)
+                    PrintShireCommand("/" + commandNode.commandName + ":" + prop)
                 } else {
-                    PatchInsCommand(myProject, prop, devInCode.text)
+                    PatchShireCommand(myProject, prop, devInCode.text)
                 }
             }
 
@@ -199,46 +199,44 @@ class ShireCompiler(
                 result.isLocalCommand = true
                 val devInCode: CodeBlockElement? = lookupNextCode(used)
                 if (devInCode == null) {
-                    PrintInsCommand("/" + commandNode.commandName + ":" + prop)
+                    PrintShireCommand("/" + commandNode.commandName + ":" + prop)
                 } else {
-                    CommitInsCommand(myProject, devInCode.text)
+                    CommitShireCommand(myProject, devInCode.text)
                 }
             }
 
             BuiltinCommand.RUN -> {
                 result.isLocalCommand = true
-                RunInsCommand(myProject, prop)
+                RunShireCommand(myProject, prop)
             }
 
             BuiltinCommand.FILE_FUNC -> {
                 result.isLocalCommand = true
-                FileFuncInsCommand(myProject, prop)
+                FileFuncShireCommand(myProject, prop)
             }
 
             BuiltinCommand.SHELL -> {
                 result.isLocalCommand = true
-                ShellInsCommand(myProject, prop)
+                ShellShireCommand(myProject, prop)
             }
 
             BuiltinCommand.BROWSE -> {
                 result.isLocalCommand = true
-                BrowseInsCommand(myProject, prop)
+                BrowseShireCommand(myProject, prop)
             }
 
             BuiltinCommand.Refactor -> {
                 result.isLocalCommand = true
                 val nextTextSegment = lookupNextTextSegment(used)
-                RefactorInsCommand(myProject, prop, nextTextSegment)
-            }
-
-            else -> {
-                PrintInsCommand("/" + commandNode.commandName + ":" + prop)
+                RefactorShireCommand(myProject, prop, nextTextSegment)
             }
         }
 
-        val execResult = runBlocking { command.execute() }
+        val execResult = runBlocking {
+            command.doExecute()
+        }
 
-        val isSucceed = execResult?.contains("$SHIRE_ERROR") == false
+        val isSucceed = execResult?.contains(SHIRE_ERROR) == false
         val result = if (isSucceed) {
             val hasReadCodeBlock = commandNode in listOf(
                 BuiltinCommand.WRITE,

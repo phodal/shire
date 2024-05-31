@@ -4,9 +4,9 @@ import com.phodal.shirelang.compiler.error.SHIRE_ERROR
 import com.intellij.openapi.project.Project
 import com.phodal.shirelang.provider.ShireSymbolProvider
 
-class SymbolInsCommand(val myProject: Project, val prop: String) :
-    InsCommand {
-    override suspend fun execute(): String {
+class SymbolShireCommand(val myProject: Project, val prop: String) :
+    ShireCommand {
+    override suspend fun doExecute(): String {
         val result = ShireSymbolProvider.all().mapNotNull {
             val found = it.resolveSymbol(myProject, prop)
             if (found.isEmpty()) return@mapNotNull null

@@ -17,11 +17,11 @@ import com.phodal.shirelang.psi.ShireUsed
 import com.phodal.shirelang.utils.Code
 import com.phodal.shirelang.utils.lookupFile
 
-class WriteInsCommand(val myProject: Project, val argument: String, val content: String, val used: ShireUsed) :
-    InsCommand {
+class WriteShireCommand(val myProject: Project, val argument: String, val content: String, val used: ShireUsed) :
+    ShireCommand {
     private val pathSeparator = "/"
 
-    override suspend fun execute(): String? {
+    override suspend fun doExecute(): String? {
         val content = Code.parse(content).text
 
         val range: LineInfo? = LineInfo.fromString(used.text)

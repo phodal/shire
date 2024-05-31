@@ -13,11 +13,11 @@ import com.phodal.shirelang.utils.lookupFile
  * @param prop the property string containing the file name and optional line range
  *
  */
-class FileInsCommand(private val myProject: Project, private val prop: String) : InsCommand {
-    private val logger = logger<FileInsCommand>()
+class FileShireCommand(private val myProject: Project, private val prop: String) : ShireCommand {
+    private val logger = logger<FileShireCommand>()
     private val output = StringBuilder()
 
-    override suspend fun execute(): String? {
+    override suspend fun doExecute(): String? {
         val range: LineInfo? = LineInfo.fromString(prop)
 
         // prop name can be src/file.name#L1-L2
