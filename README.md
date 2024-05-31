@@ -1,8 +1,8 @@
 # Shire - AI Agent Language for AI Driven programming
 
 ![Build](https://github.com/phodal/shire/workflows/Build/badge.svg)
-[![Version](https://img.shields.io/jetbrains/plugin/v/24549.svg)](https://plugins.jetbrains.com/plugin/PLUGIN_ID)
-[![Downloads](https://img.shields.io/jetbrains/plugin/d/24549.svg)](https://plugins.jetbrains.com/plugin/PLUGIN_ID)
+[![Version](https://img.shields.io/jetbrains/plugin/v/24549.svg)](https://plugins.jetbrains.com/plugin/24549)
+[![Downloads](https://img.shields.io/jetbrains/plugin/d/24549.svg)](https://plugins.jetbrains.com/plugin/24549)
 
 <!-- Plugin description -->
 Shire is an AI Agent Language for AI Driven programming. 

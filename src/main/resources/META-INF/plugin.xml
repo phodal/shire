@@ -1,5 +1,5 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
-<idea-plugin>
+<idea-plugin xmlns:xi="http://www.w3.org/2001/XInclude" allow-bundled-update="true">
     <id>com.phodal.shire</id>
     <name>Shire - AI Agent Language</name>
     <vendor>Phodal Huang</vendor>
@@ -8,11 +8,9 @@
 
     <resource-bundle>messages.ShireBundle</resource-bundle>
 
-    <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.phodal.shire.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
-    </extensions>
-
-    <applicationListeners>
-        <listener class="com.phodal.shire.listeners.MyApplicationActivationListener" topic="com.intellij.openapi.application.ApplicationActivationListener"/>
-    </applicationListeners>
+    <!--suppress PluginXmlValidity -->
+    <content>
+    <!-- language modules -->
+        <module name="com.phodal.shirelang"/>
+    </content>
 </idea-plugin>
