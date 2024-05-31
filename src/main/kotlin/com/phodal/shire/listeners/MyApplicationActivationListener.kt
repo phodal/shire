@@ -1,4 +1,4 @@
-package com.github.phodal.shire.listeners
+package com.phodal.shire.listeners
 
 import com.intellij.openapi.application.ApplicationActivationListener
 import com.intellij.openapi.diagnostic.thisLogger

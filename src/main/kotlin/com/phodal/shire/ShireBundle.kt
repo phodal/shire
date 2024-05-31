@@ -1,13 +1,13 @@
-package com.github.phodal.shire
+package com.phodal.shire
 
 import com.intellij.DynamicBundle
 import org.jetbrains.annotations.NonNls
 import org.jetbrains.annotations.PropertyKey
 
 @NonNls
-private const val BUNDLE = "messages.MyBundle"
+private const val BUNDLE = "messages.ShireBundle"
 
-object MyBundle : DynamicBundle(BUNDLE) {
+object ShireBundle : DynamicBundle(BUNDLE) {
 
     @JvmStatic
     fun message(@PropertyKey(resourceBundle = BUNDLE) key: String, vararg params: Any) =
