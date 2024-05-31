@@ -1,0 +1,57 @@
+<idea-plugin package="com.phodal.shire">
+    <dependencies>
+        <plugin id="org.intellij.plugins.markdown"/>
+        <plugin id="com.jetbrains.sh"/>
+    </dependencies>
+
+<!--    <extensions defaultExtensionNs="com.intellij">-->
+<!--        &lt;!&ndash;        refs: https://github.com/JetBrains/intellij-sdk-code-samples/blob/main/simple_language_plugin/src/main/resources/META-INF/plugin.xml&ndash;&gt;-->
+<!--        <fileType name="ShireFile" implementationClass="com.phodal.shire.language.ShireFileType" fieldName="INSTANCE"-->
+<!--                  language="Shire" extensions="Shire"/>-->
+
+<!--        <lang.parserDefinition language="Shire"-->
+<!--                               implementationClass="com.phodal.shire.language.parser.ShireParserDefinition"/>-->
+<!--        <lang.syntaxHighlighterFactory language="Shire"-->
+<!--                                       implementationClass="com.phodal.shire.language.highlight.ShireSyntaxHighlighterFactory"/>-->
+
+<!--        <lang.ast.factory language="Shire"-->
+<!--                          implementationClass="com.phodal.shire.language.ShireAstFactory"/>-->
+
+<!--        <typedHandler implementation="com.phodal.shire.language.ShireTypedHandler"/>-->
+
+<!--        <completion.contributor language="Shire"-->
+<!--                                id="ShireCompletionContributor"-->
+<!--                                order="first"-->
+<!--                                implementationClass="com.phodal.shire.language.completion.ShireCompletionContributor"/>-->
+<!--        <completion.contributor language="Shire"-->
+<!--                                order="after ShireCompletionContributor"-->
+<!--                                implementationClass="com.phodal.shire.language.completion.UserCustomCompletionContributor"/>-->
+
+<!--        <lang.foldingBuilder language="Shire"-->
+<!--                             implementationClass="com.phodal.shire.language.folding.ShireCustomVariableFoldingBuilder"/>-->
+<!--        <lang.foldingBuilder language="Shire"-->
+<!--                             implementationClass="com.phodal.shire.language.folding.ShireFileReferenceFoldingBuilder"/>-->
+
+<!--        <languageInjector implementation="com.phodal.shire.language.ShireLanguageInjector"/>-->
+
+
+<!--        <configurationType implementation="com.phodal.shire.language.run.ShiresConfigurationType"/>-->
+<!--        <programRunner implementation="com.phodal.shire.language.run.ShiresProgramRunner"/>-->
+<!--        <runConfigurationBeforeRunProviderDelegate implementation="com.phodal.shire.language.run.ShiresBeforeRunProviderDelegate"/>-->
+<!--        <runConfigurationProducer implementation="com.phodal.shire.language.run.ShiresRunConfigurationProducer"/>-->
+<!--        <runLineMarkerContributor language="Shire"-->
+<!--                                  implementationClass="com.phodal.shire.language.run.ShiresRunLineMarkersProvider"/>-->
+
+<!--        <lang.commenter language="Shire" implementationClass="com.phodal.shire.language.commenter.ShiresCommenter"/>-->
+
+<!--        <lang.documentationProvider language="Shire"-->
+<!--                                    id="ShiresDocumentationProvider"-->
+<!--                                    implementationClass="com.phodal.shire.language.documentation.ShiresDocumentationProvider"/>-->
+
+<!--        <localInspection language="Shire" groupPath="Shire" groupName="Lints"-->
+<!--                         displayName="Duplicate agent declaration"-->
+<!--                         enabledByDefault="true"-->
+<!--                         level="ERROR"-->
+<!--                         implementationClass="com.phodal.shire.language.lints.ShiresDuplicateAgentInspection"/>-->
+<!--    </extensions>-->
+</idea-plugin>
