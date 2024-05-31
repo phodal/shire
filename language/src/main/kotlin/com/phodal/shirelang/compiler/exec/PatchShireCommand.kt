@@ -11,8 +11,8 @@ import com.intellij.openapi.vcs.changes.patch.MatchPatchPaths
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.util.containers.MultiMap
 
-class PatchShireCommand(val myProject: Project, val prop: String, val codeContent: String) : ShireCommand {
-    override suspend fun doExecute(): String? {
+class PatchShireCommand(val myProject: Project, private val prop: String, private val codeContent: String) : ShireCommand {
+    override suspend fun doExecute(): String {
         FileDocumentManager.getInstance().saveAllDocuments()
 
         val shelfExecutor = ApplyPatchDefaultExecutor(myProject)

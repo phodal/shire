@@ -21,7 +21,7 @@ class WriteShireCommand(val myProject: Project, val argument: String, val conten
     ShireCommand {
     private val pathSeparator = "/"
 
-    override suspend fun doExecute(): String? {
+    override suspend fun doExecute(): String {
         val content = Code.parse(content).text
 
         val range: LineInfo? = LineInfo.fromString(used.text)
@@ -43,10 +43,10 @@ class WriteShireCommand(val myProject: Project, val argument: String, val conten
                         if (dir.isEmpty()) continue
 
                         //check child folder if exist? if not, create it
-                        if (parentDir?.findChild(dir) == null) {
-                            parentDir = runWriteAction { parentDir?.createChildDirectory(this, dir) }
+                        parentDir = if (parentDir?.findChild(dir) == null) {
+                            runWriteAction { parentDir?.createChildDirectory(this, dir) }
                         } else {
-                            parentDir = parentDir?.findChild(dir)
+                            parentDir.findChild(dir)
                         }
                     }
 

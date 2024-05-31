@@ -16,7 +16,7 @@ class VariableTemplateCompiler(
     val file: PsiFile,
     val element: PsiElement?,
     val editor: Editor,
-    val selectedText: String = "",
+    selectedText: String = "",
 ) {
     private val log = logger<VariableTemplateCompiler>()
     private val velocityContext = VelocityContext()
@@ -45,7 +45,7 @@ class VariableTemplateCompiler(
         configForLanguage()
 
         val oldContextClassLoader = Thread.currentThread().getContextClassLoader()
-        Thread.currentThread().setContextClassLoader(VariableTemplateCompiler::class.java.getClassLoader())
+        Thread.currentThread().contextClassLoader = VariableTemplateCompiler::class.java.getClassLoader()
 
         val sw = StringWriter()
         try {
@@ -55,7 +55,7 @@ class VariableTemplateCompiler(
             sw.write(template)
         }
 
-        Thread.currentThread().setContextClassLoader(oldContextClassLoader)
+        Thread.currentThread().contextClassLoader = oldContextClassLoader
         return sw.toString()
     }
 

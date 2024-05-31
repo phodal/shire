@@ -52,7 +52,7 @@ object CodeFenceLanguageAliases {
     return findMainAliasIfRegistered(id) ?: StringUtil.toLowerCase(id)
   }
 
-  fun findMainAliasIfRegistered(id: String): String? {
+  private fun findMainAliasIfRegistered(id: String): String? {
     return aliases.singleOrNull { id == it.id }?.main
   }
 }

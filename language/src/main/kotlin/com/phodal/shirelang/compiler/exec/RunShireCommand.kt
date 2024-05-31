@@ -12,7 +12,7 @@ import com.phodal.shirelang.utils.lookupFile
  *
  */
 class RunShireCommand(val myProject: Project, private val argument: String) : ShireCommand {
-    override suspend fun doExecute(): String? {
+    override suspend fun doExecute(): String {
         val virtualFile = myProject.lookupFile(argument.trim()) ?: return "$SHIRE_ERROR: File not found: $argument"
         try {
 //            val psiFile: PsiFile =

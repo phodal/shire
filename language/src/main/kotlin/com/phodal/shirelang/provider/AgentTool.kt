@@ -11,7 +11,7 @@ interface AgentTool {
 
     // extension point
     companion object {
-        val EP_NAME = ExtensionPointName<AgentTool>("shire.agentTool")
+        private val EP_NAME = ExtensionPointName<AgentTool>("com.phodal.shireAgentTool")
 
         fun allTools(): List<AgentTool> {
             return EP_NAME.extensionList

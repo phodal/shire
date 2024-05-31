@@ -1,3 +1,3 @@
 package com.phodal.shirelang.compiler.error
 
-val SHIRE_ERROR = "<DevInsError>"
+const val SHIRE_ERROR = "<DevInsError>"

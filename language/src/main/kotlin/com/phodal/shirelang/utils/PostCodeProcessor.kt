@@ -7,7 +7,7 @@ class PostCodeProcessor(
     private val prefixCode: String,
     private val suffixCode: String,
     private val completeCode: String,
-    private val indentSize: Int = 4
+    indentSize: Int = 4
 ) {
     private val indent = " ".repeat(indentSize)
     private val methodDeclLine = Regex("^(?:^|\\s+)(?:@[A-Z]\\w+|(?:(?:public|private|protected)\\s+)?.*\\{)")

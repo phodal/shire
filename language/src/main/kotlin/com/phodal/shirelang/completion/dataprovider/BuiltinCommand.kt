@@ -17,9 +17,9 @@ enum class BuiltinCommand(
 
     /**
      * Every language will have a symbol completion, which is the most basic completion, for example,
-     * - Java: [com.intellij.codeInsight.completion.JavaKeywordCompletion]
-     * - Kotlin: [org.jetbrains.kotlin.idea.completion.KotlinCompletionContributor]
-     * - Python: [com.jetbrains.python.codeInsight.completion.PyClassNameCompletionContributor]
+     * - Java: com.intellij.codeInsight.completion.JavaKeywordCompletion
+     * - Kotlin: org.jetbrains.kotlin.idea.completion.KotlinCompletionContributor
+     * - Python: com.jetbrains.python.codeInsight.completion.PyClassNameCompletionContributor
      */
     SYMBOL(
         "symbol",
@@ -58,7 +58,7 @@ enum class BuiltinCommand(
 
     companion object {
         fun all(): List<BuiltinCommand> {
-            return values().toList()
+            return entries
         }
 
         fun example(command: BuiltinCommand): String {
@@ -71,6 +71,6 @@ enum class BuiltinCommand(
             }
         }
 
-        fun fromString(agentName: String): BuiltinCommand? = values().find { it.commandName == agentName }
+        fun fromString(agentName: String): BuiltinCommand? = entries.find { it.commandName == agentName }
     }
 }

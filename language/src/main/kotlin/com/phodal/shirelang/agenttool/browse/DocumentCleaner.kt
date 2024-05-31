@@ -19,7 +19,7 @@ class DocumentCleaner {
         )
     }
 
-    fun metaDescription(doc: Document): String? {
+    private fun metaDescription(doc: Document): String? {
         val attributes = arrayOf(arrayOf("property", "description"), arrayOf("name", "description"))
         return attributes
             .asSequence()
@@ -27,7 +27,7 @@ class DocumentCleaner {
             .firstOrNull()
     }
 
-    fun metaContent(doc: Document, key: String, value: String): String? {
+    private fun metaContent(doc: Document, key: String, value: String): String? {
         val metaElements = doc.select("head meta[$key=$value]")
         return metaElements
             .map { it.attr("content").trim() }
@@ -40,7 +40,7 @@ class DocumentCleaner {
         Pair("name", "articleBody")
     )
 
-    fun articleNode(doc: Document): String? {
+    private fun articleNode(doc: Document): String? {
         var bodyElement: Element? = doc.select("html").select("body").first()
         val firstBodyElement = bodyElement ?: return null
         // the Microdata

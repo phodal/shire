@@ -20,6 +20,15 @@ import kotlinx.coroutines.runBlocking
 
 val CACHED_COMPILE_RESULT = mutableMapOf<String, ShireCompiledResult>()
 
+/**
+ * ShireCompiler class is responsible for compiling Shire files by processing different elements such as text segments, newlines, code blocks, used commands, comments, agents, variables, and builtin commands.
+ * It takes a Project, ShireFile, Editor, and PsiElement as input parameters.
+ * The compile() function processes the elements in the ShireFile and generates a ShireCompiledResult object containing the compiled output.
+ * The processUsed() function handles the processing of used commands, agents, and variables within the ShireFile.
+ * The processingCommand() function executes the specified builtin command with the provided properties and updates the output accordingly.
+ * The lookupNextCode() function looks up the next code block element following a used command.
+ * The lookupNextTextSegment() function looks up the next text segment following a used command.
+ */
 class ShireCompiler(
     private val myProject: Project,
     private val file: ShireFile,
@@ -32,7 +41,7 @@ class ShireCompiler(
     private val output: StringBuilder = StringBuilder()
 
     /**
-     * Todo: build AST tree, then compile
+     * @return ShireCompiledResult object containing the compiled result
      */
     fun compile(): ShireCompiledResult {
         result.input = file.text
