@@ -81,7 +81,6 @@ project(":language") {
     }
 
     dependencies {
-        implementation(project(":"))
     }
 
     tasks {
@@ -130,7 +129,6 @@ project(":") {
     }
 
     dependencies {
-        implementation(project(":"))
         implementation(project(":core"))
         implementation(project(":language"))
     }
