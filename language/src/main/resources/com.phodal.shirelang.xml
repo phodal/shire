@@ -5,6 +5,12 @@
         <plugin id="com.jetbrains.sh"/>
     </dependencies>
 
+    <extensionPoints>
+        <extensionPoint qualifiedName="com.phodal.shireCompletionProvider"
+                        interface="com.phodal.shirelang.provider.ShireSymbolProvider"
+                        dynamic="true"/>
+    </extensionPoints>
+
     <extensions defaultExtensionNs="com.intellij">
         <!--        refs: https://github.com/JetBrains/intellij-sdk-code-samples/blob/main/simple_language_plugin/src/main/resources/META-INF/plugin.xml-->
         <fileType name="ShireFile" implementationClass="com.phodal.shirelang.ShireFileType" fieldName="INSTANCE"
@@ -20,10 +26,11 @@
 
         <typedHandler implementation="com.phodal.shirelang.ShireTypedHandler"/>
 
-<!--        <completion.contributor language="Shire"-->
-<!--                                id="ShireCompletionContributor"-->
-<!--                                order="first"-->
-<!--                                implementationClass="com.phodal.shirelang.completion.ShireCompletionContributor"/>-->
+        <completion.contributor language="Shire"
+                                id="ShireCompletionContributor"
+                                order="first"
+                                implementationClass="com.phodal.shirelang.completion.ShireCompletionContributor"/>
+
 <!--        <completion.contributor language="Shire"-->
 <!--                                order="after ShireCompletionContributor"-->
 <!--                                implementationClass="com.phodal.shirelang.completion.UserCustomCompletionContributor"/>-->
