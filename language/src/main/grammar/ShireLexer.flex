@@ -1,8 +1,8 @@
-package cc.unitmesh.devti.language.lexer;
+package com.phodal.shirelang.lexer;
 
 import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
-import static cc.unitmesh.devti.language.psi.ShireTypes.*;
+import static com.phodal.shirelang.psi.ShireTypes.*;
 import com.intellij.psi.TokenType;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

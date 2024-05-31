@@ -1,18 +1,18 @@
 // should similar to markdown syntax
 // Copyright 2000-2022 JetBrains s.r.o. and other contributors. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 {
-  parserClass="cc.unitmesh.devti.language.parser.ShireParser"
+  parserClass="com.phodal.shirelang.parser.ShireParser"
 
   extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
 
   psiClassPrefix="Shire"
   psiImplClassSuffix="Impl"
-  psiPackage="cc.unitmesh.devti.language.psi"
-  psiImplPackage="cc.unitmesh.devti.language.psi.impl"
+  psiPackage="com.phodal.shirelang.psi"
+  psiImplPackage="com.phodal.shirelang.psi.impl"
 
-  elementTypeHolderClass="cc.unitmesh.devti.language.psi.ShireTypes"
-  elementTypeClass="cc.unitmesh.devti.language.psi.ShireElementType"
-  tokenTypeClass="cc.unitmesh.devti.language.lexer.ShireTokenType"
+  elementTypeHolderClass="com.phodal.shirelang.psi.ShireTypes"
+  elementTypeClass="com.phodal.shirelang.psi.ShireElementType"
+  tokenTypeClass="com.phodal.shirelang.lexer.ShireTokenType"
 
   tokens=[
     AGENT_START        = "AGENT_START"

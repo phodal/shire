@@ -104,20 +104,26 @@ project(":language") {
     tasks {
         generateLexer {
             sourceFile.set(file("src/main/grammar/ShireLexer.flex"))
-            targetOutputDir.set(file("src/gen/com/phodal/shire/language/lexer"))
+            targetOutputDir.set(file("src/gen/com/phodal/shirelang/lexer"))
             purgeOldFiles.set(true)
         }
 
         generateParser {
             sourceFile.set(file("src/main/grammar/ShireParser.bnf"))
             targetRootOutputDir.set(file("src/gen"))
-            pathToParser.set("com/phodal/shire/language/parser/ShireParser.java")
-            pathToPsiRoot.set("com/phodal/shire/language/psi")
+            pathToParser.set("com/phodal/shirelang/parser/ShireParser.java")
+            pathToPsiRoot.set("com/phodal/shirelang/psi")
             purgeOldFiles.set(true)
         }
 
         withType<KotlinCompile> {
             dependsOn(generateLexer, generateParser)
+        }
+    }
+
+    sourceSets {
+        main {
+            java.srcDirs("src/gen")
         }
     }
 }

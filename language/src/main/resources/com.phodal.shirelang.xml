@@ -10,15 +10,15 @@
         <fileType name="ShireFile" implementationClass="com.phodal.shirelang.ShireFileType" fieldName="INSTANCE"
                   language="Shire" extensions="shire"/>
 
-<!--        <lang.parserDefinition language="Shire"-->
-<!--                               implementationClass="com.phodal.shirelang.parser.ShireParserDefinition"/>-->
-<!--        <lang.syntaxHighlighterFactory language="Shire"-->
-<!--                                       implementationClass="com.phodal.shirelang.highlight.ShireSyntaxHighlighterFactory"/>-->
+        <lang.parserDefinition language="Shire"
+                               implementationClass="com.phodal.shirelang.parser.ShireParserDefinition"/>
+        <lang.syntaxHighlighterFactory language="Shire"
+                                       implementationClass="com.phodal.shirelang.highlight.ShireSyntaxHighlighterFactory"/>
 
-<!--        <lang.ast.factory language="Shire"-->
-<!--                          implementationClass="com.phodal.shirelang.ShireAstFactory"/>-->
+        <lang.ast.factory language="Shire"
+                          implementationClass="com.phodal.shirelang.ShireAstFactory"/>
 
-<!--        <typedHandler implementation="com.phodal.shirelang.ShireTypedHandler"/>-->
+        <typedHandler implementation="com.phodal.shirelang.ShireTypedHandler"/>
 
 <!--        <completion.contributor language="Shire"-->
 <!--                                id="ShireCompletionContributor"-->
