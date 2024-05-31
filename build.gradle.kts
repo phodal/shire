@@ -46,8 +46,8 @@ allprojects {
     }
 
     intellij {
-        version = prop("platformVersion")
-        type = prop("platformType")
+        version.set(prop("platformVersion"))
+        type.set(prop("platformType"))
         instrumentCode.set(false)
         sandboxDir.set("${layout.projectDirectory}/build/idea-sandbox-$ideaPlatformVersion")
     }
@@ -78,6 +78,9 @@ allprojects {
         buildSearchableOptions { enabled = false }
     }
 
+    dependencies {
+        compileOnly(kotlin("stdlib-jdk8"))
+    }
 }
 
 project(":core") {
@@ -91,7 +94,7 @@ project(":language") {
     }
 
     intellij {
-        version = prop("platformVersion")
+        version.set(prop("platformVersion"))
         plugins.set((listOf<String>() + "org.intellij.plugins.markdown" + "com.jetbrains.sh" + "Git4Idea"))
     }
 
