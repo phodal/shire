@@ -58,6 +58,17 @@ kover {
     }
 }
 
+project(":core") {
+    dependencies {
+    }
+}
+
+
+project(":language") {
+    dependencies {
+    }
+}
+
 tasks {
     wrapper {
         gradleVersion = properties("gradleVersion").get()
