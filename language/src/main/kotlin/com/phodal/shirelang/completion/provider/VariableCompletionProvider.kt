@@ -6,7 +6,6 @@ import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.codeInsight.completion.PrioritizedLookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.util.ProcessingContext
-import com.phodal.shirelang.compile.CustomVariable
 
 class VariableCompletionProvider : CompletionProvider<CompletionParameters>() {
     override fun addCompletions(

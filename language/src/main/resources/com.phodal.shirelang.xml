@@ -1,4 +1,6 @@
 <idea-plugin package="com.phodal.shirelang">
+    <depends>com.intellij.modules.platform</depends>
+
     <!--suppress PluginXmlValidity -->
     <dependencies>
         <plugin id="org.intellij.plugins.markdown"/>
@@ -9,6 +11,15 @@
         <extensionPoint qualifiedName="com.phodal.shireCompletionProvider"
                         interface="com.phodal.shirelang.provider.ShireSymbolProvider"
                         dynamic="true"/>
+
+        <extensionPoint qualifiedName="com.phodal.shireAgentTool"
+                        interface="com.phodal.shirelang.provider.AgentTool"
+                        dynamic="true"/>
+
+        <extensionPoint qualifiedName="com.phodal.shireRefactoringTool"
+                        beanClass="com.intellij.lang.LanguageExtensionPoint" dynamic="true">
+            <with attribute="implementationClass" implements="com.phodal.shirelang.provider.RefactoringTool"/>
+        </extensionPoint>
     </extensionPoints>
 
     <extensions defaultExtensionNs="com.intellij">
@@ -42,6 +53,7 @@
 
 <!--        <configurationType implementation="com.phodal.shirelang.run.ShiresConfigurationType"/>-->
 <!--        <programRunner implementation="com.phodal.shirelang.run.ShiresProgramRunner"/>-->
+
 <!--        <runConfigurationBeforeRunProviderDelegate implementation="com.phodal.shirelang.run.ShiresBeforeRunProviderDelegate"/>-->
 <!--        <runConfigurationProducer implementation="com.phodal.shirelang.run.ShiresRunConfigurationProducer"/>-->
 <!--        <runLineMarkerContributor language="Shire"-->

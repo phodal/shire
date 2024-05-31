@@ -1,4 +1,6 @@
-package com.phodal.shirelang.compile
+package com.phodal.shirelang.completion.provider
+
+import com.phodal.shirelang.compile.VariableTemplateCompiler
 
 enum class CustomVariable(val variable: String, val description: String) {
     SELECTION("selection", "The selected text"),
