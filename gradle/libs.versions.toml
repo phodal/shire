@@ -1,0 +1,20 @@
+[versions]
+# libraries
+exampleLibrary = "24.1.0"
+
+# plugins
+kotlin = "2.0.0"
+changelog = "2.2.0"
+gradleIntelliJPlugin = "1.17.3"
+qodana = "2024.1.5"
+kover = "0.8.0"
+
+[libraries]
+exampleLibrary = { group = "com.example", name = "exampleLibrary", version.ref = "exampleLibrary" }
+
+[plugins]
+changelog = { id = "org.jetbrains.changelog", version.ref = "changelog" }
+gradleIntelliJPlugin = { id = "org.jetbrains.intellij", version.ref = "gradleIntelliJPlugin" }
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
+qodana = { id = "org.jetbrains.qodana", version.ref = "qodana" }
