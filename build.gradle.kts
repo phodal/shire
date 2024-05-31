@@ -85,15 +85,15 @@ project(":language") {
 
     tasks {
         generateLexer {
-            sourceFile.set(file("src/grammar/ShireLexer.flex"))
+            sourceFile.set(file("src/main/grammar/ShireLexer.flex"))
             targetOutputDir.set(file("src/gen/com/phodal/shire/language/lexer"))
             purgeOldFiles.set(true)
         }
 
         generateParser {
-            sourceFile.set(file("src/grammar/ShireParser.bnf"))
+            sourceFile.set(file("src/main/grammar/ShireParser.bnf"))
             targetRootOutputDir.set(file("src/gen"))
-            pathToParser.set("com/phodal/shire/language/parser/DevInParser.java")
+            pathToParser.set("com/phodal/shire/language/parser/ShireParser.java")
             pathToPsiRoot.set("com/phodal/shire/language/psi")
             purgeOldFiles.set(true)
         }
