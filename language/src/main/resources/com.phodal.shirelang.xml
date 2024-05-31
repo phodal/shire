@@ -1,57 +1,46 @@
-<idea-plugin package="com.phodal.shire">
+<idea-plugin package="com.phodal.shirelang">
     <dependencies>
         <plugin id="org.intellij.plugins.markdown"/>
         <plugin id="com.jetbrains.sh"/>
     </dependencies>
 
-<!--    <extensions defaultExtensionNs="com.intellij">-->
-<!--        &lt;!&ndash;        refs: https://github.com/JetBrains/intellij-sdk-code-samples/blob/main/simple_language_plugin/src/main/resources/META-INF/plugin.xml&ndash;&gt;-->
-<!--        <fileType name="ShireFile" implementationClass="com.phodal.shire.language.ShireFileType" fieldName="INSTANCE"-->
-<!--                  language="Shire" extensions="Shire"/>-->
+    <extensions defaultExtensionNs="com.intellij">
+        <!--        refs: https://github.com/JetBrains/intellij-sdk-code-samples/blob/main/simple_language_plugin/src/main/resources/META-INF/plugin.xml-->
+        <fileType name="ShireFile" implementationClass="com.phodal.shirelang.ShireFileType" fieldName="INSTANCE"
+                  language="Shire" extensions="shire"/>
 
 <!--        <lang.parserDefinition language="Shire"-->
-<!--                               implementationClass="com.phodal.shire.language.parser.ShireParserDefinition"/>-->
+<!--                               implementationClass="com.phodal.shirelang.parser.ShireParserDefinition"/>-->
 <!--        <lang.syntaxHighlighterFactory language="Shire"-->
-<!--                                       implementationClass="com.phodal.shire.language.highlight.ShireSyntaxHighlighterFactory"/>-->
+<!--                                       implementationClass="com.phodal.shirelang.highlight.ShireSyntaxHighlighterFactory"/>-->
 
 <!--        <lang.ast.factory language="Shire"-->
-<!--                          implementationClass="com.phodal.shire.language.ShireAstFactory"/>-->
+<!--                          implementationClass="com.phodal.shirelang.ShireAstFactory"/>-->
 
-<!--        <typedHandler implementation="com.phodal.shire.language.ShireTypedHandler"/>-->
+<!--        <typedHandler implementation="com.phodal.shirelang.ShireTypedHandler"/>-->
 
 <!--        <completion.contributor language="Shire"-->
 <!--                                id="ShireCompletionContributor"-->
 <!--                                order="first"-->
-<!--                                implementationClass="com.phodal.shire.language.completion.ShireCompletionContributor"/>-->
+<!--                                implementationClass="com.phodal.shirelang.completion.ShireCompletionContributor"/>-->
 <!--        <completion.contributor language="Shire"-->
 <!--                                order="after ShireCompletionContributor"-->
-<!--                                implementationClass="com.phodal.shire.language.completion.UserCustomCompletionContributor"/>-->
+<!--                                implementationClass="com.phodal.shirelang.completion.UserCustomCompletionContributor"/>-->
 
 <!--        <lang.foldingBuilder language="Shire"-->
-<!--                             implementationClass="com.phodal.shire.language.folding.ShireCustomVariableFoldingBuilder"/>-->
+<!--                             implementationClass="com.phodal.shirelang.folding.ShireCustomVariableFoldingBuilder"/>-->
 <!--        <lang.foldingBuilder language="Shire"-->
-<!--                             implementationClass="com.phodal.shire.language.folding.ShireFileReferenceFoldingBuilder"/>-->
+<!--                             implementationClass="com.phodal.shirelang.folding.ShireFileReferenceFoldingBuilder"/>-->
 
-<!--        <languageInjector implementation="com.phodal.shire.language.ShireLanguageInjector"/>-->
+<!--        <languageInjector implementation="com.phodal.shirelang.ShireLanguageInjector"/>-->
 
 
-<!--        <configurationType implementation="com.phodal.shire.language.run.ShiresConfigurationType"/>-->
-<!--        <programRunner implementation="com.phodal.shire.language.run.ShiresProgramRunner"/>-->
-<!--        <runConfigurationBeforeRunProviderDelegate implementation="com.phodal.shire.language.run.ShiresBeforeRunProviderDelegate"/>-->
-<!--        <runConfigurationProducer implementation="com.phodal.shire.language.run.ShiresRunConfigurationProducer"/>-->
+<!--        <configurationType implementation="com.phodal.shirelang.run.ShiresConfigurationType"/>-->
+<!--        <programRunner implementation="com.phodal.shirelang.run.ShiresProgramRunner"/>-->
+<!--        <runConfigurationBeforeRunProviderDelegate implementation="com.phodal.shirelang.run.ShiresBeforeRunProviderDelegate"/>-->
+<!--        <runConfigurationProducer implementation="com.phodal.shirelang.run.ShiresRunConfigurationProducer"/>-->
 <!--        <runLineMarkerContributor language="Shire"-->
-<!--                                  implementationClass="com.phodal.shire.language.run.ShiresRunLineMarkersProvider"/>-->
+<!--                                  implementationClass="com.phodal.shirelang.run.ShiresRunLineMarkersProvider"/>-->
 
-<!--        <lang.commenter language="Shire" implementationClass="com.phodal.shire.language.commenter.ShiresCommenter"/>-->
-
-<!--        <lang.documentationProvider language="Shire"-->
-<!--                                    id="ShiresDocumentationProvider"-->
-<!--                                    implementationClass="com.phodal.shire.language.documentation.ShiresDocumentationProvider"/>-->
-
-<!--        <localInspection language="Shire" groupPath="Shire" groupName="Lints"-->
-<!--                         displayName="Duplicate agent declaration"-->
-<!--                         enabledByDefault="true"-->
-<!--                         level="ERROR"-->
-<!--                         implementationClass="com.phodal.shire.language.lints.ShiresDuplicateAgentInspection"/>-->
-<!--    </extensions>-->
+    </extensions>
 </idea-plugin>
