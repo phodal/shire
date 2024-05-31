@@ -1,0 +1,3 @@
+<idea-plugin allow-bundled-update="true">
+    <resource-bundle>messages.ShireMainBundle</resource-bundle>
+</idea-plugin>

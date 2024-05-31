@@ -59,8 +59,8 @@ class ShireCompiler(
                             }
 
                         if (content != null) {
-                            val devInFile = ShireFile.fromString(myProject, content)
-                            result.nextJob = devInFile
+                            val shireFile = ShireFile.fromString(myProject, content)
+                            result.nextJob = shireFile
                         }
                     }
                 }

@@ -6,8 +6,9 @@
 
     <depends>com.intellij.modules.platform</depends>
 
-    <resource-bundle>messages.ShireBundle</resource-bundle>
+    <resource-bundle>messages.ShireMainBundle</resource-bundle>
 
+    <xi:include href="/META-INF/shire-main.xml" xpointer="xpointer(/idea-plugin/*)"/>
     <!--suppress PluginXmlValidity -->
     <content>
     <!-- language modules -->

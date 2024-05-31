@@ -5,9 +5,9 @@ import org.jetbrains.annotations.NonNls
 import org.jetbrains.annotations.PropertyKey
 
 @NonNls
-private const val BUNDLE = "messages.ShireBundle"
+private const val BUNDLE = "messages.ShireMainBundle"
 
-object ShireBundle : DynamicBundle(BUNDLE) {
+object ShireMainBundle : DynamicBundle(BUNDLE) {
 
     @JvmStatic
     fun message(@PropertyKey(resourceBundle = BUNDLE) key: String, vararg params: Any) =

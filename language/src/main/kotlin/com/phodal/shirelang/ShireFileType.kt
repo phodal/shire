@@ -6,7 +6,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import javax.swing.Icon
 
 class ShireFileType : LanguageFileType(ShireLanguage) {
-    override fun getName(): String = "DevInFile"
+    override fun getName(): String = "ShireFile"
 
     override fun getIcon(): Icon = ShireIcons.DEFAULT
 
