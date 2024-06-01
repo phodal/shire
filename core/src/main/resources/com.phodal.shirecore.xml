@@ -22,5 +22,10 @@
                         beanClass="com.intellij.lang.LanguageExtensionPoint" dynamic="true">
             <with attribute="implementationClass" implements="com.phodal.shirecore.provider.RefactoringTool"/>
         </extensionPoint>
+
+        <extensionPoint qualifiedName="com.phodal.shireAutoTesting"
+                        beanClass="com.intellij.lang.LanguageExtensionPoint" dynamic="true">
+            <with attribute="implementationClass" implements="com.phodal.shirecore.provider.AutoTesting"/>
+        </extensionPoint>
     </extensionPoints>
 </idea-plugin>
