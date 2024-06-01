@@ -54,6 +54,11 @@ allprojects {
         mavenCentral()
     }
 
+    dependencies {
+        compileOnly(kotlin("stdlib-jdk8"))
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
+    }
+
     intellij {
         version.set(prop("platformVersion"))
         type.set(prop("platformType"))

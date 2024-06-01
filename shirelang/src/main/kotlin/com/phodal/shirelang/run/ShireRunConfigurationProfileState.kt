@@ -15,7 +15,6 @@ import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Key
 import com.intellij.ui.components.panels.NonOpaquePanel
@@ -26,7 +25,6 @@ import com.phodal.shirelang.compiler.ShireCompiler
 import com.phodal.shirelang.compiler.error.SHIRE_ERROR
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.flow.ShireConversationService
-import com.phodal.shirelang.run.flow.ShireProcessProcessor
 import com.phodal.shirelang.utils.ShireCoroutineScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
