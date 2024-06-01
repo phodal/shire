@@ -27,5 +27,10 @@
                         beanClass="com.intellij.lang.LanguageExtensionPoint" dynamic="true">
             <with attribute="implementationClass" implements="com.phodal.shirecore.provider.AutoTesting"/>
         </extensionPoint>
+
+        <extensionPoint qualifiedName="com.phodal.shireLlmProvider"
+                        beanClass="com.intellij.lang.LanguageExtensionPoint" dynamic="true">
+            <with attribute="implementationClass" implements="com.phodal.shirecore.provider.LlmProvider"/>
+        </extensionPoint>
     </extensionPoints>
 </idea-plugin>

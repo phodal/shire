@@ -1,5 +1,6 @@
 package com.phodal.shirelang.compiler
 
+import com.phodal.shirecore.agent.CustomAgent
 import com.phodal.shirelang.psi.ShireFile
 
 data class ShireCompiledResult(
@@ -13,8 +14,11 @@ data class ShireCompiledResult(
     var output: String = "",
     var isLocalCommand: Boolean = false,
     var hasError: Boolean = false,
-//    var executeAgent: CustomAgentConfig? = null,
-    var executeAgent: Any? = null,
+
+    /**
+     * Execute agent
+     */
+    var executeAgent: CustomAgent? = null,
     /**
      * Next job to be executed
      */
