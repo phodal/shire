@@ -7,6 +7,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiManager
 import com.intellij.sh.psi.ShFile
 import com.intellij.sh.run.ShRunner
+import com.phodal.shirelang.runner.ShellRunService
 import com.phodal.shirelang.utils.lookupFile
 
 /**
@@ -22,12 +23,15 @@ class ShellShireCommand(val myProject: Project, private val argument: String) : 
     override suspend fun doExecute(): String {
         val virtualFile = myProject.lookupFile(argument.trim()) ?: return "$SHIRE_ERROR: File not found: $argument"
         val psiFile = PsiManager.getInstance(myProject).findFile(virtualFile) as? ShFile
-//        val settings: RunnerAndConfigurationSettings? = ShellRunService().createRunSettings(myProject, virtualFile, psiFile)
-//
-//        if (settings != null) {
-//            ShellRunService().runFile(myProject, virtualFile, psiFile)
-//            return "Running shell file: $argument"
-//        }
+        val shellRunService = ShellRunService()
+
+        val settings: RunnerAndConfigurationSettings? =
+            shellRunService.createRunSettings(myProject, virtualFile, psiFile)
+
+        if (settings != null) {
+            shellRunService.runFile(myProject, virtualFile, psiFile)
+            return "Running shell file: $argument"
+        }
 
         val workingDirectory = virtualFile.parent.path
         val shRunner = ApplicationManager.getApplication().getService(ShRunner::class.java)
@@ -36,8 +40,6 @@ class ShellShireCommand(val myProject: Project, private val argument: String) : 
         if (shRunner.isAvailable(myProject)) {
             shRunner.run(myProject, virtualFile.path, workingDirectory, "RunShireShell", true)
         }
-
-        throw NotImplementedError()
 
         return "Running shell command: $argument"
     }
