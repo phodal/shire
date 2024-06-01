@@ -1,4 +1,4 @@
-package com.phodal.shirelang.provider
+package com.phodal.shirecore.provider
 
 import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.codeInsight.completion.CompletionResultSet

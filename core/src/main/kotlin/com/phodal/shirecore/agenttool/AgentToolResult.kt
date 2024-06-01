@@ -1,4 +1,4 @@
-package com.phodal.shirelang.agenttool
+package com.phodal.shirecore.agenttool
 
 data class AgentToolResult(
     val isSuccess: Boolean,

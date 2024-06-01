@@ -1,4 +1,4 @@
-package com.phodal.shirelang.provider
+package com.phodal.shirecore.provider
 
 import com.intellij.execution.RunManager
 import com.intellij.execution.RunnerAndConfigurationSettings
@@ -14,7 +14,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiErrorElement
 import com.intellij.psi.PsiFile
-import com.phodal.shirelang.runner.RunServiceTask
+import com.phodal.shirecore.runner.RunServiceTask
 
 interface RunService {
     private val logger: Logger get() = logger<RunService>()

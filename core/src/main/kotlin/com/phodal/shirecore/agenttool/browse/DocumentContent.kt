@@ -1,4 +1,4 @@
-package com.phodal.shirelang.agenttool.browse
+package com.phodal.shirecore.agenttool.browse
 
 data class DocumentContent(
     val title: String?,

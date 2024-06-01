@@ -1,8 +1,8 @@
-package com.phodal.shirelang.provider
+package com.phodal.shirecore.provider
 
 import com.intellij.openapi.extensions.ExtensionPointName
-import com.phodal.shirelang.agenttool.AgentToolContext
-import com.phodal.shirelang.agenttool.AgentToolResult
+import com.phodal.shirecore.agenttool.AgentToolContext
+import com.phodal.shirecore.agenttool.AgentToolResult
 
 interface AgentTool {
     val name: String

@@ -1,0 +1,7 @@
+<idea-plugin package="com.phodal.shirelang.java">
+    <extensions defaultExtensionNs="com.phodal">
+        <shireRefactoringTool language="JAVA"
+                         implementationClass="com.phodal.shirelang.java.impl.JavaRefactoringTool"/>
+    </extensions>
+
+</idea-plugin>

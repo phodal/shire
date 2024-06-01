@@ -1,4 +1,4 @@
-package com.phodal.shirelang
+package com.phodal.shirecore
 
 import com.intellij.notification.NotificationGroup
 import com.intellij.notification.NotificationGroupManager

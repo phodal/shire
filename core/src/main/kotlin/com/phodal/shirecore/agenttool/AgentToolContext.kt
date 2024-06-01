@@ -1,4 +1,4 @@
-package com.phodal.shirelang.agenttool
+package com.phodal.shirecore.agenttool
 
 import com.intellij.openapi.project.Project
 

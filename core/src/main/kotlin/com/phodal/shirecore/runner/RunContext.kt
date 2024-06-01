@@ -1,4 +1,4 @@
-package com.phodal.shirelang.runner
+package com.phodal.shirecore.runner
 
 import com.intellij.execution.ExecutionListener
 import com.intellij.execution.Executor

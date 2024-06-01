@@ -1,4 +1,4 @@
-package com.phodal.shirelang.provider
+package com.phodal.shirecore.provider
 
 import com.intellij.lang.Language
 import com.intellij.lang.LanguageExtension
@@ -123,7 +123,7 @@ interface RefactoringTool {
      * In Java the canonicalName is the fully qualified name of the target package.
      * In Kotlin the canonicalName is the fully qualified name of the target package or class.
      */
-    fun move(element: PsiElement, canonicalName: String)
+    fun move(element: PsiElement, canonicalName: String): Boolean
 
     companion object {
         private val languageExtension: LanguageExtension<RefactoringTool> =

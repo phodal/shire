@@ -1,7 +1,7 @@
 // Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.phodal.shirelang.runner
+package com.phodal.shirecore.runner
 
-import com.phodal.shirelang.ShirelangNotifications
+import com.phodal.shirecore.ShirelangNotifications
 import com.intellij.execution.*
 import com.intellij.execution.executors.DefaultRunExecutor
 import com.intellij.execution.impl.ExecutionManagerImpl
@@ -24,8 +24,8 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
 import com.intellij.util.messages.MessageBusConnection
 import com.intellij.util.text.nullize
-import com.phodal.shirelang.ShireCoreBundle
-import com.phodal.shirelang.provider.RunService
+import com.phodal.shirecore.ShireCoreBundle
+import com.phodal.shirecore.provider.RunService
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 

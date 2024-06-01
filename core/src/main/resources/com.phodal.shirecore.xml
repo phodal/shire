@@ -1,4 +1,4 @@
-<idea-plugin>
+<idea-plugin package="com.phodal.shirecore">
     <resource-bundle>messages.ShireCoreBundle</resource-bundle>
     <extensions defaultExtensionNs="com.intellij">
         <notificationGroup id="Shirelang.notification.group" displayType="STICKY_BALLOON" bundle="messages.ShireCoreBundle"
@@ -7,20 +7,20 @@
 
     <extensionPoints>
         <extensionPoint qualifiedName="com.phodal.shireRunService"
-                        interface="com.phodal.shirelang.provider.RunService"
+                        interface="com.phodal.shirecore.provider.RunService"
                         dynamic="true"/>
 
         <extensionPoint qualifiedName="com.phodal.shireSymbolProvider"
-                        interface="com.phodal.shirelang.provider.ShireSymbolProvider"
+                        interface="com.phodal.shirecore.provider.ShireSymbolProvider"
                         dynamic="true"/>
 
         <extensionPoint qualifiedName="com.phodal.shireAgentTool"
-                        interface="com.phodal.shirelang.provider.AgentTool"
+                        interface="com.phodal.shirecore.provider.AgentTool"
                         dynamic="true"/>
 
         <extensionPoint qualifiedName="com.phodal.shireRefactoringTool"
                         beanClass="com.intellij.lang.LanguageExtensionPoint" dynamic="true">
-            <with attribute="implementationClass" implements="com.phodal.shirelang.provider.RefactoringTool"/>
+            <with attribute="implementationClass" implements="com.phodal.shirecore.provider.RefactoringTool"/>
         </extensionPoint>
     </extensionPoints>
 </idea-plugin>

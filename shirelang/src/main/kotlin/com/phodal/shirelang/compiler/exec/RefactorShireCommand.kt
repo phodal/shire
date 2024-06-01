@@ -7,7 +7,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.phodal.shirelang.completion.dataprovider.BuiltinRefactorCommand
-import com.phodal.shirelang.provider.RefactoringTool
+import com.phodal.shirecore.provider.RefactoringTool
 import com.phodal.shirelang.psi.ShireFile
 
 /**

@@ -13,5 +13,7 @@
     <content>
     <!-- language modules -->
         <module name="com.phodal.shirelang"/>
+        <module name="com.phodal.shirecore"/>
+        <module name="com.phodal.shirelang.java"/>
     </content>
 </idea-plugin>

@@ -2,7 +2,7 @@ package com.phodal.shirelang.compiler.exec
 
 import com.phodal.shirelang.compiler.error.SHIRE_ERROR
 import com.intellij.openapi.project.Project
-import com.phodal.shirelang.provider.ShireSymbolProvider
+import com.phodal.shirecore.provider.ShireSymbolProvider
 
 class SymbolShireCommand(val myProject: Project, private val prop: String) :
     ShireCommand {
