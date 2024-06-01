@@ -49,7 +49,7 @@ class ShireRunFileAction : DumbAwareAction() {
     }
 
     companion object {
-        val ID: @NonNls String = "runShireFileAction"
+        const val ID: @NonNls String = "runShireFileAction"
     }
 
 }

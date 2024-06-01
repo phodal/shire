@@ -42,4 +42,10 @@
                                   implementationClass="com.phodal.shirelang.run.ShireRunLineMarkersProvider"/>
 
     </extensions>
+
+    <actions>
+        <action id="runShireFileAction"
+                class="com.phodal.shirelang.actions.ShireRunFileAction"
+                use-shortcut-of="RunClass"/>
+    </actions>
 </idea-plugin>
