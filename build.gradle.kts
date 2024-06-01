@@ -88,7 +88,22 @@ project(":core") {
     }
 }
 
-project(":language") {
+project(":languages:java") {
+    dependencies {
+    }
+}
+
+project(":languages:shell") {
+    dependencies {
+    }
+}
+
+project(":toolsets:git") {
+    dependencies {
+    }
+}
+
+project(":shirelang") {
     apply {
         plugin("org.jetbrains.grammarkit")
     }
@@ -142,7 +157,7 @@ project(":plugin") {
     dependencies {
         implementation(project(":"))
         implementation(project(":core"))
-        implementation(project(":language"))
+        implementation(project(":shirelang"))
     }
 
     // Collects all jars produced by compilation of project modules and merges them into singe one.
@@ -266,7 +281,7 @@ project(":plugin") {
 project(":") {
     dependencies {
         implementation(project(":core"))
-        implementation(project(":language"))
+        implementation(project(":shirelang"))
     }
 
     task("resolveDependencies") {

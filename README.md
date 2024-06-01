@@ -3,9 +3,6 @@
 </p>
 <h1 align="center">Shire - AI Agent Language</h1>
 <p align="center">
-  <a href="https://codecov.io/gh/unit-mesh/auto-dev" > 
-    <img src="https://codecov.io/gh/unit-mesh/auto-dev/graph/badge.svg?token=5RzcndjFPx"/> 
-  </a>
   <a href="https://github.com/phodal/shire/actions/workflows/build.yml">
     <img src="https://github.com/phodal/shire/workflows/Build/badge.svg" alt="Build" />
   </a>

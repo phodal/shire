@@ -9,5 +9,10 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(
     "plugin",
     "core",
-    "language",
+    "shirelang",
+
+    "languages:java",
+    "languages:shell",
+
+    "toolsets:git",
 )

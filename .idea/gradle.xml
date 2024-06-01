@@ -9,8 +9,13 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/core" />
-            <option value="$PROJECT_DIR$/language" />
+            <option value="$PROJECT_DIR$/languages" />
+            <option value="$PROJECT_DIR$/languages/java" />
+            <option value="$PROJECT_DIR$/languages/shell" />
             <option value="$PROJECT_DIR$/plugin" />
+            <option value="$PROJECT_DIR$/shirelang" />
+            <option value="$PROJECT_DIR$/toolsets" />
+            <option value="$PROJECT_DIR$/toolsets/git" />
           </set>
         </option>
       </GradleProjectSettings>
