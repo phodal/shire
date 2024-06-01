@@ -1,3 +1,13 @@
 <idea-plugin>
-    <resource-bundle>messages.ShireMainBundle</resource-bundle>
+    <resource-bundle>messages.ShireCoreBundle</resource-bundle>
+    <extensions defaultExtensionNs="com.intellij">
+        <notificationGroup id="Shirelang.notification.group" displayType="STICKY_BALLOON" bundle="messages.ShireCoreBundle"
+                           key="name"/>
+    </extensions>
+
+    <extensionPoints>
+        <extensionPoint qualifiedName="com.phodal.shireRunService"
+                        interface="com.phodal.shirelang.provider.RunService"
+                        dynamic="true"/>
+    </extensionPoints>
 </idea-plugin>

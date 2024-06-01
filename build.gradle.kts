@@ -24,9 +24,18 @@ fun prop(name: String): String =
     extra.properties[name] as? String
         ?: error("Property `$name` is not defined in gradle.properties")
 
-val ideaPlatformVersion = prop("ideaVersion").toInt()
+val ideaPlatformVersion = prop("ideaPlatformVersion")
 val pluginProjects: List<Project> get() = rootProject.allprojects.toList()
 val basePluginArchiveName = "intellij-shire"
+val ideaPlugins =
+    listOf(
+        "org.jetbrains.plugins.terminal",
+        "com.intellij.java",
+        "org.jetbrains.plugins.gradle",
+        "org.jetbrains.kotlin",
+        "JavaScript"
+    )
+
 
 // Configure project's dependencies
 repositories {
@@ -89,6 +98,11 @@ project(":core") {
 }
 
 project(":languages:java") {
+    intellij {
+        version.set(prop("ideaVersion"))
+        plugins.set(ideaPlugins)
+    }
+
     dependencies {
     }
 }
@@ -148,7 +162,7 @@ project(":plugin") {
         plugin("org.jetbrains.changelog")
     }
 
-    version = prop("pluginVersion") + "-" + prop("ideaVersion")
+    version = prop("pluginVersion")
 
     intellij {
         pluginName.set(basePluginArchiveName)
