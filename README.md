@@ -14,7 +14,6 @@
   </a>
 </p>
 
-
 <!-- Plugin description -->
 Shire is an AI Agent Language for AI Driven programming. 
 <!-- Plugin description end -->
@@ -31,9 +30,13 @@ Shire is an AI Agent Language for AI Driven programming.
   Download the [latest release](https://github.com/phodal/shire/releases/latest) and install it manually using
   <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
 
+## Roadmap
 
----
-Plugin based on the [IntelliJ Platform Plugin Template][template].
+- [ ] Shire syntax: Front-matter
+  - [ ] Custom Interaction
+  - [ ] Custom Agent
+  - [ ] Custom RAG
+- [ ] LLM Integration
 
-[template]: https://github.com/JetBrains/intellij-platform-plugin-template
-[docs:plugin-description]: https://plugins.jetbrains.com/docs/intellij/plugin-user-experience.html#plugin-description-and-presentation
+
+
