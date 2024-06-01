@@ -42,7 +42,7 @@ class VcsPrompting(private val project: Project) {
     }
 
     fun prepareContext(changes: List<Change>, ignoreFilePatterns: List<PathMatcher> = defaultIgnoreFilePatterns): String {
-        return project.service<DiffSimplifier>().simplify(changes, ignoreFilePatterns)
+        return project.getService(DiffSimplifier::class.java).simplify(changes, ignoreFilePatterns)
     }
 
     /**
@@ -62,7 +62,7 @@ class VcsPrompting(private val project: Project) {
         project: Project,
         ignoreFilePatterns: List<PathMatcher> = defaultIgnoreFilePatterns,
     ): String? {
-        val changeText = project.service<DiffSimplifier>().simplify(selectList, ignoreFilePatterns)
+        val changeText = project.getService(DiffSimplifier::class.java).simplify(selectList, ignoreFilePatterns)
 
         if (changeText.isEmpty()) {
             return null

@@ -46,7 +46,7 @@ class GitRevisionProvider : RevisionProvider {
 
         return runBlocking {
             val changes = future.await()
-            val diffContext = myProject.service<VcsPrompting>().prepareContext(changes)
+            val diffContext = myProject.getService(VcsPrompting::class.java).prepareContext(changes)
             "\n```diff\n${diffContext}\n```\n"
         }
     }

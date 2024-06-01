@@ -12,6 +12,7 @@ import com.intellij.execution.ui.RunContentDescriptor
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.service
+import com.intellij.openapi.components.serviceOrNull
 import com.intellij.openapi.fileEditor.FileDocumentManager
 import java.util.concurrent.atomic.AtomicReference
 
@@ -38,7 +39,7 @@ class ShireProgramRunner : GenericProgramRunner<RunnerSettings>(), Disposable {
         if(!isSubscribed) {
             connection.subscribe(ShireRunListener.TOPIC, object : ShireRunListener {
                 override fun runFinish(string: String, event: ProcessEvent, scriptPath: String) {
-                    environment.project.service<ShireProcessProcessor>().process(string, event, scriptPath)
+                    environment.project.getService(ShireProcessProcessor::class.java).process(string, event, scriptPath)
                 }
             })
 

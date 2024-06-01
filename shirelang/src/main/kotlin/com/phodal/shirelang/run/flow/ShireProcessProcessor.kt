@@ -21,7 +21,7 @@ import com.phodal.shirelang.utils.Code
 
 @Service(Service.Level.PROJECT)
 class ShireProcessProcessor(val project: Project) {
-    private val conversationService = project.service<ShireConversationService>()
+    private val conversationService = project.getService(ShireConversationService::class.java)
 
     /**
      * This function takes a ShireFile as input and returns a list of PsiElements that are comments.

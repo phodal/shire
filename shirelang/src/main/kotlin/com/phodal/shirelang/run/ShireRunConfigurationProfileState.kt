@@ -26,6 +26,7 @@ import com.phodal.shirelang.compiler.ShireCompiler
 import com.phodal.shirelang.compiler.error.SHIRE_ERROR
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.flow.ShireConversationService
+import com.phodal.shirelang.run.flow.ShireProcessProcessor
 import com.phodal.shirelang.utils.ShireCoroutineScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -96,7 +97,7 @@ open class ShireRunConfigurationProfileState(
         val compiler = ShireCompiler(myProject, file)
         val compileResult = compiler.compile()
 
-        myProject.service<ShireConversationService>().createConversation(configuration.getScriptPath(), compileResult)
+        myProject.getService(ShireConversationService::class.java).createConversation(configuration.getScriptPath(), compileResult)
 
         val output = compileResult.output
         val agent = compileResult.executeAgent
@@ -130,7 +131,7 @@ open class ShireRunConfigurationProfileState(
         output: String,
         console: ConsoleViewWrapperBase,
         processHandler: ProcessHandler,
-        agent: CustomAgent
+        agent: CustomAgent,
     ) {
         ApplicationManager.getApplication().invokeLater {
             val stringFlow: Flow<String>? = CustomAgentExecutor(project = myProject).execute(output, agent)
@@ -145,7 +146,7 @@ open class ShireRunConfigurationProfileState(
                     }
 
                     console.print("\nDone!", ConsoleViewContentType.SYSTEM_OUTPUT)
-                    myProject.service<ShireConversationService>()
+                    myProject.getService(ShireConversationService::class.java)
                         .updateLlmResponse(configuration.getScriptPath(), llmResult.toString())
                     processHandler.detachProcess()
                 }
@@ -157,7 +158,7 @@ open class ShireRunConfigurationProfileState(
         output: String,
         console: ConsoleViewWrapperBase,
         processHandler: ProcessHandler,
-        isLocalMode: Boolean
+        isLocalMode: Boolean,
     ) {
         ApplicationManager.getApplication().invokeLater {
             if (isLocalMode) {
@@ -176,7 +177,7 @@ open class ShireRunConfigurationProfileState(
                 }
 
                 console.print("\nDone!", ConsoleViewContentType.SYSTEM_OUTPUT)
-                myProject.service<ShireConversationService>()
+                myProject.getService(ShireConversationService::class.java)
                     .updateLlmResponse(configuration.getScriptPath(), llmResult.toString())
                 processHandler.detachProcess()
             }

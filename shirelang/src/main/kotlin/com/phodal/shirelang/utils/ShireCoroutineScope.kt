@@ -9,12 +9,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 
 @Service(Service.Level.PROJECT)
-class ShireCoroutineScope(val coroutineScope: CoroutineScope = CoroutineScope(SupervisorJob() + coroutineExceptionHandler)){
+class ShireCoroutineScope(val coroutineScope: CoroutineScope = CoroutineScope(SupervisorJob() + coroutineExceptionHandler)) {
     companion object {
         val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
             Logger.getInstance(ShireCoroutineScope::class.java).error(throwable)
         }
 
-        fun scope(project: Project): CoroutineScope = project.service<ShireCoroutineScope>().coroutineScope
+        fun scope(project: Project): CoroutineScope =
+            project.getService(ShireCoroutineScope::class.java).coroutineScope
     }
 }

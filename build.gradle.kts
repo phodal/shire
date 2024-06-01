@@ -96,10 +96,6 @@ allprojects {
         prepareSandbox { enabled = false }
         buildSearchableOptions { enabled = false }
     }
-
-    dependencies {
-        compileOnly(kotlin("stdlib-jdk8"))
-    }
 }
 
 project(":core") {
