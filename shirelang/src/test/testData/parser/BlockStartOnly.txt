@@ -1,0 +1,5 @@
+ShireFile
+  CodeBlockElement(CODE)
+    PsiElement(ShireTokenType.CODE_BLOCK_START)('```')
+    ASTWrapperPsiElement(CODE_CONTENTS)
+      <empty list>

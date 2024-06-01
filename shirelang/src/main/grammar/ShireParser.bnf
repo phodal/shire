@@ -1,5 +1,3 @@
-// should similar to markdown syntax
-// Copyright 2000-2022 JetBrains s.r.o. and other contributors. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 {
   parserClass="com.phodal.shirelang.parser.ShireParser"
 
@@ -36,7 +34,17 @@
   ]
 }
 
-ShireFile ::= (used | code | TEXT_SEGMENT | NEWLINE | COMMENTS)*
+ShireFile ::= frontMatterHeader? (used | code | TEXT_SEGMENT | NEWLINE | COMMENTS)*
+
+frontMatterHeader ::= frontmatterOpen frontMatterEntries frontmatterClose
+
+// yaml
+frontmatterOpen ::= "---"
+frontmatterClose ::= "---"
+
+frontMatterEntries ::= (frontMatterKey COLON frontMatterValue NEWLINE)*
+frontMatterKey ::= IDENTIFIER
+frontMatterValue ::= IDENTIFIER | NUMBER | STRING
 
 used ::= (
     AGENT_START AGENT_ID

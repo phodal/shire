@@ -1,0 +1,8 @@
+ShireFile
+  CodeBlockElement(CODE)
+    PsiElement(ShireTokenType.CODE_BLOCK_START)('```')
+    PsiElement(ShireTokenType.LANGUAGE_ID)('typescript jsx')
+    PsiElement(ShireTokenType.NEWLINE)('\n')
+    ASTWrapperPsiElement(CODE_CONTENTS)
+      <empty list>
+    PsiElement(ShireTokenType.CODE_BLOCK_END)('```')
