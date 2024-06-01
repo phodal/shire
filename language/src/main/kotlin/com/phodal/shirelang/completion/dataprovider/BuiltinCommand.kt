@@ -35,7 +35,7 @@ enum class BuiltinCommand(
     COMMIT("commit", "Commit the content of a file", AllIcons.Vcs.CommitNode, false),
     FILE_FUNC(
         "file-func",
-        "Read the name of a file, support for: " + FileFunc.values().joinToString(",") { it.funcName },
+        "Read the name of a file, support for: " + FileFunc.entries.joinToString(",") { it.funcName },
         AllIcons.Actions.GroupByFile,
         true,
         true

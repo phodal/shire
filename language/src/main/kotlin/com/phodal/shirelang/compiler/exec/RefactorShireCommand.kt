@@ -11,7 +11,7 @@ import com.phodal.shirelang.provider.RefactoringTool
 import com.phodal.shirelang.psi.ShireFile
 
 /**
- * `RefactorInsCommand` is a class that implements the `InsCommand` interface. It is responsible for executing
+ * `RefactorShireCommand` is a class that implements the `ShireCommand` interface. It is responsible for executing
  * refactoring commands within a project based on the provided argument and text segment.
  *
  * The class has three private properties:
@@ -44,7 +44,8 @@ import com.phodal.shirelang.psi.ShireFile
  * actual result of the refactoring is not returned.
  *
  * This class is designed to be used within a refactoring tool or plugin that provides built-in refactoring commands.
- * It demonstrates how to handle different refactoring scenarios*/
+ * It demonstrates how to handle different refactoring scenarios
+ */
 class RefactorShireCommand(val myProject: Project, private val argument: String, private val textSegment: String) :
     ShireCommand {
     override suspend fun doExecute(): String? {

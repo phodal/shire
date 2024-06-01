@@ -241,7 +241,7 @@ class ShireCompiler(
             }
         }
 
-        val execResult = runBlocking() {
+        val execResult = runBlocking {
             command.doExecute()
         }
 

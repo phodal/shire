@@ -44,8 +44,8 @@ class VariableTemplateCompiler(
 
         configForLanguage()
 
-        val oldContextClassLoader = Thread.currentThread().getContextClassLoader()
-        Thread.currentThread().contextClassLoader = VariableTemplateCompiler::class.java.getClassLoader()
+        val oldContextClassLoader = Thread.currentThread().contextClassLoader
+        Thread.currentThread().contextClassLoader = VariableTemplateCompiler::class.java.classLoader
 
         val sw = StringWriter()
         try {

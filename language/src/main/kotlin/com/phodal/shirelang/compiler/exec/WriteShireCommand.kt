@@ -17,7 +17,7 @@ import com.phodal.shirelang.psi.ShireUsed
 import com.phodal.shirelang.utils.Code
 import com.phodal.shirelang.utils.lookupFile
 
-class WriteShireCommand(val myProject: Project, val argument: String, val content: String, val used: ShireUsed) :
+class WriteShireCommand(val myProject: Project, val argument: String, val content: String, private val used: ShireUsed) :
     ShireCommand {
     private val pathSeparator = "/"
 

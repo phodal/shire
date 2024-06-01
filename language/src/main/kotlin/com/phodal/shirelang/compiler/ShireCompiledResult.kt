@@ -19,5 +19,4 @@ data class ShireCompiledResult(
      * Next job to be executed
      */
     var nextJob: ShireFile? = null
-) {
-}
+)

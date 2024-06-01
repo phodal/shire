@@ -38,6 +38,12 @@ object CodeFenceLanguageAliases {
     Entry("Shell Script", "shell", setOf("shell script", "bash", "zsh", "sh"))
   )
 
+  /**
+   * Finds the registered entry based on the provided value.
+   *
+   * @param value the value to search for in the registered entries
+   * @return the ID of the entry if found, null otherwise
+   */
   fun findRegisteredEntry(value: String): String? {
     val lower = value.lowercase()
     val entry = aliases.singleOrNull { lower == it.main || lower in it.aliases }

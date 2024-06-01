@@ -34,7 +34,7 @@ class DocumentCleaner {
             .firstOrNull { it.isNotEmpty() }
     }
 
-    val ARTICLE_BODY_ATTR: Array<Pair<String, String>> = arrayOf(
+    private val ARTICLE_BODY_ATTR: Array<Pair<String, String>> = arrayOf(
         Pair("itemprop", "articleBody"),
         Pair("data-testid", "article-body"),
         Pair("name", "articleBody")
