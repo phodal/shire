@@ -116,6 +116,11 @@ project(":languages:shell") {
 }
 
 project(":toolsets:git") {
+    intellij {
+        version.set(prop("ideaVersion"))
+        plugins.set(ideaPlugins + "Git4Idea")
+    }
+
     dependencies {
         implementation(project(":core"))
     }
