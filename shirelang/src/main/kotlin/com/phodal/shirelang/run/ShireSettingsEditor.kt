@@ -14,7 +14,7 @@ class ShireSettingsEditor(val project: Project) : SettingsEditor<ShireConfigurat
 
     init {
         val descriptor = FileChooserDescriptorFactory.createSingleFileDescriptor()
-        val message = ShireBundle.message("devin.label.choose.file")
+        val message = ShireBundle.message("shire.label.choose.file")
 
         myScriptSelector.addBrowseFolderListener(message, "", project, descriptor)
     }

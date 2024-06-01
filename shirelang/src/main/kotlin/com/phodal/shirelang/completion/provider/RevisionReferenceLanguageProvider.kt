@@ -38,7 +38,7 @@ class RevisionReferenceLanguageProvider : CompletionProvider<CompletionParameter
          * way, another example can see in [git4idea.GitPushUtil.findOrPushRemoteBranch]
          */
         val future = CompletableFuture<List<GitCommit>>()
-        val task = object : Task.Backgroundable(project, ShireBundle.message("devin.ref.loading"), false) {
+        val task = object : Task.Backgroundable(project, ShireBundle.message("shire.ref.loading"), false) {
             override fun run(indicator: ProgressIndicator) {
                 val commits: List<GitCommit> = try {
                     // in some case, maybe not repo or branch, so we should handle it

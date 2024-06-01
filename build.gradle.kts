@@ -94,7 +94,6 @@ allprojects {
 
 project(":core") {
     dependencies {
-//        implementation(libs.kotlinx.serialization.json)
         implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
     }
 }
@@ -178,6 +177,7 @@ project(":plugin") {
         implementation(project(":"))
         implementation(project(":core"))
         implementation(project(":shirelang"))
+        implementation(project(":languages:java"))
     }
 
     // Collects all jars produced by compilation of project modules and merges them into singe one.

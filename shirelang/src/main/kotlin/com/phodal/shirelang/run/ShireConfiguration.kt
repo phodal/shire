@@ -24,7 +24,7 @@ class ShireConfiguration(project: Project, factory: ConfigurationFactory, name: 
 
     override fun checkConfiguration() {
         if (!FileUtil.exists(myScriptPath)) {
-            throw RuntimeConfigurationError(ShireBundle.message("devin.run.error.script.not.found"))
+            throw RuntimeConfigurationError(ShireBundle.message("shire.run.error.script.not.found"))
         }
     }
 

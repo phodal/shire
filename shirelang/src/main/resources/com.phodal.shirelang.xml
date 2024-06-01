@@ -33,13 +33,13 @@
 
         <languageInjector implementation="com.phodal.shirelang.ShireLanguageInjector"/>
 
-<!--        <configurationType implementation="com.phodal.shirelang.run.ShiresConfigurationType"/>-->
-<!--        <programRunner implementation="com.phodal.shirelang.run.ShiresProgramRunner"/>-->
+        <configurationType implementation="com.phodal.shirelang.run.ShireConfigurationType"/>
+        <programRunner implementation="com.phodal.shirelang.run.ShireProgramRunner"/>
 
-<!--        <runConfigurationBeforeRunProviderDelegate implementation="com.phodal.shirelang.run.ShiresBeforeRunProviderDelegate"/>-->
-<!--        <runConfigurationProducer implementation="com.phodal.shirelang.run.ShiresRunConfigurationProducer"/>-->
-<!--        <runLineMarkerContributor language="Shire"-->
-<!--                                  implementationClass="com.phodal.shirelang.run.ShiresRunLineMarkersProvider"/>-->
+        <runConfigurationBeforeRunProviderDelegate implementation="com.phodal.shirelang.run.ShireBeforeRunProviderDelegate"/>
+        <runConfigurationProducer implementation="com.phodal.shirelang.run.ShireRunConfigurationProducer"/>
+        <runLineMarkerContributor language="Shire"
+                                  implementationClass="com.phodal.shirelang.run.ShireRunLineMarkersProvider"/>
 
     </extensions>
 </idea-plugin>

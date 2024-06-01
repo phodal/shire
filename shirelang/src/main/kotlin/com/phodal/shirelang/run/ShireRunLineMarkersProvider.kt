@@ -11,7 +11,7 @@ import com.phodal.shirelang.ShireBundle
 import com.phodal.shirelang.ShireLanguage
 import com.phodal.shirelang.psi.ShireFile
 
-class ShiresRunLineMarkersProvider : RunLineMarkerContributor(), DumbAware {
+class ShireRunLineMarkersProvider : RunLineMarkerContributor(), DumbAware {
     override fun getInfo(element: PsiElement): Info? {
         if (element.language !is ShireLanguage) return null
         val psiFile = element as? ShireFile ?: return null
@@ -20,7 +20,7 @@ class ShiresRunLineMarkersProvider : RunLineMarkerContributor(), DumbAware {
 
         return Info(
             AllIcons.RunConfigurations.TestState.Run,
-            { ShireBundle.message("devin.line.marker.run.0", psiFile.containingFile.name) },
+            { ShireBundle.message("shire.line.marker.run.0", psiFile.containingFile.name) },
             *actions
         )
     }
