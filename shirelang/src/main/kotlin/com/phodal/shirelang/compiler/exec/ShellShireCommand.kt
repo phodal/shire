@@ -1,5 +1,6 @@
 package com.phodal.shirelang.compiler.exec
 
+import com.intellij.execution.RunnerAndConfigurationSettings
 import com.phodal.shirelang.compiler.error.SHIRE_ERROR
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
@@ -22,19 +23,18 @@ class ShellShireCommand(val myProject: Project, private val argument: String) : 
         val virtualFile = myProject.lookupFile(argument.trim()) ?: return "$SHIRE_ERROR: File not found: $argument"
         val psiFile = PsiManager.getInstance(myProject).findFile(virtualFile) as? ShFile
 //        val settings: RunnerAndConfigurationSettings? = ShellRunService().createRunSettings(myProject, virtualFile, psiFile)
-
+//
 //        if (settings != null) {
 //            ShellRunService().runFile(myProject, virtualFile, psiFile)
 //            return "Running shell file: $argument"
 //        }
-
 
         val workingDirectory = virtualFile.parent.path
         val shRunner = ApplicationManager.getApplication().getService(ShRunner::class.java)
             ?: return "$SHIRE_ERROR: Shell runner not found"
 
         if (shRunner.isAvailable(myProject)) {
-            shRunner.run(myProject, virtualFile.path, workingDirectory, "RunDevInsShell", true)
+            shRunner.run(myProject, virtualFile.path, workingDirectory, "RunShireShell", true)
         }
 
         throw NotImplementedError()

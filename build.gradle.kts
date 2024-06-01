@@ -94,6 +94,8 @@ allprojects {
 
 project(":core") {
     dependencies {
+//        implementation(libs.kotlinx.serialization.json)
+        implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
     }
 }
 

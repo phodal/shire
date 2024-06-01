@@ -1,6 +1,7 @@
 package com.phodal.shirelang.completion.dataprovider
 
 import com.intellij.openapi.project.Project
+import com.phodal.shirecore.agent.CustomAgent
 
 /**
  * The tool hub provides a list of tools - agents and commands for the AI Agent to decide which one to call
@@ -18,7 +19,8 @@ import com.intellij.openapi.project.Project
  * ```
  */
 enum class ToolHubVariable(val hubName: String, val type: String, val description: String) {
-    COMMANDS("commands", BuiltinCommand::class.simpleName.toString(), "DevIns all commands for AI Agent to call"),
+    AGENTS("agents", CustomAgent::class.simpleName.toString(), "Shire all agent for AI Agent to call"),
+    COMMANDS("commands", BuiltinCommand::class.simpleName.toString(), "Shire all commands for AI Agent to call"),
     ;
 
     companion object {

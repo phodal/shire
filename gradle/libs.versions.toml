@@ -9,6 +9,7 @@ qodana = "2024.1.5"
 kover = "0.8.0"
 
 [libraries]
+kotlinx-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3"
 
 [plugins]
 changelog = { id = "org.jetbrains.changelog", version.ref = "changelog" }
