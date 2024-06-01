@@ -1,5 +1,6 @@
 package com.phodal.shirecore.provider
 
+import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.project.Project
 
@@ -13,6 +14,8 @@ interface RevisionProvider {
      * or null if the repository is not found
      */
     fun fetchChanges(myProject: Project, revision: String): String?
+
+    fun fetchCompletions(project: Project, result: CompletionResultSet)
 
     companion object {
         private val EP_NAME: ExtensionPointName<RevisionProvider> =
