@@ -41,7 +41,7 @@ interface ShireSymbolProvider {
 
     companion object {
         private val EP_NAME: ExtensionPointName<ShireSymbolProvider> =
-            ExtensionPointName("shire.symbolProvider")
+            ExtensionPointName("com.phodal.shireSymbolProvider")
 
         fun all(): List<ShireSymbolProvider> {
             return EP_NAME.extensionList

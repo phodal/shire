@@ -5,21 +5,6 @@
         <plugin id="com.jetbrains.sh"/>
     </dependencies>
 
-    <extensionPoints>
-        <extensionPoint qualifiedName="com.phodal.shireCompletionProvider"
-                        interface="com.phodal.shirelang.provider.ShireSymbolProvider"
-                        dynamic="true"/>
-
-        <extensionPoint qualifiedName="com.phodal.shireAgentTool"
-                        interface="com.phodal.shirelang.provider.AgentTool"
-                        dynamic="true"/>
-
-        <extensionPoint qualifiedName="com.phodal.shireRefactoringTool"
-                        beanClass="com.intellij.lang.LanguageExtensionPoint" dynamic="true">
-            <with attribute="implementationClass" implements="com.phodal.shirelang.provider.RefactoringTool"/>
-        </extensionPoint>
-    </extensionPoints>
-
     <extensions defaultExtensionNs="com.intellij">
         <fileType name="ShireFile" implementationClass="com.phodal.shirelang.ShireFileType" fieldName="INSTANCE"
                   language="Shire" extensions="shire"/>

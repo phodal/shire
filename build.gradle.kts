@@ -104,16 +104,19 @@ project(":languages:java") {
     }
 
     dependencies {
+        implementation(project(":core"))
     }
 }
 
 project(":languages:shell") {
     dependencies {
+        implementation(project(":core"))
     }
 }
 
 project(":toolsets:git") {
     dependencies {
+        implementation(project(":core"))
     }
 }
 
@@ -128,6 +131,7 @@ project(":shirelang") {
     }
 
     dependencies {
+        implementation(project(":core"))
     }
 
     tasks {
