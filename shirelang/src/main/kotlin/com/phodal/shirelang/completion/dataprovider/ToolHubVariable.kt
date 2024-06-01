@@ -25,7 +25,7 @@ enum class ToolHubVariable(val hubName: String, val type: String, val descriptio
 
     companion object {
         fun all(): List<ToolHubVariable> {
-            return entries
+            return values().toList()
         }
 
         /**

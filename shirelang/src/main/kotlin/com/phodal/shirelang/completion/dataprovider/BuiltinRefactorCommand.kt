@@ -9,11 +9,11 @@ enum class BuiltinRefactorCommand(val funcName: String, val description: String)
 
     companion object {
         fun all(): List<BuiltinRefactorCommand> {
-            return entries
+            return values().toList()
         }
 
         fun fromString(command: String): BuiltinRefactorCommand? {
-            return entries.find { it.name.equals(command, ignoreCase = true) }
+            return values().find { it.name.equals(command, ignoreCase = true) }
         }
     }
 }

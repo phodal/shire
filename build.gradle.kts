@@ -75,6 +75,16 @@ allprojects {
     }
 
     tasks {
+        withType<KotlinCompile> {
+            kotlinOptions {
+                jvmTarget = VERSION_17.toString()
+                languageVersion = "1.8"
+                // see https://plugins.jetbrains.com/docs/intellij/using-kotlin.html#kotlin-standard-library
+                apiVersion = "1.7"
+                freeCompilerArgs = listOf("-Xjvm-default=all")
+            }
+        }
+
         withType<PatchPluginXmlTask> {
             sinceBuild.set(prop("pluginSinceBuild"))
             untilBuild.set(prop("pluginUntilBuild"))

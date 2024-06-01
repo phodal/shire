@@ -9,11 +9,11 @@ enum class FileFunc(val funcName: String, val description: String, val icon: Ico
 
     companion object {
         fun all(): List<FileFunc> {
-            return entries
+            return values().toList()
         }
 
         fun fromString(funcName: String): FileFunc? {
-            return entries.find { it.funcName == funcName }
+            return values().find { it.funcName == funcName }
         }
     }
 }

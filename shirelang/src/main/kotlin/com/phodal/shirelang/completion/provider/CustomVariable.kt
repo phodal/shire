@@ -16,7 +16,7 @@ enum class CustomVariable(val variable: String, val description: String) {
     ;
 
     companion object {
-        fun all(): List<CustomVariable> = entries
+        fun all(): List<CustomVariable> = values().toList()
 
         fun hasVariable(content: String): Boolean {
             return all().any { content.contains("\$${it.variable}") }

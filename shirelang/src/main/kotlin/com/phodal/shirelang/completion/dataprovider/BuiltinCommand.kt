@@ -35,7 +35,7 @@ enum class BuiltinCommand(
     COMMIT("commit", "Commit the content of a file", AllIcons.Vcs.CommitNode, false),
     FILE_FUNC(
         "file-func",
-        "Read the name of a file, support for: " + FileFunc.entries.joinToString(",") { it.funcName },
+        "Read the name of a file, support for: " + FileFunc.values().joinToString(",") { it.funcName },
         AllIcons.Actions.GroupByFile,
         true,
         true
@@ -58,7 +58,7 @@ enum class BuiltinCommand(
 
     companion object {
         fun all(): List<BuiltinCommand> {
-            return entries
+            return values().toList()
         }
 
         fun example(command: BuiltinCommand): String {
@@ -71,6 +71,6 @@ enum class BuiltinCommand(
             }
         }
 
-        fun fromString(agentName: String): BuiltinCommand? = entries.find { it.commandName == agentName }
+        fun fromString(agentName: String): BuiltinCommand? = values().find { it.commandName == agentName }
     }
 }
