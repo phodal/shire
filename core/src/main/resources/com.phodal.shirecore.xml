@@ -18,6 +18,10 @@
                         interface="com.phodal.shirecore.provider.AgentTool"
                         dynamic="true"/>
 
+        <extensionPoint qualifiedName="com.phodal.shireRevisionProvider"
+                        interface="com.phodal.shirecore.provider.RevisionProvider"
+                        dynamic="true"/>
+
         <extensionPoint qualifiedName="com.phodal.shireRefactoringTool"
                         beanClass="com.intellij.lang.LanguageExtensionPoint" dynamic="true">
             <with attribute="implementationClass" implements="com.phodal.shirecore.provider.RefactoringTool"/>

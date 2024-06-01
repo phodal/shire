@@ -1,7 +1,7 @@
 package com.phodal.shirelang.compiler.exec
 
 import com.intellij.openapi.project.Project
-
+import com.phodal.shirecore.provider.RevisionProvider
 
 /**
  * RevAutoCommand is used to execute a command that retrieves the committed change list for a given revision using Git.
@@ -11,30 +11,14 @@ import com.intellij.openapi.project.Project
  *
  */
 class RevShireCommand(private val myProject: Project, private val revision: String) : ShireCommand {
-    override suspend fun doExecute(): String? {
-        throw NotImplementedError()
-
-//        val repository = GitRepositoryManager.getInstance(myProject).repositories.firstOrNull() ?: return null
-//        val future = CompletableFuture<List<Change>>()
-//
-//        val task = object : Task.Backgroundable(myProject, ShireBundle.message("devin.ref.loading"), false) {
-//            override fun run(indicator: ProgressIndicator) {
-//                val committedChangeList = GitCommittedChangeListProvider.getCommittedChangeList(
-//                    myProject!!, repository.root, GitRevisionNumber(revision)
-//                )?.changes?.toList()
-//
-//                future.complete(committedChangeList)
-//            }
-//        }
-//
-//        ProgressManager.getInstance()
-//            .runProcessWithProgressAsynchronously(task, BackgroundableProcessIndicator(task))
-//
-//
-//        return runBlocking {
-//            val changes = future.await()
-//            val diffContext = myProject.service<VcsPrompting>().prepareContext(changes)
-//            "\n```diff\n${diffContext}\n```\n"
-//        }
+    override suspend fun doExecute(): String {
+        return RevisionProvider.provide()?.let {
+            val changes = it.fetchChanges(myProject, revision)
+            if (changes != null) {
+                return changes
+            } else {
+                return "No changes found for revision $revision"
+            }
+        } ?: "No revision provider found"
     }
 }
