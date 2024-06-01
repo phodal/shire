@@ -47,4 +47,9 @@ class ShireParsingTest : ParsingTestCase("parser", "shire", ShireParserDefinitio
     fun testAutoRefactor() {
         doTest(true)
     }
+
+    fun testFrontMatter() {
+        doTest(true)
+    }
 }
+

@@ -31,20 +31,23 @@
     COMMAND_PROP       = "COMMAND_PROP"
     SHARP              = "SHARP"
     LINE_INFO          = "LINE_INFO"
+    FRONTMATTER_START  = "FRONTMATTER_START"
+    FRONTMATTER_END    = "FRONTMATTER_END"
+    FRONTMATTER_KEY    = "FRONTMATTER_KEY"
+    LBRACKET           = "LBRACKET"
+    RBRACKET           = "RBRACKET"
   ]
 }
 
 ShireFile ::= frontMatterHeader? (used | code | TEXT_SEGMENT | NEWLINE | COMMENTS)*
 
-frontMatterHeader ::= frontmatterOpen frontMatterEntries frontmatterClose
+frontMatterHeader ::= FRONTMATTER_START NEWLINE frontMatterEntries FRONTMATTER_END
 
-// yaml
-frontmatterOpen ::= "---"
-frontmatterClose ::= "---"
-
-frontMatterEntries ::= (frontMatterKey COLON frontMatterValue NEWLINE)*
+frontMatterEntries ::= (frontMatterEntry WHITE_SPACE? NEWLINE)*
+frontMatterEntry ::= frontMatterKey WHITE_SPACE? COLON WHITE_SPACE? frontMatterValue
 frontMatterKey ::= IDENTIFIER
-frontMatterValue ::= IDENTIFIER | NUMBER | STRING
+frontMatterValue ::= STRING | NUMBER | QUOTE_STRING | DATE | BOOLEAN | frontMatterArray
+frontMatterArray ::= LBRACKET (frontMatterValue (COMMA frontMatterValue)*) RBRACKET
 
 used ::= (
     AGENT_START AGENT_ID

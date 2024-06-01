@@ -36,10 +36,14 @@ import java.util.regex.Pattern;
 %s CODE_BLOCK
 %s COMMENT_BLOCK
 %s LINE_BLOCK
+%s FRONT_MATTER_BLOCK
+%s FRONT_MATTER_VAL_BLOCK
 
 %s LANG_ID
 
 IDENTIFIER=[a-zA-Z0-9][_\-a-zA-Z0-9]*
+DATE=[0-9]{4}-[0-9]{2}-[0-9]{2}
+STRING=[a-zA-Z0-9][_\-a-zA-Z0-9]*
 
 VARIABLE_ID=[a-zA-Z0-9][_\-a-zA-Z0-9]*
 AGENT_ID=[a-zA-Z0-9][_\-a-zA-Z0-9]*
@@ -47,7 +51,12 @@ COMMAND_ID=[a-zA-Z0-9][_\-a-zA-Z0-9]*
 LANGUAGE_ID=[a-zA-Z][_\-a-zA-Z0-9 .]*
 SYSTEM_ID=[a-zA-Z][_\-a-zA-Z0-9]*
 NUMBER=[0-9]+
+BOOLEAN=true|false|TRUE|FALSE|"true"|"false"
 TEXT_SEGMENT=[^$/@#\n]+
+WHITE_SPACE=[ \t]+
+DOUBLE_QUOTED_STRING=\"([^\\\"\r\n]|\\[^\r\n])*\"?
+SINGLE_QUOTED_STRING='([^\\'\r\n]|\\[^\r\n])*'?
+QUOTE_STRING={DOUBLE_QUOTED_STRING}|{SINGLE_QUOTED_STRING}
 
 // READ LINE FORMAT: L2C2-L0C100 or L1-L1
 LINE_INFO=L[0-9]+(C[0-9]+)?(-L[0-9]+(C[0-9]+)?)?
@@ -59,6 +68,9 @@ NEWLINE= \n | \r | \r\n
 
 COLON=:
 SHARP=#
+DASH=-
+LBRACKET=\[
+RBRACKET=\]
 
 %{
     private boolean isCodeStart = false;
@@ -155,10 +167,32 @@ SHARP=#
 
 %%
 <YYINITIAL> {
+  "---"                   { yybegin(FRONT_MATTER_BLOCK); return FRONTMATTER_START; }
   {CODE_CONTENT}          { return content(); }
   {NEWLINE}               { return NEWLINE;  }
   "["                     { yypushback(yylength()); yybegin(COMMENT_BLOCK);  }
   [^]                     { yypushback(yylength()); return TEXT_SEGMENT; }
+}
+
+<FRONT_MATTER_BLOCK> {
+  {IDENTIFIER}            { return IDENTIFIER; }
+  ":"                     { yybegin(FRONT_MATTER_VAL_BLOCK);return COLON; }
+  {NEWLINE}               { return NEWLINE; }
+  "---"                   { yybegin(YYINITIAL); return FRONTMATTER_END; }
+  [^]                     { return TokenType.BAD_CHARACTER; }
+}
+
+<FRONT_MATTER_VAL_BLOCK> {
+  {DATE}                  { return DATE; }
+  {STRING}                { return STRING; }
+  {NUMBER}                { return NUMBER; }
+  {BOOLEAN}               { return BOOLEAN; }
+  {QUOTE_STRING}          { return QUOTE_STRING; }
+  "["                     { return LBRACKET; }
+  "]"                     { return RBRACKET; }
+  ","                     { return COMMA; }
+  " "                     { return TokenType.WHITE_SPACE; }
+  [^]                     { yypushback(yylength()); yybegin(FRONT_MATTER_BLOCK); }
 }
 
 <COMMENT_BLOCK> {
