@@ -183,6 +183,7 @@ project(":plugin") {
         implementation(project(":core"))
         implementation(project(":shirelang"))
         implementation(project(":languages:java"))
+        implementation(project(":toolsets:git"))
     }
 
     // Collects all jars produced by compilation of project modules and merges them into singe one.
