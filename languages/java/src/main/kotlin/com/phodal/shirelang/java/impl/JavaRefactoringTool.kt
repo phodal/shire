@@ -13,7 +13,7 @@ import com.phodal.shirecore.provider.RefactoringTool
 import com.phodal.shirecore.refactoring.RefactorInstElement
 
 class JavaRefactoringTool : RefactoringTool {
-    val project = ProjectManager.getInstance().openProjects.firstOrNull()
+    private val project = ProjectManager.getInstance().openProjects.firstOrNull()
 
     override fun lookupFile(path: String): PsiFile? {
         if (project == null) return null
@@ -145,7 +145,7 @@ class JavaRefactoringTool : RefactoringTool {
         val methodName = input.substringAfter("#")
         val canonicalName = input.substringBefore("#")
         val maybeClassName = canonicalName.substringAfterLast(".")
-        // the clasName should be Uppercase or it will be the package
+        // the clasName should be Uppercase, or it will be the package
         var isClass = false
         var pkgName = canonicalName.substringBeforeLast(".")
         if (maybeClassName[0].isLowerCase()) {

@@ -1,7 +1,12 @@
 <idea-plugin package="com.phodal.shirelang.java">
+    <!--suppress PluginXmlValidity -->
+    <dependencies>
+        <plugin id="com.intellij.modules.java"/>
+        <plugin id="org.jetbrains.plugins.gradle"/>
+    </dependencies>
+
     <extensions defaultExtensionNs="com.phodal">
         <shireRefactoringTool language="JAVA"
                          implementationClass="com.phodal.shirelang.java.impl.JavaRefactoringTool"/>
     </extensions>
-
 </idea-plugin>
