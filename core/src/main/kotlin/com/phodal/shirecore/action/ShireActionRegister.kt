@@ -1,6 +1,8 @@
 package com.phodal.shirecore.action
 
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.project.guessProjectDir
+import com.intellij.openapi.util.IconLoader
 import javax.swing.Icon
 
 enum class ShireActionLocation {
@@ -14,12 +16,23 @@ enum class ShireActionLocation {
 data class ShireAction(
     val name: String,
     val description: String,
-    val icon: Icon,
+    /**
+     * Icon path in a project.
+     */
+    val icon: String?,
     val priority: Int,
     val menuLocation: ShireActionLocation,
     val isAvailable: (project: Project) -> Boolean,
     val action: (project: Project) -> Unit,
 )
 
-interface ShireActionRegister {
+class ShireActionIcons;
+
+abstract class ShireActionRegister {
+    abstract val project: Project
+
+    fun loadIcon(path: String): Icon {
+        val relativePath = project.guessProjectDir()?.path + "/" + path
+        return IconLoader.getIcon(relativePath, ShireActionIcons::class.java)
+    }
 }
