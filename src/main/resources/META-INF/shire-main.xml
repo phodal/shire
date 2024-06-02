@@ -1,3 +1,9 @@
 <idea-plugin allow-bundled-update="true">
     <resource-bundle>messages.ShireMainBundle</resource-bundle>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationConfigurable parentId="tools" instance="com.phodal.shire.settings.ShireLlmSettingsConfigurable"
+                                 id="shireLlmSettingsConfigurable"
+                                 displayName="Shire"/>
+    </extensions>
 </idea-plugin>
