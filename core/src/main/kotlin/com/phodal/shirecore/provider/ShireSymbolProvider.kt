@@ -15,13 +15,14 @@ import com.intellij.openapi.project.Project
  */
 interface ShireSymbolProvider {
     val language: String
+
     /**
      * Lookup canonical name for different language
      */
     fun lookupSymbol(
         project: Project,
         parameters: CompletionParameters,
-        result: CompletionResultSet
+        result: CompletionResultSet,
     ): List<LookupElement>
 
     /**

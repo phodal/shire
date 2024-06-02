@@ -6,7 +6,11 @@
     </dependencies>
 
     <extensions defaultExtensionNs="com.phodal">
-        <shireRefactoringTool language="JAVA"
-                         implementationClass="com.phodal.shirelang.java.impl.JavaRefactoringTool"/>
+        <shireRefactoringTool
+                language="JAVA"
+                implementationClass="com.phodal.shirelang.java.impl.JavaRefactoringTool"/>
+
+        <shireBuildSystemProvider
+                implementation="com.phodal.shirelang.java.impl.JavaBuildSystemProvider"/>
     </extensions>
 </idea-plugin>
