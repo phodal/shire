@@ -6,4 +6,13 @@
                                  id="shireLlmSettingsConfigurable"
                                  displayName="Shire"/>
     </extensions>
+
+    <actions>
+        <group id="ShireIntentionsActionGroup" class="com.phodal.shire.action.intention.ShireIntentionsActionGroup"
+               icon="com.phodal.shirelang.ShireIcons.DEFAULT" searchable="false">
+
+            <add-to-group group-id="ShowIntentionsGroup" relative-to-action="ShowIntentionActions" anchor="after"/>
+            <add-to-group group-id="Floating.CodeToolbar" anchor="first"/>
+        </group>
+    </actions>
 </idea-plugin>
