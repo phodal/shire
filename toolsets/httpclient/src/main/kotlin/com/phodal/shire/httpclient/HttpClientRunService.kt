@@ -19,7 +19,7 @@ import com.intellij.psi.PsiManager
 import com.phodal.shirecore.provider.RunService
 
 class HttpClientRunService : RunService {
-    override fun runConfigurationClass(project: Project): Class<out RunProfile>? {
+    override fun runConfigurationClass(project: Project): Class<out RunProfile> {
         return HttpRequestRunConfiguration::class.java
     }
 
