@@ -4,7 +4,7 @@
         <plugin id="com.jetbrains.restClient"/>
     </dependencies>
 
-        <extensions defaultExtensionNs="com.phodal">
-            <shireRunService implementation="com.phodal.shire.httpclient.HttpClientRunService"/>
-        </extensions>
+    <extensions defaultExtensionNs="com.phodal">
+        <shireRunService implementation="com.phodal.shire.httpclient.HttpClientRunService"/>
+    </extensions>
 </idea-plugin>

@@ -27,14 +27,14 @@ fun prop(name: String): String =
 val ideaPlatformVersion = prop("ideaPlatformVersion")
 val pluginProjects: List<Project> get() = rootProject.allprojects.toList()
 val basePluginArchiveName = "intellij-shire"
-val ideaPlugins =
-    listOf(
-        "org.jetbrains.plugins.terminal",
-        "com.intellij.java",
-        "org.jetbrains.plugins.gradle",
-        "org.jetbrains.kotlin",
-        "JavaScript"
-    )
+val ideaPlugins = listOf(
+    "org.jetbrains.plugins.terminal",
+    "com.intellij.java",
+    "org.jetbrains.plugins.gradle",
+    "org.jetbrains.kotlin",
+    "JavaScript",
+    "com.jetbrains.restClient"
+)
 
 
 // Configure project's dependencies
@@ -140,7 +140,7 @@ project(":toolsets:git") {
 project(":toolsets:httpclient") {
     intellij {
         version.set(prop("ideaVersion"))
-        plugins.set(ideaPlugins + "com.jetbrains.restClient")
+        plugins.set(ideaPlugins)
     }
 
     dependencies {
