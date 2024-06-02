@@ -331,6 +331,13 @@ project(":") {
     dependencies {
         implementation(project(":core"))
         implementation(project(":shirelang"))
+
+        // open ai deps
+        implementation("com.theokanning.openai-gpt3-java:service:0.18.2")
+        implementation("com.squareup.retrofit2:converter-jackson:2.9.0")
+        implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+        implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.2")
+        implementation("com.fasterxml.jackson.core:jackson-databind:2.14.2")
     }
 
     task("resolveDependencies") {
