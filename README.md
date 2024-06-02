@@ -39,4 +39,6 @@ Shire is an AI Agent Language for AI Driven programming.
 - [ ] LLM Integration
 - [ ] Architecture analysis
 
+## LICENSE
 
+MPL License
