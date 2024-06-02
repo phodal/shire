@@ -137,6 +137,17 @@ project(":toolsets:git") {
     }
 }
 
+project(":toolsets:httpclient") {
+    intellij {
+        version.set(prop("ideaVersion"))
+        plugins.set(ideaPlugins + "com.jetbrains.restClient")
+    }
+
+    dependencies {
+        implementation(project(":core"))
+    }
+}
+
 project(":shirelang") {
     apply {
         plugin("org.jetbrains.grammarkit")
@@ -195,6 +206,7 @@ project(":plugin") {
         implementation(project(":shirelang"))
         implementation(project(":languages:java"))
         implementation(project(":toolsets:git"))
+        implementation(project(":toolsets:httpclient"))
     }
 
     // Collects all jars produced by compilation of project modules and merges them into singe one.

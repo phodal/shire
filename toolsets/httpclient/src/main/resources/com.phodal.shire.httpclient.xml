@@ -1,0 +1,10 @@
+<idea-plugin package="com.phodal.shire.httpclient">
+    <!--suppress PluginXmlValidity -->
+    <dependencies>
+        <plugin id="com.jetbrains.restClient"/>
+    </dependencies>
+
+        <extensions defaultExtensionNs="com.phodal">
+            <shireRunService implementation="com.phodal.shire.httpclient.HttpClientRunService"/>
+        </extensions>
+</idea-plugin>

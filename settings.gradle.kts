@@ -19,4 +19,5 @@ include(
     "languages:shell",
 
     "toolsets:git",
+    "toolsets:httpclient",
 )
