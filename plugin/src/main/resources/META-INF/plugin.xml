@@ -18,6 +18,6 @@
         <module name="com.phodal.shirelang.java"/>
         <module name="com.phodal.shirelang.git"/>
 
-        <module name="com.phodal.shirelang.httpclient"/>
+        <module name="com.phodal.shire.httpclient"/>
     </content>
 </idea-plugin>

@@ -198,6 +198,7 @@ project(":plugin") {
 
     intellij {
         pluginName.set(basePluginArchiveName)
+        plugins.set(ideaPlugins)
     }
 
     dependencies {
