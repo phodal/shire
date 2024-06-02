@@ -13,15 +13,14 @@ import com.intellij.ui.dsl.builder.panel
 import com.intellij.util.ui.JBDimension
 import com.intellij.util.xmlb.XmlSerializerUtil
 import javax.swing.JComponent
-import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JTextField
 
-class ShireLlmSettingsConfigurable @JvmOverloads constructor(private val settings: ShireSettingsState = ShireSettingsState.getInstance())
-    : ConfigurableBase<ShireSettingUi, ShireSettingsState>(
-    "com.phodal.shire.settings",
-    "Shire Settings",
-    "com.phodal.shire.settings"
+class ShireLlmSettingsConfigurable @JvmOverloads constructor(private val settings: ShireSettingsState = ShireSettingsState.getInstance()) :
+    ConfigurableBase<ShireSettingUi, ShireSettingsState>(
+        "com.phodal.shire.settings",
+        "Shire Settings",
+        "com.phodal.shire.settings"
     ) {
     override fun getSettings(): ShireSettingsState {
         return ShireSettingsState.getInstance()
@@ -34,9 +33,9 @@ class ShireLlmSettingsConfigurable @JvmOverloads constructor(private val setting
 
 class ShireSettingUi : ConfigurableUi<ShireSettingsState> {
     private var panel: JPanel? = null
-    private var openAiHost: JTextField = JTextField().also {
+    private var apiHost: JTextField = JTextField().also {
     }
-    private var engineServer: JTextField = JTextField().also {
+    private var modelName: JTextField = JTextField().also {
     }
 
     private var engineToken: JTextField = JBPasswordField().also {
@@ -44,13 +43,13 @@ class ShireSettingUi : ConfigurableUi<ShireSettingsState> {
 
     init {
         this.panel = panel {
-            row("OpenAI Host:") {
-                cell(openAiHost)
+            row("API Host:") {
+                cell(apiHost)
                     .applyToComponent { minimumSize = JBDimension(200, 1) }
                     .align(AlignX.FILL)
             }
-            row("Engine Server:") {
-                cell(engineServer)
+            row("Model Name:") {
+                cell(modelName)
                     .applyToComponent { minimumSize = JBDimension(200, 1) }
                     .align(AlignX.FILL)
             }
@@ -63,21 +62,21 @@ class ShireSettingUi : ConfigurableUi<ShireSettingsState> {
     }
 
     override fun reset(settings: ShireSettingsState) {
-        openAiHost.text = settings.openAiHost
-        engineServer.text = settings.engineServer
-        engineToken.text = settings.engineToken
+        apiHost.text = settings.apiHost
+        modelName.text = settings.modelName
+        engineToken.text = settings.apiToken
     }
 
     override fun isModified(settings: ShireSettingsState): Boolean {
-        return openAiHost.text != settings.openAiHost ||
-                engineServer.text != settings.engineServer ||
-                engineToken.text != settings.engineToken
+        return apiHost.text != settings.apiHost ||
+                modelName.text != settings.modelName ||
+                engineToken.text != settings.apiToken
     }
 
     override fun apply(settings: ShireSettingsState) {
-        settings.openAiHost = openAiHost.text ?: ""
-        settings.engineServer = engineServer.text ?: ""
-        settings.engineToken = engineToken.text ?: ""
+        settings.apiHost = apiHost.text ?: ""
+        settings.modelName = modelName.text ?: ""
+        settings.apiToken = engineToken.text ?: ""
     }
 
     override fun getComponent(): JComponent {
@@ -88,9 +87,9 @@ class ShireSettingUi : ConfigurableUi<ShireSettingsState> {
 @Service(Service.Level.APP)
 @State(name = "com.phodal.shire.settings.ShireSettingsState", storages = [Storage("ShireSettings.xml")])
 class ShireSettingsState : PersistentStateComponent<ShireSettingsState> {
-    var openAiHost = ""
-    var engineServer = ""
-    var engineToken = ""
+    var apiHost = ""
+    var modelName = ""
+    var apiToken = ""
 
     @Synchronized
     override fun getState(): ShireSettingsState = this
