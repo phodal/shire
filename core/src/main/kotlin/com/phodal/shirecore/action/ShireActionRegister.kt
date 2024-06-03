@@ -5,12 +5,11 @@ import com.intellij.openapi.project.guessProjectDir
 import com.intellij.openapi.util.IconLoader
 import javax.swing.Icon
 
-enum class ShireActionLocation {
-    MAIN_MENU,
-    CONTEXT_MENU,
-    INTENTION_MENU,
-    TERMINAL_MENU,
-    COMMIT_MENU,
+enum class ShireActionLocation(val location: String) {
+    CONTEXT_MENU("ContextMenu"),
+    INTENTION_MENU("IntentionMenu"),
+    TERMINAL_MENU("TerminalMenu"),
+    COMMIT_MENU("CommitMenu"),
 }
 
 data class ShireAction(
@@ -21,7 +20,7 @@ data class ShireAction(
      */
     val icon: String?,
     val priority: Int,
-    val menuLocation: ShireActionLocation,
+    val actionLocation: ShireActionLocation,
     val isAvailable: (project: Project) -> Boolean,
     val action: (project: Project) -> Unit,
 )
