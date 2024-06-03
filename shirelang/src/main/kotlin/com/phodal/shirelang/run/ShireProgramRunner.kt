@@ -11,8 +11,6 @@ import com.intellij.execution.runners.showRunContent
 import com.intellij.execution.ui.RunContentDescriptor
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.components.service
-import com.intellij.openapi.components.serviceOrNull
 import com.intellij.openapi.fileEditor.FileDocumentManager
 import java.util.concurrent.atomic.AtomicReference
 
@@ -32,7 +30,6 @@ class ShireProgramRunner : GenericProgramRunner<RunnerSettings>(), Disposable {
         val devInState = state as ShireRunConfigurationProfileState
 
         FileDocumentManager.getInstance().saveAllDocuments()
-
         val result = AtomicReference<RunContentDescriptor>()
 
         //避免多次subscribe

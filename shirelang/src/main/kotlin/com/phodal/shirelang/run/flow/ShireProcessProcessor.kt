@@ -4,7 +4,6 @@ import com.intellij.execution.process.ProcessEvent
 import com.intellij.openapi.application.runInEdt
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.components.Service
-import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiElement
@@ -48,7 +47,9 @@ class ShireProcessProcessor(val project: Project) {
      * If the exit code is 0 and there is a flag comment, process it.
      *
      * Flag comment format:
-     * - [flow]:flowable.devin, means next step is flowable.devin
+     * ```shire
+     * [flow]:flowable.devin, means next step is flowable.devin
+     * ```
      *
      * @param output The output of the script
      * @param event The process event containing the exit code

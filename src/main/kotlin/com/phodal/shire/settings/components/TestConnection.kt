@@ -19,7 +19,7 @@ fun Panel.testLLMConnection(project: Project?) {
             // test custom engine
             LlmCoroutineScope.scope(project).launch {
                 try {
-                    val flowString: Flow<String> = OpenAIProvider(project).stream("hi", "", false)
+                    val flowString: Flow<String> = OpenAIProvider().stream("hi", "", false)
                     flowString.collect {
                         result.text += it
                     }

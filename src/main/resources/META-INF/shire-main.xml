@@ -7,6 +7,10 @@
                                  displayName="Shire"/>
     </extensions>
 
+    <extensions defaultExtensionNs="com.phodal">
+        <shireLlmProvider implementation="com.phodal.shire.llm.OpenAIProvider"/>
+    </extensions>
+
     <actions>
         <group id="ShireIntentionsActionGroup" class="com.phodal.shire.action.intention.ShireIntentionsActionGroup"
                icon="com.phodal.shirelang.ShireIcons.DEFAULT" searchable="false">

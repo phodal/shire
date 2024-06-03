@@ -1,7 +1,8 @@
 package com.phodal.shirecore.provider
 
+import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.project.Project
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import com.phodal.shirecore.ShirelangNotifications
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -9,9 +10,12 @@ import kotlinx.coroutines.flow.callbackFlow
 interface LlmProvider {
     val defaultTimeout: Long get() = 600
 
+    fun isApplicable(project: Project): Boolean {
+        return false
+    }
+
     fun prompt(promptText: String): String
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     fun stream(promptText: String, systemPrompt: String, keepHistory: Boolean = true): Flow<String> {
         return callbackFlow {
             val prompt = prompt(promptText)
@@ -28,13 +32,17 @@ interface LlmProvider {
     fun appendLocalMessage(msg: String, role: ChatRole) {}
 
     companion object {
-        // todo: implement
-        fun create(project: Project): LlmProvider {
-            return object : LlmProvider {
-                override fun prompt(promptText: String): String {
-                    return ""
-                }
+        private val EP_NAME: ExtensionPointName<LlmProvider> =
+            ExtensionPointName.create("com.phodal.shireLlmProvider")
+
+        fun obtain(project: Project): LlmProvider? {
+            val providers = EP_NAME.extensions.filter { it.isApplicable(project) }
+            if (providers.isEmpty()) {
+                ShirelangNotifications.notify(project, "No LLM provider found")
+                return null
             }
+
+            return providers.first()
         }
 
         enum class ChatRole {

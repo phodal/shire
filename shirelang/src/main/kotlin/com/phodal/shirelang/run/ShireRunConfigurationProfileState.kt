@@ -36,7 +36,6 @@ open class ShireRunConfigurationProfileState(
     private val myProject: Project,
     private val configuration: ShireConfiguration,
 ) : RunProfileState {
-    private val llm: LlmProvider = LlmProvider.create(myProject)
 
     override fun execute(executor: Executor?, runner: ProgramRunner<*>): ExecutionResult {
         val processHandler = ShireProcessHandler(configuration.name)
@@ -168,10 +167,10 @@ open class ShireRunConfigurationProfileState(
             ShireCoroutineScope.scope(myProject).launch {
                 val llmResult = StringBuilder()
                 runBlocking {
-                    llm.stream(output, "", false).collect {
+                    LlmProvider.obtain(myProject)?.stream(output, "", false)?.collect {
                         llmResult.append(it)
                         console.print(it, ConsoleViewContentType.NORMAL_OUTPUT)
-                    }
+                    } ?: console.print("No LLM provider found", ConsoleViewContentType.ERROR_OUTPUT)
                 }
 
                 console.print("\nDone!", ConsoleViewContentType.SYSTEM_OUTPUT)

@@ -1,6 +1,5 @@
 package com.phodal.shire.llm
 
-import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
@@ -14,7 +13,6 @@ import com.theokanning.openai.service.OpenAiService
 import com.theokanning.openai.service.OpenAiService.defaultClient
 import com.theokanning.openai.service.OpenAiService.defaultObjectMapper
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.withContext
@@ -23,18 +21,20 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.jackson.JacksonConverterFactory
 import java.time.Duration
 
-
-@Service(Service.Level.PROJECT)
-class OpenAIProvider(val project: Project) : LlmProvider {
+class OpenAIProvider : LlmProvider {
     private val logger: Logger = logger<OpenAIProvider>()
     private val timeout = Duration.ofSeconds(defaultTimeout)
-    private val openAiVersion: String
+    private val modelName: String
         get() = ShireSettingsState.getInstance().modelName
     private val openAiKey: String
         get() = ShireSettingsState.getInstance().apiToken
     private val maxTokenLength: Int get() = 16 * 1024
     private val messages: MutableList<ChatMessage> = ArrayList()
     private var historyMessageLength: Int = 0
+
+    override fun isApplicable(project: Project): Boolean {
+        return openAiKey.isNotEmpty() && modelName.isNotEmpty()
+    }
 
     private val service: OpenAiService
         get() {
@@ -136,7 +136,7 @@ class OpenAIProvider(val project: Project) : LlmProvider {
         logger.info("messages length: ${messages.size}")
 
         val chatCompletionRequest = ChatCompletionRequest.builder()
-            .model(openAiVersion)
+            .model(modelName)
             .temperature(0.0)
             .messages(messages)
             .build()
