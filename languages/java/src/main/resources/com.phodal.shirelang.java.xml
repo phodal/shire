@@ -12,5 +12,7 @@
 
         <shireBuildSystemProvider
                 implementation="com.phodal.shirelang.java.impl.JavaBuildSystemProvider"/>
+
+        <shireSymbolProvider implementation="com.phodal.shirelang.java.impl.JavaSymbolProvider"/>
     </extensions>
 </idea-plugin>
