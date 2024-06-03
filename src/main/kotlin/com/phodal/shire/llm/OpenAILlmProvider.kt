@@ -32,10 +32,6 @@ class OpenAIProvider : LlmProvider {
     private val messages: MutableList<ChatMessage> = ArrayList()
     private var historyMessageLength: Int = 0
 
-    override fun isApplicable(project: Project): Boolean {
-        return openAiKey.isNotEmpty() && modelName.isNotEmpty()
-    }
-
     private val service: OpenAiService
         get() {
             if (openAiKey.isEmpty()) {
@@ -65,12 +61,16 @@ class OpenAIProvider : LlmProvider {
             }
         }
 
+    override fun isApplicable(project: Project): Boolean {
+        return openAiKey.isNotEmpty() && modelName.isNotEmpty()
+    }
+
     override fun clearMessage() {
         messages.clear()
         historyMessageLength = 0
     }
 
-    override fun appendLocalMessage(msg: String, role: LlmProvider.Companion.ChatRole) {
+    fun appendLocalMessage(msg: String, role: LlmProvider.Companion.ChatRole) {
         val message = ChatMessage(role.roleName(), msg)
         messages.add(message)
     }

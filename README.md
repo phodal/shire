@@ -38,6 +38,8 @@ Shire is an AI Agent Language for AI Driven programming.
   - [ ] Custom RAG
 - [ ] LLM Integration
 - [ ] Architecture analysis
+- [ ] ComfyUI like LLM Workflow
+   - [COMFYUI LLM PARTY](https://github.com/heshengtao/comfyui_LLM_party) 
 
 ## LICENSE
 
