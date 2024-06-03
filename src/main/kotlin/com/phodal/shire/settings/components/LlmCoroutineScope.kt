@@ -15,6 +15,6 @@ class LlmCoroutineScope(val coroutineScope: CoroutineScope = CoroutineScope(Supe
             Logger.getInstance(LlmCoroutineScope::class.java).error(throwable)
         }
 
-        fun scope(project: Project): CoroutineScope = project.service<LlmCoroutineScope>().coroutineScope
+        fun scope(project: Project): CoroutineScope = project.getService(LlmCoroutineScope::class.java).coroutineScope
     }
 }
