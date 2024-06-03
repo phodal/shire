@@ -70,13 +70,8 @@ class OpenAIProvider : LlmProvider {
         historyMessageLength = 0
     }
 
-    fun appendLocalMessage(msg: String, role: LlmProvider.Companion.ChatRole) {
-        val message = ChatMessage(role.roleName(), msg)
-        messages.add(message)
-    }
-
     override fun prompt(promptText: String): String {
-        val completionRequest = prepareRequest(promptText, "", true)
+        val completionRequest = prepareRequest(promptText, "")
 
         val completion = service.createChatCompletion(completionRequest)
         val output = completion
@@ -91,7 +86,7 @@ class OpenAIProvider : LlmProvider {
         }
 
         var output = ""
-        val completionRequest = prepareRequest(promptText, systemPrompt, keepHistory)
+        val completionRequest = prepareRequest(promptText, systemPrompt)
 
         return callbackFlow {
             withContext(Dispatchers.IO) {
@@ -119,7 +114,7 @@ class OpenAIProvider : LlmProvider {
         }
     }
 
-    private fun prepareRequest(promptText: String, systemPrompt: String, keepHistory: Boolean): ChatCompletionRequest? {
+    private fun prepareRequest(promptText: String, systemPrompt: String): ChatCompletionRequest? {
         if (systemPrompt.isNotEmpty()) {
             val systemMessage = ChatMessage(ChatMessageRole.SYSTEM.value(), systemPrompt)
             messages.add(systemMessage)
