@@ -40,4 +40,8 @@
                         interface="com.phodal.shirecore.provider.LlmProvider"
                         dynamic="true" />
     </extensionPoints>
+
+    <extensions defaultExtensionNs="com.phodal">
+            <shireLlmProvider implementation="com.phodal.shirecore.llm.MockProvider"/>
+    </extensions>
 </idea-plugin>
