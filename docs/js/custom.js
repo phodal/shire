@@ -253,14 +253,12 @@ function shire_lang(hljs) {
   }
 }
 
-document.addEventListener("DOMContentLoaded", (event) => {
-  document.querySelectorAll("pre code").forEach((el) => {
-    let langs = hljs.listLanguages()
-    if (!langs.includes("shire")) {
-      hljs.registerLanguage("shire", function() {
-        return shire_lang(hljs)
-      })
-      hljs.highlightAll()
-    }
-  })
+document.querySelectorAll("pre code").forEach((el) => {
+  let langs = hljs.listLanguages()
+  if (!langs.includes("shire")) {
+    hljs.registerLanguage("shire", function () {
+      return shire_lang(hljs)
+    })
+    hljs.highlightAll()
+  }
 })
