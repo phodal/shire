@@ -1,10 +1,12 @@
 package com.phodal.shire.settings
 
 import com.intellij.openapi.options.ConfigurableUi
+import com.intellij.openapi.project.ProjectManager
 import com.intellij.ui.components.JBPasswordField
 import com.intellij.ui.dsl.builder.AlignX
 import com.intellij.ui.dsl.builder.panel
 import com.intellij.util.ui.JBDimension
+import com.phodal.shire.settings.components.testLLMConnection
 import javax.swing.JComponent
 import javax.swing.JPanel
 import javax.swing.JTextField
@@ -36,6 +38,8 @@ class ShireSettingUi : ConfigurableUi<ShireSettingsState> {
                     .applyToComponent { minimumSize = JBDimension(200, 1) }
                     .align(AlignX.FILL)
             }
+
+            testLLMConnection(ProjectManager.getInstance().openProjects.firstOrNull())
         }
     }
 

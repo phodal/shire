@@ -1,5 +1,6 @@
 package com.phodal.shirecore.agent
 
+import com.intellij.openapi.project.Project
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 // DON'T CHANGE THIS IMPORT
@@ -56,6 +57,12 @@ data class CustomAgent(
     val enabled: Boolean = true,
 ) {
     var state: CustomAgentState = CustomAgentState.START
+
+    companion object {
+        fun loadFromProject(myProject: Project): List<CustomAgent> {
+            return emptyList()
+        }
+    }
 }
 
 @Serializable
