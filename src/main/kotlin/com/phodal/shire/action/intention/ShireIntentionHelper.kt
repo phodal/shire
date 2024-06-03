@@ -9,14 +9,14 @@ import com.intellij.openapi.util.Iconable
 import com.intellij.psi.PsiFile
 import javax.swing.Icon
 import com.phodal.shire.ShireMainBundle
-import com.phodal.shirelang.ShireIcons
+import com.phodal.shire.ShireIdeaIcons
 import com.phodal.shire.action.intention.ui.CustomPopupStep
 
 class ShireIntentionHelper : IntentionAction, Iconable {
     override fun startInWriteAction(): Boolean = false
     override fun getText(): String = ShireMainBundle.message("intentions.assistant.name")
     override fun getFamilyName(): String = ShireMainBundle.message("intentions.assistant.name")
-    override fun getIcon(flags: Int): Icon = ShireIcons.DEFAULT
+    override fun getIcon(flags: Int): Icon = ShireIdeaIcons.DEFAULT
     override fun isAvailable(project: Project, editor: Editor?, file: PsiFile?): Boolean {
         if (file == null) return false
 

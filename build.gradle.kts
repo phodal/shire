@@ -153,6 +153,7 @@ project(":shirelang") {
     }
 
     dependencies {
+        implementation(project(":"))
         implementation(project(":core"))
     }
 
@@ -314,7 +315,7 @@ project(":plugin") {
 
         withType<PublishPluginTask> {
             dependsOn("patchChangelog")
-            token.set("perm:cGhvZGFs.OTItNzg5Mw==.I61T9lkV5v1HGvLBmzCbRWBtgDmuR8")
+            token.set(environment("IDEA_TOKEN"))
             channels.set(properties("pluginVersion").map {
                 listOf(it.split('-').getOrElse(1) { "default" }.split('.').first())
             })
@@ -322,10 +323,16 @@ project(":plugin") {
     }
 }
 
+/// for customize and business logic
 project(":") {
+    intellij {
+        version.set(prop("ideaVersion"))
+        plugins.set(ideaPlugins)
+    }
+
+
     dependencies {
         implementation(project(":core"))
-        implementation(project(":shirelang"))
 
         // open ai deps
         implementation("com.theokanning.openai-gpt3-java:service:0.18.2")

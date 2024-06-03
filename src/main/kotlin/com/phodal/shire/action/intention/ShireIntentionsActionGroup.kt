@@ -10,9 +10,8 @@ import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
-import com.phodal.shirelang.ShireBundle
 
-class ShireIntentionsActionGroup : ActionGroup(ShireBundle.message("shire.intention.name"), true), DumbAware {
+class ShireIntentionsActionGroup : ActionGroup("Shire Intention", true), DumbAware {
     override fun getChildren(e: AnActionEvent?): Array<AnAction> {
         val project: Project = e?.project ?: return emptyArray()
         val editor: Editor = e.getData(CommonDataKeys.EDITOR) ?: return emptyArray()
