@@ -2,12 +2,13 @@
   font-size: 14px !important;
 }
 
+pre {
+  background: #f5f6fa; /* 代码块背景色 */
+}
 
 .hljs {
   color: #000000; /* 普通文本 */
   line-height: 1.5;
-  background: #f5f6fa; /* 代码块背景色 */
-  padding: 1em; /* 代码块内边距 */
 }
 
 span.hljs-meta, span.hljs-variable {
