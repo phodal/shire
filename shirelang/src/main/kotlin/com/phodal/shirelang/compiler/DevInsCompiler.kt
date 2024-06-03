@@ -7,6 +7,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.elementType
+import com.phodal.shirecore.agent.CustomAgent
 import com.phodal.shirelang.compile.VariableTemplateCompiler
 import com.phodal.shirelang.compiler.exec.*
 import com.phodal.shirelang.completion.dataprovider.BuiltinCommand
@@ -131,15 +132,14 @@ class ShireCompiler(
             }
 
             ShireTypes.AGENT_START -> {
-//                val agentId = id?.text
-//                val configs = CustomAgentConfig.loadFromProject(myProject).filter {
-//                    it.name == agentId
-//                }
+                val agentId = id?.text
+                val configs = CustomAgent.loadFromProject(myProject).filter {
+                    it.name == agentId
+                }
 
-//                if (configs.isNotEmpty()) {
-//                    result.executeAgent = configs.first()
-//                }
-                throw NotImplementedError("Not implemented yet")
+                if (configs.isNotEmpty()) {
+                    result.executeAgent = configs.first()
+                }
             }
 
             ShireTypes.VARIABLE_START -> {
