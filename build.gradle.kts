@@ -56,7 +56,7 @@ allprojects {
 
     dependencies {
         compileOnly(kotlin("stdlib-jdk8"))
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
     }
 
     intellij {
