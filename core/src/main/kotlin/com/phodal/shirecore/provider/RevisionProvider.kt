@@ -17,6 +17,8 @@ interface RevisionProvider {
 
     fun fetchCompletions(project: Project, result: CompletionResultSet)
 
+    fun commitCode(project: Project, commitMessage: String): String
+
     companion object {
         private val EP_NAME: ExtensionPointName<RevisionProvider> =
             ExtensionPointName("com.phodal.shireRevisionProvider")
