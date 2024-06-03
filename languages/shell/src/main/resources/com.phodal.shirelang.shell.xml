@@ -1,6 +1,0 @@
-<idea-plugin package="com.phodal.shirelang.shell">
-    <!--suppress PluginXmlValidity -->
-    <dependencies>
-        <plugin id="com.jetbrains.sh"/>
-    </dependencies>
-</idea-plugin>

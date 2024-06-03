@@ -120,12 +120,6 @@ project(":languages:java") {
     }
 }
 
-project(":languages:shell") {
-    dependencies {
-        implementation(project(":core"))
-    }
-}
-
 project(":toolsets:git") {
     intellij {
         version.set(prop("ideaVersion"))
