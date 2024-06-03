@@ -1,6 +1,6 @@
 package com.phodal.shirelang.run.flow
 
-import com.phodal.shirecore.llm.Message
+import com.phodal.shire.llm.model.Message
 import com.phodal.shirelang.compiler.ShireCompiledResult
 
 data class ShireProcessContext(

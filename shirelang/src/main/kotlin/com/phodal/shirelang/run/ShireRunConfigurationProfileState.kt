@@ -20,7 +20,7 @@ import com.intellij.openapi.util.Key
 import com.intellij.ui.components.panels.NonOpaquePanel
 import com.phodal.shirecore.agent.CustomAgent
 import com.phodal.shirecore.agent.CustomAgentExecutor
-import com.phodal.shirecore.provider.LlmProvider
+import com.phodal.shire.llm.LlmProvider
 import com.phodal.shirelang.compiler.ShireCompiler
 import com.phodal.shirelang.compiler.error.SHIRE_ERROR
 import com.phodal.shirelang.psi.ShireFile

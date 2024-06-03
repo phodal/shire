@@ -1,6 +1,12 @@
 <idea-plugin allow-bundled-update="true">
     <resource-bundle>messages.ShireMainBundle</resource-bundle>
 
+    <extensionPoints>
+        <extensionPoint qualifiedName="com.phodal.shireLlmProvider"
+                        interface="com.phodal.shire.llm.LlmProvider"
+                        dynamic="true"/>
+    </extensionPoints>
+
     <extensions defaultExtensionNs="com.intellij">
         <applicationConfigurable parentId="tools" instance="com.phodal.shire.settings.ShireLlmSettingsConfigurable"
                                  id="shireLlmSettingsConfigurable"
@@ -16,7 +22,7 @@
                icon="com.phodal.shire.ShireIdeaIcons.DEFAULT" searchable="false">
 
             <add-to-group group-id="ShowIntentionsGroup" relative-to-action="ShowIntentionActions" anchor="after"/>
-<!--            <add-to-group group-id="Floating.CodeToolbar" anchor="first"/>-->
+            <!--            <add-to-group group-id="Floating.CodeToolbar" anchor="first"/>-->
         </group>
     </actions>
 </idea-plugin>

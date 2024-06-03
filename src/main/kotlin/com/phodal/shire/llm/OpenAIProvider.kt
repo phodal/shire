@@ -4,7 +4,6 @@ import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.phodal.shire.settings.ShireSettingsState
-import com.phodal.shirecore.provider.LlmProvider
 import com.theokanning.openai.client.OpenAiApi
 import com.theokanning.openai.completion.chat.ChatCompletionRequest
 import com.theokanning.openai.completion.chat.ChatMessage
