@@ -106,6 +106,7 @@ allprojects {
 project(":core") {
     dependencies {
         implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+//        implementation("org.jgrapht:jgrapht-core:1.5.2")
     }
 }
 

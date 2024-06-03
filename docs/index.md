@@ -21,3 +21,33 @@ permalink: /
     <img src="https://img.shields.io/jetbrains/plugin/d/24549.svg" alt="Downloads" />
   </a>
 </p>
+
+
+## Installation
+
+- Using the IDE built-in plugin system:
+
+  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "shire"</kbd> >
+  <kbd>Install</kbd>
+
+- Manually:
+
+  Download the [latest release](https://github.com/phodal/shire/releases/latest) and install it manually using
+  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
+
+## Usage
+
+Example:
+
+```shire
+---
+name: Summary
+description: Generate Summary
+interaction: AppendCursor
+actionLocation: ContextMenu
+---
+
+Summary webpage:
+
+/browse:https://www.phodal.com
+```

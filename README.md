@@ -56,6 +56,7 @@ Summary webpage:
 - [ ] LLM Integration
 - [ ] Architecture analysis
 - [ ] ComfyUI like LLM Workflow
+   - [ ] DAG - Directed Acyclic Graph 
    - [COMFYUI LLM PARTY](https://github.com/heshengtao/comfyui_LLM_party) 
 
 ## LICENSE
