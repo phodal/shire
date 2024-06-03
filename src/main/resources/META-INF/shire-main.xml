@@ -8,8 +8,7 @@
     </extensions>
 
     <extensions defaultExtensionNs="com.phodal">
-<!--        <shireLlmProvider implementation="com.phodal.shire.llm.OpenAIProvider"/>-->
-<!--        <shireLlmProvider implementation="com.phodal.shire.llm.MockProvider"/>-->
+        <shireLlmProvider implementation="com.phodal.shire.llm.OpenAIProvider"/>
     </extensions>
 
     <actions>

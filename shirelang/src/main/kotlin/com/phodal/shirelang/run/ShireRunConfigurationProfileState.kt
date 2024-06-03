@@ -20,7 +20,7 @@ import com.intellij.openapi.util.Key
 import com.intellij.ui.components.panels.NonOpaquePanel
 import com.phodal.shirecore.agent.CustomAgent
 import com.phodal.shirecore.agent.CustomAgentExecutor
-import com.phodal.shirecore.llm.LlmFactory
+import com.phodal.shirecore.provider.LlmProvider
 import com.phodal.shirelang.compiler.ShireCompiler
 import com.phodal.shirelang.compiler.error.SHIRE_ERROR
 import com.phodal.shirelang.psi.ShireFile
@@ -167,7 +167,7 @@ open class ShireRunConfigurationProfileState(
             ShireCoroutineScope.scope(myProject).launch {
                 val llmResult = StringBuilder()
                 runBlocking {
-                    LlmFactory.obtain(myProject)?.stream(output, "", false)?.collect {
+                    LlmProvider.provider(myProject)?.stream(output, "", false)?.collect {
                         llmResult.append(it)
                         console.print(it, ConsoleViewContentType.NORMAL_OUTPUT)
                     } ?: console.print("No LLM provider found", ConsoleViewContentType.ERROR_OUTPUT)

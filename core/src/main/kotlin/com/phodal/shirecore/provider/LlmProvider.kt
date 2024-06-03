@@ -2,6 +2,7 @@ package com.phodal.shirecore.provider
 
 import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.project.Project
+import com.phodal.shirecore.ShirelangNotifications
 import kotlinx.coroutines.flow.Flow
 
 interface LlmProvider {
@@ -16,8 +17,18 @@ interface LlmProvider {
     fun clearMessage()
 
     companion object {
-        val EP_NAME: ExtensionPointName<LlmProvider> =
+        private val EP_NAME: ExtensionPointName<LlmProvider> =
             ExtensionPointName.create("com.phodal.shireLlmProvider")
+
+        fun provider(project: Project): LlmProvider? {
+            val providers = EP_NAME.extensions.filter { it.isApplicable(project) }
+            return if (providers.isEmpty()) {
+                ShirelangNotifications.notify(project, "No LLM provider found")
+                null
+            } else {
+                providers.first()
+            }
+        }
 
         enum class ChatRole {
             System,
