@@ -34,7 +34,9 @@ we keep "/" as `File.separator` for macOS, Windows and Unix.
 
 Read file content:
 
-    Explain code /file:src/main/java/com/example/Controller.java
+```shire
+Explain code /file:src/main/java/com/example/Controller.java
+```
 
 will call LLM to handle it.
 
@@ -63,7 +65,9 @@ will call LLM to handle it.
 
 Run file:
 
-    /run:src/main/java/com/example/Controller.java
+```shire
+/run:src/main/java/com/example/Controller.java
+```
 
 PS: current only support for TestFile, since UnitTest is the best way to run code.
 
@@ -71,7 +75,9 @@ PS: current only support for TestFile, since UnitTest is the best way to run cod
 
 Get child elements by symbol, like get Class by package name.
 
-    /symbol:cc.unitmesh.untitled.demo
+```shire
+/symbol:cc.unitmesh.untitled.demo
+```
 
 The output will be:
 
@@ -84,7 +90,9 @@ The output will be:
 
 Get method will return code:
 
-    /symbol:cc.unitmesh.untitled.demo.MathHelper.calculateInsurance
+```shire
+/symbol:cc.unitmesh.untitled.demo.MathHelper.calculateInsurance
+```
 
 The output will be:
 
@@ -102,7 +110,9 @@ The output will be:
 
 Browse web page:
 
-    /browse:https://ide.unitmesh.cc
+```shire
+/browse:https://ide.unitmesh.cc
+```
 
 It will be text inside the body from web page.
 
@@ -110,6 +120,8 @@ It will be text inside the body from web page.
 
 Refactor code:
 
-    /refactor:rename /symbol:cc.unitmesh.untitled.demo.MathHelper.calculateInsurance to calculateInsuranceTax
+```shire
+/refactor:rename /symbol:cc.unitmesh.untitled.demo.MathHelper.calculateInsurance to calculateInsuranceTax
+```
 
 It will be handled in local.
