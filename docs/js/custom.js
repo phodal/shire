@@ -258,7 +258,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
     let langs = hljs.listLanguages()
     if (!langs.includes("shire")) {
       hljs.registerLanguage("shire", function() {
-        console.log("registering shire")
         return shire_lang(hljs)
       })
       hljs.highlightAll()
