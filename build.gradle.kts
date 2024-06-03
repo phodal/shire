@@ -330,7 +330,6 @@ project(":") {
         plugins.set(ideaPlugins)
     }
 
-
     dependencies {
         implementation(project(":core"))
 

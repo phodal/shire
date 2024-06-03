@@ -5,5 +5,5 @@ import javax.swing.Icon
 
 object ShireIdeaIcons {
     @JvmField
-    val DEFAULT: Icon = IconLoader.getIcon("/icons/idea.svg", ShireIdeaIcons::class.java)
+    val DEFAULT: Icon = IconLoader.getIcon("/icons/intention.svg", ShireIdeaIcons::class.java)
 }
