@@ -9,7 +9,7 @@ class MockProvider : LlmProvider {
         return false
     }
 
-    override fun prompt(promptText: String): String {
+    override fun text(promptText: String): String {
         return "mock"
     }
 

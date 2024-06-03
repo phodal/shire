@@ -69,7 +69,7 @@ class OpenAIProvider : LlmProvider {
         historyMessageLength = 0
     }
 
-    override fun prompt(promptText: String): String {
+    override fun text(promptText: String): String {
         val completionRequest = prepareRequest(promptText, "")
 
         val completion = service.createChatCompletion(completionRequest)
