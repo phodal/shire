@@ -9,9 +9,10 @@ nav_order: 2
 
 1. first create new file, like `sample.shire`, with content:
 
-```devin
+```shire
 Explain code /file:src/main/java/com/example/Controller.java
 ```
+
 2. Run file with `Shire` plugin, and you will see AI response result.
 
 ## Basic Commands
@@ -57,7 +58,9 @@ write content to file:
 
 Read git change by git revision:
 
-    Explain code /rev:HEAD~1
+```shire
+Explain code /rev:HEAD~1
+```
 
 will call LLM to handle it.
 

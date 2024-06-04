@@ -1,6 +1,7 @@
 package com.phodal.shirecore.agent
 
 import com.intellij.openapi.project.Project
+import com.phodal.shirecore.action.ShireActionLocation
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 // DON'T CHANGE THIS IMPORT
@@ -55,6 +56,7 @@ data class CustomAgent(
     val auth: CustomAgentAuth? = null,
     val defaultTimeout: Long = 10,
     val enabled: Boolean = true,
+    val actionLocation: ShireActionLocation,
 ) {
     var state: CustomAgentState = CustomAgentState.START
 
