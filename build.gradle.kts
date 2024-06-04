@@ -339,7 +339,7 @@ project(":") {
         implementation("com.squareup.retrofit2:converter-jackson:2.9.0")
         implementation("com.squareup.retrofit2:converter-gson:2.11.0")
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.2")
-        implementation("com.fasterxml.jackson.core:jackson-databind:2.14.2")
+        implementation("com.fasterxml.jackson.core:jackson-databind:2.17.1")
     }
 
     task("resolveDependencies") {
