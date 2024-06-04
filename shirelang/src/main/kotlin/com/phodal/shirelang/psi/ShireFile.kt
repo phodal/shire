@@ -10,8 +10,8 @@ import com.phodal.shirelang.ShireFileType
 import com.phodal.shirelang.ShireLanguage
 import java.util.*
 
-class ShireFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, ShireLanguage) {
-    override fun getFileType(): FileType = ShireFileType
+class ShireFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, ShireLanguage.INSTANCE) {
+    override fun getFileType(): FileType = ShireFileType.INSTANCE
 
     override fun getOriginalFile(): ShireFile = super.getOriginalFile() as ShireFile
 
@@ -25,9 +25,9 @@ class ShireFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, Shir
          */
         fun fromString(project: Project, text: String): ShireFile {
             val filename =
-                ShireLanguage.displayName + "-${UUID.randomUUID()}." + ShireFileType.defaultExtension
+                ShireLanguage.INSTANCE.displayName + "-${UUID.randomUUID()}." + ShireFileType.INSTANCE.defaultExtension
             val shireFile = runReadAction {
-                PsiFileFactory.getInstance(project).createFileFromText(filename, ShireLanguage, text) as ShireFile
+                PsiFileFactory.getInstance(project).createFileFromText(filename, ShireLanguage.INSTANCE, text) as ShireFile
             }
 
             return shireFile

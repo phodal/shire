@@ -9,7 +9,7 @@ import com.phodal.shirelang.ShireLanguage
 class ShireFileStub(file: ShireFile?, private val flags: Int) : PsiFileStubImpl<ShireFile>(file) {
     override fun getType() = Type
 
-    object Type : IStubFileElementType<ShireFileStub>(ShireLanguage) {
+    object Type : IStubFileElementType<ShireFileStub>(ShireLanguage.INSTANCE) {
         override fun getStubVersion(): Int = 1
 
         override fun getExternalId(): String = "devin.file"

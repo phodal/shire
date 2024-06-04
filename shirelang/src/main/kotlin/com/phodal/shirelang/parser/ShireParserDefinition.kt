@@ -52,6 +52,6 @@ internal class ShireParserDefinition : ParserDefinition {
     }
 
     companion object {
-        val FILE: IFileElementType = IFileElementType(ShireLanguage)
+        val FILE: IFileElementType = IFileElementType(ShireLanguage.INSTANCE)
     }
 }

@@ -4,7 +4,12 @@ import com.intellij.openapi.fileTypes.LanguageFileType
 import com.intellij.openapi.vfs.VirtualFile
 import javax.swing.Icon
 
-object ShireFileType : LanguageFileType(ShireLanguage) {
+class ShireFileType private constructor() : LanguageFileType(ShireLanguage.INSTANCE) {
+    companion object {
+        @JvmStatic
+        val INSTANCE = ShireFileType()
+    }
+
     override fun getName(): String = "ShireFile"
 
     override fun getIcon(): Icon = ShireIcons.DEFAULT

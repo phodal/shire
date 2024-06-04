@@ -11,8 +11,8 @@ import com.phodal.shirelang.ShireLanguage
 
 class ShireConfigurationType : SimpleConfigurationType(
     "ShiresConfigurationType",
-    ShireLanguage.id,
-    ShireBundle.message("shire.line.marker.run.0", ShireLanguage.id),
+    ShireLanguage.INSTANCE.id,
+    ShireBundle.message("shire.line.marker.run.0", ShireLanguage.INSTANCE.id),
     NotNullLazyValue.lazy { ShireIcons.DEFAULT }
 ) {
     override fun createTemplateConfiguration(project: Project): RunConfiguration =

@@ -2,7 +2,12 @@ package com.phodal.shirelang
 
 import com.intellij.lang.Language
 
-object ShireLanguage : Language("Shire", "text/shire", "text/x-shire", "application/x-shire") {
+class ShireLanguage : Language("Shire", "text/shire", "text/x-shire", "application/x-shire") {
+    companion object {
+        @JvmStatic
+        val INSTANCE = ShireLanguage()
+    }
+
     override fun isCaseSensitive() = true
     override fun getDisplayName() = "Shire"
 }
