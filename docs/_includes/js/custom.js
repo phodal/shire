@@ -1,5 +1,50 @@
 function shire_lang(hljs) {
   let regex = hljs.regex
+  const DATE_RE = '[0-9]{4}(-[0-9][0-9]){0,2}';
+  const TIME_RE = '([Tt \\t][0-9][0-9]?(:[0-9][0-9]){2})?';
+  const FRACTION_RE = '(\\.[0-9]*)?';
+  const ZONE_RE = '([ \\t])*(Z|[-+][0-9][0-9]?(:[0-9][0-9])?)?';
+  const TIMESTAMP = {
+    className: 'number',
+    begin: '\\b' + DATE_RE + TIME_RE + FRACTION_RE + ZONE_RE + '\\b'
+  };
+
+  let FRONTMATTER = {
+    className: 'meta',
+    begin: '^---$',
+    end: '^---$',
+    contains: [
+      TIMESTAMP,
+      {
+        className: 'string',
+        begin: '"', end: '"'
+      },
+      {
+        className: 'string',
+        begin: "'", end: "'"
+      },
+      {
+        className: 'number',
+        begin: '\\d+(\\.\\d+)?'
+      },
+      {
+        className: 'attr',
+        variants: [
+          // added brackets support
+          {
+            begin: /\w[\w :()\./-]*:(?=[ \t]|$)/
+          },
+          { // double quoted keys - with brackets
+            begin: /"\w[\w :()\./-]*":(?=[ \t]|$)/
+          },
+          { // single quoted keys - with brackets
+            begin: /'\w[\w :()\./-]*':(?=[ \t]|$)/
+          },
+        ]
+      }
+    ]
+  }
+
   let INLINE_HTML = {
     begin: /<\/?[A-Za-z_]/,
     end: ">",
@@ -238,6 +283,7 @@ function shire_lang(hljs) {
       keyword: KEYWORDS,
     },
     contains: [
+      FRONTMATTER,
       HEADER,
       INLINE_HTML,
       LIST,
