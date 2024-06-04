@@ -319,6 +319,11 @@ function shire_lang(hljs) {
         begin: /[a-zA-Z0-9_\-\/\.]+/, // 匹配文件路径
         relevance: 0,
       },
+      // HEAD~1
+      {
+        className: "git-rev",
+        begin: /HEAD~[0-9]+/,
+      },
       {
         className: "string",
         begin: /"/, end: /"/, // 匹配字符串
