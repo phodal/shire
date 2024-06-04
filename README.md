@@ -15,7 +15,7 @@
 </p>
 
 <!-- Plugin description -->
-Shire provides a simple AI Agent Language which you can use it to communication LLM to controller IDE to auto programming.
+Shire offers a straightforward AI Agent Language that enables communication between an LLM and control IDE for automated programming.
 <br/><br/>
 
 For example:

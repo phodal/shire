@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Home
-description: Shire is a IDE-based AI agent language that helps developers to write code more efficiently and accurately. It provides a variety of features such as code completion, code generation, and bug detection. Shire supports multiple programming languages and can be easily integrated into existing IDEs. 
+description: Shire offers a straightforward AI Agent Language that enables communication between an LLM and control IDE for automated programming.
 nav_order: 1
 permalink: /
 ---
