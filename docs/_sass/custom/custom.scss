@@ -1,7 +1,3 @@
-.site-title {
-  font-size: 14px !important;
-}
-
 pre {
   background: #f5f6fa; /* 代码块背景色 */
 }
@@ -23,11 +19,18 @@ span.hljs-title.class_ {
 span.hljs-title {
   color: #ffc66d; /* 函数名 */
 }
+span.hljs-symbol,
 span.hljs-string {
   color: #6a8759; /* 字符串 */
 }
 span.hljs-number {
   color: #6897bb; /* 数字 */
+}
+span.hljs-url {
+  color: #7253ed; /* URL */
+}
+span.hljs-command {
+  color: #c00; /* URL */
 }
 span.hljs-property, span.hljs-attr, span.hljs-params .hljs-title.class_ {
   color: #a9b7c6; /* 属性、属性名、参数名 */

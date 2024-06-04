@@ -1,76 +1,76 @@
 function shire_lang(hljs) {
   let regex = hljs.regex
   const TEMPLATE_VARIABLES = {
-    className: 'template-variable',
+    className: "template-variable",
     variants: [
       { // jinja templates Ansible
         begin: /\{\{/,
-        end: /\}\}/
+        end: /\}\}/,
       },
       { // Ruby i18n
         begin: /%\{/,
-        end: /\}/
-      }
-    ]
-  };
+        end: /\}/,
+      },
+    ],
+  }
   const STRING = {
-    className: 'string',
+    className: "string",
     relevance: 0,
     variants: [
       {
         begin: /'/,
-        end: /'/
+        end: /'/,
       },
       {
         begin: /"/,
-        end: /"/
+        end: /"/,
       },
       // { begin: /\S+/ }
     ],
     contains: [
       hljs.BACKSLASH_ESCAPE,
-      TEMPLATE_VARIABLES
-    ]
-  };
-  const DATE_RE = '[0-9]{4}(-[0-9][0-9]){0,2}';
-  const TIME_RE = '([Tt \\t][0-9][0-9]?(:[0-9][0-9]){2})?';
-  const FRACTION_RE = '(\\.[0-9]*)?';
-  const ZONE_RE = '([ \\t])*(Z|[-+][0-9][0-9]?(:[0-9][0-9])?)?';
+      TEMPLATE_VARIABLES,
+    ],
+  }
+  const DATE_RE = "[0-9]{4}(-[0-9][0-9]){0,2}"
+  const TIME_RE = "([Tt \\t][0-9][0-9]?(:[0-9][0-9]){2})?"
+  const FRACTION_RE = "(\\.[0-9]*)?"
+  const ZONE_RE = "([ \\t])*(Z|[-+][0-9][0-9]?(:[0-9][0-9])?)?"
   const TIMESTAMP = {
-    className: 'number',
-    begin: '\\b' + DATE_RE + TIME_RE + FRACTION_RE + ZONE_RE + '\\b'
-  };
+    className: "number",
+    begin: "\\b" + DATE_RE + TIME_RE + FRACTION_RE + ZONE_RE + "\\b",
+  }
 
   let FRONTMATTER = {
-    className: 'meta',
-    begin: '^---\\s*$',
-    end: '^---\\s*$',
+    className: "meta",
+    begin: "^---\\s*$",
+    end: "^---\\s*$",
     contains: [
       {
-        className: 'attr',
+        className: "attr",
         variants: [
           // added brackets support
           {
-            begin: /\w[\w :()\./-]*:(?=[ \t]|$)/
+            begin: /\w[\w :()\./-]*:(?=[ \t]|$)/,
           },
           { // double quoted keys - with brackets
-            begin: /"\w[\w :()\./-]*":(?=[ \t]|$)/
+            begin: /"\w[\w :()\./-]*":(?=[ \t]|$)/,
           },
           { // single quoted keys - with brackets
-            begin: /'\w[\w :()\./-]*':(?=[ \t]|$)/
+            begin: /'\w[\w :()\./-]*':(?=[ \t]|$)/,
           },
-        ]
+        ],
       },
       TIMESTAMP,
       // numbers are any valid C-style number that
       // sit isolated from other words
       {
-        className: 'number',
-        begin: hljs.C_NUMBER_RE + '\\b',
-        relevance: 0
+        className: "number",
+        begin: hljs.C_NUMBER_RE + "\\b",
+        relevance: 0,
       },
       STRING,
-    ]
+    ],
   }
 
   let INLINE_HTML = {
@@ -239,7 +239,7 @@ function shire_lang(hljs) {
 
   let CONTAINABLE = [
     INLINE_HTML,
-    LINK
+    LINK,
   ];
 
   [
@@ -288,7 +288,7 @@ function shire_lang(hljs) {
     match: /&([a-zA-Z0-9]+|#[0-9]{1,7}|#[Xx][0-9a-fA-F]{1,6});/,
   }
 
-  let KEYWORDS = [
+  let COMMAND_KEYWORDS = [
     "file",
     "rev",
     "refactor",
@@ -301,6 +301,36 @@ function shire_lang(hljs) {
     "refactor",
   ]
 
+  const keywordPattern = COMMAND_KEYWORDS.join("|")
+  let COMMAND = {
+    className: "command",
+    begin: new RegExp(`/(?:${keywordPattern})`),
+    contains: [
+      {
+        className: "symbol",
+        begin: /:/, // 匹配语义号
+      },
+      {
+        className: "url",
+        begin: /(https?:\/\/[^\s]+)/, // 匹配 URL
+      },
+      {
+        className: "file",
+        begin: /[a-zA-Z0-9_\-\/\.]+/, // 匹配文件路径
+        relevance: 0,
+      },
+      {
+        className: "string",
+        begin: /"/, end: /"/, // 匹配字符串
+        contains: [
+          {
+            begin: /\\./, // 匹配转义字符
+          },
+        ],
+      },
+    ],
+  }
+
   return {
     name: "shire",
     aliases: [
@@ -308,9 +338,10 @@ function shire_lang(hljs) {
       "shire",
     ],
     keywords: {
-      keyword: KEYWORDS,
+      keyword: COMMAND_KEYWORDS,
     },
     contains: [
+      COMMAND,
       FRONTMATTER,
       HEADER,
       INLINE_HTML,
@@ -322,7 +353,7 @@ function shire_lang(hljs) {
       HORIZONTAL_RULE,
       LINK,
       LINK_REFERENCE,
-      ENTITY
+      ENTITY,
     ],
   }
 }
