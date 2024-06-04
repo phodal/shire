@@ -1,11 +1,11 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin xmlns:xi="http://www.w3.org/2001/XInclude" allow-bundled-update="true">
     <id>com.phodal.shire</id>
-    <name>Shire - AI Agent Language</name>
+    <name>Shire - AI Agents Language</name>
     <vendor>Phodal Huang</vendor>
     <description>
         <![CDATA[
-      Shire provides a simple AI Agent Language which you can use it to communication LLM to controller IDE to auto programming.
+      Shire provides a simple AI Agents Language which you can use it to communication LLM to controller IDE to auto programming.
       <br/><br/>
 
       For example:

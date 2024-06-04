@@ -1,7 +1,7 @@
 remote_theme: pmarsceill/just-the-docs
 
-title: Shire - AI Agent Language
-description: Shire offers a straightforward AI Agent Language that enables communication between an LLM and control IDE for automated programming.
+title: Shire - AI Agents Language
+description: Shire offers a straightforward AI Agents Language that enables communication between an LLM and control IDE for automated programming.
 
 heading_anchors: true
 
