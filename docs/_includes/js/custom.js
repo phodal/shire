@@ -1,5 +1,37 @@
 function shire_lang(hljs) {
   let regex = hljs.regex
+  const TEMPLATE_VARIABLES = {
+    className: 'template-variable',
+    variants: [
+      { // jinja templates Ansible
+        begin: /\{\{/,
+        end: /\}\}/
+      },
+      { // Ruby i18n
+        begin: /%\{/,
+        end: /\}/
+      }
+    ]
+  };
+  const STRING = {
+    className: 'string',
+    relevance: 0,
+    variants: [
+      {
+        begin: /'/,
+        end: /'/
+      },
+      {
+        begin: /"/,
+        end: /"/
+      },
+      // { begin: /\S+/ }
+    ],
+    contains: [
+      hljs.BACKSLASH_ESCAPE,
+      TEMPLATE_VARIABLES
+    ]
+  };
   const DATE_RE = '[0-9]{4}(-[0-9][0-9]){0,2}';
   const TIME_RE = '([Tt \\t][0-9][0-9]?(:[0-9][0-9]){2})?';
   const FRACTION_RE = '(\\.[0-9]*)?';
@@ -11,22 +43,9 @@ function shire_lang(hljs) {
 
   let FRONTMATTER = {
     className: 'meta',
-    begin: '^---$',
-    end: '^---$',
+    begin: '^---\\s*$',
+    end: '^---\\s*$',
     contains: [
-      TIMESTAMP,
-      {
-        className: 'string',
-        begin: '"', end: '"'
-      },
-      {
-        className: 'string',
-        begin: "'", end: "'"
-      },
-      {
-        className: 'number',
-        begin: '\\d+(\\.\\d+)?'
-      },
       {
         className: 'attr',
         variants: [
@@ -41,7 +60,16 @@ function shire_lang(hljs) {
             begin: /'\w[\w :()\./-]*':(?=[ \t]|$)/
           },
         ]
-      }
+      },
+      TIMESTAMP,
+      // numbers are any valid C-style number that
+      // sit isolated from other words
+      {
+        className: 'number',
+        begin: hljs.C_NUMBER_RE + '\\b',
+        relevance: 0
+      },
+      STRING,
     ]
   }
 
@@ -211,7 +239,7 @@ function shire_lang(hljs) {
 
   let CONTAINABLE = [
     INLINE_HTML,
-    LINK,
+    LINK
   ];
 
   [
@@ -294,7 +322,7 @@ function shire_lang(hljs) {
       HORIZONTAL_RULE,
       LINK,
       LINK_REFERENCE,
-      ENTITY,
+      ENTITY
     ],
   }
 }
@@ -304,6 +332,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     let langs = hljs.listLanguages()
     if (!langs.includes("shire")) {
       hljs.registerLanguage("shire", function() {
+        console.log("registering shire")
         return shire_lang(hljs)
       })
       hljs.highlightAll()
