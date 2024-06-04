@@ -15,7 +15,22 @@
 </p>
 
 <!-- Plugin description -->
-Shire is an AI Agent Language for AI Driven programming. 
+Shire provides a simple AI Agent Language which you can use it to communication LLM to controller IDE to auto programming.
+<br/><br/>
+
+For example:
+```shire
+---
+name: Summary
+description: Generate Summary
+interaction: AppendCursor
+actionLocation: ContextMenu
+---
+
+Summary webpage:
+
+/browse:https://www.phodal.com
+```
 <!-- Plugin description end -->
 
 ## Installation
@@ -29,23 +44,6 @@ Shire is an AI Agent Language for AI Driven programming.
 
   Download the [latest release](https://github.com/phodal/shire/releases/latest) and install it manually using
   <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
-
-## Usage
-
-Example:
-
-```shire
----
-name: Summary
-description: Generate Summary
-interaction: AppendCursor
-actionLocation: ContextMenu
----
-
-Summary webpage:
-
-/browse:https://www.phodal.com
-```
 
 ## Roadmap
 
