@@ -24,7 +24,7 @@
 
             <add-to-group group-id="ShowIntentionsGroup" relative-to-action="ShowIntentionActions" anchor="after"/>
         </group>
-        <!-- Context Action Group -->
+        <!-- Shire Context Action Group -->
         <group id="ShireContextActionGroup"
                popup="true" text="Shire Action" description="Shire action group"
                class="com.phodal.shire.action.context.ShireContextActionGroup"

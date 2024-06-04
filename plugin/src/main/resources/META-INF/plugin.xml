@@ -20,4 +20,9 @@
 
         <module name="com.phodal.shire.httpclient"/>
     </content>
+
+
+    <extensions defaultExtensionNs="com.intellij">
+        <postStartupActivity implementation="com.phodal.shire.startup.ShireActionStartupActivity"/>
+    </extensions>
 </idea-plugin>
