@@ -79,22 +79,22 @@ PS: current only support for TestFile, since UnitTest is the best way to run cod
 Get child elements by symbol, like get Class by package name.
 
 ```shire
-/symbol:cc.unitmesh.untitled.demo
+/symbol:com.phodal.shire.demo
 ```
 
 The output will be:
 
     ```java
-    cc.unitmesh.untitled.demo.MathHelper
-    cc.unitmesh.untitled.demo.DemoApplication
-    cc.unitmesh.untitled.demo.MathHelperTest
-    cc.unitmesh.untitled.demo.DemoApplicationTests
+    com.phodal.shire.demo.MathHelper
+    com.phodal.shire.demo.DemoApplication
+    com.phodal.shire.demo.MathHelperTest
+    com.phodal.shire.demo.DemoApplicationTests
     ```
 
 Get method will return code:
 
 ```shire
-/symbol:cc.unitmesh.untitled.demo.MathHelper.calculateInsurance
+/symbol:com.phodal.shire.demo.MathHelper.calculateInsurance
 ```
 
 The output will be:
@@ -124,7 +124,7 @@ It will be text inside the body from web page.
 Refactor code:
 
 ```shire
-/refactor:rename /symbol:cc.unitmesh.untitled.demo.MathHelper.calculateInsurance to calculateInsuranceTax
+/refactor:rename /symbol:com.phodal.shire.demo.MathHelper.calculateInsurance to calculateInsuranceTax
 ```
 
 It will be handled in local.
