@@ -36,5 +36,13 @@
                         beanClass="com.intellij.lang.LanguageExtensionPoint" dynamic="true">
             <with attribute="implementationClass" implements="com.phodal.shirecore.provider.AutoTesting"/>
         </extensionPoint>
+
+
+        <!-- Code Editor -->
+        <extensionPoint qualifiedName="com.phodal.shireCodeModifier"
+                        beanClass="com.intellij.lang.LanguageExtensionPoint" dynamic="true">
+            <with attribute="implementationClass"
+                  implements="com.phodal.shirecore.codeedit.CodeModifier"/>
+        </extensionPoint>
     </extensionPoints>
 </idea-plugin>
