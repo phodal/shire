@@ -4,6 +4,7 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
 import com.intellij.openapi.components.serviceAsync
+import com.phodal.shirecore.action.ShireActionLocation
 
 @Service(Service.Level.APP)
 class DynamicShireActionService {
@@ -19,6 +20,18 @@ class DynamicShireActionService {
 
     fun getAllActions(): List<DynamicShireActionConfig> {
         return actionCache.values.toList()
+    }
+
+    fun getContextAction(): List<DynamicShireActionConfig> {
+        return actionCache.values.filter {
+            it.config.actionLocation == ShireActionLocation.CONTEXT_MENU
+        }
+    }
+
+    fun getIntentAction(): List<DynamicShireActionConfig> {
+        return actionCache.values.filter {
+            it.config.actionLocation == ShireActionLocation.INTENTION_MENU
+        }
     }
 
     companion object {

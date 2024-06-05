@@ -7,7 +7,6 @@ import com.phodal.shirelang.ShireIcons
 import com.phodal.shirelang.actions.ShireRunFileAction
 import com.phodal.shirelang.actions.dynamic.DynamicShireActionConfig
 import com.phodal.shirelang.actions.dynamic.DynamicShireActionService
-import com.phodal.shirelang.compiler.ShireCompiler
 
 class ShireContextActionGroup : ActionGroup() {
     override fun getActionUpdateThread() = ActionUpdateThread.BGT
@@ -17,7 +16,7 @@ class ShireContextActionGroup : ActionGroup() {
     }
 
     override fun getChildren(e: AnActionEvent?): Array<AnAction> {
-        val configs: List<DynamicShireActionConfig> = DynamicShireActionService.getInstance().getAllActions()
+        val configs: List<DynamicShireActionConfig> = DynamicShireActionService.getInstance().getContextAction()
         return configs.map { actionConfig ->
             DynamicShireAction(actionConfig)
         }.toTypedArray()
