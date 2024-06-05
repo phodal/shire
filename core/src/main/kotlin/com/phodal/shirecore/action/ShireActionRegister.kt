@@ -1,6 +1,5 @@
 package com.phodal.shirecore.action
 
-import com.intellij.icons.AllIcons.Icons
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
 import com.intellij.openapi.util.IconLoader

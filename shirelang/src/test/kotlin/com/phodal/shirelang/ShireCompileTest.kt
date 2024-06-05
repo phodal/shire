@@ -1,6 +1,8 @@
 package com.phodal.shirelang
 
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
+import com.phodal.shirecore.action.ShireActionLocation
+import com.phodal.shirecore.agent.InteractionType
 import com.phodal.shirelang.compiler.ShireCompiler
 import com.phodal.shirelang.psi.ShireFile
 
@@ -30,5 +32,11 @@ class ShireCompileTest: BasePlatformTestCase() {
 
         val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
         assertEquals("\n\nSummary webpage:\n", compile.output)
+        compile.config!!.let {
+            assertEquals("Summary", it.name)
+            assertEquals("Generate Summary", it.description)
+            assertEquals(InteractionType.AppendCursor, it.interaction)
+            assertEquals(ShireActionLocation.CONTEXT_MENU, it.actionLocation)
+        }
     }
 }
