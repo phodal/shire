@@ -5,26 +5,32 @@ import com.intellij.openapi.application.smartReadAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.ProjectActivity
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.psi.PsiManager
 import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.GlobalSearchScope
-import com.intellij.psi.search.ProjectScope
+import com.phodal.shirelang.compiler.FrontmatterParser
+import com.phodal.shirelang.compiler.frontmatter.FrontMatterShireConfig
+import com.phodal.shirelang.psi.ShireFile
 
 class ShireActionStartupActivity : ProjectActivity {
     override suspend fun execute(project: Project) {
-        // check all ShireLanguage
-        val searchScope: GlobalSearchScope = ProjectScope.getProjectScope(project)
         smartReadAction(project) {
-            obtainShireEditorConfigFiles(project).forEach { _ ->
-                // do something
+            val configFiles = obtainShireFiles(project)
+            val shireConfigs: List<FrontMatterShireConfig> = configFiles.mapNotNull { it ->
+                val psi: ShireFile =
+                    PsiManager.getInstance(project).findFile(it) as? ShireFile ?: return@mapNotNull null
+                FrontmatterParser.parse(psi)
             }
+
+            println("Shire Action Startup Activity")
         }
     }
 
-    fun obtainShireEditorConfigFiles(project: Project): Collection<VirtualFile> {
+    private fun obtainShireFiles(project: Project): List<VirtualFile> {
         ApplicationManager.getApplication().assertReadAccessAllowed()
         val allScope = GlobalSearchScope.allScope(project)
         val filesScope = GlobalSearchScope.getScopeRestrictedByFileTypes(allScope, ShireFileType.INSTANCE)
-        return FileTypeIndex.getFiles(ShireFileType.INSTANCE, filesScope)
+        return FileTypeIndex.getFiles(ShireFileType.INSTANCE, filesScope).toList()
     }
 
 }

@@ -31,6 +31,12 @@ object FrontmatterParser {
         }
     }
 
+    fun parse(file: ShireFile): FrontMatterShireConfig? {
+        return PsiTreeUtil.getChildrenOfTypeAsList(file, ShireFrontMatterHeader::class.java).firstOrNull()?.let {
+            parse(it)
+        }
+    }
+
     private fun processFrontmatter(frontMatterEntries: Array<PsiElement>): MutableMap<String, FrontMatterType> {
         val frontMatter: MutableMap<String, FrontMatterType> = mutableMapOf()
         var lastKey = ""
