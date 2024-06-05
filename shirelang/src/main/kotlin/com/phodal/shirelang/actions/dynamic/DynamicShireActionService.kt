@@ -35,7 +35,7 @@ class DynamicShireActionService {
     }
 
     companion object {
-        fun getInstance() = ApplicationManager.getApplication().service<DynamicShireActionService>()
-        suspend fun getInstanceAsync() = ApplicationManager.getApplication().serviceAsync<DynamicShireActionService>()
+        fun getInstance(): DynamicShireActionService =
+            ApplicationManager.getApplication().getService(DynamicShireActionService::class.java)
     }
 }
