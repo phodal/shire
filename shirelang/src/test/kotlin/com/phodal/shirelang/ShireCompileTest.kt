@@ -29,7 +29,6 @@ class ShireCompileTest: BasePlatformTestCase() {
         val file = myFixture.configureByText("test.shire", code)
 
         val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
-        println(compile.output)
-//        assertEquals("Summary webpage:\n\n/browse:https://www.phodal.com", compile.output)
+        assertEquals("\n\nSummary webpage:\n", compile.output)
     }
 }
