@@ -39,4 +39,23 @@ class ShireCompileTest: BasePlatformTestCase() {
             assertEquals(ShireActionLocation.CONTEXT_MENU, it.actionLocation)
         }
     }
+
+    fun testWithFrontMatterArray() {
+        val code = """
+            ---
+            name: Summary
+            description: "Generate Summary"
+            interaction: AppendCursor
+            data: ["a", "b"]
+            ---
+            
+            Summary webpage:
+            
+        """.trimIndent()
+
+        val file = myFixture.configureByText("test.shire", code)
+
+        val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
+        assertEquals("\n\nSummary webpage:\n", compile.output)
+    }
 }

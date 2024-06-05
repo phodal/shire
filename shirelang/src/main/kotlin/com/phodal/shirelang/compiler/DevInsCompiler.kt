@@ -148,8 +148,8 @@ class ShireCompiler(
             }
 
             ShireTypes.FRONT_MATTER_ARRAY -> {
-                val array = parseArray(element)
-                mapOf(FrontMatterType.ARRAY to array.joinToString(","))
+                val array: List<Map<FrontMatterType, String>> = parseArray(element)
+                mapOf(FrontMatterType.ARRAY to array.map { it.values.first() }.toList().joinToString(","))
             }
 
             else -> {
@@ -159,15 +159,16 @@ class ShireCompiler(
         }
     }
 
-    private fun parseArray(element: PsiElement): List<String> {
-        val array = mutableListOf<String>()
-        var arrayElement: PsiElement? = element.firstChild
+    private fun parseArray(element: PsiElement): List<Map<FrontMatterType, String>> {
+        val array = mutableListOf<Map<FrontMatterType, String>>()
+        var arrayElement: PsiElement? = element.children.firstOrNull()?.firstChild
         while (arrayElement != null) {
-            if (arrayElement.elementType == ShireTypes.STRING) {
-                array.add(arrayElement.text)
+            parseFrontMatterValue(arrayElement)?.let {
+                array.add(it)
             }
             arrayElement = arrayElement.nextSibling
         }
+
         return array
     }
 
