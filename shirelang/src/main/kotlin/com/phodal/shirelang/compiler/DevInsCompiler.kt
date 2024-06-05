@@ -12,13 +12,12 @@ import com.intellij.psi.util.elementType
 import com.phodal.shirecore.agent.CustomAgent
 import com.phodal.shirelang.compile.VariableTemplateCompiler
 import com.phodal.shirelang.compiler.exec.*
-import com.phodal.shirelang.compiler.frontmatter.FrontMatterShireConfig
-import com.phodal.shirelang.compiler.frontmatter.FrontMatterType
 import com.phodal.shirelang.completion.dataprovider.BuiltinCommand
 import com.phodal.shirelang.completion.dataprovider.CustomCommand
 import com.phodal.shirelang.completion.dataprovider.ToolHubVariable
 import com.phodal.shirelang.parser.CodeBlockElement
 import com.phodal.shirelang.psi.ShireFile
+import com.phodal.shirelang.psi.ShireFrontMatterHeader
 import com.phodal.shirelang.psi.ShireTypes
 import com.phodal.shirelang.psi.ShireUsed
 import kotlinx.coroutines.runBlocking
@@ -84,10 +83,7 @@ class ShireCompiler(
                 }
 
                 ShireTypes.FRONT_MATTER_HEADER -> {
-                    psiElement.children.firstOrNull()?.let {
-                        val fm = processFrontmatter(it.children)
-                        result.config = FrontMatterShireConfig.from(fm)
-                    }
+                    result.config = FrontmatterParser.parse(psiElement as ShireFrontMatterHeader)
                 }
 
                 WHITE_SPACE, DUMMY_BLOCK -> output.append(psiElement.text)
@@ -102,86 +98,6 @@ class ShireCompiler(
 
         CACHED_COMPILE_RESULT[file.name] = result
         return result
-    }
-
-    private fun processFrontmatter(frontMatterEntries: Array<PsiElement>): MutableMap<String, FrontMatterType> {
-        val frontMatter: MutableMap<String, FrontMatterType> = mutableMapOf()
-        var lastKey = ""
-
-        frontMatterEntries.forEach { entry ->
-            entry.children.forEach { child ->
-                when (child.elementType) {
-                    ShireTypes.FRONT_MATTER_KEY -> {
-                        lastKey = child.text
-                    }
-
-                    ShireTypes.FRONT_MATTER_VALUE -> {
-                        val value = parseFrontMatterValue(child)
-                        value?.let {
-                            frontMatter[lastKey] = it
-                        }
-                    }
-                }
-            }
-        }
-
-        return frontMatter
-    }
-
-    private fun parseFrontMatterValue(element: PsiElement): FrontMatterType? {
-        return when (element.firstChild.elementType) {
-            ShireTypes.STRING -> {
-                FrontMatterType.STRING(element.text)
-            }
-
-            ShireTypes.DATE -> {
-                FrontMatterType.DATE(element.text)
-            }
-
-            ShireTypes.QUOTE_STRING -> {
-                val value = element.text.substring(1, element.text.length - 1)
-                FrontMatterType.STRING(value)
-            }
-
-            ShireTypes.NUMBER -> {
-                FrontMatterType.NUMBER(element.text.toInt())
-            }
-
-            ShireTypes.BOOLEAN -> {
-                FrontMatterType.BOOLEAN(element.text.toBoolean())
-            }
-
-            ShireTypes.FRONT_MATTER_ARRAY -> {
-                val array: List<FrontMatterType> = parseArray(element)
-                FrontMatterType.ARRAY(array)
-            }
-
-            ShireTypes.LBRACKET, ShireTypes.RBRACKET, ShireTypes.COMMA, WHITE_SPACE -> {
-                null
-            }
-
-            null -> {
-                null
-            }
-
-            else -> {
-                logger.warn("Unknown frontmatter type: ${element.elementType}")
-                null
-            }
-        }
-    }
-
-    private fun parseArray(element: PsiElement): List<FrontMatterType> {
-        val array = mutableListOf<FrontMatterType>()
-        var arrayElement: PsiElement? = element.children.firstOrNull()?.firstChild
-        while (arrayElement != null) {
-            parseFrontMatterValue(arrayElement)?.let {
-                array.add(it)
-            }
-            arrayElement = arrayElement.nextSibling
-        }
-
-        return array
     }
 
     private fun processUsed(used: ShireUsed) {
