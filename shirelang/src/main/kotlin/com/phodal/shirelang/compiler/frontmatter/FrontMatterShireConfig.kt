@@ -11,10 +11,10 @@ data class FrontMatterShireConfig(
     val data: Map<String, FrontMatterType> = mutableMapOf(),
 ) {
     companion object {
-        fun from(fm: MutableMap<String, FrontMatterType>): FrontMatterShireConfig {
-            val name = fm["name"]?.value as String
-            val description = fm["description"]?.value as String
-            val interaction = fm["interaction"]?.value as String
+        fun from(fm: MutableMap<String, FrontMatterType>): FrontMatterShireConfig? {
+            val name = fm["name"]?.value as? String ?: return null
+            val description = fm["description"]?.value as? String ?: ""
+            val interaction = fm["interaction"]?.value as? String ?: ""
             val actionLocation = fm["actionLocation"]?.value as? String ?: ShireActionLocation.default()
 
             val data = mutableMapOf<String, FrontMatterType>()

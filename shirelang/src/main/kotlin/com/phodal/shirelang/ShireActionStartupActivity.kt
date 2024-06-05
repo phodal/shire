@@ -8,7 +8,8 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiManager
 import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.GlobalSearchScope
-import com.phodal.shirecore.action.ShireActionLocation
+import com.phodal.shirelang.actions.dynamic.DynamicShireActionConfig
+import com.phodal.shirelang.actions.dynamic.DynamicShireActionService
 import com.phodal.shirelang.compiler.FrontmatterParser
 import com.phodal.shirelang.compiler.frontmatter.FrontMatterShireConfig
 import com.phodal.shirelang.psi.ShireFile
@@ -17,20 +18,15 @@ class ShireActionStartupActivity : ProjectActivity {
     override suspend fun execute(project: Project) {
         smartReadAction(project) {
             val configFiles = obtainShireFiles(project)
-            val shireConfigs: List<FrontMatterShireConfig> = configFiles.mapNotNull { it ->
+            val shireConfigs: List<DynamicShireActionConfig> = configFiles.mapNotNull { it ->
                 val psi: ShireFile =
                     PsiManager.getInstance(project).findFile(it) as? ShireFile ?: return@mapNotNull null
-                FrontmatterParser.parse(psi)
+                val shireConfig = FrontmatterParser.parse(psi) ?: return@mapNotNull null
+                DynamicShireActionConfig(it.name, shireConfig, psi)
             }
 
             shireConfigs.map {
-                when(it.actionLocation) {
-                    ShireActionLocation.CONTEXT_MENU -> TODO()
-                    ShireActionLocation.INTENTION_MENU -> TODO()
-                    ShireActionLocation.TERMINAL_MENU -> TODO()
-                    ShireActionLocation.COMMIT_MENU -> TODO()
-                    ShireActionLocation.RunPanel -> TODO()
-                }
+                DynamicShireActionService.getInstance().putAction(it.name, it)
             }
 
             println("Shire Action Startup Activity")
