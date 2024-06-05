@@ -6,6 +6,7 @@ import com.intellij.lang.injection.InjectedLanguageManager
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
+import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiNameIdentifierOwner
@@ -25,7 +26,12 @@ interface PsiElementStrategyBuilder {
      * @param canonicalName the canonical name of the symbol to look up
      * @return the ClassStructure representing the symbol with the given canonical name, or null if not found
      */
-    fun lookupSymbol(project: Project, canonicalName: String): ClassStructure? = null
+    fun lookupSymbol(project: Project, canonicalName: String): ClassStructure?
+
+    /**
+     * Return the relative [PsiElement] with [PsiComment] for givenElement in the given project.
+     */
+    fun relativeElement(project: Project, givenElement: PsiElement, type: PsiComment): PsiElement?
 
     companion object {
         private val languageExtension: LanguageExtension<PsiElementStrategyBuilder> =
@@ -42,7 +48,7 @@ interface PsiElementStrategy {
     fun getElementToAction(project: Project?, psiFile: PsiFile, range: TextRange): PsiElement?
 }
 
-class DefaultPsiElementStrategy: PsiElementStrategy {
+class DefaultPsiElementStrategy : PsiElementStrategy {
     /**
      * Returns the PsiElement to explain in the given project and editor.
      *
