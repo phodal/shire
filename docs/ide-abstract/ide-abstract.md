@@ -1,13 +1,12 @@
 ---
 layout: default
 title: IDE Abstract
-nav_order: 2
+nav_order: 4
 has_children: true
+permalink: /docs/ide-abstract
 ---
 
-
 # IDE 抽象接口
-
 
 ```
 ---
