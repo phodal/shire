@@ -51,6 +51,15 @@
         <action id="runShireFileAction"
                 class="com.phodal.shirelang.actions.ShireRunFileAction"
                 use-shortcut-of="RunClass"/>
+
+        <!-- Shire Context Action Group -->
+        <group id="ShireContextActionGroup"
+               popup="true" text="Shire Action" description="Shire action group"
+               class="com.phodal.shirelang.actions.context.ShireContextActionGroup"
+               icon="com.phodal.shire.ShireIdeaIcons.DEFAULT" searchable="false">
+
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+        </group>
     </actions>
 
     <applicationListeners>

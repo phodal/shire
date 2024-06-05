@@ -8,6 +8,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiManager
 import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.GlobalSearchScope
+import com.phodal.shirecore.action.ShireActionLocation
 import com.phodal.shirelang.compiler.FrontmatterParser
 import com.phodal.shirelang.compiler.frontmatter.FrontMatterShireConfig
 import com.phodal.shirelang.psi.ShireFile
@@ -20,6 +21,16 @@ class ShireActionStartupActivity : ProjectActivity {
                 val psi: ShireFile =
                     PsiManager.getInstance(project).findFile(it) as? ShireFile ?: return@mapNotNull null
                 FrontmatterParser.parse(psi)
+            }
+
+            shireConfigs.map {
+                when(it.actionLocation) {
+                    ShireActionLocation.CONTEXT_MENU -> TODO()
+                    ShireActionLocation.INTENTION_MENU -> TODO()
+                    ShireActionLocation.TERMINAL_MENU -> TODO()
+                    ShireActionLocation.COMMIT_MENU -> TODO()
+                    ShireActionLocation.RunPanel -> TODO()
+                }
             }
 
             println("Shire Action Startup Activity")
