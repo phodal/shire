@@ -89,6 +89,7 @@ class ShireCompiler(
                         result.config = FrontMatterShireConfig.from(fm)
                     }
                 }
+
                 WHITE_SPACE, DUMMY_BLOCK -> output.append(psiElement.text)
                 else -> {
                     output.append(psiElement.text)
@@ -108,47 +109,16 @@ class ShireCompiler(
         var lastKey = ""
 
         frontMatterEntries.forEach { entry ->
-            entry.children.map {
-                if (it.elementType == ShireTypes.FRONT_MATTER_KEY) {
-                    lastKey = it.text
-                }
+            entry.children.forEach { child ->
+                when (child.elementType) {
+                    ShireTypes.FRONT_MATTER_KEY -> {
+                        lastKey = child.text
+                    }
 
-                if (it.elementType == ShireTypes.FRONT_MATTER_VALUE) {
-                    when (it.firstChild.elementType) {
-                        ShireTypes.STRING -> {
-                            frontMatter[lastKey] = mapOf(FrontMatterType.STRING to it.text)
-                        }
-
-                        ShireTypes.QUOTE_STRING -> {
-                            val value = it.text.substring(1, it.text.length - 1)
-                            frontMatter[lastKey] = mapOf(FrontMatterType.STRING to value)
-                        }
-
-                        ShireTypes.NUMBER -> {
-                            frontMatter[lastKey] = mapOf(FrontMatterType.NUMBER to it.text)
-                        }
-
-                        ShireTypes.BOOLEAN -> {
-                            frontMatter[lastKey] = mapOf(FrontMatterType.BOOLEAN to it.text)
-                        }
-
-                        // todo: handle for array
-                        ShireTypes.FRONT_MATTER_ARRAY -> {
-                            val array = mutableListOf<String>()
-                            var arrayElement: PsiElement? = it.firstChild
-                            while (arrayElement != null) {
-                                if (arrayElement.elementType == ShireTypes.STRING) {
-                                    array.add(arrayElement.text)
-                                }
-                                arrayElement = arrayElement.nextSibling
-                            }
-                            val matterType = FrontMatterType.ARRAY
-                            matterType.data = array
-                            frontMatter[lastKey] = mapOf(matterType to array.joinToString(","))
-                        }
-
-                        else -> {
-                            logger.warn("Unknown frontmatter type: ${it.elementType}")
+                    ShireTypes.FRONT_MATTER_VALUE -> {
+                        val value = parseFrontMatterValue(child)
+                        value?.let {
+                            frontMatter[lastKey] = it
                         }
                     }
                 }
@@ -156,6 +126,49 @@ class ShireCompiler(
         }
 
         return frontMatter
+    }
+
+    private fun parseFrontMatterValue(element: PsiElement): Map<FrontMatterType, String>? {
+        return when (element.firstChild.elementType) {
+            ShireTypes.STRING -> {
+                mapOf(FrontMatterType.STRING to element.text)
+            }
+
+            ShireTypes.QUOTE_STRING -> {
+                val value = element.text.substring(1, element.text.length - 1)
+                mapOf(FrontMatterType.STRING to value)
+            }
+
+            ShireTypes.NUMBER -> {
+                mapOf(FrontMatterType.NUMBER to element.text)
+            }
+
+            ShireTypes.BOOLEAN -> {
+                mapOf(FrontMatterType.BOOLEAN to element.text)
+            }
+
+            ShireTypes.FRONT_MATTER_ARRAY -> {
+                val array = parseArray(element)
+                mapOf(FrontMatterType.ARRAY to array.joinToString(","))
+            }
+
+            else -> {
+                logger.warn("Unknown frontmatter type: ${element.elementType}")
+                null
+            }
+        }
+    }
+
+    private fun parseArray(element: PsiElement): List<String> {
+        val array = mutableListOf<String>()
+        var arrayElement: PsiElement? = element.firstChild
+        while (arrayElement != null) {
+            if (arrayElement.elementType == ShireTypes.STRING) {
+                array.add(arrayElement.text)
+            }
+            arrayElement = arrayElement.nextSibling
+        }
+        return array
     }
 
     private fun processUsed(used: ShireUsed) {
