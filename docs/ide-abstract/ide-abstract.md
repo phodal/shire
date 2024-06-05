@@ -1,6 +1,6 @@
 ---
 layout: default
-title: IDE Abstract Config 
+title: IDE Abstract
 nav_order: 2
 has_children: true
 ---

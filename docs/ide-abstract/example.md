@@ -1,8 +1,8 @@
 ---
 layout: default
 title: Intellij IDEA Example
-parent: AI Agent
-nav_order: 1
+parent: IDE Abstract
+nav_order: 2
 ---
 
 ## For example
