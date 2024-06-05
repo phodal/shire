@@ -180,7 +180,7 @@ RBRACKET=\]
   ":"                     { yybegin(FRONT_MATTER_VAL_BLOCK);return COLON; }
   {NEWLINE}               { return NEWLINE; }
   "---"                   { yybegin(YYINITIAL); return FRONTMATTER_END; }
-  [^]                     { return TokenType.BAD_CHARACTER; }
+  [^]                     { yypushback(yylength()); yybegin(YYINITIAL); }
 }
 
 <FRONT_MATTER_VAL_BLOCK> {

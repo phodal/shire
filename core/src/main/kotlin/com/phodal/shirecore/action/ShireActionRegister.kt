@@ -1,5 +1,6 @@
 package com.phodal.shirecore.action
 
+import com.intellij.icons.AllIcons.Icons
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
 import com.intellij.openapi.util.IconLoader
@@ -10,22 +11,39 @@ enum class ShireActionLocation(val location: String) {
     INTENTION_MENU("IntentionMenu"),
     TERMINAL_MENU("TerminalMenu"),
     COMMIT_MENU("CommitMenu"),
+    RunPanel("RunPanel")
+    ;
+
+    companion object {
+        fun from(actionLocation: String): ShireActionLocation {
+            return when (actionLocation) {
+                "ContextMenu" -> CONTEXT_MENU
+                "IntentionMenu" -> INTENTION_MENU
+                "TerminalMenu" -> TERMINAL_MENU
+                "CommitMenu" -> COMMIT_MENU
+                "RunPanel" -> RunPanel
+                else -> RunPanel
+            }
+        }
+    }
+
+    data class ShireAction(
+        val name: String,
+        val description: String,
+        /**
+         * Icon path in a project.
+         */
+        val icon: String?,
+        val priority: Int,
+        val actionLocation: ShireActionLocation,
+        val isAvailable: (project: Project) -> Boolean,
+        val action: (project: Project) -> Unit,
+    )
 }
 
-data class ShireAction(
-    val name: String,
-    val description: String,
-    /**
-     * Icon path in a project.
-     */
-    val icon: String?,
-    val priority: Int,
-    val actionLocation: ShireActionLocation,
-    val isAvailable: (project: Project) -> Boolean,
-    val action: (project: Project) -> Unit,
-)
+class ShireActionIcons(val icon: Icon) {
 
-class ShireActionIcons;
+}
 
 abstract class ShireActionRegister {
     abstract val project: Project

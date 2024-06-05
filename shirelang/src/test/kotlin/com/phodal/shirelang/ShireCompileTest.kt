@@ -17,14 +17,13 @@ class ShireCompileTest: BasePlatformTestCase() {
         val code = """
             ---
             name: Summary
-            description: Generate Summary
+            description: "Generate Summary"
             interaction: AppendCursor
             actionLocation: ContextMenu
             ---
             
             Summary webpage:
             
-            /browse:https://www.phodal.com
         """.trimIndent()
 
         val file = myFixture.configureByText("test.shire", code)

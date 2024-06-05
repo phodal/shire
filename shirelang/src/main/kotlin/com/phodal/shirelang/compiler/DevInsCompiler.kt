@@ -12,6 +12,8 @@ import com.intellij.psi.util.elementType
 import com.phodal.shirecore.agent.CustomAgent
 import com.phodal.shirelang.compile.VariableTemplateCompiler
 import com.phodal.shirelang.compiler.exec.*
+import com.phodal.shirelang.compiler.frontmatter.FrontMatterShireConfig
+import com.phodal.shirelang.compiler.frontmatter.FrontMatterType
 import com.phodal.shirelang.completion.dataprovider.BuiltinCommand
 import com.phodal.shirelang.completion.dataprovider.CustomCommand
 import com.phodal.shirelang.completion.dataprovider.ToolHubVariable
@@ -36,7 +38,7 @@ class ShireCompiler(
     private val myProject: Project,
     private val file: ShireFile,
     private val editor: Editor? = null,
-    private val element: PsiElement? = null
+    private val element: PsiElement? = null,
 ) {
     private var skipNextCode: Boolean = false
     private val logger = logger<ShireCompiler>()
@@ -51,10 +53,10 @@ class ShireCompiler(
         val iterator = file.children.iterator()
 
         while (iterator.hasNext()) {
-            val it = iterator.next()
+            val psiElement = iterator.next()
 
-            when (it.elementType) {
-                ShireTypes.TEXT_SEGMENT -> output.append(it.text)
+            when (psiElement.elementType) {
+                ShireTypes.TEXT_SEGMENT -> output.append(psiElement.text)
                 ShireTypes.NEWLINE -> output.append("\n")
                 ShireTypes.CODE -> {
                     if (skipNextCode) {
@@ -62,12 +64,13 @@ class ShireCompiler(
                         continue
                     }
 
-                    output.append(it.text)
+                    output.append(psiElement.text)
                 }
-                ShireTypes.USED -> processUsed(it as ShireUsed)
+
+                ShireTypes.USED -> processUsed(psiElement as ShireUsed)
                 ShireTypes.COMMENTS -> {
-                    if (it.text.startsWith("[flow]:")) {
-                        val fileName = it.text.substringAfter("[flow]:").trim()
+                    if (psiElement.text.startsWith("[flow]:")) {
+                        val fileName = psiElement.text.substringAfter("[flow]:").trim()
                         val content =
                             myProject.guessProjectDir()?.findFileByRelativePath(fileName)?.let { virtualFile ->
                                 virtualFile.inputStream.bufferedReader().use { reader -> reader.readText() }
@@ -79,25 +82,17 @@ class ShireCompiler(
                         }
                     }
                 }
-                ShireTypes.FRONTMATTER_START -> {
-                    val frontMatter = StringBuilder()
-                    while (iterator.hasNext()) {
-                        val nextElement = iterator.next()
-                        if (nextElement.elementType == ShireTypes.FRONTMATTER_END  || nextElement.elementType == DUMMY_BLOCK) {
-                            break
-                        }
 
-                        if (nextElement.elementType == WHITE_SPACE || nextElement.elementType == ShireTypes.COLON) {
-                            continue
-                        }
-
-                        frontMatter.append(nextElement.text)
+                ShireTypes.FRONT_MATTER_HEADER -> {
+                    psiElement.children.firstOrNull()?.let {
+                        val fm = processFrontmatter(it.children)
+                        result.config = FrontMatterShireConfig.from(fm)
                     }
                 }
-                WHITE_SPACE, DUMMY_BLOCK -> output.append(it.text)
+                WHITE_SPACE, DUMMY_BLOCK -> output.append(psiElement.text)
                 else -> {
-                    output.append(it.text)
-                    logger.warn("Unknown element type: ${it.elementType}")
+                    output.append(psiElement.text)
+                    logger.warn("Unknown element type: ${psiElement.elementType}")
                 }
             }
         }
@@ -106,6 +101,61 @@ class ShireCompiler(
 
         CACHED_COMPILE_RESULT[file.name] = result
         return result
+    }
+
+    private fun processFrontmatter(frontMatterEntries: Array<PsiElement>): MutableMap<String, Map<FrontMatterType, String>> {
+        val frontMatter: MutableMap<String, Map<FrontMatterType, String>> = mutableMapOf()
+        var lastKey = ""
+
+        frontMatterEntries.forEach { entry ->
+            entry.children.map {
+                if (it.elementType == ShireTypes.FRONT_MATTER_KEY) {
+                    lastKey = it.text
+                }
+
+                if (it.elementType == ShireTypes.FRONT_MATTER_VALUE) {
+                    when (it.firstChild.elementType) {
+                        ShireTypes.STRING -> {
+                            frontMatter[lastKey] = mapOf(FrontMatterType.STRING to it.text)
+                        }
+
+                        ShireTypes.QUOTE_STRING -> {
+                            val value = it.text.substring(1, it.text.length - 1)
+                            frontMatter[lastKey] = mapOf(FrontMatterType.STRING to value)
+                        }
+
+                        ShireTypes.NUMBER -> {
+                            frontMatter[lastKey] = mapOf(FrontMatterType.NUMBER to it.text)
+                        }
+
+                        ShireTypes.BOOLEAN -> {
+                            frontMatter[lastKey] = mapOf(FrontMatterType.BOOLEAN to it.text)
+                        }
+
+                        // todo: handle for array
+                        ShireTypes.FRONT_MATTER_ARRAY -> {
+                            val array = mutableListOf<String>()
+                            var arrayElement: PsiElement? = it.firstChild
+                            while (arrayElement != null) {
+                                if (arrayElement.elementType == ShireTypes.STRING) {
+                                    array.add(arrayElement.text)
+                                }
+                                arrayElement = arrayElement.nextSibling
+                            }
+                            val matterType = FrontMatterType.ARRAY
+                            matterType.data = array
+                            frontMatter[lastKey] = mapOf(matterType to array.joinToString(","))
+                        }
+
+                        else -> {
+                            logger.warn("Unknown frontmatter type: ${it.elementType}")
+                        }
+                    }
+                }
+            }
+        }
+
+        return frontMatter
     }
 
     private fun processUsed(used: ShireUsed) {
