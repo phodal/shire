@@ -1,11 +1,13 @@
 package com.phodal.shirelang.compiler
 
+import com.intellij.lang.parser.GeneratedParserUtilBase.DUMMY_BLOCK
 import com.phodal.shirelang.compiler.error.SHIRE_ERROR
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
 import com.intellij.psi.PsiElement
+import com.intellij.psi.TokenType.WHITE_SPACE
 import com.intellij.psi.util.elementType
 import com.phodal.shirecore.agent.CustomAgent
 import com.phodal.shirelang.compile.VariableTemplateCompiler
@@ -46,19 +48,22 @@ class ShireCompiler(
      */
     fun compile(): ShireCompiledResult {
         result.input = file.text
-        file.children.forEach {
+        val iterator = file.children.iterator()
+
+        while (iterator.hasNext()) {
+            val it = iterator.next()
+
             when (it.elementType) {
                 ShireTypes.TEXT_SEGMENT -> output.append(it.text)
                 ShireTypes.NEWLINE -> output.append("\n")
                 ShireTypes.CODE -> {
                     if (skipNextCode) {
                         skipNextCode = false
-                        return@forEach
+                        continue
                     }
 
                     output.append(it.text)
                 }
-
                 ShireTypes.USED -> processUsed(it as ShireUsed)
                 ShireTypes.COMMENTS -> {
                     if (it.text.startsWith("[flow]:")) {
@@ -74,7 +79,18 @@ class ShireCompiler(
                         }
                     }
                 }
+                ShireTypes.FRONTMATTER_START -> {
+                    val frontMatter = StringBuilder()
+                    while (iterator.hasNext()) {
+                        val nextElement = iterator.next()
+                        if (nextElement.elementType == ShireTypes.FRONTMATTER_END  || nextElement.elementType == DUMMY_BLOCK) {
+                            break
+                        }
 
+                        frontMatter.append(nextElement.text)
+                    }
+                }
+                WHITE_SPACE, DUMMY_BLOCK -> output.append(it.text)
                 else -> {
                     output.append(it.text)
                     logger.warn("Unknown element type: ${it.elementType}")
