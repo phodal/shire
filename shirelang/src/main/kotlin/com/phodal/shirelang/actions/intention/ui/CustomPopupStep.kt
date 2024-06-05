@@ -1,4 +1,4 @@
-package com.phodal.shire.action.intention.ui
+package com.phodal.shirelang.actions.intention.ui
 
 import com.intellij.codeInsight.intention.IntentionAction
 import com.intellij.openapi.editor.Editor

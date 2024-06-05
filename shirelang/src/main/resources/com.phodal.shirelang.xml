@@ -60,6 +60,13 @@
 
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
         </group>
+
+        <!-- Shire Intentions Action Group -->
+        <group id="ShireIntentionsActionGroup" class="com.phodal.shirelang.actions.intention.ShireIntentionsActionGroup"
+               icon="com.phodal.shire.ShireIdeaIcons.DEFAULT" searchable="false">
+
+            <add-to-group group-id="ShowIntentionsGroup" relative-to-action="ShowIntentionActions" anchor="after"/>
+        </group>
     </actions>
 
     <applicationListeners>

@@ -1,4 +1,4 @@
-package com.phodal.shire.action.intention
+package com.phodal.shirelang.actions.intention
 
 import com.intellij.codeInsight.intention.IntentionAction
 import com.intellij.openapi.actionSystem.ActionGroup

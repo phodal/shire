@@ -1,4 +1,4 @@
-package com.phodal.shire.action.intention
+package com.phodal.shirelang.actions.intention
 
 import com.intellij.codeInsight.intention.IntentionAction
 import com.intellij.lang.injection.InjectedLanguageManager
@@ -10,7 +10,7 @@ import com.intellij.psi.PsiFile
 import javax.swing.Icon
 import com.phodal.shire.ShireMainBundle
 import com.phodal.shire.ShireIdeaIcons
-import com.phodal.shire.action.intention.ui.CustomPopupStep
+import com.phodal.shirelang.actions.intention.ui.CustomPopupStep
 
 class ShireIntentionHelper : IntentionAction, Iconable {
     override fun startInWriteAction(): Boolean = false

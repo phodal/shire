@@ -16,13 +16,4 @@
     <extensions defaultExtensionNs="com.phodal">
         <shireLlmProvider implementation="com.phodal.shire.llm.OpenAIProvider"/>
     </extensions>
-
-    <actions>
-        <!-- Shire Intentions Action Group -->
-        <group id="ShireIntentionsActionGroup" class="com.phodal.shire.action.intention.ShireIntentionsActionGroup"
-               icon="com.phodal.shire.ShireIdeaIcons.DEFAULT" searchable="false">
-
-            <add-to-group group-id="ShowIntentionsGroup" relative-to-action="ShowIntentionActions" anchor="after"/>
-        </group>
-    </actions>
 </idea-plugin>
