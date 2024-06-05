@@ -14,14 +14,13 @@ class ShireActionStartupActivity : ProjectActivity {
         // check all ShireLanguage
         val searchScope: GlobalSearchScope = ProjectScope.getProjectScope(project)
         smartReadAction(project) {
-            getEditorConfigFiles(project).forEach { _ ->
+            obtainShireEditorConfigFiles(project).forEach { _ ->
                 // do something
             }
         }
     }
 
-    fun getEditorConfigFiles(project: Project): Collection<VirtualFile> {
-        // Not allowed during indexing to prevent reentrant indexing (IDEA-277028)
+    fun obtainShireEditorConfigFiles(project: Project): Collection<VirtualFile> {
         ApplicationManager.getApplication().assertReadAccessAllowed()
         val allScope = GlobalSearchScope.allScope(project)
         val filesScope = GlobalSearchScope.getScopeRestrictedByFileTypes(allScope, ShireFileType.INSTANCE)
