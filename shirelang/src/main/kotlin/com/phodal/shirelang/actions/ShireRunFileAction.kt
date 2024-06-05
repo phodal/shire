@@ -13,6 +13,8 @@ import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.project.DumbAwareAction
+import com.intellij.openapi.project.Project
+import com.intellij.psi.PsiFile
 import com.phodal.shirelang.psi.ShireFile
 import org.jetbrains.annotations.NonNls
 
@@ -31,25 +33,31 @@ class ShireRunFileAction : DumbAwareAction() {
     override fun actionPerformed(e: AnActionEvent) {
         val file = e.getData(CommonDataKeys.PSI_FILE) ?: return
         val project = file.project
-
-        val context = ConfigurationContext.getFromContext(e.dataContext, e.place)
-        val configProducer = RunConfigurationProducer.getInstance(ShireRunConfigurationProducer::class.java)
-
-        val runConfiguration = (configProducer.findExistingConfiguration(context)
-            ?: RunManager.getInstance(project)
-                .createConfiguration(file.name, ShireConfigurationType::class.java)
-                ).configuration as ShireConfiguration
-
-        runConfiguration.setScriptPath(file.virtualFile.path)
-
-        val executorInstance = DefaultRunExecutor.getRunExecutorInstance()
-        val builder = ExecutionEnvironmentBuilder.createOrNull(executorInstance, runConfiguration) ?: return
-
-        ExecutionManager.getInstance(project).restartRunProfile(builder.build())
+        executeShireFile(e, project, file)
     }
 
     companion object {
         const val ID: @NonNls String = "runShireFileAction"
+        fun executeShireFile(
+            e: AnActionEvent,
+            project: Project,
+            file: PsiFile,
+        ) {
+            val context = ConfigurationContext.getFromContext(e.dataContext, e.place)
+            val configProducer = RunConfigurationProducer.getInstance(ShireRunConfigurationProducer::class.java)
+
+            val runConfiguration = (configProducer.findExistingConfiguration(context)
+                ?: RunManager.getInstance(project)
+                    .createConfiguration(file.name, ShireConfigurationType::class.java)
+                    ).configuration as ShireConfiguration
+
+            runConfiguration.setScriptPath(file.virtualFile.path)
+
+            val executorInstance = DefaultRunExecutor.getRunExecutorInstance()
+            val builder = ExecutionEnvironmentBuilder.createOrNull(executorInstance, runConfiguration) ?: return
+
+            ExecutionManager.getInstance(project).restartRunProfile(builder.build())
+        }
     }
 
 }

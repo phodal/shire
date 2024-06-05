@@ -11,7 +11,6 @@ import com.intellij.psi.search.GlobalSearchScope
 import com.phodal.shirelang.actions.dynamic.DynamicShireActionConfig
 import com.phodal.shirelang.actions.dynamic.DynamicShireActionService
 import com.phodal.shirelang.compiler.FrontmatterParser
-import com.phodal.shirelang.compiler.frontmatter.FrontMatterShireConfig
 import com.phodal.shirelang.psi.ShireFile
 
 class ShireActionStartupActivity : ProjectActivity {
@@ -22,7 +21,7 @@ class ShireActionStartupActivity : ProjectActivity {
                 val psi: ShireFile =
                     PsiManager.getInstance(project).findFile(it) as? ShireFile ?: return@mapNotNull null
                 val shireConfig = FrontmatterParser.parse(psi) ?: return@mapNotNull null
-                DynamicShireActionConfig(it.name, shireConfig, psi)
+                DynamicShireActionConfig(shireConfig.name, shireConfig, psi)
             }
 
             shireConfigs.map {
