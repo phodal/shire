@@ -1,10 +1,10 @@
-package com.phodal.shirecore.codemodel
+package com.phodal.shirecore.codemodel.model
 
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReference
 import com.phodal.shirecore.codemodel.base.FormatableElement
 
-class ClassStructureProvider(
+class ClassStructure(
     override val root: PsiElement,
     override val text: String?,
     override val name: String?,

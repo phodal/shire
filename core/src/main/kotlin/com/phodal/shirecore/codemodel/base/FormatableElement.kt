@@ -14,7 +14,7 @@ import com.intellij.psi.PsiElement
 abstract class FormatableElement(open val root: PsiElement, open val text: String?, open val name: String?) {
     /**
      * Formats the named element context into a string representation.
-     * In [com.phodal.shirecore.codemodel.ClassStructureProvider], the formatted string representation will be like UML.For example:
+     * In [com.phodal.shirecore.codemodel.ClassStructure], the formatted string representation will be like UML.For example:
      * ```uml
      * 'package: cc.unitmesh.untitled.demo.controller.UserController
      * '@RestController, @RequestMapping("/user")

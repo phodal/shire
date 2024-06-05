@@ -25,12 +25,15 @@ permalink: /
 
 ## Installation
 
-<iframe width="384px" height="319px" src="https://plugins.jetbrains.com/embeddable/card/24549"></iframe>
 
 - Using the IDE built-in plugin system:
 
   <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "shire"</kbd> >
   <kbd>Install</kbd>
+
+- Get from Marketplace:
+
+  <iframe width="245px" height="48px" src="https://plugins.jetbrains.com/embeddable/install/24549"></iframe>
 
 - Manually:
 

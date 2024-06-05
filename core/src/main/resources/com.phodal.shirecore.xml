@@ -45,7 +45,7 @@
         </extensionPoint>
 
         <!-- Code DataStructure -->
-        <extensionPoint qualifiedName="com.phodal.classStructure"
+        <extensionPoint qualifiedName="com.phodal.classStructureProvider"
                         beanClass="com.intellij.lang.LanguageExtensionPoint" dynamic="true">
             <with attribute="implementationClass"
                   implements="com.phodal.shirecore.codemodel.ClassStructureProvider"/>
