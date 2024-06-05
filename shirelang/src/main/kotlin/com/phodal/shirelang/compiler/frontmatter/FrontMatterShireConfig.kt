@@ -3,12 +3,20 @@ package com.phodal.shirelang.compiler.frontmatter
 import com.phodal.shirecore.action.ShireActionLocation
 import com.phodal.shirecore.agent.InteractionType
 
+sealed class ElementStrategy {
+    /**
+     * Auto select parent block element, like function, class, etc.
+     */
+    object DEFAULT : ElementStrategy()
+}
+
 data class FrontMatterShireConfig(
     val name: String,
     val description: String,
     val interaction: InteractionType,
     val actionLocation: ShireActionLocation,
     val data: Map<String, FrontMatterType> = mutableMapOf(),
+    val elementStrategy: ElementStrategy = ElementStrategy.DEFAULT,
 ) {
     companion object {
         fun from(fm: MutableMap<String, FrontMatterType>): FrontMatterShireConfig? {
