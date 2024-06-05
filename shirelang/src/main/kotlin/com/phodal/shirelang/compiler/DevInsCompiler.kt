@@ -87,6 +87,10 @@ class ShireCompiler(
                             break
                         }
 
+                        if (nextElement.elementType == WHITE_SPACE || nextElement.elementType == ShireTypes.COLON) {
+                            continue
+                        }
+
                         frontMatter.append(nextElement.text)
                     }
                 }

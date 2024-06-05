@@ -42,6 +42,7 @@ import java.util.regex.Pattern;
 %s LANG_ID
 
 IDENTIFIER=[a-zA-Z0-9][_\-a-zA-Z0-9]*
+FRONTMATTER_KEY=[a-zA-Z0-9][_\-a-zA-Z0-9]*
 DATE=[0-9]{4}-[0-9]{2}-[0-9]{2}
 STRING=[a-zA-Z0-9][_\-a-zA-Z0-9]*
 
@@ -175,7 +176,7 @@ RBRACKET=\]
 }
 
 <FRONT_MATTER_BLOCK> {
-  {IDENTIFIER}            { return IDENTIFIER; }
+  {FRONTMATTER_KEY}       { return FRONTMATTER_KEY; }
   ":"                     { yybegin(FRONT_MATTER_VAL_BLOCK);return COLON; }
   {NEWLINE}               { return NEWLINE; }
   "---"                   { yybegin(YYINITIAL); return FRONTMATTER_END; }

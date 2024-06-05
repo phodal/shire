@@ -45,7 +45,7 @@ frontMatterHeader ::= FRONTMATTER_START NEWLINE frontMatterEntries FRONTMATTER_E
 
 frontMatterEntries ::= (frontMatterEntry WHITE_SPACE? NEWLINE)*
 frontMatterEntry ::= frontMatterKey WHITE_SPACE? COLON WHITE_SPACE? frontMatterValue
-frontMatterKey ::= IDENTIFIER
+frontMatterKey ::= FRONTMATTER_KEY
 frontMatterValue ::= STRING | NUMBER | QUOTE_STRING | DATE | BOOLEAN | frontMatterArray
 frontMatterArray ::= LBRACKET (frontMatterValue (COMMA frontMatterValue)*) RBRACKET
 
