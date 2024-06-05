@@ -46,8 +46,8 @@ Example:
 
 ```shire
 ---
-name: Summary
-description: Generate Summary
+name: "Summary"
+description: "Generate Summary"
 interaction: AppendCursor
 actionLocation: ContextMenu
 ---
