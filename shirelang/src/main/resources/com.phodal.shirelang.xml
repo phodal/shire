@@ -52,4 +52,8 @@
                 class="com.phodal.shirelang.actions.ShireRunFileAction"
                 use-shortcut-of="RunClass"/>
     </actions>
+
+    <applicationListeners>
+<!--        <listener class="com.phodal.shirelang.modify.ShireModificationListener" topic="com.intellij.openapi.vfs.newvfs.BulkFileListener"/>-->
+    </applicationListeners>
 </idea-plugin>
