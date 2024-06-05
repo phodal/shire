@@ -3,14 +3,20 @@ package com.phodal.shirelang.compiler
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.psi.PsiElement
 import com.intellij.psi.TokenType.WHITE_SPACE
+import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.elementType
 import com.phodal.shirelang.compiler.frontmatter.FrontMatterShireConfig
 import com.phodal.shirelang.compiler.frontmatter.FrontMatterType
+import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.psi.ShireFrontMatterHeader
 import com.phodal.shirelang.psi.ShireTypes
 
 object FrontmatterParser {
     private val logger = logger<FrontmatterParser>()
+
+    fun hasFrontMatter(file: ShireFile): Boolean {
+        return PsiTreeUtil.getChildrenOfTypeAsList(file, ShireFrontMatterHeader::class.java).isNotEmpty()
+    }
 
     /**
      * Parses the given ShireFrontMatterHeader and returns a FrontMatterShireConfig object.
