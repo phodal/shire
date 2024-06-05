@@ -7,5 +7,4 @@ data class DynamicShireActionConfig(
     val name: String,
     val config: FrontMatterShireConfig,
     val file: ShireFile
-) {
-}
+)
