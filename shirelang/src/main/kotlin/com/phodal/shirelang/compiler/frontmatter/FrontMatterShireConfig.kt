@@ -28,7 +28,8 @@ data class FrontMatterShireConfig(
                 name,
                 description,
                 InteractionType.from(interaction),
-                ShireActionLocation.from(actionLocation)
+                ShireActionLocation.from(actionLocation),
+                data
             )
         }
     }

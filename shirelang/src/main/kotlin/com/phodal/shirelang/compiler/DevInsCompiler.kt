@@ -134,6 +134,10 @@ class ShireCompiler(
                 FrontMatterType.STRING(element.text)
             }
 
+            ShireTypes.DATE -> {
+                FrontMatterType.DATE(element.text)
+            }
+
             ShireTypes.QUOTE_STRING -> {
                 val value = element.text.substring(1, element.text.length - 1)
                 FrontMatterType.STRING(value)
