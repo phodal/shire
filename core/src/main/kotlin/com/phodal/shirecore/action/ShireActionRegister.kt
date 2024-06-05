@@ -24,6 +24,10 @@ enum class ShireActionLocation(val location: String) {
                 else -> RunPanel
             }
         }
+
+        fun default(): String {
+            return CONTEXT_MENU.location
+        }
     }
 
     data class ShireAction(

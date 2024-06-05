@@ -104,8 +104,8 @@ class ShireCompiler(
         return result
     }
 
-    private fun processFrontmatter(frontMatterEntries: Array<PsiElement>): MutableMap<String, Map<FrontMatterType, String>> {
-        val frontMatter: MutableMap<String, Map<FrontMatterType, String>> = mutableMapOf()
+    private fun processFrontmatter(frontMatterEntries: Array<PsiElement>): MutableMap<String, FrontMatterType> {
+        val frontMatter: MutableMap<String, FrontMatterType> = mutableMapOf()
         var lastKey = ""
 
         frontMatterEntries.forEach { entry ->
@@ -128,28 +128,33 @@ class ShireCompiler(
         return frontMatter
     }
 
-    private fun parseFrontMatterValue(element: PsiElement): Map<FrontMatterType, String>? {
+    private fun parseFrontMatterValue(element: PsiElement): FrontMatterType? {
         return when (element.firstChild.elementType) {
             ShireTypes.STRING -> {
-                mapOf(FrontMatterType.STRING to element.text)
+                FrontMatterType.STRING(element.text)
             }
 
             ShireTypes.QUOTE_STRING -> {
                 val value = element.text.substring(1, element.text.length - 1)
-                mapOf(FrontMatterType.STRING to value)
+                FrontMatterType.STRING(value)
             }
 
             ShireTypes.NUMBER -> {
-                mapOf(FrontMatterType.NUMBER to element.text)
+                FrontMatterType.NUMBER(element.text.toInt())
             }
 
             ShireTypes.BOOLEAN -> {
-                mapOf(FrontMatterType.BOOLEAN to element.text)
+                FrontMatterType.BOOLEAN(element.text.toBoolean())
             }
 
             ShireTypes.FRONT_MATTER_ARRAY -> {
-                val array: List<Map<FrontMatterType, String>> = parseArray(element)
-                mapOf(FrontMatterType.ARRAY to array.map { it.values.first() }.toList().joinToString(","))
+                val array: List<FrontMatterType> = parseArray(element)
+                FrontMatterType.ARRAY(array)
+            }
+
+            ShireTypes.LBRACKET, ShireTypes.RBRACKET, ShireTypes.COMMA, WHITE_SPACE -> {
+                val array: List<FrontMatterType> = parseArray(element)
+                FrontMatterType.ARRAY(array)
             }
 
             else -> {
@@ -159,8 +164,8 @@ class ShireCompiler(
         }
     }
 
-    private fun parseArray(element: PsiElement): List<Map<FrontMatterType, String>> {
-        val array = mutableListOf<Map<FrontMatterType, String>>()
+    private fun parseArray(element: PsiElement): List<FrontMatterType> {
+        val array = mutableListOf<FrontMatterType>()
         var arrayElement: PsiElement? = element.children.firstOrNull()?.firstChild
         while (arrayElement != null) {
             parseFrontMatterValue(arrayElement)?.let {

@@ -1,10 +1,10 @@
 package com.phodal.shirelang.compiler.frontmatter
 
-enum class FrontMatterType(var data: List<String> = listOf()) {
-    STRING,
-    NUMBER,
-    DATE,
-    BOOLEAN,
-    ARRAY,
-    OBJECT
+sealed class FrontMatterType(val value: Any) {
+    class STRING(value: String): FrontMatterType(value)
+    class NUMBER(value: Int): FrontMatterType(value)
+    class DATE(value: String): FrontMatterType(value)
+    class BOOLEAN(value: Boolean): FrontMatterType(value)
+    class ARRAY(value: List<FrontMatterType>): FrontMatterType(value)
+    class OBJECT(value: Map<String, FrontMatterType>): FrontMatterType(value)
 }
