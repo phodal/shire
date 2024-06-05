@@ -11,6 +11,8 @@
         <fileType name="ShireFile" implementationClass="com.phodal.shirelang.ShireFileType" fieldName="INSTANCE"
                   language="Shire" extensions="shire"/>
 
+<!--        <fileBasedIndex implementation="com.phodal.shirelang.index.ShireIdentifierIndex"/>-->
+
         <lang.parserDefinition language="Shire"
                                implementationClass="com.phodal.shirelang.parser.ShireParserDefinition"/>
         <lang.syntaxHighlighterFactory language="Shire"
