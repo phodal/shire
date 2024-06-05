@@ -153,8 +153,11 @@ class ShireCompiler(
             }
 
             ShireTypes.LBRACKET, ShireTypes.RBRACKET, ShireTypes.COMMA, WHITE_SPACE -> {
-                val array: List<FrontMatterType> = parseArray(element)
-                FrontMatterType.ARRAY(array)
+                null
+            }
+
+            null -> {
+                null
             }
 
             else -> {
