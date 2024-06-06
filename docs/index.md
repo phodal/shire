@@ -23,8 +23,11 @@ permalink: /
 </p>
 
 The Shire AI Agents Language is a specialized tool designed to facilitate communication between a large language model (
-LLM) and a control integrated development environment (IDE) for the purpose of automated programming. Here’s an overview
-of its main features and functionalities:
+LLM) and a control integrated development environment (IDE) for the purpose of automated programming. 
+
+![Shire Cheatsheet](images/shire-sheet.svg)
+
+Here’s an overview of its main features and functionalities:
 
 ### Key Features
 

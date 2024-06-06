@@ -18,6 +18,8 @@
 Shire offers a straightforward AI Agents Language that enables communication between an LLM and control IDE for automated programming.
 <br/><br/>
 
+![Shire Cheatsheet](docs/images/shire-sheet.svg)
+
 For example:
 ```shire
 ---
