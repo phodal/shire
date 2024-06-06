@@ -1,9 +1,8 @@
 ---
 layout: default
-title: Remote Agent
+title: Cloud
 nav_order: 5
 has_children: true
-permalink: /remote-agent
+permalink: /cloud
 ---
-
 
