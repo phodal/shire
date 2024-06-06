@@ -1,11 +1,9 @@
 package com.phodal.shirelang.java.impl
 
 import com.intellij.openapi.project.Project
-import com.intellij.psi.JavaPsiFacade
-import com.intellij.psi.PsiClass
-import com.intellij.psi.PsiComment
-import com.intellij.psi.PsiElement
+import com.intellij.psi.*
 import com.intellij.psi.search.GlobalSearchScope
+import com.intellij.psi.util.PsiTreeUtil
 import com.phodal.shirecore.codemodel.model.ClassStructure
 import com.phodal.shirecore.provider.PsiElementStrategyBuilder
 import com.phodal.shirelang.java.codemodel.JavaClassStructureProvider
@@ -22,4 +20,17 @@ class JavaElementStrategyBuilder : PsiElementStrategyBuilder {
     override fun relativeElement(project: Project, givenElement: PsiElement, type: PsiComment): PsiElement? {
         TODO("Not yet implemented")
     }
+
+    fun findNearestTarget(psiElement: PsiElement): PsiNameIdentifierOwner? {
+        if (psiElement is PsiMethod || psiElement is PsiClass) return psiElement as PsiNameIdentifierOwner
+
+        val closestIdentifierOwner = PsiTreeUtil.getParentOfType(psiElement, PsiNameIdentifierOwner::class.java)
+        if (closestIdentifierOwner !is PsiMethod) {
+            return PsiTreeUtil.getParentOfType(psiElement, PsiMethod::class.java) ?: closestIdentifierOwner
+        }
+
+        return closestIdentifierOwner
+    }
+
+//    fun findSampleDocument()
 }
