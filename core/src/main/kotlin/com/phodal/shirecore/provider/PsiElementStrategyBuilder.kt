@@ -26,7 +26,7 @@ interface PsiElementStrategyBuilder {
      * @param canonicalName the canonical name of the symbol to look up
      * @return the ClassStructure representing the symbol with the given canonical name, or null if not found
      */
-    fun lookupSymbol(project: Project, canonicalName: String): ClassStructure?
+    fun lookupElement(project: Project, canonicalName: String): ClassStructure?
 
     /**
      * Return the relative [PsiElement] with [PsiComment] for givenElement in the given project.

@@ -6,6 +6,9 @@
     </dependencies>
 
     <extensions defaultExtensionNs="com.phodal">
+        <classStructureProvider language="JAVA"
+                                implementationClass="com.phodal.shirelang.java.codemodel.JavaClassStructureProvider"/>
+
         <shireRefactoringTool
                 language="JAVA"
                 implementationClass="com.phodal.shirelang.java.impl.JavaRefactoringTool"/>
@@ -14,5 +17,7 @@
                 implementation="com.phodal.shirelang.java.impl.JavaBuildSystemProvider"/>
 
         <shireSymbolProvider implementation="com.phodal.shirelang.java.impl.JavaSymbolProvider"/>
+
+        <shireElementStrategyBuilder implementation="com.phodal.shirelang.java.impl.JavaElementStrategyBuilder"/>
     </extensions>
 </idea-plugin>
