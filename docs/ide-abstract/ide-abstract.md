@@ -8,10 +8,11 @@ permalink: /ide-abstract
 
 # IDE 抽象接口
 
-```
+```shire
 ---
 name: "Summary"
 description: "Generate Summary"
 interaction: AppendCursor
 actionLocation: ContextMenu
 ---
+```

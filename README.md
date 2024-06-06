@@ -22,7 +22,7 @@ For example:
 ```shire
 ---
 name: Summary
-description: Generate Summary
+description: "Summary of the webpage"
 interaction: AppendCursor
 actionLocation: ContextMenu
 ---
