@@ -1,16 +1,13 @@
 package com.phodal.shirelang.index
 
 import com.intellij.psi.PsiElement
-import com.intellij.util.indexing.DataIndexer
-import com.intellij.util.indexing.DefaultFileTypeSpecificInputFilter
-import com.intellij.util.indexing.FileBasedIndexExtension
-import com.intellij.util.indexing.FileContent
-import com.intellij.util.indexing.ID
+import com.intellij.util.indexing.*
 import com.intellij.util.io.DataExternalizer
 import com.intellij.util.io.EnumeratorStringDescriptor
 import com.intellij.util.io.KeyDescriptor
 import com.phodal.shirelang.ShireFileType
-import com.phodal.shirelang.psi.ShireFrontMatterEntry
+import com.phodal.shirelang.compiler.frontmatter.FrontMatterShireConfig
+import com.phodal.shirelang.psi.ShireFrontMatterKey
 import com.phodal.shirelang.psi.ShireVisitor
 import java.io.DataInput
 import java.io.DataOutput
@@ -19,7 +16,6 @@ internal val SHIRE_CONFIG_IDENTIFIER_INDEX_ID = ID.create<String, Int>("shire.in
 
 internal val isIndexing = ThreadLocal<Boolean>()
 
-// todo: update for content
 class ShireIdentifierIndex: FileBasedIndexExtension<String, Int>() {
     override fun getValueExternalizer() = object : DataExternalizer<Int> {
         override fun save(out: DataOutput, value: Int) = out.writeInt(value)
@@ -29,12 +25,13 @@ class ShireIdentifierIndex: FileBasedIndexExtension<String, Int>() {
     override fun getIndexer() = DataIndexer<String, Int, FileContent> {
         val result = mutableMapOf<String, Int>()
         val visitor = object : ShireVisitor() {
-//            override fun visitElement(element: PsiElement) {
-//                if (element is ShireFrontMatterEntry) {
-//                    result[element.text] = element.textOffset
-//                }
-//                super.visitElement(element)
-//            }
+            override fun visitElement(element: PsiElement) {
+                if (element is ShireFrontMatterKey && element.text == FrontMatterShireConfig.CONFIG_ID) {
+                    result[element.text] = element.textOffset
+                }
+
+                super.visitElement(element)
+            }
         }
 
         isIndexing.set(true)

@@ -50,15 +50,17 @@ data class FrontMatterShireConfig(
     val postProcessor: List<String> = emptyList(),
 ) {
     companion object {
+        const val CONFIG_ID = "name"
+
         fun from(frontMatterMap: MutableMap<String, FrontMatterType>): FrontMatterShireConfig? {
-            val name = frontMatterMap["name"]?.value as? String ?: return null
+            val name = frontMatterMap[CONFIG_ID]?.value as? String ?: return null
             val description = frontMatterMap["description"]?.value as? String ?: ""
             val interaction = frontMatterMap["interaction"]?.value as? String ?: ""
             val actionLocation = frontMatterMap["actionLocation"]?.value as? String ?: ShireActionLocation.default()
 
             val data = mutableMapOf<String, FrontMatterType>()
             frontMatterMap.forEach { (key, value) ->
-                if (key !in listOf("name", "description", "interaction", "actionLocation")) {
+                if (key !in listOf(CONFIG_ID, "description", "interaction", "actionLocation")) {
                     data[key] = value
                 }
             }
