@@ -38,6 +38,7 @@ import java.util.regex.Pattern;
 %s LINE_BLOCK
 %s FRONT_MATTER_BLOCK
 %s FRONT_MATTER_VAL_BLOCK
+%s FRONT_MATTER_VAL_OBJECT
 
 %s LANG_ID
 
@@ -45,6 +46,7 @@ IDENTIFIER=[a-zA-Z0-9][_\-a-zA-Z0-9]*
 FRONTMATTER_KEY=[a-zA-Z0-9][_\-a-zA-Z0-9]*
 DATE=[0-9]{4}-[0-9]{2}-[0-9]{2}
 STRING=[a-zA-Z0-9][_\-a-zA-Z0-9]*
+INDENT=\s{2}
 
 VARIABLE_ID=[a-zA-Z0-9][_\-a-zA-Z0-9]*
 AGENT_ID=[a-zA-Z0-9][_\-a-zA-Z0-9]*
@@ -180,10 +182,16 @@ RBRACKET=\]
   ":"                     { yybegin(FRONT_MATTER_VAL_BLOCK);return COLON; }
   {NEWLINE}               { return NEWLINE; }
   "---"                   { yybegin(YYINITIAL); return FRONTMATTER_END; }
+  "  "                    { yybegin(FRONT_MATTER_VAL_OBJECT); return INDENT; }
   [^]                     { yypushback(yylength()); yybegin(YYINITIAL); }
 }
 
-<FRONT_MATTER_VAL_BLOCK> {
+<FRONT_MATTER_VAL_OBJECT> {
+  {QUOTE_STRING}          { return QUOTE_STRING; }
+  [^]                     { yypushback(yylength()); yybegin(FRONT_MATTER_BLOCK); }
+}
+
+<FRONT_MATTER_VAL_BLOCK>  {
   {DATE}                  { return DATE; }
   {STRING}                { return STRING; }
   {NUMBER}                { return NUMBER; }

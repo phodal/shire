@@ -47,7 +47,7 @@ data class FrontMatterShireConfig(
      * Logging, Metrics, CodeVerify, RunCode, ParseCode etc.
      *
      */
-    val postMiddleware: List<String> = emptyList(),
+    val postProcessor: List<String> = emptyList(),
 ) {
     companion object {
         fun from(frontMatterMap: MutableMap<String, FrontMatterType>): FrontMatterShireConfig? {

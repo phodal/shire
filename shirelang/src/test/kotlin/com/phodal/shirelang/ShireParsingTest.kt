@@ -51,5 +51,9 @@ class ShireParsingTest : ParsingTestCase("parser", "shire", ShireParserDefinitio
     fun testFrontMatter() {
         doTest(true)
     }
+
+    fun testShireFmObject() {
+        doTest(true)
+    }
 }
 
