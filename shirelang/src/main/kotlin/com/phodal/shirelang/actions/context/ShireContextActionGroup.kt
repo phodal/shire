@@ -24,7 +24,7 @@ class ShireContextActionGroup : ActionGroup() {
 }
 
 class DynamicShireAction(private val actionConfig: DynamicShireActionConfig) :
-    DumbAwareAction(actionConfig.name, actionConfig.config.description, ShireIcons.Idea) {
+    DumbAwareAction(actionConfig.name, actionConfig.config.description, ShireIcons.DEFAULT) {
     override fun actionPerformed(e: AnActionEvent) {
         val project = e.project ?: return
 
