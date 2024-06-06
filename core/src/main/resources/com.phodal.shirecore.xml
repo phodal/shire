@@ -54,5 +54,10 @@
             <with attribute="implementationClass"
                   implements="com.phodal.shirecore.codemodel.ClassStructureProvider"/>
         </extensionPoint>
+
+        <!-- Post Code Middleware -->
+        <extensionPoint qualifiedName="com.phodal.shirePostCodeHandler"
+                        interface="com.phodal.shirecore.middleware.PostCodeHandler"
+                        dynamic="true"/>
     </extensionPoints>
 </idea-plugin>
