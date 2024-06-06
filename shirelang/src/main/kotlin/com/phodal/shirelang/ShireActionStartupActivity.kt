@@ -16,27 +16,24 @@ import com.phodal.shirelang.psi.ShireFile
 class ShireActionStartupActivity : ProjectActivity {
     override suspend fun execute(project: Project) {
         smartReadAction(project) {
-            val configFiles = obtainShireFiles(project)
-            val shireConfigs: List<DynamicShireActionConfig> = configFiles.mapNotNull { it ->
-                val psi: ShireFile =
-                    PsiManager.getInstance(project).findFile(it) as? ShireFile ?: return@mapNotNull null
-                val shireConfig = FrontmatterParser.parse(psi) ?: return@mapNotNull null
-                DynamicShireActionConfig(shireConfig.name, shireConfig, psi)
-            }
+            obtainShireFiles(project)
+                .forEach {
+                    val psi: ShireFile =
+                        PsiManager.getInstance(project).findFile(it) as? ShireFile ?: return@forEach
+                    val shireConfig = FrontmatterParser.parse(psi) ?: return@forEach
 
-            shireConfigs.map {
-                DynamicShireActionService.getInstance().putAction(it.name, it)
-            }
+                    val configName = shireConfig.name
 
-            println("Shire Action Startup Activity")
+                    val shireActionConfig = DynamicShireActionConfig(configName, shireConfig, psi)
+                    DynamicShireActionService.getInstance().putAction(configName, shireActionConfig)
+                }
         }
     }
 
-    private fun obtainShireFiles(project: Project): List<VirtualFile> {
+    private fun obtainShireFiles(project: Project): Collection<VirtualFile> {
         ApplicationManager.getApplication().assertReadAccessAllowed()
         val allScope = GlobalSearchScope.allScope(project)
         val filesScope = GlobalSearchScope.getScopeRestrictedByFileTypes(allScope, ShireFileType.INSTANCE)
-        return FileTypeIndex.getFiles(ShireFileType.INSTANCE, filesScope).toList()
+        return FileTypeIndex.getFiles(ShireFileType.INSTANCE, filesScope)
     }
-
 }
