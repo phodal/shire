@@ -41,18 +41,24 @@ data class FrontMatterShireConfig(
      *
      * todo: apply isApplicable for actions that do not depend on any tasks.
      */
-    val dependsOn: List<String> = emptyList()
+    val dependsOn: List<String> = emptyList(),
+    /**
+     * Post middleware actions, like
+     * Logging, Metrics, CodeVerify, RunCode, ParseCode etc.
+     *
+     */
+    val postMiddleware: List<String> = emptyList(),
 ) {
     companion object {
-        fun from(fm: MutableMap<String, FrontMatterType>): FrontMatterShireConfig? {
-            val name = fm["name"]?.value as? String ?: return null
-            val description = fm["description"]?.value as? String ?: ""
-            val interaction = fm["interaction"]?.value as? String ?: ""
-            val actionLocation = fm["actionLocation"]?.value as? String ?: ShireActionLocation.default()
+        fun from(frontMatterMap: MutableMap<String, FrontMatterType>): FrontMatterShireConfig? {
+            val name = frontMatterMap["name"]?.value as? String ?: return null
+            val description = frontMatterMap["description"]?.value as? String ?: ""
+            val interaction = frontMatterMap["interaction"]?.value as? String ?: ""
+            val actionLocation = frontMatterMap["actionLocation"]?.value as? String ?: ShireActionLocation.default()
 
             val data = mutableMapOf<String, FrontMatterType>()
-            fm.forEach { (key, value) ->
-                if (key != "name" && key != "description" && key != "interaction" && key != "actionLocation") {
+            frontMatterMap.forEach { (key, value) ->
+                if (key !in listOf("name", "description", "interaction", "actionLocation")) {
                     data[key] = value
                 }
             }
