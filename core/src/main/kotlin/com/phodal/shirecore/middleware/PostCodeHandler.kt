@@ -9,6 +9,11 @@ import com.phodal.shirecore.provider.AutoTesting
 interface PostCodeHandler {
     fun isApplicable(context: PostCodeHandleContext): Boolean
 
+    /**
+     * Some init tasks, like metric for time, etc.
+     */
+    fun initTask(context: PostCodeHandleContext): String
+
     fun execute(project: Project, context: PostCodeHandleContext, genText: String): String
 
     companion object {
@@ -30,5 +35,38 @@ data class PostCodeHandleContext (
  *
  */
 enum class PostCodeHandle {
-    Logging, Metrics, CodeVerify, RunCode, ParseCode
+    /**
+     * Logging the action.
+     */
+    Logging,
+
+    /**
+     * Metric time spent on the action.
+     */
+    TimeMetric,
+
+    /**
+     * Acceptance metric.
+     */
+    AcceptanceMetric,
+
+    /**
+     * Check has code error or PSI issue.
+     */
+    CodeVerify,
+
+    /**
+     * Run generate text code
+     */
+    RunCode,
+
+    /**
+     * Parse text to code blocks
+     */
+    ParseCode,
+
+    /**
+     * For example, TestCode should be in the correct directory, like java test should be in test directory.
+     */
+    InferenceCodeLocation
 }
