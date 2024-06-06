@@ -1,19 +1,27 @@
 package com.phodal.shirecore.provider
 
+import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer
+import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerEx
 import com.intellij.execution.RunManager
 import com.intellij.execution.RunnerAndConfigurationSettings
 import com.intellij.execution.actions.ConfigurationContext
 import com.intellij.execution.configurations.RunConfiguration
 import com.intellij.execution.configurations.RunProfile
+import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.diagnostic.logger
+import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.Disposer
+import com.intellij.openapi.util.TextRange
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiErrorElement
 import com.intellij.psi.PsiFile
+import com.intellij.psi.PsiManager
+import com.intellij.util.messages.MessageBusConnection
 import com.phodal.shirecore.runner.RunServiceTask
 
 interface RunService {
@@ -89,29 +97,6 @@ interface RunService {
         runManager.selectedConfiguration = settings
 
         return settings
-    }
-
-    fun PsiFile.collectPsiError(): MutableList<String> {
-        val errors = mutableListOf<String>()
-        val visitor = object : PsiSyntaxCheckingVisitor() {
-            override fun visitElement(element: PsiElement) {
-                if (element is PsiErrorElement) {
-                    errors.add("Syntax error at position ${element.textRange.startOffset}: ${element.errorDescription}")
-                }
-                super.visitElement(element)
-            }
-        }
-
-        this.accept(visitor)
-        return errors
-    }
-
-    abstract class PsiSyntaxCheckingVisitor : com.intellij.psi.PsiElementVisitor() {
-        override fun visitElement(element: PsiElement) {
-            runReadAction {
-                element.children.forEach { it.accept(this) }
-            }
-        }
     }
 
     private fun createDefaultTestConfigurations(project: Project, element: PsiElement): RunnerAndConfigurationSettings? {

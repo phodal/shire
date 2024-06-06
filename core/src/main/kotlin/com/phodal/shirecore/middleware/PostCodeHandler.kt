@@ -44,7 +44,11 @@ interface PostProcessor {
 
 data class PostCodeHandleContext (
     val element: PsiElement,
-    val file: VirtualFile
+    val language: String,
+    /**
+     * Convert code to file
+     */
+    val file: VirtualFile? = null,
 )
 
 /**
