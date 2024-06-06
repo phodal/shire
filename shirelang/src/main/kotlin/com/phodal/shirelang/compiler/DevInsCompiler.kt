@@ -4,9 +4,11 @@ import com.intellij.lang.parser.GeneratedParserUtilBase.DUMMY_BLOCK
 import com.phodal.shirelang.compiler.error.SHIRE_ERROR
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiManager
 import com.intellij.psi.TokenType.WHITE_SPACE
 import com.intellij.psi.util.elementType
 import com.phodal.shirecore.agent.CustomAgent
@@ -162,14 +164,27 @@ class ShireCompiler(
                     return
                 }
 
-                if (editor == null || element == null) {
+                val currentEditor = editor ?: FileEditorManager.getInstance(myProject).selectedTextEditor
+                val currentElement = element ?: currentEditor?.caretModel?.currentCaret?.offset?.let {
+                    val psiFile = currentEditor?.let { editor ->
+                        val psiFile = editor.virtualFile?.let { file ->
+                            PsiManager.getInstance(myProject).findFile(file)
+                        }
+
+                        psiFile ?: return@let null
+                    } ?: return@let null
+
+                    psiFile.findElementAt(it) ?: return@let null
+                }
+
+                if (currentEditor == null || currentElement == null) {
                     output.append("$SHIRE_ERROR No context editor found for variable: ${used.text}")
                     result.hasError = true
                     return
                 }
 
-                val file = element.containingFile
-                VariableTemplateCompiler(file.language, file, element, editor).compile(used.text).let {
+                val file = currentElement.containingFile
+                VariableTemplateCompiler(file.language, file, currentElement, currentEditor).compile(used.text).let {
                     output.append(it)
                 }
             }

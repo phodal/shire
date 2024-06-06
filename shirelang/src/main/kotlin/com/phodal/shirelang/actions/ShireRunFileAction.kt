@@ -1,8 +1,5 @@
 package com.phodal.shirelang.actions
 
-import com.phodal.shirelang.run.ShireConfiguration
-import com.phodal.shirelang.run.ShireConfigurationType
-import com.phodal.shirelang.run.ShireRunConfigurationProducer
 import com.intellij.execution.ExecutionManager
 import com.intellij.execution.RunManager
 import com.intellij.execution.actions.ConfigurationContext
@@ -16,6 +13,9 @@ import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
 import com.phodal.shirelang.psi.ShireFile
+import com.phodal.shirelang.run.ShireConfiguration
+import com.phodal.shirelang.run.ShireConfigurationType
+import com.phodal.shirelang.run.ShireRunConfigurationProducer
 import org.jetbrains.annotations.NonNls
 
 class ShireRunFileAction : DumbAwareAction() {

@@ -56,14 +56,14 @@
         <group id="ShireContextActionGroup"
                popup="true" text="Shire Action" description="Shire action group"
                class="com.phodal.shirelang.actions.context.ShireContextActionGroup"
-               icon="com.phodal.shire.ShireIdeaIcons.DEFAULT" searchable="false">
+               icon="com.phodal.shirelang.ShireIcons.DEFAULT" searchable="false">
 
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
         </group>
 
         <!-- Shire Intentions Action Group -->
         <group id="ShireIntentionsActionGroup" class="com.phodal.shirelang.actions.intention.ShireIntentionsActionGroup"
-               icon="com.phodal.shire.ShireIdeaIcons.DEFAULT" searchable="false">
+               icon="com.phodal.shirelang.ShireIcons.DEFAULT" searchable="false">
 
             <add-to-group group-id="ShowIntentionsGroup" relative-to-action="ShowIntentionActions" anchor="after"/>
         </group>

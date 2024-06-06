@@ -143,21 +143,23 @@ class ShireProcessProcessor(val project: Project) {
         return ShireCompiler(project, devInFile, editor, element)
     }
 
-    private fun getElementAtOffset(psiFile: PsiElement, offset: Int): PsiElement? {
-        var element = psiFile.findElementAt(offset) ?: return null
-
-        if (element is PsiWhiteSpace) {
-            element = element.getParent()
-        }
-
-        return element
-    }
-
     /**
      * 1. We need to call LLM to get the task list
      * 2. According to the input and output to decide the next step
      */
     fun createAgentTasks(): List<ShireFile> {
         TODO()
+    }
+
+    companion object {
+        fun getElementAtOffset(psiFile: PsiElement, offset: Int): PsiElement? {
+            var element = psiFile.findElementAt(offset) ?: return null
+
+            if (element is PsiWhiteSpace) {
+                element = element.getParent()
+            }
+
+            return element
+        }
     }
 }
