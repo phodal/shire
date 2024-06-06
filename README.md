@@ -26,7 +26,7 @@ interaction: AppendCursor
 actionLocation: ContextMenu
 postProcessor: ["VerifyCode", "RunCode"]
 fileRule:
-  "**/*.java": "You MUST use should_xx_xx style for test method name, You MUST use given-when-then style."
+  "**/*.java": "You MUST use should_xx_xx style for test method name"
 ---
 
 Generate code for API.
