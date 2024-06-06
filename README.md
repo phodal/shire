@@ -14,26 +14,31 @@
   </a>
 </p>
 
-<!-- Plugin description -->
 Shire offers a straightforward AI Agents Language that enables communication between an LLM and control IDE for automated programming.
-<br/><br/>
-
-![Shire Cheatsheet](docs/images/shire-sheet.svg)
 
 For example:
+
 ```shire
 ---
-name: Summary
-description: "Summary of the webpage"
+name: "Object Demo"
+description: "A simple object demo"
 interaction: AppendCursor
 actionLocation: ContextMenu
+postProcessor: ["VerifyCode", "RunCode"]
+fileRule:
+  "**/*.java": "You MUST use should_xx_xx style for test method name, You MUST use given-when-then style."
 ---
 
-Summary webpage:
+Generate code for API.
 
-/browse:https://www.phodal.com
+@api-market intergration User login oauth API
+
+Here is current $language code:
+
+/file:src/main/kotlin/com/phodal/blog/controller/UserController.kt
 ```
-<!-- Plugin description end -->
+
+![Shire Cheatsheet](docs/images/shire-sheet.svg)
 
 ## Installation
 
