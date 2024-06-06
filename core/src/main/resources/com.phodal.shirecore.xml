@@ -56,7 +56,7 @@
         </extensionPoint>
 
         <!-- Post Code Middleware -->
-        <extensionPoint qualifiedName="com.phodal.shirePostCodeHandler"
+        <extensionPoint qualifiedName="com.phodal.shirePostProcessor"
                         interface="com.phodal.shirecore.middleware.PostCodeHandler"
                         dynamic="true"/>
     </extensionPoints>
