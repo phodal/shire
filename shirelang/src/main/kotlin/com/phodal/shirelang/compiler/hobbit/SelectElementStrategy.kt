@@ -5,7 +5,6 @@ import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.psi.PsiElement
 import com.phodal.shirecore.provider.DefaultPsiElementStrategy
-import com.phodal.shirecore.provider.PsiElementStrategy
 
 sealed class SelectElementStrategy {
     /**
@@ -35,6 +34,15 @@ sealed class SelectElementStrategy {
             val endOffset = elementToExplain.textRange.endOffset
 
             editor.selectionModel.setSelection(startOffset, endOffset)
+        }
+    }
+
+    companion object {
+        fun fromString(strategy: String): SelectElementStrategy {
+            return when (strategy.lowercase()) {
+                "default" -> DEFAULT
+                else -> DEFAULT
+            }
         }
     }
 }

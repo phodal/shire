@@ -27,13 +27,13 @@ open class HobbitHole(
     /**
      * The data of the action.
      */
-    val data: Map<String, FrontMatterType> = mutableMapOf(),
+    val additionalData: Map<String, FrontMatterType> = mutableMapOf(),
     /**
      * The strategy to select the element to apply the action.
      * If not selected text, will according the element position to select the element block.
      * For example, if cursor in a function, select the function block.
      */
-    val selectionStrategy: SelectElementStrategy = SelectElementStrategy.DEFAULT,
+    private val selectionStrategy: SelectElementStrategy = SelectElementStrategy.DEFAULT,
     /**
      * The list of actions that this action depends on.
      * We use it for Directed Acyclic Graph (DAG) to represent dependencies between actions.
@@ -78,12 +78,15 @@ open class HobbitHole(
                 }
             }
 
+            val selectionStrategy = frontMatterMap["selectionStrategy"]?.value as? String ?: ""
+
             return HobbitHole(
                 name,
                 description,
                 InteractionType.from(interaction),
                 ShireActionLocation.from(actionLocation),
-                data
+                additionalData = data,
+                selectionStrategy = SelectElementStrategy.fromString(selectionStrategy),
             )
         }
     }
