@@ -11,7 +11,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
-import com.intellij.psi.PsiFile
+import com.phodal.shirelang.actions.dynamic.DynamicShireActionConfig
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.ShireConfiguration
 import com.phodal.shirelang.run.ShireConfigurationType
@@ -33,7 +33,8 @@ class ShireRunFileAction : DumbAwareAction() {
     override fun actionPerformed(e: AnActionEvent) {
         val file = e.getData(CommonDataKeys.PSI_FILE) as? ShireFile ?: return
         val project = file.project
-        executeShireFile(e, project, file)
+        val config = DynamicShireActionConfig.from(file)
+        executeShireFile(e, project, config)
     }
 
     companion object {
@@ -41,17 +42,17 @@ class ShireRunFileAction : DumbAwareAction() {
         fun executeShireFile(
             e: AnActionEvent,
             project: Project,
-            file: ShireFile,
+            config: DynamicShireActionConfig,
         ) {
             val context = ConfigurationContext.getFromContext(e.dataContext, e.place)
             val configProducer = RunConfigurationProducer.getInstance(ShireRunConfigurationProducer::class.java)
 
             val runConfiguration = (configProducer.findExistingConfiguration(context)
                 ?: RunManager.getInstance(project)
-                    .createConfiguration(file.name, ShireConfigurationType::class.java)
+                    .createConfiguration(config.name, ShireConfigurationType::class.java)
                     ).configuration as ShireConfiguration
 
-            runConfiguration.setScriptPath(file.virtualFile.path)
+            runConfiguration.setScriptPath(config.shireFile.virtualFile.path)
 
             val executorInstance = DefaultRunExecutor.getRunExecutorInstance()
             val builder = ExecutionEnvironmentBuilder.createOrNull(executorInstance, runConfiguration) ?: return

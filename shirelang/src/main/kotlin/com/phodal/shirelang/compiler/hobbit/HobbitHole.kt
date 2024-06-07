@@ -7,6 +7,8 @@ import com.phodal.shirecore.action.ShireActionLocation
 import com.phodal.shirecore.agent.InteractionType
 import com.phodal.shirecore.middleware.PostCodeHandleContext
 import com.phodal.shirecore.middleware.PostProcessor
+import com.phodal.shirelang.compiler.FrontmatterParser
+import com.phodal.shirelang.psi.ShireFile
 
 /**
  * - Normal: the action is a normal action
@@ -77,6 +79,10 @@ open class HobbitHole(
 
     companion object {
         const val CONFIG_ID = "name"
+
+        fun from(file: ShireFile): HobbitHole? {
+            return FrontmatterParser.parse(file)
+        }
 
         fun from(frontMatterMap: MutableMap<String, FrontMatterType>): HobbitHole? {
             val name = frontMatterMap[CONFIG_ID]?.value as? String ?: return null

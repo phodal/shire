@@ -34,6 +34,6 @@ class DynamicShireAction(private val config: DynamicShireActionConfig) :
         config.hole.setupProcessor(project, editor, file)
         config.hole.pickupElement()
 
-        ShireRunFileAction.executeShireFile(e, project, config.shireFile)
+        ShireRunFileAction.executeShireFile(e, project, config)
     }
 }
