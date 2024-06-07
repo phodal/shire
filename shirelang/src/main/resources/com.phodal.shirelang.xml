@@ -1,4 +1,5 @@
 <idea-plugin package="com.phodal.shirelang">
+    <resource-bundle>messages.ShireBundle</resource-bundle>
     <!--suppress PluginXmlValidity -->
     <dependencies>
         <plugin id="org.intellij.plugins.markdown"/>
@@ -45,6 +46,10 @@
         <runLineMarkerContributor language="Shire"
                                   implementationClass="com.phodal.shirelang.run.ShireRunLineMarkersProvider"/>
 
+        <intentionAction>
+            <className>com.phodal.shirelang.actions.intention.ShireIntentionHelper</className>
+            <categoryKey>shire.intention.category</categoryKey>
+        </intentionAction>
     </extensions>
 
     <actions>

@@ -21,7 +21,12 @@ class ShireIntentionHelper : IntentionAction, Iconable {
         if (file == null) return false
 
         val instance = InjectedLanguageManager.getInstance(project)
-        return instance.getTopLevelFile(file)?.virtualFile != null
+        if (instance.getTopLevelFile(file)?.virtualFile == null) {
+            return false
+        }
+
+        val intentions = IntentionHelperUtil.getAiAssistantIntentions(project, editor, file)
+        return intentions.isNotEmpty()
     }
 
     override fun invoke(project: Project, editor: Editor, file: PsiFile) {

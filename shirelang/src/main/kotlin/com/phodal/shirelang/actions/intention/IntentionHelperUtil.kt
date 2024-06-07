@@ -10,7 +10,7 @@ import com.phodal.shirelang.actions.dynamic.DynamicShireActionService
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 
 object IntentionHelperUtil {
-    fun getAiAssistantIntentions(project: Project, editor: Editor, file: PsiFile): List<IntentionAction> {
+    fun getAiAssistantIntentions(project: Project, editor: Editor?, file: PsiFile): List<IntentionAction> {
         val shireActionConfigs = DynamicShireActionService.getInstance().getAction(ShireActionLocation.INTENTION_MENU)
         return shireActionConfigs.map { actionConfig ->
             ShireIntentionAction(actionConfig.name, actionConfig.config, file)
