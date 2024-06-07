@@ -41,6 +41,13 @@
             <with attribute="implementationClass" implements="com.phodal.shirecore.provider.AutoTesting"/>
         </extensionPoint>
 
+        <!-- Toolchain Provider -->
+        <extensionPoint qualifiedName="com.phodal.shireToolchainProvider"
+                        beanClass="com.intellij.lang.LanguageExtensionPoint" dynamic="true">
+            <with attribute="implementationClass"
+                  implements="com.phodal.shirecore.provider.ToolchainProvider"/>
+        </extensionPoint>
+
         <!-- Code Editor -->
         <extensionPoint qualifiedName="com.phodal.shireCodeModifier"
                         beanClass="com.intellij.lang.LanguageExtensionPoint" dynamic="true">
