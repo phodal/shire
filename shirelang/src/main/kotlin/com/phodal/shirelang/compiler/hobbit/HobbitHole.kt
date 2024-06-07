@@ -2,6 +2,8 @@ package com.phodal.shirelang.compiler.hobbit
 
 import com.phodal.shirecore.action.ShireActionLocation
 import com.phodal.shirecore.agent.InteractionType
+import com.phodal.shirecore.middleware.PostCodeHandleContext
+import com.phodal.shirecore.middleware.PostProcessor
 
 /**
  * - Normal: the action is a normal action
@@ -46,7 +48,7 @@ open class HobbitHole(
      * Logging, Metrics, CodeVerify, RunCode, ParseCode etc.
      *
      */
-    val postProcessors: List<String> = emptyList(),
+    val postProcessors: List<PostProcessor> = emptyList(),
 
     /**
      * The list of rule files to apply for the action.
@@ -80,6 +82,11 @@ open class HobbitHole(
 
             val selectionStrategy = frontMatterMap["selectionStrategy"]?.value as? String ?: ""
 
+            val postProcessors: List<PostProcessor> = emptyList()
+            frontMatterMap["postProcessors"]?.value?.let {
+                PostProcessor.handler(it as String)
+            }
+
             return HobbitHole(
                 name,
                 description,
@@ -87,6 +94,7 @@ open class HobbitHole(
                 ShireActionLocation.from(actionLocation),
                 additionalData = data,
                 selectionStrategy = SelectElementStrategy.fromString(selectionStrategy),
+                postProcessors = postProcessors
             )
         }
     }

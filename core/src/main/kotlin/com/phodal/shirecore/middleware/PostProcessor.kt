@@ -6,6 +6,14 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
 
 interface PostProcessor {
+    val processorName: String
+
+    /**
+     * This function checks if a given context is applicable for handling post codes.
+     *
+     * @param context the PostCodeHandleContext to be checked for applicability
+     * @return true if the context is applicable for handling post codes, false otherwise
+     */
     fun isApplicable(context: PostCodeHandleContext): Boolean
 
     /**
@@ -24,25 +32,16 @@ interface PostProcessor {
         private val EP_NAME: ExtensionPointName<PostProcessor> =
             ExtensionPointName.create("com.phodal.shirePostProcessor")
 
-        fun handler(handleName: String, context: PostCodeHandleContext): List<PostProcessor> {
-            // check from builtin
-            val builtinHandler = BuiltinPostHandler.values().find {
-                it.handleName == handleName
-            }
-
-//            if (builtinHandler != null) {
-//                return listOf(BuiltinPostProcessor(builtinHandler))
-//            }
-
-            return EP_NAME.extensionList.filter {
-                it.isApplicable(context)
+        fun handler(handleName: String): PostProcessor? {
+            return EP_NAME.extensionList.find {
+                it.processorName == handleName
             }
         }
 
     }
 }
 
-data class PostCodeHandleContext (
+class PostCodeHandleContext (
     val element: PsiElement,
     val language: String,
     /**
@@ -50,45 +49,3 @@ data class PostCodeHandleContext (
      */
     val file: VirtualFile? = null,
 )
-
-/**
- * Post middleware actions, like
- * Logging, Metrics, CodeVerify, RunCode, ParseCode etc.
- *
- */
-enum class BuiltinPostHandler(var handleName: String) {
-    /**
-     * Logging the action.
-     */
-    Logging("logging"),
-
-    /**
-     * Metric time spent on the action.
-     */
-    TimeMetric("timeMetric"),
-
-    /**
-     * Acceptance metric.
-     */
-    AcceptanceMetric("acceptanceMetric"),
-
-    /**
-     * Check has code error or PSI issue.
-     */
-    CodeVerify("codeVerify"),
-
-    /**
-     * Run generate text code
-     */
-    RunCode("runCode"),
-
-    /**
-     * Parse text to code blocks
-     */
-    ParseCode("parseCode"),
-
-    /**
-     * For example, TestCode should be in the correct directory, like java test should be in test directory.
-     */
-    InferCodeLocation("InferCodeLocation"),
-}
