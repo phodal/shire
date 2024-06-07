@@ -16,25 +16,44 @@ import com.intellij.util.messages.MessageBusConnection
 import com.phodal.shirecore.middleware.PostCodeHandleContext
 import com.phodal.shirecore.middleware.PostProcessor
 
-class CodeVerifyProcessor : PostProcessor {
+class CodeVerifyProcessor(override val processorName: String = "CodeVerify") : PostProcessor {
     override fun isApplicable(context: PostCodeHandleContext): Boolean {
-        TODO("Not yet implemented")
+        // check is psi support in this project
+
+        return true
     }
 
     override fun setup(context: PostCodeHandleContext): String {
-        TODO("Not yet implemented")
-    }
-
-    override fun execute(project: Project, context: PostCodeHandleContext, genText: String): String {
+        // do nothing
         return ""
     }
 
+    override fun execute(project: Project, context: PostCodeHandleContext, genText: String): String {
+        if (context.file == null) {
+            return ""
+        }
+
+        var errors: List<String> = listOf()
+        collectSyntaxError<PsiFile>(context.file, project) {
+            errors = it
+        }
+
+        return errors.joinToString("\n")
+    }
+
     override fun finish(context: PostCodeHandleContext): String {
-        TODO("Not yet implemented")
+        return ""
     }
 
 
-    fun <T : PsiFile> collectSyntaxError(
+    /**
+     * This function is used to collect syntax errors from a given PsiFile and then execute a specified action with the list of errors.
+     *
+     * @param outputFile the VirtualFile representing the output file to collect syntax errors from
+     * @param project the Project in which the file is located
+     * @param runAction the action to run with the list of syntax errors (optional)
+     */
+    private fun <T : PsiFile> collectSyntaxError(
         outputFile: VirtualFile,
         project: Project,
         runAction: ((errors: List<String>) -> Unit)?,

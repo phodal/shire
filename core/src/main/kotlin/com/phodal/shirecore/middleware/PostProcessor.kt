@@ -2,8 +2,6 @@ package com.phodal.shirecore.middleware
 
 import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.psi.PsiElement
 
 interface PostProcessor {
     val processorName: String
@@ -40,12 +38,3 @@ interface PostProcessor {
 
     }
 }
-
-class PostCodeHandleContext (
-    val element: PsiElement,
-    val language: String,
-    /**
-     * Convert code to file
-     */
-    val file: VirtualFile? = null,
-)
