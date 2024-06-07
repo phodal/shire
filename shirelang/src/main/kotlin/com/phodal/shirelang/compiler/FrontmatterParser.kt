@@ -5,7 +5,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.TokenType.WHITE_SPACE
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.elementType
-import com.phodal.shirelang.compiler.frontmatter.FrontMatterShireConfig
+import com.phodal.shirelang.compiler.frontmatter.HobbitHole
 import com.phodal.shirelang.compiler.frontmatter.FrontMatterType
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.psi.ShireFrontMatterHeader
@@ -24,14 +24,14 @@ object FrontmatterParser {
      * @param psiElement the ShireFrontMatterHeader to be parsed
      * @return a FrontMatterShireConfig object if parsing is successful, null otherwise
      */
-    fun parse(psiElement: ShireFrontMatterHeader): FrontMatterShireConfig? {
+    fun parse(psiElement: ShireFrontMatterHeader): HobbitHole? {
         return psiElement.children.firstOrNull()?.let {
             val fm = processFrontmatter(it.children)
-            FrontMatterShireConfig.from(fm)
+            HobbitHole.from(fm)
         }
     }
 
-    fun parse(file: ShireFile): FrontMatterShireConfig? {
+    fun parse(file: ShireFile): HobbitHole? {
         return PsiTreeUtil.getChildrenOfTypeAsList(file, ShireFrontMatterHeader::class.java).firstOrNull()?.let {
             parse(it)
         }

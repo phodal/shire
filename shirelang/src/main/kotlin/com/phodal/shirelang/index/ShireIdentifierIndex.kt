@@ -6,7 +6,7 @@ import com.intellij.util.io.DataExternalizer
 import com.intellij.util.io.EnumeratorStringDescriptor
 import com.intellij.util.io.KeyDescriptor
 import com.phodal.shirelang.ShireFileType
-import com.phodal.shirelang.compiler.frontmatter.FrontMatterShireConfig
+import com.phodal.shirelang.compiler.frontmatter.HobbitHole
 import com.phodal.shirelang.psi.ShireFrontMatterKey
 import com.phodal.shirelang.psi.ShireVisitor
 import java.io.DataInput
@@ -26,7 +26,7 @@ class ShireIdentifierIndex: FileBasedIndexExtension<String, Int>() {
         val result = mutableMapOf<String, Int>()
         val visitor = object : ShireVisitor() {
             override fun visitElement(element: PsiElement) {
-                if (element is ShireFrontMatterKey && element.text == FrontMatterShireConfig.CONFIG_ID) {
+                if (element is ShireFrontMatterKey && element.text == HobbitHole.CONFIG_ID) {
                     result[element.text] = element.textOffset
                 }
 

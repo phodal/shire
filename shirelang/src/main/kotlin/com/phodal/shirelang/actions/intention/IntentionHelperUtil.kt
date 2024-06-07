@@ -7,7 +7,7 @@ import com.intellij.psi.PsiFile
 import com.phodal.shirecore.ShirelangNotifications
 import com.phodal.shirecore.action.ShireActionLocation
 import com.phodal.shirelang.actions.dynamic.DynamicShireActionService
-import com.phodal.shirelang.compiler.frontmatter.FrontMatterShireConfig
+import com.phodal.shirelang.compiler.frontmatter.HobbitHole
 
 object IntentionHelperUtil {
     fun getAiAssistantIntentions(project: Project, editor: Editor, file: PsiFile): List<IntentionAction> {
@@ -18,7 +18,7 @@ object IntentionHelperUtil {
     }
 }
 
-class ShireIntentionAction(name: String, val config: FrontMatterShireConfig, file: PsiFile) : IntentionAction {
+class ShireIntentionAction(name: String, val config: HobbitHole, file: PsiFile) : IntentionAction {
     override fun startInWriteAction(): Boolean = false
 
     override fun getFamilyName(): String = "Shire Intention"

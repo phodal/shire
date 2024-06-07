@@ -1,7 +1,7 @@
 package com.phodal.shirelang.compiler
 
 import com.phodal.shirecore.agent.CustomAgent
-import com.phodal.shirelang.compiler.frontmatter.FrontMatterShireConfig
+import com.phodal.shirelang.compiler.frontmatter.HobbitHole
 import com.phodal.shirelang.psi.ShireFile
 
 data class ShireCompiledResult(
@@ -25,5 +25,5 @@ data class ShireCompiledResult(
      */
     var nextJob: ShireFile? = null,
 
-    var config: FrontMatterShireConfig? = null,
+    var config: HobbitHole? = null,
 )

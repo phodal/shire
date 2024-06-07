@@ -14,7 +14,7 @@ sealed class ElementStrategy {
  * - Normal: the action is a normal action
  * - Flow: each action can be a task in a flow, which will build a DAG
  */
-data class FrontMatterShireConfig(
+open class HobbitHole(
     /**
      * Display name of the action.
      */
@@ -64,11 +64,11 @@ data class FrontMatterShireConfig(
      * The list of rule files to apply for the action.
      */
     val fileContentFilter: List<String> = emptyList()
-) {
+) : Smials {
     companion object {
         const val CONFIG_ID = "name"
 
-        fun from(frontMatterMap: MutableMap<String, FrontMatterType>): FrontMatterShireConfig? {
+        fun from(frontMatterMap: MutableMap<String, FrontMatterType>): HobbitHole? {
             val name = frontMatterMap[CONFIG_ID]?.value as? String ?: return null
             val description = frontMatterMap["description"]?.value as? String ?: ""
             val interaction = frontMatterMap["interaction"]?.value as? String ?: ""
@@ -81,7 +81,7 @@ data class FrontMatterShireConfig(
                 }
             }
 
-            return FrontMatterShireConfig(
+            return HobbitHole(
                 name,
                 description,
                 InteractionType.from(interaction),
