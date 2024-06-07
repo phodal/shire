@@ -16,6 +16,10 @@
         <shireBuildSystemProvider
                 implementation="com.phodal.shirelang.java.impl.JavaBuildSystemProvider"/>
 
+        <shireToolchainProvider
+                language="JAVA"
+                implementationClass="com.phodal.shirelang.java.impl.JavaToolchainProvider"/>
+
         <shireSymbolProvider implementation="com.phodal.shirelang.java.impl.JavaSymbolProvider"/>
 
         <shireElementStrategyBuilder implementation="com.phodal.shirelang.java.impl.JavaElementStrategyBuilder"/>

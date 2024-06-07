@@ -19,10 +19,10 @@ data class ToolchainPrepareContext(
 )
 
 interface ToolchainProvider {
-    fun isApplicable(project: Project, creationContext: ToolchainPrepareContext): Boolean
+    fun isApplicable(project: Project, context: ToolchainPrepareContext): Boolean
 
     @RequiresBackgroundThread
-    suspend fun collect(project: Project, creationContext: ToolchainPrepareContext): List<ToolchainContextItem>
+    suspend fun collect(project: Project, context: ToolchainPrepareContext): List<ToolchainContextItem>
 
     companion object {
         private val EP_NAME = ExtensionPointName<ToolchainProvider>("com.phodal.shireToolchainProvider")
