@@ -33,7 +33,7 @@ open class HobbitHole(
      * If not selected text, will according the element position to select the element block.
      * For example, if cursor in a function, select the function block.
      */
-    private val selectionStrategy: SelectElementStrategy = SelectElementStrategy.DEFAULT,
+    private val selectionStrategy: SelectElementStrategy = SelectElementStrategy.Blocked,
     /**
      * The list of actions that this action depends on.
      * We use it for Directed Acyclic Graph (DAG) to represent dependencies between actions.

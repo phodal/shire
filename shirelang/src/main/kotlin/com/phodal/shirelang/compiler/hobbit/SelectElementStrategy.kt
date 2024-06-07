@@ -15,7 +15,7 @@ sealed class SelectElementStrategy {
     /**
      * Auto select parent block element, like function, class, etc.
      */
-    object DEFAULT : SelectElementStrategy() {
+    object Blocked : SelectElementStrategy() {
         override fun select() {
             val project = ProjectManager.getInstance().openProjects.firstOrNull() ?: return
             val editor = FileEditorManager.getInstance(project).selectedTextEditor ?: return
@@ -37,11 +37,41 @@ sealed class SelectElementStrategy {
         }
     }
 
+    object Selected: SelectElementStrategy() {
+        override fun select() {
+            // do nothing
+        }
+    }
+
+    object Default: SelectElementStrategy() {
+        override fun select() {
+            val project = ProjectManager.getInstance().openProjects.firstOrNull() ?: return
+            val editor = FileEditorManager.getInstance(project).selectedTextEditor ?: return
+
+            val selectionModel = editor.selectionModel
+            if (!selectionModel.hasSelection()) {
+                Blocked.select()
+            }
+        }
+    }
+
+    object All: SelectElementStrategy() {
+        override fun select() {
+            val project = ProjectManager.getInstance().openProjects.firstOrNull() ?: return
+            val editor = FileEditorManager.getInstance(project).selectedTextEditor ?: return
+
+            val selectionModel = editor.selectionModel
+            selectionModel.setSelection(0, editor.document.textLength)
+        }
+    }
+
     companion object {
         fun fromString(strategy: String): SelectElementStrategy {
             return when (strategy.lowercase()) {
-                "default" -> DEFAULT
-                else -> DEFAULT
+                "block" -> Blocked
+                "select" -> Selected
+                "all" -> All
+                else -> Default
             }
         }
     }
