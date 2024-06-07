@@ -53,7 +53,7 @@ ShireFile
         PsiElement(ShireTokenType.NEWLINE)('\n')
       ShireFrontMatterEntryImpl(FRONT_MATTER_ENTRY)
         ShireFrontMatterKeyImpl(FRONT_MATTER_KEY)
-          PsiElement(ShireTokenType.FRONTMATTER_KEY)('fileRule')
+          PsiElement(ShireTokenType.FRONTMATTER_KEY)('filenameFilter')
         PsiElement(ShireTokenType.COLON)(':')
         ShireFrontMatterValueImpl(FRONT_MATTER_VALUE)
           PsiElement(ShireTokenType.NEWLINE)('\n')

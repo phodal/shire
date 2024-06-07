@@ -15,7 +15,13 @@ sealed class ElementStrategy {
  * - Flow: each action can be a task in a flow, which will build a DAG
  */
 data class FrontMatterShireConfig(
+    /**
+     * Display name of the action.
+     */
     val name: String,
+    /**
+     * Tips for the action.
+     */
     val description: String,
     /**
      * The output of the action can be a file, a string, etc.
@@ -48,6 +54,16 @@ data class FrontMatterShireConfig(
      *
      */
     val postProcessor: List<String> = emptyList(),
+
+    /**
+     * The list of rule files to apply for the action.
+     */
+    val filenameFilter: List<String> = emptyList(),
+
+    /**
+     * The list of rule files to apply for the action.
+     */
+    val fileContentFilter: List<String> = emptyList()
 ) {
     companion object {
         const val CONFIG_ID = "name"

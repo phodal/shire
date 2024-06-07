@@ -13,7 +13,7 @@
 
 ```shire
 ---
-fileRule:
+filenameFilter:
   "**/*.java": "You MUST use should_xx_xx style for test method name, You MUST use given-when-then style."
   "**/*Controller.java": "Use appropriate Spring test annotations such as `@MockBean`, `@Autowired`, `@WebMvcTest`, `@DataJpaTest`, `@AutoConfigureTestDatabase`, `@AutoConfigureMockMvc`, `@SpringBootTest` etc."
   "**/*Service.java": "Follow the common Spring code style by using the AssertJ library.\nAssume that the database is empty before each test and create valid entities with consideration for data constraints (jakarta.validation.constraints)."

@@ -33,7 +33,7 @@
                 <tspan x="321.984" y="99" font-family="NotoSerifSC-Regular, Noto Serif SC" font-weight="normal" fill="#000000">, </tspan>
                 <tspan x="328.992" y="99" font-family="NotoSerifSC-Regular, Noto Serif SC" font-weight="normal" fill="#087D18">"RunCode"</tspan>
                 <tspan x="390.792" y="99" font-family="NotoSerifSC-Regular, Noto Serif SC" font-weight="normal" fill="#000000">]</tspan>
-                <tspan x="153" y="116" fill="#861094">fileRule</tspan>
+                <tspan x="153" y="116" fill="#861094">filenameFilter</tspan>
                 <tspan x="200.172" y="116" font-family="NotoSerifSC-Regular, Noto Serif SC" font-weight="normal" fill="#000000">:</tspan>
                 <tspan x="153" y="133" font-family="NotoSerifSC-Regular, Noto Serif SC" font-weight="normal" fill="#000000">  </tspan>
                 <tspan x="159.192" y="133" font-family="NotoSerifSC-Regular, Noto Serif SC" font-weight="normal" fill="#087D18">"**/*.java"</tspan>
