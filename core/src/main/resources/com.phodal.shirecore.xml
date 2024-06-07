@@ -57,7 +57,7 @@
 
         <!-- Post Code Middleware -->
         <extensionPoint qualifiedName="com.phodal.shirePostProcessor"
-                        interface="com.phodal.shirecore.middleware.PostCodeHandler"
+                        interface="com.phodal.shirecore.middleware.PostProcessor"
                         dynamic="true"/>
     </extensionPoints>
 </idea-plugin>

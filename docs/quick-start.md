@@ -41,8 +41,8 @@ name: "Object Demo"
 description: "A simple object demo"
 interaction: AppendCursor
 actionLocation: ContextMenu
-postProcessor: ["VerifyCode", "RunCode"]
-filenameFilter:
+postProcessors: ["VerifyCode", "RunCode"]
+filenameFilters:
   "**/*.java": "You MUST use should_xx_xx style for test method name"
 ---
 
