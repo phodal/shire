@@ -1,7 +1,7 @@
 package com.phodal.shirelang.compiler
 
 import com.phodal.shirecore.agent.CustomAgent
-import com.phodal.shirelang.compiler.frontmatter.HobbitHole
+import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.psi.ShireFile
 
 data class ShireCompiledResult(

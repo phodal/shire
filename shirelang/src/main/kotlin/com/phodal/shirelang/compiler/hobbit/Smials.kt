@@ -1,4 +1,4 @@
-package com.phodal.shirelang.compiler.frontmatter
+package com.phodal.shirelang.compiler.hobbit
 
 /**
  * Smials is a type of Hobbit Hole

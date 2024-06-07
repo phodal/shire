@@ -1,4 +1,4 @@
-package com.phodal.shirelang.compiler.frontmatter
+package com.phodal.shirelang.compiler.hobbit
 
 sealed class FrontMatterType(val value: Any) {
     class STRING(value: String): FrontMatterType(value)

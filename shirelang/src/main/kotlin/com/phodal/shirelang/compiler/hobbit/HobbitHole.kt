@@ -1,14 +1,7 @@
-package com.phodal.shirelang.compiler.frontmatter
+package com.phodal.shirelang.compiler.hobbit
 
 import com.phodal.shirecore.action.ShireActionLocation
 import com.phodal.shirecore.agent.InteractionType
-
-sealed class SelectElementStrategy {
-    /**
-     * Auto select parent block element, like function, class, etc.
-     */
-    object DEFAULT : SelectElementStrategy()
-}
 
 /**
  * - Normal: the action is a normal action
@@ -63,8 +56,12 @@ open class HobbitHole(
     /**
      * The list of rule files to apply for the action.
      */
-    val fileContentFilters: List<String> = emptyList()
+    val fileContentFilters: List<String> = emptyList(),
 ) : Smials {
+    fun pickupElement() {
+        this.selectionStrategy.select()
+    }
+
     companion object {
         const val CONFIG_ID = "name"
 
