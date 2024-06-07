@@ -31,7 +31,7 @@ class ShireRunFileAction : DumbAwareAction() {
     }
 
     override fun actionPerformed(e: AnActionEvent) {
-        val file = e.getData(CommonDataKeys.PSI_FILE) ?: return
+        val file = e.getData(CommonDataKeys.PSI_FILE) as? ShireFile ?: return
         val project = file.project
         executeShireFile(e, project, file)
     }
@@ -41,7 +41,7 @@ class ShireRunFileAction : DumbAwareAction() {
         fun executeShireFile(
             e: AnActionEvent,
             project: Project,
-            file: PsiFile,
+            file: ShireFile,
         ) {
             val context = ConfigurationContext.getFromContext(e.dataContext, e.place)
             val configProducer = RunConfigurationProducer.getInstance(ShireRunConfigurationProducer::class.java)

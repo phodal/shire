@@ -24,10 +24,12 @@ class ShireContextActionGroup : ActionGroup() {
     }
 }
 
-class DynamicShireAction(private val actionConfig: DynamicShireActionConfig) :
-    DumbAwareAction(actionConfig.name, actionConfig.config.description, ShireIcons.DEFAULT) {
+class DynamicShireAction(private val config: DynamicShireActionConfig) :
+    DumbAwareAction(config.name, config.config.description, ShireIcons.DEFAULT) {
     override fun actionPerformed(e: AnActionEvent) {
         val project = e.project ?: return
-        ShireRunFileAction.executeShireFile(e, project, actionConfig.file)
+        config.config.pickupElement()
+
+        ShireRunFileAction.executeShireFile(e, project, config.shireFile)
     }
 }

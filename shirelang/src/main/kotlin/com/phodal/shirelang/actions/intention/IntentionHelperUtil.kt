@@ -18,7 +18,7 @@ object IntentionHelperUtil {
     }
 }
 
-class ShireIntentionAction(name: String, val hobbitHole: HobbitHole, file: PsiFile) : IntentionAction {
+class ShireIntentionAction(name: String, private val hobbitHole: HobbitHole, file: PsiFile) : IntentionAction {
     override fun startInWriteAction(): Boolean = false
 
     override fun getFamilyName(): String = "Shire Intention"

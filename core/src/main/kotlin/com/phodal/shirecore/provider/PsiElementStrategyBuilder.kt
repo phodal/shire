@@ -48,7 +48,7 @@ interface PsiElementStrategy {
     fun getElementToAction(project: Project?, psiFile: PsiFile, range: TextRange): PsiElement?
 }
 
-class DefaultPsiElementStrategy : PsiElementStrategy {
+open class DefaultPsiElementStrategy : PsiElementStrategy {
     /**
      * Returns the PsiElement to explain in the given project and editor.
      *
