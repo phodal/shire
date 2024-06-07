@@ -27,11 +27,6 @@ class DynamicShireAction(private val actionConfig: DynamicShireActionConfig) :
     DumbAwareAction(actionConfig.name, actionConfig.config.description, ShireIcons.DEFAULT) {
     override fun actionPerformed(e: AnActionEvent) {
         val project = e.project ?: return
-
-        // todo: handle editor and element
-        val editor = e.getData(CommonDataKeys.EDITOR) as EditorEx? ?: return
-        val element = e.getData(CommonDataKeys.PSI_ELEMENT)
-
         ShireRunFileAction.executeShireFile(e, project, actionConfig.file)
     }
 }
