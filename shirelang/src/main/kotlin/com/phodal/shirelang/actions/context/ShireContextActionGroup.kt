@@ -1,8 +1,8 @@
 package com.phodal.shirelang.actions.context
 
 import com.intellij.openapi.actionSystem.*
-import com.intellij.openapi.editor.ex.EditorEx
 import com.intellij.openapi.project.DumbAwareAction
+import com.phodal.shirecore.action.ShireActionLocation
 import com.phodal.shirelang.ShireIcons
 import com.phodal.shirelang.actions.ShireRunFileAction
 import com.phodal.shirelang.actions.dynamic.DynamicShireActionConfig
@@ -16,7 +16,8 @@ class ShireContextActionGroup : ActionGroup() {
     }
 
     override fun getChildren(e: AnActionEvent?): Array<AnAction> {
-        val configs: List<DynamicShireActionConfig> = DynamicShireActionService.getInstance().getContextAction()
+        val configs: List<DynamicShireActionConfig> =
+            DynamicShireActionService.getInstance().getAction(ShireActionLocation.CONTEXT_MENU)
         return configs.map { actionConfig ->
             DynamicShireAction(actionConfig)
         }.toTypedArray()

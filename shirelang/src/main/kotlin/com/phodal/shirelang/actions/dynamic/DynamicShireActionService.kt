@@ -16,17 +16,12 @@ class DynamicShireActionService {
         return actionCache.values.toList()
     }
 
-    fun getContextAction(): List<DynamicShireActionConfig> {
+    fun getAction(location: ShireActionLocation): List<DynamicShireActionConfig> {
         return actionCache.values.filter {
-            it.config.actionLocation == ShireActionLocation.CONTEXT_MENU
+            it.config.actionLocation == location
         }
     }
 
-    fun getIntentAction(): List<DynamicShireActionConfig> {
-        return actionCache.values.filter {
-            it.config.actionLocation == ShireActionLocation.INTENTION_MENU
-        }
-    }
 
     companion object {
         fun getInstance(): DynamicShireActionService =

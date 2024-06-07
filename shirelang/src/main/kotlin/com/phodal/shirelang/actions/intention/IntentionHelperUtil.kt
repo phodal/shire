@@ -5,12 +5,13 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
 import com.phodal.shirecore.ShirelangNotifications
+import com.phodal.shirecore.action.ShireActionLocation
 import com.phodal.shirelang.actions.dynamic.DynamicShireActionService
 import com.phodal.shirelang.compiler.frontmatter.FrontMatterShireConfig
 
 object IntentionHelperUtil {
     fun getAiAssistantIntentions(project: Project, editor: Editor, file: PsiFile): List<IntentionAction> {
-        val shireActionConfigs = DynamicShireActionService.getInstance().getIntentAction()
+        val shireActionConfigs = DynamicShireActionService.getInstance().getAction(ShireActionLocation.INTENTION_MENU)
         return shireActionConfigs.map { actionConfig ->
             ShireIntentionAction(actionConfig.name, actionConfig.config, file)
         }
