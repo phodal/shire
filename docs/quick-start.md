@@ -55,3 +55,6 @@ Here is current $language code:
 /file:src/main/kotlin/com/phodal/blog/controller/UserController.kt
 ```
 
+## LICENSE
+
+This code is distributed under the MPL 2.0 license. See `LICENSE` in this directory.
