@@ -13,13 +13,14 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.*
 import com.intellij.util.messages.MessageBusConnection
+import com.phodal.shirecore.middleware.BuiltinPostHandler
 import com.phodal.shirecore.middleware.PostCodeHandleContext
 import com.phodal.shirecore.middleware.PostProcessor
 
-class CodeVerifyProcessor(override val processorName: String = "CodeVerify") : PostProcessor {
-    override fun isApplicable(context: PostCodeHandleContext): Boolean {
-        // check is psi support in this project
+class CodeVerifyProcessor : PostProcessor {
+    override val processorName: String = BuiltinPostHandler.CodeVerify.handleName
 
+    override fun isApplicable(context: PostCodeHandleContext): Boolean {
         return true
     }
 
@@ -34,7 +35,7 @@ class CodeVerifyProcessor(override val processorName: String = "CodeVerify") : P
         }
 
         var errors: List<String> = listOf()
-        collectSyntaxError<PsiFile>(context.file, project) {
+        collectSyntaxError<PsiFile>(context.file.virtualFile, project) {
             errors = it
         }
 
