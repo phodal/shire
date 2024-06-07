@@ -2,18 +2,19 @@ package com.phodal.shirecore.middleware
 
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiFile
 
 class PostCodeHandleContext (
     /**
      * The element to be handled
      */
-    val element: PsiElement,
+    val element: PsiElement?,
     /**
      * The language of the code to be handled
      */
-    val language: String,
+    val language: String?,
     /**
      * Convert code to file
      */
-    val file: VirtualFile? = null,
+    val file: PsiFile? = null,
 )

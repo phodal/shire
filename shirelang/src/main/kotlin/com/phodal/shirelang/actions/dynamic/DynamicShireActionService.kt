@@ -18,7 +18,7 @@ class DynamicShireActionService {
 
     fun getAction(location: ShireActionLocation): List<DynamicShireActionConfig> {
         return actionCache.values.filter {
-            it.config.actionLocation == location
+            it.hole.actionLocation == location
         }
     }
 

@@ -19,6 +19,14 @@ interface PostProcessor {
      */
     fun setup(context: PostCodeHandleContext): String
 
+    /**
+     * Executes a function with the given project, context, and generated text.
+     *
+     * @param project the project to execute the function on
+     * @param context the context in which the function is executed
+     * @param genText the generated text to be used in the execution
+     * @return a string result of the execution
+     */
     fun execute(project: Project, context: PostCodeHandleContext, genText: String): String
 
     /**

@@ -25,10 +25,14 @@ class ShireContextActionGroup : ActionGroup() {
 }
 
 class DynamicShireAction(private val config: DynamicShireActionConfig) :
-    DumbAwareAction(config.name, config.config.description, ShireIcons.DEFAULT) {
+    DumbAwareAction(config.name, config.hole.description, ShireIcons.DEFAULT) {
     override fun actionPerformed(e: AnActionEvent) {
         val project = e.project ?: return
-        config.config.pickupElement()
+        val editor = e.getData(CommonDataKeys.EDITOR)
+        val file = e.getData(CommonDataKeys.PSI_FILE)
+
+        config.hole.setupProcessor(project, editor, file)
+        config.hole.pickupElement()
 
         ShireRunFileAction.executeShireFile(e, project, config.shireFile)
     }

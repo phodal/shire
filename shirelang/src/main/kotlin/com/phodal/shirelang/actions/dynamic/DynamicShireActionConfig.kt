@@ -5,6 +5,6 @@ import com.phodal.shirelang.psi.ShireFile
 
 data class DynamicShireActionConfig(
     val name: String,
-    val config: HobbitHole,
+    val hole: HobbitHole,
     val shireFile: ShireFile
 )

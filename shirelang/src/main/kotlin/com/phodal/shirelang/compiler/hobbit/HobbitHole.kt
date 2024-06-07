@@ -1,5 +1,8 @@
 package com.phodal.shirelang.compiler.hobbit
 
+import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.project.Project
+import com.intellij.psi.PsiFile
 import com.phodal.shirecore.action.ShireActionLocation
 import com.phodal.shirecore.agent.InteractionType
 import com.phodal.shirecore.middleware.PostCodeHandleContext
@@ -62,6 +65,14 @@ open class HobbitHole(
 ) : Smials {
     fun pickupElement() {
         this.selectionStrategy.select()
+    }
+
+    fun setupProcessor(project: Project, editor: Editor?, file: PsiFile?) {
+        val language = file?.language?.id
+        val context = PostCodeHandleContext(null, language, file)
+        postProcessors.forEach {
+            it.setup(context)
+        }
     }
 
     companion object {

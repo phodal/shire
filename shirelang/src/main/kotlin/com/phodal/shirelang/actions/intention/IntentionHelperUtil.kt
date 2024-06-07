@@ -13,7 +13,7 @@ object IntentionHelperUtil {
     fun getAiAssistantIntentions(project: Project, editor: Editor?, file: PsiFile): List<IntentionAction> {
         val shireActionConfigs = DynamicShireActionService.getInstance().getAction(ShireActionLocation.INTENTION_MENU)
         return shireActionConfigs.map { actionConfig ->
-            ShireIntentionAction(actionConfig.name, actionConfig.config, file)
+            ShireIntentionAction(actionConfig.name, actionConfig.hole, file)
         }
     }
 }
@@ -30,6 +30,7 @@ class ShireIntentionAction(name: String, private val hobbitHole: HobbitHole, fil
     }
 
     override fun invoke(project: Project, editor: Editor?, file: PsiFile?) {
+        hobbitHole.setupProcessor(project, editor, file)
         hobbitHole.pickupElement()
         ShirelangNotifications.notify(project, "Shire Intention")
     }
