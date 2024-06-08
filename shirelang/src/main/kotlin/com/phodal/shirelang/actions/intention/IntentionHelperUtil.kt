@@ -18,7 +18,7 @@ object IntentionHelperUtil {
     }
 }
 
-class ShireIntentionAction(name: String, private val hobbitHole: HobbitHole, file: PsiFile) : IntentionAction {
+class ShireIntentionAction(name: String, private val hobbitHole: HobbitHole?, file: PsiFile) : IntentionAction {
     override fun startInWriteAction(): Boolean = false
 
     override fun getFamilyName(): String = "Shire Intention"
@@ -30,8 +30,8 @@ class ShireIntentionAction(name: String, private val hobbitHole: HobbitHole, fil
     }
 
     override fun invoke(project: Project, editor: Editor?, file: PsiFile?) {
-        hobbitHole.setupProcessor(project, editor, file)
-        hobbitHole.pickupElement()
+        hobbitHole?.setupProcessor(project, editor, file)
+        hobbitHole?.pickupElement()
         ShirelangNotifications.notify(project, "Shire Intention")
     }
 

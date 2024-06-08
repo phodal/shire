@@ -6,13 +6,13 @@ import com.phodal.shirelang.psi.ShireFile
 
 data class DynamicShireActionConfig(
     val name: String,
-    val hole: HobbitHole,
+    val hole: HobbitHole ? = null,
     val shireFile: ShireFile
 ) {
     companion object {
         fun from(file: ShireFile): DynamicShireActionConfig {
             val hole = FrontmatterParser.parse(file)
-            return DynamicShireActionConfig(file.name, hole!!, file)
+            return DynamicShireActionConfig(file.name, hole, file)
         }
     }
 }
