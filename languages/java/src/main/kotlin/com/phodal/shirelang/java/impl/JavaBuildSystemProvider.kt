@@ -2,17 +2,8 @@ package com.phodal.shirelang.java.impl
 
 import com.intellij.openapi.externalSystem.service.project.ProjectDataManager
 import com.intellij.openapi.externalSystem.service.ui.completion.TextCompletionInfo
-import com.intellij.openapi.module.LanguageLevelUtil
-import com.intellij.openapi.module.ModuleManager
-import com.intellij.openapi.module.ModuleUtilCore
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
-import com.intellij.openapi.projectRoots.JavaSdkType
-import com.intellij.openapi.roots.ModuleRootManager
-import com.intellij.openapi.roots.ProjectRootManager
-import com.intellij.pom.java.LanguageLevel
-import com.intellij.psi.PsiFile
-import com.intellij.psi.util.PsiUtil
 import com.phodal.shirecore.buildsystem.BuildSystemContext
 import com.phodal.shirecore.provider.BuildSystemProvider
 import com.phodal.shirelang.java.util.JavaToolchain
@@ -28,15 +19,7 @@ open class JavaBuildSystemProvider : BuildSystemProvider() {
         val gradleInfo = projectDataManager.getExternalProjectsData(project, GradleConstants.SYSTEM_ID)
         if (gradleInfo.isNotEmpty()) {
             buildToolName = "Gradle"
-            val indices = GradleTasksIndices.getInstance(project)
-
-            val tasks = indices.findTasks(project.guessProjectDir()!!.path)
-                .filterNot { it.isInherited }
-                .groupBy { it.name }
-                .map { TextCompletionInfo(it.key, it.value.first().description) }
-                .sortedWith(Comparator.comparing({ it.text }, GRADLE_COMPLETION_COMPARATOR))
-
-            taskString = tasks.joinToString(" ") { it.text }
+            taskString = JavaToolchain.collectGradleTasks(project).joinToString(" ") { it.text }
         } else {
             buildToolName = "Maven"
         }
@@ -51,6 +34,7 @@ open class JavaBuildSystemProvider : BuildSystemProvider() {
             taskString = taskString
         )
     }
+
 }
 
 val GRADLE_COMPLETION_COMPARATOR = Comparator<String> { o1, o2 ->
