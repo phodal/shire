@@ -1,9 +1,7 @@
 package com.phodal.shirecore.runner
 
-import com.intellij.execution.ExecutionException
-import com.intellij.execution.ExecutionManager
-import com.intellij.execution.OutputListener
-import com.intellij.execution.RunnerAndConfigurationSettings
+import com.intellij.execution.*
+import com.intellij.execution.configurations.RunConfiguration
 import com.intellij.execution.executors.DefaultRunExecutor
 import com.intellij.execution.impl.ExecutionManagerImpl
 import com.intellij.execution.process.ProcessAdapter
@@ -14,6 +12,7 @@ import com.intellij.execution.runners.ProgramRunner
 import com.intellij.execution.testframework.sm.runner.SMTRunnerEventsAdapter
 import com.intellij.execution.testframework.sm.runner.SMTRunnerEventsListener
 import com.intellij.openapi.application.runInEdt
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
@@ -28,8 +27,8 @@ interface ConfigurationRunner {
     fun executeRunConfigurations(
         project: Project,
         settings: RunnerAndConfigurationSettings,
-        testEventsListener: SMTRunnerEventsAdapter?,
-        indicator: ProgressIndicator?,
+        testEventsListener: SMTRunnerEventsAdapter? = null,
+        indicator: ProgressIndicator? = null,
     ) {
         val runContext = createRunContext()
         executeRunConfigures(project, settings, runContext, testEventsListener, indicator)
@@ -159,6 +158,18 @@ interface ConfigurationRunner {
         runContext.environments.add(env)
         runner.execute(env)
         return true
+    }
+
+    fun executeRunConfigurations(project: Project, configuration: RunConfiguration) {
+        val runManager = RunManager.getInstance(project)
+        val settings = runManager.findConfigurationByTypeAndName(configuration.type, configuration.name)
+
+        if (settings == null) {
+            logger<ConfigurationRunner>().warn("Failed to find test configuration for: ${configuration.name}")
+            return
+        }
+
+        executeRunConfigurations(project, settings)
     }
 }
 

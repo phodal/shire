@@ -10,18 +10,18 @@ import com.intellij.openapi.projectRoots.JavaSdk
 import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.util.SmartList
 import com.phodal.shirecore.provider.ProjectRunService
-import com.phodal.shirecore.runner.RunServiceTask
+import com.phodal.shirecore.runner.ConfigurationRunner
 import com.phodal.shirelang.java.toolchain.GradleTasksUtil
 import icons.GradleIcons
 
-class JavaRunProjectService : ProjectRunService {
+class JavaRunProjectService : ProjectRunService, ConfigurationRunner {
     override fun isAvailable(project: Project): Boolean {
         return ProjectRootManager.getInstance(project).projectSdk is JavaSdk
     }
 
     override fun run(project: Project, taskName: String) {
         val runConfiguration = GradleTasksUtil.configureGradleRun(project, taskName)
-        RunServiceTask.run(project, runConfiguration)
+        executeRunConfigurations(project, runConfiguration)
     }
 
     override fun lookupAvailableTask(
@@ -32,7 +32,7 @@ class JavaRunProjectService : ProjectRunService {
         val lookupElements: MutableList<LookupElement> = SmartList()
         GradleTasksUtil.collectGradleTasksData(project).filter {
             !it.isTest && !it.isJvmTest
-        } .forEach {
+        }.forEach {
             val element = LookupElementBuilder.create(it.getFqnTaskName())
                 .withTypeText(it.description)
                 .withIcon(GradleIcons.Gradle)

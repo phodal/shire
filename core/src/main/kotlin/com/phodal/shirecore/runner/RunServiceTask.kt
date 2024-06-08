@@ -131,10 +131,4 @@ open class RunServiceTask(
 
     private fun fillWithIncorrect(message: String): String =
         message.nullize(nullizeSpaces = true) ?: "Incorrect"
-
-    companion object {
-        fun run(project: Project, runConfiguration: RunConfiguration) {
-
-        }
-    }
 }
