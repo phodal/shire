@@ -15,6 +15,7 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.util.PsiUtil
 import com.phodal.shirecore.buildsystem.BuildSystemContext
 import com.phodal.shirecore.provider.BuildSystemProvider
+import com.phodal.shirelang.java.util.JavaToolchain
 import org.jetbrains.plugins.gradle.service.project.GradleTasksIndices
 import org.jetbrains.plugins.gradle.util.GradleConstants
 
@@ -40,7 +41,7 @@ open class JavaBuildSystemProvider : BuildSystemProvider() {
             buildToolName = "Maven"
         }
 
-        val javaVersion = detectLanguageLevel(project, null)
+        val javaVersion = JavaToolchain.detectLanguageLevel(project, null)
 
         return BuildSystemContext(
             buildToolName = buildToolName,
@@ -50,41 +51,20 @@ open class JavaBuildSystemProvider : BuildSystemProvider() {
             taskString = taskString
         )
     }
+}
 
-    private fun detectLanguageLevel(project: Project, sourceFile: PsiFile?): LanguageLevel? {
-        val projectSdk = ProjectRootManager.getInstance(project).projectSdk
-        if (projectSdk != null) {
-            if (projectSdk.sdkType !is JavaSdkType) return null
-            return PsiUtil.getLanguageLevel(project)
-        }
-
-        var moduleForFile = ModuleUtilCore.findModuleForFile(sourceFile)
-        if (moduleForFile == null) {
-            moduleForFile = ModuleManager.getInstance(project).modules.firstOrNull() ?: return null
-        }
-
-        val sdk = ModuleRootManager.getInstance(moduleForFile).sdk ?: return null
-        if (sdk.sdkType !is JavaSdkType) return null
-
-        return LanguageLevelUtil.getEffectiveLanguageLevel(moduleForFile)
-    }
-
-    companion object {
-
-        val GRADLE_COMPLETION_COMPARATOR = Comparator<String> { o1, o2 ->
-            when {
-                o1.startsWith("--") && o2.startsWith("--") -> o1.compareTo(o2)
-                o1.startsWith("-") && o2.startsWith("--") -> -1
-                o1.startsWith("--") && o2.startsWith("-") -> 1
-                o1.startsWith(":") && o2.startsWith(":") -> o1.compareTo(o2)
-                o1.startsWith(":") && o2.startsWith("-") -> -1
-                o1.startsWith("-") && o2.startsWith(":") -> 1
-                o2.startsWith("-") -> -1
-                o2.startsWith(":") -> -1
-                o1.startsWith("-") -> 1
-                o1.startsWith(":") -> 1
-                else -> o1.compareTo(o2)
-            }
-        }
+val GRADLE_COMPLETION_COMPARATOR = Comparator<String> { o1, o2 ->
+    when {
+        o1.startsWith("--") && o2.startsWith("--") -> o1.compareTo(o2)
+        o1.startsWith("-") && o2.startsWith("--") -> -1
+        o1.startsWith("--") && o2.startsWith("-") -> 1
+        o1.startsWith(":") && o2.startsWith(":") -> o1.compareTo(o2)
+        o1.startsWith(":") && o2.startsWith("-") -> -1
+        o1.startsWith("-") && o2.startsWith(":") -> 1
+        o2.startsWith("-") -> -1
+        o2.startsWith(":") -> -1
+        o1.startsWith("-") -> 1
+        o1.startsWith(":") -> 1
+        else -> o1.compareTo(o2)
     }
 }
