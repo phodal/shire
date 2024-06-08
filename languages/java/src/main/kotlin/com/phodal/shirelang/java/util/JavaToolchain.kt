@@ -40,6 +40,23 @@ object JavaToolchain {
         return tasks
     }
 
+    /**
+     * Check start java task name, like:
+     * - Spring Boot: `bootRun`
+     * - Quarkus: `quarkusDev`
+     * - Micronaut: `run`
+     * - Helidon: `run`
+     */
+    fun getRunTaskName(project: Project): String {
+        val tasks = collectGradleTasks(project)
+        val runTasks = tasks.filter { it.text.contains("run", ignoreCase = true) }
+        if (runTasks.isNotEmpty()) {
+            return runTasks.first().text
+        }
+
+        return "run"
+    }
+
     fun detectLanguageLevel(project: Project, sourceFile: PsiFile?): LanguageLevel? {
         val projectSdk = ProjectRootManager.getInstance(project).projectSdk
         if (projectSdk != null) {
@@ -55,5 +72,4 @@ object JavaToolchain {
 
         return LanguageLevelUtil.getEffectiveLanguageLevel(moduleForFile)
     }
-
 }
