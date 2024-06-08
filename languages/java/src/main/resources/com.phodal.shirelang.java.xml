@@ -20,6 +20,9 @@
                 language="JAVA"
                 implementationClass="com.phodal.shirelang.java.impl.JavaToolchainProvider"/>
 
+        <shireRunProjectService
+                implementation="com.phodal.shirelang.java.impl.JavaRunProjectService"/>
+
         <shireSymbolProvider implementation="com.phodal.shirelang.java.impl.JavaSymbolProvider"/>
 
         <shireElementStrategyBuilder implementation="com.phodal.shirelang.java.impl.JavaElementStrategyBuilder"/>
