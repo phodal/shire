@@ -35,17 +35,22 @@ class JavaToolchainProvider : ToolchainProvider {
         project: Project,
         context: ToolchainPrepareContext,
     ): List<ToolchainContextItem> {
-        val psiFile = context.sourceFile
-        val isJavaFile = psiFile?.containingFile?.virtualFile?.extension?.equals("java", true) ?: false
+        return collectJavaVersion(context, project)?.let { listOf(it) } ?: emptyList()
+    }
 
-        if (!isJavaFile) return emptyList()
-        val languageLevel = detectLanguageLevel(project, psiFile) ?: return emptyList()
+
+    private fun collectJavaVersion(
+        context: ToolchainPrepareContext,
+        project: Project,
+    ): ToolchainContextItem? {
+        val psiFile = context.sourceFile
+        psiFile?.containingFile?.virtualFile?.extension?.equals("java", true) ?: return null
+
+        val languageLevel = detectLanguageLevel(project, psiFile) ?: return null
 
         val prompt = "You are working on a project that uses Java SDK version $languageLevel."
 
-        return listOf(
-            ToolchainContextItem(JavaToolchainProvider::class, prompt)
-        )
+        return ToolchainContextItem(JavaToolchainProvider::class, prompt)
     }
 
     private fun detectLanguageLevel(project: Project, sourceFile: PsiFile?): LanguageLevel? {
