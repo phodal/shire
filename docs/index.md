@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Home
-description: Shire offers a straightforward AI Agents Language that enables communication between an LLM and control IDE for automated programming.
+description: Shire offers a straightforward AI Coding & Agents Language that enables communication between an LLM and control IDE for automated programming.
 nav_order: 1
 permalink: /
 ---
@@ -9,7 +9,7 @@ permalink: /
 <p align="center">
   <img src="images/pluginIcon.svg" width="160px" height="160px"  alt="logo" />
 </p>
-<h1 align="center">Shire - AI Agents Language</h1>
+<h1 align="center">Shire - AI Coding & Agents Language</h1>
 <p align="center">
   <a href="https://github.com/phodal/shire/actions/workflows/build.yml">
     <img src="https://github.com/phodal/shire/workflows/Build/badge.svg" alt="Build" />
@@ -22,7 +22,7 @@ permalink: /
   </a>
 </p>
 
-The Shire AI Agents Language is a specialized tool designed to facilitate communication between a large language model (
+The Shire AI Coding & Agents Language is a specialized tool designed to facilitate communication between a large language model (
 LLM) and a control integrated development environment (IDE) for the purpose of automated programming. 
 
 ![Shire Cheatsheet](images/shire-sheet.svg)
