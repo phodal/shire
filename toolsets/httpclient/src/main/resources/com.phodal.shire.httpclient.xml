@@ -5,6 +5,6 @@
     </dependencies>
 
     <extensions defaultExtensionNs="com.phodal">
-        <shireRunService implementation="com.phodal.shire.httpclient.HttpClientFileRunService"/>
+        <shireFileRunService implementation="com.phodal.shire.httpclient.HttpClientFileRunService"/>
     </extensions>
 </idea-plugin>
