@@ -9,9 +9,9 @@ import com.intellij.psi.PsiManager
 import com.intellij.sh.psi.ShFile
 import com.intellij.sh.run.ShConfigurationType
 import com.intellij.sh.run.ShRunConfiguration
-import com.phodal.shirecore.provider.RunService
+import com.phodal.shirecore.provider.FileRunService
 
-class ShellRunService : RunService {
+class ShellFileRunService : FileRunService {
     override fun runConfigurationClass(project: Project): Class<out RunProfile> = ShRunConfiguration::class.java
     override fun createConfiguration(project: Project, virtualFile: VirtualFile): RunConfiguration? {
         val psiFile = PsiManager.getInstance(project).findFile(virtualFile) as? ShFile ?: return null

@@ -18,7 +18,7 @@ import com.phodal.shirecore.unittest.AutoTestingPromptContext
  *
  * @constructor Creates a new instance of the `WriteTestService` class.
  */
-abstract class AutoTesting : LazyExtensionInstance<AutoTesting>(), RunService {
+abstract class AutoTesting : LazyExtensionInstance<AutoTesting>(), FileRunService {
     @Attribute("language")
     var language: String? = null
 

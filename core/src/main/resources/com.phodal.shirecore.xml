@@ -8,7 +8,7 @@
 
     <extensionPoints>
         <extensionPoint qualifiedName="com.phodal.shireRunService"
-                        interface="com.phodal.shirecore.provider.RunService"
+                        interface="com.phodal.shirecore.provider.FileRunService"
                         dynamic="true"/>
 
         <extensionPoint qualifiedName="com.phodal.shireSymbolProvider"

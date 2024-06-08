@@ -25,7 +25,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.util.messages.MessageBusConnection
 import com.intellij.util.text.nullize
 import com.phodal.shirecore.ShireCoreBundle
-import com.phodal.shirecore.provider.RunService
+import com.phodal.shirecore.provider.FileRunService
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
@@ -33,7 +33,7 @@ open class RunServiceTask(
     private val project: Project,
     private val virtualFile: VirtualFile,
     private val testElement: PsiElement?,
-    private val runService: RunService,
+    private val fileRunService: FileRunService,
     private val runner: ProgramRunner<*>? = null,
 ) : com.intellij.openapi.progress.Task.Backgroundable(
     project, ShireCoreBundle.message("progress.run.task"), true
@@ -52,7 +52,7 @@ open class RunServiceTask(
      * @return The check result of the executed run configuration, or `null` if no run configuration could be created.
      */
     private fun runAndCollectTestResults(indicator: ProgressIndicator?): RunnerResult? {
-        val settings: RunnerAndConfigurationSettings? = runService.createRunSettings(project, virtualFile, testElement)
+        val settings: RunnerAndConfigurationSettings? = fileRunService.createRunSettings(project, virtualFile, testElement)
         if (settings == null) {
             logger<RunServiceTask>().warn("No run configuration found for file: ${virtualFile.path}")
             return null
