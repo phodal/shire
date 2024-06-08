@@ -62,22 +62,14 @@ open class RunServiceTask(
 
         settings.isActivateToolWindowBeforeRun = false
 
-        val stderr = StringBuilder()
-        val processListener = object : OutputListener() {
-            override fun onTextAvailable(event: ProcessEvent, outputType: Key<*>) {
-                if (ProcessOutputType.isStderr(outputType)) {
-                    stderr.append(event.text)
-                }
-            }
-        }
-
         val testRoots = mutableListOf<SMTestProxy.SMRootTestProxy>()
         val testEventsListener = object : SMTRunnerEventsAdapter() {
             override fun onTestingStarted(testsRoot: SMTestProxy.SMRootTestProxy) {
                 testRoots += testsRoot
             }
         }
-        val runContext = RunContext(processListener, null, CountDownLatch(1))
+
+        val runContext = createRunContext()
         executeRunConfigures(project, settings, runContext, testEventsListener, indicator)
 
         @Suppress("UnstableApiUsage")

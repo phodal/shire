@@ -2,11 +2,13 @@ package com.phodal.shirecore.runner
 
 import com.intellij.execution.ExecutionException
 import com.intellij.execution.ExecutionManager
+import com.intellij.execution.OutputListener
 import com.intellij.execution.RunnerAndConfigurationSettings
 import com.intellij.execution.executors.DefaultRunExecutor
 import com.intellij.execution.impl.ExecutionManagerImpl
 import com.intellij.execution.process.ProcessAdapter
 import com.intellij.execution.process.ProcessEvent
+import com.intellij.execution.process.ProcessOutputType
 import com.intellij.execution.runners.ExecutionEnvironmentBuilder
 import com.intellij.execution.runners.ProgramRunner
 import com.intellij.execution.testframework.sm.runner.SMTRunnerEventsAdapter
@@ -15,11 +17,98 @@ import com.intellij.openapi.application.runInEdt
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
+import com.intellij.openapi.util.Key
 import com.intellij.util.messages.MessageBusConnection
+import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
 interface ConfigurationRunner {
     fun runnerId() = DefaultRunExecutor.EXECUTOR_ID
+
+    fun executeRunConfigurations(
+        project: Project,
+        settings: RunnerAndConfigurationSettings,
+        testEventsListener: SMTRunnerEventsAdapter?,
+        indicator: ProgressIndicator?,
+    ) {
+        val runContext = createRunContext()
+        executeRunConfigures(project, settings, runContext, testEventsListener, indicator)
+    }
+
+    fun executeRunConfigures(
+        project: Project,
+        settings: RunnerAndConfigurationSettings,
+        runContext: RunContext,
+        testEventsListener: SMTRunnerEventsAdapter?,
+        indicator: ProgressIndicator?,
+    ) {
+        val connection = project.messageBus.connect()
+        try {
+            return executeRunConfigurations(connection, settings, runContext, testEventsListener, indicator)
+        } finally {
+            connection.disconnect()
+        }
+    }
+
+    /**
+     * This function is responsible for executing run configurations with the given parameters.
+     *
+     * @param connection The message bus connection to use.
+     * @param configurations The runner and configuration settings to execute.
+     * @param runContext The run context for the execution.
+     * @param testEventsListener The listener for test events.
+     * @param indicator The progress indicator for the execution.
+     */
+    fun executeRunConfigurations(
+        connection: MessageBusConnection,
+        configurations: RunnerAndConfigurationSettings,
+        runContext: RunContext,
+        testEventsListener: SMTRunnerEventsListener?,
+        indicator: ProgressIndicator?,
+    ) {
+        testEventsListener?.let {
+            connection.subscribe(SMTRunnerEventsListener.TEST_STATUS, it)
+        }
+        Disposer.register(connection, runContext)
+
+        runInEdt {
+            connection.subscribe(
+                ExecutionManager.EXECUTION_TOPIC,
+                CheckExecutionListener(runnerId(), runContext)
+            )
+
+            try {
+                configurations.startRunConfigurationExecution(runContext)
+            } catch (e: ExecutionException) {
+                runContext.latch.countDown()
+            }
+        }
+
+        while (indicator?.isCanceled != true) {
+            val result = runContext.latch.await(100, TimeUnit.MILLISECONDS)
+            if (result) break
+        }
+
+        if (indicator?.isCanceled == true) {
+            Disposer.dispose(runContext)
+        }
+    }
+
+    fun createRunContext(): RunContext {
+        val stderr = StringBuilder()
+        val processListener = object : OutputListener() {
+            override fun onTextAvailable(event: ProcessEvent, outputType: Key<*>) {
+                if (ProcessOutputType.isStderr(outputType)) {
+                    stderr.append(event.text)
+                }
+            }
+        }
+
+        val runContext = RunContext(processListener, null, CountDownLatch(1))
+        return runContext
+    }
+
+
     /**
      * This function defines a process run completion action to be executed once a process run by the program runner completes.
      * It is designed to handle the aftermath of a process execution, including stopping the process and notifying the run context.
@@ -70,56 +159,6 @@ interface ConfigurationRunner {
         runContext.environments.add(env)
         runner.execute(env)
         return true
-    }
-
-    fun executeRunConfigurations(
-        connection: MessageBusConnection,
-        configurations: RunnerAndConfigurationSettings,
-        runContext: RunContext,
-        testEventsListener: SMTRunnerEventsListener?,
-        indicator: ProgressIndicator?,
-    ) {
-        testEventsListener?.let {
-            connection.subscribe(SMTRunnerEventsListener.TEST_STATUS, it)
-        }
-        Disposer.register(connection, runContext)
-
-        runInEdt {
-            connection.subscribe(
-                ExecutionManager.EXECUTION_TOPIC,
-                CheckExecutionListener(runnerId(), runContext)
-            )
-
-            try {
-                configurations.startRunConfigurationExecution(runContext)
-            } catch (e: ExecutionException) {
-                runContext.latch.countDown()
-            }
-        }
-
-        while (indicator?.isCanceled != true) {
-            val result = runContext.latch.await(100, TimeUnit.MILLISECONDS)
-            if (result) break
-        }
-
-        if (indicator?.isCanceled == true) {
-            Disposer.dispose(runContext)
-        }
-    }
-
-    fun executeRunConfigures(
-        project: Project,
-        settings: RunnerAndConfigurationSettings,
-        runContext: RunContext,
-        testEventsListener: SMTRunnerEventsAdapter,
-        indicator: ProgressIndicator?,
-    ) {
-        val connection = project.messageBus.connect()
-        try {
-            return executeRunConfigurations(connection, settings, runContext, testEventsListener, indicator)
-        } finally {
-            connection.disconnect()
-        }
     }
 }
 
