@@ -13,14 +13,13 @@ class ProjectRunProvider : CompletionProvider<CompletionParameters>() {
         context: ProcessingContext,
         result: CompletionResultSet,
     ) {
-        ProjectRunService.all().forEach { completionProvider ->
-            val elements = completionProvider
+        ProjectRunService.all().forEach { provider ->
+            provider
                 .lookupAvailableTask(parameters.editor.project!!, parameters, result)
                 .map { PrioritizedLookupElement.withPriority(it, 99.0) }
-
-            elements.forEach {
-                result.addElement(it)
-            }
+                .forEach {
+                    result.addElement(it)
+                }
         }
     }
 }
