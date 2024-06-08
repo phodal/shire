@@ -10,6 +10,7 @@ import com.intellij.openapi.projectRoots.JavaSdk
 import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.util.SmartList
 import com.phodal.shirecore.provider.ProjectRunService
+import com.phodal.shirecore.runner.RunServiceTask
 import com.phodal.shirelang.java.toolchain.GradleTasksUtil
 import icons.GradleIcons
 
@@ -19,7 +20,8 @@ class JavaRunProjectService : ProjectRunService {
     }
 
     override fun run(project: Project, taskName: String) {
-//        val configureGradleTask = GradleTasksUtil.createConfigForGradle(project, taskName)
+        val runConfiguration = GradleTasksUtil.configureGradleRun(project, taskName)
+        RunServiceTask.run(project, runConfiguration)
     }
 
     override fun lookupAvailableTask(

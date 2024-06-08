@@ -64,7 +64,7 @@ object GradleTasksUtil {
         return tasks
     }
 
-        fun createGradleTestConfiguration(virtualFile: VirtualFile, project: Project): GradleRunConfiguration? {
+    fun createGradleTestConfiguration(virtualFile: VirtualFile, project: Project): GradleRunConfiguration? {
         val name = virtualFile.name
 
         val canonicalName = runReadAction {
@@ -105,12 +105,11 @@ object GradleTasksUtil {
      * This function is used to create a Gradle run configuration for a specific virtual file in a project.
      * It takes the virtual file, project, and task name as parameters and returns a GradleRunConfiguration object.
      *
-     * @param virtualFile The virtual file for which the configuration is being created.
      * @param project The project in which the configuration is being created.
      * @param taskName The name of the task to be executed in the Gradle run configuration.
      * @return A GradleRunConfiguration object representing the created configuration.
      */
-    fun createConfigForGradle(project: Project, taskName: String): GradleRunConfiguration {
+    fun configureGradleRun(project: Project, taskName: String): GradleRunConfiguration {
         val runManager = RunManager.getInstance(project)
         val configuration = runManager.createConfiguration(
             taskName,

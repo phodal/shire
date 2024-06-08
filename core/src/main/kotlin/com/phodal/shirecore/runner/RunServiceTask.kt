@@ -3,6 +3,7 @@ package com.phodal.shirecore.runner
 
 import com.phodal.shirecore.ShirelangNotifications
 import com.intellij.execution.*
+import com.intellij.execution.configurations.RunConfiguration
 import com.intellij.execution.executors.DefaultRunExecutor
 import com.intellij.execution.impl.ExecutionManagerImpl
 import com.intellij.execution.process.*
@@ -35,10 +36,10 @@ open class RunServiceTask(
     private val testElement: PsiElement?,
     private val fileRunService: FileRunService,
     private val runner: ProgramRunner<*>? = null,
-) : com.intellij.openapi.progress.Task.Backgroundable(
+) : ConfigurationRunner, com.intellij.openapi.progress.Task.Backgroundable(
     project, ShireCoreBundle.message("progress.run.task"), true
 ) {
-    private fun runnerId() = runner?.runnerId ?: DefaultRunExecutor.EXECUTOR_ID
+    override fun runnerId() = runner?.runnerId ?: DefaultRunExecutor.EXECUTOR_ID
 
     override fun run(indicator: ProgressIndicator) {
         runAndCollectTestResults(indicator)
@@ -52,7 +53,8 @@ open class RunServiceTask(
      * @return The check result of the executed run configuration, or `null` if no run configuration could be created.
      */
     private fun runAndCollectTestResults(indicator: ProgressIndicator?): RunnerResult? {
-        val settings: RunnerAndConfigurationSettings? = fileRunService.createRunSettings(project, virtualFile, testElement)
+        val settings: RunnerAndConfigurationSettings? =
+            fileRunService.createRunSettings(project, virtualFile, testElement)
         if (settings == null) {
             logger<RunServiceTask>().warn("No run configuration found for file: ${virtualFile.path}")
             return null
@@ -89,7 +91,7 @@ open class RunServiceTask(
         return result
     }
 
-    protected fun SMTestProxy.SMRootTestProxy.toCheckResult(): RunnerResult? {
+    private fun SMTestProxy.SMRootTestProxy.toCheckResult(): RunnerResult? {
         if (finishedSuccessfully()) return RunnerResult(RunnerStatus.Solved, "CONGRATULATIONS")
 
         val failedChildren = collectChildren(object : Filter<SMTestProxy>() {
@@ -146,105 +148,9 @@ open class RunServiceTask(
     private fun fillWithIncorrect(message: String): String =
         message.nullize(nullizeSpaces = true) ?: "Incorrect"
 
-    fun executeRunConfigures(
-        project: Project,
-        settings: RunnerAndConfigurationSettings,
-        runContext: RunContext,
-        testEventsListener: SMTRunnerEventsAdapter,
-        indicator: ProgressIndicator?,
-    ) {
-        val connection = project.messageBus.connect()
-        try {
-            return executeRunConfigurations(connection, settings, runContext, testEventsListener, indicator)
-        } finally {
-            connection.disconnect()
-        }
-    }
+    companion object {
+        fun run(project: Project, runConfiguration: RunConfiguration) {
 
-    private fun executeRunConfigurations(
-        connection: MessageBusConnection,
-        configurations: RunnerAndConfigurationSettings,
-        runContext: RunContext,
-        testEventsListener: SMTRunnerEventsListener?,
-        indicator: ProgressIndicator?,
-    ) {
-        testEventsListener?.let {
-            connection.subscribe(SMTRunnerEventsListener.TEST_STATUS, it)
-        }
-        Disposer.register(connection, runContext)
-
-        runInEdt {
-            connection.subscribe(
-                ExecutionManager.EXECUTION_TOPIC,
-                CheckExecutionListener(runnerId(), runContext)
-            )
-
-            try {
-                configurations.startRunConfigurationExecution(runContext)
-            } catch (e: ExecutionException) {
-                runContext.latch.countDown()
-            }
-        }
-
-        while (indicator?.isCanceled != true) {
-            val result = runContext.latch.await(100, TimeUnit.MILLISECONDS)
-            if (result) break
-        }
-
-        if (indicator?.isCanceled == true) {
-            Disposer.dispose(runContext)
-        }
-    }
-
-    @Throws(ExecutionException::class)
-    private fun RunnerAndConfigurationSettings.startRunConfigurationExecution(runContext: RunContext): Boolean {
-        val runner = ProgramRunner.getRunner(runnerId(), configuration)
-        val env =
-            ExecutionEnvironmentBuilder.create(DefaultRunExecutor.getRunExecutorInstance(), this)
-                .activeTarget()
-                .build(processRunCompletionAction(runContext))
-
-        if (runner == null || env.state == null) {
-            runContext.latch.countDown()
-            return false
-        }
-
-        runContext.environments.add(env)
-        runner.execute(env)
-        return true
-    }
-
-    /**
-     * This function defines a process run completion action to be executed once a process run by the program runner completes.
-     * It is designed to handle the aftermath of a process execution, including stopping the process and notifying the run context.
-     *
-     * @param runContext The context in which the run operation is being executed. It provides the necessary information
-     *                   and handles to manage the run process, including a latch to synchronize the completion of the run.
-     *                   The run context is also responsible for disposing of resources once the run completes.
-     *
-     * Note: This function uses the 'return@Callback' syntax to exit the lambda expression early in case of a null descriptor.
-     */
-    fun processRunCompletionAction(runContext: RunContext) = ProgramRunner.Callback { descriptor ->
-        // Descriptor can be null in some cases.
-        // For example, IntelliJ Rust's test runner provides null here if compilation fails
-        if (descriptor == null) {
-            runContext.latch.countDown()
-            return@Callback
-        }
-
-        Disposer.register(runContext) {
-            ExecutionManagerImpl.stopProcess(descriptor)
-        }
-        val processHandler = descriptor.processHandler
-        if (processHandler != null) {
-            processHandler.addProcessListener(object : ProcessAdapter() {
-                override fun processTerminated(event: ProcessEvent) {
-                    runContext.latch.countDown()
-                }
-            })
-            runContext.processListener?.let {
-                processHandler.addProcessListener(it)
-            }
         }
     }
 }
