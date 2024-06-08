@@ -2,6 +2,7 @@ package com.phodal.shirelang.java.impl
 
 import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.codeInsight.completion.CompletionResultSet
+import com.intellij.codeInsight.completion.PrioritizedLookupElement
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.openapi.project.Project
@@ -27,11 +28,14 @@ class JavaRunProjectService : ProjectRunService {
         result: CompletionResultSet,
     ): List<LookupElement> {
         val lookupElements: MutableList<LookupElement> = SmartList()
-        GradleTasksUtil.collectGradleTasksWithCheck(project).forEach {
-            val element = LookupElementBuilder.create(it.text)
+        GradleTasksUtil.collectGradleTasksData(project).filter {
+            !it.isTest && !it.isJvmTest
+        } .forEach {
+            val element = LookupElementBuilder.create(it.getFqnTaskName())
                 .withTypeText(it.description)
                 .withIcon(GradleIcons.Gradle)
-            result.addElement(element)
+
+            lookupElements.add(PrioritizedLookupElement.withPriority(element, 99.0))
         }
 
         return lookupElements

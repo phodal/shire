@@ -15,6 +15,7 @@ import org.jetbrains.plugins.gradle.service.execution.GradleExternalTaskConfigur
 import org.jetbrains.plugins.gradle.service.execution.GradleRunConfiguration
 import org.jetbrains.plugins.gradle.service.project.GradleTasksIndices
 import org.jetbrains.plugins.gradle.util.GradleConstants
+import org.jetbrains.plugins.gradle.util.GradleTaskData
 
 object GradleTasksUtil {
     fun collectGradleTasksWithCheck(project: Project): List<TextCompletionInfo> {
@@ -53,10 +54,17 @@ object GradleTasksUtil {
             .groupBy { it.name }
             .map { TextCompletionInfo(it.key, it.value.first().description) }
             .sortedWith(Comparator.comparing({ it.text }, GRADLE_COMPLETION_COMPARATOR))
+
         return tasks
     }
 
-    fun createGradleTestConfiguration(virtualFile: VirtualFile, project: Project): GradleRunConfiguration? {
+    fun collectGradleTasksData(project: Project): List<GradleTaskData> {
+        val indices = GradleTasksIndices.getInstance(project)
+        val tasks = indices.findTasks(project.guessProjectDir()!!.path)
+        return tasks
+    }
+
+        fun createGradleTestConfiguration(virtualFile: VirtualFile, project: Project): GradleRunConfiguration? {
         val name = virtualFile.name
 
         val canonicalName = runReadAction {

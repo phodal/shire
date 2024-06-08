@@ -4,6 +4,8 @@ import com.phodal.shirelang.utils.canBeAdded
 import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.codeInsight.completion.CompletionProvider
 import com.intellij.codeInsight.completion.CompletionResultSet
+import com.intellij.codeInsight.completion.PrioritizedLookupElement
+import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.ide.presentation.VirtualFilePresentation
 import com.intellij.openapi.fileEditor.impl.EditorHistoryManager
@@ -44,17 +46,19 @@ class FileReferenceLanguageProvider : CompletionProvider<CompletionParameters>()
     private fun buildElement(
         virtualFile: VirtualFile,
         basePath: @NonNls String
-    ): LookupElementBuilder {
+    ): LookupElement {
         val removePrefix = virtualFile.path.removePrefix(basePath)
         val relativePath: String = removePrefix.removePrefix(File.separator)
 
-        return LookupElementBuilder.create(relativePath)
+        val elementBuilder = LookupElementBuilder.create(relativePath)
             .withIcon(VirtualFilePresentation.getIcon(virtualFile))
             .withInsertHandler { context, _ ->
                 context.editor.caretModel.moveCaretRelatively(
                     1, 0, false, false, false
                 )
             }
+
+        return PrioritizedLookupElement.withPriority(elementBuilder, 1.0)
     }
 }
 
