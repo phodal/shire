@@ -83,13 +83,16 @@ interface ConfigurationRunner {
             }
         }
 
-        while (indicator?.isCanceled != true) {
-            val result = runContext.latch.await(100, TimeUnit.MILLISECONDS)
-            if (result) break
-        }
+        // todo: find a better way
+        if (indicator != null) {
+            while (!indicator.isCanceled) {
+                val result = runContext.latch.await(100, TimeUnit.MILLISECONDS)
+                if (result) break
+            }
 
-        if (indicator?.isCanceled == true) {
-            Disposer.dispose(runContext)
+            if (indicator.isCanceled) {
+                Disposer.dispose(runContext)
+            }
         }
     }
 
