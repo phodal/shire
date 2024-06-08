@@ -6,7 +6,6 @@ import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.ProcessingContext
-import com.phodal.shirelang.psi.ShireTypes
 
 class HobbitHoleCompletion : CompletionProvider<CompletionParameters>() {
     override fun addCompletions(
@@ -14,13 +13,13 @@ class HobbitHoleCompletion : CompletionProvider<CompletionParameters>() {
         context: ProcessingContext,
         result: CompletionResultSet,
     ) {
-        val text = parameters.position.text
-        // get keyword from hobbit hole
-        val psiElement = PsiTreeUtil.findSiblingBackward(parameters.position, ShireTypes.FRONTMATTER_KEY, null)
+        val position = parameters.originalPosition ?: parameters.position
+        val psiElement = PsiTreeUtil.prevVisibleLeaf(position)?.let {
+            PsiTreeUtil.prevLeaf(it, true)
+        } ?: return
 
-        if (psiElement != null) {
-            val keyword = psiElement.text
-            if (keyword == "hobbit") {
+        when (psiElement.text) {
+            "hobbit" -> {
                 result.addElement(LookupElementBuilder.create("Frodo"))
                 result.addElement(LookupElementBuilder.create("Sam"))
                 result.addElement(LookupElementBuilder.create("Merry"))
