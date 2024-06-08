@@ -8,6 +8,7 @@ import com.intellij.patterns.PsiElementPattern
 import com.intellij.psi.PsiElement
 import com.phodal.shirelang.completion.dataprovider.BuiltinCommand
 import com.phodal.shirelang.completion.provider.*
+import com.phodal.shirelang.psi.ShireFrontMatterEntry
 import com.phodal.shirelang.psi.ShireTypes
 import com.phodal.shirelang.psi.ShireUsed
 
@@ -21,6 +22,9 @@ class ShireCompletionContributor : CompletionContributor() {
         extend(CompletionType.BASIC, PlatformPatterns.psiElement(ShireTypes.COMMAND_ID), BuiltinCommandCompletion())
         extend(CompletionType.BASIC, PlatformPatterns.psiElement(ShireTypes.AGENT_ID), CustomAgentCompletion())
 
+        extend(CompletionType.BASIC, PlatformPatterns.psiElement(ShireTypes.FRONTMATTER_KEY), HobbitHoleKeyCompletion())
+        extend(CompletionType.BASIC, hobbitHolePattern(), HobbitHoleCompletion())
+
         // command completion
         extend(
             CompletionType.BASIC,
@@ -29,27 +33,27 @@ class ShireCompletionContributor : CompletionContributor() {
         )
         extend(
             CompletionType.BASIC,
-            valuePattern(BuiltinCommand.REV.commandName),
+            commandPropPattern(BuiltinCommand.REV.commandName),
             RevisionReferenceLanguageProvider()
         )
         extend(
             CompletionType.BASIC,
-            valuePattern(BuiltinCommand.SYMBOL.commandName),
+            commandPropPattern(BuiltinCommand.SYMBOL.commandName),
             SymbolReferenceLanguageProvider()
         )
         extend(
             CompletionType.BASIC,
-            valuePattern(BuiltinCommand.FILE_FUNC.commandName),
+            commandPropPattern(BuiltinCommand.FILE_FUNC.commandName),
             FileFunctionProvider()
         )
         extend(
             CompletionType.BASIC,
-            valuePattern(BuiltinCommand.Refactor.commandName),
+            commandPropPattern(BuiltinCommand.Refactor.commandName),
             RefactoringFuncProvider()
         )
         extend(
             CompletionType.BASIC,
-            valuePattern(BuiltinCommand.RUN.commandName),
+            commandPropPattern(BuiltinCommand.RUN.commandName),
             ProjectRunProvider()
         )
     }
@@ -60,7 +64,7 @@ class ShireCompletionContributor : CompletionContributor() {
         PlatformPatterns.psiElement()
             .inside(psiElement<ShireUsed>())
 
-    private fun valuePattern(text: String): PsiElementPattern.Capture<PsiElement> =
+    private fun commandPropPattern(text: String): PsiElementPattern.Capture<PsiElement> =
         baseUsedPattern()
             .withElementType(ShireTypes.COMMAND_PROP)
             .afterLeafSkipping(
@@ -68,8 +72,18 @@ class ShireCompletionContributor : CompletionContributor() {
                 PlatformPatterns.psiElement().withText(text)
             )
 
+
+    private fun hobbitHolePattern(): ElementPattern<out PsiElement> {
+        return PlatformPatterns.psiElement()
+            .inside(psiElement<ShireFrontMatterEntry>())
+            .afterLeafSkipping(
+                PlatformPatterns.psiElement(ShireTypes.COLON),
+                PlatformPatterns.psiElement().withElementType(ShireTypes.FRONTMATTER_KEY)
+            )
+    }
+
     private fun valuePatterns(listOf: List<BuiltinCommand>): ElementPattern<out PsiElement> {
-        val patterns = listOf.map { valuePattern(it.commandName) }
+        val patterns = listOf.map { commandPropPattern(it.commandName) }
         return PlatformPatterns.or(*patterns.toTypedArray())
     }
 }
