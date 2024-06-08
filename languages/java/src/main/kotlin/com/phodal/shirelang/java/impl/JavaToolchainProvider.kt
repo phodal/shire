@@ -1,21 +1,16 @@
 package com.phodal.shirelang.java.impl
 
 import com.intellij.lang.java.JavaLanguage
-import com.intellij.openapi.module.LanguageLevelUtil
 import com.intellij.openapi.module.Module
-import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.module.ModuleUtilCore
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.projectRoots.JavaSdkType
 import com.intellij.openapi.roots.ModuleRootManager
 import com.intellij.openapi.roots.ProjectRootManager
-import com.intellij.pom.java.LanguageLevel
-import com.intellij.psi.PsiFile
-import com.intellij.psi.util.PsiUtil
 import com.phodal.shirecore.provider.ToolchainContextItem
 import com.phodal.shirecore.provider.ToolchainPrepareContext
 import com.phodal.shirecore.provider.ToolchainProvider
-import com.phodal.shirelang.java.util.JavaToolchain
+import com.phodal.shirelang.java.toolchain.JavaToolchain
 
 class JavaToolchainProvider : ToolchainProvider {
     override fun isApplicable(project: Project, context: ToolchainPrepareContext): Boolean {

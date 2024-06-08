@@ -1,4 +1,4 @@
-package com.phodal.shirelang.java.util
+package com.phodal.shirelang.java.toolchain
 
 import com.intellij.openapi.externalSystem.service.project.ProjectDataManager
 import com.intellij.openapi.externalSystem.service.ui.completion.TextCompletionInfo

@@ -1,13 +1,10 @@
 package com.phodal.shirelang.java.impl
 
 import com.intellij.openapi.externalSystem.service.project.ProjectDataManager
-import com.intellij.openapi.externalSystem.service.ui.completion.TextCompletionInfo
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.project.guessProjectDir
 import com.phodal.shirecore.buildsystem.BuildSystemContext
 import com.phodal.shirecore.provider.BuildSystemProvider
-import com.phodal.shirelang.java.util.JavaToolchain
-import org.jetbrains.plugins.gradle.service.project.GradleTasksIndices
+import com.phodal.shirelang.java.toolchain.JavaToolchain
 import org.jetbrains.plugins.gradle.util.GradleConstants
 
 open class JavaBuildSystemProvider : BuildSystemProvider() {
