@@ -7,6 +7,7 @@ import com.phodal.shirecore.action.ShireActionLocation
 import com.phodal.shirecore.agent.InteractionType
 import com.phodal.shirecore.middleware.PostCodeHandleContext
 import com.phodal.shirecore.middleware.PostProcessor
+import com.phodal.shirecore.middleware.select.SelectElementStrategy
 import com.phodal.shirelang.compiler.FrontmatterParser
 import com.phodal.shirelang.psi.ShireFile
 

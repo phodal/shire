@@ -1,10 +1,9 @@
-package com.phodal.shirelang.compiler.hobbit
+package com.phodal.shirecore.middleware.select
 
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.psi.PsiElement
-import com.phodal.shirecore.provider.DefaultPsiElementStrategy
 
 sealed class SelectElementStrategy {
     /**
