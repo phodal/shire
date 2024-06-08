@@ -26,7 +26,7 @@ interface ProjectRunService {
         val EP_NAME = ExtensionPointName<ProjectRunService>("com.phodal.shireRunProjectService")
 
         fun all(): List<ProjectRunService> {
-            return ProjectRunService.EP_NAME.extensionList
+            return EP_NAME.extensionList
         }
 
         fun provider(project: Project): ProjectRunService? {
