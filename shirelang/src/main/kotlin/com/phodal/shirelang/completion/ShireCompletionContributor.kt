@@ -47,6 +47,11 @@ class ShireCompletionContributor : CompletionContributor() {
             valuePattern(BuiltinCommand.Refactor.commandName),
             RefactoringFuncProvider()
         )
+        extend(
+            CompletionType.BASIC,
+            valuePattern(BuiltinCommand.RUN.commandName),
+            ProjectRunProvider()
+        )
     }
 
     private inline fun <reified I : PsiElement> psiElement() = PlatformPatterns.psiElement(I::class.java)
