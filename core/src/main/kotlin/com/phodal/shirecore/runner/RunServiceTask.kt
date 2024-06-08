@@ -1,34 +1,26 @@
 // Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.phodal.shirecore.runner
 
-import com.phodal.shirecore.ShirelangNotifications
-import com.intellij.execution.*
+import com.intellij.execution.RunnerAndConfigurationSettings
 import com.intellij.execution.configurations.RunConfiguration
 import com.intellij.execution.executors.DefaultRunExecutor
-import com.intellij.execution.impl.ExecutionManagerImpl
-import com.intellij.execution.process.*
-import com.intellij.execution.runners.ExecutionEnvironmentBuilder
+import com.intellij.execution.process.AnsiEscapeDecoder
+import com.intellij.execution.process.ProcessOutputTypes
 import com.intellij.execution.runners.ProgramRunner
 import com.intellij.execution.testframework.Filter
 import com.intellij.execution.testframework.sm.runner.SMTRunnerEventsAdapter
-import com.intellij.execution.testframework.sm.runner.SMTRunnerEventsListener
 import com.intellij.execution.testframework.sm.runner.SMTestProxy
 import com.intellij.openapi.application.invokeAndWaitIfNeeded
-import com.intellij.openapi.application.runInEdt
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.Disposer
-import com.intellij.openapi.util.Key
 import com.intellij.openapi.util.NlsSafe
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
-import com.intellij.util.messages.MessageBusConnection
 import com.intellij.util.text.nullize
 import com.phodal.shirecore.ShireCoreBundle
+import com.phodal.shirecore.ShirelangNotifications
 import com.phodal.shirecore.provider.FileRunService
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.TimeUnit
 
 open class RunServiceTask(
     private val project: Project,
