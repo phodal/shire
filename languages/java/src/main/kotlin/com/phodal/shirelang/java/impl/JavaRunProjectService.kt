@@ -42,4 +42,8 @@ class JavaRunProjectService : ProjectRunService, ConfigurationRunner {
 
         return lookupElements
     }
+
+    override fun tasks(project: Project): List<String> {
+        return GradleTasksUtil.collectGradleTasksData(project).map { it.getFqnTaskName() }
+    }
 }

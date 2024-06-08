@@ -30,6 +30,10 @@ interface ProjectRunService {
         return listOf()
     }
 
+    fun tasks(project: Project): List<String> {
+        return listOf()
+    }
+
     companion object {
         val EP_NAME: ExtensionPointName<ProjectRunService> = ExtensionPointName("com.phodal.shireRunProjectService")
 
