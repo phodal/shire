@@ -23,7 +23,7 @@ interface ProjectRunService {
     }
 
     companion object {
-        val EP_NAME = ExtensionPointName<ProjectRunService>("com.phodal.shireRunProjectService")
+        val EP_NAME: ExtensionPointName<ProjectRunService> = ExtensionPointName("com.phodal.shireRunProjectService")
 
         fun all(): List<ProjectRunService> {
             return EP_NAME.extensionList
