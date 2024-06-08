@@ -6,6 +6,9 @@ import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.ProcessingContext
+import com.phodal.shirecore.action.ShireActionLocation
+import com.phodal.shirelang.ShireIcons
+import com.phodal.shirelang.compiler.hobbit.HobbitHole
 
 class HobbitHoleCompletion : CompletionProvider<CompletionParameters>() {
     override fun addCompletions(
@@ -24,6 +27,15 @@ class HobbitHoleCompletion : CompletionProvider<CompletionParameters>() {
                 result.addElement(LookupElementBuilder.create("Sam"))
                 result.addElement(LookupElementBuilder.create("Merry"))
                 result.addElement(LookupElementBuilder.create("Pippin"))
+            }
+            HobbitHole.ACTION_LOCATION -> {
+                ShireActionLocation.all().forEach {
+                    result.addElement(LookupElementBuilder
+                        .create(it)
+                        .withIcon(ShireIcons.DEFAULT)
+                        .withTypeText("Action Location", true)
+                    )
+                }
             }
         }
     }

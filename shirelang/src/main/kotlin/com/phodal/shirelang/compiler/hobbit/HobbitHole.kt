@@ -80,6 +80,7 @@ open class HobbitHole(
 
     companion object {
         const val CONFIG_ID = "name"
+        const val ACTION_LOCATION = "actionLocation"
 
         fun from(file: ShireFile): HobbitHole? {
             return FrontmatterParser.parse(file)
@@ -94,7 +95,7 @@ open class HobbitHole(
                 CONFIG_ID to "The display name of the action",
                 "description" to "The tips for the action",
                 "interaction" to "The output of the action can be a file, a string, etc.",
-                "actionLocation" to "The location of the action, can [ShireActionLocation]",
+                ACTION_LOCATION to "The location of the action, can [ShireActionLocation]",
                 "selectionStrategy" to "The strategy to select the element to apply the action",
                 "postProcessors" to "The list of post processors",
             )
@@ -104,7 +105,7 @@ open class HobbitHole(
             val name = frontMatterMap[CONFIG_ID]?.value as? String ?: return null
             val description = frontMatterMap["description"]?.value as? String ?: ""
             val interaction = frontMatterMap["interaction"]?.value as? String ?: ""
-            val actionLocation = frontMatterMap["actionLocation"]?.value as? String ?: ShireActionLocation.default()
+            val actionLocation = frontMatterMap[ACTION_LOCATION]?.value as? String ?: ShireActionLocation.default()
 
             val data = mutableMapOf<String, FrontMatterType>()
             frontMatterMap.forEach { (key, value) ->

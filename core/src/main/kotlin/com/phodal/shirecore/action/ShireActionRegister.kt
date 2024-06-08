@@ -25,6 +25,10 @@ enum class ShireActionLocation(val location: String) {
             }
         }
 
+        fun all(): List<String> {
+            return values().map { it.location }
+        }
+
         fun default(): String {
             return CONTEXT_MENU.location
         }
