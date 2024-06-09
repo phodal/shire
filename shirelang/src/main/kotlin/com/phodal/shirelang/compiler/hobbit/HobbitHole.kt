@@ -11,7 +11,7 @@ import com.phodal.shirecore.middleware.select.SelectElementStrategy
 import com.phodal.shirelang.compiler.FrontmatterParser
 import com.phodal.shirelang.psi.ShireFile
 
-class ShireRegexRule(val regex: String, val description: String)
+class ShirePatternAction(val regex: String, val description: String)
 
 /**
  * - Normal: the action is a normal action
@@ -61,7 +61,7 @@ open class HobbitHole(
     /**
      * The list of rule files to apply for the action.
      */
-    val filenameRules: List<ShireRegexRule> = emptyList(),
+    val filenameRules: List<ShirePatternAction> = emptyList(),
 
     /**
      * The list of rule files to apply for the action.
@@ -128,13 +128,12 @@ open class HobbitHole(
                 PostProcessor.handler(it as String)
             }
 
-            val filenameRules: MutableList<ShireRegexRule> = mutableListOf()
+            val filenameRules: MutableList<ShirePatternAction> = mutableListOf()
             val filenamesMap = frontMatterMap[FILENAME_RULES] as? FrontMatterType.OBJECT
             filenamesMap?.let {
                 (filenamesMap.value as Map<String, FrontMatterType>).forEach { (key, value) ->
-                    val regex = key
                     val description = value.value as? String ?: ""
-                    filenameRules.add(ShireRegexRule(regex, description))
+                    filenameRules.add(ShirePatternAction(key, description))
                 }
             }
 
