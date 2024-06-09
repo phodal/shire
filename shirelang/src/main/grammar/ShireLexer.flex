@@ -199,11 +199,11 @@ RBRACKET=\]
 
 <FRONT_MATTER_VAL_OBJECT> {
   {QUOTE_STRING}          { return QUOTE_STRING; }
-  {PATTERN}               { yybegin(PATTERN_ACTION_BLOCK); return PATTERN; }
   [^]                     { yypushback(yylength()); yybegin(FRONT_MATTER_BLOCK); }
 }
 
 <FRONT_MATTER_VALUE_BLOCK>  {
+  {PATTERN}               { yybegin(PATTERN_ACTION_BLOCK); return PATTERN; }
   {DATE}                  { return DATE; }
   {STRING}                { return STRING; }
   {NUMBER}                { return NUMBER; }

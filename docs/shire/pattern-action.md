@@ -27,9 +27,9 @@ pattern { action }
 ### Shire 示例
 
 ```
-/**.java/ { print $0 }  # 匹配所有 Java 文件并打印
-/**.java/ { grep("error.log") | sort | xargs("rm")}
-/**.log/ {
+"var0": /**.java/ { print $0 }  # 匹配所有 Java 文件并打印
+"var1": /**.java/ { grep("error.log") | sort | xargs("rm")}
+"var2": /**.log/ {
   case "$0" {
     "error" { grep("ERROR") | sort | xargs("notify_admin") }
     "warn" { grep("WARN") | sort | xargs("notify_admin") }

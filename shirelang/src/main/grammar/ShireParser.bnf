@@ -52,13 +52,13 @@ frontMatterHeader ::= FRONTMATTER_START NEWLINE frontMatterEntries FRONTMATTER_E
 frontMatterEntries ::= ((frontMatterEntry | patternAction) WHITE_SPACE?)*
 frontMatterEntry ::= frontMatterKey WHITE_SPACE? COLON WHITE_SPACE? (frontMatterValue) NEWLINE?
 frontMatterKey ::= FRONTMATTER_KEY | QUOTE_STRING | PATTERN
-frontMatterValue ::= STRING | NUMBER | QUOTE_STRING | DATE | PATTERN | BOOLEAN | frontMatterArray | (NEWLINE objectKeyValue)
+frontMatterValue ::= STRING | NUMBER | QUOTE_STRING | DATE | BOOLEAN | frontMatterArray | (NEWLINE objectKeyValue)
 frontMatterArray ::= LBRACKET (frontMatterValue (COMMA frontMatterValue)*) RBRACKET
 
 objectKeyValue ::= (INDENT keyValue NEWLINE?)*
 keyValue ::= frontMatterEntry | patternAction
 
-patternAction ::= PATTERN WHITE_SPACE? matchAction | caseAction (WHITE_SPACE | NEWLINE)*
+patternAction ::= QUOTE_STRING WHITE_SPACE? COLON WHITE_SPACE?  PATTERN WHITE_SPACE? matchAction | caseAction (WHITE_SPACE | NEWLINE)*
 
 matchAction ::= NEWLINE? CASE_BLOCK_START (WHITE_SPACE? pipelineFunc WHITE_SPACE? PIPE)* WHITE_SPACE? pipelineFunc WHITE_SPACE? CASE_BLOCK_END
 
