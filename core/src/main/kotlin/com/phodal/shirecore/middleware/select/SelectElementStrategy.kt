@@ -73,5 +73,9 @@ sealed class SelectElementStrategy {
                 else -> Default
             }
         }
+
+        fun all(): List<String> {
+            return SelectElementStrategy::class.sealedSubclasses.map { it.simpleName!! }
+        }
     }
 }
