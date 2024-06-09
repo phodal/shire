@@ -37,6 +37,11 @@
     LBRACKET           = "LBRACKET"
     RBRACKET           = "RBRACKET"
     INDENT             = "INDENT"
+    OPEN_BRACE         = "{"
+    CLOASE_BRACE       = "}"
+    LPAREN             = "("
+    RPAREN             = ")"
+    CASE               = "case"
   ]
 }
 
@@ -44,7 +49,7 @@ ShireFile ::= frontMatterHeader? (used | code | TEXT_SEGMENT | NEWLINE | COMMENT
 
 frontMatterHeader ::= FRONTMATTER_START NEWLINE frontMatterEntries FRONTMATTER_END
 
-frontMatterEntries ::= (frontMatterEntry WHITE_SPACE?)*
+frontMatterEntries ::= ((frontMatterEntry | patternAction) WHITE_SPACE?)*
 frontMatterEntry ::= frontMatterKey WHITE_SPACE? COLON WHITE_SPACE? (frontMatterValue) NEWLINE?
 frontMatterKey ::= FRONTMATTER_KEY | QUOTE_STRING | PATTERN
 frontMatterValue ::= STRING | NUMBER | QUOTE_STRING | DATE | PATTERN | BOOLEAN | frontMatterArray | (NEWLINE objectKeyValue)
@@ -59,6 +64,18 @@ keyValue ::= frontMatterEntry
  *  prompt()
  * }
  */
+
+patternAction ::= matchAction | caseAction
+matchAction ::= PATTERN WHITE_SPACE? NEWLINE? OPEN_BRACE (pipelineFunc ('|' pipelineFunc)*)? CLOSE_BRACE
+/// find, grep, sed, awk, sort, args
+pipelineFunc ::= funcName LPAREN pipelineArgs RPAREN | funcName
+funcName ::= 'find' | 'grep' | 'sed' | 'awk' | 'sort' | 'xargs' | IDENTIFIER
+pipelineArgs ::= (pipelineArg (COMMA pipelineArg)*)?
+pipelineArg ::= STRING | NUMBER | IDENTIFIER | optionArg
+optionArg ::= '-' IDENTIFIER (WHITE_SPACE (STRING | NUMBER | IDENTIFIER))?
+caseAction ::= CASE WHITE_SPACE PATTERN WHITE_SPACE OPEN_BRACE (caseOption (NEWLINE caseOption)*)? CLOSE_BRACE
+caseOption ::= optionPattern WHITE_SPACE OPEN_BRACE pipelineFunc ('|' pipelineFunc)* CLOSE_BRACE
+optionPattern ::= STRING | IDENTIFIER
 
 used ::= (
     AGENT_START AGENT_ID
