@@ -9,6 +9,7 @@ import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.FrontMatterType
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.psi.ShireFrontMatterHeader
+import com.phodal.shirelang.psi.ShireObjectKeyValue
 import com.phodal.shirelang.psi.ShireTypes
 
 object FrontmatterParser {
@@ -62,6 +63,23 @@ object FrontmatterParser {
     }
 
     private fun parseFrontMatterValue(element: PsiElement): FrontMatterType? {
+        when (element) {
+            is ShireObjectKeyValue -> {
+                val map: MutableMap<String, FrontMatterType> = mutableMapOf()
+                element.children.mapNotNull {
+                    if (it.elementType == ShireTypes.KEY_VALUE) {
+                        processFrontmatter(it.children)
+                    } else {
+                        null
+                    }
+                }.forEach {
+                    map.putAll(it)
+                }
+
+                return FrontMatterType.OBJECT(map)
+            }
+        }
+
         return when (element.firstChild.elementType) {
             ShireTypes.STRING -> {
                 FrontMatterType.STRING(element.text)
@@ -89,16 +107,21 @@ object FrontmatterParser {
                 FrontMatterType.ARRAY(array)
             }
 
-            ShireTypes.LBRACKET, ShireTypes.RBRACKET, ShireTypes.COMMA, WHITE_SPACE -> {
-                null
+            ShireTypes.NEWLINE -> {
+                return this.parseFrontMatterValue(element.firstChild.nextSibling)
             }
 
-            null -> {
+            ShireTypes.LBRACKET,
+            ShireTypes.RBRACKET,
+            ShireTypes.COMMA,
+            WHITE_SPACE,
+            null,
+            -> {
                 null
             }
 
             else -> {
-                logger.warn("Unknown frontmatter type: ${element.elementType}")
+                logger.warn("Unknown frontmatter type: ${element.firstChild}")
                 null
             }
         }

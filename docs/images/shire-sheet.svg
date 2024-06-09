@@ -33,7 +33,7 @@
                 <tspan x="361.833984" y="89" fill="#000000">, </tspan>
                 <tspan x="376.236328" y="89" fill="#087D18">"RunCode"</tspan>
                 <tspan x="441.046875" y="89" fill="#000000">]</tspan>
-                <tspan x="153" y="104" fill="#861094">filenameFilters</tspan>
+                <tspan x="153" y="104" fill="#861094">filenameRules</tspan>
                 <tspan x="261.017578" y="104" fill="#000000">:</tspan>
                 <tspan x="153" y="119" fill="#000000">  </tspan>
                 <tspan x="167.402344" y="119" fill="#087D18">"**/*.java"</tspan>

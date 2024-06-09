@@ -42,7 +42,7 @@ description: "A simple object demo"
 interaction: AppendCursor
 actionLocation: ContextMenu
 postProcessors: ["VerifyCode", "RunCode"]
-filenameFilters:
+filenameRules:
   "**/*.java": "You MUST use should_xx_xx style for test method name"
 ---
 

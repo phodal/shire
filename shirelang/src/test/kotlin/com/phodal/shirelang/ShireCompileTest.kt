@@ -78,4 +78,30 @@ class ShireCompileTest: BasePlatformTestCase() {
         val isFrontMatterPresent = FrontmatterParser.hasFrontMatter(file as ShireFile)
         assertTrue(isFrontMatterPresent)
     }
+
+    fun testShouldHandleForObject() {
+        val code = """
+            ---
+            name: Summary
+            description: "Generate Summary"
+            interaction: AppendCursor
+            data: ["a", "b"]
+            filenameRules: 
+              "name": "a"
+              "description": "b"
+            ---
+            
+            Summary webpage:
+        """.trimIndent()
+
+        val file = myFixture.configureByText("test.shire", code)
+
+        val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
+        assertEquals("\n\nSummary webpage:", compile.output)
+        val filenameRules = compile.config!!.filenameRules
+
+        assertEquals(2, filenameRules.size)
+//        assertEquals("a", filenameRules[0])
+//        assertEquals("b", filenameRules[1])
+    }
 }

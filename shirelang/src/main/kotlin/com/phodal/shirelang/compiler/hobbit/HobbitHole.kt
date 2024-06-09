@@ -11,6 +11,8 @@ import com.phodal.shirecore.middleware.select.SelectElementStrategy
 import com.phodal.shirelang.compiler.FrontmatterParser
 import com.phodal.shirelang.psi.ShireFile
 
+class ShireRegexRule(val regex: String, val description: String)
+
 /**
  * - Normal: the action is a normal action
  * - Flow: each action can be a task in a flow, which will build a DAG
@@ -59,7 +61,7 @@ open class HobbitHole(
     /**
      * The list of rule files to apply for the action.
      */
-    val filenameFilters: List<String> = emptyList(),
+    val filenameRules: List<ShireRegexRule> = emptyList(),
 
     /**
      * The list of rule files to apply for the action.
@@ -85,6 +87,7 @@ open class HobbitHole(
         const val STRATEGY_SELECTION = "selectionStrategy"
         const val POST_PROCESSOR = "postProcessors"
         private const val DESCRIPTION = "description"
+        private const val FILENAME_RULES = "filenameRules"
 
         fun from(file: ShireFile): HobbitHole? {
             return FrontmatterParser.parse(file)
@@ -125,11 +128,22 @@ open class HobbitHole(
                 PostProcessor.handler(it as String)
             }
 
+            val filenameRules: MutableList<ShireRegexRule> = mutableListOf()
+            val filenamesMap = frontMatterMap[FILENAME_RULES] as? FrontMatterType.OBJECT
+            filenamesMap?.let {
+                (filenamesMap.value as Map<String, FrontMatterType>).forEach { (key, value) ->
+                    val regex = key
+                    val description = value.value as? String ?: ""
+                    filenameRules.add(ShireRegexRule(regex, description))
+                }
+            }
+
             return HobbitHole(
                 name,
                 description,
                 InteractionType.from(interaction),
                 ShireActionLocation.from(actionLocation),
+                filenameRules = filenameRules,
                 additionalData = data,
                 selectionStrategy = SelectElementStrategy.fromString(selectionStrategy),
                 postProcessors = postProcessors
