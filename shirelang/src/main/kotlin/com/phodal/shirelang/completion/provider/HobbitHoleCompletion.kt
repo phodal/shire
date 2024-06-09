@@ -11,6 +11,8 @@ import com.phodal.shirelang.ShireIcons
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 
 class HobbitHoleCompletion : CompletionProvider<CompletionParameters>() {
+    private val HOBBIT = "hobbit"
+
     override fun addCompletions(
         parameters: CompletionParameters,
         context: ProcessingContext,
@@ -22,11 +24,8 @@ class HobbitHoleCompletion : CompletionProvider<CompletionParameters>() {
         } ?: return
 
         when (psiElement.text) {
-            "hobbit" -> {
-                result.addElement(LookupElementBuilder.create("Frodo"))
-                result.addElement(LookupElementBuilder.create("Sam"))
-                result.addElement(LookupElementBuilder.create("Merry"))
-                result.addElement(LookupElementBuilder.create("Pippin"))
+            HOBBIT -> {
+                hobbitHeroes(result)
             }
             HobbitHole.ACTION_LOCATION -> {
                 ShireActionLocation.all().forEach {
@@ -37,6 +36,12 @@ class HobbitHoleCompletion : CompletionProvider<CompletionParameters>() {
                     )
                 }
             }
+        }
+    }
+
+    private fun hobbitHeroes(result: CompletionResultSet) {
+        listOf("Frodo", "Sam", "Merry", "Pippin").forEach {
+            result.addElement(LookupElementBuilder.create(it))
         }
     }
 
