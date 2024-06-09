@@ -1,12 +1,12 @@
 package com.phodal.shirecore.agent
 
-enum class InteractionType {
-    ChatPanel,
-    AppendCursor,
-    AppendCursorStream,
-    OutputFile,
-    ReplaceSelection,
-    ReplaceCurrentFile,
+enum class InteractionType(val description: String) {
+    ChatPanel("Output results to the chat panel"),
+    AppendCursor("Append content at the current cursor position"),
+    AppendCursorStream("Append content at the current cursor position, stream output"),
+    OutputFile("Output to a file"),
+    ReplaceSelection("Replace the currently selected content"),
+    ReplaceCurrentFile("Replace the content of the current file")
     ;
 
     companion object {
