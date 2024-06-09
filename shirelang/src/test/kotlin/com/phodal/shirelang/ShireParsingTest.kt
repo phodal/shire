@@ -52,7 +52,11 @@ class ShireParsingTest : ParsingTestCase("parser", "shire", ShireParserDefinitio
         doTest(true)
     }
 
-    fun testShireFmObject() {
+    fun testSingleComment() {
+        doTest(true)
+    }
+
+    fun testSystemCalling() {
         doTest(true)
     }
 }
