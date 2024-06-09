@@ -54,7 +54,7 @@ sealed class SelectElementStrategy {
         }
     }
 
-    object All: SelectElementStrategy() {
+    object SelectAll: SelectElementStrategy() {
         override fun select() {
             val project = ProjectManager.getInstance().openProjects.firstOrNull() ?: return
             val editor = FileEditorManager.getInstance(project).selectedTextEditor ?: return
@@ -69,7 +69,7 @@ sealed class SelectElementStrategy {
             return when (strategy.lowercase()) {
                 "block" -> Blocked
                 "select" -> Selected
-                "all" -> All
+                "selectAll" -> SelectAll
                 else -> Default
             }
         }
