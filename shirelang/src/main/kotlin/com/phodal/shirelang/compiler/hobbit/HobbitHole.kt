@@ -83,12 +83,12 @@ open class HobbitHole(
         const val ACTION_LOCATION = "actionLocation"
         const val INTERACTION = "interaction"
         const val STRATEGY_SELECTION = "selectionStrategy"
+        const val POST_PROCESSOR = "postProcessors"
+        private const val DESCRIPTION = "description"
 
         fun from(file: ShireFile): HobbitHole? {
             return FrontmatterParser.parse(file)
         }
-
-
 
         /**
          * For Code completion ,
@@ -97,23 +97,23 @@ open class HobbitHole(
         fun keys(): Map<String, String> {
             return mapOf(
                 CONFIG_ID to "The display name of the action",
-                "description" to "The tips for the action",
+                DESCRIPTION to "The tips for the action",
                 INTERACTION to "The output of the action can be a file, a string, etc.",
                 ACTION_LOCATION to "The location of the action, can [ShireActionLocation]",
                 STRATEGY_SELECTION to "The strategy to select the element to apply the action",
-                "postProcessors" to "The list of post processors",
+                POST_PROCESSOR to "The list of post processors",
             )
         }
 
         fun from(frontMatterMap: MutableMap<String, FrontMatterType>): HobbitHole? {
             val name = frontMatterMap[CONFIG_ID]?.value as? String ?: return null
-            val description = frontMatterMap["description"]?.value as? String ?: ""
+            val description = frontMatterMap[DESCRIPTION]?.value as? String ?: ""
             val interaction = frontMatterMap[INTERACTION]?.value as? String ?: ""
             val actionLocation = frontMatterMap[ACTION_LOCATION]?.value as? String ?: ShireActionLocation.default()
 
             val data = mutableMapOf<String, FrontMatterType>()
             frontMatterMap.forEach { (key, value) ->
-                if (key !in listOf(CONFIG_ID, "description", INTERACTION, "actionLocation")) {
+                if (key !in listOf(CONFIG_ID, DESCRIPTION, INTERACTION, ACTION_LOCATION)) {
                     data[key] = value
                 }
             }
@@ -121,7 +121,7 @@ open class HobbitHole(
             val selectionStrategy = frontMatterMap[STRATEGY_SELECTION]?.value as? String ?: ""
 
             val postProcessors: List<PostProcessor> = emptyList()
-            frontMatterMap["postProcessors"]?.value?.let {
+            frontMatterMap[POST_PROCESSOR]?.value?.let {
                 PostProcessor.handler(it as String)
             }
 

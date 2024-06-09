@@ -44,5 +44,8 @@ interface PostProcessor {
             }
         }
 
+        fun allNames(): List<String> {
+            return EP_NAME.extensionList.map { it.processorName }
+        }
     }
 }
