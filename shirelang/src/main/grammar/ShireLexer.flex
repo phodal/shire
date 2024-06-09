@@ -39,6 +39,8 @@ import java.util.regex.Pattern;
 %s FRONT_MATTER_BLOCK
 %s FRONT_MATTER_VALUE_BLOCK
 %s FRONT_MATTER_VAL_OBJECT
+%s PATTERN_ACTION_BLOCK
+%s PARAMTER_BLOCK
 
 %s LANG_ID
 
@@ -50,7 +52,12 @@ INDENT                   = \s{2}
 
 EscapedChar              = "\\" [^\n]
 RegexWord                = [^\r\n\\\"' \t$`()] | {EscapedChar}
+REGEX                    = \/{RegexWord}+\/
 PATTERN                  = \/{RegexWord}+\/
+
+LPAREN                   = \(
+RPAREN                   = \)
+PIPE                     = \|
 
 VARIABLE_ID              = [a-zA-Z0-9][_\-a-zA-Z0-9]*
 AGENT_ID                 = [a-zA-Z0-9][_\-a-zA-Z0-9]*
@@ -192,7 +199,7 @@ RBRACKET=\]
 
 <FRONT_MATTER_VAL_OBJECT> {
   {QUOTE_STRING}          { return QUOTE_STRING; }
-  {PATTERN}               { return PATTERN; }
+  {PATTERN}               { yybegin(PATTERN_ACTION_BLOCK); return PATTERN; }
   [^]                     { yypushback(yylength()); yybegin(FRONT_MATTER_BLOCK); }
 }
 
@@ -208,6 +215,27 @@ RBRACKET=\]
   ","                     { return COMMA; }
   " "                     { return TokenType.WHITE_SPACE; }
   [^]                     { yypushback(yylength()); yybegin(FRONT_MATTER_BLOCK); }
+}
+
+<PATTERN_ACTION_BLOCK> {
+  "{"                    { return OPEN_BRACE; }
+  "}"                    { return CLOSE_BRACE; }
+  {WHITE_SPACE}          { return WHITE_SPACE; }
+  {IDENTIFIER}           { return IDENTIFIER; }
+  {LPAREN}               { yybegin(PARAMTER_BLOCK); return LPAREN; }
+  "|"                    { return PIPE; }
+  [^]                    { yypushback(yylength()); yybegin(FRONT_MATTER_VALUE_BLOCK); }
+}
+
+<PARAMTER_BLOCK> {
+  {IDENTIFIER}           { return IDENTIFIER; }
+  {QUOTE_STRING}         { return QUOTE_STRING; }
+  {REGEX}                { return PATTERN; }
+  {NUMBER}               { return NUMBER; }
+  {RPAREN}               { yybegin(PATTERN_ACTION_BLOCK); return RPAREN; }
+  {WHITE_SPACE}          { return WHITE_SPACE; }
+  ","                    { return COMMA; }
+  [^]                    { yypushback(yylength()); yybegin(FRONT_MATTER_VAL_OBJECT); }
 }
 
 <COMMENT_BLOCK> {

@@ -38,7 +38,7 @@
     RBRACKET           = "RBRACKET"
     INDENT             = "INDENT"
     OPEN_BRACE         = "{"
-    CLOASE_BRACE       = "}"
+    CLOSE_BRACE       = "}"
     LPAREN             = "("
     RPAREN             = ")"
     CASE               = "case"
@@ -56,26 +56,22 @@ frontMatterValue ::= STRING | NUMBER | QUOTE_STRING | DATE | PATTERN | BOOLEAN |
 frontMatterArray ::= LBRACKET (frontMatterValue (COMMA frontMatterValue)*) RBRACKET
 
 objectKeyValue ::= (INDENT keyValue NEWLINE?)*
-keyValue ::= frontMatterEntry
+keyValue ::= frontMatterEntry | patternAction
 
-/* example:
- * ```java
- * /**\/*.java/ {
- *  prompt()
- * }
- */
+patternAction ::= PATTERN WHITE_SPACE? matchAction | caseAction (WHITE_SPACE | NEWLINE)*
 
-patternAction ::= matchAction | caseAction
-matchAction ::= PATTERN WHITE_SPACE? NEWLINE? OPEN_BRACE (pipelineFunc ('|' pipelineFunc)*)? CLOSE_BRACE
-/// find, grep, sed, awk, sort, args
-pipelineFunc ::= funcName LPAREN pipelineArgs RPAREN | funcName
-funcName ::= 'find' | 'grep' | 'sed' | 'awk' | 'sort' | 'xargs' | IDENTIFIER
+matchAction ::= NEWLINE? CASE_BLOCK_START (WHITE_SPACE? pipelineFunc WHITE_SPACE? PIPE)* WHITE_SPACE? pipelineFunc WHITE_SPACE? CASE_BLOCK_END
+
+pipelineFunc ::= (funcCall | funcName)
+funcCall ::= funcName LPAREN pipelineArgs? RPAREN
+funcName ::= IDENTIFIER
 pipelineArgs ::= (pipelineArg (COMMA pipelineArg)*)?
-pipelineArg ::= STRING | NUMBER | IDENTIFIER | optionArg
-optionArg ::= '-' IDENTIFIER (WHITE_SPACE (STRING | NUMBER | IDENTIFIER))?
-caseAction ::= CASE WHITE_SPACE PATTERN WHITE_SPACE OPEN_BRACE (caseOption (NEWLINE caseOption)*)? CLOSE_BRACE
-caseOption ::= optionPattern WHITE_SPACE OPEN_BRACE pipelineFunc ('|' pipelineFunc)* CLOSE_BRACE
-optionPattern ::= STRING | IDENTIFIER
+pipelineArg ::= STRING | NUMBER | IDENTIFIER | QUOTE_STRING
+
+caseAction ::= "case" WHITE_SPACE PATTERN WHITE_SPACE "in" WHITE_SPACE CASE_BLOCK_START casePatternAction* CASE_BLOCK_END
+casePatternAction ::= PATTERN COLON WHITE_SPACE matchAction
+CASE_BLOCK_START ::= OPEN_BRACE (WHITE_SPACE | NEWLINE)*
+CASE_BLOCK_END ::=(WHITE_SPACE | NEWLINE)* CLOSE_BRACE
 
 used ::= (
     AGENT_START AGENT_ID

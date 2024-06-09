@@ -28,6 +28,15 @@ pattern { action }
 
 ```
 /**.java/ { print $0 }  # 匹配所有 Java 文件并打印
+/**.java/ { grep("error.log") | sort | xargs("rm")}
+/**.log/ {
+  case "$0" {
+    "error" { grep("ERROR") | sort | xargs("notify_admin") }
+    "warn" { grep("WARN") | sort | xargs("notify_admin") }
+    "info" { grep("INFO") | sort | xargs("notify_user") }
+    -  { grep("ERROR") | sort | xargs("notify_admin") }
+  }
+}
 ```
 
 ### 其它语言示例
