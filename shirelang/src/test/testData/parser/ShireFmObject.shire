@@ -1,17 +1,15 @@
 ---
-name: "Object Demo"
-description: "A simple object demo"
+name: "Java to Kotlin"
+description: "Convert Java to Kotlin file"
 interaction: AppendCursor
 actionLocation: ContextMenu
 postProcessor: ["VerifyCode", "RunCode"]
 filenameRules:
-  "**/*.java": "You MUST use should_xx_xx style for test method name, You MUST use given-when-then style."
+  /**.java/: "You should thinking in best Kotlin way."
+Condition: /**\/*.java/
 ---
 
-Generate code for API.
+Convert follow $language code to Kotlin
 
-@api-market intergration User login oauth API
+$all
 
-Here is current $language code:
-
-/file:src/main/kotlin/com/phodal/blog/controller/UserController.kt
