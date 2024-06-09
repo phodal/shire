@@ -32,6 +32,49 @@ pattern { action }
 
 ### 其它语言示例
 
+```textproc
+# 模式-动作对
+match /pattern/ do
+  print $0
+end
+
+# 模式-替换
+replace /foo/ with /bar/
+
+# 模式-执行
+match /pattern/ do
+  exec "echo 'pattern found'"
+end
+
+# 模式-分支
+case $1 in
+  "start")
+    print "Starting service"
+  ;;
+  "stop")
+    print "Stopping service"
+  ;;
+  "restart")
+    print "Restarting service"
+  ;;
+  *)
+    print "Usage: {start|stop|restart}"
+  ;;
+end
+
+# 变量和数组
+let count = 0
+match /pattern/ do
+  let count = count + 1
+end
+print "Total patterns found: " + count
+
+# 正则表达式匹配
+match /[0-9]+/ do
+  print "Number found: " + $0
+end
+```
+
 以下是通用的示例，适用于不同脚本和编程语言：
 
 - **AWK 脚本**：
