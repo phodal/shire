@@ -53,6 +53,13 @@ frontMatterArray ::= LBRACKET (frontMatterValue (COMMA frontMatterValue)*) RBRAC
 objectKeyValue ::= (INDENT keyValue NEWLINE?)*
 keyValue ::= frontMatterEntry
 
+/* example:
+ * ```java
+ * /**\/*.java/ {
+ *  prompt()
+ * }
+ */
+
 used ::= (
     AGENT_START AGENT_ID
     | COMMAND_START COMMAND_ID (COLON COMMAND_PROP (SHARP LINE_INFO)?)?
