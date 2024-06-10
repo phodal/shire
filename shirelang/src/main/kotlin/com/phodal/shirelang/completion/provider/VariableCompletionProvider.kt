@@ -13,7 +13,7 @@ class VariableCompletionProvider : CompletionProvider<CompletionParameters>() {
         context: ProcessingContext,
         result: CompletionResultSet,
     ) {
-        CustomVariable.all().forEach {
+        ContextVariable.all().forEach {
             val withTypeText =
                 PrioritizedLookupElement.withPriority(
                     LookupElementBuilder.create(it.variable).withTypeText(it.description, true),

@@ -6,7 +6,7 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiNameIdentifierOwner
-import com.phodal.shirelang.completion.provider.CustomVariable
+import com.phodal.shirelang.completion.provider.ContextVariable
 import org.apache.velocity.VelocityContext
 import org.apache.velocity.app.Velocity
 import java.io.StringWriter
@@ -22,10 +22,10 @@ class VariableTemplateCompiler(
     private val velocityContext = VelocityContext()
 
     init {
-        this.set(CustomVariable.SELECTION.variable, editor.selectionModel.selectedText ?: selectedText)
-        this.set(CustomVariable.BEFORE_CURSOR.variable, file.text.substring(0, editor.caretModel.offset))
-        this.set(CustomVariable.AFTER_CURSOR.variable, file.text.substring(editor.caretModel.offset))
-        this.set(CustomVariable.ALL.variable, file.text)
+        this.set(ContextVariable.SELECTION.variable, editor.selectionModel.selectedText ?: selectedText)
+        this.set(ContextVariable.BEFORE_CURSOR.variable, file.text.substring(0, editor.caretModel.offset))
+        this.set(ContextVariable.AFTER_CURSOR.variable, file.text.substring(editor.caretModel.offset))
+        this.set(ContextVariable.ALL.variable, file.text)
     }
 
     fun set(key: String, value: String) {
@@ -33,10 +33,10 @@ class VariableTemplateCompiler(
     }
 
     fun compile(template: String): String {
-        velocityContext.put(CustomVariable.FILE_NAME.variable, file.name)
-        velocityContext.put(CustomVariable.FILE_PATH.variable, file.virtualFile?.path ?: "")
+        velocityContext.put(ContextVariable.FILE_NAME.variable, file.name)
+        velocityContext.put(ContextVariable.FILE_PATH.variable, file.virtualFile?.path ?: "")
         velocityContext.put(
-            CustomVariable.METHOD_NAME.variable, when (element) {
+            ContextVariable.METHOD_NAME.variable, when (element) {
                 is PsiNameIdentifierOwner -> element.nameIdentifier?.text ?: ""
                 else -> ""
             }
@@ -60,9 +60,9 @@ class VariableTemplateCompiler(
     }
 
     private fun configForLanguage() {
-        velocityContext.put(CustomVariable.LANGUAGE.variable, language.displayName)
+        velocityContext.put(ContextVariable.LANGUAGE.variable, language.displayName)
         velocityContext.put(
-            CustomVariable.COMMENT_SYMBOL.variable, when (language.displayName.lowercase()) {
+            ContextVariable.COMMENT_SYMBOL.variable, when (language.displayName.lowercase()) {
                 "java", "kotlin" -> "//"
                 "python" -> "#"
                 "javascript" -> "//"

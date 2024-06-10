@@ -2,7 +2,7 @@ package com.phodal.shirelang.completion.provider
 
 import com.phodal.shirelang.compile.VariableTemplateCompiler
 
-enum class CustomVariable(val variable: String, val description: String) {
+enum class ContextVariable(val variable: String, val description: String) {
     SELECTION("selection", "The selected text"),
     BEFORE_CURSOR("beforeCursor", "The text before the cursor"),
     AFTER_CURSOR("afterCursor", "The text after the cursor"),
@@ -16,7 +16,7 @@ enum class CustomVariable(val variable: String, val description: String) {
     ;
 
     companion object {
-        fun all(): List<CustomVariable> = values().toList()
+        fun all(): List<ContextVariable> = values().toList()
 
         fun hasVariable(content: String): Boolean {
             return all().any { content.contains("\$${it.variable}") }
