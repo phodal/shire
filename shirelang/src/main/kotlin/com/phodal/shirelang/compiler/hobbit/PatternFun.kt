@@ -3,66 +3,93 @@ package com.phodal.shirelang.compiler.hobbit
 import com.intellij.openapi.diagnostic.logger
 
 /**
- * PatternFun is a sealed class in Kotlin that represents different pattern processing functions.
- * It has four subclasses: Prompt, Grep, Sort, and Xargs, each representing a specific pattern processing function.
+ * PatternFun is a sealed class in Kotlin representing different pattern processing functions.
+ * It has several subclasses: Prompt, Grep, Sed, Sort, Uniq, Head, Tail, Xargs, and Print,
+ * each representing a specific pattern processing function.
  *
  * @property funcName The name of the pattern processing function.
  */
 sealed class PatternFun(open val funcName: String) {
+    /**
+     * Prompt subclass for displaying a message prompt.
+     *
+     * @property message The message to be displayed.
+     */
     class Prompt(val message: String) : PatternFun("prompt")
 
     /**
-     * Like `grep` function with one or more patterns to search for.
+     * Grep subclass for searching with one or more patterns.
+     *
+     * @property patterns The patterns to search for.
      */
     class Grep(vararg val patterns: String) : PatternFun("grep")
 
     /**
-     * Find and replace function with one or more patterns to search for and replace with.
+     * Sed subclass for find and replace operations.
+     *
+     * @property pattern The pattern to search for.
+     * @property replacements The string to replace matches with.
      */
     class Sed(val pattern: String, val replacements: String) : PatternFun("sed")
 
     /**
-     * Sort function with one or more arguments for sorting.
+     * Sort subclass for sorting with one or more arguments.
+     *
+     * @property arguments The arguments to use for sorting.
      */
     class Sort(vararg val arguments: String) : PatternFun("sort")
 
     /**
-     * uniq function with one or more arguments for removing duplicates.
+     * Uniq subclass for removing duplicates based on one or more arguments.
+     *
+     * @property texts The texts to process for uniqueness.
      */
     class Uniq(vararg val texts: String) : PatternFun("uniq")
 
     /**
-     * head function with one or more arguments for getting the first lines.
+     * Head subclass for retrieving the first few lines.
+     *
+     * @property lines The number of lines to retrieve from the start.
      */
     class Head(val lines: Number) : PatternFun("head")
 
     /**
-     * tail function with one or more arguments for getting the last lines.
+     * Tail subclass for retrieving the last few lines.
+     *
+     * @property lines The number of lines to retrieve from the end.
      */
     class Tail(val lines: Number) : PatternFun("tail")
 
     /**
-     * Xargs function with one or more variables to process.
+     * Xargs subclass for processing one or more variables.
+     *
+     * @property variables The variables to process.
      */
     class Xargs(vararg val variables: String) : PatternFun("xargs")
 
     /**
-     * Print function with one or more arguments to print.
+     * Print subclass for printing one or more texts.
+     *
+     * @property texts The texts to be printed.
      */
     class Print(vararg val texts: String) : PatternFun("print")
 
     companion object {
+        /**
+         * Creates a list of PatternFun instances from a FrontMatterType object.
+         *
+         * @param value The FrontMatterType object.
+         * @return A list of corresponding PatternFun instances.
+         */
         fun from(value: FrontMatterType): List<PatternFun> {
             return when (value) {
                 is FrontMatterType.STRING -> {
-                    return listOf(Prompt(value.value as? String ?: ""))
+                    listOf(Prompt(value.value as? String ?: ""))
                 }
-
                 is FrontMatterType.PATTERN -> {
                     val action = value.value as? ShirePatternAction
                     action?.processors ?: emptyList()
                 }
-
                 else -> {
                     logger<PatternFun>().error("Unknown pattern processor type: $value")
                     emptyList()
