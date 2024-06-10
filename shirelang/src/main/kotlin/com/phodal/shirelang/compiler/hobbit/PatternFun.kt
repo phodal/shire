@@ -46,6 +46,11 @@ sealed class PatternFun(open val funcName: String) {
      */
     class Xargs(vararg val variables: String) : PatternFun("xargs")
 
+    /**
+     * Print function with one or more arguments to print.
+     */
+    class Print(vararg val texts: String) : PatternFun("print")
+
     companion object {
         fun from(value: FrontMatterType): List<PatternFun> {
             return when (value) {

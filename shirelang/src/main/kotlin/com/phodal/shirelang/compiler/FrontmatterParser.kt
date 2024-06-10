@@ -157,7 +157,7 @@ object FrontmatterParser {
                 }
 
                 "sed" -> {
-                    processor.add(PatternFun.Replace(args[0], args[1]))
+                    processor.add(PatternFun.Sed(args[0], args[1]))
                 }
 
                 "xargs" -> {
@@ -174,6 +174,10 @@ object FrontmatterParser {
 
                 "tail" -> {
                     processor.add(PatternFun.Tail(args[0].toInt()))
+                }
+
+                "print" -> {
+                    processor.add(PatternFun.Print(*args.toTypedArray()))
                 }
 
                 else -> {
