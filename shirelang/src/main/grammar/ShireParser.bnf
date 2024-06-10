@@ -42,6 +42,8 @@
     LPAREN             = "("
     RPAREN             = ")"
     CASE               = "case"
+    DEFAULT            = "default"
+    DASH               = "-"
   ]
 }
 
@@ -58,25 +60,24 @@ frontMatterArray ::= LBRACKET (frontMatterValue (COMMA frontMatterValue)*) RBRAC
 objectKeyValue ::= (INDENT keyValue NEWLINE?)*
 keyValue ::= frontMatterEntry | patternAction
 
-patternAction ::= QUOTE_STRING WHITE_SPACE? COLON WHITE_SPACE?  PATTERN WHITE_SPACE? matchAction | caseAction (WHITE_SPACE | NEWLINE)*
+patternAction ::= QUOTE_STRING WHITE_SPACE? COLON WHITE_SPACE? PATTERN WHITE_SPACE? actionBlock (WHITE_SPACE | NEWLINE)*
 
-matchAction ::= NEWLINE? CASE_BLOCK_START pipelineFuncBody CASE_BLOCK_END
+actionBlock ::= NEWLINE? BLOCK_START (actionBody) BLOCK_END
 
-pipelineFuncBody ::= INDENT* (WHITE_SPACE? pipelineFunc WHITE_SPACE? PIPE)* WHITE_SPACE? pipelineFunc WHITE_SPACE?
-pipelineFunc ::= (funcCall | funcName)
+actionBody ::= (WHITE_SPACE? actionExpr WHITE_SPACE? PIPE)* WHITE_SPACE? actionExpr WHITE_SPACE?
+actionExpr ::= (caseBody | funcCall)
 
-funcCall ::= funcName LPAREN pipelineArgs? RPAREN
+funcCall ::= funcName (LPAREN pipelineArgs? RPAREN)?
 funcName ::= IDENTIFIER
 pipelineArgs ::= (pipelineArg (COMMA pipelineArg)*)?
 pipelineArg ::= STRING | NUMBER | IDENTIFIER | QUOTE_STRING
 
-caseAction ::= CASE_BLOCK_START INDENT? CASE WHITE_SPACE QUOTE_STRING WHITE_SPACE? CASE_BLOCK_START casePatternAction* CASE_BLOCK_END CASE_BLOCK_END
-casePatternAction ::= INDENT? WHITE_SPACE* caseCondition CASE_BLOCK_START pipelineFuncBody CASE_BLOCK_END
-caseCondition ::= PATTERN | QUOTE_STRING | default
-default ::= "-"
+caseBody ::= CASE (WHITE_SPACE | NEWLINE)* QUOTE_STRING WHITE_SPACE? BLOCK_START casePatternAction* BLOCK_END
+casePatternAction ::= NEWLINE? INDENT? WHITE_SPACE? caseCondition BLOCK_START actionBody BLOCK_END
+caseCondition ::= PATTERN | QUOTE_STRING | DEFAULT
 
-CASE_BLOCK_START ::= OPEN_BRACE (WHITE_SPACE | NEWLINE)*
-CASE_BLOCK_END ::= (WHITE_SPACE | NEWLINE)* CLOSE_BRACE
+BLOCK_START ::= (WHITE_SPACE | NEWLINE)* OPEN_BRACE (WHITE_SPACE | NEWLINE)*
+BLOCK_END ::= (WHITE_SPACE | NEWLINE)* CLOSE_BRACE (WHITE_SPACE | NEWLINE)*
 
 used ::= (
     AGENT_START AGENT_ID

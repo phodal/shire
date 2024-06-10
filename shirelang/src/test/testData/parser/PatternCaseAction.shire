@@ -3,10 +3,7 @@ variables:
   "var1": "value2"
   "var3": /**.log/ {
     case "$0" {
-      "error" { grep("ERROR") | sort | xargs("notify_admin") }
-      "warn" { grep("WARN") | sort | xargs("notify_admin") }
-      "info" { grep("INFO") | sort | xargs("notify_user") }
-      -  { grep("ERROR") | sort | xargs("notify_admin") }
+
     }
   }
 ---

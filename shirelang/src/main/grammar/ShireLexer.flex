@@ -83,9 +83,10 @@ NEWLINE                  = \n | \r | \r\n
 
 COLON                 =:
 SHARP                 =#
-DASH                  =-
-LBRACKET             =\[
-RBRACKET             =\]
+LBRACKET              =\[
+RBRACKET              =\]
+DEFAULT               =default
+CASE                  =case
 
 %{
     private boolean isCodeStart = false;
@@ -222,11 +223,13 @@ RBRACKET             =\]
   "{"                    { return OPEN_BRACE; }
   "}"                    { return CLOSE_BRACE; }
   {WHITE_SPACE}          { return WHITE_SPACE; }
-  "case"                 { yybegin(CASE_BLOCK);return CASE; }
+  {NEWLINE}              { return NEWLINE; }
+  {CASE}                 { yybegin(CASE_BLOCK);return CASE; }
   {IDENTIFIER}           { return IDENTIFIER; }
   {LPAREN}               { yybegin(PARAMTER_BLOCK); return LPAREN; }
   "|"                    { return PIPE; }
   [^]                    { yypushback(yylength()); yybegin(FRONT_MATTER_VALUE_BLOCK); }
+ // [^]                    { return TokenType.BAD_CHARACTER; }
 }
 
 <CASE_BLOCK> {
@@ -234,6 +237,9 @@ RBRACKET             =\]
   "}"                    { return CLOSE_BRACE; }
   {QUOTE_STRING}         { return QUOTE_STRING; }
   {IDENTIFIER}           { return IDENTIFIER; }
+  {INDENT}               { return INDENT; }
+  {WHITE_SPACE}          { return WHITE_SPACE; }
+  "default"              { return DEFAULT; }
   [^]                    { yypushback(yylength()); yybegin(PATTERN_ACTION_BLOCK); }
 }
 
