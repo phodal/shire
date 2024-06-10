@@ -49,7 +49,7 @@ ShireFile ::= frontMatterHeader? (used | code | TEXT_SEGMENT | NEWLINE | COMMENT
 
 frontMatterHeader ::= FRONTMATTER_START NEWLINE frontMatterEntries FRONTMATTER_END
 
-frontMatterEntries ::= ((frontMatterEntry | patternAction) WHITE_SPACE?)*
+frontMatterEntries ::= ((frontMatterEntry) WHITE_SPACE?)*
 frontMatterEntry ::= frontMatterKey WHITE_SPACE? COLON WHITE_SPACE? (frontMatterValue) NEWLINE?
 frontMatterKey ::= FRONTMATTER_KEY | QUOTE_STRING | PATTERN
 frontMatterValue ::= STRING | NUMBER | QUOTE_STRING | DATE | BOOLEAN | frontMatterArray | (NEWLINE objectKeyValue)
@@ -60,18 +60,23 @@ keyValue ::= frontMatterEntry | patternAction
 
 patternAction ::= QUOTE_STRING WHITE_SPACE? COLON WHITE_SPACE?  PATTERN WHITE_SPACE? matchAction | caseAction (WHITE_SPACE | NEWLINE)*
 
-matchAction ::= NEWLINE? CASE_BLOCK_START (WHITE_SPACE? pipelineFunc WHITE_SPACE? PIPE)* WHITE_SPACE? pipelineFunc WHITE_SPACE? CASE_BLOCK_END
+matchAction ::= NEWLINE? CASE_BLOCK_START pipelineFuncBody CASE_BLOCK_END
 
+pipelineFuncBody ::= INDENT* (WHITE_SPACE? pipelineFunc WHITE_SPACE? PIPE)* WHITE_SPACE? pipelineFunc WHITE_SPACE?
 pipelineFunc ::= (funcCall | funcName)
+
 funcCall ::= funcName LPAREN pipelineArgs? RPAREN
 funcName ::= IDENTIFIER
 pipelineArgs ::= (pipelineArg (COMMA pipelineArg)*)?
 pipelineArg ::= STRING | NUMBER | IDENTIFIER | QUOTE_STRING
 
-caseAction ::= "case" WHITE_SPACE PATTERN WHITE_SPACE "in" WHITE_SPACE CASE_BLOCK_START casePatternAction* CASE_BLOCK_END
-casePatternAction ::= PATTERN COLON WHITE_SPACE matchAction
+caseAction ::= CASE_BLOCK_START INDENT? CASE WHITE_SPACE QUOTE_STRING WHITE_SPACE? CASE_BLOCK_START casePatternAction* CASE_BLOCK_END CASE_BLOCK_END
+casePatternAction ::= INDENT? WHITE_SPACE* caseCondition CASE_BLOCK_START pipelineFuncBody CASE_BLOCK_END
+caseCondition ::= PATTERN | QUOTE_STRING | default
+default ::= "-"
+
 CASE_BLOCK_START ::= OPEN_BRACE (WHITE_SPACE | NEWLINE)*
-CASE_BLOCK_END ::=(WHITE_SPACE | NEWLINE)* CLOSE_BRACE
+CASE_BLOCK_END ::= (WHITE_SPACE | NEWLINE)* CLOSE_BRACE
 
 used ::= (
     AGENT_START AGENT_ID

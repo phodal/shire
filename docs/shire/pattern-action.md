@@ -84,41 +84,6 @@ match /[0-9]+/ do
 end
 ```
 
-以下是通用的示例，适用于不同脚本和编程语言：
-
-- **AWK 脚本**：
-
-```awk
-
-/error/ { print $0 }  # 匹配包含 "error" 的行并打印
-$1 > 100 { print $0 } # 匹配第一字段大于 100 的行并打印
-```
-
-- **Python**：
-
-```python
-
-data = ["error in line 1", "all good", "value 150", "value 50"]
-for line in data:
-    if "error" in line:
-        print(line)  # 匹配包含 "error" 的行并打印
-    if int(line.split()[-1]) > 100:
-        print(line)  # 匹配最后一个数值大于 100 的行并打印
-```
-
-- **Shell 脚本**：
-
-```sh
-while read line; do
-    if [[ "$line" == *"error"* ]]; then
-        echo "$line"  # 匹配包含 "error" 的行并打印
-    fi
-    if [[ $(echo $line | awk '{print $NF}') -gt 100 ]]; then
-        echo "$line"  # 匹配最后一个字段大于 100 的行并打印
-    fi
-done < inputfile
-```
-
 在这些示例中：
 
 - **Pattern（模式）**：是用于匹配输入数据的条件，如包含特定字符串或满足某个数值条件。

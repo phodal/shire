@@ -6,7 +6,6 @@ actionLocation: ContextMenu
 postProcessor: ["VerifyCode", "RunCode"]
 filenameRules:
   /**.java/: "You should thinking in best Kotlin way."
-Condition: /**\/*.java/
 ---
 
 Convert follow $language code to Kotlin

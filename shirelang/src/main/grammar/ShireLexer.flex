@@ -41,6 +41,7 @@ import java.util.regex.Pattern;
 %s FRONT_MATTER_VAL_OBJECT
 %s PATTERN_ACTION_BLOCK
 %s PARAMTER_BLOCK
+%s CASE_BLOCK
 
 %s LANG_ID
 
@@ -48,7 +49,7 @@ IDENTIFIER               = [a-zA-Z0-9][_\-a-zA-Z0-9]*
 FRONTMATTER_KEY          = [a-zA-Z0-9][_\-a-zA-Z0-9]*
 DATE                     = [0-9]{4}-[0-9]{2}-[0-9]{2}
 STRING                   = [a-zA-Z0-9][_\-a-zA-Z0-9]*
-INDENT                   = \s{2}
+INDENT                   = "  "
 
 EscapedChar              = "\\" [^\n]
 RegexWord                = [^\r\n\\\"' \t$`()] | {EscapedChar}
@@ -80,11 +81,11 @@ CODE_CONTENT             = [^\n]+
 COMMENTS                 = \[ ([^\]]+)? \] [^\t\r\n]*
 NEWLINE                  = \n | \r | \r\n
 
-COLON   =:
-SHARP   =#
-DASH    =-
-LBRACKET=\[
-RBRACKET=\]
+COLON                 =:
+SHARP                 =#
+DASH                  =-
+LBRACKET             =\[
+RBRACKET             =\]
 
 %{
     private boolean isCodeStart = false;
@@ -221,10 +222,19 @@ RBRACKET=\]
   "{"                    { return OPEN_BRACE; }
   "}"                    { return CLOSE_BRACE; }
   {WHITE_SPACE}          { return WHITE_SPACE; }
+  "case"                 { yybegin(CASE_BLOCK);return CASE; }
   {IDENTIFIER}           { return IDENTIFIER; }
   {LPAREN}               { yybegin(PARAMTER_BLOCK); return LPAREN; }
   "|"                    { return PIPE; }
   [^]                    { yypushback(yylength()); yybegin(FRONT_MATTER_VALUE_BLOCK); }
+}
+
+<CASE_BLOCK> {
+  "{"                    { return OPEN_BRACE; }
+  "}"                    { return CLOSE_BRACE; }
+  {QUOTE_STRING}         { return QUOTE_STRING; }
+  {IDENTIFIER}           { return IDENTIFIER; }
+  [^]                    { yypushback(yylength()); yybegin(PATTERN_ACTION_BLOCK); }
 }
 
 <PARAMTER_BLOCK> {
