@@ -127,5 +127,5 @@ class ShireCompileTest: BasePlatformTestCase() {
         val fmt = compile.config!!.additionalData["variables"]
 
         TestCase.assertTrue(fmt is FrontMatterType.OBJECT)
-    }
+      }
 }

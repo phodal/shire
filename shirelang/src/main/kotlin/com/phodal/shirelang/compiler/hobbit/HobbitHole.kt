@@ -65,6 +65,11 @@ open class HobbitHole(
      * The list of rule files to apply for the action.
      */
     val fileContentFilters: List<String> = emptyList(),
+
+    /**
+     * The list of variables to apply for the action.
+     */
+    val variables: MutableMap<String, List<PatternProcessorItem>> = mutableMapOf()
 ) : Smials {
     fun pickupElement() {
         this.selectionStrategy.select()
@@ -86,6 +91,7 @@ open class HobbitHole(
         const val POST_PROCESSOR = "postProcessors"
         private const val DESCRIPTION = "description"
         private const val FILENAME_RULES = "filenameRules"
+        private const val VARIABLES = "variables"
 
         fun from(file: ShireFile): HobbitHole? {
             return FrontmatterParser.parse(file)
@@ -135,6 +141,15 @@ open class HobbitHole(
                 }
             }
 
+            val variables: MutableMap<String, List<PatternProcessorItem>> = mutableMapOf()
+            val variablesMap = frontMatterMap[VARIABLES] as? FrontMatterType.OBJECT
+            variablesMap?.let {
+                (variablesMap.value as? Map<String, FrontMatterType>)?.forEach { (key, value) ->
+                    val text = key.removeSurrounding("\"")
+                    variables[text] = PatternProcessorItem.from(value)
+                }
+            }
+
             return HobbitHole(
                 name,
                 description,
@@ -143,7 +158,8 @@ open class HobbitHole(
                 filenameRules = filenameRules,
                 additionalData = data,
                 selectionStrategy = SelectElementStrategy.fromString(selectionStrategy),
-                postProcessors = postProcessors
+                postProcessors = postProcessors,
+                variables = variables
             )
         }
     }

@@ -14,6 +14,10 @@ sealed class PatternProcessorItem(val type: String) {
                 is FrontMatterType.STRING -> {
                     return listOf(Prompt(value.value as? String ?: ""))
                 }
+                is FrontMatterType.PATTERN -> {
+                    val action = value.value as? ShirePatternAction
+                    action?.processors ?: emptyList()
+                }
                 else -> {
                     logger<PatternProcessorItem>().error("Unknown pattern processor type: $value")
                     emptyList()
@@ -36,4 +40,5 @@ sealed class FrontMatterType(val value: Any) {
     class BOOLEAN(value: Boolean): FrontMatterType(value)
     class ARRAY(value: List<FrontMatterType>): FrontMatterType(value)
     class OBJECT(value: Map<String, FrontMatterType>): FrontMatterType(value)
+    class PATTERN(value: ShirePatternAction): FrontMatterType(value)
 }

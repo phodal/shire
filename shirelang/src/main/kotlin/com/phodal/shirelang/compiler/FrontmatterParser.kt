@@ -7,6 +7,9 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.elementType
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.FrontMatterType
+import com.phodal.shirelang.compiler.hobbit.PatternProcessorItem
+import com.phodal.shirelang.compiler.hobbit.ShirePatternAction
+import com.phodal.shirelang.psi.ShireActionBlock
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.psi.ShireFrontMatterHeader
 import com.phodal.shirelang.psi.ShireObjectKeyValue
@@ -54,6 +57,15 @@ object FrontmatterParser {
                         value?.let {
                             frontMatter[lastKey] = it
                         }
+                    }
+                    ShireTypes.PATTERN_ACTION -> {
+                        val value = parsePatternAction(child)
+                        value?.let {
+                            frontMatter[lastKey] = it
+                        }
+                    }
+                    else -> {
+                        logger.warn("Unknown frontmatter type: ${child.elementType}")
                     }
                 }
             }
@@ -125,6 +137,31 @@ object FrontmatterParser {
                 null
             }
         }
+    }
+
+    private fun parsePatternAction(element: PsiElement): FrontMatterType? {
+        val pattern = element.children.firstOrNull()?.text ?: ""
+
+        val processor: MutableList<PatternProcessorItem> = mutableListOf()
+        val actionBlock = PsiTreeUtil.getChildOfType(element, ShireActionBlock::class.java)
+        actionBlock?.actionBody?.actionExprList?.map {
+            when(it.funcCall?.funcName?.text) {
+                "grep" -> {
+                    processor.add(PatternProcessorItem.Grep(it.text))
+                }
+                "sort" -> {
+                    processor.add(PatternProcessorItem.Sort())
+                }
+                "xargs" -> {
+                    processor.add(PatternProcessorItem.Xargs(it.text))
+                }
+                else -> {
+                    processor.add(PatternProcessorItem.Prompt(it.text))
+                }
+            }
+        }
+
+        return FrontMatterType.PATTERN(ShirePatternAction(pattern, processor))
     }
 
     private fun parseArray(element: PsiElement): List<FrontMatterType> {
