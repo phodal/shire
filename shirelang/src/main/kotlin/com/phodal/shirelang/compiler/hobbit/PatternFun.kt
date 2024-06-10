@@ -19,7 +19,7 @@ sealed class PatternFun(open val funcName: String) {
     /**
      * Find and replace function with one or more patterns to search for and replace with.
      */
-    class Replace(val pattern: String, val replacements: String) : PatternFun("replace")
+    class Sed(val pattern: String, val replacements: String) : PatternFun("sed")
 
     /**
      * Sort function with one or more arguments for sorting.
@@ -34,11 +34,12 @@ sealed class PatternFun(open val funcName: String) {
     /**
      * head function with one or more arguments for getting the first lines.
      */
-    class Head(vararg val lines: String) : PatternFun("head")
+    class Head(val lines: Number) : PatternFun("head")
 
     /**
      * tail function with one or more arguments for getting the last lines.
      */
+    class Tail(val lines: Number) : PatternFun("tail")
 
     /**
      * Xargs function with one or more variables to process.

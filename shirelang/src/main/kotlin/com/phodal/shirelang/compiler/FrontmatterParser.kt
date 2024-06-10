@@ -156,12 +156,24 @@ object FrontmatterParser {
                     processor.add(PatternFun.Sort(*args.toTypedArray()))
                 }
 
-                "replace" -> {
+                "sed" -> {
                     processor.add(PatternFun.Replace(args[0], args[1]))
                 }
 
                 "xargs" -> {
                     processor.add(PatternFun.Xargs(*args.toTypedArray()))
+                }
+
+                "uniq" -> {
+                    processor.add(PatternFun.Uniq(*args.toTypedArray()))
+                }
+
+                "head" -> {
+                    processor.add(PatternFun.Head(args[0].toInt()))
+                }
+
+                "tail" -> {
+                    processor.add(PatternFun.Tail(args[0].toInt()))
                 }
 
                 else -> {
