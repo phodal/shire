@@ -7,7 +7,7 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.elementType
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.FrontMatterType
-import com.phodal.shirelang.compiler.hobbit.PatternProcessorItem
+import com.phodal.shirelang.compiler.hobbit.PatternFun
 import com.phodal.shirelang.compiler.hobbit.ShirePatternAction
 import com.phodal.shirelang.psi.ShireActionBlock
 import com.phodal.shirelang.psi.ShireFile
@@ -142,21 +142,21 @@ object FrontmatterParser {
     private fun parsePatternAction(element: PsiElement): FrontMatterType? {
         val pattern = element.children.firstOrNull()?.text ?: ""
 
-        val processor: MutableList<PatternProcessorItem> = mutableListOf()
+        val processor: MutableList<PatternFun> = mutableListOf()
         val actionBlock = PsiTreeUtil.getChildOfType(element, ShireActionBlock::class.java)
         actionBlock?.actionBody?.actionExprList?.map {
             when(it.funcCall?.funcName?.text) {
                 "grep" -> {
-                    processor.add(PatternProcessorItem.Grep(it.text))
+                    processor.add(PatternFun.Grep(it.text))
                 }
                 "sort" -> {
-                    processor.add(PatternProcessorItem.Sort())
+                    processor.add(PatternFun.Sort())
                 }
                 "xargs" -> {
-                    processor.add(PatternProcessorItem.Xargs(it.text))
+                    processor.add(PatternFun.Xargs(it.text))
                 }
                 else -> {
-                    processor.add(PatternProcessorItem.Prompt(it.text))
+                    processor.add(PatternFun.Prompt(it.text))
                 }
             }
         }

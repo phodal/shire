@@ -69,7 +69,7 @@ open class HobbitHole(
     /**
      * The list of variables to apply for the action.
      */
-    val variables: MutableMap<String, List<PatternProcessorItem>> = mutableMapOf()
+    val variables: MutableMap<String, List<PatternFun>> = mutableMapOf()
 ) : Smials {
     fun pickupElement() {
         this.selectionStrategy.select()
@@ -137,16 +137,16 @@ open class HobbitHole(
             filenamesMap?.let {
                 (filenamesMap.value as? Map<String, FrontMatterType>)?.forEach { (key, value) ->
                     val text = key.removeSurrounding("\"")
-                    filenameRules.add(ShirePatternAction(text, PatternProcessorItem.from(value)))
+                    filenameRules.add(ShirePatternAction(text, PatternFun.from(value)))
                 }
             }
 
-            val variables: MutableMap<String, List<PatternProcessorItem>> = mutableMapOf()
+            val variables: MutableMap<String, List<PatternFun>> = mutableMapOf()
             val variablesMap = frontMatterMap[VARIABLES] as? FrontMatterType.OBJECT
             variablesMap?.let {
                 (variablesMap.value as? Map<String, FrontMatterType>)?.forEach { (key, value) ->
                     val text = key.removeSurrounding("\"")
-                    variables[text] = PatternProcessorItem.from(value)
+                    variables[text] = PatternFun.from(value)
                 }
             }
 

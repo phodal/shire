@@ -6,6 +6,7 @@ import com.phodal.shirecore.agent.InteractionType
 import com.phodal.shirelang.compiler.FrontmatterParser
 import com.phodal.shirelang.compiler.ShireCompiler
 import com.phodal.shirelang.compiler.hobbit.FrontMatterType
+import com.phodal.shirelang.compiler.hobbit.ShirePatternAction
 import com.phodal.shirelang.psi.ShireFile
 import junit.framework.TestCase
 
@@ -124,8 +125,11 @@ class ShireCompileTest: BasePlatformTestCase() {
 
         val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
         assertEquals("\n\nSummary webpage:", compile.output)
-        val fmt = compile.config!!.additionalData["variables"]
+        val map = compile.config!!.variables
 
-        TestCase.assertTrue(fmt is FrontMatterType.OBJECT)
+
+        val var2 = map["var2"]!!
+
+        assertEquals(3, var2.size)
       }
 }

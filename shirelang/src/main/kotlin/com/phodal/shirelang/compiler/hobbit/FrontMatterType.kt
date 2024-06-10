@@ -2,14 +2,13 @@ package com.phodal.shirelang.compiler.hobbit
 
 import com.intellij.openapi.diagnostic.logger
 
-
-sealed class PatternProcessorItem(val type: String) {
-    class Prompt(val message: String): PatternProcessorItem("prompt")
-    class Grep(val pattern: String): PatternProcessorItem("grep")
-    class Sort: PatternProcessorItem("sort")
-    class Xargs(val command: String): PatternProcessorItem("xargs")
+sealed class PatternFun(open val regex: String) {
+    class Prompt(val message: String): PatternFun("prompt")
+    class Grep(vararg val patterns: String): PatternFun("grep")
+    class Sort(vararg val arguments: String): PatternFun("sort")
+    class Xargs(vararg val variables: String): PatternFun("xargs")
     companion object {
-        fun from(value: FrontMatterType): List<PatternProcessorItem> {
+        fun from(value: FrontMatterType): List<PatternFun> {
             return when (value) {
                 is FrontMatterType.STRING -> {
                     return listOf(Prompt(value.value as? String ?: ""))
@@ -19,7 +18,7 @@ sealed class PatternProcessorItem(val type: String) {
                     action?.processors ?: emptyList()
                 }
                 else -> {
-                    logger<PatternProcessorItem>().error("Unknown pattern processor type: $value")
+                    logger<PatternFun>().error("Unknown pattern processor type: $value")
                     emptyList()
                 }
             }
@@ -30,7 +29,7 @@ sealed class PatternProcessorItem(val type: String) {
 /**
  * The action location of the action.
  */
-class ShirePatternAction(val pattern: String, val processors: List<PatternProcessorItem>)
+class ShirePatternAction(val pattern: String, val processors: List<PatternFun>)
 
 
 sealed class FrontMatterType(val value: Any) {
