@@ -40,5 +40,14 @@ sealed class FrontMatterType(val value: Any) {
     class BOOLEAN(value: Boolean): FrontMatterType(value)
     class ARRAY(value: List<FrontMatterType>): FrontMatterType(value)
     class OBJECT(value: Map<String, FrontMatterType>): FrontMatterType(value)
+
+    /**
+     * The default pattern action handles for processing
+     */
     class PATTERN(value: ShirePatternAction): FrontMatterType(value)
+
+    /**
+     * The case match for the front matter.
+     */
+    class CaseMatch(value: Map<String, PATTERN>): FrontMatterType(value)
 }
