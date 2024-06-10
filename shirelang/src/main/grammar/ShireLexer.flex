@@ -229,13 +229,11 @@ CASE                  =case
   {LPAREN}               { yybegin(PARAMTER_BLOCK); return LPAREN; }
   "|"                    { return PIPE; }
   [^]                    { yypushback(yylength()); yybegin(FRONT_MATTER_VALUE_BLOCK); }
- // [^]                    { return TokenType.BAD_CHARACTER; }
 }
 
 <CASE_BLOCK> {
   "{"                    { return OPEN_BRACE; }
   "}"                    { return CLOSE_BRACE; }
-  {QUOTE_STRING}         { return QUOTE_STRING; }
   {IDENTIFIER}           { return IDENTIFIER; }
   {INDENT}               { return INDENT; }
   {WHITE_SPACE}          { return WHITE_SPACE; }
@@ -251,7 +249,7 @@ CASE                  =case
   {RPAREN}               { yybegin(PATTERN_ACTION_BLOCK); return RPAREN; }
   {WHITE_SPACE}          { return WHITE_SPACE; }
   ","                    { return COMMA; }
-  [^]                    { yypushback(yylength()); yybegin(FRONT_MATTER_VAL_OBJECT); }
+//  [^]                    { yypushback(yylength()); yybegin(FRONT_MATTER_VAL_OBJECT); }
 }
 
 <COMMENT_BLOCK> {
