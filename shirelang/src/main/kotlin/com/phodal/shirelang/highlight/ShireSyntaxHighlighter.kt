@@ -1,13 +1,14 @@
 package com.phodal.shirelang.highlight
 
-import com.phodal.shirelang.psi.ShireTypes
 import com.intellij.lexer.Lexer
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
 import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.openapi.fileTypes.SyntaxHighlighter
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase
 import com.intellij.psi.tree.IElementType
+import com.intellij.psi.tree.TokenSet
 import com.phodal.shirelang.lexer.ShireLexerAdapter
+import com.phodal.shirelang.psi.ShireTypes
 
 class ShireSyntaxHighlighter : SyntaxHighlighter {
     override fun getHighlightingLexer(): Lexer = ShireLexerAdapter()
@@ -19,7 +20,20 @@ class ShireSyntaxHighlighter : SyntaxHighlighter {
     companion object {
         private val ATTRIBUTES: MutableMap<IElementType, TextAttributesKey> = HashMap()
 
+        private val KEYWORDS: TokenSet = TokenSet.create(
+            ShireTypes.CASE,
+            ShireTypes.DEFAULT
+        )
+
+
         init {
+
+            SyntaxHighlighterBase.fillMap(
+                ATTRIBUTES,
+                KEYWORDS,
+                DefaultLanguageHighlighterColors.KEYWORD
+            )
+
             ATTRIBUTES[ShireTypes.COMMENTS] = DefaultLanguageHighlighterColors.LINE_COMMENT
 
             ATTRIBUTES[ShireTypes.VARIABLE_START] = DefaultLanguageHighlighterColors.KEYWORD
@@ -48,10 +62,17 @@ class ShireSyntaxHighlighter : SyntaxHighlighter {
 
             ATTRIBUTES[ShireTypes.FRONTMATTER_KEY] = DefaultLanguageHighlighterColors.CONSTANT
 
-            ATTRIBUTES[ShireTypes.IDENTIFIER] = DefaultLanguageHighlighterColors.KEYWORD
+            // func name
+            ATTRIBUTES[ShireTypes.IDENTIFIER] = DefaultLanguageHighlighterColors.IDENTIFIER
             ATTRIBUTES[ShireTypes.NUMBER] = DefaultLanguageHighlighterColors.KEYWORD
             ATTRIBUTES[ShireTypes.QUOTE_STRING] = DefaultLanguageHighlighterColors.STRING
             ATTRIBUTES[ShireTypes.DATE] = DefaultLanguageHighlighterColors.LABEL
+
+            ATTRIBUTES[ShireTypes.LBRACKET] = DefaultLanguageHighlighterColors.BRACKETS
+            ATTRIBUTES[ShireTypes.RBRACKET] = DefaultLanguageHighlighterColors.BRACKETS
+
+            ATTRIBUTES[ShireTypes.LPAREN] = DefaultLanguageHighlighterColors.PARENTHESES
+            ATTRIBUTES[ShireTypes.RPAREN] = DefaultLanguageHighlighterColors.PARENTHESES
         }
     }
 

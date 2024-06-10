@@ -34,7 +34,7 @@ pattern { action }
     "error" { grep("ERROR") | sort | xargs("notify_admin") }
     "warn" { grep("WARN") | sort | xargs("notify_admin") }
     "info" { grep("INFO") | sort | xargs("notify_user") }
-    -  { grep("ERROR") | sort | xargs("notify_admin") }
+    default  { grep("ERROR") | sort | xargs("notify_admin") }
   }
 }
 ```
