@@ -9,6 +9,7 @@ import com.phodal.shirecore.middleware.PostCodeHandleContext
 import com.phodal.shirecore.middleware.PostProcessor
 import com.phodal.shirecore.middleware.select.SelectElementStrategy
 import com.phodal.shirelang.compiler.FrontmatterParser
+import com.phodal.shirelang.compiler.hobbit._base.Smials
 import com.phodal.shirelang.psi.ShireFile
 
 /**
