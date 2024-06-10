@@ -40,6 +40,7 @@ import java.util.regex.Pattern;
 %s FRONT_MATTER_VALUE_BLOCK
 %s FRONT_MATTER_VAL_OBJECT
 %s PATTERN_ACTION_BLOCK
+%s CONDITION_EXPR_BLOCK
 
 %s LANG_ID
 
@@ -215,6 +216,21 @@ ARROW                 ==>
   ","                     { return COMMA; }
   " "                     { return TokenType.WHITE_SPACE; }
   [^]                     { yypushback(yylength()); yybegin(FRONT_MATTER_BLOCK); }
+}
+
+// todo
+<CONDITION_EXPR_BLOCK> {
+  "!"                     { return NOT; }
+  "&&"                    { return ANDAND; }
+  "||"                    { return OROR; }
+  "."                     { return DOT; }
+  "=="                    { return EQEQ; }
+  "!="                    { return NEQ; }
+  "<"                     { return LT; }
+  "<="                    { return LTE; }
+  ">"                     { return GT; }
+  ">="                    { return GTE; }
+  {IDENTIFIER}            { return IDENTIFIER; }
 }
 
 <PATTERN_ACTION_BLOCK> {

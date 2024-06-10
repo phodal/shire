@@ -12,6 +12,8 @@
   elementTypeClass="com.phodal.shirelang.psi.ShireElementType"
   tokenTypeClass="com.phodal.shirelang.lexer.ShireTokenType"
 
+  extends(".*Expr") = expr
+
   tokens=[
     AGENT_START        = "AGENT_START"
     COMMAND_START      = "COMMAND_START"
@@ -45,6 +47,18 @@
     CASE               = "case"
     DEFAULT            = "default"
     DASH               = "-"
+
+    // operators
+    EQEQ               = '=='
+    NEQ                = '!='
+    LT                 = '<'
+    GT                 = '>'
+    LTE                = '<='
+    GTE                = '>='
+    ANDAND             = '&&'
+    OROR               = '||'
+    DOT                = '.'
+    NOT                = '!'
   ]
 }
 
@@ -79,6 +93,44 @@ pattern ::= PATTERN_EXPR
 
 BLOCK_START ::= (WHITE_SPACE | NEWLINE)* OPEN_BRACE (WHITE_SPACE | NEWLINE)*
 BLOCK_END ::= (WHITE_SPACE | NEWLINE)* CLOSE_BRACE (WHITE_SPACE | NEWLINE)*
+
+// todo
+conditionExpr ::= expr ARROW actionBlock
+expr ::=
+    logicalOrExpr
+    | logicalAndExpr
+    | eqComparisonExpr
+    | ineqComparisonExpr
+    | callExpr
+    | simpleRefExpr
+    | literalExpr
+    | parenExpr
+
+// See also:
+// b/37137454: Modify databinding expression grammar to allow calls to unqualified methods
+// https://github.com/JetBrains/Grammar-Kit/blob/master/HOWTO.md#24-compact-expression-parsing-with-priorities
+// https://github.com/JetBrains/Grammar-Kit/blob/master/testData/generator/ExprParser.bnf
+fake refExpr ::= expr? '.' IDENTIFIER
+simpleRefExpr ::= IDENTIFIER {extends=refExpr elementType=refExpr}
+
+logicalOrExpr ::= expr '||' expr
+logicalAndExpr ::= expr '&&' expr
+eqComparisonExpr ::= expr eqComparisonOp expr
+ineqComparisonExpr ::= expr ineqComparisonOp expr
+callExpr ::= refExpr '(' expressionList? ')'
+expressionList ::= expr (',' expr)*
+
+literalExpr ::= literal
+parenExpr ::= '(' expr ')'
+// when
+private eqComparisonOp ::= '==' | '!='
+private ineqComparisonOp ::= '<=' | '>=' | '<' | '>'
+
+private literal ::= NUMBER
+  | TRUE | FALSE
+  | QUOTE_STRING
+  | IDENTIFIER
+  | VARIABLE_START VARIABLE_ID
 
 used ::= (
     AGENT_START AGENT_ID
