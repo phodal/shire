@@ -39,6 +39,12 @@ pattern { action }
 }
 ```
 
+Shire 使用正则表达式来匹配：
+
+```regexp
+.*.java
+```
+
 ### 其它语言示例
 
 ```textproc
