@@ -69,7 +69,7 @@ open class HobbitHole(
     /**
      * The list of variables to apply for the action.
      */
-    val variables: MutableMap<String, List<PatternFun>> = mutableMapOf()
+    val variables: MutableMap<String, List<VariablePatternFunc>> = mutableMapOf()
 ) : Smials {
     fun pickupElement() {
         this.selectionStrategy.select()
@@ -141,12 +141,14 @@ open class HobbitHole(
                 }
             }
 
-            val variables: MutableMap<String, List<PatternFun>> = mutableMapOf()
+            val variables: MutableMap<String, List<VariablePatternFunc>> = mutableMapOf()
             val variablesMap = frontMatterMap[VARIABLES] as? FrontMatterType.OBJECT
             variablesMap?.let {
                 (variablesMap.value as? Map<String, FrontMatterType>)?.forEach { (key, value) ->
                     val text = key.removeSurrounding("\"")
-                    variables[text] = PatternFun.from(value)
+                    val funcs = PatternFun.from(value)
+
+                    variables[text] = funcs.map { func -> VariablePatternFunc(text, func) }
                 }
             }
 

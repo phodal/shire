@@ -1,6 +1,7 @@
 package com.phodal.shirelang.compiler
 
 import com.intellij.openapi.diagnostic.logger
+import com.intellij.openapi.util.NlsSafe
 import com.intellij.psi.PsiElement
 import com.intellij.psi.TokenType.WHITE_SPACE
 import com.intellij.psi.util.PsiTreeUtil
@@ -9,11 +10,7 @@ import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.FrontMatterType
 import com.phodal.shirelang.compiler.hobbit.PatternFun
 import com.phodal.shirelang.compiler.hobbit.ShirePatternAction
-import com.phodal.shirelang.psi.ShireActionBlock
-import com.phodal.shirelang.psi.ShireFile
-import com.phodal.shirelang.psi.ShireFrontMatterHeader
-import com.phodal.shirelang.psi.ShireObjectKeyValue
-import com.phodal.shirelang.psi.ShireTypes
+import com.phodal.shirelang.psi.*
 
 object FrontmatterParser {
     private val logger = logger<FrontmatterParser>()
@@ -58,12 +55,14 @@ object FrontmatterParser {
                             frontMatter[lastKey] = it
                         }
                     }
+
                     ShireTypes.PATTERN_ACTION -> {
                         val value = parsePatternAction(child)
                         value?.let {
                             frontMatter[lastKey] = it
                         }
                     }
+
                     else -> {
                         logger.warn("Unknown frontmatter type: ${child.elementType}")
                     }
@@ -139,30 +138,52 @@ object FrontmatterParser {
         }
     }
 
-    private fun parsePatternAction(element: PsiElement): FrontMatterType? {
+    private fun parsePatternAction(element: PsiElement): FrontMatterType {
         val pattern = element.children.firstOrNull()?.text ?: ""
 
         val processor: MutableList<PatternFun> = mutableListOf()
         val actionBlock = PsiTreeUtil.getChildOfType(element, ShireActionBlock::class.java)
-        actionBlock?.actionBody?.actionExprList?.map {
-            when(it.funcCall?.funcName?.text) {
+        actionBlock?.actionBody?.actionExprList?.map { expr ->
+            val funcCall = expr.funcCall
+            val args = parseParameters(funcCall)
+
+            when (funcCall?.funcName?.text) {
                 "grep" -> {
-                    processor.add(PatternFun.Grep(it.text))
+                    processor.add(PatternFun.Grep(*args.toTypedArray()))
                 }
+
                 "sort" -> {
-                    processor.add(PatternFun.Sort())
+                    processor.add(PatternFun.Sort(*args.toTypedArray()))
                 }
+
                 "xargs" -> {
-                    processor.add(PatternFun.Xargs(it.text))
+                    processor.add(PatternFun.Xargs(*args.toTypedArray()))
                 }
+
                 else -> {
-                    processor.add(PatternFun.Prompt(it.text))
+                    // remove surrounding quotes
+                    val text = expr.text.removeSurrounding("\"")
+                    processor.add(PatternFun.Prompt(text))
                 }
             }
         }
 
         return FrontMatterType.PATTERN(ShirePatternAction(pattern, processor))
     }
+
+    private fun parseParameters(funcCall: ShireFuncCall?): List<@NlsSafe String> =
+        PsiTreeUtil.findChildOfType(funcCall, ShirePipelineArgs::class.java)
+            ?.let {
+                it.pipelineArgList.map { arg -> arg }
+            }?.map {
+                when(it.firstChild.elementType) {
+                    ShireTypes.QUOTE_STRING -> it.text
+                        .removeSurrounding("\"")
+                        .removeSurrounding("'")
+                    ShireTypes.STRING -> it.text.removeSurrounding("\"")
+                    else -> it.text
+                }
+            } ?: emptyList()
 
     private fun parseArray(element: PsiElement): List<FrontMatterType> {
         val array = mutableListOf<FrontMatterType>()

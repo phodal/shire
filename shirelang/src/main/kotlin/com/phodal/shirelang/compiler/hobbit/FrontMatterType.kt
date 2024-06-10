@@ -2,7 +2,9 @@ package com.phodal.shirelang.compiler.hobbit
 
 import com.intellij.openapi.diagnostic.logger
 
-sealed class PatternFun(open val regex: String) {
+class VariablePatternFunc(val name: String, val function: PatternFun)
+
+sealed class PatternFun(open val funcName: String) {
     class Prompt(val message: String): PatternFun("prompt")
     class Grep(vararg val patterns: String): PatternFun("grep")
     class Sort(vararg val arguments: String): PatternFun("sort")

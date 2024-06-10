@@ -5,10 +5,8 @@ import com.phodal.shirecore.action.ShireActionLocation
 import com.phodal.shirecore.agent.InteractionType
 import com.phodal.shirelang.compiler.FrontmatterParser
 import com.phodal.shirelang.compiler.ShireCompiler
-import com.phodal.shirelang.compiler.hobbit.FrontMatterType
-import com.phodal.shirelang.compiler.hobbit.ShirePatternAction
+import com.phodal.shirelang.compiler.hobbit.PatternFun
 import com.phodal.shirelang.psi.ShireFile
-import junit.framework.TestCase
 
 class ShireCompileTest: BasePlatformTestCase() {
     fun testNormalString() {
@@ -131,5 +129,9 @@ class ShireCompileTest: BasePlatformTestCase() {
         val var2 = map["var2"]!!
 
         assertEquals(3, var2.size)
+        assertEquals("grep", var2[0].function.funcName)
+        assertEquals("error.log", (var2[0].function as PatternFun.Grep).patterns[0])
+        assertEquals("sort", var2[1].function.funcName)
+        assertEquals("xargs", var2[2].function.funcName)
       }
 }
