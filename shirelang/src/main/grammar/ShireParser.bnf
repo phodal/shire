@@ -37,8 +37,9 @@
     LBRACKET           = "LBRACKET"
     RBRACKET           = "RBRACKET"
     INDENT             = "INDENT"
+    ARROW              = "ARROW"
     OPEN_BRACE         = "{"
-    CLOSE_BRACE       = "}"
+    CLOSE_BRACE        = "}"
     LPAREN             = "("
     RPAREN             = ")"
     CASE               = "case"
@@ -62,8 +63,8 @@ keyValue ::= frontMatterEntry | patternAction
 
 patternAction ::= QUOTE_STRING WHITE_SPACE? COLON WHITE_SPACE? PATTERN WHITE_SPACE? actionBlock
 actionBlock ::=  BLOCK_START (actionBody) BLOCK_END
-actionBody ::= (WHITE_SPACE? actionExpr WHITE_SPACE? PIPE)* WHITE_SPACE? actionExpr WHITE_SPACE?
-actionExpr ::= (caseBody | funcCall)
+actionBody ::= (actionExpr PIPE)* actionExpr
+actionExpr ::= WHITE_SPACE? (caseBody | funcCall) WHITE_SPACE?
 
 funcCall ::= funcName (LPAREN pipelineArgs? RPAREN)?
 funcName ::= IDENTIFIER
@@ -71,11 +72,11 @@ pipelineArgs ::= (pipelineArg (COMMA pipelineArg)*)?
 pipelineArg ::= STRING | NUMBER | IDENTIFIER | QUOTE_STRING
 
 caseBody ::= CASE (WHITE_SPACE | NEWLINE)* QUOTE_STRING BLOCK_START casePatternAction* BLOCK_END
-casePatternAction ::= caseCondition actionBlock
-caseCondition ::= PATTERN | QUOTE_STRING | DEFAULT
+casePatternAction ::= caseCondition BLOCK_START (actionExpr PIPE)* actionExpr BLOCK_END
+caseCondition ::= DEFAULT | PATTERN | QUOTE_STRING
 
-BLOCK_START ::= (WHITE_SPACE | NEWLINE)? OPEN_BRACE (WHITE_SPACE | NEWLINE)?
-BLOCK_END ::= (WHITE_SPACE | NEWLINE)? CLOSE_BRACE (WHITE_SPACE | NEWLINE)?
+BLOCK_START ::= (WHITE_SPACE | NEWLINE)* OPEN_BRACE (WHITE_SPACE | NEWLINE)*
+BLOCK_END ::= (WHITE_SPACE | NEWLINE)* CLOSE_BRACE (WHITE_SPACE | NEWLINE)*
 
 used ::= (
     AGENT_START AGENT_ID

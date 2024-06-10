@@ -40,8 +40,6 @@ import java.util.regex.Pattern;
 %s FRONT_MATTER_VALUE_BLOCK
 %s FRONT_MATTER_VAL_OBJECT
 %s PATTERN_ACTION_BLOCK
-%s PARAMTER_BLOCK
-%s CASE_BLOCK
 
 %s LANG_ID
 
@@ -87,6 +85,7 @@ LBRACKET              =\[
 RBRACKET              =\]
 DEFAULT               =default
 CASE                  =case
+ARROW                 ==>
 
 %{
     private boolean isCodeStart = false;
@@ -211,7 +210,6 @@ CASE                  =case
   {NUMBER}                { return NUMBER; }
   {BOOLEAN}               { return BOOLEAN; }
   {QUOTE_STRING}          { return QUOTE_STRING; }
-  {PATTERN}               { return PATTERN; }
   "["                     { return LBRACKET; }
   "]"                     { return RBRACKET; }
   ","                     { return COMMA; }
@@ -222,34 +220,21 @@ CASE                  =case
 <PATTERN_ACTION_BLOCK> {
   "{"                    { return OPEN_BRACE; }
   "}"                    { return CLOSE_BRACE; }
+  "|"                    { return PIPE; }
+  ","                    { return COMMA; }
+  "("                    { return LPAREN; }
+  ")"                    { return RPAREN; }
   {WHITE_SPACE}          { return WHITE_SPACE; }
   {NEWLINE}              { return NEWLINE; }
-  {CASE}                 { yybegin(CASE_BLOCK);return CASE; }
-  {IDENTIFIER}           { return IDENTIFIER; }
-  {LPAREN}               { yybegin(PARAMTER_BLOCK); return LPAREN; }
-  "|"                    { return PIPE; }
-  [^]                    { yypushback(yylength()); yybegin(FRONT_MATTER_VALUE_BLOCK); }
-}
 
-<CASE_BLOCK> {
-  "{"                    { return OPEN_BRACE; }
-  "}"                    { return CLOSE_BRACE; }
-  {IDENTIFIER}           { return IDENTIFIER; }
-  {INDENT}               { return INDENT; }
-  {WHITE_SPACE}          { return WHITE_SPACE; }
-  "default"              { return DEFAULT; }
-  [^]                    { yypushback(yylength()); yybegin(PATTERN_ACTION_BLOCK); }
-}
-
-<PARAMTER_BLOCK> {
-  {IDENTIFIER}           { return IDENTIFIER; }
+  {CASE}                 { return CASE; }
   {QUOTE_STRING}         { return QUOTE_STRING; }
-  {REGEX}                { return PATTERN; }
+  "default"              { return DEFAULT; }
+  {IDENTIFIER}           { return IDENTIFIER; }
+  {PATTERN}              { return PATTERN; }
   {NUMBER}               { return NUMBER; }
-  {RPAREN}               { yybegin(PATTERN_ACTION_BLOCK); return RPAREN; }
-  {WHITE_SPACE}          { return WHITE_SPACE; }
-  ","                    { return COMMA; }
-//  [^]                    { yypushback(yylength()); yybegin(FRONT_MATTER_VAL_OBJECT); }
+  "=>"                   { return ARROW; }
+  [^]                    { yypushback(yylength()); yybegin(FRONT_MATTER_VALUE_BLOCK); }
 }
 
 <COMMENT_BLOCK> {
