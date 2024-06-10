@@ -87,8 +87,7 @@ class ShireCompileTest: BasePlatformTestCase() {
             interaction: AppendCursor
             data: ["a", "b"]
             filenameRules: 
-              "name": "a"
-              "description": "b"
+              "/**.java/": "You should thinking in best Kotlin way."
             ---
             
             Summary webpage:
@@ -101,7 +100,6 @@ class ShireCompileTest: BasePlatformTestCase() {
         val filenameRules = compile.config!!.filenameRules
 
         assertEquals(2, filenameRules.size)
-//        assertEquals("a", filenameRules[0])
-//        assertEquals("b", filenameRules[1])
+        assertEquals("/**.java/", filenameRules[0].regex)
     }
 }

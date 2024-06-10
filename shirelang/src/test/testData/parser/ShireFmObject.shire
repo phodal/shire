@@ -5,7 +5,7 @@ interaction: AppendCursor
 actionLocation: ContextMenu
 postProcessor: ["VerifyCode", "RunCode"]
 filenameRules:
-  /**.java/: "You should thinking in best Kotlin way."
+  "/**.java/": "You should thinking in best Kotlin way."
 ---
 
 Convert follow $language code to Kotlin
