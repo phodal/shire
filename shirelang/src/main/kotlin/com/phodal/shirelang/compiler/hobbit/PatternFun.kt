@@ -7,44 +7,43 @@ import com.intellij.openapi.diagnostic.logger
  * It has four subclasses: Prompt, Grep, Sort, and Xargs, each representing a specific pattern processing function.
  *
  * @property funcName The name of the pattern processing function.
- *
- * The Prompt class represents a prompt function with a message to display.
- *
- * The Grep class represents a grep function with one or more patterns to search for.
- *
- * The Sort class represents a sort function with one or more arguments for sorting.
- *
- * The Xargs class represents an xargs function with one or more variables to process.
- *
- * The companion object provides a method from(value: FrontMatterType) to create a list of PatternFun objects based on the given FrontMatterType.
- * It handles different types of FrontMatterType and returns the corresponding PatternFun objects.
- *
- * If the FrontMatterType is a STRING, it creates a Prompt object with the value as the message.
- * If the FrontMatterType is a PATTERN, it extracts the processors from the value and returns them as a list of PatternFun objects.
- * If the FrontMatterType is neither STRING nor PATTERN, it logs an error and returns an empty list.
  */
 sealed class PatternFun(open val funcName: String) {
-    class Prompt(val message: String): PatternFun("prompt")
+    class Prompt(val message: String) : PatternFun("prompt")
 
     /**
      * Like `grep` function with one or more patterns to search for.
      */
-    class Grep(vararg val patterns: String): PatternFun("grep")
+    class Grep(vararg val patterns: String) : PatternFun("grep")
 
     /**
      * Find and replace function with one or more patterns to search for and replace with.
      */
-    class Replace(val pattern: String, val replacements: String): PatternFun("replace")
+    class Replace(val pattern: String, val replacements: String) : PatternFun("replace")
 
     /**
      * Sort function with one or more arguments for sorting.
      */
-    class Sort(vararg val arguments: String): PatternFun("sort")
+    class Sort(vararg val arguments: String) : PatternFun("sort")
+
+    /**
+     * uniq function with one or more arguments for removing duplicates.
+     */
+    class Uniq(vararg val texts: String) : PatternFun("uniq")
+
+    /**
+     * head function with one or more arguments for getting the first lines.
+     */
+    class Head(vararg val lines: String) : PatternFun("head")
+
+    /**
+     * tail function with one or more arguments for getting the last lines.
+     */
 
     /**
      * Xargs function with one or more variables to process.
      */
-    class Xargs(vararg val variables: String): PatternFun("xargs")
+    class Xargs(vararg val variables: String) : PatternFun("xargs")
 
     companion object {
         fun from(value: FrontMatterType): List<PatternFun> {
@@ -52,10 +51,12 @@ sealed class PatternFun(open val funcName: String) {
                 is FrontMatterType.STRING -> {
                     return listOf(Prompt(value.value as? String ?: ""))
                 }
+
                 is FrontMatterType.PATTERN -> {
                     val action = value.value as? ShirePatternAction
                     action?.processors ?: emptyList()
                 }
+
                 else -> {
                     logger<PatternFun>().error("Unknown pattern processor type: $value")
                     emptyList()
