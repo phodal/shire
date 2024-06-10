@@ -6,7 +6,7 @@ kotlin = "2.0.0"
 changelog = "2.2.0"
 gradleIntelliJPlugin = "1.17.3"
 qodana = "2024.1.5"
-kover = "0.8.0"
+kover = "0.8.1"
 
 [libraries]
 kotlinx-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.0"
