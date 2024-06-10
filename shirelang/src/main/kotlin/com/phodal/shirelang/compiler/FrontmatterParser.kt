@@ -156,6 +156,10 @@ object FrontmatterParser {
                     processor.add(PatternFun.Sort(*args.toTypedArray()))
                 }
 
+                "replace" -> {
+                    processor.add(PatternFun.Replace(args[0], args[1]))
+                }
+
                 "xargs" -> {
                     processor.add(PatternFun.Xargs(*args.toTypedArray()))
                 }

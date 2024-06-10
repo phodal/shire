@@ -25,8 +25,25 @@ import com.intellij.openapi.diagnostic.logger
  */
 sealed class PatternFun(open val funcName: String) {
     class Prompt(val message: String): PatternFun("prompt")
+
+    /**
+     * Like `grep` function with one or more patterns to search for.
+     */
     class Grep(vararg val patterns: String): PatternFun("grep")
+
+    /**
+     * Find and replace function with one or more patterns to search for and replace with.
+     */
+    class Replace(val pattern: String, val replacements: String): PatternFun("replace")
+
+    /**
+     * Sort function with one or more arguments for sorting.
+     */
     class Sort(vararg val arguments: String): PatternFun("sort")
+
+    /**
+     * Xargs function with one or more variables to process.
+     */
     class Xargs(vararg val variables: String): PatternFun("xargs")
 
     companion object {
