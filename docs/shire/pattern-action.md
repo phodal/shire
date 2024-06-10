@@ -5,94 +5,42 @@ parent: Shire Language
 nav_order: 4
 ---
 
-好的，以下是一个通用的定义，适用于各种脚本和编程语言：
-
----
-
-### Pattern-Action 定义
-
-**Pattern-action** 是一种编程结构，用于根据特定条件（模式）执行相应操作的机制。它通常由两个部分组成：
+我们参考 Unix 的 Shell 编程，引入了 Pattern-Action 的概念。Pattern-Action 是一种编程结构，用于根据特定条件（模式）执行相应操作的机制。它通常由两个部分组成：
 
 1. **Pattern（模式）**：匹配输入数据的规则或条件。模式可以是正则表达式、特定值、范围或逻辑表达式，用于确定哪些输入数据满足条件。
 2. **Action（动作）**：当输入数据匹配模式时要执行的操作。动作是由一组命令或代码组成，定义了对匹配数据的处理方式。
 
-### 格式
+简单表达如下：
+
 ```plaintext
-pattern { action }
+/*.java/ { grep("error.log") | sort | xargs("rm")}
 ```
 
-- **pattern**：用于匹配输入数据的条件。
-- **action**：对匹配数据执行的操作。
+其中的 `/*.java/` 是模式（Pattern），`{ grep("error.log") | sort | xargs("rm")}` 是动作（Action）。
 
 ### Shire 示例
 
-```
-"var0": /**.java/ { print $0 }  # 匹配所有 Java 文件并打印
-"var1": /**.java/ { grep("error.log") | sort | xargs("rm")}
-"var2": /**.log/ {
-  case "$0" {
-    "error" { grep("ERROR") | sort | xargs("notify_admin") }
-    "warn" { grep("WARN") | sort | xargs("notify_admin") }
-    "info" { grep("INFO") | sort | xargs("notify_user") }
-    default  { grep("ERROR") | sort | xargs("notify_admin") }
+```shire
+---
+variables:
+  "var1": "value2"
+  "var2": /.*.java/ { grep("error.log") | sort | xargs("rm")}
+  "var3": /.*.java/ {
+    case "$0" {
+      "error" { grep("ERROR") | sort | xargs("notify_admin") }
+      "warn" { grep("WARN") | sort | xargs("notify_admin") }
+      "info" { grep("INFO") | sort | xargs("notify_user") }
+      default  { grep("ERROR") | sort | xargs("notify_admin") }
+    }
   }
-}
+---
+
+
 ```
 
-Shire 使用正则表达式来匹配：
+Shire 使用 Intellij 自带的正则表达式来匹配：
 
 ```regexp
 .*.java
 ```
 
-### 其它语言示例
-
-```textproc
-# 模式-动作对
-match /pattern/ do
-  print $0
-end
-
-# 模式-替换
-replace /foo/ with /bar/
-
-# 模式-执行
-match /pattern/ do
-  exec "echo 'pattern found'"
-end
-
-# 模式-分支
-case $1 in
-  "start")
-    print "Starting service"
-  ;;
-  "stop")
-    print "Stopping service"
-  ;;
-  "restart")
-    print "Restarting service"
-  ;;
-  *)
-    print "Usage: {start|stop|restart}"
-  ;;
-end
-
-# 变量和数组
-let count = 0
-match /pattern/ do
-  let count = count + 1
-end
-print "Total patterns found: " + count
-
-# 正则表达式匹配
-match /[0-9]+/ do
-  print "Number found: " + $0
-end
-```
-
-在这些示例中：
-
-- **Pattern（模式）**：是用于匹配输入数据的条件，如包含特定字符串或满足某个数值条件。
-- **Action（动作）**：是在模式匹配成功时执行的操作，如打印匹配的行。
-
-这种 `pattern-action` 结构在数据处理、文本分析、日志筛选等场景中广泛应用，提供了一种简洁而强大的方法来处理和分析数据。
