@@ -52,7 +52,7 @@ INDENT                   = "  "
 EscapedChar              = "\\" [^\n]
 RegexWord                = [^\r\n\\\"' \t$`()] | {EscapedChar}
 REGEX                    = \/{RegexWord}+\/
-PATTERN                  = \/{RegexWord}+\/
+PATTERN_EXPR                  = \/{RegexWord}+\/
 
 LPAREN                   = \(
 RPAREN                   = \)
@@ -204,7 +204,7 @@ ARROW                 ==>
 }
 
 <FRONT_MATTER_VALUE_BLOCK>  {
-  {PATTERN}               { yybegin(PATTERN_ACTION_BLOCK); return PATTERN; }
+  {PATTERN_EXPR}          { yybegin(PATTERN_ACTION_BLOCK); return PATTERN_EXPR; }
   {DATE}                  { return DATE; }
   {STRING}                { return STRING; }
   {NUMBER}                { return NUMBER; }
@@ -231,7 +231,7 @@ ARROW                 ==>
   {QUOTE_STRING}         { return QUOTE_STRING; }
   "default"              { return DEFAULT; }
   {IDENTIFIER}           { return IDENTIFIER; }
-  {PATTERN}              { return PATTERN; }
+  {PATTERN_EXPR}         { return PATTERN_EXPR; }
   {NUMBER}               { return NUMBER; }
   "=>"                   { return ARROW; }
   [^]                    { yypushback(yylength()); yybegin(FRONT_MATTER_VALUE_BLOCK); }

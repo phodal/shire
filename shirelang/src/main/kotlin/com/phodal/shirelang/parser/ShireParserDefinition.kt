@@ -44,6 +44,10 @@ internal class ShireParserDefinition : ParserDefinition {
             return CodeBlockElement(node)
         }
 
+        if (elementType == ShireTypes.PATTERN) {
+            return PatternElement(node)
+        }
+
         if (elementType == ShireTypes.CODE_CONTENTS) {
             return ASTWrapperPsiElement(node)
         }

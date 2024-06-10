@@ -8,11 +8,33 @@ import com.intellij.psi.LanguageInjector
 import com.intellij.psi.PsiLanguageInjectionHost
 import com.intellij.psi.util.elementType
 import com.phodal.shirelang.parser.CodeBlockElement
+import com.phodal.shirelang.parser.PatternElement
 import com.phodal.shirelang.psi.ShireTypes
 import com.phodal.shirelang.utils.Code.Companion.findLanguage
 
 class ShireLanguageInjector : LanguageInjector {
     override fun getLanguagesToInject(host: PsiLanguageInjectionHost, registrar: InjectedLanguagePlaces) {
+        // inject regex
+        injectRegexLanguage(host, registrar)
+
+        // inject markdown highlight
+        injectCodeBlockLanguage(host, registrar)
+    }
+
+    private fun injectRegexLanguage(host: PsiLanguageInjectionHost, registrar: InjectedLanguagePlaces) {
+        if (host !is PatternElement || !host.isValidHost()) return
+
+        val text = host.text
+        val language = findLanguage("RegExp")
+
+        val range = TextRange(0, text.length)
+        registrar.addPlace(language, range, null, null)
+    }
+
+    private fun injectCodeBlockLanguage(
+        host: PsiLanguageInjectionHost,
+        registrar: InjectedLanguagePlaces,
+    ) {
         if (host !is CodeBlockElement || !host.isValidHost()) return
 
         val hasCodeContents = host.children.any { it.elementType == ShireTypes.CODE_CONTENTS }
