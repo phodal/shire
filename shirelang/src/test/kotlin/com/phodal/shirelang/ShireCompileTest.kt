@@ -5,7 +5,9 @@ import com.phodal.shirecore.action.ShireActionLocation
 import com.phodal.shirecore.agent.InteractionType
 import com.phodal.shirelang.compiler.FrontmatterParser
 import com.phodal.shirelang.compiler.ShireCompiler
+import com.phodal.shirelang.compiler.hobbit.FrontMatterType
 import com.phodal.shirelang.psi.ShireFile
+import junit.framework.TestCase
 
 class ShireCompileTest: BasePlatformTestCase() {
     fun testNormalString() {
@@ -99,7 +101,31 @@ class ShireCompileTest: BasePlatformTestCase() {
         assertEquals("\n\nSummary webpage:", compile.output)
         val filenameRules = compile.config!!.filenameRules
 
-        assertEquals(2, filenameRules.size)
-        assertEquals("/**.java/", filenameRules[0].regex)
+        assertEquals(1, filenameRules.size)
+        assertEquals("/**.java/", filenameRules[0].pattern)
+    }
+
+    fun testShouldHandleForPatternAction() {
+        val code = """
+            ---
+            name: Summary
+            description: "Generate Summary"
+            interaction: AppendCursor
+            data: ["a", "b"]
+            variables:
+              "var1": "demo"
+              "var2": /**.java/ { grep("error.log") | sort | xargs("rm")}
+            ---
+            
+            Summary webpage:
+        """.trimIndent()
+
+        val file = myFixture.configureByText("test.shire", code)
+
+        val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
+        assertEquals("\n\nSummary webpage:", compile.output)
+        val fmt = compile.config!!.additionalData["variables"]
+
+        TestCase.assertTrue(fmt is FrontMatterType.OBJECT)
     }
 }
