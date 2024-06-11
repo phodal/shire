@@ -1,8 +1,8 @@
 ---
 variables:
   "var1": "demo"
-  "var2": /**.java/ { grep("error.log") | sort | xargs("rm")}
-  "var3": /**.log/ {
+  "var2": /.*.java/ { grep("error.log") | sort | xargs("rm")}
+  "var3": /.*.log/ {
     case "$0" {
       "error" { grep("ERROR") | sort | xargs("notify_admin") }
       "warn" { grep("WARN") | sort | xargs("notify_admin") }
