@@ -158,9 +158,9 @@ class ShireCompiler(
 
             ShireTypes.VARIABLE_START -> {
                 val variableId = id?.text
-                val variable = ToolHubVariable.lookup(myProject, variableId)
-                if (variable.isNotEmpty()) {
-                    output.append(variable.joinToString("\n") { it })
+                val variables = ToolHubVariable.lookup(variableId)
+                if (variables.isNotEmpty()) {
+                    output.append(variables.joinToString("\n") { it })
                     return
                 }
 
@@ -189,6 +189,7 @@ class ShireCompiler(
                     return
                 }
 
+                // todo: add to cache for performance
                 val file = currentElement.containingFile
                 VariableTemplateCompiler(file.language, file, currentElement, currentEditor).compile(used.text).let {
                     output.append(it)

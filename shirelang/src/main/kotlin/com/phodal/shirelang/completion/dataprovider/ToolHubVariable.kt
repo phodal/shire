@@ -1,6 +1,5 @@
 package com.phodal.shirelang.completion.dataprovider
 
-import com.intellij.openapi.project.Project
 import com.phodal.shirecore.agent.CustomAgent
 
 /**
@@ -31,10 +30,10 @@ enum class ToolHubVariable(val hubName: String, val type: String, val descriptio
         /**
          * @param variableId should be one of the [ToolHubVariable] name
          */
-        fun lookup(myProject: Project, variableId: String?): List<String> {
+        fun lookup(variableId: String?): List<String> {
             return when (variableId) {
-                COMMANDS.hubName -> BuiltinCommand.all().map {
-                    "- " + it.commandName + ". " + it.description
+                COMMANDS.hubName -> ToolHubVariable.all().map {
+                    "- " + it.hubName + ". " + it.description
                 }
                 else -> emptyList()
             }

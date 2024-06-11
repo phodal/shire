@@ -19,7 +19,7 @@ class VariableTemplateCompiler(
     selectedText: String = "",
 ) {
     private val log = logger<VariableTemplateCompiler>()
-    private val velocityContext = VelocityContext()
+    private val variableMap: MutableMap<String, Any> = mutableMapOf()
 
     init {
         this.set(ContextVariable.SELECTION.variable, editor.selectionModel.selectedText ?: selectedText)
@@ -29,27 +29,27 @@ class VariableTemplateCompiler(
     }
 
     fun set(key: String, value: String) {
-        velocityContext.put(key, value)
+        variableMap.put(key, value)
     }
 
     fun compile(template: String): String {
-        velocityContext.put(ContextVariable.FILE_NAME.variable, file.name)
-        velocityContext.put(ContextVariable.FILE_PATH.variable, file.virtualFile?.path ?: "")
-        velocityContext.put(
-            ContextVariable.METHOD_NAME.variable, when (element) {
-                is PsiNameIdentifierOwner -> element.nameIdentifier?.text ?: ""
-                else -> ""
-            }
-        )
+        variableMap[ContextVariable.FILE_NAME.variable] = file.name
+        variableMap[ContextVariable.FILE_PATH.variable] = file.virtualFile?.path ?: ""
+        variableMap[ContextVariable.METHOD_NAME.variable] = when (element) {
+            is PsiNameIdentifierOwner -> element.nameIdentifier?.text ?: ""
+            else -> ""
+        }
 
         configForLanguage()
 
         val oldContextClassLoader = Thread.currentThread().contextClassLoader
         Thread.currentThread().contextClassLoader = VariableTemplateCompiler::class.java.classLoader
 
+        val context = VelocityContext()
         val sw = StringWriter()
         try {
-            Velocity.evaluate(velocityContext, sw, "#" + this.javaClass.name, template)
+            context.put("context", variableMap)
+            Velocity.evaluate(context, sw, "#" + this.javaClass.name, template)
         } catch (e: Exception) {
             log.error("Failed to compile template: $template", e)
             sw.write(template)
@@ -60,8 +60,8 @@ class VariableTemplateCompiler(
     }
 
     private fun configForLanguage() {
-        velocityContext.put(ContextVariable.LANGUAGE.variable, language.displayName)
-        velocityContext.put(
+        variableMap.put(ContextVariable.LANGUAGE.variable, language.displayName)
+        variableMap.put(
             ContextVariable.COMMENT_SYMBOL.variable, when (language.displayName.lowercase()) {
                 "java", "kotlin" -> "//"
                 "python" -> "#"
