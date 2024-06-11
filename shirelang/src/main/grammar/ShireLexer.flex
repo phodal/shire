@@ -276,6 +276,7 @@ END                      =end
 
   {NEWLINE}               { return NEWLINE; }
   {TEXT_SEGMENT}          { return TEXT_SEGMENT; }
+  {SHARP}                 { yybegin(EXPR_BLOCK); return SHARP; }
   [^]                     { return TokenType.BAD_CHARACTER; }
 }
 
@@ -334,9 +335,11 @@ END                      =end
   "<="                 { return LTE; }
   ">"                  { return GT; }
   ">="                 { return GTE; }
+  "$"                  { return VARIABLE_START; }
 
   {NUMBER}             { return NUMBER; }
-  {COLON}              { return COLON; }
+  {IDENTIFIER}         { return IDENTIFIER; }
+  {WHITE_SPACE}        { return WHITE_SPACE; }
   [^]                  { yypushback(yylength()); yybegin(YYINITIAL);  }
 }
 

@@ -132,8 +132,8 @@ expressionList ::= expr (',' expr)*
 literalExpr ::= literal
 parenExpr ::= '(' expr ')'
 // when
-private eqComparisonOp ::= '==' | '!='
-private ineqComparisonOp ::= '<=' | '>=' | '<' | '>'
+private eqComparisonOp ::= WHITE_SPACE?  ('==' | '!=') WHITE_SPACE?
+private ineqComparisonOp ::= WHITE_SPACE?  ('<=' | '>=' | '<' | '>') WHITE_SPACE?
 
 private literal ::= NUMBER
   | TRUE | FALSE
@@ -155,8 +155,8 @@ code ::=  CODE_BLOCK_START LANGUAGE_ID? NEWLINE? code_contents? CODE_BLOCK_END?
 code_contents ::= (NEWLINE | CODE_CONTENT)*
 
 velocityExpr ::=
-     SHARP 'if' expr
+     SHARP 'if' '(' WHITE_SPACE? VARIABLE_START? expr WHITE_SPACE?  ')'
     | SHARP 'else'
-    | SHARP 'elseif' expr
+    | SHARP 'elseif' '(' WHITE_SPACE? VARIABLE_START? expr WHITE_SPACE? ')'
     | SHARP 'end'
     | SHARP 'endif'
