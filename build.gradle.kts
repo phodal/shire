@@ -316,7 +316,7 @@ project(":plugin") {
 
         withType<PublishPluginTask> {
             dependsOn("patchChangelog")
-            token.set(environment("IDEA_TOKEN"))
+            token.set(environment("PUBLISH_TOKEN"))
             channels.set(properties("pluginVersion").map {
                 listOf(it.split('-').getOrElse(1) { "default" }.split('.').first())
             })
