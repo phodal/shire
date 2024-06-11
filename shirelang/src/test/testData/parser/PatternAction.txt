@@ -29,7 +29,7 @@ ShireFile
                 PsiWhiteSpace(' ')
                 ShirePatternActionImpl(PATTERN_ACTION)
                   PatternElement(PATTERN)
-                    PsiElement(ShireTokenType.PATTERN_EXPR)('/**.java/')
+                    PsiElement(ShireTokenType.PATTERN_EXPR)('/.*.java/')
                   PsiElement(ShireTokenType.WHITE_SPACE)(' ')
                   ShireActionBlockImpl(ACTION_BLOCK)
                     PsiElement(ShireTokenType.{)('{')
