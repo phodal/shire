@@ -146,7 +146,7 @@ WHEN                     =when
     }
 
     private IElementType comment() {
-        String text = yytext().toString().trim();
+        String text = yytext().toString();
         if (text.contains("[") && text.contains("]")) {
             return COMMENTS;
         } else {
