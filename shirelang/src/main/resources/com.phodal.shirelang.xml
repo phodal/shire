@@ -57,6 +57,11 @@
                 class="com.phodal.shirelang.actions.ShireRunFileAction"
                 use-shortcut-of="RunClass"/>
 
+        <action id="shire.NewShireFile" class="com.phodal.shirelang.actions.template.NewShireFileAction"
+                icon="com.phodal.shirelang.ShireIcons.DEFAULT">
+            <add-to-group group-id="NewGroup" anchor="before" relative-to-action="NewFromTemplate"/>
+        </action>
+
         <!-- Shire Context Action Group -->
         <group id="ShireContextActionGroup"
                popup="true" text="Shire Action" description="Shire action group"
