@@ -103,6 +103,7 @@ expr ::=
     | eqComparisonExpr
     | ineqComparisonExpr
     | callExpr
+    | qualRefExpr
     | simpleRefExpr
     | literalExpr
     | parenExpr
@@ -111,8 +112,9 @@ expr ::=
 // b/37137454: Modify databinding expression grammar to allow calls to unqualified methods
 // https://github.com/JetBrains/Grammar-Kit/blob/master/HOWTO.md#24-compact-expression-parsing-with-priorities
 // https://github.com/JetBrains/Grammar-Kit/blob/master/testData/generator/ExprParser.bnf
-fake refExpr ::= expr? '.' IDENTIFIER
-simpleRefExpr ::= IDENTIFIER {extends=refExpr elementType=refExpr}
+fake refExpr ::= expr? '.' STRING
+simpleRefExpr ::= STRING {extends=refExpr elementType=refExpr}
+qualRefExpr ::= expr '.' STRING {extends=refExpr elementType=refExpr}
 
 logicalOrExpr ::= expr '||' expr
 logicalAndExpr ::= expr '&&' expr
@@ -130,8 +132,8 @@ private ineqComparisonOp ::= '<=' | '>=' | '<' | '>'
 private literal ::= NUMBER
   | TRUE | FALSE
   | QUOTE_STRING
-  | IDENTIFIER
-  | VARIABLE_START VARIABLE_ID
+  | STRING
+  | "$" STRING
 
 used ::= (
     AGENT_START AGENT_ID

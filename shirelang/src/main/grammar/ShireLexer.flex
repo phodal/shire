@@ -192,7 +192,6 @@ WHEN                     =when
 }
 
 <FRONT_MATTER_BLOCK> {
-  {WHEN}                  { yybegin(CONDITION_EXPR_BLOCK); return WHEN; }
   {FRONTMATTER_KEY}       { return FRONTMATTER_KEY; }
   ":"                     { yybegin(FRONT_MATTER_VALUE_BLOCK);return COLON; }
   {NEWLINE}               { return NEWLINE; }
@@ -217,10 +216,6 @@ WHEN                     =when
   "]"                     { return RBRACKET; }
   ","                     { return COMMA; }
   " "                     { return TokenType.WHITE_SPACE; }
-  [^]                     { yypushback(yylength()); yybegin(FRONT_MATTER_BLOCK); }
-}
-
-<CONDITION_EXPR_BLOCK> {
   "!"                     { return NOT; }
   "&&"                    { return ANDAND; }
   "||"                    { return OROR; }
@@ -231,8 +226,8 @@ WHEN                     =when
   "<="                    { return LTE; }
   ">"                     { return GT; }
   ">="                    { return GTE; }
-  {IDENTIFIER}            { return IDENTIFIER; }
   " "                     { return TokenType.WHITE_SPACE; }
+  "$"                     { return VARIABLE_START; }
   ":"                     { return COLON; }
   [^]                     { yypushback(yylength()); yybegin(FRONT_MATTER_BLOCK); }
 }
