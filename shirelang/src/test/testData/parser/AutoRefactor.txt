@@ -33,7 +33,6 @@ ShireFile
     PsiElement(ShireTokenType.COLON)(':')
     PsiElement(ShireTokenType.COMMAND_PROP)('extractMethod')
   PsiElement(ShireTokenType.TEXT_SEGMENT)(' cc.unitmesh.devti.language.run.DevInsProgramRunnerImpl.run')
-  PsiElement(ShireTokenType.SYSTEM_START)('#')
-  PsiElement(ShireTokenType.SYSTEM_ID)('L20-L30')
-  PsiErrorElement:ShireTokenType.COLON expected
-    <empty list>
+  PsiErrorElement:<used>, <velocity expr>, ShireTokenType.CODE_BLOCK_START, ShireTokenType.COMMENTS, ShireTokenType.NEWLINE or ShireTokenType.TEXT_SEGMENT expected, got '#'
+    PsiElement(ShireTokenType.SHARP)('#')
+  PsiElement(ShireTokenType.LINE_INFO)('L20-L30')

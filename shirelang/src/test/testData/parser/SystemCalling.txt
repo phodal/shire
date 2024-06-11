@@ -1,6 +1,0 @@
-ShireFile
-  ShireUsedImpl(USED)
-    PsiElement(ShireTokenType.SYSTEM_START)('#')
-    PsiElement(ShireTokenType.SYSTEM_ID)('kanban')
-    PsiElement(ShireTokenType.COLON)(':')
-    PsiElement(ShireTokenType.NUMBER)('1')

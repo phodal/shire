@@ -31,9 +31,6 @@ ShireFile
     PsiElement(ShireTokenType.COMMAND_PROP)('632372da')
   PsiElement(ShireTokenType.TEXT_SEGMENT)(' 从版本库中读取内容')
   PsiElement(ShireTokenType.NEWLINE)('\n')
-  ShireUsedImpl(USED)
-    PsiElement(ShireTokenType.SYSTEM_START)('#')
-    PsiElement(ShireTokenType.SYSTEM_ID)('system_id')
-    PsiElement(ShireTokenType.COLON)(':')
-    PsiElement(ShireTokenType.NUMBER)('51')
-  PsiElement(ShireTokenType.TEXT_SEGMENT)(' 传递参数到 story_id')
+  PsiErrorElement:<used>, <velocity expr>, ShireTokenType.CODE_BLOCK_START, ShireTokenType.COMMENTS, ShireTokenType.NEWLINE or ShireTokenType.TEXT_SEGMENT expected, got '#'
+    PsiElement(ShireTokenType.SHARP)('#')
+  PsiElement(ShireTokenType.TEXT_SEGMENT)('system_id:51 传递参数到 story_id')

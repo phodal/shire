@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
 %s COMMAND_BLOCK
 %s COMMAND_VALUE_BLOCK
 
-%s SYSTEM_BLOCK
+%s EXPR_BLOCK
 %s VELOCITY_BLOCK
 
 %s CODE_BLOCK
@@ -64,7 +64,6 @@ VARIABLE_ID              = [a-zA-Z0-9][_\-a-zA-Z0-9]*
 AGENT_ID                 = [a-zA-Z0-9][_\-a-zA-Z0-9]*
 COMMAND_ID               = [a-zA-Z0-9][_\-a-zA-Z0-9]*
 LANGUAGE_ID              = [a-zA-Z][_\-a-zA-Z0-9 .]*
-SYSTEM_ID                = [a-zA-Z][_\-a-zA-Z0-9]*
 NUMBER                   = [0-9]+
 BOOLEAN                  = true|false|TRUE|FALSE|"true"|"false"
 
@@ -272,7 +271,7 @@ END                      =end
   "@"                     { yybegin(AGENT_BLOCK);    return AGENT_START; }
   "/"                     { yybegin(COMMAND_BLOCK);  return COMMAND_START; }
   "$"                     { yybegin(VARIABLE_BLOCK); return VARIABLE_START; }
-  "#"                     { yybegin(SYSTEM_BLOCK);   return SYSTEM_START; }
+  "#"                     { yybegin(EXPR_BLOCK);   return SHARP; }
 
   "```" {IDENTIFIER}?     { yybegin(LANG_ID); if (isCodeStart == true) { isCodeStart = false; return CODE_BLOCK_END; } else { isCodeStart = true; }; yypushback(yylength()); }
 
@@ -316,7 +315,7 @@ END                      =end
   [^]                  { yypushback(yylength()); yybegin(YYINITIAL); }
 }
 
-<SYSTEM_BLOCK> {
+<EXPR_BLOCK> {
   {IF}                 { return IF; }
   {ELSE}               { return ELSE; }
   {ELSEIF}             { return ELSEIF; }
@@ -341,7 +340,6 @@ END                      =end
 
   {NUMBER}             { return NUMBER; }
   {COLON}              { return COLON; }
-  {SYSTEM_ID}          { return SYSTEM_ID; }
   {LINE_INFO}          { return LINE_INFO; }
   [^]                  { yypushback(yylength()); yybegin(YYINITIAL);  }
 }

@@ -18,7 +18,6 @@
     AGENT_START        = "AGENT_START"
     COMMAND_START      = "COMMAND_START"
     VARIABLE_START     = "VARIABLE_START"
-    SYSTEM_START       = "SYSTEM_START"
     CODE_BLOCK_START   = "CODE_BLOCK_START"
     CODE_BLOCK_END     = "CODE_BLOCK_END"
     CODE_BLOCK         = "CODE_BLOCK"
@@ -28,7 +27,6 @@
     VARIABLE_ID        = "VARIABLE_ID"
     COMMAND_ID         = "COMMAND_ID"
     AGENT_ID           = "AGENT_ID"
-    SYSTEM_ID          = "SYSTEM_ID"
     COLON              = "COLON"
     COMMAND_PROP       = "COMMAND_PROP"
     SHARP              = "SHARP"
@@ -68,7 +66,7 @@
   ]
 }
 
-ShireFile ::= frontMatterHeader? (used | code | TEXT_SEGMENT | NEWLINE | COMMENTS)*
+ShireFile ::= frontMatterHeader? (used | code | velocityExpr | TEXT_SEGMENT | NEWLINE | COMMENTS)*
 
 frontMatterHeader ::= FRONTMATTER_START NEWLINE frontMatterEntries FRONTMATTER_END
 
@@ -147,7 +145,6 @@ used ::= (
     AGENT_START AGENT_ID
     | COMMAND_START COMMAND_ID (COLON COMMAND_PROP (SHARP LINE_INFO)?)?
     | VARIABLE_START (VARIABLE_ID | varAccess)
-    | SYSTEM_START (velocityExpr | SYSTEM_ID COLON NUMBER)
 )
 
 // just make template pass success not fail
