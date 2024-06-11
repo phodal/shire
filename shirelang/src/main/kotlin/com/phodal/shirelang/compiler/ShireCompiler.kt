@@ -166,12 +166,12 @@ class ShireCompiler(
 
                 val currentEditor = editor ?: FileEditorManager.getInstance(myProject).selectedTextEditor
                 val currentElement = element ?: currentEditor?.caretModel?.currentCaret?.offset?.let {
-                    val psiFile = currentEditor?.let { editor ->
+                    val psiFile = currentEditor.let { editor ->
                         val psiFile = editor.virtualFile?.let { file ->
                             PsiManager.getInstance(myProject).findFile(file)
                         }
 
-                        psiFile ?: return@let null
+                        psiFile
                     } ?: return@let null
 
                     psiFile.findElementAt(it) ?: return@let psiFile
