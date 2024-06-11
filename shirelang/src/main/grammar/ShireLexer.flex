@@ -207,10 +207,10 @@ WHEN                     =when
 }
 
 <FRONT_MATTER_VALUE_BLOCK>  {
-  {DATE}                  { return DATE; }
-  {IDENTIFIER}            { return IDENTIFIER; }
   {NUMBER}                { return NUMBER; }
+  {DATE}                  { return DATE; }
   {BOOLEAN}               { return BOOLEAN; }
+  {IDENTIFIER}            { return IDENTIFIER; }
   {QUOTE_STRING}          { return QUOTE_STRING; }
   {PATTERN_EXPR}          { yybegin(PATTERN_ACTION_BLOCK); return PATTERN_EXPR; }
   "["                     { return LBRACKET; }
@@ -244,12 +244,14 @@ WHEN                     =when
   {WHITE_SPACE}          { return WHITE_SPACE; }
   {NEWLINE}              { return NEWLINE; }
 
-  {CASE}                 { return CASE; }
-  {QUOTE_STRING}         { return QUOTE_STRING; }
+  // keywords
+  "case"                 { return CASE; }
   "default"              { return DEFAULT; }
-  {IDENTIFIER}           { return IDENTIFIER; }
-  {PATTERN_EXPR}         { return PATTERN_EXPR; }
+
   {NUMBER}               { return NUMBER; }
+  {IDENTIFIER}           { return IDENTIFIER; }
+  {QUOTE_STRING}         { return QUOTE_STRING; }
+  {PATTERN_EXPR}         { return PATTERN_EXPR; }
   "=>"                   { return ARROW; }
   [^]                    { yypushback(yylength()); yybegin(FRONT_MATTER_VALUE_BLOCK); }
 }
