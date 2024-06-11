@@ -15,6 +15,7 @@ import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Key
 import com.intellij.ui.components.panels.NonOpaquePanel
@@ -90,8 +91,10 @@ open class ShireRunConfigurationProfileState(
             return DefaultExecutionResult(console, processHandler)
         }
 
+//        val editor =
+        val editor = FileEditorManager.getInstance(myProject).selectedTextEditor
         // save the run result
-        val compiler = ShireCompiler(myProject, file)
+        val compiler = ShireCompiler(myProject, file, editor)
         val compileResult = compiler.compile()
 
         myProject.getService(ShireConversationService::class.java).createConversation(configuration.getScriptPath(), compileResult)

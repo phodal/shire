@@ -132,8 +132,8 @@ expressionList ::= expr (',' expr)*
 literalExpr ::= literal
 parenExpr ::= '(' expr ')'
 // when
-private eqComparisonOp ::= WHITE_SPACE?  ('==' | '!=') WHITE_SPACE?
-private ineqComparisonOp ::= WHITE_SPACE?  ('<=' | '>=' | '<' | '>') WHITE_SPACE?
+private eqComparisonOp ::= WHITE_SPACE? ('==' | '!=') WHITE_SPACE?
+private ineqComparisonOp ::= WHITE_SPACE? ('<=' | '>=' | '<' | '>') WHITE_SPACE?
 
 private literal ::= NUMBER
   | TRUE | FALSE

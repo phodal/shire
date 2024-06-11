@@ -79,6 +79,7 @@ class ShireProcessProcessor(val project: Project) {
                     }
                 }
             }
+
             event.exitCode != 0 -> {
                 conversationService.tryFixWithLlm(scriptPath)
             }
@@ -92,7 +93,7 @@ class ShireProcessProcessor(val project: Project) {
     fun executeTask(newScript: ShireFile) {
         val devInsCompiler = createCompiler(project, newScript)
         val result = devInsCompiler.compile()
-        if(result.output != "") {
+        if (result.output != "") {
             ShirelangNotifications.notify(project, result.output)
         }
 
@@ -103,12 +104,11 @@ class ShireProcessProcessor(val project: Project) {
 //                    override fun requestPrompt(): String = result.output
 //                }, null, true)
 //            }
-        }
-        else {
+        } else {
             if (result.nextJob != null) {
                 val nextJob = result.nextJob!!
                 val nextResult = createCompiler(project, nextJob).compile()
-                if(nextResult.output != "") {
+                if (nextResult.output != "") {
                     ShirelangNotifications.notify(project, nextResult.output)
                 }
             }
@@ -124,7 +124,7 @@ class ShireProcessProcessor(val project: Project) {
      */
     private fun createCompiler(
         project: Project,
-        text: String
+        text: String,
     ): ShireCompiler {
         val devInFile = ShireFile.fromString(project, text)
         return createCompiler(project, devInFile)
@@ -132,7 +132,7 @@ class ShireProcessProcessor(val project: Project) {
 
     private fun createCompiler(
         project: Project,
-        devInFile: ShireFile
+        devInFile: ShireFile,
     ): ShireCompiler {
         val editor = FileEditorManager.getInstance(project).selectedTextEditor
         val element: PsiElement? = editor?.caretModel?.currentCaret?.offset?.let {

@@ -1,6 +1,7 @@
 package com.phodal.shirelang.actions.context
 
 import com.intellij.openapi.actionSystem.*
+import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.DumbAwareAction
 import com.phodal.shirecore.action.ShireActionLocation
 import com.phodal.shirelang.ShireIcons
@@ -28,7 +29,7 @@ class DynamicShireAction(private val config: DynamicShireActionConfig) :
     DumbAwareAction(config.name, config.hole?.description, ShireIcons.DEFAULT) {
     override fun actionPerformed(e: AnActionEvent) {
         val project = e.project ?: return
-        val editor = e.getData(CommonDataKeys.EDITOR)
+        val editor = FileEditorManager.getInstance(project).selectedTextEditor
         val file = e.getData(CommonDataKeys.PSI_FILE)
 
         config.hole?.setupProcessor(project, editor, file)

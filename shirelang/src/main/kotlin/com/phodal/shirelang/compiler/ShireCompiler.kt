@@ -174,7 +174,7 @@ class ShireCompiler(
                         psiFile ?: return@let null
                     } ?: return@let null
 
-                    psiFile.findElementAt(it) ?: return@let null
+                    psiFile.findElementAt(it) ?: return@let psiFile
                 }
 
                 if (currentEditor == null || currentElement == null) {
