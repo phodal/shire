@@ -57,7 +57,7 @@ jobs:
         env:
           CHANGELOG: ${{ steps.properties.outputs.changelog }}
         run: |
-          ./gradlew patchChangelog --release-note="$CHANGELOG"
+          ./gradlew :plugin:patchChangelog --release-note="$CHANGELOG"
 
       # Publish the plugin to JetBrains Marketplace
       - name: Publish Plugin
