@@ -267,7 +267,7 @@ ShireFile
         PsiElement(ShireTokenType.COLON)(':')
         PsiWhiteSpace(' ')
         ShireFrontMatterValueImpl(FRONT_MATTER_VALUE)
-          PsiElement(ShireTokenType.STRING)('42')
+          PsiElement(ShireTokenType.IDENTIFIER)('42')
         PsiElement(ShireTokenType.NEWLINE)('\n')
     PsiElement(ShireTokenType.FRONTMATTER_END)('---')
   PsiElement(ShireTokenType.NEWLINE)('\n')

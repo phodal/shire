@@ -53,7 +53,7 @@ INDENT                   = "  "
 EscapedChar              = "\\" [^\n]
 RegexWord                = [^\r\n\\\"' \t$`()] | {EscapedChar}
 REGEX                    = \/{RegexWord}+\/
-PATTERN_EXPR                  = \/{RegexWord}+\/
+PATTERN_EXPR             = \/{RegexWord}+\/
 
 LPAREN                   = \(
 RPAREN                   = \)
@@ -192,6 +192,7 @@ WHEN                     =when
 }
 
 <FRONT_MATTER_BLOCK> {
+  {WHEN}                  { return WHEN; }
   {FRONTMATTER_KEY}       { return FRONTMATTER_KEY; }
   ":"                     { yybegin(FRONT_MATTER_VALUE_BLOCK);return COLON; }
   {NEWLINE}               { return NEWLINE; }
@@ -206,12 +207,12 @@ WHEN                     =when
 }
 
 <FRONT_MATTER_VALUE_BLOCK>  {
-  {PATTERN_EXPR}          { yybegin(PATTERN_ACTION_BLOCK); return PATTERN_EXPR; }
   {DATE}                  { return DATE; }
-  {STRING}                { return STRING; }
+  {IDENTIFIER}            { return IDENTIFIER; }
   {NUMBER}                { return NUMBER; }
   {BOOLEAN}               { return BOOLEAN; }
   {QUOTE_STRING}          { return QUOTE_STRING; }
+  {PATTERN_EXPR}          { yybegin(PATTERN_ACTION_BLOCK); return PATTERN_EXPR; }
   "["                     { return LBRACKET; }
   "]"                     { return RBRACKET; }
   ","                     { return COMMA; }
@@ -228,7 +229,7 @@ WHEN                     =when
   ">="                    { return GTE; }
   " "                     { return TokenType.WHITE_SPACE; }
   "$"                     { return VARIABLE_START; }
-  ":"                     { return COLON; }
+//  ":"                     { return COLON; }
   [^]                     { yypushback(yylength()); yybegin(FRONT_MATTER_BLOCK); }
 }
 

@@ -68,9 +68,12 @@ ShireFile ::= frontMatterHeader? (used | code | TEXT_SEGMENT | NEWLINE | COMMENT
 frontMatterHeader ::= FRONTMATTER_START NEWLINE frontMatterEntries FRONTMATTER_END
 
 frontMatterEntries ::= ((frontMatterEntry) WHITE_SPACE?)*
-frontMatterEntry ::= frontMatterKey WHITE_SPACE? COLON WHITE_SPACE? (frontMatterValue | patternAction | conditionExpr) NEWLINE?
+frontMatterEntry ::=
+    "when" WHITE_SPACE? COLON WHITE_SPACE? conditionExpr NEWLINE?
+    | frontMatterKey WHITE_SPACE? COLON WHITE_SPACE? (frontMatterValue | patternAction) NEWLINE?
+
 frontMatterKey ::= FRONTMATTER_KEY | QUOTE_STRING
-frontMatterValue ::= STRING | NUMBER | QUOTE_STRING | DATE | BOOLEAN | frontMatterArray | (NEWLINE objectKeyValue)
+frontMatterValue ::= IDENTIFIER | NUMBER | QUOTE_STRING | DATE | BOOLEAN | frontMatterArray | (NEWLINE objectKeyValue)
 frontMatterArray ::= LBRACKET (frontMatterValue (COMMA frontMatterValue)*) RBRACKET
 
 objectKeyValue ::= (INDENT keyValue NEWLINE?)*
@@ -84,7 +87,7 @@ actionExpr ::= WHITE_SPACE? (caseBody | funcCall) WHITE_SPACE?
 funcCall ::= funcName (LPAREN pipelineArgs? RPAREN)?
 funcName ::= IDENTIFIER
 pipelineArgs ::= (pipelineArg (COMMA pipelineArg)*)?
-pipelineArg ::= STRING | NUMBER | IDENTIFIER | QUOTE_STRING
+pipelineArg ::= NUMBER | IDENTIFIER | QUOTE_STRING
 
 caseBody ::= CASE (WHITE_SPACE | NEWLINE)* QUOTE_STRING BLOCK_START casePatternAction* BLOCK_END
 casePatternAction ::= caseCondition BLOCK_START (actionExpr PIPE)* actionExpr BLOCK_END
@@ -112,9 +115,9 @@ expr ::=
 // b/37137454: Modify databinding expression grammar to allow calls to unqualified methods
 // https://github.com/JetBrains/Grammar-Kit/blob/master/HOWTO.md#24-compact-expression-parsing-with-priorities
 // https://github.com/JetBrains/Grammar-Kit/blob/master/testData/generator/ExprParser.bnf
-fake refExpr ::= expr? '.' STRING
-simpleRefExpr ::= STRING {extends=refExpr elementType=refExpr}
-qualRefExpr ::= expr '.' STRING {extends=refExpr elementType=refExpr}
+fake refExpr ::= expr? '.' IDENTIFIER
+simpleRefExpr ::= IDENTIFIER {extends=refExpr elementType=refExpr}
+qualRefExpr ::= expr '.' IDENTIFIER {extends=refExpr elementType=refExpr}
 
 logicalOrExpr ::= expr '||' expr
 logicalAndExpr ::= expr '&&' expr
@@ -132,8 +135,8 @@ private ineqComparisonOp ::= '<=' | '>=' | '<' | '>'
 private literal ::= NUMBER
   | TRUE | FALSE
   | QUOTE_STRING
-  | STRING
-  | "$" STRING
+  | IDENTIFIER
+  | "$" IDENTIFIER
 
 used ::= (
     AGENT_START AGENT_ID

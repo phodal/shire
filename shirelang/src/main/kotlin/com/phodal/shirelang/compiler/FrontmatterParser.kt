@@ -92,7 +92,7 @@ object FrontmatterParser {
         }
 
         return when (element.firstChild.elementType) {
-            ShireTypes.STRING -> {
+            ShireTypes.IDENTIFIER -> {
                 FrontMatterType.STRING(element.text)
             }
 
@@ -138,7 +138,7 @@ object FrontmatterParser {
         }
     }
 
-    private fun parsePatternAction(element: PsiElement): FrontMatterType {
+    private fun parsePatternAction(element: PsiElement): FrontMatterType? {
         val pattern = element.children.firstOrNull()?.text ?: ""
 
         val processor: MutableList<PatternFun> = mutableListOf()
@@ -200,7 +200,7 @@ object FrontmatterParser {
                     ShireTypes.QUOTE_STRING -> it.text
                         .removeSurrounding("\"")
                         .removeSurrounding("'")
-                    ShireTypes.STRING -> it.text.removeSurrounding("\"")
+                    ShireTypes.IDENTIFIER -> it.text.removeSurrounding("\"")
                     else -> it.text
                 }
             } ?: emptyList()
