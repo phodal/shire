@@ -322,10 +322,27 @@ END                      =end
   {ELSEIF}             { return ELSEIF; }
   {ENDIF}              { return ENDIF; }
   {END}                { return END; }
+  "("                  { return LPAREN; }
+  ")"                  { return RPAREN; }
+  "<"                  { return LT; }
+  "["                  { return LBRACKET; }
+  "]"                  { return RBRACKET; }
+  ","                  { return COMMA; }
+  "!"                  { return NOT; }
+  "&&"                 { return ANDAND; }
+  "||"                 { return OROR; }
+  "."                  { return DOT; }
+  "=="                 { return EQEQ; }
+  "!="                 { return NEQ; }
+  "<"                  { return LT; }
+  "<="                 { return LTE; }
+  ">"                  { return GT; }
+  ">="                 { return GTE; }
 
   {NUMBER}             { return NUMBER; }
   {COLON}              { return COLON; }
   {SYSTEM_ID}          { return SYSTEM_ID; }
+  {LINE_INFO}          { return LINE_INFO; }
   [^]                  { yypushback(yylength()); yybegin(YYINITIAL);  }
 }
 

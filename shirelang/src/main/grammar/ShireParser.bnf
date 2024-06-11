@@ -68,7 +68,7 @@
   ]
 }
 
-ShireFile ::= frontMatterHeader? (velocityExpr | used | code | TEXT_SEGMENT | NEWLINE | COMMENTS)*
+ShireFile ::= frontMatterHeader? (used | code | TEXT_SEGMENT | NEWLINE | COMMENTS)*
 
 frontMatterHeader ::= FRONTMATTER_START NEWLINE frontMatterEntries FRONTMATTER_END
 
@@ -147,7 +147,7 @@ used ::= (
     AGENT_START AGENT_ID
     | COMMAND_START COMMAND_ID (COLON COMMAND_PROP (SHARP LINE_INFO)?)?
     | VARIABLE_START (VARIABLE_ID | varAccess)
-    | SYSTEM_START SYSTEM_ID COLON NUMBER
+    | SYSTEM_START (velocityExpr | SYSTEM_ID COLON NUMBER)
 )
 
 // just make template pass success not fail
@@ -158,8 +158,8 @@ code ::=  CODE_BLOCK_START LANGUAGE_ID? NEWLINE? code_contents? CODE_BLOCK_END?
 code_contents ::= (NEWLINE | CODE_CONTENT)*
 
 velocityExpr ::=
-    SHARP 'if'
-    | SHARP 'else'
-    | SHARP 'elseif'
-    | SHARP 'end'
-    | SHARP 'endif'
+     'if' expr
+    | 'else'
+    | 'elseif' expr
+    | 'end'
+    | 'endif'
