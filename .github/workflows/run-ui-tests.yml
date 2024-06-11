@@ -25,9 +25,9 @@ jobs:
               Xvfb -ac :99 -screen 0 1920x1080x16 &
               gradle runIdeForUiTests &
           - os: windows-latest
-            runIde: start gradlew.bat runIdeForUiTests
+            runIde: start gradlew.bat :plugin:runIdeForUiTests
           - os: macos-latest
-            runIde: ./gradlew runIdeForUiTests &
+            runIde: ./gradlew :plugin:runIdeForUiTests &
 
     steps:
 
