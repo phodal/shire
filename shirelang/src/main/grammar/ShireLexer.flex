@@ -32,6 +32,7 @@ import java.util.regex.Pattern;
 %s COMMAND_VALUE_BLOCK
 
 %s SYSTEM_BLOCK
+%s VELOCITY_BLOCK
 
 %s CODE_BLOCK
 %s COMMENT_BLOCK
@@ -84,10 +85,16 @@ COLON                    =:
 SHARP                    =#
 LBRACKET                 =\[
 RBRACKET                 =\]
+
 DEFAULT                  =default
 CASE                     =case
 ARROW                    ==>
 WHEN                     =when
+IF                       =if
+ELSE                     =else
+ELSEIF                   =elseif
+ENDIF                    =endif
+END                      =end
 
 %{
     private boolean isCodeStart = false;
@@ -313,7 +320,16 @@ WHEN                     =when
   {SYSTEM_ID}          { return SYSTEM_ID; }
   {COLON}              { return COLON; }
   {NUMBER}             { return NUMBER; }
-  [^]                  { yybegin(YYINITIAL); yypushback(yylength()); }
+//  [^]                  { yypushback(yylength()); yybegin(VELOCITY_BLOCK);  }
+//}
+//
+//<VELOCITY_BLOCK> {
+  {IF}                 { return IF; }
+  {ELSE}               { return ELSE; }
+  {ELSEIF}             { return ELSEIF; }
+  {ENDIF}              { return ENDIF; }
+  {END}                { return END; }
+  [^]                  { yypushback(yylength()); yybegin(YYINITIAL);  }
 }
 
 <CODE_BLOCK> {

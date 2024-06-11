@@ -47,9 +47,14 @@
     CASE               = "case"
     DEFAULT            = "default"
     WHEN               = "when"
-    DASH               = "-"
+    IF                 = 'if'
+    ELSE               = 'else'
+    ELSEIF             = 'elseif'
+    END                = 'end'
+    ENDIF              = 'endif'
 
     // operators
+    DASH               = "-"
     EQEQ               = '=='
     NEQ                = '!='
     LT                 = '<'
@@ -63,7 +68,7 @@
   ]
 }
 
-ShireFile ::= frontMatterHeader? (used | code | TEXT_SEGMENT | NEWLINE | COMMENTS)*
+ShireFile ::= frontMatterHeader? (velocityExpr | used | code | TEXT_SEGMENT | NEWLINE | COMMENTS)*
 
 frontMatterHeader ::= FRONTMATTER_START NEWLINE frontMatterEntries FRONTMATTER_END
 
@@ -151,3 +156,10 @@ varAccess ::= OPEN_BRACE WHITE_SPACE? VARIABLE_ID WHITE_SPACE? (DOT WHITE_SPACE?
 code ::=  CODE_BLOCK_START LANGUAGE_ID? NEWLINE? code_contents? CODE_BLOCK_END?
 
 code_contents ::= (NEWLINE | CODE_CONTENT)*
+
+velocityExpr ::=
+    SHARP 'if'
+    | SHARP 'else'
+    | SHARP 'elseif'
+    | SHARP 'end'
+    | SHARP 'endif'
