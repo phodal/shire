@@ -155,8 +155,8 @@ code ::=  CODE_BLOCK_START LANGUAGE_ID? NEWLINE? code_contents? CODE_BLOCK_END?
 code_contents ::= (NEWLINE | CODE_CONTENT)*
 
 velocityExpr ::=
-     'if' expr
-    | 'else'
-    | 'elseif' expr
-    | 'end'
-    | 'endif'
+     SHARP 'if' expr
+    | SHARP 'else'
+    | SHARP 'elseif' expr
+    | SHARP 'end'
+    | SHARP 'endif'

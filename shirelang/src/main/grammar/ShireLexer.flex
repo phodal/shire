@@ -271,7 +271,6 @@ END                      =end
   "@"                     { yybegin(AGENT_BLOCK);    return AGENT_START; }
   "/"                     { yybegin(COMMAND_BLOCK);  return COMMAND_START; }
   "$"                     { yybegin(VARIABLE_BLOCK); return VARIABLE_START; }
-  "#"                     { yybegin(EXPR_BLOCK);   return SHARP; }
 
   "```" {IDENTIFIER}?     { yybegin(LANG_ID); if (isCodeStart == true) { isCodeStart = false; return CODE_BLOCK_END; } else { isCodeStart = true; }; yypushback(yylength()); }
 
@@ -283,19 +282,17 @@ END                      =end
 <COMMAND_BLOCK> {
   {COMMAND_ID}            { return COMMAND_ID; }
   {COLON}                 { yybegin(COMMAND_VALUE_BLOCK); return COLON; }
-  " "                     { yypushback(1); yybegin(YYINITIAL); }
   [^]                     { yypushback(1); yybegin(YYINITIAL); }
 }
 
 <COMMAND_VALUE_BLOCK> {
   {COMMAND_PROP}          { return command_value();  }
-  " "                     { yypushback(1); yybegin(YYINITIAL); }
   [^]                     { yypushback(1); yybegin(YYINITIAL); }
 }
 
 <LINE_BLOCK> {
-  {LINE_INFO}             { return LINE_INFO; }
   {SHARP}                 { return SHARP; }
+  {LINE_INFO}             { return LINE_INFO; }
   [^]                     { yypushback(yylength()); yybegin(COMMAND_VALUE_BLOCK); }
 }
 
@@ -340,7 +337,6 @@ END                      =end
 
   {NUMBER}             { return NUMBER; }
   {COLON}              { return COLON; }
-  {LINE_INFO}          { return LINE_INFO; }
   [^]                  { yypushback(yylength()); yybegin(YYINITIAL);  }
 }
 
