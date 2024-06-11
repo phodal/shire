@@ -46,6 +46,7 @@
     RPAREN             = ")"
     CASE               = "case"
     DEFAULT            = "default"
+    WHEN               = "when"
     DASH               = "-"
 
     // operators
@@ -67,7 +68,7 @@ ShireFile ::= frontMatterHeader? (used | code | TEXT_SEGMENT | NEWLINE | COMMENT
 frontMatterHeader ::= FRONTMATTER_START NEWLINE frontMatterEntries FRONTMATTER_END
 
 frontMatterEntries ::= ((frontMatterEntry) WHITE_SPACE?)*
-frontMatterEntry ::= frontMatterKey WHITE_SPACE? COLON WHITE_SPACE? (frontMatterValue | patternAction) NEWLINE?
+frontMatterEntry ::= frontMatterKey WHITE_SPACE? COLON WHITE_SPACE? (frontMatterValue | patternAction | conditionExpr) NEWLINE?
 frontMatterKey ::= FRONTMATTER_KEY | QUOTE_STRING
 frontMatterValue ::= STRING | NUMBER | QUOTE_STRING | DATE | BOOLEAN | frontMatterArray | (NEWLINE objectKeyValue)
 frontMatterArray ::= LBRACKET (frontMatterValue (COMMA frontMatterValue)*) RBRACKET
@@ -95,7 +96,7 @@ BLOCK_START ::= (WHITE_SPACE | NEWLINE)* OPEN_BRACE (WHITE_SPACE | NEWLINE)*
 BLOCK_END ::= (WHITE_SPACE | NEWLINE)* CLOSE_BRACE (WHITE_SPACE | NEWLINE)*
 
 // todo
-conditionExpr ::= expr ARROW actionBlock
+conditionExpr ::= expr
 expr ::=
     logicalOrExpr
     | logicalAndExpr

@@ -80,13 +80,14 @@ CODE_CONTENT             = [^\n]+
 COMMENTS                 = \[ ([^\]]+)? \] [^\t\r\n]*
 NEWLINE                  = \n | \r | \r\n
 
-COLON                 =:
-SHARP                 =#
-LBRACKET              =\[
-RBRACKET              =\]
-DEFAULT               =default
-CASE                  =case
-ARROW                 ==>
+COLON                    =:
+SHARP                    =#
+LBRACKET                 =\[
+RBRACKET                 =\]
+DEFAULT                  =default
+CASE                     =case
+ARROW                    ==>
+WHEN                     =when
 
 %{
     private boolean isCodeStart = false;
@@ -191,6 +192,7 @@ ARROW                 ==>
 }
 
 <FRONT_MATTER_BLOCK> {
+  {WHEN}                  { yybegin(CONDITION_EXPR_BLOCK); return WHEN; }
   {FRONTMATTER_KEY}       { return FRONTMATTER_KEY; }
   ":"                     { yybegin(FRONT_MATTER_VALUE_BLOCK);return COLON; }
   {NEWLINE}               { return NEWLINE; }
@@ -218,7 +220,6 @@ ARROW                 ==>
   [^]                     { yypushback(yylength()); yybegin(FRONT_MATTER_BLOCK); }
 }
 
-// todo
 <CONDITION_EXPR_BLOCK> {
   "!"                     { return NOT; }
   "&&"                    { return ANDAND; }
@@ -231,6 +232,9 @@ ARROW                 ==>
   ">"                     { return GT; }
   ">="                    { return GTE; }
   {IDENTIFIER}            { return IDENTIFIER; }
+  " "                     { return TokenType.WHITE_SPACE; }
+  ":"                     { return COLON; }
+  [^]                     { yypushback(yylength()); yybegin(FRONT_MATTER_BLOCK); }
 }
 
 <PATTERN_ACTION_BLOCK> {
