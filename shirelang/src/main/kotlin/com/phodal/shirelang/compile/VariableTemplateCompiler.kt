@@ -60,20 +60,18 @@ class VariableTemplateCompiler(
     }
 
     private fun configForLanguage() {
-        variableMap.put(ContextVariable.LANGUAGE.variable, language.displayName)
-        variableMap.put(
-            ContextVariable.COMMENT_SYMBOL.variable, when (language.displayName.lowercase()) {
-                "java", "kotlin" -> "//"
-                "python" -> "#"
-                "javascript" -> "//"
-                "typescript" -> "//"
-                "go" -> "//"
-                "c", "c++", "c#" -> "//"
-                "rust" -> "//"
-                "ruby" -> "#"
-                "shell" -> "#"
-                else -> "-"
-            }
-        )
+        variableMap[ContextVariable.LANGUAGE.variable] = language.displayName
+        variableMap[ContextVariable.COMMENT_SYMBOL.variable] = when (language.displayName.lowercase()) {
+            "java", "kotlin" -> "//"
+            "python" -> "#"
+            "javascript" -> "//"
+            "typescript" -> "//"
+            "go" -> "//"
+            "c", "c++", "c#" -> "//"
+            "rust" -> "//"
+            "ruby" -> "#"
+            "shell" -> "#"
+            else -> "-"
+        }
     }
 }
