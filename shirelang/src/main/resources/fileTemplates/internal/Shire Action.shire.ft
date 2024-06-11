@@ -1,5 +1,5 @@
 ---
-name: "Object Demo"
+name: "{{name}}"
 description: ""
 interaction: AppendCursor
 actionLocation: ContextMenu

@@ -2,19 +2,14 @@ package com.phodal.shirelang.actions.template
 
 import com.intellij.ide.actions.CreateFileFromTemplateAction
 import com.intellij.ide.actions.CreateFileFromTemplateDialog
-import com.intellij.openapi.fileEditor.FileEditorManager
+import com.intellij.ide.fileTemplates.FileTemplateManager
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.NonEmptyInputValidator
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiFile
-import com.intellij.psi.util.PsiTreeUtil
-import com.intellij.psi.util.elementType
 import com.phodal.shirelang.ShireBundle
 import com.phodal.shirelang.ShireIcons
-import com.phodal.shirelang.psi.ShireFile
-import com.phodal.shirelang.psi.ShireFrontMatterHeader
-import com.phodal.shirelang.psi.ShireTypes
 
 class NewShireFileAction : CreateFileFromTemplateAction(
     ShireBundle.message("shire.newFile"), "Creates new AutoDev customize", ShireIcons.DEFAULT
@@ -31,32 +26,11 @@ class NewShireFileAction : CreateFileFromTemplateAction(
             .setValidator(NonEmptyInputValidator())
     }
 
-    override fun postProcess(createdElement: PsiFile, templateName: String?, customProperties: Map<String, String>?) {
-        super.postProcess(createdElement, templateName, customProperties)
+    override fun createFile(name: String?, templateName: String?, dir: PsiDirectory?): PsiFile? {
+        val template = FileTemplateManager.getInstance(dir!!.project).getInternalTemplate(templateName!!)
+        val newName = name!!.lowercase().replace(" ", "_")
 
-        if (createdElement is ShireFile) {
-            val matterHeader =
-                PsiTreeUtil.getChildrenOfTypeAsList(createdElement, ShireFrontMatterHeader::class.java).firstOrNull()
-                    ?: return
-
-            val editor = FileEditorManager.getInstance(createdElement.project).selectedTextEditor ?: return
-
-            matterHeader.children.forEach { entry ->
-                entry.children.forEach { child ->
-                    when (child.elementType) {
-                        ShireTypes.FRONT_MATTER_KEY -> {
-                            if (child.text == "name") {
-                                // move to name
-                            }
-                            if (child.text == "description") {
-                                val element = child.nextSibling
-                                editor.caretModel.moveToOffset(element.getTextRange().getEndOffset())
-                            }
-                        }
-                    }
-                }
-            }
-
-        }
+        template.text = template.text.replace("{{name}}", name)
+        return createFileFromTemplate(newName, template, dir)
     }
 }
