@@ -1,0 +1,12 @@
+---
+when: $selection.length == 1 && $selection.first() == 'file'
+---
+
+Write unit test for following ${context.lang} code.
+
+${context.frameworkContext}
+
+```$context.lang
+${context.imports}
+${context.sourceCode}
+```

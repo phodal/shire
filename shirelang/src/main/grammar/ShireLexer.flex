@@ -299,8 +299,14 @@ WHEN                     =when
 }
 
 <VARIABLE_BLOCK> {
-  {VARIABLE_ID}        { yybegin(YYINITIAL); return VARIABLE_ID; }
-  [^]                  { return TokenType.BAD_CHARACTER; }
+  {VARIABLE_ID}        { return VARIABLE_ID; }
+  {IDENTIFIER}         { return IDENTIFIER; }
+  "{"                  { return OPEN_BRACE; }
+  "}"                  { return CLOSE_BRACE; }
+  "."                  { return DOT; }
+  "("                  { return LPAREN; }
+  ")"                  { return RPAREN; }
+  [^]                  { yypushback(yylength()); yybegin(YYINITIAL); }
 }
 
 <SYSTEM_BLOCK> {
