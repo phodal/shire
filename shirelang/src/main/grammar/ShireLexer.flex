@@ -317,18 +317,15 @@ END                      =end
 }
 
 <SYSTEM_BLOCK> {
-  {SYSTEM_ID}          { return SYSTEM_ID; }
-  {COLON}              { return COLON; }
-  {NUMBER}             { return NUMBER; }
-//  [^]                  { yypushback(yylength()); yybegin(VELOCITY_BLOCK);  }
-//}
-//
-//<VELOCITY_BLOCK> {
   {IF}                 { return IF; }
   {ELSE}               { return ELSE; }
   {ELSEIF}             { return ELSEIF; }
   {ENDIF}              { return ENDIF; }
   {END}                { return END; }
+
+  {NUMBER}             { return NUMBER; }
+  {COLON}              { return COLON; }
+  {SYSTEM_ID}          { return SYSTEM_ID; }
   [^]                  { yypushback(yylength()); yybegin(YYINITIAL);  }
 }
 
