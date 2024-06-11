@@ -177,8 +177,14 @@ class ShireCompiler(
                     psiFile.findElementAt(it) ?: return@let psiFile
                 }
 
-                if (currentEditor == null || currentElement == null) {
-                    output.append("$SHIRE_ERROR No context editor found for variable: ${used.text}")
+                if (currentElement == null) {
+                    output.append("$SHIRE_ERROR No element found for variable: ${used.text}")
+                    result.hasError = true
+                    return
+                }
+
+                if (currentEditor == null) {
+                    output.append("$SHIRE_ERROR No editor found for variable: ${used.text}")
                     result.hasError = true
                     return
                 }
