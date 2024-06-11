@@ -229,7 +229,8 @@ WHEN                     =when
   ">="                    { return GTE; }
   " "                     { return TokenType.WHITE_SPACE; }
   "$"                     { return VARIABLE_START; }
-//  ":"                     { return COLON; }
+  "("                     { return LPAREN; }
+  ")"                     { return RPAREN; }
   [^]                     { yypushback(yylength()); yybegin(FRONT_MATTER_BLOCK); }
 }
 
