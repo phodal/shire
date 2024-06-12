@@ -1,11 +1,9 @@
 package com.phodal.shirelang.compiler.hobbit
 
-class ShirePatternAction(val pattern: String, val processors: List<PatternFun>)
+import com.intellij.psi.tree.IElementType
+import com.phodal.shirelang.psi.ShireTypes
 
-enum class Operator {
-    OR, AND, NOT,
-    EQUAL, NOT_EQUAL, LESS_THAN, GREATER_THAN, LESS_EQUAL, GREATER_EQUAL
-}
+class ShirePatternAction(val pattern: String, val processors: List<PatternFun>)
 
 sealed class FrontMatterType(val value: Any) {
     class STRING(value: String) : FrontMatterType(value)
@@ -26,17 +24,67 @@ sealed class FrontMatterType(val value: Any) {
     class CaseMatch(value: Map<String, PATTERN>) : FrontMatterType(value)
 }
 
-class Comparison(val variable: String, val operator: Operator, val value: FrontMatterType)
+abstract class Statement
 
-class Factor(val notOp: Boolean = false, val comparison: Comparison)
-
-class Term(val factors: List<Factor>, val andOps: List<Boolean>)
 /**
- * The condition expression for the front matter.
- *
- * should include variables like `$selection`
- *
- * should include operators like `&&`, `||`, `!`
- *
+ * Enumeration of operator types used in conditional expressions.
  */
-class Expr(val terms: List<Term>, val orOps: List<Boolean>)
+enum class OperatorType {
+    OR, AND, NOT,
+    EQUAL, NOT_EQUAL, LESS_THAN, GREATER_THAN, LESS_EQUAL, GREATER_EQUAL
+}
+
+/**
+ * Represents an operator used in a comparison expression.
+ *
+ * @property type The type of operator.
+ */
+class Operator(val type: IElementType) : Statement() {
+    val operatorType: OperatorType = toType()
+
+    fun toType(): OperatorType {
+        return when (type) {
+            ShireTypes.OROR -> OperatorType.OR
+            ShireTypes.ANDAND -> OperatorType.AND
+            ShireTypes.NOT -> OperatorType.NOT
+            ShireTypes.EQEQ -> OperatorType.EQUAL
+            ShireTypes.NEQ -> OperatorType.NOT_EQUAL
+            ShireTypes.LT -> OperatorType.LESS_THAN
+            ShireTypes.GT -> OperatorType.GREATER_THAN
+            ShireTypes.LTE -> OperatorType.LESS_EQUAL
+            ShireTypes.GTE -> OperatorType.GREATER_EQUAL
+            else -> throw IllegalArgumentException("Invalid operator type")
+        }
+    }
+}
+
+/**
+ * Represents a comparison expression, including a variable, an operator, and a value.
+ *
+ * @property variable The name of the variable being compared.
+ * @property operator The operator used for comparison.
+ * @property value The value being compared against.
+ */
+class Comparison(val variable: String, val operator: Operator, val value: FrontMatterType) : Statement()
+
+/**
+ * Represents a factor in a conditional expression, including an optional NOT operator and a comparison expression.
+ *
+ * @property notOp Indicates if the NOT operator is included, default is false.
+ * @property comparison The comparison expression contained within the factor.
+ */
+class Factor(val notOp: Boolean = false, val comparison: Comparison) : Statement()
+
+/**
+ * Represents a term in a conditional expression, consisting of multiple factors combined with AND operators.
+ *
+ * @property factors The list of factors in the term.
+ */
+class Term(val factors: List<Factor>) : Statement()
+
+/**
+ * Represents a complete conditional expression, consisting of multiple terms combined with OR operators.
+ *
+ * @property terms The list of terms in the expression.
+ */
+class Expression(val terms: List<Term>) : Statement()
