@@ -19,11 +19,12 @@ class ShireCustomAgentRunner(
     override val configuration: ShireConfiguration,
     override val console: ConsoleViewWrapperBase,
     override val processHandler: ProcessHandler,
-    override val prompt: String,
+    override val input: String,
     private val agent: CustomAgent,
-) : ShireRunner(configuration, processHandler, console, myProject, prompt) {
+) : ShireRunner(configuration, processHandler, console, myProject, input) {
     override fun execute() {
         ApplicationManager.getApplication().invokeLater {
+            val prompt = this.compileShireTemplate()
             val stringFlow: Flow<String>? = CustomAgentExecutor(project = myProject).execute(prompt, agent)
 
             if (stringFlow == null) {

@@ -18,9 +18,9 @@ class ShireDefaultRunner(
     override val configuration: ShireConfiguration,
     override val console: ConsoleViewWrapperBase,
     override val processHandler: ProcessHandler,
-    override val prompt: String,
+    override val input: String,
     private val isLocalMode: Boolean,
- ) : ShireRunner(configuration, processHandler, console, myProject, prompt) {
+ ) : ShireRunner(configuration, processHandler, console, myProject, input) {
    override fun execute() {
         ApplicationManager.getApplication().invokeLater {
             if (isLocalMode) {
@@ -29,6 +29,7 @@ class ShireDefaultRunner(
                 return@invokeLater
             }
 
+            val prompt = this.compileShireTemplate()
             ShireCoroutineScope.scope(myProject).launch {
                 val llmResult = StringBuilder()
                 runBlocking {
