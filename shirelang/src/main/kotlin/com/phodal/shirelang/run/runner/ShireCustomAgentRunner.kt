@@ -21,25 +21,30 @@ class ShireCustomAgentRunner(
     override val processHandler: ProcessHandler,
     override val prompt: String,
     private val agent: CustomAgent,
- ) : ShireRunner(configuration, processHandler, console, myProject, prompt) {
+) : ShireRunner(configuration, processHandler, console, myProject, prompt) {
     override fun execute() {
         ApplicationManager.getApplication().invokeLater {
             val stringFlow: Flow<String>? = CustomAgentExecutor(project = myProject).execute(prompt, agent)
-            if (stringFlow != null) {
-                ShireCoroutineScope.scope(myProject).launch {
-                    val llmResult = StringBuilder()
-                    runBlocking {
-                        stringFlow.collect {
-                            llmResult.append(it)
-                            console.print(it, ConsoleViewContentType.NORMAL_OUTPUT)
-                        }
-                    }
 
-                    console.print("\nDone!", ConsoleViewContentType.SYSTEM_OUTPUT)
-                    myProject.getService(ShireConversationService::class.java)
-                        .updateLlmResponse(configuration.getScriptPath(), llmResult.toString())
-                    processHandler.detachProcess()
+            if (stringFlow == null) {
+                console.print("No LLM provider found", ConsoleViewContentType.ERROR_OUTPUT)
+                processHandler.detachProcess()
+                return@invokeLater
+            }
+
+            ShireCoroutineScope.scope(myProject).launch {
+                val llmResult = StringBuilder()
+                runBlocking {
+                    stringFlow.collect {
+                        llmResult.append(it)
+                        console.print(it, ConsoleViewContentType.NORMAL_OUTPUT)
+                    }
                 }
+
+                console.print("\nDone!", ConsoleViewContentType.SYSTEM_OUTPUT)
+                myProject.getService(ShireConversationService::class.java)
+                    .updateLlmResponse(configuration.getScriptPath(), llmResult.toString())
+                processHandler.detachProcess()
             }
         }
     }

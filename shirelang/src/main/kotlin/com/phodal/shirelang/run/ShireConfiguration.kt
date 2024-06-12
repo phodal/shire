@@ -45,16 +45,16 @@ class ShireConfiguration(project: Project, factory: ConfigurationFactory, name: 
     fun setScriptPath(scriptPath: String) {
         myScriptPath = scriptPath.trim { it <= ' ' }
     }
-}
 
-fun Element.writeString(name: String, value: String) {
-    val opt = Element("option")
-    opt.setAttribute("name", name)
-    opt.setAttribute("value", value)
-    addContent(opt)
-}
+    private fun Element.writeString(name: String, value: String) {
+        val opt = Element("option")
+        opt.setAttribute("name", name)
+        opt.setAttribute("value", value)
+        addContent(opt)
+    }
 
-fun Element.readString(name: String): String? =
-    children
-        .find { it.name == "option" && it.getAttributeValue("name") == name }
-        ?.getAttributeValue("value")
+    private fun Element.readString(name: String): String? =
+        children
+            .find { it.name == "option" && it.getAttributeValue("name") == name }
+            ?.getAttributeValue("value")
+}

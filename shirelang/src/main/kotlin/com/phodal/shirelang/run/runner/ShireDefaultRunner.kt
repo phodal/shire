@@ -6,6 +6,7 @@ import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 import com.phodal.shire.llm.LlmProvider
+import com.phodal.shirelang.ShireBundle
 import com.phodal.shirelang.run.ShireConfiguration
 import com.phodal.shirelang.run.flow.ShireConversationService
 import com.phodal.shirelang.utils.ShireCoroutineScope
@@ -23,7 +24,7 @@ class ShireDefaultRunner(
    override fun execute() {
         ApplicationManager.getApplication().invokeLater {
             if (isLocalMode) {
-                console.print("Local command detected, running in local mode", ConsoleViewContentType.SYSTEM_OUTPUT)
+                console.print(ShireBundle.message("shire.run.local.mode"), ConsoleViewContentType.SYSTEM_OUTPUT)
                 processHandler.detachProcess()
                 return@invokeLater
             }
