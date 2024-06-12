@@ -8,7 +8,6 @@ import com.intellij.execution.console.ConsoleViewWrapperBase
 import com.intellij.execution.impl.ConsoleViewImpl
 import com.intellij.execution.process.ProcessAdapter
 import com.intellij.execution.process.ProcessEvent
-import com.intellij.execution.process.ProcessHandler
 import com.intellij.execution.process.ProcessTerminatedListener
 import com.intellij.execution.runners.ProgramRunner
 import com.intellij.execution.ui.ConsoleViewContentType
@@ -19,17 +18,12 @@ import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Key
 import com.intellij.ui.components.panels.NonOpaquePanel
-import com.phodal.shirecore.agent.CustomAgent
-import com.phodal.shirecore.agent.CustomAgentExecutor
-import com.phodal.shire.llm.LlmProvider
 import com.phodal.shirelang.compiler.ShireCompiler
 import com.phodal.shirelang.compiler.error.SHIRE_ERROR
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.flow.ShireConversationService
-import com.phodal.shirelang.utils.ShireCoroutineScope
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import com.phodal.shirelang.run.runner.ShireCustomAgentRunner
+import com.phodal.shirelang.run.runner.ShireDefaultRunner
 import java.awt.BorderLayout
 import javax.swing.JComponent
 
@@ -91,11 +85,11 @@ open class ShireRunConfigurationProfileState(
             return DefaultExecutionResult(console, processHandler)
         }
 
-//        val editor =
         val editor = FileEditorManager.getInstance(myProject).selectedTextEditor
-        // save the run result
         val compiler = ShireCompiler(myProject, file, editor)
         val compileResult = compiler.compile()
+
+        // translate template for handle reset for the conversation
 
         myProject.getService(ShireConversationService::class.java).createConversation(configuration.getScriptPath(), compileResult)
 
@@ -119,69 +113,12 @@ open class ShireRunConfigurationProfileState(
         }
 
         if (agent != null) {
-            agentRun(output, console, processHandler, agent)
+            ShireCustomAgentRunner(myProject, configuration, console, processHandler, output, agent).execute()
         } else {
-            defaultRun(output, console, processHandler, compileResult.isLocalCommand)
+            ShireDefaultRunner(myProject, configuration, console, processHandler, output, compileResult.isLocalCommand).execute()
         }
 
         return DefaultExecutionResult(console, processHandler)
-    }
-
-    private fun agentRun(
-        output: String,
-        console: ConsoleViewWrapperBase,
-        processHandler: ProcessHandler,
-        agent: CustomAgent,
-    ) {
-        ApplicationManager.getApplication().invokeLater {
-            val stringFlow: Flow<String>? = CustomAgentExecutor(project = myProject).execute(output, agent)
-            if (stringFlow != null) {
-                ShireCoroutineScope.scope(myProject).launch {
-                    val llmResult = StringBuilder()
-                    runBlocking {
-                        stringFlow.collect {
-                            llmResult.append(it)
-                            console.print(it, ConsoleViewContentType.NORMAL_OUTPUT)
-                        }
-                    }
-
-                    console.print("\nDone!", ConsoleViewContentType.SYSTEM_OUTPUT)
-                    myProject.getService(ShireConversationService::class.java)
-                        .updateLlmResponse(configuration.getScriptPath(), llmResult.toString())
-                    processHandler.detachProcess()
-                }
-            }
-        }
-    }
-
-    private fun defaultRun(
-        output: String,
-        console: ConsoleViewWrapperBase,
-        processHandler: ProcessHandler,
-        isLocalMode: Boolean,
-    ) {
-        ApplicationManager.getApplication().invokeLater {
-            if (isLocalMode) {
-                console.print("Local command detected, running in local mode", ConsoleViewContentType.SYSTEM_OUTPUT)
-                processHandler.detachProcess()
-                return@invokeLater
-            }
-
-            ShireCoroutineScope.scope(myProject).launch {
-                val llmResult = StringBuilder()
-                runBlocking {
-                    LlmProvider.provider(myProject)?.stream(output, "", false)?.collect {
-                        llmResult.append(it)
-                        console.print(it, ConsoleViewContentType.NORMAL_OUTPUT)
-                    } ?: console.print("No LLM provider found", ConsoleViewContentType.ERROR_OUTPUT)
-                }
-
-                console.print("\nDone!", ConsoleViewContentType.SYSTEM_OUTPUT)
-                myProject.getService(ShireConversationService::class.java)
-                    .updateLlmResponse(configuration.getScriptPath(), llmResult.toString())
-                processHandler.detachProcess()
-            }
-        }
     }
 }
 

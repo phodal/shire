@@ -32,7 +32,6 @@ class ShireProgramRunner : GenericProgramRunner<RunnerSettings>(), Disposable {
         FileDocumentManager.getInstance().saveAllDocuments()
         val result = AtomicReference<RunContentDescriptor>()
 
-        //避免多次subscribe
         if(!isSubscribed) {
             connection.subscribe(ShireRunListener.TOPIC, object : ShireRunListener {
                 override fun runFinish(string: String, event: ProcessEvent, scriptPath: String) {

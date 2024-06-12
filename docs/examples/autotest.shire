@@ -10,7 +10,6 @@ fileName-rules:
 variables:
   "frameworkContext": /.*/build\.gradle\.kts/ { grep("org.springframework.boot:spring-boot-starter-jdbc") | print("This project use Spring Framework")}
 ---
-
 Write unit test for following ${context.language} code.
 
 ${context.frameworkContext}
@@ -20,11 +19,11 @@ Here is the relate code maybe you can use
 ${context.relatedClasses}
 #end
 
-#if( $context.currentClass.length() > 0 )
+#if($context.currentClass.length() > 0 )
 This is the class where the source code resides:
 ${context.currentClass}
 #end
-${context.extContext}
+
 Here is the source code to be tested:
 
 ```${context.language}
@@ -37,4 +36,3 @@ Should include package and imports. Start method test code with Markdown code bl
 #else
 Should include package and imports. Start ${context.testClassName} test code with Markdown code block here:
 #end
-
