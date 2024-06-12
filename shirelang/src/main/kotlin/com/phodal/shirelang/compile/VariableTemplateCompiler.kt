@@ -45,9 +45,11 @@ class VariableTemplateCompiler(
         val oldContextClassLoader = Thread.currentThread().contextClassLoader
         Thread.currentThread().contextClassLoader = VariableTemplateCompiler::class.java.classLoader
 
-        val context = VelocityContext()
+        // for compatibility with older versions of AutoDev
+        val context = VelocityContext(variableMap)
         val sw = StringWriter()
         try {
+            // for compatibility with older versions of AutoDev
             context.put("context", variableMap)
             Velocity.evaluate(context, sw, "#" + this.javaClass.name, template)
         } catch (e: Exception) {

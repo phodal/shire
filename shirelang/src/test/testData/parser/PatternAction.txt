@@ -70,4 +70,5 @@ ShireFile
   PsiElement(ShireTokenType.NEWLINE)('\n')
   ShireUsedImpl(USED)
     PsiElement(ShireTokenType.VARIABLE_START)('$')
-    PsiElement(ShireTokenType.VARIABLE_ID)('var1')
+    ShireVarIdImpl(VAR_ID)
+      PsiElement(ShireTokenType.VARIABLE_ID)('var1')
