@@ -19,7 +19,7 @@ class ShireRunLineMarkersProvider : RunLineMarkerContributor(), DumbAware {
         val actions = arrayOf<AnAction>(ActionManager.getInstance().getAction(ShireRunFileAction.ID))
 
         return Info(
-            AllIcons.RunConfigurations.TestState.Run,
+            AllIcons.RunConfigurations.Application,
             { ShireBundle.message("shire.line.marker.run.0", psiFile.containingFile.name) },
             *actions
         )

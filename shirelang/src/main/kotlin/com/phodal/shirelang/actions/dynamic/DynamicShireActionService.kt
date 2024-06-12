@@ -22,7 +22,6 @@ class DynamicShireActionService {
         }
     }
 
-
     companion object {
         fun getInstance(): DynamicShireActionService =
             ApplicationManager.getApplication().getService(DynamicShireActionService::class.java)

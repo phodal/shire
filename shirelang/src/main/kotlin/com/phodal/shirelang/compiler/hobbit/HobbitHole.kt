@@ -70,7 +70,9 @@ open class HobbitHole(
     /**
      * The list of variables to apply for the action.
      */
-    val variables: MutableMap<String, List<VariablePatternFunc>> = mutableMapOf()
+    val variables: MutableMap<String, List<VariablePatternFunc>> = mutableMapOf(),
+
+    val when_: String = ""
 ) : Smials {
     fun pickupElement() {
         this.selectionStrategy.select()
@@ -93,6 +95,7 @@ open class HobbitHole(
         private const val DESCRIPTION = "description"
         private const val FILENAME_RULES = "filenameRules"
         private const val VARIABLES = "variables"
+        private const val WHEN = "when"
 
         fun from(file: ShireFile): HobbitHole? {
             return FrontmatterParser.parse(file)
@@ -152,6 +155,8 @@ open class HobbitHole(
                     variables[text] = funcs.map { func -> VariablePatternFunc(text, func) }
                 }
             }
+
+
 
             return HobbitHole(
                 name,
