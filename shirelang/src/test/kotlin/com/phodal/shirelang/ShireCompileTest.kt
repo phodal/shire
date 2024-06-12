@@ -8,7 +8,7 @@ import com.phodal.shirelang.compiler.ShireCompiler
 import com.phodal.shirelang.compiler.hobbit.PatternFun
 import com.phodal.shirelang.psi.ShireFile
 
-class ShireCompileTest: BasePlatformTestCase() {
+class ShireCompileTest : BasePlatformTestCase() {
     fun testNormalString() {
         val code = "Normal String /"
         val file = myFixture.configureByText("test.shire", code)
@@ -133,5 +133,26 @@ class ShireCompileTest: BasePlatformTestCase() {
         assertEquals("error.log", (var2[0].function as PatternFun.Grep).patterns[0])
         assertEquals("sort", var2[1].function.funcName)
         assertEquals("xargs", var2[2].function.funcName)
-      }
+    }
+
+    fun testShouldHandleForWhenCondition() {
+        val code = """
+            ---
+            name: Summary
+            description: "Generate Summary"
+            interaction: AppendCursor
+            when: ${'$'}selection.length == 1 && ${'$'}selection.first() == 'file'
+            ---
+            
+            Summary webpage:
+        """.trimIndent()
+
+        val file = myFixture.configureByText("test.shire", code)
+
+        val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
+        assertEquals("\n\nSummary webpage:", compile.output)
+        val when_ = compile.config!!.when_
+
+        assertEquals(0, when_.size)
+    }
 }

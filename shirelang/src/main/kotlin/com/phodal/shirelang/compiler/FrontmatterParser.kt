@@ -50,17 +50,18 @@ object FrontmatterParser {
                     }
 
                     ShireTypes.FRONT_MATTER_VALUE -> {
-                        val value = parseFrontMatterValue(child)
-                        value?.let {
-                            frontMatter[lastKey] = it
-                        }
+                        frontMatter[lastKey] = parseFrontMatterValue(child)
+                            ?: FrontMatterType.STRING("Frontmatter value parsing failed: ${child.text}")
                     }
 
                     ShireTypes.PATTERN_ACTION -> {
-                        val value = parsePatternAction(child)
-                        value?.let {
-                            frontMatter[lastKey] = it
-                        }
+                        frontMatter[lastKey] = parsePatternAction(child)
+                            ?: FrontMatterType.STRING("Pattern action parsing failed: ${child.text}")
+                    }
+
+                    ShireTypes.EXPR -> {
+                        frontMatter[lastKey] = parseExpr(child)
+                            ?: FrontMatterType.STRING("Logical expression parsing failed: ${child.text}")
                     }
 
                     else -> {
@@ -71,6 +72,11 @@ object FrontmatterParser {
         }
 
         return frontMatter
+    }
+
+    private fun parseExpr(child: PsiElement): FrontMatterType? {
+
+        return null
     }
 
     private fun parseFrontMatterValue(element: PsiElement): FrontMatterType? {
@@ -196,10 +202,11 @@ object FrontmatterParser {
             ?.let {
                 it.pipelineArgList.map { arg -> arg }
             }?.map {
-                when(it.firstChild.elementType) {
+                when (it.firstChild.elementType) {
                     ShireTypes.QUOTE_STRING -> it.text
                         .removeSurrounding("\"")
                         .removeSurrounding("'")
+
                     ShireTypes.IDENTIFIER -> it.text.removeSurrounding("\"")
                     else -> it.text
                 }
