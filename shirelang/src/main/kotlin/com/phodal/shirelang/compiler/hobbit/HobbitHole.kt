@@ -156,6 +156,9 @@ open class HobbitHole(
                 }
             }
 
+            val when_ = mutableListOf<VariableCondition>()
+            val whenMap = frontMatterMap[WHEN] as? FrontMatterType.OBJECT
+
             return HobbitHole(
                 name,
                 description,

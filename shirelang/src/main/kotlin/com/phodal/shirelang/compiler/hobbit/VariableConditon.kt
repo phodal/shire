@@ -1,5 +1,9 @@
 package com.phodal.shirelang.compiler.hobbit
 
+import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.project.Project
+import com.intellij.psi.PsiFile
+
 /**
  * Check variable in [com.phodal.shirelang.completion.provider.ContextVariable] is valid.
  *
@@ -11,7 +15,7 @@ package com.phodal.shirelang.compiler.hobbit
  * ---
  * ```
  */
-class VariableCondition(val string: String) {
+class VariableCondition(val variable: String) {
     private val conditions = mutableListOf<(String) -> Boolean>()
 
     fun addCondition(condition: (String) -> Boolean) {
@@ -19,7 +23,11 @@ class VariableCondition(val string: String) {
     }
 
     fun validate(): Boolean {
-        return conditions.all { it(string) }
+        return conditions.all { it(variable) }
+    }
+
+    fun check(project: Project, editor: Editor, file: PsiFile): Boolean {
+        return validate()
     }
 }
 

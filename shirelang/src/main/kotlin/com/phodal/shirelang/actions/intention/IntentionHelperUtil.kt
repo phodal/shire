@@ -6,6 +6,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
 import com.phodal.shirecore.ShirelangNotifications
 import com.phodal.shirecore.action.ShireActionLocation
+import com.phodal.shirelang.ShireBundle
 import com.phodal.shirelang.actions.dynamic.DynamicShireActionService
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 
@@ -13,20 +14,25 @@ object IntentionHelperUtil {
     fun getAiAssistantIntentions(project: Project, editor: Editor?, file: PsiFile): List<IntentionAction> {
         val shireActionConfigs = DynamicShireActionService.getInstance().getAction(ShireActionLocation.INTENTION_MENU)
         return shireActionConfigs.map { actionConfig ->
-            ShireIntentionAction(actionConfig.name, actionConfig.hole, file)
+            ShireIntentionAction(actionConfig.hole, file)
         }
     }
 }
 
-class ShireIntentionAction(name: String, private val hobbitHole: HobbitHole?, file: PsiFile) : IntentionAction {
+class ShireIntentionAction(private val hobbitHole: HobbitHole?, file: PsiFile) : IntentionAction {
     override fun startInWriteAction(): Boolean = false
+    override fun getFamilyName(): String = ShireBundle.message("shire.intention")
+    override fun getText(): String = ShireBundle.message("shire.intention")
 
-    override fun getFamilyName(): String = "Shire Intention"
+    override fun isAvailable(project: Project, editor: Editor, file: PsiFile): Boolean {
+        // if not set when condition, will always available
+        val conditions = hobbitHole?.when_ ?: return true
 
-    override fun getText(): String = "Shire Intention"
+        val result = conditions.all { condition ->
+            condition.check(project, editor, file)
+        }
 
-    override fun isAvailable(project: Project, editor: Editor?, file: PsiFile?): Boolean {
-        return true
+        return result
     }
 
     override fun invoke(project: Project, editor: Editor?, file: PsiFile?) {
