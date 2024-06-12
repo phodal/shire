@@ -5,6 +5,11 @@ import com.phodal.shirelang.psi.ShireTypes
 
 class ShirePatternAction(val pattern: String, val processors: List<PatternFun>)
 
+/**
+ * Basic Types: [STRING], [NUMBER], [DATE], [BOOLEAN], [ARRAY], [OBJECT]
+ * Pattern: [PATTERN]
+ * Expression: [CaseMatch]
+ */
 sealed class FrontMatterType(val value: Any) {
     class STRING(value: String) : FrontMatterType(value)
     class NUMBER(value: Int) : FrontMatterType(value)
@@ -29,9 +34,26 @@ abstract class Statement
 /**
  * Enumeration of operator types used in conditional expressions.
  */
-enum class OperatorType {
-    OR, AND, NOT,
-    EQUAL, NOT_EQUAL, LESS_THAN, GREATER_THAN, LESS_EQUAL, GREATER_EQUAL
+sealed class OperatorType(val type: IElementType, val display: String) {
+    object Or : OperatorType(ShireTypes.OROR, "||")
+    object And : OperatorType(ShireTypes.ANDAND, "&&")
+    object Not : OperatorType(ShireTypes.NOT, "!")
+    object Equal : OperatorType(ShireTypes.EQEQ, "==")
+    object NotEqual : OperatorType(ShireTypes.NEQ, "!=")
+    object LessThan : OperatorType(ShireTypes.LT, "<")
+    object GreaterThan : OperatorType(ShireTypes.GT, ">")
+    object LessEqual : OperatorType(ShireTypes.LTE, "<=")
+    object GreaterEqual : OperatorType(ShireTypes.GTE, ">=")
+}
+
+/**
+ * String Operator
+ */
+sealed class StringOperator(val display: String) {
+    object Contains : StringOperator("contains")
+    object StartsWith : StringOperator("startsWith")
+    object EndsWith : StringOperator("endsWith")
+    object Matches : StringOperator("matches")
 }
 
 /**
@@ -52,15 +74,15 @@ class Operator(val type: IElementType) : Statement() {
      */
     private fun toType(): OperatorType {
         return when (type) {
-            ShireTypes.OROR -> OperatorType.OR
-            ShireTypes.ANDAND -> OperatorType.AND
-            ShireTypes.NOT -> OperatorType.NOT
-            ShireTypes.EQEQ -> OperatorType.EQUAL
-            ShireTypes.NEQ -> OperatorType.NOT_EQUAL
-            ShireTypes.LT -> OperatorType.LESS_THAN
-            ShireTypes.GT -> OperatorType.GREATER_THAN
-            ShireTypes.LTE -> OperatorType.LESS_EQUAL
-            ShireTypes.GTE -> OperatorType.GREATER_EQUAL
+            ShireTypes.OROR -> OperatorType.Or
+            ShireTypes.ANDAND -> OperatorType.And
+            ShireTypes.NOT -> OperatorType.Not
+            ShireTypes.EQEQ -> OperatorType.Equal
+            ShireTypes.NEQ -> OperatorType.NotEqual
+            ShireTypes.LT -> OperatorType.LessThan
+            ShireTypes.GT -> OperatorType.GreaterThan
+            ShireTypes.LTE -> OperatorType.LessEqual
+            ShireTypes.GTE -> OperatorType.GreaterEqual
             else -> throw IllegalArgumentException("Invalid operator type")
         }
     }
