@@ -6,9 +6,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.TokenType.WHITE_SPACE
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.elementType
-import com.phodal.shirelang.compiler.hobbit.HobbitHole
-import com.phodal.shirelang.compiler.hobbit.FrontMatterType
-import com.phodal.shirelang.compiler.hobbit.PatternFun
+import com.phodal.shirelang.compiler.hobbit.*
 import com.phodal.shirelang.compiler.hobbit.ShirePatternAction
 import com.phodal.shirelang.psi.*
 
@@ -59,8 +57,8 @@ object FrontmatterParser {
                             ?: FrontMatterType.STRING("Pattern action parsing failed: ${child.text}")
                     }
 
-                    ShireTypes.EXPR -> {
-                        frontMatter[lastKey] = parseExpr(child)
+                    ShireTypes.LOGICAL_AND_EXPR -> {
+                        frontMatter[lastKey] = parseLogicAndExpr(child as ShireLogicalAndExpr)
                             ?: FrontMatterType.STRING("Logical expression parsing failed: ${child.text}")
                     }
 
@@ -74,9 +72,76 @@ object FrontmatterParser {
         return frontMatter
     }
 
-    private fun parseExpr(child: PsiElement): FrontMatterType? {
+    private fun parseLogicAndExpr(child: ShireLogicalAndExpr): FrontMatterType? {
+        val left = child.exprList.firstOrNull() ?: return null
+        val right = child.exprList.lastOrNull() ?: return null
 
-        return null
+        return FrontMatterType.Expression(
+            LogicalExpression(
+                left = parseExpr(left),
+                operator = OperatorType.And,
+                right = parseExpr(right)
+            )
+        )
+    }
+
+    private fun parseExpr(expr: PsiElement): Statement = when (expr.elementType) {
+        ShireTypes.EQ_COMPARISON_EXPR -> {
+            val variable = parseRefExpr(expr.children.firstOrNull())
+            val value = parseRefExpr(expr.children.lastOrNull())
+            Comparison(variable, Operator(OperatorType.Equal), value)
+        }
+
+        else -> {
+            logger.warn("parseExpr, Unknown expression type: ${expr.elementType}")
+            Comparison(FrontMatterType.STRING(""), Operator(OperatorType.Equal), FrontMatterType.STRING(""))
+        }
+    }
+
+    private fun parseRefExpr(expr: PsiElement?): FrontMatterType {
+        return when (expr?.elementType) {
+            ShireTypes.LITERAL_EXPR -> {
+                FrontMatterType.STRING(expr!!.text)
+            }
+
+            ShireTypes.REF_EXPR -> {
+                val ref = expr!!.children.firstOrNull()!!
+                when (ref?.elementType) {
+                    ShireTypes.IDENTIFIER -> {
+                        FrontMatterType.STRING(ref.text)
+                    }
+
+                    ShireTypes.NUMBER -> {
+                        FrontMatterType.NUMBER(ref.text.toInt())
+                    }
+
+                    ShireTypes.QUOTE_STRING -> {
+                        val value = ref.text.substring(1, ref.text.length - 1)
+                        FrontMatterType.STRING(value)
+                    }
+
+                    else -> {
+                        logger.warn("parseRefExpr, Unknown ref type: ${ref?.elementType}")
+                        FrontMatterType.STRING("")
+                    }
+                }
+            }
+
+            ShireTypes.CALL_EXPR -> {
+                val childrens = PsiTreeUtil.findChildrenOfType(expr, ShireExpr::class.java)
+                val left = parseRefExpr(childrens.first())
+                // next will be dot
+                val right = parseRefExpr(childrens.last())
+
+                val methodCall = MethodCall(left, right, listOf())
+                FrontMatterType.Expression(methodCall)
+            }
+
+            else -> {
+                logger.warn("parseRefExpr, Unknown expression type: ${expr?.elementType}")
+                FrontMatterType.STRING("")
+            }
+        }
     }
 
     private fun parseFrontMatterValue(element: PsiElement): FrontMatterType? {

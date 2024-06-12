@@ -1,8 +1,5 @@
 package com.phodal.shirelang.compiler.hobbit
 
-import com.intellij.psi.tree.IElementType
-import com.phodal.shirelang.psi.ShireTypes
-
 class ShirePatternAction(val pattern: String, val processors: List<PatternFun>)
 
 /**
@@ -27,4 +24,9 @@ sealed class FrontMatterType(val value: Any) {
      * The case match for the front matter.
      */
     class CaseMatch(value: Map<String, PATTERN>) : FrontMatterType(value)
+
+    /**
+     * The expression
+     */
+    class Expression(value: Statement) : FrontMatterType(value)
 }

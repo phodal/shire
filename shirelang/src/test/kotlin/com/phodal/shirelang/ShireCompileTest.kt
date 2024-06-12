@@ -138,9 +138,6 @@ class ShireCompileTest : BasePlatformTestCase() {
     fun testShouldHandleForWhenCondition() {
         val code = """
             ---
-            name: Summary
-            description: "Generate Summary"
-            interaction: AppendCursor
             when: ${'$'}selection.length == 1 && ${'$'}selection.first() == 'file'
             ---
             
@@ -151,8 +148,8 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
         assertEquals("\n\nSummary webpage:", compile.output)
-        val when_ = compile.config!!.when_
+        val when_ = compile.config?.when_
 
-        assertEquals(0, when_.size)
+        assertEquals(0, when_?.size)
     }
 }

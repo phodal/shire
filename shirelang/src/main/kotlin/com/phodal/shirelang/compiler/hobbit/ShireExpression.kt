@@ -80,7 +80,7 @@ data class StringOperatorStatement(val type: StringOperator) : Statement()
  * @property value The value being compared against.
  */
 data class Comparison(
-    val variable: String,
+    val variable: FrontMatterType,
     val operator: Operator,
     val value: FrontMatterType
 ) : Statement()
@@ -117,3 +117,17 @@ data class LogicalExpression(
  * @property operand The operand to be negated.
  */
 data class NotExpression(val operand: Statement) : Statement()
+
+
+/**
+ * Represents a method call expression, including the object and method being called.
+ *
+ * @property objectName The name of the object on which the method is called.
+ * @property methodName The name of the method being called.
+ * @property arguments The arguments passed to the method.
+ */
+data class MethodCall(
+    val objectName: FrontMatterType,
+    val methodName: FrontMatterType,
+    val arguments: List<Any>
+) : Statement()
