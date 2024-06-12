@@ -72,7 +72,7 @@ open class HobbitHole(
      */
     val variables: MutableMap<String, List<VariablePatternFunc>> = mutableMapOf(),
 
-    val when_: String = ""
+    val when_: List<VariableCondition> = emptyList(),
 ) : Smials {
     fun pickupElement() {
         this.selectionStrategy.select()
@@ -155,8 +155,6 @@ open class HobbitHole(
                     variables[text] = funcs.map { func -> VariablePatternFunc(text, func) }
                 }
             }
-
-
 
             return HobbitHole(
                 name,

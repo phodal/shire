@@ -75,7 +75,7 @@ frontMatterEntry ::=
     "when" WHITE_SPACE? COLON WHITE_SPACE? conditionExpr NEWLINE?
     | frontMatterKey WHITE_SPACE? COLON WHITE_SPACE? (frontMatterValue | patternAction) NEWLINE?
 
-frontMatterKey ::= FRONTMATTER_KEY | QUOTE_STRING
+frontMatterKey ::= FRONTMATTER_KEY | QUOTE_STRING | pattern
 frontMatterValue ::= IDENTIFIER | NUMBER | QUOTE_STRING | DATE | BOOLEAN | frontMatterArray | (NEWLINE objectKeyValue)
 frontMatterArray ::= LBRACKET (frontMatterValue (COMMA frontMatterValue)*) RBRACKET
 
