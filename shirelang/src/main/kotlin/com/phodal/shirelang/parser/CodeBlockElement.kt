@@ -12,10 +12,14 @@ import com.intellij.psi.impl.source.tree.injected.InjectionBackgroundSuppressor
 import com.intellij.psi.templateLanguages.OuterLanguageElement
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.util.*
+import com.phodal.shirelang.psi.ShireExpr
 import com.phodal.shirelang.psi.ShireTypes
 
 class CodeBlockElement(node: ASTNode) : ASTWrapperPsiElement(node), PsiLanguageInjectionHost,
     InjectionBackgroundSuppressor {
+
+    private val isShireLanguage: Boolean = false
+
     override fun isValidHost(): Boolean {
         return isAbleToAcceptInjections(this)
     }
@@ -23,9 +27,8 @@ class CodeBlockElement(node: ASTNode) : ASTWrapperPsiElement(node), PsiLanguageI
     private fun isAbleToAcceptInjections(host: CodeBlockElement): Boolean {
         val hasStartBlock = host.firstChild?.elementType != ShireTypes.CODE_BLOCK_START
         val hasEndBlock = host.lastChild?.elementType != ShireTypes.CODE_BLOCK_END
-        val hasContents = host.children.count { it.hasType(ShireTypes.CODE_CONTENTS) } < 2
 
-        return !(hasStartBlock && hasEndBlock && hasContents)
+        return !(hasStartBlock && hasEndBlock)
     }
 
     override fun updateText(text: String): PsiLanguageInjectionHost {
@@ -38,6 +41,10 @@ class CodeBlockElement(node: ASTNode) : ASTWrapperPsiElement(node), PsiLanguageI
 
     fun getLanguageId(): PsiElement? {
         return findChildByType(ShireTypes.LANGUAGE_ID)
+    }
+
+    fun isShireTemplate(): Boolean {
+        return PsiTreeUtil.findChildOfType(this, ShireExpr::class.java) != null
     }
 
     companion object {

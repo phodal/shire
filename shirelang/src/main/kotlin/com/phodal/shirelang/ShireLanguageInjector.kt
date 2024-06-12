@@ -40,7 +40,12 @@ class ShireLanguageInjector : LanguageInjector {
         val hasCodeContents = host.children.any { it.elementType == ShireTypes.CODE_CONTENTS }
         if (!hasCodeContents) return
 
-        val text = host.getLanguageId()?.text ?: return
+        val text: String = if (host.isShireTemplate()) {
+            "shire"
+        } else {
+            host.getLanguageId()?.text
+        } ?: return
+
         val language = findLanguage(text)
 
         val contentList = CodeBlockElement.obtainFenceContent(host) ?: return
