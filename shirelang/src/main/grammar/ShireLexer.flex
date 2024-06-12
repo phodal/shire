@@ -97,6 +97,7 @@ END                      =end
 
 %{
     private boolean isCodeStart = false;
+    private boolean isInsideShireTemplate = false;
 %}
 
 %{
@@ -336,21 +337,24 @@ END                      =end
   ">"                  { return GT; }
   ">="                 { return GTE; }
   "$"                  { return VARIABLE_START; }
+  "{"                  { return OPEN_BRACE; }
+  "}"                  { return CLOSE_BRACE; }
 
   {NUMBER}             { return NUMBER; }
   {IDENTIFIER}         { return IDENTIFIER; }
   {WHITE_SPACE}        { return WHITE_SPACE; }
-  [^]                  { yypushback(yylength()); yybegin(YYINITIAL);  }
+  [^]                  { yypushback(yylength()); if (isInsideShireTemplate) { yybegin(CODE_BLOCK); } else { yybegin(YYINITIAL); } }
 }
 
 <CODE_BLOCK> {
   {CODE_CONTENT}       { if(isCodeStart) { return codeContent(); } else { yybegin(YYINITIAL); yypushback(yylength()); } }
   {NEWLINE}            { return NEWLINE; }
-  <<EOF>>              { isCodeStart = false; yybegin(YYINITIAL); yypushback(yylength()); }
+  <<EOF>>              { isCodeStart = false; isInsideShireTemplate = false; yybegin(YYINITIAL); yypushback(yylength()); }
 }
 
 <LANG_ID> {
    "```"             { return CODE_BLOCK_START; }
    {LANGUAGE_ID}     { return LANGUAGE_ID;  }
-   [^]               { yypushback(1); yybegin(CODE_BLOCK); }
+   "$"               { isInsideShireTemplate = true; yybegin(EXPR_BLOCK); return VARIABLE_START; }
+   [^]               { yypushback(yylength()); yybegin(CODE_BLOCK); }
 }

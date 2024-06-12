@@ -113,6 +113,7 @@ expr ::=
     | simpleRefExpr
     | literalExpr
     | parenExpr
+    | variableExpr
 
 // See also:
 // b/37137454: Modify databinding expression grammar to allow calls to unqualified methods
@@ -128,6 +129,9 @@ eqComparisonExpr ::= expr eqComparisonOp expr
 ineqComparisonExpr ::= expr ineqComparisonOp expr
 callExpr ::= refExpr '(' expressionList? ')'
 expressionList ::= expr (',' expr)*
+/// variable block
+variableExpr ::= "{" WHITE_SPACE? expr WHITE_SPACE? "}"
+
 
 literalExpr ::= literal
 parenExpr ::= '(' expr ')'
@@ -152,7 +156,7 @@ varAccess ::= OPEN_BRACE WHITE_SPACE? varId WHITE_SPACE? (DOT WHITE_SPACE? varId
 
 varId ::= VARIABLE_ID
 
-code ::=  CODE_BLOCK_START LANGUAGE_ID? NEWLINE? code_contents? CODE_BLOCK_END?
+code ::=  CODE_BLOCK_START (LANGUAGE_ID | VARIABLE_START expr)? NEWLINE? code_contents? CODE_BLOCK_END?
 
 code_contents ::= (NEWLINE | CODE_CONTENT)*
 
