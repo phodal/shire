@@ -43,7 +43,7 @@ class CodeBlockElement(node: ASTNode) : ASTWrapperPsiElement(node), PsiLanguageI
         return findChildByType(ShireTypes.LANGUAGE_ID)
     }
 
-    fun isShireTemplate(): Boolean {
+    fun isShireTemplateCodeBlock(): Boolean {
         return PsiTreeUtil.findChildOfType(this, ShireExpr::class.java) != null
     }
 

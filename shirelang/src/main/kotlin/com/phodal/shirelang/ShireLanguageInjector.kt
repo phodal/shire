@@ -40,25 +40,24 @@ class ShireLanguageInjector : LanguageInjector {
         val hasCodeContents = host.children.any { it.elementType == ShireTypes.CODE_CONTENTS }
         if (!hasCodeContents) return
 
-        val text: String = if (host.isShireTemplate()) {
+        val text: String = if (host.isShireTemplateCodeBlock()) {
             "shire"
         } else {
             host.getLanguageId()?.text
         } ?: return
 
-        val language = findLanguage(text)
-
         val contentList = CodeBlockElement.obtainFenceContent(host) ?: return
         if (contentList.isEmpty()) return
 
+        val language = findLanguage(text)
         injectAsOnePlace(host, language, registrar)
     }
 
     private fun injectAsOnePlace(host: CodeBlockElement, language: Language, registrar: InjectedLanguagePlaces) {
-        val elements = CodeBlockElement.obtainFenceContent(host) ?: return
+        val contentList = CodeBlockElement.obtainFenceContent(host) ?: return
 
-        val first = elements.first()
-        val last = elements.last()
+        val first = contentList.first()
+        val last = contentList.last()
 
         val textRange = TextRange.create(first.startOffsetInParent, last.startOffsetInParent + last.textLength)
         registrar.addPlace(language, textRange, null, null)
