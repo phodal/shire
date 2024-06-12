@@ -42,7 +42,15 @@ enum class OperatorType {
 class Operator(val type: IElementType) : Statement() {
     val operatorType: OperatorType = toType()
 
-    fun toType(): OperatorType {
+    /**
+     * This function converts a ShireTypes enum value to its corresponding OperatorType enum value.
+     * It uses a when expression to match the input ShireTypes enum value to the appropriate OperatorType enum value.
+     * If the input ShireTypes enum value does not match any of the predefined cases, it throws an IllegalArgumentException.
+     *
+     * @return the OperatorType enum value corresponding to the input ShireTypes enum value
+     * @throws IllegalArgumentException if the input ShireTypes enum value is not recognized
+     */
+    private fun toType(): OperatorType {
         return when (type) {
             ShireTypes.OROR -> OperatorType.OR
             ShireTypes.ANDAND -> OperatorType.AND
@@ -55,6 +63,22 @@ class Operator(val type: IElementType) : Statement() {
             ShireTypes.GTE -> OperatorType.GREATER_EQUAL
             else -> throw IllegalArgumentException("Invalid operator type")
         }
+    }
+
+    fun toSymbol(): String {
+        return when (type) {
+            ShireTypes.OROR -> "||"
+            ShireTypes.ANDAND -> "&&"
+            ShireTypes.NOT -> "!"
+            ShireTypes.EQEQ -> "=="
+            ShireTypes.NEQ -> "!="
+            ShireTypes.LT -> "<"
+            ShireTypes.GT -> ">"
+            ShireTypes.LTE -> "<="
+            ShireTypes.GTE -> ">="
+            else -> throw IllegalArgumentException("Invalid operator type")
+        }
+
     }
 }
 
