@@ -16,17 +16,15 @@ import com.phodal.shirelang.psi.ShireFile
 class ShireActionStartupActivity : ProjectActivity {
     override suspend fun execute(project: Project) {
         smartReadAction(project) {
-            obtainShireFiles(project)
-                .forEach {
-                    val psi: ShireFile =
-                        PsiManager.getInstance(project).findFile(it) as? ShireFile ?: return@forEach
-                    val shireConfig = FrontmatterParser.parse(psi) ?: return@forEach
+            obtainShireFiles(project).forEach {
+                val psi: ShireFile = PsiManager.getInstance(project).findFile(it) as? ShireFile ?: return@forEach
+                val shireConfig = FrontmatterParser.parse(psi) ?: return@forEach
 
-                    val configName = shireConfig.name
+                val configName = shireConfig.name
 
-                    val shireActionConfig = DynamicShireActionConfig(configName, shireConfig, psi)
-                    DynamicShireActionService.getInstance().putAction(configName, shireActionConfig)
-                }
+                val shireActionConfig = DynamicShireActionConfig(configName, shireConfig, psi)
+                DynamicShireActionService.getInstance().putAction(configName, shireActionConfig)
+            }
         }
     }
 
