@@ -34,7 +34,7 @@
                                 implementationClass="com.phodal.shirelang.completion.UserCustomCompletionContributor"/>
 
         <lang.foldingBuilder language="Shire"
-                             implementationClass="com.phodal.shirelang.folding.ShireCustomVariableFoldingBuilder"/>
+                             implementationClass="com.phodal.shirelang.folding.ShireFoldingBuilder"/>
 
         <languageInjector implementation="com.phodal.shirelang.ShireLanguageInjector"/>
 

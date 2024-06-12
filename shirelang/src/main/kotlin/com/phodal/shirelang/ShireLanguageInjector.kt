@@ -41,7 +41,7 @@ class ShireLanguageInjector : LanguageInjector {
         if (!hasCodeContents) return
 
         val text: String = if (host.isShireTemplateCodeBlock()) {
-            "shire"
+            ShireLanguage.INSTANCE.id
         } else {
             host.getLanguageId()?.text
         } ?: return
