@@ -27,11 +27,15 @@ import com.phodal.shirelang.run.runner.ShireDefaultRunner
 import java.awt.BorderLayout
 import javax.swing.JComponent
 
+/**
+ * ShireRunConfigurationProfileState is a class that represents the state of a run configuration profile in the Shire plugin for Kotlin.
+ * It implements the RunProfileState interface.
+ *
+ */
 open class ShireRunConfigurationProfileState(
     private val myProject: Project,
     private val configuration: ShireConfiguration,
 ) : RunProfileState {
-
     override fun execute(executor: Executor?, runner: ProgramRunner<*>): ExecutionResult {
         val processHandler = ShireProcessHandler(configuration.name)
         ProcessTerminatedListener.attach(processHandler)
@@ -97,10 +101,13 @@ open class ShireRunConfigurationProfileState(
         val agent = compileResult.executeAgent
 
         output.split("\n").forEach {
-            if (it.contains(SHIRE_ERROR)) {
-                console.print(it, ConsoleViewContentType.LOG_ERROR_OUTPUT)
-            } else {
-                console.print(it, ConsoleViewContentType.USER_INPUT)
+            when {
+                it.contains(SHIRE_ERROR) -> {
+                    console.print(it, ConsoleViewContentType.LOG_ERROR_OUTPUT)
+                }
+                else -> {
+                    console.print(it, ConsoleViewContentType.USER_INPUT)
+                }
             }
             console.print("\n", ConsoleViewContentType.NORMAL_OUTPUT)
         }

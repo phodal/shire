@@ -3,8 +3,11 @@ package com.phodal.shirelang.compile
 import com.intellij.lang.Language
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.fileEditor.FileEditorManager
+import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
+import com.intellij.psi.PsiManager
 import com.intellij.psi.PsiNameIdentifierOwner
 import com.phodal.shirelang.completion.provider.ContextVariable
 import org.apache.velocity.VelocityContext
@@ -74,6 +77,39 @@ class VariableTemplateCompiler(
             "ruby" -> "#"
             "shell" -> "#"
             else -> "-"
+        }
+    }
+
+    companion object {
+        /**
+         * This function returns the default editor for the given project.
+         * It takes a Project object as a parameter and returns an Editor object.
+         * It uses the FileEditorManager to get the selected text editor for the project.
+         * If no editor is selected, it returns null.
+         */
+        fun defaultEditor(myProject: Project): Editor? {
+            return FileEditorManager.getInstance(myProject).selectedTextEditor
+        }
+
+        /**
+         * This function returns the PsiElement at the current caret position in the editor.
+         *
+         * @param myProject the project to which the editor belongs
+         * @param currentEditor the current editor where the caret position is located
+         * @return the PsiElement at the current caret position, or null if not found
+         */
+        fun defaultElement(myProject: Project, currentEditor: Editor?): PsiElement? {
+            return currentEditor?.caretModel?.currentCaret?.offset?.let {
+                val psiFile = currentEditor.let { editor ->
+                    val psiFile = editor.virtualFile?.let { file ->
+                        PsiManager.getInstance(myProject).findFile(file)
+                    }
+
+                    psiFile
+                } ?: return@let null
+
+                psiFile.findElementAt(it) ?: return@let psiFile
+            }
         }
     }
 }

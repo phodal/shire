@@ -12,5 +12,9 @@ abstract class ShireRunner(
     open val myProject: Project,
     open val prompt: String,
 ) {
+    fun compileShireTemplate() {
+        // convert template again
+    }
+
     abstract fun execute()
 }
