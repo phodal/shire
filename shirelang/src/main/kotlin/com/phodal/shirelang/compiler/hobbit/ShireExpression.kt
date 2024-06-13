@@ -122,8 +122,12 @@ data class Comparison(
     val value: FrontMatterType,
 ) : Statement() {
     override fun evaluate(variables: Map<String, String>): Boolean {
-        val variableValue = ""
-        val value = ""
+        val variableValue = when(variable.value) {
+            is MethodCall -> variable.value.evaluate(variables)
+            else -> throw IllegalArgumentException("Invalid variable type: ${variable.value}")
+        }
+
+        val value = value.value
 
         return when (operator.type) {
             OperatorType.Equal -> variableValue == value
@@ -155,7 +159,6 @@ data class StringComparison(
             StringOperator.StartsWith -> variable.startsWith(value)
             StringOperator.EndsWith -> variable.endsWith(value)
             StringOperator.Matches -> variable.matches(Pattern.compile(value).toRegex())
-            else -> throw IllegalArgumentException("Invalid string comparison operator: ${operator.type}")
         }
     }
 }
@@ -208,8 +211,14 @@ data class MethodCall(
     val arguments: List<Any>,
 ) : Statement() {
     override fun evaluate(variables: Map<String, String>): Any {
-        val value = objectName.value as? String ?: return false
-        return when (methodName.value) {
+        val value = when(objectName) {
+            is FrontMatterType.STRING -> variables[objectName.value]
+            is FrontMatterType.Variable -> variables[objectName.value]
+            else -> null
+        }  ?: throw IllegalArgumentException("Variable not found: ${objectName.value}")
+
+        val methodName = methodName.value
+        return when (methodName) {
             "length" -> value.length
             "trim" -> value.trim()
             "contains" -> value.contains(arguments[0] as String)
@@ -219,6 +228,8 @@ data class MethodCall(
             "uppercase" -> value.uppercase()
             "isEmpty" -> value.isEmpty()
             "isNotEmpty" -> value.isNotEmpty()
+            "first" -> value.first().toString()
+            "last" -> value.last().toString()
             else -> throw IllegalArgumentException("Unsupported method: $methodName")
         }
     }

@@ -161,6 +161,7 @@ class ShireCompileTest : BasePlatformTestCase() {
 }"""
         )
 
-        (when_.value as LogicalExpression).evaluate(variables)
+        val result = (when_.value as LogicalExpression).evaluate(variables)
+        assertTrue(result)
     }
 }
