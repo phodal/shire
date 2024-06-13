@@ -103,7 +103,7 @@ object FrontmatterParser {
     private fun parseRefExpr(expr: PsiElement?): FrontMatterType {
         return when (expr?.elementType) {
             ShireTypes.LITERAL_EXPR -> {
-                FrontMatterType.STRING(expr!!.text)
+                parseLiteral(expr!!)
             }
 
             ShireTypes.REF_EXPR -> {
@@ -193,7 +193,7 @@ object FrontmatterParser {
 
         return when (element.firstChild.elementType) {
             ShireTypes.IDENTIFIER -> {
-                FrontMatterType.STRING(element.text)
+                FrontMatterType.IDENTIFIER(element.text)
             }
 
             ShireTypes.DATE -> {
