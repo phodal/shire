@@ -227,7 +227,7 @@ data class MethodCall(
             else -> null
         }  ?: throw IllegalArgumentException("Variable not found: ${objectName.value}")
 
-        val parameters = this.arguments.joinToString(", ") {
+        val parameters = this.arguments.map {
             when (it) {
                 is FrontMatterType -> it.display()
                 else -> it.toString()

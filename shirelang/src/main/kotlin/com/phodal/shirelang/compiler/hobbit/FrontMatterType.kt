@@ -12,7 +12,7 @@ sealed class FrontMatterType(val value: Any) {
 
     class STRING(value: String) : FrontMatterType(value) {
         override fun display(): String {
-            return "\"$value\""
+            return "$value"
         }
     }
 

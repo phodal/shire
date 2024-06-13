@@ -1,4 +1,4 @@
-package com.phodal.shirelang.completion.provider
+package com.phodal.shirelang.completion.dataprovider
 
 import com.phodal.shirelang.compile.VariableTemplateCompiler
 

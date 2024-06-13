@@ -6,18 +6,18 @@ import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.codeInsight.completion.PrioritizedLookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.util.ProcessingContext
-import com.phodal.shirelang.completion.dataprovider.ContextVariable
+import com.phodal.shirelang.actions.validator.PsiVariables
 
-class VariableCompletionProvider : CompletionProvider<CompletionParameters>() {
+class WhenConditionCompletionProvider : CompletionProvider<CompletionParameters>() {
     override fun addCompletions(
         parameters: CompletionParameters,
         context: ProcessingContext,
         result: CompletionResultSet,
     ) {
-        ContextVariable.all().forEach {
+        PsiVariables.completionProvider().forEach {
             val withTypeText =
                 PrioritizedLookupElement.withPriority(
-                    LookupElementBuilder.create(it.variable).withTypeText(it.description, true),
+                    LookupElementBuilder.create(it.key).withTypeText(it.value, true),
                     99.0
                 )
             result.addElement(withTypeText)

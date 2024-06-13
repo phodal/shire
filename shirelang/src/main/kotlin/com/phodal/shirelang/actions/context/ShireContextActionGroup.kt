@@ -34,6 +34,7 @@ class DynamicShireAction(private val config: DynamicShireActionConfig) :
 
         WhenConditionValidator.isAvailable(conditions, psiFile)?.let {
             e.presentation.isEnabled = it
+            e.presentation.isVisible = it
         }
     }
 
