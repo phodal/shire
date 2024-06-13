@@ -37,20 +37,18 @@ Example:
 
 ```shire
 ---
-name: "Object Demo"
-description: "A simple object demo"
-interaction: AppendCursor
+name: "AutoTest"
+description: "AutoTest"
 actionLocation: ContextMenu
-postProcessors: ["VerifyCode", "RunCode"]
-filenameRules:
-  "**/*.java": "You MUST use should_xx_xx style for test method name"
+interaction: AppendCursor
+when: $fileName.contains(".java") && $filePath.contains("src/main/java")
 ---
 
-Generate code for API.
+@ext-context.autotest
 
-@api-market intergration User login oauth API
+Write unit test for following ${context.language} code.
 
-Here is current $language code:
+${context.frameworkContext}
 
 /file:src/main/kotlin/com/phodal/blog/controller/UserController.kt
 ```
