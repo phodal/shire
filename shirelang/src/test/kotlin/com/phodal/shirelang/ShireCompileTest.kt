@@ -164,4 +164,22 @@ class ShireCompileTest : BasePlatformTestCase() {
         val result = (when_.value as LogicalExpression).evaluate(variables)
         assertTrue(result)
     }
+
+    fun testShouldHandleForWhenConditionForContains() {
+        val code = """
+            ---
+            when: ${'$'}fileName.contains(".java") && ${'$'}filePath.contains("src/main/java")
+            ---
+            
+            Summary webpage:
+        """.trimIndent()
+
+        val file = myFixture.configureByText("test.shire", code)
+
+        val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
+        assertEquals("\n\nSummary webpage:", compile.output)
+        val when_ = compile.config?.when_
+
+        assertEquals(when_!!.display(), "\$fileName.contains(\".java\") && \$filePath.contains(\"src/main/java\")")
+    }
 }

@@ -16,7 +16,15 @@ abstract class Statement {
             is StringComparison -> "${this.variable} ${this.operator.display()} ${this.value}"
             is LogicalExpression -> "${this.left.display()} ${this.operator.display} ${this.right.display()}"
             is NotExpression -> "!${this.operand.display()}"
-            is MethodCall -> "${this.objectName.display()}.${this.methodName.display()}(${this.arguments.joinToString(", ")})"
+            is MethodCall -> {
+                val parameters = this.arguments.joinToString(", ") {
+                    when (it) {
+                        is FrontMatterType -> it.display()
+                        else -> it.toString()
+                    }
+                }
+                "${this.objectName.display()}.${this.methodName.display()}($parameters)"
+            }
             else -> ""
         }
     }
@@ -219,13 +227,20 @@ data class MethodCall(
             else -> null
         }  ?: throw IllegalArgumentException("Variable not found: ${objectName.value}")
 
+        val parameters = this.arguments.joinToString(", ") {
+            when (it) {
+                is FrontMatterType -> it.display()
+                else -> it.toString()
+            }
+        }
+
         val methodName = methodName.value
         return when (methodName) {
             "length" -> value.length
             "trim" -> value.trim()
-            "contains" -> value.contains(arguments[0] as String)
-            "startsWith" -> value.startsWith(arguments[0] as String)
-            "endsWith" -> value.endsWith(arguments[0] as String)
+            "contains" -> value.contains(parameters[0] as String)
+            "startsWith" -> value.startsWith(parameters[0] as String)
+            "endsWith" -> value.endsWith(parameters[0] as String)
             "lowercase" -> value.lowercase()
             "uppercase" -> value.uppercase()
             "isEmpty" -> value.isEmpty()
