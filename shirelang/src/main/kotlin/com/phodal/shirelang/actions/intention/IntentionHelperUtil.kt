@@ -28,11 +28,9 @@ class ShireIntentionAction(private val hobbitHole: HobbitHole?, file: PsiFile) :
         // if not set when condition, will always available
         val conditions = hobbitHole?.when_ ?: return true
 
-        val result = conditions.all { condition ->
-            condition.check(project, editor, file)
-        }
+        /// todo: add execute conditions
 
-        return result
+        return false
     }
 
     override fun invoke(project: Project, editor: Editor?, file: PsiFile?) {

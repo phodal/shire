@@ -150,6 +150,6 @@ class ShireCompileTest : BasePlatformTestCase() {
         assertEquals("\n\nSummary webpage:", compile.output)
         val when_ = compile.config?.when_
 
-        assertEquals(0, when_?.size)
+        assertEquals(when_!!.display(), "\$selection.length() == 1 && \$selection.first() == \"file\"")
     }
 }

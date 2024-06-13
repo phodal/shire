@@ -3,7 +3,20 @@ package com.phodal.shirelang.compiler.hobbit
 /**
  * Represents the base class for all statements.
  */
-abstract class Statement
+abstract class Statement {
+    fun display(): String {
+        return when (this) {
+            is Operator -> this.type.display
+            is StringOperatorStatement -> this.type.display
+            is Comparison -> "${this.variable.display()} ${this.operator.display()} ${this.value.display()}"
+            is StringComparison -> "${this.variable} ${this.operator.display()} ${this.value}"
+            is LogicalExpression -> "${this.left.display()} ${this.operator.display} ${this.right.display()}"
+            is NotExpression -> "!${this.operand.display()}"
+            is MethodCall -> "${this.objectName.display()}.${this.methodName.display()}(${this.arguments.joinToString(", ")})"
+            else -> ""
+        }
+    }
+}
 
 /**
  * Enumeration of operator types used in logical and comparison expressions.

@@ -106,33 +106,26 @@ object FrontmatterParser {
                 parseLiteral(expr!!)
             }
 
+            // fake refExpr ::= expr? '.' IDENTIFIER
             ShireTypes.REF_EXPR -> {
-                val ref = expr!!.children.last()
-                when (ref.elementType) {
-                    ShireTypes.LITERAL_EXPR -> {
-                        parseLiteral(ref)
-                    }
+                val refExpr = expr as ShireRefExpr
+                val left = parseRefExpr(refExpr.expr)
+                val id = refExpr.expr?.nextSibling?.nextSibling
 
-                    ShireTypes.CALL_EXPR -> {
-                        parseRefExpr(ref)
-                    }
-
-                    else -> {
-                        logger.warn("parseRefExpr.REF_EXPR, Unknown ref type: ${ref.elementType}")
-                        FrontMatterType.STRING("")
-                    }
-                }
+                val right = FrontMatterType.IDENTIFIER(id?.text ?: "")
+                val methodCall = MethodCall(left, right, listOf())
+                FrontMatterType.Expression(methodCall)
             }
 
+            // callExpr ::= refExpr '(' expressionList? ')'
             ShireTypes.CALL_EXPR -> {
-                // fixme: for $selection.length will be $selection, selection
                 val refExpr = PsiTreeUtil
                     .findChildrenOfType(expr, ShireExpr::class.java)
                     .first() as ShireRefExpr
 
                 val left = parseRefExpr(refExpr.expr)
                 val id = refExpr.expr?.nextSibling?.nextSibling
-                val right = FrontMatterType.STRING(id?.text ?: "")
+                val right = FrontMatterType.IDENTIFIER(id?.text ?: "")
 
                 val methodCall = MethodCall(left, right, listOf())
                 FrontMatterType.Expression(methodCall)
@@ -149,7 +142,7 @@ object FrontmatterParser {
         val firstChild = ref.firstChild
         return when (firstChild.elementType) {
             ShireTypes.IDENTIFIER -> {
-                FrontMatterType.STRING(ref.text)
+                FrontMatterType.IDENTIFIER(ref.text)
             }
 
             ShireTypes.NUMBER -> {

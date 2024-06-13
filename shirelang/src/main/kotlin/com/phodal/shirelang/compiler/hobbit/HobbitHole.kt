@@ -80,7 +80,7 @@ open class HobbitHole(
      *
      * Which is used for: [IntentionAction.isAvailable], [DumbAwareAction.update] to check is show menu.
      */
-    val when_: List<VariableCondition> = emptyList(),
+    val when_: FrontMatterType.Expression? = null
 ) : Smials {
     fun pickupElement() {
         this.selectionStrategy.select()
@@ -164,12 +164,7 @@ open class HobbitHole(
                 }
             }
 
-            val whenCondition = mutableListOf<VariableCondition>()
-            val whenMap = frontMatterMap[WHEN] as? FrontMatterType.Expression
-            whenMap?.let {
-                // convert in here
-                println(it)
-            }
+            val whenCondition = frontMatterMap[WHEN] as? FrontMatterType.Expression
 
             return HobbitHole(
                 name,
