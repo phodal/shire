@@ -7,6 +7,7 @@ import java.util.regex.Pattern
  */
 abstract class Statement {
     abstract fun evaluate(variables: Map<String, String>): Any
+
     fun display(): String {
         return when (this) {
             is Operator -> this.type.display
@@ -124,6 +125,7 @@ data class Comparison(
     override fun evaluate(variables: Map<String, String>): Boolean {
         val variableValue = when(variable.value) {
             is MethodCall -> variable.value.evaluate(variables)
+            is FrontMatterType.STRING -> variable.value.value
             else -> throw IllegalArgumentException("Invalid variable type: ${variable.value}")
         }
 

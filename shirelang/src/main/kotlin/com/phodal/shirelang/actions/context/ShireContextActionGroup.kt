@@ -8,6 +8,7 @@ import com.phodal.shirelang.ShireIcons
 import com.phodal.shirelang.actions.ShireRunFileAction
 import com.phodal.shirelang.actions.dynamic.DynamicShireActionConfig
 import com.phodal.shirelang.actions.dynamic.DynamicShireActionService
+import com.phodal.shirelang.actions.validator.WhenConditionValidator
 
 class ShireContextActionGroup : ActionGroup() {
     override fun getActionUpdateThread() = ActionUpdateThread.BGT
@@ -27,6 +28,15 @@ class ShireContextActionGroup : ActionGroup() {
 
 class DynamicShireAction(private val config: DynamicShireActionConfig) :
     DumbAwareAction(config.name, config.hole?.description, ShireIcons.DEFAULT) {
+    override fun update(e: AnActionEvent) {
+        val conditions = config.hole?.when_ ?: return
+        val psiFile = e.getData(CommonDataKeys.PSI_FILE) ?: return
+
+        WhenConditionValidator.isAvailable(conditions, psiFile)?.let {
+            e.presentation.isEnabled = it
+        }
+    }
+
     override fun actionPerformed(e: AnActionEvent) {
         val project = e.project ?: return
         val editor = FileEditorManager.getInstance(project).selectedTextEditor
