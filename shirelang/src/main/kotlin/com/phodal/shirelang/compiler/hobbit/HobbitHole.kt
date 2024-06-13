@@ -95,7 +95,7 @@ open class HobbitHole(
     }
 
     companion object {
-        const val CONFIG_ID = "name"
+        const val NAME = "name"
         const val ACTION_LOCATION = "actionLocation"
         const val INTERACTION = "interaction"
         const val STRATEGY_SELECTION = "selectionStrategy"
@@ -115,7 +115,7 @@ open class HobbitHole(
          */
         fun keys(): Map<String, String> {
             return mapOf(
-                CONFIG_ID to "The display name of the action",
+                NAME to "The display name of the action",
                 DESCRIPTION to "The tips for the action",
                 INTERACTION to "The output of the action can be a file, a string, etc.",
                 ACTION_LOCATION to "The location of the action, can [ShireActionLocation]",
@@ -124,15 +124,15 @@ open class HobbitHole(
             )
         }
 
-        fun from(frontMatterMap: MutableMap<String, FrontMatterType>): HobbitHole? {
-            val name = frontMatterMap[CONFIG_ID]?.value as? String ?: return null
+        fun from(frontMatterMap: MutableMap<String, FrontMatterType>): HobbitHole {
+            val name = frontMatterMap[NAME]?.value as? String ?: ""
             val description = frontMatterMap[DESCRIPTION]?.value as? String ?: ""
             val interaction = frontMatterMap[INTERACTION]?.value as? String ?: ""
             val actionLocation = frontMatterMap[ACTION_LOCATION]?.value as? String ?: ShireActionLocation.default()
 
             val data = mutableMapOf<String, FrontMatterType>()
             frontMatterMap.forEach { (key, value) ->
-                if (key !in listOf(CONFIG_ID, DESCRIPTION, INTERACTION, ACTION_LOCATION)) {
+                if (key !in listOf(NAME, DESCRIPTION, INTERACTION, ACTION_LOCATION)) {
                     data[key] = value
                 }
             }

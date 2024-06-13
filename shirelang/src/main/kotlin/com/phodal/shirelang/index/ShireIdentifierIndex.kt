@@ -26,7 +26,7 @@ class ShireIdentifierIndex: FileBasedIndexExtension<String, Int>() {
         val result = mutableMapOf<String, Int>()
         val visitor = object : ShireVisitor() {
             override fun visitElement(element: PsiElement) {
-                if (element is ShireFrontMatterKey && element.text == HobbitHole.CONFIG_ID) {
+                if (element is ShireFrontMatterKey && element.text == HobbitHole.NAME) {
                     result[element.text] = element.textOffset
                 }
 
