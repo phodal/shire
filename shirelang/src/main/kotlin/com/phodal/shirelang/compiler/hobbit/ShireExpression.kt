@@ -229,6 +229,7 @@ data class MethodCall(
 
         val parameters = this.arguments.map {
             when (it) {
+                is FrontMatterType.STRING -> it.display().removeSurrounding("\"")
                 is FrontMatterType -> it.display()
                 else -> it.toString()
             }

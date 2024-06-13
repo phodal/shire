@@ -28,6 +28,11 @@ class ShireContextMenuActionGroup : ActionGroup() {
 
 class ShireContextMenuAction(private val config: DynamicShireActionConfig) :
     DumbAwareAction(config.name, config.hole?.description, ShireIcons.DEFAULT) {
+
+    override fun getActionUpdateThread(): ActionUpdateThread {
+        return ActionUpdateThread.BGT
+    }
+
     override fun update(e: AnActionEvent) {
         val conditions = config.hole?.when_ ?: return
         val psiFile = e.getData(CommonDataKeys.PSI_FILE) ?: return
