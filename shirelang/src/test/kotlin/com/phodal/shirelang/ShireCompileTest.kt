@@ -5,6 +5,7 @@ import com.phodal.shirecore.action.ShireActionLocation
 import com.phodal.shirecore.agent.InteractionType
 import com.phodal.shirelang.compiler.FrontmatterParser
 import com.phodal.shirelang.compiler.ShireCompiler
+import com.phodal.shirelang.compiler.hobbit.LogicalExpression
 import com.phodal.shirelang.compiler.hobbit.PatternFun
 import com.phodal.shirelang.psi.ShireFile
 
@@ -138,7 +139,7 @@ class ShireCompileTest : BasePlatformTestCase() {
     fun testShouldHandleForWhenCondition() {
         val code = """
             ---
-            when: ${'$'}selection.length == 1 && ${'$'}selection.first() == 'file'
+            when: ${'$'}selection.length >= 1 && ${'$'}selection.first() == 'p'
             ---
             
             Summary webpage:
@@ -150,6 +151,16 @@ class ShireCompileTest : BasePlatformTestCase() {
         assertEquals("\n\nSummary webpage:", compile.output)
         val when_ = compile.config?.when_
 
-        assertEquals(when_!!.display(), "\$selection.length() == 1 && \$selection.first() == \"file\"")
+        assertEquals(when_!!.display(), "\$selection.length() >= 1 && \$selection.first() == \"p\"")
+
+        val variables: Map<String, String> = mapOf(
+            "selection" to """public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, World");
+    }
+}"""
+        )
+
+        (when_.value as LogicalExpression).evaluate(variables)
     }
 }

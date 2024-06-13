@@ -6,7 +6,7 @@ import java.util.regex.Pattern
  * Represents the base class for all statements.
  */
 abstract class Statement {
-    abstract fun evaluate(): Any
+    abstract fun evaluate(variables: Map<String, String>): Any
     fun display(): String {
         return when (this) {
             is Operator -> this.type.display
@@ -53,6 +53,23 @@ sealed class OperatorType(val display: String) {
 
     /** Greater than or equal operator (>=). */
     object GreaterEqual : OperatorType(">=")
+
+    companion object {
+        fun fromString(operator: String): OperatorType {
+            return when (operator) {
+                "||" -> Or
+                "&&" -> And
+                "!" -> Not
+                "==" -> Equal
+                "!=" -> NotEqual
+                "<" -> LessThan
+                ">" -> GreaterThan
+                "<=" -> LessEqual
+                ">=" -> GreaterEqual
+                else -> throw IllegalArgumentException("Invalid operator: $operator")
+            }
+        }
+    }
 }
 
 /**
@@ -80,7 +97,7 @@ sealed class StringOperator(val display: String) {
  * @property type The type of operator.
  */
 data class Operator(val type: OperatorType) : Statement() {
-    override fun evaluate() = type.display
+    override fun evaluate(variables: Map<String, String>) = type.display
 }
 
 /**
@@ -89,7 +106,7 @@ data class Operator(val type: OperatorType) : Statement() {
  * @property type The type of string operator.
  */
 data class StringOperatorStatement(val type: StringOperator) : Statement() {
-    override fun evaluate() = type.display
+    override fun evaluate(variables: Map<String, String>) = type.display
 }
 
 /**
@@ -104,7 +121,7 @@ data class Comparison(
     val operator: Operator,
     val value: FrontMatterType,
 ) : Statement() {
-    override fun evaluate(): Boolean {
+    override fun evaluate(variables: Map<String, String>): Boolean {
         val variableValue = ""
         val value = ""
 
@@ -132,7 +149,7 @@ data class StringComparison(
     val operator: StringOperatorStatement,
     val value: String,
 ) : Statement() {
-    override fun evaluate(): Boolean {
+    override fun evaluate(variables: Map<String, String>): Boolean {
         return when (operator.type) {
             StringOperator.Contains -> variable.contains(value)
             StringOperator.StartsWith -> variable.startsWith(value)
@@ -155,9 +172,9 @@ data class LogicalExpression(
     val operator: OperatorType,
     val right: Statement,
 ) : Statement() {
-    override fun evaluate(): Boolean {
-        val leftValue = left.evaluate() as Boolean
-        val rightValue = right.evaluate() as Boolean
+    override fun evaluate(variables: Map<String, String>): Boolean {
+        val leftValue = left.evaluate(variables) as Boolean
+        val rightValue = right.evaluate(variables) as Boolean
 
         return when (operator) {
             OperatorType.And -> leftValue && rightValue
@@ -173,11 +190,10 @@ data class LogicalExpression(
  * @property operand The operand to be negated.
  */
 data class NotExpression(val operand: Statement) : Statement() {
-    override fun evaluate(): Boolean {
-        return !(operand.evaluate() as Boolean)
+    override fun evaluate(variables: Map<String, String>): Boolean {
+        return !(operand.evaluate(variables) as Boolean)
     }
 }
-
 
 /**
  * Represents a method call expression, including the object and method being called.
@@ -191,7 +207,7 @@ data class MethodCall(
     val methodName: FrontMatterType,
     val arguments: List<Any>,
 ) : Statement() {
-    override fun evaluate(): Any {
+    override fun evaluate(variables: Map<String, String>): Any {
         val value = objectName.value as? String ?: return false
         return when (methodName.value) {
             "length" -> value.length

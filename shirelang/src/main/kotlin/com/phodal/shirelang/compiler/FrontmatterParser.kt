@@ -94,6 +94,17 @@ object FrontmatterParser {
             Comparison(variable, Operator(OperatorType.Equal), value)
         }
 
+        // INEQ_COMPARISON_EXPR
+        ShireTypes.INEQ_COMPARISON_EXPR -> {
+            val variable = parseRefExpr(expr.children.firstOrNull())
+            val value = parseRefExpr(expr.children.lastOrNull())
+
+            val exp = expr as ShireIneqComparisonExpr
+            val operatorType = OperatorType.fromString(exp.ineqComparisonOp.text)
+
+            Comparison(variable, Operator(operatorType), value)
+        }
+
         else -> {
             logger.warn("parseExpr, Unknown expression type: ${expr.elementType}")
             Comparison(FrontMatterType.STRING(""), Operator(OperatorType.Equal), FrontMatterType.STRING(""))
