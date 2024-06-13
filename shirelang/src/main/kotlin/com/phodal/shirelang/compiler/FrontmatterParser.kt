@@ -9,6 +9,7 @@ import com.intellij.psi.util.elementType
 import com.phodal.shirelang.compiler.hobbit.*
 import com.phodal.shirelang.compiler.hobbit.ShirePatternAction
 import com.phodal.shirelang.psi.*
+import org.jaxen.expr.LiteralExpr
 
 object FrontmatterParser {
     private val logger = logger<FrontmatterParser>()
@@ -106,28 +107,24 @@ object FrontmatterParser {
 
             ShireTypes.REF_EXPR -> {
                 val ref = expr!!.children.firstOrNull()!!
-                when (ref?.elementType) {
-                    ShireTypes.IDENTIFIER -> {
-                        FrontMatterType.STRING(ref.text)
+                when (ref.elementType) {
+                    ShireTypes.LITERAL_EXPR -> {
+                        parseLiteral(ref)
                     }
 
-                    ShireTypes.NUMBER -> {
-                        FrontMatterType.NUMBER(ref.text.toInt())
-                    }
-
-                    ShireTypes.QUOTE_STRING -> {
-                        val value = ref.text.substring(1, ref.text.length - 1)
-                        FrontMatterType.STRING(value)
+                    ShireTypes.CALL_EXPR -> {
+                        parseRefExpr(ref)
                     }
 
                     else -> {
-                        logger.warn("parseRefExpr, Unknown ref type: ${ref?.elementType}")
+                        logger.warn("parseRefExpr.REF_EXPR, Unknown ref type: ${ref.elementType}")
                         FrontMatterType.STRING("")
                     }
                 }
             }
 
             ShireTypes.CALL_EXPR -> {
+                // fixme: for $selection.length will be $selection, selection
                 val childrens = PsiTreeUtil.findChildrenOfType(expr, ShireExpr::class.java)
                 val left = parseRefExpr(childrens.first())
                 // next will be dot
@@ -140,6 +137,34 @@ object FrontmatterParser {
             else -> {
                 logger.warn("parseRefExpr, Unknown expression type: ${expr?.elementType}")
                 FrontMatterType.STRING("")
+            }
+        }
+    }
+
+    private fun parseLiteral(ref: PsiElement): FrontMatterType {
+        val firstChild = ref.firstChild
+        return when (firstChild.elementType) {
+            ShireTypes.IDENTIFIER -> {
+                FrontMatterType.STRING(ref.text)
+            }
+
+            ShireTypes.NUMBER -> {
+                FrontMatterType.NUMBER(ref.text.toInt())
+            }
+
+            ShireTypes.QUOTE_STRING -> {
+                val value = ref.text.substring(1, ref.text.length - 1)
+                FrontMatterType.STRING(value)
+            }
+
+            ShireTypes.VARIABLE_START -> {
+                val next = ref.lastChild
+                FrontMatterType.Variable(next.text)
+            }
+
+            else -> {
+                logger.warn("parseLiteral, Unknown ref type: ${firstChild.elementType}")
+                FrontMatterType.STRING(ref.text)
             }
         }
     }

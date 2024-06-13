@@ -1,6 +1,8 @@
 package com.phodal.shirelang.compiler.hobbit
 
+import com.intellij.codeInsight.intention.IntentionAction
 import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
 import com.phodal.shirecore.action.ShireActionLocation
@@ -72,6 +74,12 @@ open class HobbitHole(
      */
     val variables: MutableMap<String, List<VariablePatternFunc>> = mutableMapOf(),
 
+    /**
+     * This code snippet declares a variable 'when_' of type List<VariableCondition> and initializes it with an empty list.
+     * 'when_' is a list that stores VariableCondition objects.
+     *
+     * Which is used for: [IntentionAction.isAvailable], [DumbAwareAction.update] to check is show menu.
+     */
     val when_: List<VariableCondition> = emptyList(),
 ) : Smials {
     fun pickupElement() {
@@ -156,8 +164,12 @@ open class HobbitHole(
                 }
             }
 
-            val when_ = mutableListOf<VariableCondition>()
-            val whenMap = frontMatterMap[WHEN] as? FrontMatterType.OBJECT
+            val whenCondition = mutableListOf<VariableCondition>()
+            val whenMap = frontMatterMap[WHEN] as? FrontMatterType.Expression
+            whenMap?.let {
+                // convert in here
+                println(it)
+            }
 
             return HobbitHole(
                 name,
@@ -168,7 +180,8 @@ open class HobbitHole(
                 additionalData = data,
                 selectionStrategy = SelectElementStrategy.fromString(selectionStrategy),
                 postProcessors = postProcessors,
-                variables = variables
+                variables = variables,
+                when_ = whenCondition
             )
         }
     }

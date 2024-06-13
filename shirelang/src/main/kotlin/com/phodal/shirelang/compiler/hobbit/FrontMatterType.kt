@@ -25,6 +25,7 @@ sealed class FrontMatterType(val value: Any) {
      */
     class CaseMatch(value: Map<String, PATTERN>) : FrontMatterType(value)
 
+    class Variable(value: String) : FrontMatterType(value)
     /**
      * The expression
      */

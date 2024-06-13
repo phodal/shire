@@ -150,6 +150,6 @@ class ShireCompileTest : BasePlatformTestCase() {
         assertEquals("\n\nSummary webpage:", compile.output)
         val when_ = compile.config?.when_
 
-        assertEquals(0, when_?.size)
+        assertEquals(null, when_?.size)
     }
 }
