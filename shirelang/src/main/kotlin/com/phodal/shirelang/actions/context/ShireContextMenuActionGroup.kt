@@ -10,7 +10,7 @@ import com.phodal.shirelang.actions.dynamic.DynamicShireActionConfig
 import com.phodal.shirelang.actions.dynamic.DynamicShireActionService
 import com.phodal.shirelang.actions.validator.WhenConditionValidator
 
-class ShireContextActionGroup : ActionGroup() {
+class ShireContextMenuActionGroup : ActionGroup() {
     override fun getActionUpdateThread() = ActionUpdateThread.BGT
 
     override fun update(e: AnActionEvent) {
@@ -21,12 +21,12 @@ class ShireContextActionGroup : ActionGroup() {
         val configs: List<DynamicShireActionConfig> =
             DynamicShireActionService.getInstance().getAction(ShireActionLocation.CONTEXT_MENU)
         return configs.map { actionConfig ->
-            DynamicShireAction(actionConfig)
+            ShireContextMenuAction(actionConfig)
         }.toTypedArray()
     }
 }
 
-class DynamicShireAction(private val config: DynamicShireActionConfig) :
+class ShireContextMenuAction(private val config: DynamicShireActionConfig) :
     DumbAwareAction(config.name, config.hole?.description, ShireIcons.DEFAULT) {
     override fun update(e: AnActionEvent) {
         val conditions = config.hole?.when_ ?: return
