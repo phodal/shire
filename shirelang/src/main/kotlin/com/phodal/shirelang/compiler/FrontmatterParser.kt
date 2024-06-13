@@ -299,6 +299,10 @@ object FrontmatterParser {
                     processor.add(PatternFun.Print(*args.toTypedArray()))
                 }
 
+                "cat" -> {
+                    processor.add(PatternFun.Cat(*args.toTypedArray()))
+                }
+
                 else -> {
                     // remove surrounding quotes
                     val text = expr.text.removeSurrounding("\"")

@@ -74,6 +74,12 @@ sealed class PatternFun(open val funcName: String) {
      */
     class Print(vararg val texts: String) : PatternFun("print")
 
+    /**
+     * Cat subclass for concatenating one or more files.
+     * Paths can be absolute or relative to the current working directory.
+     */
+    class Cat(vararg val paths: String) : PatternFun("cat")
+
     companion object {
         /**
          * Creates a list of PatternFun instances from a FrontMatterType object.
