@@ -18,6 +18,39 @@ nav_order: 4
 
 其中的 `/*.java/` 是模式（Pattern），`{ grep("error.log") | sort | xargs("rm")}` 是动作（Action）。
 
+## Shire Pattern-Action
+
+Shire 使用 Intellij 自带的正则表达式来匹配，以支持代码高亮、语法检查等，方便用户编写。
+
+```regexp
+.*.java
+```
+
+### Pattern-Action Pipeline 示例
+
+```shire
+---
+variables:
+  "var2": /.*.java/ { grep("error.log") | sort | cat }
+---
+```
+
+### Pattern-Action multiple CASE 示例
+
+```shire
+---
+variables:
+  "testTemplate": /\(.*\).java/ {
+    case "$1" {
+      "Controller" { cat(".shire/templates/ControllerTest.java") }
+      "Service" { cat(".shire/templates/ServiceTest.java") }
+      default  { cat(".shire/templates/DefaultTest.java") }
+    }
+  }
+---
+```
+
+
 ## Pattern Function
 
 ```kotlin
@@ -92,30 +125,4 @@ sealed class PatternFun(open val funcName: String) {
      */
     class Cat(vararg val paths: String) : PatternFun("cat")
 }
-```
-
-### Shire 示例
-
-```shire
----
-variables:
-  "var1": "value2"
-  "var2": /.*.java/ { grep("error.log") | sort | xargs("rm")}
-  "var3": /.*.java/ {
-    case "$0" {
-      "error" { grep("ERROR") | sort | xargs("notify_admin") }
-      "warn" { grep("WARN") | sort | xargs("notify_admin") }
-      "info" { grep("INFO") | sort | xargs("notify_user") }
-      default  { grep("ERROR") | sort | xargs("notify_admin") }
-    }
-  }
----
-
-
-```
-
-Shire 使用 Intellij 自带的正则表达式来匹配：
-
-```regexp
-.*.java
 ```
