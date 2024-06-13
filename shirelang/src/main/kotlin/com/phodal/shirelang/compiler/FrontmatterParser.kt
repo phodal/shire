@@ -59,6 +59,7 @@ object FrontmatterParser {
                     }
 
                     ShireTypes.LOGICAL_AND_EXPR -> {
+                        lastKey = HobbitHole.WHEN
                         frontMatter[lastKey] = parseLogicAndExpr(child as ShireLogicalAndExpr)
                             ?: FrontMatterType.STRING("Logical expression parsing failed: ${child.text}")
                     }

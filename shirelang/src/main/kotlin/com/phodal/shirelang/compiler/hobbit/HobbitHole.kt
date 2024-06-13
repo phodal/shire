@@ -103,7 +103,7 @@ open class HobbitHole(
         private const val DESCRIPTION = "description"
         private const val FILENAME_RULES = "filenameRules"
         private const val VARIABLES = "variables"
-        private const val WHEN = "when"
+        const val WHEN = "when"
 
         fun from(file: ShireFile): HobbitHole? {
             return FrontmatterParser.parse(file)
