@@ -1,9 +1,12 @@
 package com.phodal.shirelang.compiler.hobbit
 
+import java.util.regex.Pattern
+
 /**
  * Represents the base class for all statements.
  */
 abstract class Statement {
+    abstract fun evaluate(): Any
     fun display(): String {
         return when (this) {
             is Operator -> this.type.display
@@ -76,14 +79,18 @@ sealed class StringOperator(val display: String) {
  *
  * @property type The type of operator.
  */
-data class Operator(val type: OperatorType) : Statement()
+data class Operator(val type: OperatorType) : Statement() {
+    override fun evaluate() = type.display
+}
 
 /**
  * Represents a string operator used in a string comparison expression.
  *
  * @property type The type of string operator.
  */
-data class StringOperatorStatement(val type: StringOperator) : Statement()
+data class StringOperatorStatement(val type: StringOperator) : Statement() {
+    override fun evaluate() = type.display
+}
 
 /**
  * Represents a comparison expression, including a variable, an operator, and a value.
@@ -95,8 +102,23 @@ data class StringOperatorStatement(val type: StringOperator) : Statement()
 data class Comparison(
     val variable: FrontMatterType,
     val operator: Operator,
-    val value: FrontMatterType
-) : Statement()
+    val value: FrontMatterType,
+) : Statement() {
+    override fun evaluate(): Boolean {
+        val variableValue = ""
+        val value = ""
+
+        return when (operator.type) {
+            OperatorType.Equal -> variableValue == value
+            OperatorType.NotEqual -> variableValue != value
+            OperatorType.LessThan -> (variableValue as Comparable<Any>) < value
+            OperatorType.GreaterThan -> (variableValue as Comparable<Any>) > value
+            OperatorType.LessEqual -> (variableValue as Comparable<Any>) <= value
+            OperatorType.GreaterEqual -> (variableValue as Comparable<Any>) >= value
+            else -> throw IllegalArgumentException("Invalid comparison operator: ${operator.type}")
+        }
+    }
+}
 
 /**
  * Represents a string comparison expression, including a variable, a string operator, and a value.
@@ -108,8 +130,18 @@ data class Comparison(
 data class StringComparison(
     val variable: String,
     val operator: StringOperatorStatement,
-    val value: String
-) : Statement()
+    val value: String,
+) : Statement() {
+    override fun evaluate(): Boolean {
+        return when (operator.type) {
+            StringOperator.Contains -> variable.contains(value)
+            StringOperator.StartsWith -> variable.startsWith(value)
+            StringOperator.EndsWith -> variable.endsWith(value)
+            StringOperator.Matches -> variable.matches(Pattern.compile(value).toRegex())
+            else -> throw IllegalArgumentException("Invalid string comparison operator: ${operator.type}")
+        }
+    }
+}
 
 /**
  * Represents a logical expression, including left and right operands and an operator.
@@ -121,15 +153,30 @@ data class StringComparison(
 data class LogicalExpression(
     val left: Statement,
     val operator: OperatorType,
-    val right: Statement
-) : Statement()
+    val right: Statement,
+) : Statement() {
+    override fun evaluate(): Boolean {
+        val leftValue = left.evaluate() as Boolean
+        val rightValue = right.evaluate() as Boolean
+
+        return when (operator) {
+            OperatorType.And -> leftValue && rightValue
+            OperatorType.Or -> leftValue || rightValue
+            else -> throw IllegalArgumentException("Invalid logical operator: $operator")
+        }
+    }
+}
 
 /**
  * Represents a negation expression, including an operand.
  *
  * @property operand The operand to be negated.
  */
-data class NotExpression(val operand: Statement) : Statement()
+data class NotExpression(val operand: Statement) : Statement() {
+    override fun evaluate(): Boolean {
+        return !(operand.evaluate() as Boolean)
+    }
+}
 
 
 /**
@@ -142,5 +189,21 @@ data class NotExpression(val operand: Statement) : Statement()
 data class MethodCall(
     val objectName: FrontMatterType,
     val methodName: FrontMatterType,
-    val arguments: List<Any>
-) : Statement()
+    val arguments: List<Any>,
+) : Statement() {
+    override fun evaluate(): Any {
+        val value = objectName.value as? String ?: return false
+        return when (methodName.value) {
+            "length" -> value.length
+            "trim" -> value.trim()
+            "contains" -> value.contains(arguments[0] as String)
+            "startsWith" -> value.startsWith(arguments[0] as String)
+            "endsWith" -> value.endsWith(arguments[0] as String)
+            "lowercase" -> value.lowercase()
+            "uppercase" -> value.uppercase()
+            "isEmpty" -> value.isEmpty()
+            "isNotEmpty" -> value.isNotEmpty()
+            else -> throw IllegalArgumentException("Unsupported method: $methodName")
+        }
+    }
+}
