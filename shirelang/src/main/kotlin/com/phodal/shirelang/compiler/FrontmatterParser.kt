@@ -106,7 +106,7 @@ object FrontmatterParser {
             }
 
             ShireTypes.REF_EXPR -> {
-                val ref = expr!!.children.firstOrNull()!!
+                val ref = expr!!.children.last()
                 when (ref.elementType) {
                     ShireTypes.LITERAL_EXPR -> {
                         parseLiteral(ref)
@@ -125,10 +125,13 @@ object FrontmatterParser {
 
             ShireTypes.CALL_EXPR -> {
                 // fixme: for $selection.length will be $selection, selection
-                val childrens = PsiTreeUtil.findChildrenOfType(expr, ShireExpr::class.java)
-                val left = parseRefExpr(childrens.first())
-                // next will be dot
-                val right = parseRefExpr(childrens.last())
+                val refExpr = PsiTreeUtil
+                    .findChildrenOfType(expr, ShireExpr::class.java)
+                    .first() as ShireRefExpr
+
+                val left = parseRefExpr(refExpr.expr)
+                val id = refExpr.expr?.nextSibling?.nextSibling
+                val right = FrontMatterType.STRING(id?.text ?: "")
 
                 val methodCall = MethodCall(left, right, listOf())
                 FrontMatterType.Expression(methodCall)
