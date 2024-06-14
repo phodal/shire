@@ -20,6 +20,7 @@ class WhenConditionCompletionProvider : CompletionProvider<CompletionParameters>
                     LookupElementBuilder.create(it.key).withTypeText(it.value, true),
                     99.0
                 )
+
             result.addElement(withTypeText)
         }
     }
