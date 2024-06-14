@@ -22,14 +22,14 @@ class JaccardSimilarity {
         }.toTypedArray()
     }
 
-    private fun tokenize(input: String): Set<String> {
+    fun tokenize(input: String): Set<String> {
         return StopwordsBasedTokenizer.instance().tokenize(input)
     }
 
-    private fun similarityScore(set1: Set<String>, set2: Set<String>): Double {
+    fun similarityScore(set1: Set<String>, set2: Set<String>): Double {
         val intersectionSize = set1.intersect(set2).size
         val unionSize = set1.union(set2).size
-        return intersectionSize.toDouble() / unionSize.toDouble()
+        return intersectionSize.toDouble() / unionSize
     }
 
     /**
@@ -40,9 +40,14 @@ class JaccardSimilarity {
      * @return A number representing the similarity score between the path and the set of strings.
      */
     fun pathSimilarity(path: String, sets: Set<String>): Double {
-        val splitPath = path.split("/")
-        val set1 = splitPath.flatMap { tokenize(it) }.toSet()
-        val set2 = sets.flatMap { tokenize(it) }.toSet()
+        val splitPath = path.split('/')
+
+        val set1 = splitPath.map(::tokenize)
+            .reduce { acc, it -> acc.union(it) }
+
+        val set2 = sets.map(::tokenize)
+            .reduce { acc, it -> acc.union(it) }
+
         return similarityScore(set1, set2)
     }
 }

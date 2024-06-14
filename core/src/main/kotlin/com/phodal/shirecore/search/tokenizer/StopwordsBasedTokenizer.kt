@@ -66,7 +66,7 @@ class StopwordsBasedTokenizer private constructor() : CodeTokenizer {
 
     private val chineseStopWords = CHINESE_STOP_WORDS
 
-    private val stopWordsSet = setOf<String>(
+    private val stopWordsSet = setOf(
         *stopWords.toTypedArray(),
         *programmingKeywords.toTypedArray(),
         *javaKeywords.toTypedArray(),
