@@ -30,11 +30,10 @@ when: $filePath.contains("src/main/java") && $fileName.contains(".java")
 ### 支持的变量
 
 - PsiVariables
-    - filePath
-    - fileName
-    - fileType
-    - fileExtension
-    - fileContent
+    - `filePath`：文件路径
+    - `fileName`：文件名
+    - `fileExtension`：文件扩展名
+    - `fileContent`：文件内容
 
 ### 支持的操作符
 
@@ -49,14 +48,14 @@ when: $filePath.contains("src/main/java") && $fileName.contains(".java")
 
 详细见：[com.phodal.shirelang.compiler.hobbit.MethodCall]
 
-- "length" -> value.length
-- "trim" -> value.trim()
-- "contains" -> value.contains(parameters[0] as String)
+- "length"     -> value.length
+- "trim"       -> value.trim()
+- "contains"   -> value.contains(parameters[0] as String)
 - "startsWith" -> value.startsWith(parameters[0] as String)
-- "endsWith" -> value.endsWith(parameters[0] as String)
-- "lowercase" -> value.lowercase()
-- "uppercase" -> value.uppercase()
-- "isEmpty" -> value.isEmpty()
+- "endsWith"   -> value.endsWith(parameters[0] as String)
+- "lowercase"  -> value.lowercase()
+- "uppercase"  -> value.uppercase()
+- "isEmpty"    -> value.isEmpty()
 - "isNotEmpty" -> value.isNotEmpty()
-- "first" -> value.first().toString()
-- "last" -> value.last().toString()
+- "first"      -> value.first().toString()
+- "last"       -> value.last().toString()
