@@ -9,7 +9,7 @@ class JaccardSimilarityTest {
         // given
         val jaccardSimilarity = JaccardSimilarity()
         val query = "test query"
-        val chunks = arrayOf(arrayOf("test", "query"), arrayOf("another", "test"), arrayOf("query", "test"))
+        val chunks = listOf(listOf("test", "query"), listOf("another", "test"), listOf("query", "test"))
 
         // when
         val result = jaccardSimilarity.tokenLevelJaccardSimilarity(query, chunks)
