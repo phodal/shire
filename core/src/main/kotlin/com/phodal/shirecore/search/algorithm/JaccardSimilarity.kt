@@ -2,7 +2,7 @@ package com.phodal.shirecore.search.algorithm
 
 import com.phodal.shirecore.search.tokenizer.StopwordsBasedTokenizer
 
-class JaccardSimilarity {
+open class JaccardSimilarity {
     /**
      * The `tokenLevelJaccardSimilarity` method calculates the Jaccard similarity between a query string and an array of string
      * arrays (chunks). The Jaccard similarity is a measure of the similarity between two sets and is defined as the size of
@@ -12,14 +12,14 @@ class JaccardSimilarity {
      * @param chunks An array of string arrays (chunks) to compare against the query.
      * @return A two-dimensional array representing the Jaccard similarity scores between the query and each chunk.
      */
-    fun tokenLevelJaccardSimilarity(query: String, chunks: Array<Array<String>>): Array<DoubleArray> {
+    fun tokenLevelJaccardSimilarity(query: String, chunks: List<List<String>>): List<List<Double>> {
         val currentFileTokens = tokenize(query)
         return chunks.map { list ->
             list.map { it ->
                 val tokenizedFile = tokenize(it)
                 similarityScore(currentFileTokens, tokenizedFile)
-            }.toDoubleArray()
-        }.toTypedArray()
+            }
+        }
     }
 
     fun tokenize(input: String): Set<String> {
