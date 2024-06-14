@@ -283,7 +283,7 @@ data class MethodCall(
                 FunctionCompletion("isNotEmpty", "Check if the string is not empty"),
                 FunctionCompletion("first", "The first character of the string"),
                 FunctionCompletion("last", "The last character of the string"),
-                FunctionCompletion("matches", "Check if the string matches a regex pattern", "(\"//\")", 2)
+                FunctionCompletion("matches", "Check if the string matches a regex pattern", "(\"//\")", 3)
             )
         }
     }

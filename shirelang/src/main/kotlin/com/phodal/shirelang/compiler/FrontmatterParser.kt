@@ -63,8 +63,19 @@ object FrontmatterParser {
                             ?: FrontMatterType.STRING("Logical expression parsing failed: ${child.text}")
                     }
 
+                    ShireTypes.LOGICAL_OR_EXPR -> {
+                        lastKey = HobbitHole.WHEN
+                        frontMatter[lastKey] = parseLogicOrExpr(child as ShireLogicalOrExpr)
+                            ?: FrontMatterType.STRING("Logical expression parsing failed: ${child.text}")
+                    }
+
+                    ShireTypes.CALL_EXPR -> {
+                        lastKey = HobbitHole.WHEN
+                        frontMatter[lastKey] = FrontMatterType.Expression(parseExpr(child))
+                    }
+
                     else -> {
-                        logger.warn("Unknown frontmatter type: ${child.elementType}")
+                        logger.warn("processFrontmatter, Unknown frontmatter type: ${child.elementType}")
                     }
                 }
             }
@@ -81,6 +92,19 @@ object FrontmatterParser {
             LogicalExpression(
                 left = parseExpr(left),
                 operator = OperatorType.And,
+                right = parseExpr(right)
+            )
+        )
+    }
+
+    private fun parseLogicOrExpr(child: ShireLogicalOrExpr): FrontMatterType? {
+        val left = child.exprList.firstOrNull() ?: return null
+        val right = child.exprList.lastOrNull() ?: return null
+
+        return FrontMatterType.Expression(
+            LogicalExpression(
+                left = parseExpr(left),
+                operator = OperatorType.Or,
                 right = parseExpr(right)
             )
         )
@@ -251,7 +275,7 @@ object FrontmatterParser {
             }
 
             else -> {
-                logger.warn("Unknown frontmatter type: ${element.firstChild}")
+                logger.warn("parseFrontMatterValue, Unknown frontmatter type: ${element.firstChild}")
                 null
             }
         }
