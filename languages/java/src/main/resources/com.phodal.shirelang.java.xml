@@ -25,6 +25,10 @@
 
         <shireSymbolProvider implementation="com.phodal.shirelang.java.impl.JavaSymbolProvider"/>
 
+        <shireCodeStructVariableProvider
+                language="JAVA"
+                implementationClass="com.phodal.shirelang.java.impl.JavaCodeStructVariableProvider"/>
+
         <shireElementStrategyBuilder implementation="com.phodal.shirelang.java.impl.JavaElementStrategyBuilder"/>
     </extensions>
 </idea-plugin>
