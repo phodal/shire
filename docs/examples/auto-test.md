@@ -38,6 +38,6 @@ nav_order: 1
     #if($context.isNewFile)
     Should include package and imports. Start method test code with Markdown code block here:
     #else
-    Should include package and imports. Start ${context.targetClassName} test code with Markdown code block here:
+    Should include package and imports. Start ${context.targetTestFileName} test code with Markdown code block here:
     #end
 

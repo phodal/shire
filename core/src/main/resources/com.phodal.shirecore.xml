@@ -52,6 +52,13 @@
                   implements="com.phodal.shirecore.provider.ToolchainProvider"/>
         </extensionPoint>
 
+        <!-- Toolchain Provider -->
+        <extensionPoint qualifiedName="com.phodal.shireCodeStructVariableProvider"
+                        beanClass="com.intellij.lang.LanguageExtensionPoint" dynamic="true">
+            <with attribute="implementationClass"
+                  implements="com.phodal.shirecore.provider.CodeStructVariableProvider"/>
+        </extensionPoint>
+
         <!-- Code Editor -->
         <extensionPoint qualifiedName="com.phodal.shireCodeModifier"
                         beanClass="com.intellij.lang.LanguageExtensionPoint" dynamic="true">
