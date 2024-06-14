@@ -9,7 +9,6 @@ import com.intellij.psi.PsiElement
 import com.phodal.shirelang.completion.dataprovider.BuiltinCommand
 import com.phodal.shirelang.completion.provider.*
 import com.phodal.shirelang.psi.ShireFrontMatterEntry
-import com.phodal.shirelang.psi.ShireLiteralExpr
 import com.phodal.shirelang.psi.ShireRefExpr
 import com.phodal.shirelang.psi.ShireTypes
 import com.phodal.shirelang.psi.ShireUsed
@@ -87,10 +86,8 @@ class ShireCompletionContributor : CompletionContributor() {
 
     private fun whenConditionPattern(): ElementPattern<out PsiElement> {
         return PlatformPatterns.psiElement()
-            .afterLeafSkipping(
-                PlatformPatterns.psiElement(ShireTypes.VARIABLE_ID),
-                PlatformPatterns.psiElement().inside(psiElement<ShireFrontMatterEntry>())
-            )
+            .inside(psiElement<ShireFrontMatterEntry>())
+            .afterLeaf(PlatformPatterns.psiElement().withText("$"))
     }
 
     private fun whenConditionFuncPattern(): ElementPattern<out PsiElement> {
