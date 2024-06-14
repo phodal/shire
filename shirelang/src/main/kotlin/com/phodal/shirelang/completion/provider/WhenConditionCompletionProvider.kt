@@ -7,6 +7,7 @@ import com.intellij.codeInsight.completion.PrioritizedLookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.util.ProcessingContext
 import com.phodal.shirelang.actions.validator.PsiVariables
+import com.phodal.shirelang.compiler.hobbit.MethodCall
 
 class WhenConditionCompletionProvider : CompletionProvider<CompletionParameters>() {
     override fun addCompletions(
@@ -19,6 +20,32 @@ class WhenConditionCompletionProvider : CompletionProvider<CompletionParameters>
                 PrioritizedLookupElement.withPriority(
                     LookupElementBuilder.create(it.key).withTypeText(it.value, true),
                     99.0
+                )
+
+            result.addElement(withTypeText)
+        }
+    }
+}
+
+class WhenConditionFunctionCompletionProvider : CompletionProvider<CompletionParameters>() {
+    override fun addCompletions(
+        parameters: CompletionParameters,
+        context: ProcessingContext,
+        result: CompletionResultSet,
+    ) {
+        MethodCall.completionProvider().forEach {
+            val elementBuilder = LookupElementBuilder.create(it.key)
+                .withTypeText(it.value, true)
+                .withInsertHandler { context, _ ->
+                    // todo: add rule by function map
+                    context.document.insertString(context.tailOffset, "()")
+                    context.editor.caretModel.moveCaretRelatively(2, 0, false, false, false)
+                }
+
+            val withTypeText =
+                PrioritizedLookupElement.withPriority(
+                    elementBuilder
+                    , 99.0
                 )
 
             result.addElement(withTypeText)

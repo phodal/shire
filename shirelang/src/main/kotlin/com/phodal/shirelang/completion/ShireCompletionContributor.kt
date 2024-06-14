@@ -9,6 +9,7 @@ import com.intellij.psi.PsiElement
 import com.phodal.shirelang.completion.dataprovider.BuiltinCommand
 import com.phodal.shirelang.completion.provider.*
 import com.phodal.shirelang.psi.ShireFrontMatterEntry
+import com.phodal.shirelang.psi.ShireLiteralExpr
 import com.phodal.shirelang.psi.ShireRefExpr
 import com.phodal.shirelang.psi.ShireTypes
 import com.phodal.shirelang.psi.ShireUsed
@@ -26,6 +27,7 @@ class ShireCompletionContributor : CompletionContributor() {
         extend(CompletionType.BASIC, PlatformPatterns.psiElement(ShireTypes.FRONTMATTER_KEY), HobbitHoleKeyCompletion())
         extend(CompletionType.BASIC, hobbitHolePattern(), HobbitHoleCompletion())
         extend(CompletionType.BASIC, whenConditionPattern(), WhenConditionCompletionProvider())
+        extend(CompletionType.BASIC, whenConditionFuncPattern(), WhenConditionFunctionCompletionProvider())
 
         // command completion
         extend(
@@ -84,12 +86,20 @@ class ShireCompletionContributor : CompletionContributor() {
     }
 
     private fun whenConditionPattern(): ElementPattern<out PsiElement> {
-        return PlatformPatterns.psiElement(ShireTypes.IDENTIFIER)
+        return PlatformPatterns.psiElement()
             .afterLeafSkipping(
                 PlatformPatterns.psiElement(ShireTypes.VARIABLE_ID),
                 PlatformPatterns.psiElement().inside(psiElement<ShireFrontMatterEntry>())
             )
+    }
 
+    private fun whenConditionFuncPattern(): ElementPattern<out PsiElement> {
+        return PlatformPatterns.psiElement(ShireTypes.IDENTIFIER)
+            .inside(psiElement<ShireFrontMatterEntry>())
+            .afterLeafSkipping(
+                PlatformPatterns.psiElement(ShireTypes.IDENTIFIER),
+                PlatformPatterns.psiElement(ShireTypes.DOT),
+            )
     }
 
     private fun valuePatterns(listOf: List<BuiltinCommand>): ElementPattern<out PsiElement> {

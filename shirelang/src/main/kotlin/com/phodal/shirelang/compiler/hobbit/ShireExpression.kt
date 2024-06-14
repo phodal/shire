@@ -251,4 +251,22 @@ data class MethodCall(
             else -> throw IllegalArgumentException("Unsupported method: $methodName")
         }
     }
+
+    companion object {
+        fun completionProvider(): Map<String, String> {
+            return mapOf(
+                "length" to "The length of the string",
+                "trim" to "The trimmed string",
+                "contains" to "Check if the string contains a substring",
+                "startsWith" to "Check if the string starts with a substring",
+                "endsWith" to "Check if the string ends with a substring",
+                "lowercase" to "The lowercase version of the string",
+                "uppercase" to "The uppercase version of the string",
+                "isEmpty" to "Check if the string is empty",
+                "isNotEmpty" to "Check if the string is not empty",
+                "first" to "The first character of the string",
+                "last" to "The last character of the string"
+            )
+        }
+    }
 }
