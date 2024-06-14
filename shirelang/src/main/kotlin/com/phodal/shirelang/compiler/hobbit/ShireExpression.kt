@@ -248,24 +248,42 @@ data class MethodCall(
             "isNotEmpty" -> value.isNotEmpty()
             "first" -> value.first().toString()
             "last" -> value.last().toString()
+            // match regex
+            "matches" -> value.matches(parameters[0].toRegex())
             else -> throw IllegalArgumentException("Unsupported method: $methodName")
         }
     }
 
     companion object {
-        fun completionProvider(): Map<String, String> {
-            return mapOf(
-                "length" to "The length of the string",
-                "trim" to "The trimmed string",
-                "contains" to "Check if the string contains a substring",
-                "startsWith" to "Check if the string starts with a substring",
-                "endsWith" to "Check if the string ends with a substring",
-                "lowercase" to "The lowercase version of the string",
-                "uppercase" to "The uppercase version of the string",
-                "isEmpty" to "Check if the string is empty",
-                "isNotEmpty" to "Check if the string is not empty",
-                "first" to "The first character of the string",
-                "last" to "The last character of the string"
+
+        /**
+         * Represents a function completion item with the specified name, description, postInsertString, and moveCaret value.
+         *
+         * @param name the name of the function
+         * @param description the description of the function
+         * @param postInsertString the string to be inserted after the function name, default value is "()"
+         * @param moveCaret the position to move the caret after inserting the function, default value is 2
+         *      - For a normal case, it will be 2 (end of the string)
+         *      - For params function,like contains, startsWith, endsWith, matches, it will be 2 (center of the string)
+         */
+        data class FunctionCompletion(
+            val name: String, val description: String, val postInsertString: String = "()", val moveCaret: Int = 2
+        )
+
+        fun completionProvider() : List<FunctionCompletion> {
+            return listOf(
+                FunctionCompletion("length", "The length of the string"),
+                FunctionCompletion("trim", "The trimmed string"),
+                FunctionCompletion("contains", "Check if the string contains a substring", "(\"\")", 2),
+                FunctionCompletion("startsWith", "Check if the string starts with a substring", "(\"\")", 2),
+                FunctionCompletion("endsWith", "Check if the string ends with a substring", "(\"\")", 2),
+                FunctionCompletion("lowercase", "The lowercase version of the string"),
+                FunctionCompletion("uppercase", "The uppercase version of the string"),
+                FunctionCompletion("isEmpty", "Check if the string is empty"),
+                FunctionCompletion("isNotEmpty", "Check if the string is not empty"),
+                FunctionCompletion("first", "The first character of the string"),
+                FunctionCompletion("last", "The last character of the string"),
+                FunctionCompletion("matches", "Check if the string matches a regex pattern", "(\"//\")", 2)
             )
         }
     }

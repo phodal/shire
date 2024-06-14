@@ -34,12 +34,11 @@ class WhenConditionFunctionCompletionProvider : CompletionProvider<CompletionPar
         result: CompletionResultSet,
     ) {
         MethodCall.completionProvider().forEach {
-            val elementBuilder = LookupElementBuilder.create(it.key)
-                .withTypeText(it.value, true)
+            val elementBuilder = LookupElementBuilder.create(it.name)
+                .withTypeText(it.description, true)
                 .withInsertHandler { context, _ ->
-                    // todo: add rule by function map
-                    context.document.insertString(context.tailOffset, "()")
-                    context.editor.caretModel.moveCaretRelatively(2, 0, false, false, false)
+                    context.document.insertString(context.tailOffset, it.postInsertString)
+                    context.editor.caretModel.moveCaretRelatively(it.moveCaret, 0, false, false, false)
                 }
 
             val withTypeText =
