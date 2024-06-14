@@ -27,7 +27,7 @@
 
         <shireCodeStructVariableProvider
                 language="JAVA"
-                implementationClass="com.phodal.shirelang.java.impl.JavaCodeStructVariableProvider"/>
+                implementationClass="com.phodal.shirelang.java.impl.JavaPsiContextVariableProvider"/>
 
         <shireElementStrategyBuilder implementation="com.phodal.shirelang.java.impl.JavaElementStrategyBuilder"/>
     </extensions>

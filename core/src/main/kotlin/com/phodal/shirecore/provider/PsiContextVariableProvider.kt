@@ -7,7 +7,7 @@ import com.intellij.psi.PsiElement
 /**
  * Enum representing variables used in the generation of code structures.
  */
-enum class CodeStructVariable(val variableName: String) {
+enum class PsiVariable(val variableName: String) {
     /**
      * Represents the PsiNameIdentifierOwner of the current class, used to retrieve the class name.
      */
@@ -48,35 +48,42 @@ enum class CodeStructVariable(val variableName: String) {
  * Resolve variables for code struct generation.
  * This is used to provide the variables that are used in the code struct generation.
  */
-interface CodeStructVariableProvider {
+interface PsiContextVariableProvider {
     /**
      * Calculate the values for the given variable based on the provided PsiElement.
+     *
+     * @param psiElement the PsiElement for which to calculate variable values
+     * @return a map containing the resolved values for each PsiVariable based on the provided PsiElement
      */
-    fun calculate(psiElement: PsiElement): Map<CodeStructVariable, String> {
-        val result = mutableMapOf<CodeStructVariable, String>()
-        for (variable in CodeStructVariable.values()) {
-            result[variable] = calculateVariable(psiElement, variable)
+    fun resolveAll(psiElement: PsiElement): Map<PsiVariable, String> {
+        val result = mutableMapOf<PsiVariable, String>()
+        for (variable in PsiVariable.values()) {
+            result[variable] = resolveVariableValue(psiElement, variable)
         }
         return result
     }
 
     /**
      * Calculate the value for the given variable based on the provided PsiElement.
+     *
+     * @param psiElement the PsiElement to use for resolving the variable value
+     * @param variable the PsiVariable for which to calculate the value
+     * @return the calculated value for the variable as a String
      */
-    fun calculateVariable(psiElement: PsiElement, variable: CodeStructVariable): String
+    fun resolveVariableValue(psiElement: PsiElement, variable: PsiVariable): String
 
     companion object {
-        private val languageExtension: LanguageExtension<CodeStructVariableProvider> =
-            LanguageExtension("com.phodal.shireCodeStructVariableProvider")
+        private val languageExtension: LanguageExtension<PsiContextVariableProvider> =
+            LanguageExtension("com.phodal.shirePsiVariableProvider")
 
-        fun provide(language: Language): CodeStructVariableProvider {
-            return languageExtension.forLanguage(language)  ?: DefaultCodeStructVariableProvider()
+        fun provide(language: Language): PsiContextVariableProvider {
+            return languageExtension.forLanguage(language)  ?: DefaultPsiContextVariableProvider()
         }
     }
 }
 
-class DefaultCodeStructVariableProvider : CodeStructVariableProvider {
-    override fun calculateVariable(psiElement: PsiElement, variable: CodeStructVariable): String {
+class DefaultPsiContextVariableProvider : PsiContextVariableProvider {
+    override fun resolveVariableValue(psiElement: PsiElement, variable: PsiVariable): String {
         return ""
     }
 }

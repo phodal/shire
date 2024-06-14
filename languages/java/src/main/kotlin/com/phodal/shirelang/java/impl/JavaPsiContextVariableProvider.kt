@@ -3,12 +3,12 @@ package com.phodal.shirelang.java.impl
 import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiJavaFile
-import com.phodal.shirecore.provider.CodeStructVariable
-import com.phodal.shirecore.provider.CodeStructVariableProvider
+import com.phodal.shirecore.provider.PsiVariable
+import com.phodal.shirecore.provider.PsiContextVariableProvider
 import com.phodal.shirelang.java.toolchain.getContainingClass
 
-class JavaCodeStructVariableProvider : CodeStructVariableProvider {
-    override fun calculateVariable(psiElement: PsiElement, variable: CodeStructVariable): String {
+class JavaPsiContextVariableProvider : PsiContextVariableProvider {
+    override fun resolveVariableValue(psiElement: PsiElement, variable: PsiVariable): String {
         if (psiElement.language.id != "JAVA") {
             return ""
         }
@@ -17,26 +17,26 @@ class JavaCodeStructVariableProvider : CodeStructVariableProvider {
         val javaFile: PsiJavaFile = psiElement.containingFile as PsiJavaFile
 
         return when (variable) {
-            CodeStructVariable.CURRENT_CLASS_NAME -> {
+            PsiVariable.CURRENT_CLASS_NAME -> {
                 clazz?.name ?: ""
             }
-            CodeStructVariable.CURRENT_CLASS_CODE -> {
+            PsiVariable.CURRENT_CLASS_CODE -> {
                 javaFile.text
             }
-            CodeStructVariable.RELATED_CLASSES -> {
+            PsiVariable.RELATED_CLASSES -> {
                 ""
             }
-            CodeStructVariable.SIMILAR_TEST_CASE -> {
+            PsiVariable.SIMILAR_TEST_CASE -> {
                 ""
             }
-            CodeStructVariable.IMPORTS -> {
+            PsiVariable.IMPORTS -> {
                 javaFile.importList?.text ?: ""
             }
-            CodeStructVariable.IS_NEW_FILE -> {
+            PsiVariable.IS_NEW_FILE -> {
                 // todo check has target test fiel
                 ""
             }
-            CodeStructVariable.TARGET_TEST_FILE_NAME -> {
+            PsiVariable.TARGET_TEST_FILE_NAME -> {
                 ""
             }
         }

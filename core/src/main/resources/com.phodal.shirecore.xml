@@ -53,10 +53,10 @@
         </extensionPoint>
 
         <!-- Toolchain Provider -->
-        <extensionPoint qualifiedName="com.phodal.shireCodeStructVariableProvider"
+        <extensionPoint qualifiedName="com.phodal.shirePsiVariableProvider"
                         beanClass="com.intellij.lang.LanguageExtensionPoint" dynamic="true">
             <with attribute="implementationClass"
-                  implements="com.phodal.shirecore.provider.CodeStructVariableProvider"/>
+                  implements="com.phodal.shirecore.provider.PsiContextVariableProvider"/>
         </extensionPoint>
 
         <!-- Code Editor -->
