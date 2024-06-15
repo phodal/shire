@@ -1,26 +1,29 @@
 package com.phodal.shirelang.compiler
 
 import com.intellij.lang.parser.GeneratedParserUtilBase.DUMMY_BLOCK
-import com.phodal.shirelang.compiler.error.SHIRE_ERROR
 import com.intellij.openapi.diagnostic.logger
+import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
+import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.TokenType.WHITE_SPACE
 import com.intellij.psi.util.elementType
+import com.intellij.refactoring.suggested.startOffset
 import com.phodal.shirecore.agent.CustomAgent
 import com.phodal.shirelang.compile.VariableTemplateCompiler
+import com.phodal.shirelang.compiler.error.SHIRE_ERROR
 import com.phodal.shirelang.compiler.exec.*
 import com.phodal.shirelang.completion.dataprovider.BuiltinCommand
 import com.phodal.shirelang.completion.dataprovider.CustomCommand
-import com.phodal.shirelang.completion.dataprovider.ToolHubVariable
 import com.phodal.shirelang.parser.CodeBlockElement
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.psi.ShireFrontMatterHeader
 import com.phodal.shirelang.psi.ShireTypes
 import com.phodal.shirelang.psi.ShireUsed
 import kotlinx.coroutines.runBlocking
+
 
 val CACHED_COMPILE_RESULT = mutableMapOf<String, ShireCompiledResult>()
 
@@ -159,11 +162,6 @@ class ShireCompiler(
 
             ShireTypes.VARIABLE_START -> {
                 val variableId = id?.text
-                val variables = ToolHubVariable.lookup(variableId)
-                if (variables.isNotEmpty()) {
-                    output.append(variables.joinToString("\n") { it })
-                    return
-                }
 
                 val currentEditor = editor ?: VariableTemplateCompiler.defaultEditor(myProject)
                 val currentElement = element ?: VariableTemplateCompiler.defaultElement(myProject, currentEditor)
@@ -174,20 +172,16 @@ class ShireCompiler(
                     return
                 }
 
-                if (currentEditor == null) {
-                    output.append("$SHIRE_ERROR No editor found for variable: ${used.text}")
-                    result.hasError = true
-                    return
+
+                val lineNo = try {
+                    val containingFile = currentElement.containingFile
+                    val document: Document? = PsiDocumentManager.getInstance(firstChild!!.project).getDocument(containingFile)
+                    document?.getLineNumber(firstChild.textRange.startOffset) ?: 0
+                } catch (e: Exception) {
+                    0
                 }
 
-                // handle for variabled
-
-                val file = currentElement.containingFile
-                val lineNo = currentElement.textRange.startOffset
                 symbolTable.addVariable(variableId ?: "", SymbolTable.VariableType.String, lineNo)
-                VariableTemplateCompiler(file.language, file, currentElement, currentEditor).compile(used.text).let {
-                    output.append(it)
-                }
             }
 
             else -> {
