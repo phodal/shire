@@ -41,7 +41,12 @@ enum class PsiVariable(val variableName: String) {
     /**
      * The name of the target test file where the code structure will be generated.
      */
-    TARGET_TEST_FILE_NAME("targetTestFileName")
+    TARGET_TEST_FILE_NAME("targetTestFileName"),
+
+    /**
+     * underTestMethod
+     */
+    UNDER_TEST_METHOD_CODE("underTestMethodCode")
 }
 
 /**
