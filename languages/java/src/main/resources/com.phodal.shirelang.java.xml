@@ -25,7 +25,7 @@
 
         <shireSymbolProvider implementation="com.phodal.shirelang.java.impl.JavaSymbolProvider"/>
 
-        <shireCodeStructVariableProvider
+        <shirePsiVariableProvider
                 language="JAVA"
                 implementationClass="com.phodal.shirelang.java.impl.JavaPsiContextVariableProvider"/>
 

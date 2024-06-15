@@ -3,6 +3,7 @@ package com.phodal.shirelang.run.runner
 import com.intellij.execution.console.ConsoleViewWrapperBase
 import com.intellij.execution.process.ProcessHandler
 import com.intellij.openapi.project.Project
+import com.phodal.shirecore.provider.PsiContextVariableProvider
 import com.phodal.shirelang.compile.VariableTemplateCompiler
 import com.phodal.shirelang.compiler.SymbolTable
 import com.phodal.shirelang.run.ShireConfiguration
@@ -22,8 +23,15 @@ abstract class ShireRunner(
         // preResolverVariables
 
         if (currentElement != null && currentEditor != null) {
+            val language = currentElement.language
+//            SymbolResolver(myProject, currentEditor,)
+
             val file = currentElement.containingFile
-            return VariableTemplateCompiler(file.language, file, currentElement, currentEditor).compile(input)
+            val templateCompiler = VariableTemplateCompiler(file.language, file, currentElement, currentEditor)
+
+            // updateVariables
+
+            return templateCompiler.compile(input)
         }
 
         return input
