@@ -120,9 +120,9 @@ open class ShireRunConfigurationProfileState(
         }
 
         if (agent != null) {
-            ShireCustomAgentRunner(myProject, configuration, console, processHandler, output, agent).execute()
+            ShireCustomAgentRunner(myProject, configuration, console, processHandler, output, file, agent).execute()
         } else {
-            ShireDefaultRunner(myProject, configuration, console, processHandler, output, compileResult.isLocalCommand).execute()
+            ShireDefaultRunner(myProject, configuration, console, processHandler, output, file, compileResult.isLocalCommand).execute()
         }
 
         return DefaultExecutionResult(console, processHandler)

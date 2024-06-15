@@ -26,4 +26,9 @@ data class ShireCompiledResult(
     var nextJob: ShireFile? = null,
 
     var config: HobbitHole? = null,
+
+    /**
+     * Variables for lazy resolve
+     */
+    var symbolTable: SymbolTable = SymbolTable()
 )

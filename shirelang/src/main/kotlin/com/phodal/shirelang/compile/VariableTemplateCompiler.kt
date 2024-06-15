@@ -32,7 +32,7 @@ class VariableTemplateCompiler(
     }
 
     fun set(key: String, value: String) {
-        variableMap.put(key, value)
+        variableMap[key] = value
     }
 
     fun compile(template: String): String {
