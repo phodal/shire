@@ -24,6 +24,7 @@ import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.flow.ShireConversationService
 import com.phodal.shirelang.run.runner.ShireCustomAgentRunner
 import com.phodal.shirelang.run.runner.ShireDefaultRunner
+import com.phodal.shirelang.run.runner.ShireRunner
 import java.awt.BorderLayout
 import javax.swing.JComponent
 
@@ -93,9 +94,12 @@ open class ShireRunConfigurationProfileState(
         val compiler = ShireCompiler(myProject, file, editor)
         val compileResult = compiler.compile()
 
+        val symbolTable = compileResult.symbolTable
+
         // translate template for handle reset for the conversation
 
-        myProject.getService(ShireConversationService::class.java).createConversation(configuration.getScriptPath(), compileResult)
+        myProject.getService(ShireConversationService::class.java)
+            .createConversation(configuration.getScriptPath(), compileResult)
 
         val output = compileResult.output
         val agent = compileResult.executeAgent
@@ -105,6 +109,7 @@ open class ShireRunConfigurationProfileState(
                 it.contains(SHIRE_ERROR) -> {
                     console.print(it, ConsoleViewContentType.LOG_ERROR_OUTPUT)
                 }
+
                 else -> {
                     console.print(it, ConsoleViewContentType.USER_INPUT)
                 }
@@ -119,11 +124,14 @@ open class ShireRunConfigurationProfileState(
             return DefaultExecutionResult(console, processHandler)
         }
 
-        if (agent != null) {
-            ShireCustomAgentRunner(myProject, configuration, console, processHandler, output, file, agent).execute()
+        val shireRunner: ShireRunner = if (agent != null) {
+            ShireCustomAgentRunner(myProject, configuration, console, processHandler, output, symbolTable, agent)
         } else {
-            ShireDefaultRunner(myProject, configuration, console, processHandler, output, file, compileResult.isLocalCommand).execute()
+            val isLocalMode = compileResult.isLocalCommand
+            ShireDefaultRunner(myProject, configuration, console, processHandler, output, symbolTable, isLocalMode)
         }
+
+        shireRunner.execute()
 
         return DefaultExecutionResult(console, processHandler)
     }
