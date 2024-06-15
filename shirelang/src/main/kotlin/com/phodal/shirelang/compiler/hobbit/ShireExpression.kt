@@ -1,5 +1,6 @@
 package com.phodal.shirelang.compiler.hobbit
 
+import com.intellij.openapi.diagnostic.logger
 import java.util.regex.Pattern
 
 /**
@@ -134,7 +135,10 @@ data class Comparison(
         val variableValue = when(variable.value) {
             is MethodCall -> variable.value.evaluate(variables)
             is FrontMatterType.STRING -> variable.value.value
-            else -> throw IllegalArgumentException("Invalid variable type: ${variable.value}")
+            else -> {
+                logger<Comparison>().error("Variable not found: ${variable.value}, will use: ${variables[variable.value]}")
+                variables[variable.value]
+            }
         }
 
         val value = value.value
