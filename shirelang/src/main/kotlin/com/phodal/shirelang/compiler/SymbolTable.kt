@@ -3,7 +3,7 @@ package com.phodal.shirelang.compiler
 class SymbolTable {
     private val table: MutableMap<String, VariableInfo> = mutableMapOf()
 
-    fun addVariable(name: String, varType: String, scope: VariableScope, lineDeclared: Int) {
+    fun addVariable(name: String, varType: VariableType, lineDeclared: Int, scope: VariableScope = VariableScope.BuiltIn) {
         if (!table.containsKey(name)) {
             table[name] = VariableInfo(varType, scope, lineDeclared)
         } else {
@@ -15,7 +15,7 @@ class SymbolTable {
         return table[name] ?: throw Exception("Variable $name not found.")
     }
 
-    fun updateVariable(name: String, newType: String? = null, newScope: VariableScope? = null, newLineDeclared: Int? = null) {
+    fun updateVariable(name: String, newType: VariableType? = null, newScope: VariableScope? = null, newLineDeclared: Int? = null) {
         val variable = table[name] ?: throw Exception("Variable $name not found.")
         val updatedVariable = variable.copy(
             type = newType ?: variable.type,
@@ -33,11 +33,21 @@ class SymbolTable {
         }
     }
 
+    fun getAllVariables(): Map<String, VariableInfo> {
+        return table.toMap()
+    }
+
     data class VariableInfo(
-        val type: String,
+        val type: VariableType,
         val scope: VariableScope,
         val lineDeclared: Int
     )
+
+    enum class VariableType {
+        String,
+        Boolean,
+        Number,
+    }
 
     enum class VariableScope {
         BuiltIn,

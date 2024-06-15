@@ -154,6 +154,7 @@ project(":shirelang") {
     }
 
     dependencies {
+        implementation("org.apache.velocity:velocity-engine-core:2.3")
         implementation(project(":"))
         implementation(project(":core"))
     }

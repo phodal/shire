@@ -200,4 +200,30 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         assertEquals(when_!!.display(), "\$fileName.matches(\"/.*.java/\")")
     }
+
+//    fun testShouldGetSymbolTableValueFromCompileResult() {
+//        val code = """
+//            ---
+//            name: Summary
+//            description: "Generate Summary"
+//            interaction: AppendCursor
+//            data: ["a", "b"]
+//            when: ${'$'}fileName.matches("/.*.java/")
+//            variables:
+//              "var1": "demo"
+//              "var2": /**.java/ { grep("error.log") | sort | xargs("rm")}
+//            ---
+//
+//
+//            Summary webpage: ${'$'}{fileName}
+//        """.trimIndent()
+//
+//        val file = myFixture.configureByText("test.shire", code)
+//
+//        val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
+//        assertEquals("\n\nSummary webpage:", compile.output)
+//        val table = compile.symbolTable
+//
+//        assertEquals(1, table.getAllVariables().size)
+//    }
 }

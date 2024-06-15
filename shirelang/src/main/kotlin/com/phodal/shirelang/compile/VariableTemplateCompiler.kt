@@ -22,7 +22,7 @@ class VariableTemplateCompiler(
     selectedText: String = "",
 ) {
     private val log = logger<VariableTemplateCompiler>()
-    private val variableMap: MutableMap<String, Any> = mutableMapOf()
+    private val variableMap: MutableMap<String, String> = mutableMapOf()
 
     init {
         this.set(ContextVariable.SELECTION.variable, editor.selectionModel.selectedText ?: selectedText)
@@ -33,6 +33,10 @@ class VariableTemplateCompiler(
 
     fun set(key: String, value: String) {
         variableMap[key] = value
+    }
+
+    fun set(map: Map<String, String>) {
+        variableMap.putAll(map)
     }
 
     fun compile(template: String): String {
@@ -49,7 +53,7 @@ class VariableTemplateCompiler(
         Thread.currentThread().contextClassLoader = VariableTemplateCompiler::class.java.classLoader
 
         // for compatibility with older versions of AutoDev
-        val context = VelocityContext(variableMap)
+        val context = VelocityContext(variableMap as Map<String, Any>?)
         val sw = StringWriter()
         try {
             // for compatibility with older versions of AutoDev

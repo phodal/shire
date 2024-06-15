@@ -44,6 +44,8 @@ class ShireCompiler(
     private val result = ShireCompiledResult()
     private val output: StringBuilder = StringBuilder()
 
+    private val symbolTable = SymbolTable()
+
     /**
      * @return ShireCompiledResult object containing the compiled result
      */
@@ -95,6 +97,7 @@ class ShireCompiler(
         }
 
         result.output = output.toString()
+        result.symbolTable = symbolTable
 
         CACHED_COMPILE_RESULT[file.name] = result
         return result
@@ -177,8 +180,11 @@ class ShireCompiler(
                     return
                 }
 
-                // todo: add to cache for performance
+                // handle for variabled
+
                 val file = currentElement.containingFile
+                val lineNo = currentElement.textRange.startOffset
+                symbolTable.addVariable(variableId ?: "", SymbolTable.VariableType.String, lineNo)
                 VariableTemplateCompiler(file.language, file, currentElement, currentEditor).compile(used.text).let {
                     output.append(it)
                 }

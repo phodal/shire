@@ -19,7 +19,6 @@ abstract class ShireRunner(
         val currentEditor = VariableTemplateCompiler.defaultEditor(myProject)
         val currentElement = VariableTemplateCompiler.defaultElement(myProject, currentEditor)
 
-
         // preResolverVariables
 
         if (currentElement != null && currentEditor != null) {
