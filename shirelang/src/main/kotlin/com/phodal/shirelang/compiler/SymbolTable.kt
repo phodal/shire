@@ -4,10 +4,21 @@ class SymbolTable {
     private val table: MutableMap<String, VariableInfo> = mutableMapOf()
 
     fun addVariable(name: String, varType: VariableType, lineDeclared: Int, scope: VariableScope = VariableScope.BuiltIn) {
-        if (!table.containsKey(name)) {
-            table[name] = VariableInfo(varType, scope, lineDeclared)
+        var varName = name;
+        // {context.frameworkContext}
+        if (varName.startsWith("{") && varName.endsWith("}")) {
+            varName = varName.substring(1, varName.length - 1)
+        }
+
+        // remove the context prefix
+        if (varName.startsWith("context.")) {
+            varName = varName.substring(8)
+        }
+
+        if (!table.containsKey(varName)) {
+            table[varName] = VariableInfo(varType, scope, lineDeclared)
         } else {
-            throw Exception("Variable $name already declared.")
+            throw Exception("Variable $varName already declared.")
         }
     }
 
