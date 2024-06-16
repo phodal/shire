@@ -23,12 +23,13 @@ abstract class ShireRunner(
 
         if (currentElement != null && currentEditor != null) {
             val language = currentElement.language
-//            SymbolResolver(myProject, currentEditor,)
+            val additionalMap: Map<String, String> = SymbolResolver(myProject, currentEditor).resolve(symbolTable)
 
             val file = currentElement.containingFile
             val templateCompiler = VariableTemplateCompiler(file.language, file, currentElement, currentEditor)
 
             // updateVariables
+            templateCompiler.set(additionalMap)
 
             return templateCompiler.compile(input)
         }
