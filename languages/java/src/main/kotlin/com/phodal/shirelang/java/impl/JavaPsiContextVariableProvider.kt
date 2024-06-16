@@ -51,12 +51,12 @@ class JavaPsiContextVariableProvider : PsiContextVariableProvider {
             }
 
             PsiVariable.TARGET_TEST_FILE_NAME -> {
-                val sourceFilePath = sourceFile.virtualFile
                 val testFileName = sourceFile.name.replace(".java", "") + "Test"
-                val parentDirPath = ReadAction.compute<String, Throwable> { sourceFilePath.parent?.path }
-                val testDirPath = parentDirPath.replace("/src/main/java/", "/src/test/java/")
+//                val sourceFilePath = sourceFile.virtualFile
+//                val parentDirPath = ReadAction.compute<String, Throwable> { sourceFilePath.parent?.path }
+//                val testDirPath = parentDirPath.replace("/src/main/java/", "/src/test/java/")
 
-                "$testDirPath/$testFileName.java"
+                "$testFileName.java"
             }
 
             PsiVariable.UNDER_TEST_METHOD_CODE -> {

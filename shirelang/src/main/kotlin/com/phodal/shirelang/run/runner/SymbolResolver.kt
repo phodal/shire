@@ -10,6 +10,7 @@ import com.phodal.shirecore.provider.PsiVariable
 import com.phodal.shirelang.compiler.SymbolTable
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.VariablePatternFunc
+import com.phodal.shirelang.completion.dataprovider.ContextVariable
 
 class SymbolResolver(val myProject: Project, val editor: Editor, val hole: HobbitHole?) {
     private val variableProvider: PsiContextVariableProvider
@@ -24,8 +25,13 @@ class SymbolResolver(val myProject: Project, val editor: Editor, val hole: Hobbi
     }
 
     fun resolve(symbolTable: SymbolTable): Map<String, String> {
-        //
-        val results = resolveBuiltInVariable(symbolTable)
+        val element: PsiElement? = editor.caretModel.currentCaret.let {
+            PsiManager.getInstance(myProject).findFile(editor.virtualFile)?.findElementAt(it.offset)
+        }
+
+        val results = resolveBuiltInVariable(symbolTable, element)
+
+        results.putAll(ContextVariable.resolve(editor, element))
 //
 //        hole?.variables?.forEach {
 //            results[it.key] = VariableFuncExecutor.execute(it.value)
@@ -34,10 +40,8 @@ class SymbolResolver(val myProject: Project, val editor: Editor, val hole: Hobbi
         return results
     }
 
-    private fun resolveBuiltInVariable(symbolTable: SymbolTable): MutableMap<String, String> {
-        val element: PsiElement? = editor.caretModel.currentCaret.let {
-            PsiManager.getInstance(myProject).findFile(editor.virtualFile)?.findElementAt(it.offset)
-        }
+    private fun resolveBuiltInVariable(symbolTable: SymbolTable, element: PsiElement?): MutableMap<String, String> {
+
 
         val result = mutableMapOf<String, String>()
         symbolTable.getAllVariables().forEach {

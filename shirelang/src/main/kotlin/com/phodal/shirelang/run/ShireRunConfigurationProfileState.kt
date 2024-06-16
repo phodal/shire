@@ -149,7 +149,7 @@ fun compileShireTemplate(myProject: Project, hole: HobbitHole, symbolTable: Symb
         val additionalMap: Map<String, String> = SymbolResolver(myProject, currentEditor, hole).resolve(symbolTable)
 
         val file = currentElement.containingFile
-        val templateCompiler = VariableTemplateCompiler(file.language, file, currentElement, currentEditor)
+        val templateCompiler = VariableTemplateCompiler(file.language, file)
 
         templateCompiler.set(additionalMap)
         return templateCompiler.compile(input)
