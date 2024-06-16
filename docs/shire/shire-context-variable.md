@@ -2,7 +2,7 @@
 layout: default
 title: Shire Context Variable
 parent: Shire Language
-nav_order: 4
+nav_order: 5
 ---
 
 Context Variables for All
