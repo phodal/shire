@@ -1,6 +1,31 @@
-# [](https://github.com/phodal/shire/compare/v0.0.4...v) (2024-06-11)
+# [](https://github.com/phodal/shire/compare/v0.0.6...v) (2024-06-16)
 
 ## [Unreleased]
+
+## [0.0.6](https://github.com/phodal/shire/compare/v0.0.4...v[0.0.6]) (2024-06-16)
+
+### Bug Fixes
+
+- **java:** fix null check for JavaSdkType in JavaToolchainProvider ([fb8ad5f](https://github.com/phodal/shire/commit/fb8ad5f88d980f14505f8af1eb798de733438b81))
+- **java:** handle null psiElement in resolveVariableValue ([ba34428](https://github.com/phodal/shire/commit/ba34428e95ca67e1373853be6e590d5ed4cf1eb9))
+- **test:** update file patterns in test data ([bfbe463](https://github.com/phodal/shire/commit/bfbe46370b41a4c7f2c10f8d48f3446c97866b47))
+
+### Features
+
+- **actions:** add WhenConditionValidator for dynamic actions ([2e1c06a](https://github.com/phodal/shire/commit/2e1c06a1088c0c69cb471e4ae90af020f9147c36))
+- **compiler:** add support for method call with arguments ([1cb74e3](https://github.com/phodal/shire/commit/1cb74e3771f265266480fa35daa18053630883ff))
+- **compiler:** update HobbitHole variables to use list of conditions ([dd9dc0a](https://github.com/phodal/shire/commit/dd9dc0ae5638f0693dd3c651705d5da6e17f0dce))
+- **completion:** add support for when condition functions ([35e13aa](https://github.com/phodal/shire/commit/35e13aa45c33886252ed31f9cde1af2accd154ff))
+- **core:** add CodeStructVariableProvider for code struct generation [#14](https://github.com/phodal/shire/issues/14) ([9a6c573](https://github.com/phodal/shire/commit/9a6c5739066fd4cd2f0a4f61e0683919d89bb6b8))
+- **frontmatter:** add support for logical OR expressions in frontmatter parsing ([3c0f5dc](https://github.com/phodal/shire/commit/3c0f5dc9e48aa7c4ec296cfab95cd5a5e59d3f29))
+- **grammar:** add support for velocity expressions ([c71fb07](https://github.com/phodal/shire/commit/c71fb07f638afa52279cbc4921733c17c52d6cc7))
+- **highlight:** add 'WHEN' keyword support ([abdcb6c](https://github.com/phodal/shire/commit/abdcb6cbfc46d5a12f81ff631304b47cac36a392))
+- **java:** add JavaCodeStructVariableProvider for code struct generation [#15](https://github.com/phodal/shire/issues/15) ([378f44e](https://github.com/phodal/shire/commit/378f44ec4a4f4779cbdcc0329568257e1a519adb))
+- **runner:** add SymbolResolver for variable resolution [#14](https://github.com/phodal/shire/issues/14) ([ed03e25](https://github.com/phodal/shire/commit/ed03e25211dc222a92dca99269150af5a4fbf351))
+- **search:** add TfIdf class for text analysis [#14](https://github.com/phodal/shire/issues/14) ([55e94a6](https://github.com/phodal/shire/commit/55e94a6f109dd4677f985f605119d133045c75c6))
+- **shire:** add PatternFun Cat subclass ([ca2b531](https://github.com/phodal/shire/commit/ca2b53117d2ca0c512bf182d8d83fb55922ee8bb))
+- **template:** add Shire Action template and action [#14](https://github.com/phodal/shire/issues/14) ([0493d23](https://github.com/phodal/shire/commit/0493d2363006ae25073272d8035d0851aee15824))
+- **tokenizer:** add TermSplitter and StopwordsBasedTokenizer [#14](https://github.com/phodal/shire/issues/14) ([a774f48](https://github.com/phodal/shire/commit/a774f48a17c64553ab417763511b230dfaf73b18))
 
 ## [0.0.4](https://github.com/phodal/shire/compare/2b4a6f06733149d0cd9763e2d4719a048fa37ce3...v[0.0.4]) (2024-06-11)
 
@@ -10,6 +35,7 @@
 - **build:** update paths for plugin directory in workflows ([a0b6570](https://github.com/phodal/shire/commit/a0b657083ec8d49d65dff87f4efd003848aac7ed))
 - **parser:** fix filenameRules regex in ShireFmObject test ([85de5bd](https://github.com/phodal/shire/commit/85de5bdf5964886d6568aee24b61a1ff2e873da2))
 - **parser:** fix filenameRules regex in ShireFmObject test ([74783a1](https://github.com/phodal/shire/commit/74783a1d7dfb15b956132f68e5316ba9775c0512))
+- **release:** update gradle task path for patching changelog ([201c458](https://github.com/phodal/shire/commit/201c458e09399435039ade13fac81a0d43d26754))
 
 ### Features
 
@@ -92,5 +118,6 @@
 - **shell:** add shell language support plugin file ([bdc1c90](https://github.com/phodal/shire/commit/bdc1c90f10d7c2c4fb8f7157db343dd756c11352))
 - **shire:** add Shire context action group and location support ([e3df86d](https://github.com/phodal/shire/commit/e3df86d16d0c9985fec787a8e76ce553be9a9a45))
 
-[Unreleased]: https://github.com/phodal/shire/compare/v0.0.4...HEAD
+[Unreleased]: https://github.com/phodal/shire/compare/v0.0.6...HEAD
+[0.0.6]: https://github.com/phodal/shire/compare/v0.0.4...v0.0.6
 [0.0.4]: https://github.com/phodal/shire/commits/v0.0.4
