@@ -174,7 +174,6 @@ class ShireCompiler(
                     return
                 }
 
-
                 val lineNo = try {
                     val containingFile = currentElement.containingFile
                     val document: Document? = PsiDocumentManager.getInstance(firstChild!!.project).getDocument(containingFile)
@@ -184,6 +183,7 @@ class ShireCompiler(
                 }
 
                 symbolTable.addVariable(variableId ?: "", SymbolTable.VariableType.String, lineNo)
+                output.append(used.text)
             }
 
             else -> {

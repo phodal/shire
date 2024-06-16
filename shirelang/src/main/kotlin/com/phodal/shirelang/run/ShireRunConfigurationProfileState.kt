@@ -105,7 +105,8 @@ open class ShireRunConfigurationProfileState(
         myProject.getService(ShireConversationService::class.java)
             .createConversation(configuration.getScriptPath(), compileResult)
 
-        val compiledOutput = compileShireTemplate(myProject, compileResult.config!!, symbolTable, compileResult.output)
+        val input = compileResult.output
+        val compiledOutput = compileShireTemplate(myProject, compileResult.config!!, symbolTable, input)
         val agent = compileResult.executeAgent
 
         compiledOutput.split("\n").forEach {

@@ -30,5 +30,5 @@ data class ShireCompiledResult(
     /**
      * Variables for lazy resolve
      */
-    var symbolTable: SymbolTable = SymbolTable()
+    var symbolTable: SymbolTable = SymbolTable(),
 )

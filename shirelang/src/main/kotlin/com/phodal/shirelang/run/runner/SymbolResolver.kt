@@ -5,6 +5,7 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
+import com.intellij.psi.util.PsiUtilBase
 import com.phodal.shirecore.provider.DefaultPsiContextVariableProvider
 import com.phodal.shirecore.provider.PsiContextVariableProvider
 import com.phodal.shirecore.provider.PsiVariable
@@ -12,6 +13,7 @@ import com.phodal.shirelang.compiler.SymbolTable
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.VariablePatternFunc
 import com.phodal.shirelang.completion.dataprovider.ContextVariable
+import com.phodal.shirelang.run.flow.ShireProcessProcessor.Companion.getElementAtOffset
 
 class SymbolResolver(val myProject: Project, val editor: Editor, val hole: HobbitHole?) {
     private val variableProvider: PsiContextVariableProvider
@@ -26,8 +28,14 @@ class SymbolResolver(val myProject: Project, val editor: Editor, val hole: Hobbi
     }
 
     fun resolve(symbolTable: SymbolTable): Map<String, String> {
-        val element: PsiElement? = editor.caretModel.currentCaret.let {
-            PsiManager.getInstance(myProject).findFile(editor.virtualFile)?.findElementAt(it.offset)
+        val element: PsiElement? = try {
+            editor.caretModel.currentCaret.offset.let {
+                val psiFile = PsiUtilBase.getPsiFileInEditor(editor, myProject) ?: return@let null
+                getElementAtOffset(psiFile, it)
+            }
+        } catch (e: Exception) {
+            logger<SymbolResolver>().error("Failed to resolve element", e)
+            null
         }
 
         val results = resolveBuiltInVariable(symbolTable, element)

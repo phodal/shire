@@ -1,5 +1,6 @@
 package com.phodal.shirecore.provider
 
+import com.intellij.lang.LanguageExtension
 import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
@@ -9,7 +10,7 @@ import kotlin.reflect.KClass
 
 class ToolchainContextItem(
     val clazz: KClass<*>,
-    var text: String
+    var text: String,
 )
 
 data class ToolchainPrepareContext(
@@ -25,7 +26,8 @@ interface ToolchainProvider {
     suspend fun collect(project: Project, context: ToolchainPrepareContext): List<ToolchainContextItem>
 
     companion object {
-        private val EP_NAME = ExtensionPointName<ToolchainProvider>("com.phodal.shireToolchainProvider")
+        private val EP_NAME: LanguageExtension<ToolchainProvider> =
+            LanguageExtension("com.phodal.shireToolchainProvider")
 
         suspend fun gatherToolchainContextItems(
             project: Project,
@@ -33,15 +35,10 @@ interface ToolchainProvider {
         ): List<ToolchainContextItem> {
             val elements = mutableListOf<ToolchainContextItem>()
 
-            val chatContextProviders = EP_NAME.extensionList
-            for (provider in chatContextProviders) {
-                try {
-                    val applicable = provider.isApplicable(project, toolchainPrepareContext)
-                    if (applicable) {
-                        elements.addAll(provider.collect(project, toolchainPrepareContext))
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
+            toolchainPrepareContext.sourceFile?.language?.let {
+                val provider = EP_NAME.forLanguage(it)
+                if (provider.isApplicable(project, toolchainPrepareContext)) {
+                    elements.addAll(provider.collect(project, toolchainPrepareContext))
                 }
             }
 

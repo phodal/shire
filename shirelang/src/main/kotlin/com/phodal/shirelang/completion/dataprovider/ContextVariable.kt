@@ -18,14 +18,15 @@ enum class ContextVariable(val variable: String, val description: String) {
 
     companion object {
         fun all(): List<ContextVariable> = values().toList()
+
         fun resolve(editor: Editor, element: PsiElement?): Map<out String, String> {
             val file = element?.containingFile
 
             return all().associate {
                 it.variable to when (it) {
                     SELECTION -> editor.selectionModel.selectedText ?: ""
-                    BEFORE_CURSOR -> element?.text?.substring(0, editor.caretModel.offset) ?: ""
-                    AFTER_CURSOR -> element?.text?.substring(editor.caretModel.offset) ?: ""
+                    BEFORE_CURSOR -> file?.text?.substring(0, editor.caretModel.offset) ?: ""
+                    AFTER_CURSOR -> file?.text?.substring(editor.caretModel.offset) ?: ""
                     FILE_NAME -> file?.name ?: ""
                     FILE_PATH -> file?.virtualFile?.path ?: ""
                     METHOD_NAME -> when (element) {
