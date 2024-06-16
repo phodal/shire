@@ -94,7 +94,10 @@ class JavaPsiContextVariableProvider : PsiContextVariableProvider {
             PsiVariable.FRAMEWORK_CONTEXT -> {
                 runBlocking {
                     val prepareContext = ToolchainPrepareContext(sourceFile, psiElement)
-                    ToolchainProvider.gatherToolchainContextItems(project, prepareContext).joinToString("\n")
+                    val contextItems =
+                        ToolchainProvider.gatherToolchainContextItems(project, prepareContext)
+
+                    contextItems.joinToString("\n") { it.text }
                 }
             }
         }

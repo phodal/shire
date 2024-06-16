@@ -16,7 +16,8 @@ class JavaToolchainProvider : ToolchainProvider {
     override fun isApplicable(project: Project, context: ToolchainPrepareContext): Boolean {
         val sourceFile = context.sourceFile ?: return false
         if (sourceFile.language != JavaLanguage.INSTANCE) return false
-        if (ProjectRootManager.getInstance(project).projectSdk !is JavaSdkType) return false
+        val projectSdk = ProjectRootManager.getInstance(project).projectSdk
+        if (projectSdk?.sdkType !is JavaSdkType) return false
 
         val module: Module = try {
             ModuleUtilCore.findModuleForFile(sourceFile)
