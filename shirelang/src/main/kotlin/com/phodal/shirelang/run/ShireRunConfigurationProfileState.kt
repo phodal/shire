@@ -20,6 +20,7 @@ import com.intellij.openapi.util.Key
 import com.intellij.ui.components.panels.NonOpaquePanel
 import com.phodal.shirelang.compiler.ShireCompiler
 import com.phodal.shirelang.compiler.error.SHIRE_ERROR
+import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.flow.ShireConversationService
 import com.phodal.shirelang.run.runner.ShireCustomAgentRunner
@@ -124,11 +125,13 @@ open class ShireRunConfigurationProfileState(
             return DefaultExecutionResult(console, processHandler)
         }
 
+        val hole: HobbitHole? = compileResult.config
+
         val shireRunner: ShireRunner = if (agent != null) {
-            ShireCustomAgentRunner(myProject, configuration, console, processHandler, output, symbolTable, agent)
+            ShireCustomAgentRunner(myProject, configuration, console, processHandler, output, symbolTable, hole, agent)
         } else {
             val isLocalMode = compileResult.isLocalCommand
-            ShireDefaultRunner(myProject, configuration, console, processHandler, output, symbolTable, isLocalMode)
+            ShireDefaultRunner(myProject, configuration, console, processHandler, output, symbolTable, hole, isLocalMode)
         }
 
         shireRunner.execute()

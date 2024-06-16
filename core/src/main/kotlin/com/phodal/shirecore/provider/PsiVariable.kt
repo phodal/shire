@@ -43,4 +43,18 @@ enum class PsiVariable(val variableName: String) {
      * underTestMethod
      */
     UNDER_TEST_METHOD_CODE("underTestMethodCode")
+
+    ;
+
+    companion object {
+        /**
+         * Returns the PsiVariable with the given variable name.
+         *
+         * @param variableName the variable name to search for
+         * @return the PsiVariable with the given variable name
+         */
+        fun fromVariableName(variableName: String): PsiVariable? {
+            return values().firstOrNull { it.variableName == variableName }
+        }
+    }
 }

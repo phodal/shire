@@ -31,7 +31,7 @@ interface PsiContextVariableProvider {
      * @param variable the PsiVariable for which to calculate the value
      * @return the calculated value for the variable as a String
      */
-    fun resolveVariableValue(psiElement: PsiElement, variable: PsiVariable): String
+    fun resolveVariableValue(psiElement: PsiElement?, variable: PsiVariable): String
 
     companion object {
         private val languageExtension: LanguageExtension<PsiContextVariableProvider> =
@@ -44,7 +44,7 @@ interface PsiContextVariableProvider {
 }
 
 class DefaultPsiContextVariableProvider : PsiContextVariableProvider {
-    override fun resolveVariableValue(psiElement: PsiElement, variable: PsiVariable): String {
+    override fun resolveVariableValue(psiElement: PsiElement?, variable: PsiVariable): String {
         return ""
     }
 }
