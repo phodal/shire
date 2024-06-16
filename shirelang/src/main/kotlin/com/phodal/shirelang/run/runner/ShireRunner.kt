@@ -3,9 +3,6 @@ package com.phodal.shirelang.run.runner
 import com.intellij.execution.console.ConsoleViewWrapperBase
 import com.intellij.execution.process.ProcessHandler
 import com.intellij.openapi.project.Project
-import com.phodal.shirelang.compile.VariableTemplateCompiler
-import com.phodal.shirelang.compiler.SymbolTable
-import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.run.ShireConfiguration
 
 abstract class ShireRunner(
@@ -13,31 +10,7 @@ abstract class ShireRunner(
     open val processHandler: ProcessHandler,
     open val console: ConsoleViewWrapperBase,
     open val myProject: Project,
-    open val symbolTable: SymbolTable,
-    open val hole: HobbitHole?,
-    open val input: String,
+    open val prompt: String,
 ) {
-    fun compileShireTemplate(): String {
-        val currentEditor = VariableTemplateCompiler.defaultEditor(myProject)
-        val currentElement = VariableTemplateCompiler.defaultElement(myProject, currentEditor)
-
-        // preResolverVariables
-
-        if (currentElement != null && currentEditor != null) {
-            val language = currentElement.language
-            val additionalMap: Map<String, String> = SymbolResolver(myProject, currentEditor, hole).resolve(symbolTable)
-
-            val file = currentElement.containingFile
-            val templateCompiler = VariableTemplateCompiler(file.language, file, currentElement, currentEditor)
-
-            // updateVariables
-            templateCompiler.set(additionalMap)
-
-            return templateCompiler.compile(input)
-        }
-
-        return input
-    }
-
     abstract fun execute()
 }

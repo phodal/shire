@@ -7,9 +7,6 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 import com.phodal.shire.llm.LlmProvider
 import com.phodal.shirelang.ShireBundle
-import com.phodal.shirelang.compiler.SymbolTable
-import com.phodal.shirelang.compiler.hobbit.HobbitHole
-import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.ShireConfiguration
 import com.phodal.shirelang.run.flow.ShireConversationService
 import com.phodal.shirelang.utils.ShireCoroutineScope
@@ -21,11 +18,9 @@ class ShireDefaultRunner(
     override val configuration: ShireConfiguration,
     override val console: ConsoleViewWrapperBase,
     override val processHandler: ProcessHandler,
-    override val input: String,
-    override val symbolTable: SymbolTable,
-    override val hole: HobbitHole?,
+    override val prompt: String,
     private val isLocalMode: Boolean,
- ) : ShireRunner(configuration, processHandler, console, myProject, symbolTable, hole, input) {
+ ) : ShireRunner(configuration, processHandler, console, myProject, prompt) {
    override fun execute() {
         ApplicationManager.getApplication().invokeLater {
             if (isLocalMode) {
@@ -34,7 +29,6 @@ class ShireDefaultRunner(
                 return@invokeLater
             }
 
-            val prompt = this.compileShireTemplate()
             ShireCoroutineScope.scope(myProject).launch {
                 val llmResult = StringBuilder()
                 runBlocking {

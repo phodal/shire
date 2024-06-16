@@ -18,7 +18,9 @@ import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Key
 import com.intellij.ui.components.panels.NonOpaquePanel
+import com.phodal.shirelang.compile.VariableTemplateCompiler
 import com.phodal.shirelang.compiler.ShireCompiler
+import com.phodal.shirelang.compiler.SymbolTable
 import com.phodal.shirelang.compiler.error.SHIRE_ERROR
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.psi.ShireFile
@@ -26,6 +28,7 @@ import com.phodal.shirelang.run.flow.ShireConversationService
 import com.phodal.shirelang.run.runner.ShireCustomAgentRunner
 import com.phodal.shirelang.run.runner.ShireDefaultRunner
 import com.phodal.shirelang.run.runner.ShireRunner
+import com.phodal.shirelang.run.runner.SymbolResolver
 import java.awt.BorderLayout
 import javax.swing.JComponent
 
@@ -102,10 +105,10 @@ open class ShireRunConfigurationProfileState(
         myProject.getService(ShireConversationService::class.java)
             .createConversation(configuration.getScriptPath(), compileResult)
 
-        val output = compileResult.output
+        val compiledOutput = compileShireTemplate(myProject, compileResult.config!!, symbolTable, compileResult.output)
         val agent = compileResult.executeAgent
 
-        output.split("\n").forEach {
+        compiledOutput.split("\n").forEach {
             when {
                 it.contains(SHIRE_ERROR) -> {
                     console.print(it, ConsoleViewContentType.LOG_ERROR_OUTPUT)
@@ -120,23 +123,38 @@ open class ShireRunConfigurationProfileState(
 
         console.print("\n--------------------\n", ConsoleViewContentType.NORMAL_OUTPUT)
 
-        if (output.contains(SHIRE_ERROR)) {
+        if (compiledOutput.contains(SHIRE_ERROR)) {
             processHandler.exitWithError()
             return DefaultExecutionResult(console, processHandler)
         }
 
-        val hole: HobbitHole? = compileResult.config
-
         val shireRunner: ShireRunner = if (agent != null) {
-            ShireCustomAgentRunner(myProject, configuration, console, processHandler, output, symbolTable, hole, agent)
+            ShireCustomAgentRunner(myProject, configuration, console, processHandler, compiledOutput, agent)
         } else {
             val isLocalMode = compileResult.isLocalCommand
-            ShireDefaultRunner(myProject, configuration, console, processHandler, output, symbolTable, hole, isLocalMode)
+            ShireDefaultRunner(myProject, configuration, console, processHandler, compiledOutput, isLocalMode)
         }
 
         shireRunner.execute()
 
         return DefaultExecutionResult(console, processHandler)
     }
+}
+
+fun compileShireTemplate(myProject: Project, hole: HobbitHole, symbolTable: SymbolTable, input: String): String {
+    val currentEditor = VariableTemplateCompiler.defaultEditor(myProject)
+    val currentElement = VariableTemplateCompiler.defaultElement(myProject, currentEditor)
+
+    if (currentElement != null && currentEditor != null) {
+        val additionalMap: Map<String, String> = SymbolResolver(myProject, currentEditor, hole).resolve(symbolTable)
+
+        val file = currentElement.containingFile
+        val templateCompiler = VariableTemplateCompiler(file.language, file, currentElement, currentEditor)
+
+        templateCompiler.set(additionalMap)
+        return templateCompiler.compile(input)
+    }
+
+    return input
 }
 
