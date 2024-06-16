@@ -45,15 +45,8 @@ class JavaRelatedClassesProvider {
     }
 
     private fun canBeRemoved(member: PsiMember): Boolean {
-        val modifierList = member.modifierList
-        if (modifierList?.hasModifierProperty("public") != true) {
-            val annotations = member.annotations
-            if (annotations.isEmpty()) {
-                return true
-            }
-        }
-
-        return false
+        if (member.modifierList?.hasModifierProperty("public") == true) return false
+        return member.annotations.isEmpty()
     }
 
     private fun findRelatedClasses(method: PsiMethod): List<PsiClass> {
@@ -67,7 +60,7 @@ class JavaRelatedClassesProvider {
         return projectContentClasses.toList()
     }
 
-    fun isProjectContent(element: PsiElement): Boolean {
+    private fun isProjectContent(element: PsiElement): Boolean {
         val virtualFile = PsiUtil.getVirtualFile(element)
         return virtualFile == null || ProjectFileIndex.getInstance(element.project).isInContent(virtualFile)
     }
