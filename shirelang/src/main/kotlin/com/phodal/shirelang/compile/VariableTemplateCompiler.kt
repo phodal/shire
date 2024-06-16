@@ -17,13 +17,13 @@ class VariableTemplateCompiler(
     val file: PsiFile,
 ) {
     private val log = logger<VariableTemplateCompiler>()
-    private val variableMap: MutableMap<String, String> = mutableMapOf()
+    private val variableMap: MutableMap<String, Any> = mutableMapOf()
 
     fun set(key: String, value: String) {
         variableMap[key] = value
     }
 
-    fun set(map: Map<String, String>) {
+    fun set(map: Map<String, Any>) {
         variableMap.putAll(map)
     }
 

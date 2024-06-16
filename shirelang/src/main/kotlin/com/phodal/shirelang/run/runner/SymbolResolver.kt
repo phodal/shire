@@ -27,7 +27,7 @@ class SymbolResolver(val myProject: Project, val editor: Editor, val hole: Hobbi
         }
     }
 
-    fun resolve(symbolTable: SymbolTable): Map<String, String> {
+    fun resolve(symbolTable: SymbolTable): Map<String, Any> {
         val element: PsiElement? = try {
             editor.caretModel.currentCaret.offset.let {
                 val psiFile = PsiUtilBase.getPsiFileInEditor(editor, myProject) ?: return@let null
@@ -49,8 +49,8 @@ class SymbolResolver(val myProject: Project, val editor: Editor, val hole: Hobbi
         return results
     }
 
-    private fun resolveBuiltInVariable(symbolTable: SymbolTable, element: PsiElement?): MutableMap<String, String> {
-        val result = mutableMapOf<String, String>()
+    private fun resolveBuiltInVariable(symbolTable: SymbolTable, element: PsiElement?): MutableMap<String, Any> {
+        val result = mutableMapOf<String, Any>()
         symbolTable.getAllVariables().forEach {
             val psiVariable = PsiVariable.fromVariableName(it.key)
             if (psiVariable != null) {

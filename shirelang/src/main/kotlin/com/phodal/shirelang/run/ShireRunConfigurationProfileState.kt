@@ -147,7 +147,7 @@ fun compileShireTemplate(myProject: Project, hole: HobbitHole, symbolTable: Symb
     val currentElement = VariableTemplateCompiler.defaultElement(myProject, currentEditor)
 
     if (currentElement != null && currentEditor != null) {
-        val additionalMap: Map<String, String> = SymbolResolver(myProject, currentEditor, hole).resolve(symbolTable)
+        val additionalMap: Map<String, Any> = SymbolResolver(myProject, currentEditor, hole).resolve(symbolTable)
 
         val file = currentElement.containingFile
         val templateCompiler = VariableTemplateCompiler(file.language, file)

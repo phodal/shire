@@ -13,7 +13,7 @@ import com.phodal.shirelang.java.toolchain.getContainingClass
 import kotlinx.coroutines.runBlocking
 
 class JavaPsiContextVariableProvider : PsiContextVariableProvider {
-    override fun resolveVariableValue(psiElement: PsiElement?, variable: PsiVariable): String {
+    override fun resolveVariableValue(psiElement: PsiElement?, variable: PsiVariable): Any {
         val project = psiElement?.project ?: return ""
         if (psiElement.language.id != "JAVA") {
             return ""
@@ -45,11 +45,7 @@ class JavaPsiContextVariableProvider : PsiContextVariableProvider {
 
             PsiVariable.IS_NEW_FILE -> {
                 val sourceElement = TestFinderHelper.findClassesForTest(psiElement)
-                return if (sourceElement.isEmpty()) {
-                    "true"
-                } else {
-                    "false"
-                }
+                return sourceElement.isEmpty()
             }
 
             PsiVariable.TARGET_TEST_FILE_NAME -> {
