@@ -25,7 +25,7 @@ class JavaToolchainProvider : ToolchainProvider {
             return false
         } ?: return false
 
-        return ModuleRootManager.getInstance(module).sdk is JavaSdkType
+        return ModuleRootManager.getInstance(module).sdk?.sdkType is JavaSdkType
     }
 
     override suspend fun collect(
