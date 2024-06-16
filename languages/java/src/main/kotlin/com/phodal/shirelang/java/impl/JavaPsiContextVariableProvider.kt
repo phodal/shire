@@ -11,8 +11,8 @@ import com.phodal.shirecore.provider.PsiContextVariableProvider
 import com.phodal.shirelang.java.toolchain.getContainingClass
 
 class JavaPsiContextVariableProvider : PsiContextVariableProvider {
-    override fun resolveVariableValue(psiElement: PsiElement, variable: PsiVariable): String {
-        val project = psiElement.project
+    override fun resolveVariableValue(psiElement: PsiElement?, variable: PsiVariable): String {
+        val project = psiElement?.project ?: return ""
         if (psiElement.language.id != "JAVA") {
             return ""
         }
