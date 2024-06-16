@@ -13,7 +13,6 @@ enum class ContextVariable(val variable: String, val description: String) {
     METHOD_NAME("methodName", "The name of the method"),
     LANGUAGE("language", "The language of the file"),
     COMMENT_SYMBOL("commentSymbol", "The comment symbol of the language"),
-    FRAMEWORK_CONTEXT("frameworkContext", "The context of the framework"),
     ALL("all", "All the text")
     ;
 
@@ -48,7 +47,6 @@ enum class ContextVariable(val variable: String, val description: String) {
                         else -> "-"
                     }
 
-                    FRAMEWORK_CONTEXT -> ""
                     ALL -> file?.text ?: ""
                 }
             }

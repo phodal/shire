@@ -1,5 +1,6 @@
 package com.phodal.shirelang.run.runner
 
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
@@ -41,13 +42,16 @@ class SymbolResolver(val myProject: Project, val editor: Editor, val hole: Hobbi
     }
 
     private fun resolveBuiltInVariable(symbolTable: SymbolTable, element: PsiElement?): MutableMap<String, String> {
-
-
         val result = mutableMapOf<String, String>()
         symbolTable.getAllVariables().forEach {
             val psiVariable = PsiVariable.fromVariableName(it.key)
             if (psiVariable != null) {
-                result[it.key] = variableProvider.resolveVariableValue(element, psiVariable)
+                result[it.key] = try {
+                    variableProvider.resolveVariableValue(element, psiVariable)
+                } catch (e: Exception) {
+                    logger<SymbolResolver>().error("Failed to resolve variable: ${it.key}", e)
+                    ""
+                }
             } else {
                 result[it.key] = ""
             }

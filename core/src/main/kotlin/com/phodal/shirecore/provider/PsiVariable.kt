@@ -42,7 +42,9 @@ enum class PsiVariable(val variableName: String) {
     /**
      * underTestMethod
      */
-    UNDER_TEST_METHOD_CODE("underTestMethodCode")
+    UNDER_TEST_METHOD_CODE("underTestMethodCode"),
+
+    FRAMEWORK_CONTEXT("frameworkContext")
 
     ;
 

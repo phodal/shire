@@ -14,8 +14,8 @@ class ToolchainContextItem(
 
 data class ToolchainPrepareContext(
     val sourceFile: PsiFile?,
+    val element: PsiElement?,
     val extraItems: List<ToolchainContextItem> = emptyList(),
-    val element: PsiElement?
 )
 
 interface ToolchainProvider {

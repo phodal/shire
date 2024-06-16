@@ -91,6 +91,9 @@ class ShireCompiler(
                 }
 
                 WHITE_SPACE, DUMMY_BLOCK -> output.append(psiElement.text)
+                ShireTypes.VELOCITY_EXPR -> {
+                    logger.info("Velocity expression found: ${psiElement.text}")
+                }
                 else -> {
                     output.append(psiElement.text)
                     logger.warn("Unknown element type: ${psiElement.elementType}")

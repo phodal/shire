@@ -1,6 +1,5 @@
 package com.phodal.shirelang.java.impl
 
-import com.intellij.openapi.application.ReadAction
 import com.intellij.psi.*
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.search.searches.ClassInheritorsSearch
@@ -8,7 +7,10 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.testIntegration.TestFinderHelper
 import com.phodal.shirecore.provider.PsiVariable
 import com.phodal.shirecore.provider.PsiContextVariableProvider
+import com.phodal.shirecore.provider.ToolchainPrepareContext
+import com.phodal.shirecore.provider.ToolchainProvider
 import com.phodal.shirelang.java.toolchain.getContainingClass
+import kotlinx.coroutines.runBlocking
 
 class JavaPsiContextVariableProvider : PsiContextVariableProvider {
     override fun resolveVariableValue(psiElement: PsiElement?, variable: PsiVariable): String {
@@ -52,15 +54,10 @@ class JavaPsiContextVariableProvider : PsiContextVariableProvider {
 
             PsiVariable.TARGET_TEST_FILE_NAME -> {
                 val testFileName = sourceFile.name.replace(".java", "") + "Test"
-//                val sourceFilePath = sourceFile.virtualFile
-//                val parentDirPath = ReadAction.compute<String, Throwable> { sourceFilePath.parent?.path }
-//                val testDirPath = parentDirPath.replace("/src/main/java/", "/src/test/java/")
-
                 "$testFileName.java"
             }
 
             PsiVariable.UNDER_TEST_METHOD_CODE -> {
-
                 val searchScope = GlobalSearchScope.allScope(project)
 
                 when (psiElement) {
@@ -92,6 +89,13 @@ class JavaPsiContextVariableProvider : PsiContextVariableProvider {
                 }
 
                 return ""
+            }
+
+            PsiVariable.FRAMEWORK_CONTEXT -> {
+                runBlocking {
+                    val prepareContext = ToolchainPrepareContext(sourceFile, psiElement)
+                    ToolchainProvider.gatherToolchainContextItems(project, prepareContext).joinToString("\n")
+                }
             }
         }
     }
