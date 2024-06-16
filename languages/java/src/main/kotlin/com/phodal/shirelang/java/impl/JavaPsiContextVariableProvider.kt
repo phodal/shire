@@ -32,11 +32,11 @@ class JavaPsiContextVariableProvider : PsiContextVariableProvider {
             }
 
             PsiVariable.RELATED_CLASSES -> {
-                ""
+                return listOf<String>()
             }
 
             PsiVariable.SIMILAR_TEST_CASE -> {
-                ""
+                return listOf<String>()
             }
 
             PsiVariable.IMPORTS -> {
