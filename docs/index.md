@@ -22,10 +22,16 @@ permalink: /
   </a>
 </p>
 
-The Shire AI Coding & Agents Language is a specialized tool designed to facilitate communication between a large language model (
-LLM) and a control integrated development environment (IDE) for the purpose of automated programming. 
+Shire offers a straightforward AI Coding & Agents Language
+that enables communication between an LLM and control IDE for automated programming.
+
+Shire example:
 
 ![Shire Cheatsheet](images/shire-sheet.svg)
+
+Shire Data Architecture:
+
+![Shire Data Architecture](images/shire-data-flow.svg)
 
 Here’s an overview of its main features and functionalities:
 

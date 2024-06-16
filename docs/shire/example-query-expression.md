@@ -13,7 +13,7 @@ Usecases:
 
 Example AST query expression which will support use our AST node and S-Expression to query the AST tree.
 
-For example:
+A ChatGPT generate for example:
 
 ```kotlin
 val query = """
@@ -43,4 +43,6 @@ val query = """
         )
     )
 """.trimIndent()
+```
+
 

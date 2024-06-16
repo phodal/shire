@@ -21,6 +21,10 @@ Shire example:
 
 ![Shire Cheatsheet](docs/images/shire-sheet.svg)
 
+Shire Data Architecture:
+
+![Shire Data Architecture](docs/images/shire-data-flow.svg)
+
 Documentation: [Shire AI Coding & Agents Language](https://shire.phodal.com/)
 
 ## LICENSE
