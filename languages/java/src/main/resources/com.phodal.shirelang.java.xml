@@ -18,7 +18,7 @@
 
         <shireToolchainProvider
                 language="JAVA"
-                implementationClass="com.phodal.shirelang.java.impl.JavaToolchainProvider"/>
+                implementationClass="com.phodal.shirelang.java.variable.JavaToolchainProvider"/>
 
         <shireRunProjectService
                 implementation="com.phodal.shirelang.java.impl.JavaRunProjectService"/>
@@ -27,7 +27,7 @@
 
         <shirePsiVariableProvider
                 language="JAVA"
-                implementationClass="com.phodal.shirelang.java.impl.JavaPsiContextVariableProvider"/>
+                implementationClass="com.phodal.shirelang.java.variable.JavaPsiContextVariableProvider"/>
 
         <shireElementStrategyBuilder implementation="com.phodal.shirelang.java.impl.JavaElementStrategyBuilder"/>
     </extensions>

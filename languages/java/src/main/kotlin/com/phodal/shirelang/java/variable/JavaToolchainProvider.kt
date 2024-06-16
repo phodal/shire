@@ -1,4 +1,4 @@
-package com.phodal.shirelang.java.impl
+package com.phodal.shirelang.java.variable
 
 import com.intellij.lang.java.JavaLanguage
 import com.intellij.openapi.module.Module
@@ -34,7 +34,6 @@ class JavaToolchainProvider : ToolchainProvider {
     ): List<ToolchainContextItem> {
         return collectJavaVersion(context, project)?.let { listOf(it) } ?: emptyList()
     }
-
 
     private fun collectJavaVersion(
         context: ToolchainPrepareContext,

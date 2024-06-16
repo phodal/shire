@@ -1,4 +1,4 @@
-package com.phodal.shirelang.java.impl
+package com.phodal.shirelang.java.variable
 
 import com.intellij.psi.*
 import com.intellij.psi.search.GlobalSearchScope
@@ -10,6 +10,7 @@ import com.phodal.shirecore.provider.PsiContextVariableProvider
 import com.phodal.shirecore.provider.ToolchainPrepareContext
 import com.phodal.shirecore.provider.ToolchainProvider
 import com.phodal.shirelang.java.toolchain.getContainingClass
+import com.phodal.shirelang.java.variable.provider.JavaRelatedClassesProvider
 import kotlinx.coroutines.runBlocking
 
 class JavaPsiContextVariableProvider : PsiContextVariableProvider {
@@ -32,7 +33,12 @@ class JavaPsiContextVariableProvider : PsiContextVariableProvider {
             }
 
             PsiVariable.RELATED_CLASSES -> {
-                return listOf<String>()
+                return when(psiElement.parent) {
+                    is PsiMethod -> {
+                        JavaRelatedClassesProvider().lookup(psiElement.parent!! as PsiMethod).joinToString("\n") { it.text }
+                    }
+                    else -> ""
+                }
             }
 
             PsiVariable.SIMILAR_TEST_CASE -> {
