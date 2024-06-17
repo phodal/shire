@@ -73,6 +73,12 @@
                   implements="com.phodal.shirecore.codemodel.ClassStructureProvider"/>
         </extensionPoint>
 
+        <extensionPoint qualifiedName="com.phodal.methodStructureProvider"
+                        beanClass="com.intellij.lang.LanguageExtensionPoint" dynamic="true">
+            <with attribute="implementationClass"
+                  implements="com.phodal.shirecore.codemodel.MethodStructureProvider"/>
+        </extensionPoint>
+
         <!-- Post Code Middleware -->
         <extensionPoint qualifiedName="com.phodal.shirePostProcessor"
                         interface="com.phodal.shirecore.middleware.PostProcessor"

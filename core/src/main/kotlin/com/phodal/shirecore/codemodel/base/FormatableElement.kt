@@ -40,5 +40,5 @@ abstract class FormatableElement(open val root: PsiElement, open val text: Strin
      * ```
      * @return The formatted string representation of the named element context.
      */
-    fun format(): String = ""
+    open fun format(): String = ""
 }
