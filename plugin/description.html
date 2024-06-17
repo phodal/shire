@@ -1,13 +1,22 @@
-Shire offers a straightforward AI Coding &nbsp; Agents Language that enables communication between an LLM
+<blockquote>Shire offers a straightforward AI Coding &amp; Agents Language that enables communication between an LLM
 and control IDE for automated programming.
-<br/><br/>
+</blockquote>
 
-For example:
+<h2>Shire syntax Overview</h2>
+
+<img src="https://shire.phodal.com/images/shire-sheet.svg" alt="Shire Cheatsheet" />
+
+<h2>Shire Data Architecture</h2>
+
+<img src="https://shire.phodal.com/images/shire-data-flow.svg" alt="Shire Data Architecture" />
+
+<h2>Shire code example</h2>
+
 <pre>
 <code lang="shire">
 ---
 name: "AutoTest"
-description: "AutoTest"
+description: "Auto generate test in ContextMenu with use selection code"
 actionLocation: ContextMenu
 interaction: AppendCursor
 when: $fileName.contains(".java") && $filePath.contains("src/main/java")
@@ -18,6 +27,8 @@ when: $fileName.contains(".java") && $filePath.contains("src/main/java")
 Write unit test for following ${context.language} code.
 
 ${context.frameworkContext}
+
+Here is the source code to be tested:
 
 /file:src/main/kotlin/com/phodal/blog/controller/UserController.kt
 </code>
