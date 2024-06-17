@@ -1,6 +1,5 @@
 package com.phodal.shirecore.codemodel.model
 
-import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiReference
 import com.phodal.shirecore.codemodel.ClassStructureProvider
@@ -18,17 +17,12 @@ class MethodStructure(
     val paramNames: List<String> = emptyList(),
     val includeClassContext: Boolean = false,
     val usages: List<PsiReference> = emptyList(),
-    private val fanInOut: List<PsiElement> = emptyList(),
+    val fanInOut: List<PsiElement> = emptyList(),
 ) : FormatableElement(root, text, name) {
-    private val classContext: ClassStructure?
-    private val project: Project = root.project
-
-    init {
-        classContext = if (includeClassContext && enclosingClass != null) {
-            ClassStructureProvider.from(enclosingClass, false)
-        } else {
-            null
-        }
+    private val classContext: ClassStructure? = if (includeClassContext && enclosingClass != null) {
+        ClassStructureProvider.from(enclosingClass, false)
+    } else {
+        null
     }
 
     override fun format(): String {
@@ -64,7 +58,7 @@ class MethodStructure(
             val context: ClassStructure = ClassStructureProvider.from(it, false) ?: return@forEach
             val element = context.root
 
-            if (!isInProject(element.containingFile?.virtualFile!!, project)) {
+            if (!isInProject(element.containingFile?.virtualFile!!, root.project)) {
                 return@forEach
             }
 
