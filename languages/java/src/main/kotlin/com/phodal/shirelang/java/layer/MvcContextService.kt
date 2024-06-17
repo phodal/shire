@@ -71,7 +71,7 @@ class MvcContextService(private val project: Project) {
 
         val path = file?.virtualFile?.path ?: ""
         val classList = relevantModel.map {
-            JavaClassStructureProvider().getClassStructure(it, true)?.format()
+            JavaClassStructureProvider().build(it, true)?.format()
         }
 
         return "\n${classList.joinToString("\n")}\n//current path: ${path}\n"

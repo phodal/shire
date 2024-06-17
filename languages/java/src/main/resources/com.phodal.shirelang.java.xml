@@ -29,6 +29,9 @@
                 language="JAVA"
                 implementationClass="com.phodal.shirelang.java.variable.JavaPsiContextVariableProvider"/>
 
+        <shireCodeModifier language="JAVA"
+                           implementationClass="com.phodal.shirelang.java.codeedit.JavaCodeModifier"/>
+
         <shireElementStrategyBuilder implementation="com.phodal.shirelang.java.impl.JavaElementStrategyBuilder"/>
     </extensions>
 </idea-plugin>

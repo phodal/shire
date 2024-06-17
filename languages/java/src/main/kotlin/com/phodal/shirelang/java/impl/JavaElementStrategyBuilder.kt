@@ -14,7 +14,7 @@ class JavaElementStrategyBuilder : PsiElementStrategyBuilder {
             .findClass(canonicalName, GlobalSearchScope.projectScope(project))
             ?: return null
 
-        return JavaClassStructureProvider().getClassStructure(psiClass, false)
+        return JavaClassStructureProvider().build(psiClass, false)
     }
 
     override fun relativeElement(project: Project, givenElement: PsiElement, type: PsiComment): PsiElement? {

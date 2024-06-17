@@ -10,7 +10,7 @@ import com.phodal.shirecore.codemodel.ClassStructureProvider
 import com.phodal.shirecore.codemodel.model.ClassStructure
 
 class JavaClassStructureProvider : ClassStructureProvider {
-    override fun getClassStructure(psiElement: PsiElement, gatherUsages: Boolean): ClassStructure? {
+    override fun build(psiElement: PsiElement, gatherUsages: Boolean): ClassStructure? {
         if (psiElement !is PsiClass) return null
 
         val supers = runReadAction {

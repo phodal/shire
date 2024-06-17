@@ -19,7 +19,7 @@ interface ClassStructureProvider {
      * @param gatherUsages specifies whether to gather usages of the class
      * @return the class context for the given [psiElement], or null if the class context cannot be determined
      */
-    fun getClassStructure(psiElement: PsiElement, gatherUsages: Boolean): ClassStructure?
+    fun build(psiElement: PsiElement, gatherUsages: Boolean): ClassStructure?
 
     companion object {
         private val languageExtension = LanguageExtension<ClassStructureProvider>("com.phodal.classStructureProvider")
@@ -34,7 +34,7 @@ interface ClassStructureProvider {
         fun from(psiElement: PsiElement, gatherUsages: Boolean = false): ClassStructure? {
             for (provider in providers) {
                 try {
-                    return provider.getClassStructure(psiElement, gatherUsages)
+                    return provider.build(psiElement, gatherUsages)
                 } catch (e: Exception) {
                     logger.error("Error while getting class context from $provider", e)
                 }
