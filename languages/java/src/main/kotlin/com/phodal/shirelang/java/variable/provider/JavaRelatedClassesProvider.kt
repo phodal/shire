@@ -5,8 +5,10 @@ import com.intellij.psi.*
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.PsiUtil
 
-class JavaRelatedClassesProvider {
-    fun lookup(method: PsiMethod): List<PsiClass> {
+class JavaRelatedClassesProvider : RelatedClassesProvider<PsiClass> {
+    override fun lookupMethod(method: PsiElement): List<PsiClass> {
+        if (method !is PsiMethod) return emptyList()
+
         return findRelatedClasses(method)
             .flatMap { findSuperClasses(it) }
             .map { cleanUp(it) }
