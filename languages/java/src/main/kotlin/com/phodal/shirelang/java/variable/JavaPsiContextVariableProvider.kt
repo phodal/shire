@@ -1,5 +1,6 @@
 package com.phodal.shirelang.java.variable
 
+import com.intellij.openapi.project.Project
 import com.intellij.psi.*
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.search.searches.ClassInheritorsSearch
@@ -16,9 +17,7 @@ import kotlinx.coroutines.runBlocking
 class JavaPsiContextVariableProvider : PsiContextVariableProvider {
     override fun resolveVariableValue(psiElement: PsiElement?, variable: PsiVariable): Any {
         val project = psiElement?.project ?: return ""
-        if (psiElement.language.id != "JAVA") {
-            return ""
-        }
+        if (psiElement.language.id != "JAVA") return ""
 
         val clazz: PsiClass? = psiElement.getContainingClass()
         val sourceFile: PsiJavaFile = psiElement.containingFile as PsiJavaFile
@@ -33,12 +32,7 @@ class JavaPsiContextVariableProvider : PsiContextVariableProvider {
             }
 
             PsiVariable.RELATED_CLASSES -> {
-                return when(psiElement.parent) {
-                    is PsiMethod -> {
-                        JavaRelatedClassesProvider().lookup(psiElement.parent!! as PsiMethod).joinToString("\n") { it.text }
-                    }
-                    else -> ""
-                }
+                JavaRelatedClassesProvider().lookup(psiElement.parent).joinToString("\n") { it.text }
             }
 
             PsiVariable.SIMILAR_TEST_CASE -> {
@@ -60,37 +54,7 @@ class JavaPsiContextVariableProvider : PsiContextVariableProvider {
             }
 
             PsiVariable.UNDER_TEST_METHOD_CODE -> {
-                val searchScope = GlobalSearchScope.allScope(project)
-
-                when (psiElement) {
-                    is PsiMethod -> {
-                        val calls: List<PsiMethodCallExpression> =
-                            PsiTreeUtil.findChildrenOfAnyType(psiElement.body, PsiMethodCallExpression::class.java)
-                                .toList()
-
-                        val strings = calls
-                            .mapNotNull { it ->
-                                it.methodExpression.resolve()?.let {
-                                    it as PsiMethod
-                                }
-                            }
-                            .filter {
-                                if (it.containingClass == null) return@filter false
-
-                                val isEmpty = ClassInheritorsSearch.search(it.containingClass!!, searchScope, true)
-                                    .findAll().isEmpty()
-
-                                !isEmpty
-                            }
-                            .map {
-                                it.text
-                            }
-
-                        return strings.joinToString("\n")
-                    }
-                }
-
-                return ""
+                return lookupUnderTestMethod(project, psiElement)
             }
 
             PsiVariable.FRAMEWORK_CONTEXT -> {
@@ -102,6 +66,32 @@ class JavaPsiContextVariableProvider : PsiContextVariableProvider {
                     contextItems.joinToString("\n") { it.text }
                 }
             }
+        }
+    }
+
+    private fun lookupUnderTestMethod(project: Project, psiElement: PsiElement): String {
+        val searchScope = GlobalSearchScope.allScope(project)
+
+        return when (psiElement) {
+            is PsiMethod -> {
+                val calls = PsiTreeUtil
+                    .findChildrenOfAnyType(psiElement.body, PsiMethodCallExpression::class.java)
+                    .toList()
+
+                return calls
+                    .mapNotNull(PsiMethodCallExpression::resolveMethod)
+                    .filter {
+                        if (it.containingClass == null) return@filter false
+
+                        ClassInheritorsSearch
+                            .search(it.containingClass!!, searchScope, true)
+                            .findAll().isNotEmpty()
+                    }.joinToString("\n") {
+                        it.text
+                    }
+            }
+
+            else -> ""
         }
     }
 
