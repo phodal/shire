@@ -83,7 +83,7 @@ class DiffSimplifier(val project: Project) {
 
     companion object {
         private val revisionRegex = Regex("\\(revision [^)]+\\)")
-        private const val lineTip = "\\ No newline at end of file"
+        private const val LINE_TIP = "\\ No newline at end of file"
 
         /**
          * This method is used to process the given diff string and extract relevant information from it.
@@ -115,7 +115,7 @@ class DiffSimplifier(val project: Project) {
                 }
 
                 // if a patch includes `\ No newline at the end of file` remove it
-                if (line.contains(lineTip)) {
+                if (line.contains(LINE_TIP)) {
                     index++
                     continue
                 }

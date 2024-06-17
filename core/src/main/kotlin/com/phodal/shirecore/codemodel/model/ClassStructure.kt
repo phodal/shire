@@ -19,7 +19,11 @@ class ClassStructure(
     val usages: List<PsiReference> = emptyList(),
 ) : FormatableElement(root, text, name) {
     private fun getFieldNames(): List<String> = fields.mapNotNull {
-        VariableStructureProvider.from(it, false, false, false)?.shortFormat()
+        VariableStructureProvider.from(it,
+            includeMethodContext = false,
+            includeClassContext = false,
+            gatherUsages = false
+        ).shortFormat()
     }
 
     private fun getMethodSignatures(): List<String> = methods.mapNotNull {

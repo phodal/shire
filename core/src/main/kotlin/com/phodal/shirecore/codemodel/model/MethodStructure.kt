@@ -11,13 +11,13 @@ class MethodStructure(
     override val text: String,
     override val name: String?,
     val signature: String? = null,
-    val enclosingClass: PsiElement? = null,
+    private val enclosingClass: PsiElement? = null,
     val language: String? = null,
     val returnType: String? = null,
     val paramNames: List<String> = emptyList(),
-    val includeClassContext: Boolean = false,
-    val usages: List<PsiReference> = emptyList(),
-    val fanInOut: List<PsiElement> = emptyList(),
+    private val includeClassContext: Boolean = false,
+    private val usages: List<PsiReference> = emptyList(),
+    private val fanInOut: List<PsiElement> = emptyList(),
 ) : FormatableElement(root, text, name) {
     private val classContext: ClassStructure? = if (includeClassContext && enclosingClass != null) {
         ClassStructureProvider.from(enclosingClass, false)

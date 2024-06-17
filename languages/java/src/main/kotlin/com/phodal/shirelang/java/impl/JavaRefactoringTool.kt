@@ -138,7 +138,14 @@ class JavaRefactoringTool : RefactoringTool {
             val javaFile = psiFile as? PsiJavaFile ?: return null
             val className = javaFile.classes.firstOrNull()?.name ?: return null
             val canonicalName = javaFile.packageName + "." + className
-            return RefactorInstElement(true, true, input, canonicalName, className, javaFile.packageName)
+            return RefactorInstElement(
+                true,
+                isMethod = true,
+                methodName = input,
+                canonicalName = canonicalName,
+                className = className,
+                pkgName = javaFile.packageName,
+            )
         }
 
         val isMethod = input.contains("#")

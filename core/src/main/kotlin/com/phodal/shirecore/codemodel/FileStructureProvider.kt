@@ -17,7 +17,7 @@ interface FileStructureProvider {
             providers = registeredLanguages.mapNotNull(languageExtension::forLanguage)
         }
 
-        fun from(psiFile: PsiFile): FileStructure? {
+        fun from(psiFile: PsiFile): FileStructure {
             for (provider in providers) {
                 val fileContext = provider.build(psiFile)
                 if (fileContext != null) {

@@ -139,7 +139,7 @@ class CodeVerifyProcessor : PostProcessor {
      * If the element is a PsiErrorElement, it adds a message to the errors list with the error description and position.
      * Finally, it returns the list of error messages.
      */
-    fun PsiFile.collectPsiError(): MutableList<String> {
+    private fun PsiFile.collectPsiError(): MutableList<String> {
         val errors = mutableListOf<String>()
         val visitor = object : PsiSyntaxCheckingVisitor() {
             override fun visitElement(element: PsiElement) {

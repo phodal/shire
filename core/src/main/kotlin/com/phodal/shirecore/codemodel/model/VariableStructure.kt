@@ -18,7 +18,7 @@ class VariableStructure(
     private val includeClassContext: Boolean = false
 ) : FormatableElement(root, text, name) {
     private val methodContext: MethodStructure? = if (includeMethodContext && enclosingMethod != null) {
-        MethodStructureProvider.from(enclosingMethod, false, false)
+        MethodStructureProvider.from(enclosingMethod, includeClassContext = false, gatherUsages = false)
     } else {
         null
     }

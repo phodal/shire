@@ -17,7 +17,6 @@ interface MethodStructureProvider {
     companion object {
         private val languageExtension = LanguageExtension<MethodStructureProvider>("com.phodal.methodStructureProvider")
         private val providers: List<MethodStructureProvider>
-        private val logger = logger<MethodStructureProvider>()
 
         init {
             val registeredLanguages = Language.getRegisteredLanguages()

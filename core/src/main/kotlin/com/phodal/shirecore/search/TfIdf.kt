@@ -66,8 +66,8 @@ interface RegexTokenizerOptions {
 }
 
 open class RegexpTokenizer(opts: RegexTokenizerOptions? = null) : Tokenizer() {
-    var _pattern = Regex("\\s+")
-    var discardEmpty: Boolean = true
+    var whitespacePattern = Regex("\\s+")
+    private var discardEmpty: Boolean = true
     private var _gaps: Boolean? = null
 
     init {
@@ -77,7 +77,7 @@ open class RegexpTokenizer(opts: RegexTokenizerOptions? = null) : Tokenizer() {
             override val gaps: Boolean? = null
         }
 
-        _pattern = options.pattern ?: _pattern
+        whitespacePattern = options.pattern ?: whitespacePattern
         discardEmpty = options.discardEmpty
         _gaps = options.gaps
 
@@ -90,10 +90,10 @@ open class RegexpTokenizer(opts: RegexTokenizerOptions? = null) : Tokenizer() {
         val results: List<String>
 
         if (_gaps == true) {
-            results = s.split(_pattern)
+            results = s.split(whitespacePattern)
             return if (discardEmpty) without(results, "", " ") else results
         } else {
-            results = _pattern.findAll(s).map { it.value }.toList()
+            results = whitespacePattern.findAll(s).map { it.value }.toList()
             return results.ifEmpty { emptyList() }
         }
     }
@@ -105,7 +105,7 @@ open class RegexpTokenizer(opts: RegexTokenizerOptions? = null) : Tokenizer() {
 
 class WordTokenizer(options: RegexTokenizerOptions? = null) : RegexpTokenizer(options) {
     init {
-        _pattern = Regex("[^A-Za-zА-Яа-я0-9_]+")
+        whitespacePattern = Regex("[^A-Za-zА-Яа-я0-9_]+")
     }
 }
 
@@ -132,12 +132,12 @@ class TfIdf<K, V> {
     }
 
     private fun documentHasTerm(term: String, document: DocumentType): Boolean {
-        return (document as? Map<*, *>)?.get(term) as? Int ?: 0 > 0
+        return ((document as? Map<*, *>)?.get(term) as? Int ?: 0) > 0
     }
 
     fun buildDocument(text: DocumentType, key: Any? = null): MutableMap<String, Any?> {
         val stopOut: Boolean
-        var doc: MutableMap<String, Any?>
+        val doc: MutableMap<String, Any?>
 
         when (text) {
             is String -> {

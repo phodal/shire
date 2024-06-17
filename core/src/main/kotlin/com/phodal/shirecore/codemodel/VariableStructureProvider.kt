@@ -28,7 +28,7 @@ interface VariableStructureProvider {
             includeMethodContext: Boolean = false,
             includeClassContext: Boolean = false,
             gatherUsages: Boolean = false,
-        ): VariableStructure? {
+        ): VariableStructure {
             for (provider in providers) {
                 val variableStructure =
                     provider.build(psiElement, includeMethodContext, includeClassContext, gatherUsages) ?: continue

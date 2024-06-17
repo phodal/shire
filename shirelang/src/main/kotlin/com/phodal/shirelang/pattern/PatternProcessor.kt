@@ -9,7 +9,7 @@ sealed class PatternProcessor {
         }
     }
 
-    class Sort : PatternProcessor() {
+    object Sort : PatternProcessor() {
         override fun process(input: List<String>): List<String> {
             return input.sorted()
         }
