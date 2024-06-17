@@ -35,7 +35,7 @@ class JavaPsiContextVariableProvider : PsiContextVariableProvider {
             PsiVariable.RELATED_CLASSES -> {
                 return when(psiElement.parent) {
                     is PsiMethod -> {
-                        JavaRelatedClassesProvider().lookupMethod(psiElement.parent!! as PsiMethod).joinToString("\n") { it.text }
+                        JavaRelatedClassesProvider().lookup(psiElement.parent!! as PsiMethod).joinToString("\n") { it.text }
                     }
                     else -> ""
                 }

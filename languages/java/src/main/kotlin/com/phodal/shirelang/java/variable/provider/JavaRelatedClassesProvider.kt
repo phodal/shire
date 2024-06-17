@@ -5,14 +5,29 @@ import com.intellij.psi.*
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.PsiUtil
 
-class JavaRelatedClassesProvider : RelatedClassesProvider<PsiClass> {
-    override fun lookupMethod(method: PsiElement): List<PsiClass> {
-        if (method !is PsiMethod) return emptyList()
+/**
+ * This class JavaRelatedClassesProvider implements the RelatedClassesProvider interface and provides a method to
+ * lookup related classes for a given PsiElement, specifically a PsiMethod.
+ * It analyzes the parameters, return type, and generic types of the PsiMethod to find related classes that are part
+ * of the project content.
+ * It also includes methods to clean up unnecessary elements in a PsiClass, find superclasses of a PsiClass, and determine
+ * if an element is part of the project content.
+ */
+class JavaRelatedClassesProvider : RelatedClassesProvider {
+    override fun lookup(element: PsiElement): List<PsiClass> {
+        return when (element) {
+            is PsiMethod -> findRelatedClasses(element)
+                .flatMap { findSuperClasses(it) }
+                .map { cleanUp(it) }
+                .toList()
 
-        return findRelatedClasses(method)
-            .flatMap { findSuperClasses(it) }
-            .map { cleanUp(it) }
-            .toList()
+            is PsiClass -> findRelatedClasses(element)
+            else -> emptyList()
+        }
+    }
+
+    private fun findRelatedClasses(clazz: PsiClass): List<PsiClass> {
+        return clazz.allMethods.flatMap { findRelatedClasses(it) }.distinct()
     }
 
     /**
