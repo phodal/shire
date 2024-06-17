@@ -73,10 +73,22 @@
                   implements="com.phodal.shirecore.codemodel.ClassStructureProvider"/>
         </extensionPoint>
 
+        <extensionPoint qualifiedName="com.phodal.fileStructureProvider"
+                        beanClass="com.intellij.lang.LanguageExtensionPoint" dynamic="true">
+            <with attribute="implementationClass"
+                  implements="com.phodal.shirecore.codemodel.FileStructureProvider"/>
+        </extensionPoint>
+
         <extensionPoint qualifiedName="com.phodal.methodStructureProvider"
                         beanClass="com.intellij.lang.LanguageExtensionPoint" dynamic="true">
             <with attribute="implementationClass"
                   implements="com.phodal.shirecore.codemodel.MethodStructureProvider"/>
+        </extensionPoint>
+
+        <extensionPoint qualifiedName="com.phodal.variableStructureProvider"
+                        beanClass="com.intellij.lang.LanguageExtensionPoint" dynamic="true">
+            <with attribute="implementationClass"
+                  implements="com.phodal.shirecore.codemodel.VariableStructureProvider"/>
         </extensionPoint>
 
         <!-- Post Code Middleware -->

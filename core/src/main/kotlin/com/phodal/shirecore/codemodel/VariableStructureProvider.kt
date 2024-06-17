@@ -1,0 +1,43 @@
+package com.phodal.shirecore.codemodel
+
+import com.intellij.lang.Language
+import com.intellij.lang.LanguageExtension
+import com.intellij.psi.PsiElement
+import com.phodal.shirecore.codemodel.model.VariableStructure
+
+interface VariableStructureProvider {
+    fun build(
+        psiElement: PsiElement,
+        withMethodContext: Boolean,
+        withClassContext: Boolean,
+        gatherUsages: Boolean,
+    ): VariableStructure?
+
+    companion object {
+        private val languageExtension =
+            LanguageExtension<VariableStructureProvider>("com.phodal.variableStructureProvider")
+        private val providers: List<VariableStructureProvider>
+
+        init {
+            val registeredLanguages = Language.getRegisteredLanguages()
+            providers = registeredLanguages.mapNotNull(languageExtension::forLanguage)
+        }
+
+        fun from(
+            psiElement: PsiElement,
+            includeMethodContext: Boolean = false,
+            includeClassContext: Boolean = false,
+            gatherUsages: Boolean = false,
+        ): VariableStructure? {
+            for (provider in providers) {
+                val variableStructure =
+                    provider.build(psiElement, includeMethodContext, includeClassContext, gatherUsages) ?: continue
+
+                return variableStructure
+            }
+
+            return VariableStructure(psiElement, psiElement.text, null)
+        }
+    }
+
+}

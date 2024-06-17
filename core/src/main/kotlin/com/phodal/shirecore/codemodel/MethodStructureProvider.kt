@@ -4,7 +4,6 @@ import com.intellij.lang.Language
 import com.intellij.lang.LanguageExtension
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.psi.PsiElement
-import com.phodal.shirecore.codemodel.model.ClassStructure
 import com.phodal.shirecore.codemodel.model.MethodStructure
 
 /**
@@ -13,7 +12,7 @@ import com.phodal.shirecore.codemodel.model.MethodStructure
  * @see MethodContext
  */
 interface MethodStructureProvider {
-    fun getMethodContext(psiElement: PsiElement, includeClassContext: Boolean, gatherUsages: Boolean): MethodStructure?
+    fun build(psiElement: PsiElement, includeClassContext: Boolean, gatherUsages: Boolean): MethodStructure?
 
     companion object {
         private val languageExtension = LanguageExtension<MethodStructureProvider>("com.phodal.methodStructureProvider")
@@ -29,7 +28,7 @@ interface MethodStructureProvider {
             val iterator = providers.iterator()
             while (iterator.hasNext()) {
                 val provider = iterator.next()
-                val methodContext = provider.getMethodContext(psiElement, includeClassContext, gatherUsages)
+                val methodContext = provider.build(psiElement, includeClassContext, gatherUsages)
                 if (methodContext != null) {
                     return methodContext
                 }
