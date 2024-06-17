@@ -2,6 +2,7 @@ package com.phodal.shirecore.codemodel.model
 
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
+import com.intellij.psi.PsiNameIdentifierOwner
 import com.phodal.shirecore.codemodel.ClassStructureProvider
 import com.phodal.shirecore.codemodel.base.FormatableElement
 
@@ -11,8 +12,8 @@ class FileStructure(
     private val path: String,
     private val packageString: String? = null,
     private val imports: List<PsiElement> = emptyList(),
-    private val classes: List<PsiElement> = emptyList(),
-    private val methods: List<PsiElement> = emptyList(),
+    val classes: List<PsiNameIdentifierOwner> = emptyList(),
+    private val methods: List<PsiNameIdentifierOwner> = emptyList(),
 ) : FormatableElement(root, path, name) {
     private fun getClassDetail(): List<String> = classes.mapNotNull {
         ClassStructureProvider.from(it, false)?.format()
