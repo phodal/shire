@@ -12,6 +12,8 @@ import com.phodal.shirecore.middleware.PostProcessor
 import com.phodal.shirecore.middleware.select.SelectElementStrategy
 import com.phodal.shirelang.compiler.FrontmatterParser
 import com.phodal.shirelang.compiler.hobbit._base.Smials
+import com.phodal.shirelang.compiler.hobbit.patternaction.PatternAction
+import com.phodal.shirelang.compiler.hobbit.patternaction.PatternActionTransform
 import com.phodal.shirelang.psi.ShireFile
 
 /**
@@ -50,7 +52,7 @@ open class HobbitHole(
     /**
      * The list of variables to apply for the action.
      */
-    val variables: MutableMap<String, List<VariablePatternFunc>> = mutableMapOf(),
+    val variables: MutableMap<String, List<PatternActionTransform>> = mutableMapOf(),
 
     /**
      * The rest of the data.
@@ -148,18 +150,18 @@ open class HobbitHole(
             filenamesMap?.let {
                 (filenamesMap.value as? Map<String, FrontMatterType>)?.forEach { (key, value) ->
                     val text = key.removeSurrounding("\"")
-                    filenameRules.add(ShirePatternAction(text, PatternFun.from(value)))
+                    filenameRules.add(ShirePatternAction(text, PatternAction.from(value)))
                 }
             }
 
-            val variables: MutableMap<String, List<VariablePatternFunc>> = mutableMapOf()
+            val variables: MutableMap<String, List<PatternActionTransform>> = mutableMapOf()
             val variablesMap = frontMatterMap[VARIABLES] as? FrontMatterType.OBJECT
             variablesMap?.let {
                 (variablesMap.value as? Map<String, FrontMatterType>)?.forEach { (key, value) ->
                     val text = key.removeSurrounding("\"")
-                    val funcs = PatternFun.from(value)
+                    val funcs = PatternAction.from(value)
 
-                    variables[text] = funcs.map { func -> VariablePatternFunc(text, func) }
+                    variables[text] = funcs.map { func -> PatternActionTransform(text, func) }
                 }
             }
 

@@ -11,7 +11,7 @@ import com.phodal.shirecore.provider.PsiContextVariableProvider
 import com.phodal.shirecore.provider.PsiVariable
 import com.phodal.shirelang.compiler.SymbolTable
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
-import com.phodal.shirelang.compiler.hobbit.VariablePatternFunc
+import com.phodal.shirelang.compiler.hobbit.patternaction.VariablePatternActionExecutor
 import com.phodal.shirelang.completion.dataprovider.ContextVariable
 import com.phodal.shirelang.run.flow.ShireProcessProcessor.Companion.getElementAtOffset
 
@@ -45,7 +45,7 @@ class SymbolResolver(val myProject: Project, val editor: Editor, val hole: Hobbi
         results.putAll(SystemInfoVariable.resolve())
 
         hole?.variables?.forEach {
-            results[it.key] = VariableFuncExecutor.execute(it.key, it.value)
+            results[it.key] = VariablePatternActionExecutor.execute(it.key, it.value)
         }
 
         return results
@@ -72,21 +72,3 @@ class SymbolResolver(val myProject: Project, val editor: Editor, val hole: Hobbi
 
 }
 
-class VariableFuncExecutor {
-    companion object {
-        /**
-         * We should execute the variable function with the given key and pipeline functions.
-         *
-         * Each function output will be the input of the next function.
-         */
-        fun execute(key: String, pipelineFuncs: List<VariablePatternFunc>): String {
-            var result = key
-            pipelineFuncs.forEach {
-                result = it.execute(result)
-            }
-
-            return result
-        }
-    }
-
-}

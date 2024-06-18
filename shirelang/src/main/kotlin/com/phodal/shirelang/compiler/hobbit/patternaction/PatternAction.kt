@@ -1,6 +1,8 @@
-package com.phodal.shirelang.compiler.hobbit
+package com.phodal.shirelang.compiler.hobbit.patternaction
 
 import com.intellij.openapi.diagnostic.logger
+import com.phodal.shirelang.compiler.hobbit.FrontMatterType
+import com.phodal.shirelang.compiler.hobbit.ShirePatternAction
 
 /**
  * PatternFun is a sealed class in Kotlin representing different pattern processing functions.
@@ -9,20 +11,20 @@ import com.intellij.openapi.diagnostic.logger
  *
  * @property funcName The name of the pattern processing function.
  */
-sealed class PatternFun(open val funcName: String) {
+sealed class PatternAction(open val funcName: String) {
     /**
      * Prompt subclass for displaying a message prompt.
      *
      * @property message The message to be displayed.
      */
-    class Prompt(val message: String) : PatternFun("prompt")
+    class Prompt(val message: String) : PatternAction("prompt")
 
     /**
      * Grep subclass for searching with one or more patterns.
      *
      * @property patterns The patterns to search for.
      */
-    class Grep(vararg val patterns: String) : PatternFun("grep")
+    class Grep(vararg val patterns: String) : PatternAction("grep")
 
     /**
      * Sed subclass for find and replace operations.
@@ -30,55 +32,55 @@ sealed class PatternFun(open val funcName: String) {
      * @property pattern The pattern to search for.
      * @property replacements The string to replace matches with.
      */
-    class Sed(val pattern: String, val replacements: String) : PatternFun("sed")
+    class Sed(val pattern: String, val replacements: String) : PatternAction("sed")
 
     /**
      * Sort subclass for sorting with one or more arguments.
      *
      * @property arguments The arguments to use for sorting.
      */
-    class Sort(vararg val arguments: String) : PatternFun("sort")
+    class Sort(vararg val arguments: String) : PatternAction("sort")
 
     /**
      * Uniq subclass for removing duplicates based on one or more arguments.
      *
      * @property texts The texts to process for uniqueness.
      */
-    class Uniq(vararg val texts: String) : PatternFun("uniq")
+    class Uniq(vararg val texts: String) : PatternAction("uniq")
 
     /**
      * Head subclass for retrieving the first few lines.
      *
      * @property lines The number of lines to retrieve from the start.
      */
-    class Head(val lines: Number) : PatternFun("head")
+    class Head(val lines: Number) : PatternAction("head")
 
     /**
      * Tail subclass for retrieving the last few lines.
      *
      * @property lines The number of lines to retrieve from the end.
      */
-    class Tail(val lines: Number) : PatternFun("tail")
+    class Tail(val lines: Number) : PatternAction("tail")
 
     /**
      * Xargs subclass for processing one or more variables.
      *
      * @property variables The variables to process.
      */
-    class Xargs(vararg val variables: String) : PatternFun("xargs")
+    class Xargs(vararg val variables: String) : PatternAction("xargs")
 
     /**
      * Print subclass for printing one or more texts.
      *
      * @property texts The texts to be printed.
      */
-    class Print(vararg val texts: String) : PatternFun("print")
+    class Print(vararg val texts: String) : PatternAction("print")
 
     /**
      * Cat subclass for concatenating one or more files.
      * Paths can be absolute or relative to the current working directory.
      */
-    class Cat(vararg val paths: String) : PatternFun("cat")
+    class Cat(vararg val paths: String) : PatternAction("cat")
 
     companion object {
         /**
@@ -87,7 +89,7 @@ sealed class PatternFun(open val funcName: String) {
          * @param value The FrontMatterType object.
          * @return A list of corresponding PatternFun instances.
          */
-        fun from(value: FrontMatterType): List<PatternFun> {
+        fun from(value: FrontMatterType): List<PatternAction> {
             return when (value) {
                 is FrontMatterType.STRING -> {
                     listOf(Prompt(value.value as? String ?: ""))
@@ -97,7 +99,7 @@ sealed class PatternFun(open val funcName: String) {
                     action?.processors ?: emptyList()
                 }
                 else -> {
-                    logger<PatternFun>().error("Unknown pattern processor type: $value")
+                    logger<PatternAction>().error("Unknown pattern processor type: $value")
                     emptyList()
                 }
             }
