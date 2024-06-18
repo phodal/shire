@@ -12,5 +12,4 @@ class VariablePatternActionExecutor {
             return actionTransform.execute("")
         }
     }
-
 }

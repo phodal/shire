@@ -162,9 +162,9 @@ open class HobbitHole(
             val variablesMap = frontMatterMap[VARIABLES] as? FrontMatterType.OBJECT
             variablesMap?.let {
                 (variablesMap.value as? Map<String, FrontMatterType>)?.forEach { (key, value) ->
-                    val text = key.removeSurrounding("\"")
+                    val variable = key.removeSurrounding("\"")
                     PatternAction.from(value)?.let {
-                        variables[text] = PatternActionTransform(text, it.patternFuncs, it.pattern)
+                        variables[variable] = PatternActionTransform(variable, it.pattern, it.patternFuncs)
                     }
                 }
             }

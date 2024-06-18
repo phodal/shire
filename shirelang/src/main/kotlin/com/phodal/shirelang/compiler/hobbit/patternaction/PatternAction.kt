@@ -44,16 +44,16 @@ sealed class PatternActionFunc(open val funcName: String) {
     /**
      * Head subclass for retrieving the first few lines.
      *
-     * @property lines The number of lines to retrieve from the start.
+     * @property number The number of lines to retrieve from the start.
      */
-    class Head(val lines: Number) : PatternActionFunc("head")
+    class Head(val number: Number) : PatternActionFunc("head")
 
     /**
      * Tail subclass for retrieving the last few lines.
      *
-     * @property lines The number of lines to retrieve from the end.
+     * @property number The number of lines to retrieve from the end.
      */
-    class Tail(val lines: Number) : PatternActionFunc("tail")
+    class Tail(val number: Number) : PatternActionFunc("tail")
 
     /**
      * Xargs subclass for processing one or more variables.
