@@ -1,5 +1,6 @@
 package com.phodal.shirelang.run.runner
 
+import com.intellij.util.PlatformUtils
 import java.util.*
 
 /**
@@ -11,18 +12,18 @@ import java.util.*
  */
 class SystemInfoVariable {
     companion object {
-        fun getOSInfo(): Map<String, Any> {
-            val osInfo = mutableMapOf<String, Any>()
-            osInfo["name"] = System.getProperty("os.name")
-            osInfo["version"] = System.getProperty("os.version")
-            return osInfo
+        fun fetchOsData(): Map<String, Any> {
+            return mapOf(
+                "name" to System.getProperty("os.name"),
+                "version" to System.getProperty("os.version"),
+                "arch" to System.getProperty("os.arch")
+            )
         }
 
-        fun getIDEInfo(): Map<String, Any> {
+        fun fetchIDEData(): Map<String, Any> {
             val ideInfo = mutableMapOf<String, Any>()
             // Replace these with actual methods to get IDE information
-            ideInfo["name"] = "IntelliJ IDEA"
-            ideInfo["version"] = "2024.1"
+            ideInfo["name"] = System.getProperty(PlatformUtils.PLATFORM_PREFIX_KEY, "idea")
             return ideInfo
         }
 
@@ -40,10 +41,10 @@ class SystemInfoVariable {
 
         fun resolve(): Map<out String, Any> {
             val results = mutableMapOf<String, Any>()
-            results.putAll(getOSInfo())
-            results.putAll(getIDEInfo())
-            results.putAll(getTimezoneInfo())
-            results.putAll(getLocaleInfo())
+            results.putAll(mapOf("os" to fetchOsData()))
+            results.putAll(mapOf("ide" to fetchIDEData()))
+            results.putAll(mapOf("timezone" to getTimezoneInfo()))
+            results.putAll(mapOf("locale" to getLocaleInfo()))
             return results
         }
     }
