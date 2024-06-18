@@ -8,7 +8,7 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.elementType
 import com.phodal.shirelang.compiler.hobbit.*
 import com.phodal.shirelang.compiler.hobbit.ShirePatternAction
-import com.phodal.shirelang.compiler.hobbit.patternaction.PatternAction
+import com.phodal.shirelang.compiler.hobbit.patternaction.PatternActionFunc
 import com.phodal.shirelang.psi.*
 
 object FrontmatterParser {
@@ -282,10 +282,10 @@ object FrontmatterParser {
         }
     }
 
-    private fun parsePatternAction(element: PsiElement): FrontMatterType? {
+    private fun parsePatternAction(element: PsiElement): FrontMatterType {
         val pattern = element.children.firstOrNull()?.text ?: ""
 
-        val processor: MutableList<PatternAction> = mutableListOf()
+        val processor: MutableList<PatternActionFunc> = mutableListOf()
         val actionBlock = PsiTreeUtil.getChildOfType(element, ShireActionBlock::class.java)
         actionBlock?.actionBody?.actionExprList?.map { expr ->
             val funcCall = expr.funcCall
@@ -293,45 +293,45 @@ object FrontmatterParser {
 
             when (funcCall?.funcName?.text) {
                 "grep" -> {
-                    processor.add(PatternAction.Grep(*args.toTypedArray()))
+                    processor.add(PatternActionFunc.Grep(*args.toTypedArray()))
                 }
 
                 "sort" -> {
-                    processor.add(PatternAction.Sort(*args.toTypedArray()))
+                    processor.add(PatternActionFunc.Sort(*args.toTypedArray()))
                 }
 
                 "sed" -> {
-                    processor.add(PatternAction.Sed(args[0], args[1]))
+                    processor.add(PatternActionFunc.Sed(args[0], args[1]))
                 }
 
                 "xargs" -> {
-                    processor.add(PatternAction.Xargs(*args.toTypedArray()))
+                    processor.add(PatternActionFunc.Xargs(*args.toTypedArray()))
                 }
 
                 "uniq" -> {
-                    processor.add(PatternAction.Uniq(*args.toTypedArray()))
+                    processor.add(PatternActionFunc.Uniq(*args.toTypedArray()))
                 }
 
                 "head" -> {
-                    processor.add(PatternAction.Head(args[0].toInt()))
+                    processor.add(PatternActionFunc.Head(args[0].toInt()))
                 }
 
                 "tail" -> {
-                    processor.add(PatternAction.Tail(args[0].toInt()))
+                    processor.add(PatternActionFunc.Tail(args[0].toInt()))
                 }
 
                 "print" -> {
-                    processor.add(PatternAction.Print(*args.toTypedArray()))
+                    processor.add(PatternActionFunc.Print(*args.toTypedArray()))
                 }
 
                 "cat" -> {
-                    processor.add(PatternAction.Cat(*args.toTypedArray()))
+                    processor.add(PatternActionFunc.Cat(*args.toTypedArray()))
                 }
 
                 else -> {
                     // remove surrounding quotes
                     val text = expr.text.removeSurrounding("\"")
-                    processor.add(PatternAction.Prompt(text))
+                    processor.add(PatternActionFunc.Prompt(text))
                 }
             }
         }

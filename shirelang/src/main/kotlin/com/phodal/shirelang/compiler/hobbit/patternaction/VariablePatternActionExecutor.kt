@@ -7,13 +7,9 @@ class VariablePatternActionExecutor {
          *
          * Each function output will be the input of the next function.
          */
-        fun execute(key: String, pipelineFuncs: List<PatternActionTransform>): String {
-            var result = key
-            pipelineFuncs.forEach {
-                result = it.execute(result)
-            }
-
-            return result
+        fun execute(actionTransform: PatternActionTransform): String {
+            // get pipeline pattern data ine here
+            return actionTransform.execute("")
         }
     }
 

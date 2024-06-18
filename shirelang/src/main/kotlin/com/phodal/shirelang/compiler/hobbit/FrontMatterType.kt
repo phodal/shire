@@ -1,8 +1,9 @@
 package com.phodal.shirelang.compiler.hobbit
 
-import com.phodal.shirelang.compiler.hobbit.patternaction.PatternAction
+import com.phodal.shirelang.compiler.hobbit.patternaction.PatternActionFunc
 
-class ShirePatternAction(val pattern: String, val processors: List<PatternAction>)
+
+class ShirePatternAction(val pattern: String, val processors: List<PatternActionFunc>)
 
 /**
  * Basic Types: [STRING], [NUMBER], [DATE], [BOOLEAN], [ARRAY], [OBJECT]

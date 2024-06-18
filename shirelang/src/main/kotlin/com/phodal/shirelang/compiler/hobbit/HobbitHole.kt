@@ -52,7 +52,7 @@ open class HobbitHole(
     /**
      * The list of variables to apply for the action.
      */
-    val variables: MutableMap<String, List<PatternActionTransform>> = mutableMapOf(),
+    val variables: MutableMap<String, PatternActionTransform> = mutableMapOf(),
 
     /**
      * The rest of the data.
@@ -150,18 +150,22 @@ open class HobbitHole(
             filenamesMap?.let {
                 (filenamesMap.value as? Map<String, FrontMatterType>)?.forEach { (key, value) ->
                     val text = key.removeSurrounding("\"")
-                    filenameRules.add(ShirePatternAction(text, PatternAction.from(value)))
+                    PatternAction.from(value)?.let {
+                        filenameRules.add(ShirePatternAction(it.pattern, it.patternFuncs))
+                    }
+
+
                 }
             }
 
-            val variables: MutableMap<String, List<PatternActionTransform>> = mutableMapOf()
+            val variables: MutableMap<String, PatternActionTransform> = mutableMapOf()
             val variablesMap = frontMatterMap[VARIABLES] as? FrontMatterType.OBJECT
             variablesMap?.let {
                 (variablesMap.value as? Map<String, FrontMatterType>)?.forEach { (key, value) ->
                     val text = key.removeSurrounding("\"")
-                    val funcs = PatternAction.from(value)
-
-                    variables[text] = funcs.map { func -> PatternActionTransform(text, func) }
+                    PatternAction.from(value)?.let {
+                        variables[text] = PatternActionTransform(text, it.patternFuncs, it.pattern)
+                    }
                 }
             }
 
