@@ -21,7 +21,11 @@ package com.phodal.shirelang.compiler.hobbit.patternaction
  *
  * @see PatternAction
  */
-class PatternActionTransform(val variable: String, val pattern: String, val patternActionFuncs: List<PatternActionFunc>) {
+class PatternActionTransform(
+    val variable: String,
+    val pattern: String,
+    val patternActionFuncs: List<PatternActionFunc>,
+) {
     fun execute(input: Any): String {
         var result = input
         patternActionFuncs.forEach { action ->
@@ -31,7 +35,8 @@ class PatternActionTransform(val variable: String, val pattern: String, val patt
                 }
 
                 is PatternActionFunc.Grep -> {
-                    result = action.patterns.joinToString("\n")
+                    result = (result as String).split("\n").filter { line -> action.patterns.any { line.contains(it) } }
+                        .joinToString("\n")
                 }
 
                 is PatternActionFunc.Sed -> {
@@ -39,11 +44,11 @@ class PatternActionTransform(val variable: String, val pattern: String, val patt
                 }
 
                 is PatternActionFunc.Sort -> {
-                    result = action.arguments.sorted().joinToString("\n")
+                    result = (result as String).split("\n").sorted().joinToString("\n")
                 }
 
                 is PatternActionFunc.Uniq -> {
-                    result = action.texts.distinct().joinToString("\n")
+                    result = (result as String).split("\n").distinct().joinToString("\n")
                 }
 
                 is PatternActionFunc.Head -> {

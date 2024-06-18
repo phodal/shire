@@ -151,10 +151,8 @@ open class HobbitHole(
                 (filenamesMap.value as? Map<String, FrontMatterType>)?.forEach { (key, value) ->
                     val text = key.removeSurrounding("\"")
                     PatternAction.from(value)?.let {
-                        filenameRules.add(ShirePatternAction(it.pattern, it.patternFuncs))
+                        filenameRules.add(ShirePatternAction(text, it.patternFuncs))
                     }
-
-
                 }
             }
 
