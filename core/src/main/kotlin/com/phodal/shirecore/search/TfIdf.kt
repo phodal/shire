@@ -249,10 +249,6 @@ class TfIdf<K, V> {
     }
 
     fun setStopwords(customStopwords: List<String>): Boolean {
-        if (customStopwords.any { it !is String }) {
-            return false
-        }
-
         ourStopwords = customStopwords
         return true
     }

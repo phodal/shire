@@ -231,17 +231,17 @@ data class MethodCall(
             else -> null
         }  ?: throw IllegalArgumentException("Variable not found: ${objectName.value}")
 
-        // todo: change to List Any
-        val parameters = this.arguments.map {
+        val parameters: List<Any> = this.arguments.map {
             when (it) {
                 is FrontMatterType.STRING -> it.display().removeSurrounding("\"")
+                is FrontMatterType.NUMBER -> it.value
+                is FrontMatterType.DATE -> it.value
                 is FrontMatterType -> it.display()
                 else -> it.toString()
             }
         }
 
-        val methodName = methodName.value
-        return when (methodName) {
+        return when (val methodName = methodName.value) {
             "length" -> value.length
             "trim" -> value.trim()
             "contains" -> value.contains(parameters[0] as String)
@@ -254,7 +254,7 @@ data class MethodCall(
             "first" -> value.first().toString()
             "last" -> value.last().toString()
             // match regex
-            "matches" -> value.matches(parameters[0].toRegex())
+            "matches" -> value.matches((parameters[0] as String).toRegex())
             else -> throw IllegalArgumentException("Unsupported method: $methodName")
         }
     }
