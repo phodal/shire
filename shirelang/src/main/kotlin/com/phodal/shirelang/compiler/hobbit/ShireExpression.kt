@@ -231,6 +231,7 @@ data class MethodCall(
             else -> null
         }  ?: throw IllegalArgumentException("Variable not found: ${objectName.value}")
 
+        // todo: change to List Any
         val parameters = this.arguments.map {
             when (it) {
                 is FrontMatterType.STRING -> it.display().removeSurrounding("\"")

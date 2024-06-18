@@ -51,6 +51,9 @@ data class CustomAgent(
     val transition: List<CustomFlowTransition> = emptyList(),
     val interactive: InteractionType = InteractionType.ChatPanel,
     val auth: CustomAgentAuth? = null,
+    /**
+     * 10 minutes
+     */
     val defaultTimeout: Long = 10,
     val enabled: Boolean = true,
     val actionLocation: ShireActionLocation,

@@ -18,7 +18,7 @@ class ClassStructure(
     val annotations: List<String> = mutableListOf(),
     val usages: List<PsiReference> = emptyList(),
 ) : FormatableElement(root, text, name) {
-    private fun getFieldNames(): List<String> = fields.mapNotNull {
+    private fun getFieldNames(): List<String> = fields.map {
         VariableStructureProvider.from(it,
             includeMethodContext = false,
             includeClassContext = false,
@@ -38,7 +38,8 @@ class ClassStructure(
             else -> " : ${superClasses.joinToString(separator = ", ")}"
         }
         val methodSignatures = getMethodSignatures()
-            .filter { it.isNotBlank() }.joinToString(separator = "\n  ") { method ->
+            .filter { it.isNotBlank() }
+            .joinToString(separator = "\n  ") { method ->
                 "+ $method"
             }
 
