@@ -45,7 +45,7 @@ class SymbolResolver(val myProject: Project, val editor: Editor, val hole: Hobbi
         results.putAll(SystemInfoVariable.resolve())
 
         hole?.variables?.forEach {
-            results[it.key] = VariablePatternActionExecutor.execute(it.value)
+            results[it.key] = VariablePatternActionExecutor(myProject, editor, hole).execute(it.value)
         }
 
         return results
