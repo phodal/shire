@@ -44,9 +44,9 @@ class SymbolResolver(val myProject: Project, val editor: Editor, val hole: Hobbi
 
         results.putAll(SystemInfoVariable.resolve())
 
-//        hole?.variables?.forEach {
-//            results[it.key] = VariableFuncExecutor.execute(it.value)
-//        }
+        hole?.variables?.forEach {
+            results[it.key] = VariableFuncExecutor.execute(it.key, it.value)
+        }
 
         return results
     }
@@ -74,8 +74,18 @@ class SymbolResolver(val myProject: Project, val editor: Editor, val hole: Hobbi
 
 class VariableFuncExecutor {
     companion object {
-        fun execute(value: List<VariablePatternFunc>): String {
-            TODO("Not yet implemented")
+        /**
+         * We should execute the variable function with the given key and pipeline functions.
+         *
+         * Each function output will be the input of the next function.
+         */
+        fun execute(key: String, pipelineFuncs: List<VariablePatternFunc>): String {
+            var result = key
+            pipelineFuncs.forEach {
+                result = it.execute(result)
+            }
+
+            return result
         }
     }
 
