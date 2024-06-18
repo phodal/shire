@@ -3,9 +3,6 @@ package com.phodal.shirecore.agent
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.action.ShireActionLocation
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
-// DON'T CHANGE THIS IMPORT
-import kotlinx.serialization.decodeFromString
 
 @Serializable
 data class CustomFlowTransition(

@@ -152,9 +152,8 @@ class ShireCompiler(
             }
 
             ShireTypes.AGENT_START -> {
-                val agentId = id?.text
                 val configs = CustomAgent.loadFromProject(myProject).filter {
-                    it.name == agentId
+                    it.name == id?.text
                 }
 
                 if (configs.isNotEmpty()) {

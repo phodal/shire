@@ -216,6 +216,19 @@ class TfIdf<K, V> {
 
     data class TermData(val term: String, val tf: Int, val idf: Double, val tfidf: Double)
 
+    /**
+     * This function calculates the Term Frequency-Inverse Document Frequency (TF-IDF) for each document in the collection.
+     * TF-IDF is a numerical statistic that reflects how important a word is to a document in a collection or corpus.
+     *
+     * @param terms The terms for which the TF-IDF is to be calculated. This can be a single term or a collection of terms.
+     * @param callback An optional callback function that is invoked for each document. The callback function is passed three parameters:
+     *                 - The index of the current document.
+     *                 - The calculated TF-IDF value for the current document.
+     *                 - The key of the current document (if it exists).
+     *                 The callback function can be used to perform additional processing or logging for each document.
+     *
+     * @return A list of Double values representing the calculated TF-IDF values for each document in the collection. The order of the values in the list corresponds to the order of the documents in the collection.
+     */
     fun tfidfs(terms: Any, callback: TfIdfCallback? = null): List<Double> {
         val tfidfs = MutableList(documents.size) { 0.0 }
 
