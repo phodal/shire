@@ -36,33 +36,11 @@ open class HobbitHole(
      */
     val actionLocation: ShireActionLocation,
     /**
-     * The data of the action.
-     */
-    val additionalData: Map<String, FrontMatterType> = mutableMapOf(),
-    /**
      * The strategy to select the element to apply the action.
      * If not selected text, will according the element position to select the element block.
      * For example, if cursor in a function, select the function block.
      */
-    private val selectionStrategy: SelectElementStrategy = SelectElementStrategy.Blocked,
-    /**
-     * The list of actions that this action depends on.
-     * We use it for Directed Acyclic Graph (DAG) to represent dependencies between actions.
-     *
-     * todo: apply isApplicable for actions that do not depend on any tasks.
-     */
-    val dependencies: List<String> = emptyList(),
-    /**
-     * Post middleware actions, like
-     * Logging, Metrics, CodeVerify, RunCode, ParseCode etc.
-     *
-     */
-    val postProcessors: List<PostProcessor> = emptyList(),
-
-    /**
-     * The list of rule files to apply for the action.
-     */
-    val filenameRules: List<ShirePatternAction> = emptyList(),
+    val selectionStrategy: SelectElementStrategy = SelectElementStrategy.Blocked,
 
     /**
      * The list of rule files to apply for the action.
@@ -75,12 +53,33 @@ open class HobbitHole(
     val variables: MutableMap<String, List<VariablePatternFunc>> = mutableMapOf(),
 
     /**
+     * The rest of the data.
+     */
+    val restData: Map<String, FrontMatterType> = mutableMapOf(),
+
+    /**
      * This code snippet declares a variable 'when_' of type List<VariableCondition> and initializes it with an empty list.
      * 'when_' is a list that stores VariableCondition objects.
      *
      * Which is used for: [IntentionAction.isAvailable], [DumbAwareAction.update] to check is show menu.
      */
-    val when_: FrontMatterType.Expression? = null
+    val when_: FrontMatterType.Expression? = null,
+
+    /**
+     * The list of rule files to apply for the action.
+     */
+    val preFilter: List<ShirePatternAction> = emptyList(),
+    /**
+     * Post middleware actions, like
+     * Logging, Metrics, CodeVerify, RunCode, ParseCode etc.
+     *
+     */
+    val postProcess: List<PostProcessor> = emptyList(),
+    /**
+     * The list of actions that this action depends on.
+     * We use it for Directed Acyclic Graph (DAG) to represent dependencies between actions.
+     */
+    val finalize: FrontMatterType.Expression? = null,
 ) : Smials {
     fun pickupElement() {
         this.selectionStrategy.select()
@@ -89,7 +88,7 @@ open class HobbitHole(
     fun setupProcessor(project: Project, editor: Editor?, file: PsiFile?) {
         val language = file?.language?.id
         val context = PostCodeHandleContext(null, language, file)
-        postProcessors.forEach {
+        postProcess.forEach {
             it.setup(context)
         }
     }
@@ -171,10 +170,10 @@ open class HobbitHole(
                 description,
                 InteractionType.from(interaction),
                 ShireActionLocation.from(actionLocation),
-                filenameRules = filenameRules,
-                additionalData = data,
+                preFilter = filenameRules,
+                restData = data,
                 selectionStrategy = SelectElementStrategy.fromString(selectionStrategy),
-                postProcessors = postProcessors,
+                postProcess = postProcessors,
                 variables = variables,
                 when_ = whenCondition
             )

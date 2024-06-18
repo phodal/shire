@@ -99,7 +99,7 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
         assertEquals("\n\nSummary webpage:", compile.output)
-        val filenameRules = compile.config!!.filenameRules
+        val filenameRules = compile.config!!.preFilter
 
         assertEquals(1, filenameRules.size)
         assertEquals("/**.java/", filenameRules[0].pattern)
