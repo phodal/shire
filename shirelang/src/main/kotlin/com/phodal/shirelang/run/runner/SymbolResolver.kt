@@ -41,7 +41,9 @@ class SymbolResolver(val myProject: Project, val editor: Editor, val hole: Hobbi
         val results = resolveBuiltInVariable(symbolTable, element)
 
         results.putAll(ContextVariable.resolve(editor, element))
-//
+
+        results.putAll(SystemInfoVariable.resolve())
+
 //        hole?.variables?.forEach {
 //            results[it.key] = VariableFuncExecutor.execute(it.value)
 //        }
