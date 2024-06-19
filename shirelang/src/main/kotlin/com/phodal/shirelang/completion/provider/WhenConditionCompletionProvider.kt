@@ -7,7 +7,7 @@ import com.intellij.codeInsight.completion.PrioritizedLookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.util.ProcessingContext
 import com.phodal.shirelang.actions.validator.PsiVariables
-import com.phodal.shirelang.compiler.hobbit.ast.MethodCall
+import com.phodal.shirelang.compiler.hobbit.ast.ExpressionBuiltInMethod
 
 class WhenConditionCompletionProvider : CompletionProvider<CompletionParameters>() {
     override fun addCompletions(
@@ -33,7 +33,7 @@ class WhenConditionFunctionCompletionProvider : CompletionProvider<CompletionPar
         context: ProcessingContext,
         result: CompletionResultSet,
     ) {
-        MethodCall.completionProvider().forEach {
+        ExpressionBuiltInMethod.completionProvider().forEach {
             val elementBuilder = LookupElementBuilder.create(it.name)
                 .withTypeText(it.description, true)
                 .withInsertHandler { context, _ ->
@@ -43,8 +43,7 @@ class WhenConditionFunctionCompletionProvider : CompletionProvider<CompletionPar
 
             val withTypeText =
                 PrioritizedLookupElement.withPriority(
-                    elementBuilder
-                    , 99.0
+                    elementBuilder, 99.0
                 )
 
             result.addElement(withTypeText)

@@ -26,6 +26,7 @@ abstract class Statement {
                 }
                 "${this.objectName.display()}.${this.methodName.display()}($parameters)"
             }
+
             else -> ""
         }
     }
@@ -132,7 +133,7 @@ data class Comparison(
     val value: FrontMatterType,
 ) : Statement() {
     override fun evaluate(variables: Map<String, String>): Boolean {
-        val variableValue = when(variable.value) {
+        val variableValue = when (variable.value) {
             is MethodCall -> variable.value.evaluate(variables)
             is FrontMatterType.STRING -> variable.value.value
             else -> {
@@ -225,11 +226,11 @@ data class MethodCall(
     val arguments: List<Any>,
 ) : Statement() {
     override fun evaluate(variables: Map<String, String>): Any {
-        val value = when(objectName) {
+        val value = when (objectName) {
             is FrontMatterType.STRING -> variables[objectName.value]
             is FrontMatterType.Variable -> variables[objectName.value]
             else -> null
-        }  ?: throw IllegalArgumentException("Variable not found: ${objectName.value}")
+        } ?: throw IllegalArgumentException("Variable not found: ${objectName.value}")
 
         val parameters: List<Any> = this.arguments.map {
             when (it) {
@@ -241,55 +242,22 @@ data class MethodCall(
             }
         }
 
-        return when (val methodName = methodName.value) {
-            "length" -> value.length
-            "trim" -> value.trim()
-            "contains" -> value.contains(parameters[0] as String)
-            "startsWith" -> value.startsWith(parameters[0] as String)
-            "endsWith" -> value.endsWith(parameters[0] as String)
-            "lowercase" -> value.lowercase()
-            "uppercase" -> value.uppercase()
-            "isEmpty" -> value.isEmpty()
-            "isNotEmpty" -> value.isNotEmpty()
-            "first" -> value.first().toString()
-            "last" -> value.last().toString()
-            // match regex
-            "matches" -> value.matches((parameters[0] as String).toRegex())
+        val method = ExpressionBuiltInMethod.fromString(methodName.value.toString())
+        return when (method) {
+            ExpressionBuiltInMethod.LENGTH -> value.length
+            ExpressionBuiltInMethod.TRIM -> value.trim()
+            ExpressionBuiltInMethod.CONTAINS -> value.contains(parameters[0] as String)
+            ExpressionBuiltInMethod.STARTS_WITH -> value.startsWith(parameters[0] as String)
+            ExpressionBuiltInMethod.ENDS_WITH -> value.endsWith(parameters[0] as String)
+            ExpressionBuiltInMethod.LOWERCASE -> value.lowercase()
+            ExpressionBuiltInMethod.UPPERCASE -> value.uppercase()
+            ExpressionBuiltInMethod.IS_EMPTY -> value.isEmpty()
+            ExpressionBuiltInMethod.IS_NOT_EMPTY -> value.isNotEmpty()
+            ExpressionBuiltInMethod.FIRST -> value.first().toString()
+            ExpressionBuiltInMethod.LAST -> value.last().toString()
+            ExpressionBuiltInMethod.MATCHES -> value.matches((parameters[0] as String).toRegex())
             else -> throw IllegalArgumentException("Unsupported method: $methodName")
         }
     }
 
-    companion object {
-
-        /**
-         * Represents a function completion item with the specified name, description, postInsertString, and moveCaret value.
-         *
-         * @param name the name of the function
-         * @param description the description of the function
-         * @param postInsertString the string to be inserted after the function name, default value is "()"
-         * @param moveCaret the position to move the caret after inserting the function, default value is 2
-         *      - For a normal case, it will be 2 (end of the string)
-         *      - For params function,like contains, startsWith, endsWith, matches, it will be 2 (center of the string)
-         */
-        data class FunctionCompletion(
-            val name: String, val description: String, val postInsertString: String = "()", val moveCaret: Int = 2
-        )
-
-        fun completionProvider() : List<FunctionCompletion> {
-            return listOf(
-                FunctionCompletion("length", "The length of the string"),
-                FunctionCompletion("trim", "The trimmed string"),
-                FunctionCompletion("contains", "Check if the string contains a substring", "(\"\")", 2),
-                FunctionCompletion("startsWith", "Check if the string starts with a substring", "(\"\")", 2),
-                FunctionCompletion("endsWith", "Check if the string ends with a substring", "(\"\")", 2),
-                FunctionCompletion("lowercase", "The lowercase version of the string"),
-                FunctionCompletion("uppercase", "The uppercase version of the string"),
-                FunctionCompletion("isEmpty", "Check if the string is empty"),
-                FunctionCompletion("isNotEmpty", "Check if the string is not empty"),
-                FunctionCompletion("first", "The first character of the string"),
-                FunctionCompletion("last", "The last character of the string"),
-                FunctionCompletion("matches", "Check if the string matches a regex pattern", "(\"//\")", 3)
-            )
-        }
-    }
 }
