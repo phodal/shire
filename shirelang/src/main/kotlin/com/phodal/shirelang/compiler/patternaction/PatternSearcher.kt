@@ -2,6 +2,7 @@ package com.phodal.shirelang.compiler.patternaction
 
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
+import com.intellij.openapi.vfs.VfsUtilCore
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.openapi.vfs.VirtualFileVisitor
@@ -66,16 +67,14 @@ object PatternSearcher {
         if (baseDir != null) {
             baseDir.fileSystem.refreshAndFindFileByPath(baseDir.path)
 
-            val visitor: VirtualFileVisitor<VirtualFile> = object : VirtualFileVisitor<VirtualFile>() {
+            VfsUtilCore.visitChildrenRecursively(baseDir, object : VirtualFileVisitor<Any>() {
                 override fun visitFile(file: VirtualFile): Boolean {
                     if (pattern.matcher(file.name).matches()) {
                         matchingFiles.add(file)
                     }
                     return true
                 }
-            }
-
-            visitor.visitFile(baseDir)
+            })
         }
 
         return matchingFiles

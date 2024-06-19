@@ -2,7 +2,14 @@ package com.phodal.shirelang.compiler.patternaction
 
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.project.guessProjectDir
+import com.intellij.openapi.vfs.LocalFileSystem
+import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.vfs.findFile
+import com.intellij.openapi.vfs.readText
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
+import java.io.File
+
 
 class PatternActionProcessor(val myProject: Project, val editor: Editor, val hole: HobbitHole) {
     /**
@@ -11,10 +18,19 @@ class PatternActionProcessor(val myProject: Project, val editor: Editor, val hol
      * Each function output will be the input of the next function.
      */
     fun execute(actionTransform: PatternActionTransform): String {
-        // get pipeline pattern data ine here
-        return this.execute(actionTransform, "")
+        var input: Any = ""
+        if (actionTransform.pattern.isNotBlank()) {
+            input = PatternSearcher.findFilesByRegex(myProject, actionTransform.pattern)
+                .map { it.path }
+                .toTypedArray()
+        }
+
+        return this.execute(actionTransform, input)
     }
 
+    /**
+     * Since we use `class Cat(vararg val paths: String)`, If input is [Collection] should use [Array]
+     */
     fun execute(transform: PatternActionTransform, input: Any): String {
         var result = input
         transform.patternActionFuncs.forEach { action ->
@@ -49,7 +65,24 @@ class PatternActionProcessor(val myProject: Project, val editor: Editor, val hol
                 }
 
                 is PatternActionFunc.Cat -> {
-                    result = action.paths.joinToString("\n")
+                    val baseDir = myProject.guessProjectDir()!!
+                    var paths = action.paths
+                    if (action.paths.isEmpty()) {
+                        paths = input as Array<String>
+                    }
+
+                    var absolutePaths: List<VirtualFile> = paths.mapNotNull {
+                        baseDir.findFile(it)
+                    }
+                    if (absolutePaths.isEmpty()) {
+                        absolutePaths = paths.mapNotNull {
+                            LocalFileSystem.getInstance().findFileByIoFile(File(it))
+                        }
+                    }
+
+                    val content = absolutePaths.joinToString("\n") { it.readText() }
+
+                    result = content
                 }
 
                 is PatternActionFunc.Print -> {

@@ -239,4 +239,34 @@ class ShireCompileTest : BasePlatformTestCase() {
         assertEquals("demo", results["var1"])
         assertEquals("hello", results["var2"].toString())
     }
+
+    fun testShouldLoadFile() {
+        val code = """
+            ---
+            name: Summary
+            description: "Generate Summary"
+            interaction: AppendCursor
+            data: ["a", "b"]
+            when: ${'$'}fileName.matches("/.*.java/")
+            variables:
+              "var2": /.*ple.shire/ { cat | print("hello") | sort }
+            ---
+            
+            Summary webpage: ${'$'}fileName
+        """.trimIndent()
+
+        val file = myFixture.addFileToProject("sample.shire", code)
+
+        myFixture.openFileInEditor(file.virtualFile)
+
+        val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
+        val hole = compile.config!!
+        val editor = myFixture.editor
+
+        val results = hole.variables.mapValues {
+            PatternActionProcessor(project, editor, hole).execute(it.value)
+        }
+
+        assertEquals("hello", results["var2"].toString())
+    }
 }
