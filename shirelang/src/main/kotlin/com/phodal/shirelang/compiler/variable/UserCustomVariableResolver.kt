@@ -9,8 +9,8 @@ class UserCustomVariableResolver(
     val project: Project,
     val editor: Editor,
     val hole: HobbitHole?
-) {
-    fun resolve() : Map<String, String> {
+) : VariableResolver {
+    override fun resolve() : Map<String, String> {
         if (hole == null) {
             return emptyMap()
         }

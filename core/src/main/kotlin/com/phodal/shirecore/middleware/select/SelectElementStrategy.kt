@@ -1,9 +1,13 @@
 package com.phodal.shirecore.middleware.select
 
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.fileEditor.FileEditorManager
+import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiWhiteSpace
+import com.intellij.psi.util.PsiUtilBase
 
 sealed class SelectElementStrategy {
     /**
@@ -77,5 +81,30 @@ sealed class SelectElementStrategy {
         fun all(): List<String> {
             return SelectElementStrategy::class.sealedSubclasses.map { it.simpleName!! }
         }
+
+        fun getElementAtOffset(psiFile: PsiElement, offset: Int): PsiElement? {
+            var element = psiFile.findElementAt(offset) ?: return null
+
+            if (element is PsiWhiteSpace) {
+                element = element.getParent()
+            }
+
+            return element
+        }
+
+        fun resolvePsiElement(myProject: Project, editor: Editor): PsiElement? {
+            val element: PsiElement? = try {
+                editor.caretModel.currentCaret.offset.let {
+                    val psiFile = PsiUtilBase.getPsiFileInEditor(editor, myProject) ?: return@let null
+                    getElementAtOffset(psiFile, it)
+                }
+            } catch (e: Exception) {
+                logger<SelectElementStrategy>().error("Failed to resolve element", e)
+                null
+            }
+
+            return element
+        }
+
     }
 }

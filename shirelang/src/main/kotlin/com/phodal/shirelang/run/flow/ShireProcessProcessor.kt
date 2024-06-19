@@ -7,10 +7,10 @@ import com.intellij.openapi.components.Service
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.util.PsiUtilBase
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.phodal.shirecore.ShirelangNotifications
+import com.phodal.shirecore.middleware.select.SelectElementStrategy
 import com.phodal.shirelang.ShireLanguage
 import com.phodal.shirelang.compiler.ShireCompiler
 import com.phodal.shirelang.psi.ShireFile
@@ -137,7 +137,7 @@ class ShireProcessProcessor(val project: Project) {
         val editor = FileEditorManager.getInstance(project).selectedTextEditor
         val element: PsiElement? = editor?.caretModel?.currentCaret?.offset?.let {
             val psiFile = PsiUtilBase.getPsiFileInEditor(editor, project) ?: return@let null
-            getElementAtOffset(psiFile, it)
+            SelectElementStrategy.getElementAtOffset(psiFile, it)
         }
 
         return ShireCompiler(project, devInFile, editor, element)
@@ -151,15 +151,4 @@ class ShireProcessProcessor(val project: Project) {
         TODO()
     }
 
-    companion object {
-        fun getElementAtOffset(psiFile: PsiElement, offset: Int): PsiElement? {
-            var element = psiFile.findElementAt(offset) ?: return null
-
-            if (element is PsiWhiteSpace) {
-                element = element.getParent()
-            }
-
-            return element
-        }
-    }
 }

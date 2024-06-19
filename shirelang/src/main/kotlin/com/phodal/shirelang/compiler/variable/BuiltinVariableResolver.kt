@@ -35,7 +35,7 @@ class BuiltinVariableResolver(
                 result[it.key] = try {
                     variableProvider.resolveVariableValue(element, psiVariable)
                 } catch (e: Exception) {
-                    logger<CompositeVariableSolver>().error("Failed to resolve variable: ${it.key}", e)
+                    logger<CompositeVariableResolver>().error("Failed to resolve variable: ${it.key}", e)
                     ""
                 }
             } else {
