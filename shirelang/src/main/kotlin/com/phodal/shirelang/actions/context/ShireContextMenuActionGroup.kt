@@ -37,7 +37,7 @@ class ShireContextMenuAction(private val config: DynamicShireActionConfig) :
         val conditions = config.hole?.when_ ?: return
         val psiFile = e.getData(CommonDataKeys.PSI_FILE) ?: return
 
-        WhenConditionValidator.isAvailable(conditions, psiFile)?.let {
+        WhenConditionValidator.isAvailable(conditions, psiFile).let {
             e.presentation.isEnabled = it
             e.presentation.isVisible = it
         }

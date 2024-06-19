@@ -18,16 +18,23 @@ data class VariableResolverContext(
 class CompositeVariableResolver(
    private val context: VariableResolverContext
 ) : VariableResolver {
-    override fun resolve(): Map<String, Any> {
+    init {
         val element: PsiElement? = SelectElementStrategy.resolvePsiElement(context.myProject, context.editor)
         context.element = element
+    }
 
-        val results = mutableMapOf<String, Any>()
-        results.putAll(BuiltinVariableResolver(context).resolve())
-        results.putAll(ContextVariableResolver(context).resolve())
-        results.putAll(SystemInfoVariableResolver(context).resolve())
-        results.putAll(UserCustomVariableResolver(context).resolve())
-        return results
+    override fun resolve(): Map<String, Any> {
+        val resolverList = listOf(
+            BuiltinVariableResolver(context),
+            ContextVariableResolver(context),
+            SystemInfoVariableResolver(context),
+            UserCustomVariableResolver(context)
+        )
+
+        return resolverList.fold(mutableMapOf()) { acc, resolver ->
+            acc.putAll(resolver.resolve())
+            acc
+        }
     }
 }
 
