@@ -249,7 +249,7 @@ class ShireCompileTest : BasePlatformTestCase() {
             data: ["a", "b"]
             when: ${'$'}fileName.matches("/.*.java/")
             variables:
-              "var2": /.*ple.shire/ { cat | print("hello") | sort }
+              "var2": /.*ple.shire/ { cat | grep("fileName") | sort }
             ---
             
             Summary webpage: ${'$'}fileName
@@ -267,6 +267,8 @@ class ShireCompileTest : BasePlatformTestCase() {
             PatternActionProcessor(project, editor, hole).execute(it.value)
         }
 
-        assertEquals("hello", results["var2"].toString())
+        assertEquals("  \"var2\": /.*ple.shire/ { cat | grep(\"fileName\") | sort }\n" +
+                "Summary webpage: \$fileName\n" +
+                "when: \$fileName.matches(\"/.*.java/\")", results["var2"].toString())
     }
 }
