@@ -10,12 +10,12 @@ import java.util.*
  * - IDE information, version, etc.
  * - Timezone, locale, etc.
  */
-class SystemInfoVariableResolver: VariableResolver {
+class SystemInfoVariableResolver : VariableResolver {
     override fun resolve(): Map<String, Any> {
         return mapOf(
             "os" to fetchOsData(),
             "ide" to fetchIDEData(),
-            "timezone" to fetchTimezoneData(),
+            "time" to fetchTimezoneData(),
             "locale" to fetchLocaleData()
         )
     }
@@ -41,7 +41,12 @@ class SystemInfoVariableResolver: VariableResolver {
     }
 
     private fun fetchTimezoneData(): Map<String, Any> {
-        return mapOf("timezone" to TimeZone.getDefault().displayName)
+        return mapOf(
+            "timezone" to TimeZone.getDefault().displayName,
+            "date" to Calendar.getInstance().time,
+            "today" to Calendar.getInstance().time,
+            "now" to System.currentTimeMillis()
+        )
     }
 
     private fun fetchLocaleData(): Map<String, Any> {
