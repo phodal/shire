@@ -1,5 +1,24 @@
-package com.phodal.shirelang.compiler.hobbit.patternaction
+package com.phodal.shirelang.compiler.patternaction
 
+/**
+ * The `PatternActionFunc` is a sealed class in Kotlin that represents a variety of pattern action functions.
+ * Each subclass represents a different function, and each has a unique set of properties relevant to its function.
+ *
+ * @property funcName The name of the function.
+ *
+ * @constructor Creates an instance of PatternActionFunc with a function name.
+ *
+ * @see Prompt
+ * @see Grep
+ * @see Sed
+ * @see Sort
+ * @see Uniq
+ * @see Head
+ * @see Tail
+ * @see Xargs
+ * @see Print
+ * @see Cat
+ */
 sealed class PatternActionFunc(open val funcName: String) {
     /**
      * Prompt subclass for displaying a message prompt.

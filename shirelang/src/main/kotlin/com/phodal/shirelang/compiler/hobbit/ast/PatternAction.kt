@@ -1,7 +1,7 @@
 package com.phodal.shirelang.compiler.hobbit.ast
 
 import com.intellij.openapi.diagnostic.logger
-import com.phodal.shirelang.compiler.hobbit.patternaction.PatternActionFunc
+import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 
 /**
  * PatternFun is a sealed class in Kotlin representing different pattern processing functions.

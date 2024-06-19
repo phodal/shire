@@ -1,4 +1,4 @@
-package com.phodal.shirelang.compiler.hobbit.patternaction
+package com.phodal.shirelang.compiler.patternaction
 
 /**
  * The `PatternActionTransform` class is a utility class in Kotlin that is used to perform various actions based on a provided pattern and action.

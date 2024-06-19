@@ -2,9 +2,25 @@ package com.phodal.shirelang.compiler.hobbit.ast
 
 
 /**
- * Basic Types: [STRING], [NUMBER], [DATE], [BOOLEAN], [ARRAY], [OBJECT]
- * Pattern: [PATTERN]
- * Expression: [CaseMatch]
+ * The `FrontMatterType` is a sealed class in Kotlin that represents different types of front matter data.
+ * It has several subclasses to represent different types of data: [STRING], [NUMBER], [DATE], [BOOLEAN], [ARRAY], [OBJECT], [PATTERN], [CaseMatch], [Variable], [Expression], [IDENTIFIER].
+ * Each subclass overrides the `display()` function to return a string representation of the data.
+ *
+ * @property value The value of the front matter data.
+ *
+ * @constructor Creates an instance of `FrontMatterType`.
+ *
+ * @see STRING A subclass of `FrontMatterType` that represents a string.
+ * @see NUMBER A subclass of `FrontMatterType` that represents a number.
+ * @see DATE A subclass of `FrontMatterType` that represents a date.
+ * @see BOOLEAN A subclass of `FrontMatterType` that represents a boolean.
+ * @see ARRAY A subclass of `FrontMatterType` that represents a JSON array.
+ * @see OBJECT A subclass of `FrontMatterType` that represents a JSON object.
+ * @see PATTERN A subclass of `FrontMatterType` that represents a pattern action.
+ * @see CaseMatch A subclass of `FrontMatterType` that represents a case match.
+ * @see Variable A subclass of `FrontMatterType` that represents a variable.
+ * @see Expression A subclass of `FrontMatterType` that represents an expression.
+ * @see IDENTIFIER A subclass of `FrontMatterType` that represents an identifier.
  */
 sealed class FrontMatterType(val value: Any) {
     open fun display(): String = value.toString()
@@ -149,8 +165,6 @@ sealed class FrontMatterType(val value: Any) {
         }
     }
 
-
-
     /**
      * Identifier for the front matter config expression and template, like [Expression] or [MethodCall]
      *
@@ -165,5 +179,4 @@ sealed class FrontMatterType(val value: Any) {
             return value.toString()
         }
     }
-
 }

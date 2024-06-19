@@ -1,4 +1,4 @@
-package com.phodal.shirelang.compiler.hobbit.patternaction
+package com.phodal.shirelang.compiler.patternaction
 
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project

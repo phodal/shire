@@ -15,7 +15,7 @@ import com.phodal.shirelang.compiler.hobbit._base.Smials
 import com.phodal.shirelang.compiler.hobbit.ast.FrontMatterType
 import com.phodal.shirelang.compiler.hobbit.ast.PatternAction
 import com.phodal.shirelang.compiler.hobbit.ast.RuleBasedPatternAction
-import com.phodal.shirelang.compiler.hobbit.patternaction.PatternActionTransform
+import com.phodal.shirelang.compiler.patternaction.PatternActionTransform
 import com.phodal.shirelang.psi.ShireFile
 
 /**

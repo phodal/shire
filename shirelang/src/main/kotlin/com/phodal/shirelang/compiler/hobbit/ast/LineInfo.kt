@@ -1,4 +1,4 @@
-package com.phodal.shirelang.compiler.model
+package com.phodal.shirelang.compiler.hobbit.ast
 
 data class LineInfo(
     val startLine: Int,

@@ -1,7 +1,7 @@
 package com.phodal.shirelang.compiler.exec
 
 import com.phodal.shirelang.compiler.error.SHIRE_ERROR
-import com.phodal.shirelang.compiler.model.LineInfo
+import com.phodal.shirelang.compiler.hobbit.ast.LineInfo
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.command.WriteCommandAction

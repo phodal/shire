@@ -6,8 +6,8 @@ import com.phodal.shirecore.agent.InteractionType
 import com.phodal.shirelang.compiler.FrontmatterParser
 import com.phodal.shirelang.compiler.ShireCompiler
 import com.phodal.shirelang.compiler.hobbit.ast.LogicalExpression
-import com.phodal.shirelang.compiler.hobbit.patternaction.PatternActionFunc
-import com.phodal.shirelang.compiler.hobbit.patternaction.PatternActionProcessor
+import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
+import com.phodal.shirelang.compiler.patternaction.PatternActionProcessor
 import com.phodal.shirelang.psi.ShireFile
 
 class ShireCompileTest : BasePlatformTestCase() {

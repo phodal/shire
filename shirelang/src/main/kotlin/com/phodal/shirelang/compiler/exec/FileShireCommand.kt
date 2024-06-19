@@ -1,6 +1,6 @@
 package com.phodal.shirelang.compiler.exec
 
-import com.phodal.shirelang.compiler.model.LineInfo
+import com.phodal.shirelang.compiler.hobbit.ast.LineInfo
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiManager
