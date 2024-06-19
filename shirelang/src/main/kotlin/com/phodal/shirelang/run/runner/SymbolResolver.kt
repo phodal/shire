@@ -11,7 +11,7 @@ import com.phodal.shirecore.provider.PsiContextVariableProvider
 import com.phodal.shirecore.provider.PsiVariable
 import com.phodal.shirelang.compiler.SymbolTable
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
-import com.phodal.shirelang.compiler.hobbit.patternaction.VariablePatternActionExecutor
+import com.phodal.shirelang.compiler.hobbit.patternaction.PatternActionProcessor
 import com.phodal.shirelang.completion.dataprovider.ContextVariable
 import com.phodal.shirelang.run.flow.ShireProcessProcessor.Companion.getElementAtOffset
 
@@ -45,7 +45,7 @@ class SymbolResolver(val myProject: Project, val editor: Editor, val hole: Hobbi
         results.putAll(SystemInfoVariable.resolve())
 
         hole?.variables?.forEach {
-            results[it.key] = VariablePatternActionExecutor(myProject, editor, hole).execute(it.value)
+            results[it.key] = PatternActionProcessor(myProject, editor, hole).execute(it.value)
         }
 
         return results

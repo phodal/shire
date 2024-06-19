@@ -25,6 +25,9 @@ sealed class FrontMatterType(val value: Any) {
         }
     }
 
+    /**
+     * The `DATE` class is a subclass of `FrontMatterType` that represents a date.
+     */
     class DATE(value: String) : FrontMatterType(value) {
         override fun display(): String {
             return value.toString()
@@ -37,12 +40,31 @@ sealed class FrontMatterType(val value: Any) {
         }
     }
 
+    /**
+     * The `ARRAY` class is a subclass of `FrontMatterType` that represents a JSON array.
+     *
+     * ```shire
+     * ---
+     * variables: ["var1", "var2"]
+     * ---
+     */
     class ARRAY(value: List<FrontMatterType>) : FrontMatterType(value) {
         override fun display(): String {
             return (value as List<FrontMatterType>).joinToString(", ", "[", "]") { it.display() }
         }
     }
 
+    /**
+     * The `OBJECT` class is a subclass of `FrontMatterType` that represents a JSON object.
+     * It takes a `Map` of `String` to `FrontMatterType` as its constructor parameter.
+     *
+     * ```shire
+     * ---
+     * variables:
+     *   "var1": "value1"
+     * ---
+     * ```
+     */
     class OBJECT(value: Map<String, FrontMatterType>) : FrontMatterType(value) {
         override fun display(): String {
             return (value as Map<String, FrontMatterType>).entries.joinToString(
@@ -54,7 +76,14 @@ sealed class FrontMatterType(val value: Any) {
     }
 
     /**
-     * The default pattern action handles for processing
+     * The pattern action handles for processing
+     *
+     * ```shire
+     * ---
+     * variables:
+     *   "var2": /.*.java/ { grep("error.log") | sort | xargs("rm")}
+     * ---
+     * ````
      */
     class PATTERN(value: ShirePatternAction) : FrontMatterType(value) {
         override fun display(): String {
@@ -64,6 +93,16 @@ sealed class FrontMatterType(val value: Any) {
 
     /**
      * The case match for the front matter.
+     *
+     * ```shire
+     * ---
+     * case "$0" {
+     *      "error" { grep("ERROR") | sort | xargs("notify_admin") }
+     *      "warn" { grep("WARN") | sort | xargs("notify_admin") }
+     *      "info" { grep("INFO") | sort | xargs("notify_user") }
+     *      default  { grep("ERROR") | sort | xargs("notify_admin") }
+     * }
+     * ---
      */
     class CaseMatch(value: Map<String, PATTERN>) : FrontMatterType(value) {
         /**
@@ -100,7 +139,30 @@ sealed class FrontMatterType(val value: Any) {
     }
 
     /**
-     * IDENTIFIER
+     * The simple expression for the [HobbitHole.WHEN] condition.
+     *
+     * ```shire
+     * ---
+     * when: $selection.length >= 1 && $selection.first() == 'p'
+     * ---
+     * ```
+     */
+    class Expression(value: Statement) : FrontMatterType(value) {
+        override fun display(): String {
+            return (value as Statement).display()
+        }
+    }
+
+
+
+    /**
+     * Identifier for the front matter config expression and template, like [Expression] or [MethodCall]
+     *
+     * ```shire
+     * ---
+     * when: $selection.length >= 1 && $selection.first() == 'p'
+     * ---
+     * ```
      */
     class IDENTIFIER(value: String) : FrontMatterType(value) {
         override fun display(): String {
@@ -108,12 +170,4 @@ sealed class FrontMatterType(val value: Any) {
         }
     }
 
-    /**
-     * The expression
-     */
-    class Expression(value: Statement) : FrontMatterType(value) {
-        override fun display(): String {
-            return (value as Statement).display()
-        }
-    }
 }

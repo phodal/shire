@@ -7,9 +7,8 @@ import com.phodal.shirelang.compiler.FrontmatterParser
 import com.phodal.shirelang.compiler.ShireCompiler
 import com.phodal.shirelang.compiler.hobbit.LogicalExpression
 import com.phodal.shirelang.compiler.hobbit.patternaction.PatternActionFunc
-import com.phodal.shirelang.compiler.hobbit.patternaction.VariablePatternActionExecutor
+import com.phodal.shirelang.compiler.hobbit.patternaction.PatternActionProcessor
 import com.phodal.shirelang.psi.ShireFile
-import com.phodal.shirelang.run.compileShireTemplate
 
 class ShireCompileTest : BasePlatformTestCase() {
     fun testNormalString() {
@@ -234,7 +233,7 @@ class ShireCompileTest : BasePlatformTestCase() {
         val editor = myFixture.editor
 
         val results = hole.variables.mapValues {
-            VariablePatternActionExecutor(project, editor, hole).execute(it.value)
+            PatternActionProcessor(project, editor, hole).execute(it.value)
         }
 
         assertEquals("demo", results["var1"])

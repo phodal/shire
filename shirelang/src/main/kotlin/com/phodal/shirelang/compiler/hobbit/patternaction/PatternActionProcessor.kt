@@ -4,7 +4,7 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 
-class VariablePatternActionExecutor(val myProject: Project, val editor: Editor, val hole: HobbitHole) {
+class PatternActionProcessor(val myProject: Project, val editor: Editor, val hole: HobbitHole) {
     /**
      * We should execute the variable function with the given key and pipeline functions.
      *
