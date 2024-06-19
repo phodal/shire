@@ -1,5 +1,6 @@
 package com.phodal.shirelang.compiler.patternaction
 
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
 import com.intellij.openapi.vfs.VfsUtilCore
@@ -58,24 +59,28 @@ object PatternSearcher {
             return cache[regex]!!
         }
 
+        val pattern: Pattern = try {
+            Pattern.compile(regex)
+        } catch (e: Exception) {
+            logger<PatternSearcher>().error("Invalid regex: $regex")
+            return emptyList()
+        }
+
+        val baseDir: VirtualFile = project.guessProjectDir() ?: return emptyList()
+
         val matchingFiles: MutableList<VirtualFile> = ArrayList()
-        val pattern: Pattern = Pattern.compile(regex)
 
         VirtualFileManager.getInstance().getFileSystem("file").refresh(false)
-        val baseDir: VirtualFile? = project.guessProjectDir()
 
-        if (baseDir != null) {
-            baseDir.fileSystem.refreshAndFindFileByPath(baseDir.path)
-
-            VfsUtilCore.visitChildrenRecursively(baseDir, object : VirtualFileVisitor<Any>() {
-                override fun visitFile(file: VirtualFile): Boolean {
-                    if (pattern.matcher(file.name).matches()) {
-                        matchingFiles.add(file)
-                    }
-                    return true
+        VfsUtilCore.visitChildrenRecursively(baseDir, object : VirtualFileVisitor<Any>() {
+            override fun visitFile(file: VirtualFile): Boolean {
+                if (pattern.matcher(file.name).matches()) {
+                    matchingFiles.add(file)
                 }
-            })
-        }
+                return true
+            }
+
+        })
 
         return matchingFiles
     }

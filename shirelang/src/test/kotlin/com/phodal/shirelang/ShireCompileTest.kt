@@ -213,7 +213,7 @@ class ShireCompileTest : BasePlatformTestCase() {
             when: ${'$'}fileName.matches("/.*.java/")
             variables:
               "var1": "demo"
-              "var2": /**.java/ { print("hello") | sort }
+              "var2": /.*.java/ { print("hello") | sort }
             ---
             
             Summary webpage: ${'$'}fileName
