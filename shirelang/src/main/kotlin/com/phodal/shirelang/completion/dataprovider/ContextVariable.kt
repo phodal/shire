@@ -1,9 +1,5 @@
 package com.phodal.shirelang.completion.dataprovider
 
-import com.intellij.openapi.editor.Editor
-import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiNameIdentifierOwner
-
 enum class ContextVariable(val variable: String, val description: String) {
     SELECTION("selection", "The selected text"),
     BEFORE_CURSOR("beforeCursor", "The text before the cursor"),
