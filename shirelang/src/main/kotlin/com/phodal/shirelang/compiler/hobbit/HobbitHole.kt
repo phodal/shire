@@ -12,7 +12,9 @@ import com.phodal.shirecore.middleware.PostProcessor
 import com.phodal.shirecore.middleware.select.SelectElementStrategy
 import com.phodal.shirelang.compiler.FrontmatterParser
 import com.phodal.shirelang.compiler.hobbit._base.Smials
-import com.phodal.shirelang.compiler.hobbit.patternaction.PatternAction
+import com.phodal.shirelang.compiler.hobbit.ast.FrontMatterType
+import com.phodal.shirelang.compiler.hobbit.ast.PatternAction
+import com.phodal.shirelang.compiler.hobbit.ast.RuleBasedPatternAction
 import com.phodal.shirelang.compiler.hobbit.patternaction.PatternActionTransform
 import com.phodal.shirelang.psi.ShireFile
 
@@ -70,7 +72,7 @@ open class HobbitHole(
     /**
      * The list of rule files to apply for the action.
      */
-    val preFilter: List<ShirePatternAction> = emptyList(),
+    val preFilter: List<RuleBasedPatternAction> = emptyList(),
     /**
      * Post middleware actions, like
      * Logging, Metrics, CodeVerify, RunCode, ParseCode etc.
@@ -145,13 +147,13 @@ open class HobbitHole(
                 PostProcessor.handler(it as String)
             }
 
-            val filenameRules: MutableList<ShirePatternAction> = mutableListOf()
+            val filenameRules: MutableList<RuleBasedPatternAction> = mutableListOf()
             val filenamesMap = frontMatterMap[FILENAME_RULES] as? FrontMatterType.OBJECT
             filenamesMap?.let {
                 (filenamesMap.value as? Map<String, FrontMatterType>)?.forEach { (key, value) ->
                     val text = key.removeSurrounding("\"")
                     PatternAction.from(value)?.let {
-                        filenameRules.add(ShirePatternAction(text, it.patternFuncs))
+                        filenameRules.add(RuleBasedPatternAction(text, it.patternFuncs))
                     }
                 }
             }

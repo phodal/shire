@@ -1,4 +1,4 @@
-package com.phodal.shirelang.compiler.hobbit
+package com.phodal.shirelang.compiler.hobbit.ast
 
 import com.intellij.openapi.diagnostic.logger
 import java.util.regex.Pattern

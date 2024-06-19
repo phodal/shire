@@ -7,7 +7,7 @@ import com.intellij.codeInsight.completion.PrioritizedLookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.util.ProcessingContext
 import com.phodal.shirelang.actions.validator.PsiVariables
-import com.phodal.shirelang.compiler.hobbit.MethodCall
+import com.phodal.shirelang.compiler.hobbit.ast.MethodCall
 
 class WhenConditionCompletionProvider : CompletionProvider<CompletionParameters>() {
     override fun addCompletions(

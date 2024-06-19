@@ -7,7 +7,8 @@ import com.intellij.psi.TokenType.WHITE_SPACE
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.elementType
 import com.phodal.shirelang.compiler.hobbit.*
-import com.phodal.shirelang.compiler.hobbit.ShirePatternAction
+import com.phodal.shirelang.compiler.hobbit.ast.RuleBasedPatternAction
+import com.phodal.shirelang.compiler.hobbit.ast.*
 import com.phodal.shirelang.compiler.hobbit.patternaction.PatternActionFunc
 import com.phodal.shirelang.psi.*
 
@@ -336,7 +337,7 @@ object FrontmatterParser {
             }
         }
 
-        return FrontMatterType.PATTERN(ShirePatternAction(pattern, processor))
+        return FrontMatterType.PATTERN(RuleBasedPatternAction(pattern, processor))
     }
 
     private fun parseParameters(funcCall: ShireFuncCall?): List<@NlsSafe String> =

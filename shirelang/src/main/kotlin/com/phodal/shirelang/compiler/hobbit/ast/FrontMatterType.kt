@@ -1,9 +1,5 @@
-package com.phodal.shirelang.compiler.hobbit
+package com.phodal.shirelang.compiler.hobbit.ast
 
-import com.phodal.shirelang.compiler.hobbit.patternaction.PatternActionFunc
-
-
-class ShirePatternAction(val pattern: String, val processors: List<PatternActionFunc>)
 
 /**
  * Basic Types: [STRING], [NUMBER], [DATE], [BOOLEAN], [ARRAY], [OBJECT]
@@ -85,9 +81,9 @@ sealed class FrontMatterType(val value: Any) {
      * ---
      * ````
      */
-    class PATTERN(value: ShirePatternAction) : FrontMatterType(value) {
+    class PATTERN(value: RuleBasedPatternAction) : FrontMatterType(value) {
         override fun display(): String {
-            return (value as ShirePatternAction).pattern + " -> " + (value.processors.joinToString(", ") { it.funcName })
+            return (value as RuleBasedPatternAction).pattern + " -> " + (value.processors.joinToString(", ") { it.funcName })
         }
     }
 
@@ -122,7 +118,7 @@ sealed class FrontMatterType(val value: Any) {
                 "case \"\$0\" {\n",
                 "\n}"
             ) { (key, value: PATTERN) ->
-                val pattern = (value as ShirePatternAction).pattern
+                val pattern = (value as RuleBasedPatternAction).pattern
                 val processors = value.processors.joinToString(" | ") { it.funcName }
                 "    \"$key\" { $processors }"
             }

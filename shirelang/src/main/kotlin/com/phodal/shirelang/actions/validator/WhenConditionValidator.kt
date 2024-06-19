@@ -1,8 +1,8 @@
 package com.phodal.shirelang.actions.validator
 
 import com.intellij.psi.PsiFile
-import com.phodal.shirelang.compiler.hobbit.FrontMatterType
-import com.phodal.shirelang.compiler.hobbit.Statement
+import com.phodal.shirelang.compiler.hobbit.ast.FrontMatterType
+import com.phodal.shirelang.compiler.hobbit.ast.Statement
 
 /**
  * Intention variable for condition include:
