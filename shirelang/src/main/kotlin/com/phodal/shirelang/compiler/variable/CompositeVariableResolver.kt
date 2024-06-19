@@ -7,21 +7,26 @@ import com.phodal.shirecore.middleware.select.SelectElementStrategy
 import com.phodal.shirelang.compiler.SymbolTable
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 
+data class VariableResolverContext(
+    val myProject: Project,
+    val editor: Editor,
+    val hole: HobbitHole?,
+    val symbolTable: SymbolTable,
+    var element: PsiElement?
+)
+
 class CompositeVariableResolver(
-    private val myProject: Project,
-    private val editor: Editor,
-    private val hole: HobbitHole?,
-    private val symbolTable: SymbolTable,
+   private val context: VariableResolverContext
 ) : VariableResolver {
     override fun resolve(): Map<String, Any> {
-        val element: PsiElement? = SelectElementStrategy.resolvePsiElement(myProject, editor)
+        val element: PsiElement? = SelectElementStrategy.resolvePsiElement(context.myProject, context.editor)
+        context.element = element
 
-        // TODO: refactor code
         val results = mutableMapOf<String, Any>()
-        results.putAll(BuiltinVariableResolver(myProject, editor, symbolTable, element).resolve())
-        results.putAll(ContextVariableResolver(editor, element).resolve())
-        results.putAll(SystemInfoVariableResolver().resolve())
-        results.putAll(UserCustomVariableResolver(myProject, editor, hole).resolve())
+        results.putAll(BuiltinVariableResolver(context).resolve())
+        results.putAll(ContextVariableResolver(context).resolve())
+        results.putAll(SystemInfoVariableResolver(context).resolve())
+        results.putAll(UserCustomVariableResolver(context).resolve())
         return results
     }
 }

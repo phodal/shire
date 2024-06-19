@@ -10,7 +10,9 @@ import java.util.*
  * - IDE information, version, etc.
  * - Timezone, locale, etc.
  */
-class SystemInfoVariableResolver : VariableResolver {
+class SystemInfoVariableResolver(
+    private val context: VariableResolverContext
+) : VariableResolver {
     override fun resolve(): Map<String, Any> {
         return mapOf(
             "os" to fetchOsData(),

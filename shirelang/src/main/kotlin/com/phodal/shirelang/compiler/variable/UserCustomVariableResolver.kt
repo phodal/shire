@@ -1,22 +1,17 @@
 package com.phodal.shirelang.compiler.variable
 
-import com.intellij.openapi.editor.Editor
-import com.intellij.openapi.project.Project
-import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.patternaction.PatternActionProcessor
 
 class UserCustomVariableResolver(
-    val project: Project,
-    val editor: Editor,
-    val hole: HobbitHole?
+    private val context: VariableResolverContext
 ) : VariableResolver {
     override fun resolve() : Map<String, String> {
-        if (hole == null) {
+        if (context.hole == null) {
             return emptyMap()
         }
 
-        return hole.variables.mapValues {
-            PatternActionProcessor(project, editor, hole).execute(it.value)
+        return context.hole.variables.mapValues {
+            PatternActionProcessor(context.myProject, context.editor, context.hole).execute(it.value)
         }
     }
 }

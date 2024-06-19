@@ -29,6 +29,7 @@ import com.phodal.shirelang.run.runner.ShireCustomAgentRunner
 import com.phodal.shirelang.run.runner.ShireDefaultRunner
 import com.phodal.shirelang.run.runner.ShireRunner
 import com.phodal.shirelang.compiler.variable.CompositeVariableResolver
+import com.phodal.shirelang.compiler.variable.VariableResolverContext
 import java.awt.BorderLayout
 import javax.swing.JComponent
 
@@ -147,7 +148,8 @@ fun compileShireTemplate(myProject: Project, hole: HobbitHole, symbolTable: Symb
     val currentElement = VariableTemplateCompiler.defaultElement(myProject, currentEditor)
 
     if (currentElement != null && currentEditor != null) {
-        val additionalMap: Map<String, Any> = CompositeVariableResolver(myProject, currentEditor, hole, symbolTable).resolve()
+        val context = VariableResolverContext(myProject, currentEditor, hole, symbolTable, null)
+        val additionalMap: Map<String, Any> = CompositeVariableResolver(context).resolve()
 
         val file = currentElement.containingFile
         val templateCompiler = VariableTemplateCompiler(file.language, file)
