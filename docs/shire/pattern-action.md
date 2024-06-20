@@ -31,7 +31,8 @@ Shire 使用 Intellij 自带的正则表达式来匹配，以支持代码高亮�
 ```shire
 ---
 variables:
-  "var2": /.*.java/ { grep("error.log") | sort | cat }
+  "var2": /.*.java/ { cat | grep("error.log") | sort | cat }
+   "extContext": /build\.gradle\.kts/ { cat | grep("org.springframework.boot:spring-boot-starter-jdbc") | print("This project use Spring Framework")}
 ---
 ```
 

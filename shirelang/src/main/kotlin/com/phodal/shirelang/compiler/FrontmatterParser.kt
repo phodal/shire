@@ -292,9 +292,13 @@ object FrontmatterParser {
             val funcCall = expr.funcCall
             val args = parseParameters(funcCall)
 
-            val firstArg = args[0]
             when (funcCall?.funcName?.text) {
                 "grep" -> {
+                    if (args.isEmpty()) {
+                        logger.warn("parsePatternAction, grep requires at least 1 argument")
+                        return FrontMatterType.ERROR("grep requires at least 1 argument")
+                    }
+
                     processor.add(PatternActionFunc.Grep(*args.toTypedArray()))
                 }
 
@@ -303,10 +307,15 @@ object FrontmatterParser {
                 }
 
                 "sed" -> {
-                    if (firstArg.startsWith("/") && firstArg.endsWith("/")) {
-                        processor.add(PatternActionFunc.Sed(firstArg, args[1], true))
+                    if (args.size < 2) {
+                        logger.warn("parsePatternAction, sed requires at least 2 arguments")
+                        return FrontMatterType.ERROR("sed requires at least 2 arguments")
+                    }
+
+                    if (args[0].startsWith("/") && args[0].endsWith("/")) {
+                        processor.add(PatternActionFunc.Sed(args[0], args[1], true))
                     } else {
-                        processor.add(PatternActionFunc.Sed(firstArg, args[1]))
+                        processor.add(PatternActionFunc.Sed(args[0], args[1]))
                     }
                 }
 
@@ -319,11 +328,19 @@ object FrontmatterParser {
                 }
 
                 "head" -> {
-                    processor.add(PatternActionFunc.Head(firstArg.toInt()))
+                    if (args.isEmpty()) {
+                        processor.add(PatternActionFunc.Head(10))
+                    } else {
+                        processor.add(PatternActionFunc.Head(args[0].toInt()))
+                    }
                 }
 
                 "tail" -> {
-                    processor.add(PatternActionFunc.Tail(firstArg.toInt()))
+                    if (args.isEmpty()) {
+                        processor.add(PatternActionFunc.Tail(10))
+                    } else {
+                        processor.add(PatternActionFunc.Tail(args[0].toInt()))
+                    }
                 }
 
                 "print" -> {

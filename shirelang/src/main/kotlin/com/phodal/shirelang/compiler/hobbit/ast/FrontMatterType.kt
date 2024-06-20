@@ -52,6 +52,12 @@ sealed class FrontMatterType(val value: Any) {
         }
     }
 
+    class ERROR(value: String) : FrontMatterType(value) {
+        override fun display(): String {
+            return value.toString()
+        }
+    }
+
     /**
      * The `ARRAY` class is a subclass of `FrontMatterType` that represents a JSON array.
      *
