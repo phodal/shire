@@ -38,7 +38,8 @@ open class ShireRunConfigurationProfileState(
     private val myProject: Project,
     private val configuration: ShireConfiguration,
 ) : RunProfileState {
-    private val executionConsole: ConsoleViewImpl = ConsoleViewImpl(myProject, true)
+    val executionConsole: ConsoleViewImpl = ConsoleViewImpl(myProject, true)
+    val console = ShireConsoleView(executionConsole)
 
     override fun execute(executor: Executor?, runner: ProgramRunner<*>): ExecutionResult {
         val processHandler = ShireProcessHandler(configuration.name)
@@ -46,7 +47,6 @@ open class ShireRunConfigurationProfileState(
 
         val sb = StringBuilder()
         processHandler.addProcessListener(ShireProcessAdapter(sb, configuration))
-        val console = ShireConsoleView(executionConsole)
 
         // start message log in here
         console.addMessageFilter { line, _ ->

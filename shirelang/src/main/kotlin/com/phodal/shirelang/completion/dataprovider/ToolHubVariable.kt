@@ -5,14 +5,14 @@ import com.phodal.shirecore.agent.CustomAgent
 /**
  * The tool hub provides a list of tools - agents and commands for the AI Agents to decide which one to call
  * For example, you prompt could be:
- * ```devin
+ * ```shire
  * Here is the tools you can use:
  * $agents
  * ```
  *
  * Or
  *
- * ```devin
+ * ```shire
  * Here is the tools you can use:
  * $commands
  * ```

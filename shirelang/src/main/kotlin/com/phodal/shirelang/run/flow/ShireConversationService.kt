@@ -1,9 +1,11 @@
 package com.phodal.shirelang.run.flow
 
+import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.project.Project
 import com.phodal.shire.llm.LlmProvider
 import com.phodal.shirelang.compiler.ShireCompiledResult
+import com.phodal.shirelang.run.ShireConsoleView
 import kotlinx.coroutines.runBlocking
 
 @Service(Service.Level.PROJECT)
@@ -53,7 +55,7 @@ class ShireConversationService(val project: Project) {
      *
      * @param scriptPath The path of the script to re-run
      */
-    fun tryFixWithLlm(scriptPath: String) {
+    fun tryFixWithLlm(scriptPath: String, consoleView: ShireConsoleView?) {
         if (cachedConversations.isEmpty()) {
             return
         }
@@ -64,11 +66,9 @@ class ShireConversationService(val project: Project) {
         }
 
         conversation.alreadyReRun = true
-        // call llm again to re-run
 
         val prompt = StringBuilder()
 
-        // todo: refactor to DevIn template file
         if (conversation.compiledResult.isLocalCommand) {
             prompt.append(
                 """
@@ -76,7 +76,7 @@ class ShireConversationService(val project: Project) {
                 When I use shell-like language and compile the script, I got an error, can you help me to fix it?
                 
                 Origin script:
-                ```devin
+                ```shire
                 ${conversation.compiledResult.input}
                 ```
                 
@@ -90,6 +90,8 @@ class ShireConversationService(val project: Project) {
 
         prompt.append(
             """
+            You are a top software developer in the world, which can help me to fix the issue.
+            
             Here is the run result, can you help me to fix it?
             Run result:
             ####
@@ -98,13 +100,15 @@ class ShireConversationService(val project: Project) {
             """.trimIndent()
         )
 
-//        val finalPrompt = prompt.toString()
-//        runBlocking {
-//            LlmProvider.provider(project)?.stream(finalPrompt, "Shirelang", true)
-//                ?.collect {
-//                    //
-//                }
-//        }
+        val finalPrompt = prompt.toString()
+        if (consoleView != null) {
+            runBlocking {
+                LlmProvider.provider(project)?.stream(finalPrompt, "Shirelang", true)
+                    ?.collect {
+                        consoleView.print(it, ConsoleViewContentType.NORMAL_OUTPUT)
+                    }
+            }
+        }
     }
 
     fun getLlmResponse(scriptPath: String): String {

@@ -27,7 +27,7 @@ class ShireProgramRunner : GenericProgramRunner<RunnerSettings>(), Disposable {
 
     override fun doExecute(state: RunProfileState, environment: ExecutionEnvironment): RunContentDescriptor? {
         if (environment.runProfile !is ShireConfiguration) return null
-        val devInState = state as ShireRunConfigurationProfileState
+        val shireState = state as ShireRunConfigurationProfileState
 
         FileDocumentManager.getInstance().saveAllDocuments()
         val result = AtomicReference<RunContentDescriptor>()
@@ -35,7 +35,9 @@ class ShireProgramRunner : GenericProgramRunner<RunnerSettings>(), Disposable {
         if(!isSubscribed) {
             connection.subscribe(ShireRunListener.TOPIC, object : ShireRunListener {
                 override fun runFinish(string: String, event: ProcessEvent, scriptPath: String) {
-                    environment.project.getService(ShireProcessProcessor::class.java).process(string, event, scriptPath)
+                    val consoleView = (environment.state as? ShireRunConfigurationProfileState)?.console
+                    environment.project.getService(ShireProcessProcessor::class.java)
+                        .process(string, event, scriptPath, consoleView)
                 }
             })
 
@@ -43,7 +45,7 @@ class ShireProgramRunner : GenericProgramRunner<RunnerSettings>(), Disposable {
         }
 
         ApplicationManager.getApplication().invokeAndWait {
-            val showRunContent = showRunContent(devInState.execute(environment.executor, this), environment)
+            val showRunContent = showRunContent(shireState.execute(environment.executor, this), environment)
             result.set(showRunContent)
         }
 

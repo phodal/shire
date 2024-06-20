@@ -1,6 +1,7 @@
 package com.phodal.shirelang.run.flow
 
 import com.intellij.execution.process.ProcessEvent
+import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.application.runInEdt
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.components.Service
@@ -9,13 +10,16 @@ import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiUtilBase
 import com.intellij.openapi.fileEditor.FileEditorManager
+import com.phodal.shire.llm.LlmProvider
 import com.phodal.shirecore.ShirelangNotifications
 import com.phodal.shirecore.middleware.select.SelectElementStrategy
 import com.phodal.shirelang.ShireLanguage
 import com.phodal.shirelang.compiler.ShireCompiler
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.psi.ShireVisitor
+import com.phodal.shirelang.run.ShireConsoleView
 import com.phodal.shirelang.utils.Code
+import kotlinx.coroutines.runBlocking
 
 
 @Service(Service.Level.PROJECT)
@@ -55,14 +59,14 @@ class ShireProcessProcessor(val project: Project) {
      * @param event The process event containing the exit code
      * @param scriptPath The path of the script file
      */
-    fun process(output: String, event: ProcessEvent, scriptPath: String) {
+    fun process(output: String, event: ProcessEvent, scriptPath: String, consoleView: ShireConsoleView?) {
         conversationService.updateIdeOutput(scriptPath, output)
 
         val code = Code.parse(conversationService.getLlmResponse(scriptPath))
         val isShireCode = code.language == ShireLanguage.INSTANCE
         if (isShireCode) {
             runInEdt {
-                executeTask(ShireFile.fromString(project, code.text))
+                executeTask(ShireFile.fromString(project, code.text), consoleView)
             }
         }
 
@@ -75,13 +79,13 @@ class ShireProcessProcessor(val project: Project) {
                     if (text.startsWith("[flow]:")) {
                         val nextScript = text.substring(7)
                         val newScript = ShireFile.lookup(project, nextScript) ?: return
-                        this.executeTask(newScript)
+                        this.executeTask(newScript, consoleView)
                     }
                 }
             }
 
             event.exitCode != 0 -> {
-                conversationService.tryFixWithLlm(scriptPath)
+                conversationService.tryFixWithLlm(scriptPath, consoleView)
             }
         }
     }
@@ -90,7 +94,7 @@ class ShireProcessProcessor(val project: Project) {
      * This function is responsible for running a task with a new script.
      * @param newScript The new script to be run.
      */
-    fun executeTask(newScript: ShireFile) {
+    private fun executeTask(newScript: ShireFile, consoleView: ShireConsoleView?) {
         val devInsCompiler = createCompiler(project, newScript)
         val result = devInsCompiler.compile()
         if (result.shireOutput != "") {
@@ -98,12 +102,14 @@ class ShireProcessProcessor(val project: Project) {
         }
 
         if (result.hasError) {
-//            sendToChatWindow(project, ChatActionType.CHAT) { panel, service ->
-//                service.handlePromptAndResponse(panel, object : ContextPrompter() {
-//                    override fun displayPrompt(): String = result.output
-//                    override fun requestPrompt(): String = result.output
-//                }, null, true)
-//            }
+            if (consoleView != null) {
+                runBlocking {
+                    LlmProvider.provider(project)?.stream(result.shireOutput, "Shirelang", true)
+                        ?.collect {
+                            consoleView.print(it, ConsoleViewContentType.NORMAL_OUTPUT)
+                        }
+                }
+            }
         } else {
             if (result.nextJob != null) {
                 val nextJob = result.nextJob!!
