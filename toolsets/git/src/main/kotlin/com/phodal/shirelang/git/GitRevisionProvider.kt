@@ -17,7 +17,7 @@ import com.intellij.openapi.vcs.changes.LocalChangeList
 import com.intellij.vcs.commit.ChangeListCommitState
 import com.intellij.vcs.commit.LocalChangesCommitter
 import com.phodal.shirecore.ShireCoreBundle
-import com.phodal.shirecore.provider.RevisionProvider
+import com.phodal.shirecore.provider.shire.RevisionProvider
 import git4idea.GitCommit
 import git4idea.GitRevisionNumber
 import git4idea.changes.GitCommittedChangeListProvider

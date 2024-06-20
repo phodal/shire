@@ -6,10 +6,10 @@ import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.search.searches.ClassInheritorsSearch
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.testIntegration.TestFinderHelper
-import com.phodal.shirecore.provider.PsiVariable
-import com.phodal.shirecore.provider.PsiContextVariableProvider
-import com.phodal.shirecore.provider.ToolchainPrepareContext
-import com.phodal.shirecore.provider.ToolchainProvider
+import com.phodal.shirecore.provider.variable.PsiVariable
+import com.phodal.shirecore.provider.variable.PsiContextVariableProvider
+import com.phodal.shirecore.provider.context.ToolchainPrepareContext
+import com.phodal.shirecore.provider.context.ToolchainProvider
 import com.phodal.shirelang.java.toolchain.getContainingClass
 import com.phodal.shirelang.java.variable.provider.JavaRelatedClassesProvider
 import kotlinx.coroutines.runBlocking

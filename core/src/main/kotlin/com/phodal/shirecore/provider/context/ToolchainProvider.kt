@@ -1,7 +1,6 @@
-package com.phodal.shirecore.provider
+package com.phodal.shirecore.provider.context
 
 import com.intellij.lang.LanguageExtension
-import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile

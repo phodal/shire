@@ -1,4 +1,4 @@
-package com.phodal.shirecore.provider
+package com.phodal.shirecore.provider.variable
 
 /**
  * Enum representing variables used in the generation of code structures.

@@ -1,4 +1,4 @@
-package com.phodal.shirecore.provider
+package com.phodal.shirecore.provider.agent
 
 import com.intellij.openapi.extensions.ExtensionPointName
 import com.phodal.shirecore.agenttool.AgentToolContext

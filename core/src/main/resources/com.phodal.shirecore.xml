@@ -8,36 +8,36 @@
 
     <extensionPoints>
         <extensionPoint qualifiedName="com.phodal.shireFileRunService"
-                        interface="com.phodal.shirecore.provider.FileRunService"
+                        interface="com.phodal.shirecore.provider.shire.FileRunService"
                         dynamic="true"/>
 
         <extensionPoint qualifiedName="com.phodal.shireRunProjectService"
-                        interface="com.phodal.shirecore.provider.ProjectRunService"
+                        interface="com.phodal.shirecore.provider.shire.ProjectRunService"
                         dynamic="true"/>
 
         <extensionPoint qualifiedName="com.phodal.shireSymbolProvider"
-                        interface="com.phodal.shirecore.provider.ShireSymbolProvider"
+                        interface="com.phodal.shirecore.provider.shire.ShireSymbolProvider"
                         dynamic="true"/>
 
         <extensionPoint qualifiedName="com.phodal.shireAgentTool"
-                        interface="com.phodal.shirecore.provider.AgentTool"
+                        interface="com.phodal.shirecore.provider.agent.AgentTool"
                         dynamic="true"/>
 
         <extensionPoint qualifiedName="com.phodal.shireRevisionProvider"
-                        interface="com.phodal.shirecore.provider.RevisionProvider"
+                        interface="com.phodal.shirecore.provider.shire.RevisionProvider"
                         dynamic="true"/>
 
         <extensionPoint qualifiedName="com.phodal.shireBuildSystemProvider"
-                        interface="com.phodal.shirecore.provider.BuildSystemProvider"
+                        interface="com.phodal.shirecore.provider.context.BuildSystemProvider"
                         dynamic="true"/>
 
         <extensionPoint qualifiedName="com.phodal.shireElementStrategyBuilder"
-                        interface="com.phodal.shirecore.provider.PsiElementStrategyBuilder "
+                        interface="com.phodal.shirecore.provider.variable.PsiElementStrategyBuilder "
                         dynamic="true"/>
 
         <extensionPoint qualifiedName="com.phodal.shireRefactoringTool"
                         beanClass="com.intellij.lang.LanguageExtensionPoint" dynamic="true">
-            <with attribute="implementationClass" implements="com.phodal.shirecore.provider.RefactoringTool"/>
+            <with attribute="implementationClass" implements="com.phodal.shirecore.provider.shire.RefactoringTool"/>
         </extensionPoint>
 
         <extensionPoint qualifiedName="com.phodal.shireAutoTesting"
@@ -49,14 +49,14 @@
         <extensionPoint qualifiedName="com.phodal.shireToolchainProvider"
                         beanClass="com.intellij.lang.LanguageExtensionPoint" dynamic="true">
             <with attribute="implementationClass"
-                  implements="com.phodal.shirecore.provider.ToolchainProvider"/>
+                  implements="com.phodal.shirecore.provider.context.ToolchainProvider"/>
         </extensionPoint>
 
         <!-- Toolchain Provider -->
         <extensionPoint qualifiedName="com.phodal.shirePsiVariableProvider"
                         beanClass="com.intellij.lang.LanguageExtensionPoint" dynamic="true">
             <with attribute="implementationClass"
-                  implements="com.phodal.shirecore.provider.PsiContextVariableProvider"/>
+                  implements="com.phodal.shirecore.provider.variable.PsiContextVariableProvider"/>
         </extensionPoint>
 
         <!-- Code Editor -->

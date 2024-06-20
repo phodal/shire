@@ -1,7 +1,7 @@
 package com.phodal.shirelang.compiler.exec
 
 import com.intellij.openapi.project.Project
-import com.phodal.shirecore.provider.RevisionProvider
+import com.phodal.shirecore.provider.shire.RevisionProvider
 
 /**
  * RevAutoCommand is used to execute a command that retrieves the committed change list for a given revision using Git.

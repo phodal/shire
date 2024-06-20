@@ -1,4 +1,4 @@
-package com.phodal.shirecore.provider
+package com.phodal.shirecore.provider.shire
 
 import com.intellij.lang.Language
 import com.intellij.lang.LanguageExtension

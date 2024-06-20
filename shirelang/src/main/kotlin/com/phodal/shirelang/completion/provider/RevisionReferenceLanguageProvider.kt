@@ -5,7 +5,7 @@ import com.intellij.codeInsight.completion.CompletionProvider
 import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.openapi.project.Project
 import com.intellij.util.ProcessingContext
-import com.phodal.shirecore.provider.RevisionProvider
+import com.phodal.shirecore.provider.shire.RevisionProvider
 
 
 class RevisionReferenceLanguageProvider : CompletionProvider<CompletionParameters>() {

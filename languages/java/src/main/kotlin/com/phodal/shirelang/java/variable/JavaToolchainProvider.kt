@@ -7,9 +7,9 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.projectRoots.JavaSdkType
 import com.intellij.openapi.roots.ModuleRootManager
 import com.intellij.openapi.roots.ProjectRootManager
-import com.phodal.shirecore.provider.ToolchainContextItem
-import com.phodal.shirecore.provider.ToolchainPrepareContext
-import com.phodal.shirecore.provider.ToolchainProvider
+import com.phodal.shirecore.provider.context.ToolchainContextItem
+import com.phodal.shirecore.provider.context.ToolchainPrepareContext
+import com.phodal.shirecore.provider.context.ToolchainProvider
 import com.phodal.shirelang.java.toolchain.JavaToolchain
 
 class JavaToolchainProvider : ToolchainProvider {

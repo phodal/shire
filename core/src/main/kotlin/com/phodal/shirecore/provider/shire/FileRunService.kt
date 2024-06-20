@@ -1,4 +1,4 @@
-package com.phodal.shirecore.provider
+package com.phodal.shirecore.provider.shire
 
 import com.intellij.execution.RunManager
 import com.intellij.execution.RunnerAndConfigurationSettings

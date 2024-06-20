@@ -16,7 +16,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
-import com.phodal.shirecore.provider.FileRunService
+import com.phodal.shirecore.provider.shire.FileRunService
 
 class HttpClientFileRunService : FileRunService {
     override fun runConfigurationClass(project: Project): Class<out RunProfile> {

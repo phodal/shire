@@ -1,7 +1,7 @@
 package com.phodal.shirecore.agenttool.browse
 
 import com.phodal.shirecore.agenttool.AgentToolContext
-import com.phodal.shirecore.provider.AgentTool
+import com.phodal.shirecore.provider.agent.AgentTool
 import com.phodal.shirecore.agenttool.AgentToolResult
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document

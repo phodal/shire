@@ -9,7 +9,7 @@ import com.intellij.psi.PsiManager
 import com.intellij.sh.psi.ShFile
 import com.intellij.sh.run.ShConfigurationType
 import com.intellij.sh.run.ShRunConfiguration
-import com.phodal.shirecore.provider.FileRunService
+import com.phodal.shirecore.provider.shire.FileRunService
 
 class ShellFileRunService : FileRunService {
     override fun runConfigurationClass(project: Project): Class<out RunProfile> = ShRunConfiguration::class.java

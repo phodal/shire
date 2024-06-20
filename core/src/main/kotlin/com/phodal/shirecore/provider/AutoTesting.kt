@@ -7,6 +7,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.serviceContainer.LazyExtensionInstance
 import com.intellij.util.xmlb.annotations.Attribute
+import com.phodal.shirecore.provider.shire.FileRunService
 import com.phodal.shirecore.unittest.AutoTestingPromptContext
 
 /**

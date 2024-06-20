@@ -5,7 +5,7 @@ import com.intellij.psi.*
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.util.PsiTreeUtil
 import com.phodal.shirecore.codemodel.model.ClassStructure
-import com.phodal.shirecore.provider.PsiElementStrategyBuilder
+import com.phodal.shirecore.provider.variable.PsiElementStrategyBuilder
 import com.phodal.shirelang.java.codemodel.JavaClassStructureProvider
 
 class JavaElementStrategyBuilder : PsiElementStrategyBuilder {

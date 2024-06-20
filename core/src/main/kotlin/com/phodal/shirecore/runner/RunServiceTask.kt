@@ -2,7 +2,6 @@
 package com.phodal.shirecore.runner
 
 import com.intellij.execution.RunnerAndConfigurationSettings
-import com.intellij.execution.configurations.RunConfiguration
 import com.intellij.execution.executors.DefaultRunExecutor
 import com.intellij.execution.process.AnsiEscapeDecoder
 import com.intellij.execution.process.ProcessOutputTypes
@@ -20,7 +19,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.util.text.nullize
 import com.phodal.shirecore.ShireCoreBundle
 import com.phodal.shirecore.ShirelangNotifications
-import com.phodal.shirecore.provider.FileRunService
+import com.phodal.shirecore.provider.shire.FileRunService
 
 open class RunServiceTask(
     private val project: Project,

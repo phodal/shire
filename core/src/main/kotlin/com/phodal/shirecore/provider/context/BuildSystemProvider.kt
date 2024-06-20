@@ -1,4 +1,4 @@
-package com.phodal.shirecore.provider
+package com.phodal.shirecore.provider.context
 
 
 import com.intellij.openapi.extensions.ExtensionPointName
@@ -26,7 +26,7 @@ abstract class BuildSystemProvider : LazyExtensionInstance<BuildSystemProvider>(
         private val EP_NAME: ExtensionPointName<BuildSystemProvider> =
             ExtensionPointName.create("com.phodal.shireBuildSystemProvider")
 
-        fun guess(project: Project): List<BuildSystemContext> {
+        fun provide(project: Project): List<BuildSystemContext> {
             return EP_NAME.extensionList.mapNotNull {
                 it.collect(project)
             }

@@ -9,7 +9,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.projectRoots.JavaSdk
 import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.util.SmartList
-import com.phodal.shirecore.provider.ProjectRunService
+import com.phodal.shirecore.provider.shire.ProjectRunService
 import com.phodal.shirecore.runner.ConfigurationRunner
 import com.phodal.shirelang.java.toolchain.GradleTasksUtil
 import icons.GradleIcons

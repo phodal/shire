@@ -18,7 +18,7 @@ import com.intellij.psi.search.ProjectScope
 import com.intellij.psi.search.PsiShortNamesCache
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.SmartList
-import com.phodal.shirecore.provider.ShireSymbolProvider
+import com.phodal.shirecore.provider.shire.ShireSymbolProvider
 
 class JavaSymbolProvider : ShireSymbolProvider {
     override val language: String = JavaLanguage.INSTANCE.displayName

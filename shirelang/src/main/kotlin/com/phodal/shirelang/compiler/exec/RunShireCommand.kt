@@ -4,7 +4,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.phodal.shirecore.provider.AutoTesting
-import com.phodal.shirecore.provider.ProjectRunService
+import com.phodal.shirecore.provider.shire.ProjectRunService
 import com.phodal.shirelang.compiler.error.SHIRE_ERROR
 import com.phodal.shirelang.utils.lookupFile
 
