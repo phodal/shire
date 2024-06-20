@@ -4,7 +4,6 @@ import com.intellij.execution.console.ConsoleViewWrapperBase
 import com.intellij.execution.process.ProcessHandler
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.progress.Task.Backgroundable
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.agent.CustomAgent
 import com.phodal.shirecore.agent.CustomAgentExecutor
