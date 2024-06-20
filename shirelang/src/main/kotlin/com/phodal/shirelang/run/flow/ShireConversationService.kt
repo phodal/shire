@@ -59,11 +59,11 @@ class ShireConversationService(val project: Project) {
         }
 
         val conversation = cachedConversations[scriptPath] ?: return
-        if (conversation.hadReRun) {
+        if (conversation.alreadyReRun) {
             return
         }
 
-        conversation.hadReRun = true
+        conversation.alreadyReRun = true
         // call llm again to re-run
 
         val prompt = StringBuilder()
@@ -98,13 +98,13 @@ class ShireConversationService(val project: Project) {
             """.trimIndent()
         )
 
-        val finalPrompt = prompt.toString()
-        runBlocking {
-            LlmProvider.provider(project)?.stream(finalPrompt, "Shirelang", true)
-                ?.collect {
-                    updateLlmResponse(scriptPath, it)
-                }
-        }
+//        val finalPrompt = prompt.toString()
+//        runBlocking {
+//            LlmProvider.provider(project)?.stream(finalPrompt, "Shirelang", true)
+//                ?.collect {
+//                    //
+//                }
+//        }
     }
 
     fun getLlmResponse(scriptPath: String): String {

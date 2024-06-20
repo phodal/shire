@@ -12,5 +12,5 @@ data class ShireProcessContext(
     val llmResponse: String,
     val ideOutput: String,
     val chatMessages: MutableList<ChatMessage> = mutableListOf(),
-    var hadReRun: Boolean = false
+    var alreadyReRun: Boolean = false
 )
