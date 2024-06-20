@@ -5,6 +5,8 @@ import com.intellij.psi.PsiManager
 import com.phodal.shirecore.provider.DefaultPsiContextVariableProvider
 import com.phodal.shirecore.provider.PsiContextVariableProvider
 import com.phodal.shirecore.provider.PsiVariable
+import com.phodal.shirelang.compiler.variable._base.VariableResolver
+import com.phodal.shirelang.compiler.variable._base.VariableResolverContext
 
 class BuiltinVariableResolver(
     private val context: VariableResolverContext

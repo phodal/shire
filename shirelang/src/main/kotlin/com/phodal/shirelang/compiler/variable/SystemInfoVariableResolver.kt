@@ -1,6 +1,8 @@
 package com.phodal.shirelang.compiler.variable
 
 import com.intellij.openapi.application.ApplicationInfo
+import com.phodal.shirelang.compiler.variable._base.VariableResolver
+import com.phodal.shirelang.compiler.variable._base.VariableResolverContext
 import java.util.*
 
 /**

@@ -18,18 +18,14 @@ import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Key
 import com.intellij.ui.components.panels.NonOpaquePanel
-import com.phodal.shirelang.compile.VariableTemplateCompiler
 import com.phodal.shirelang.compiler.ShireCompiler
-import com.phodal.shirelang.compiler.SymbolTable
+import com.phodal.shirelang.compiler.ShireTemplateCompiler
 import com.phodal.shirelang.compiler.error.SHIRE_ERROR
-import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.flow.ShireConversationService
 import com.phodal.shirelang.run.runner.ShireCustomAgentRunner
 import com.phodal.shirelang.run.runner.ShireDefaultRunner
 import com.phodal.shirelang.run.runner.ShireRunner
-import com.phodal.shirelang.compiler.variable.CompositeVariableResolver
-import com.phodal.shirelang.compiler.variable.VariableResolverContext
 import java.awt.BorderLayout
 import javax.swing.JComponent
 
@@ -101,13 +97,11 @@ open class ShireRunConfigurationProfileState(
 
         val symbolTable = compileResult.symbolTable
 
-        // translate template for handle reset for the conversation
-
         myProject.getService(ShireConversationService::class.java)
             .createConversation(configuration.getScriptPath(), compileResult)
 
         val input = compileResult.output
-        val compiledOutput = compileShireTemplate(myProject, compileResult.config!!, symbolTable, input)
+        val compiledOutput = ShireTemplateCompiler(myProject, compileResult.config!!, symbolTable, input).compile()
         val agent = compileResult.executeAgent
 
         compiledOutput.split("\n").forEach {
@@ -141,23 +135,5 @@ open class ShireRunConfigurationProfileState(
 
         return DefaultExecutionResult(console, processHandler)
     }
-}
-
-fun compileShireTemplate(myProject: Project, hole: HobbitHole, symbolTable: SymbolTable, input: String): String {
-    val currentEditor = VariableTemplateCompiler.defaultEditor(myProject)
-    val currentElement = VariableTemplateCompiler.defaultElement(myProject, currentEditor)
-
-    if (currentElement != null && currentEditor != null) {
-        val context = VariableResolverContext(myProject, currentEditor, hole, symbolTable, null)
-        val additionalMap: Map<String, Any> = CompositeVariableResolver(context).resolve()
-
-        val file = currentElement.containingFile
-        val templateCompiler = VariableTemplateCompiler(file.language, file)
-
-        templateCompiler.set(additionalMap)
-        return templateCompiler.compile(input)
-    }
-
-    return input
 }
 

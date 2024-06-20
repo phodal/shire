@@ -1,6 +1,8 @@
 package com.phodal.shirelang.compiler.variable
 
 import com.intellij.psi.PsiNameIdentifierOwner
+import com.phodal.shirelang.compiler.variable._base.VariableResolver
+import com.phodal.shirelang.compiler.variable._base.VariableResolverContext
 import com.phodal.shirelang.completion.dataprovider.ContextVariable
 import com.phodal.shirelang.completion.dataprovider.ContextVariable.*
 

@@ -1,6 +1,8 @@
 package com.phodal.shirelang.compiler.variable
 
 import com.phodal.shirelang.compiler.patternaction.PatternActionProcessor
+import com.phodal.shirelang.compiler.variable._base.VariableResolver
+import com.phodal.shirelang.compiler.variable._base.VariableResolverContext
 
 class UserCustomVariableResolver(
     private val context: VariableResolverContext
