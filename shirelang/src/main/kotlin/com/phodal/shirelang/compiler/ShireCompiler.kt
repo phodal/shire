@@ -101,7 +101,7 @@ class ShireCompiler(
             }
         }
 
-        result.output = output.toString()
+        result.shireOutput = output.toString()
         result.symbolTable = symbolTable
 
         CACHED_COMPILE_RESULT[file.name] = result
@@ -119,7 +119,7 @@ class ShireCompiler(
                     CustomCommand.fromString(myProject, id?.text ?: "")?.let { cmd ->
                         ShireFile.fromString(myProject, cmd.content).let { file ->
                             ShireCompiler(myProject, file).compile().let {
-                                output.append(it.output)
+                                output.append(it.shireOutput)
                                 result.hasError = it.hasError
                             }
                         }

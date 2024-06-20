@@ -9,26 +9,39 @@ data class ShireCompiledResult(
      * The origin DevIns content
      */
     var input: String = "",
+
     /**
-     * Output String of a compile result
+     * Output String of a compiler result, not the final result
      */
-    var output: String = "",
+    var shireOutput: String = "",
+
+    /**
+     * Is local command only
+     */
     var isLocalCommand: Boolean = false,
+
+    /**
+     * Has error
+     */
     var hasError: Boolean = false,
 
     /**
      * Execute agent
      */
     var executeAgent: CustomAgent? = null,
+
     /**
-     * Next job to be executed
+     * Next job file to be executed
      */
     var nextJob: ShireFile? = null,
 
+    /**
+     * The frontmatter of the file, which contains the configuration of Shire
+     */
     var config: HobbitHole? = null,
 
     /**
-     * Variables for lazy resolve
+     * Symbol table for all variables
      */
     var symbolTable: SymbolTable = SymbolTable(),
 )

@@ -43,38 +43,10 @@ open class ShireRunConfigurationProfileState(
         ProcessTerminatedListener.attach(processHandler)
 
         val sb = StringBuilder()
-
-        processHandler.addProcessListener(object : ProcessAdapter() {
-            var result = ""
-            override fun processTerminated(event: ProcessEvent) {
-                super.processTerminated(event)
-
-                ApplicationManager.getApplication().messageBus
-                    .syncPublisher(ShireRunListener.TOPIC)
-                    .runFinish(result, event, configuration.getScriptPath())
-            }
-
-            override fun onTextAvailable(event: ProcessEvent, outputType: Key<*>) {
-                super.onTextAvailable(event, outputType)
-                result = sb.toString()
-            }
-        })
+        processHandler.addProcessListener(ShireProcessAdapter(sb, configuration))
 
         val executionConsole = ConsoleViewImpl(myProject, true)
-        val console = object : ConsoleViewWrapperBase(executionConsole) {
-            override fun getComponent(): JComponent = myPanel
-            private var myPanel: NonOpaquePanel = NonOpaquePanel(BorderLayout())
-
-            init {
-                val baseComponent = delegate.component
-                myPanel.add(baseComponent, BorderLayout.CENTER)
-
-                val actionGroup = DefaultActionGroup(*executionConsole.createConsoleActions())
-                val toolbar = ActionManager.getInstance().createActionToolbar("BuildConsole", actionGroup, false)
-                toolbar.targetComponent = baseComponent
-                myPanel.add(toolbar.component, BorderLayout.EAST)
-            }
-        }
+        val console = ShireConsoleView(executionConsole)
 
         // start message log in here
         console.addMessageFilter { line, _ ->
@@ -100,11 +72,33 @@ open class ShireRunConfigurationProfileState(
         myProject.getService(ShireConversationService::class.java)
             .createConversation(configuration.getScriptPath(), compileResult)
 
-        val input = compileResult.output
-        val compiledOutput = ShireTemplateCompiler(myProject, compileResult.config!!, symbolTable, input).compile()
-        val agent = compileResult.executeAgent
+        val input = compileResult.shireOutput
 
-        compiledOutput.split("\n").forEach {
+        val promptText = ShireTemplateCompiler(myProject, compileResult.config!!, symbolTable, input).compile()
+        logCompiled(console, promptText)
+
+        if (promptText.contains(SHIRE_ERROR)) {
+            processHandler.exitWithError()
+            return DefaultExecutionResult(console, processHandler)
+        }
+
+        val agent = compileResult.executeAgent
+        val shireRunner: ShireRunner = if (agent != null) {
+            ShireCustomAgentRunner(myProject, configuration, console, processHandler, promptText, agent)
+        } else {
+            val isLocalMode = compileResult.isLocalCommand
+            ShireDefaultRunner(myProject, configuration, console, processHandler, promptText, isLocalMode)
+        }
+
+        shireRunner.execute()
+
+        return DefaultExecutionResult(console, processHandler)
+    }
+
+    private fun logCompiled(console: ConsoleViewWrapperBase, promptText: String) {
+        console.print("Shire Script: ${configuration.getScriptPath()}\n", ConsoleViewContentType.SYSTEM_OUTPUT)
+        console.print("Shire Script Compile output:\n", ConsoleViewContentType.SYSTEM_OUTPUT)
+        promptText.split("\n").forEach {
             when {
                 it.contains(SHIRE_ERROR) -> {
                     console.print(it, ConsoleViewContentType.LOG_ERROR_OUTPUT)
@@ -118,22 +112,38 @@ open class ShireRunConfigurationProfileState(
         }
 
         console.print("\n--------------------\n", ConsoleViewContentType.NORMAL_OUTPUT)
+    }
+}
 
-        if (compiledOutput.contains(SHIRE_ERROR)) {
-            processHandler.exitWithError()
-            return DefaultExecutionResult(console, processHandler)
-        }
+class ShireConsoleView(private val executionConsole: ConsoleViewImpl) :
+    ConsoleViewWrapperBase(executionConsole) {
+    override fun getComponent(): JComponent = myPanel
+    private var myPanel: NonOpaquePanel = NonOpaquePanel(BorderLayout())
 
-        val shireRunner: ShireRunner = if (agent != null) {
-            ShireCustomAgentRunner(myProject, configuration, console, processHandler, compiledOutput, agent)
-        } else {
-            val isLocalMode = compileResult.isLocalCommand
-            ShireDefaultRunner(myProject, configuration, console, processHandler, compiledOutput, isLocalMode)
-        }
+    init {
+        val baseComponent = delegate.component
+        myPanel.add(baseComponent, BorderLayout.CENTER)
 
-        shireRunner.execute()
+        val actionGroup = DefaultActionGroup(*executionConsole.createConsoleActions())
+        val toolbar = ActionManager.getInstance().createActionToolbar("BuildConsole", actionGroup, false)
+        toolbar.targetComponent = baseComponent
+        myPanel.add(toolbar.component, BorderLayout.EAST)
+    }
+}
 
-        return DefaultExecutionResult(console, processHandler)
+class ShireProcessAdapter(private val sb: StringBuilder, val configuration: ShireConfiguration) : ProcessAdapter() {
+    var result = ""
+    override fun processTerminated(event: ProcessEvent) {
+        super.processTerminated(event)
+
+        ApplicationManager.getApplication().messageBus
+            .syncPublisher(ShireRunListener.TOPIC)
+            .runFinish(result, event, configuration.getScriptPath())
+    }
+
+    override fun onTextAvailable(event: ProcessEvent, outputType: Key<*>) {
+        super.onTextAvailable(event, outputType)
+        result = sb.toString()
     }
 }
 

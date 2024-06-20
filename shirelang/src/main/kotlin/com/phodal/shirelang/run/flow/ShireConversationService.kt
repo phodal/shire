@@ -80,7 +80,7 @@ class ShireConversationService(val project: Project) {
                 
                 Script with result:
                 ####
-                ${conversation.compiledResult.output}
+                ${conversation.compiledResult.shireOutput}
                 ####
                 """.trimIndent()
             )

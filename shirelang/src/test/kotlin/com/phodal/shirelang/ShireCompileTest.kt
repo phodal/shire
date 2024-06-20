@@ -16,7 +16,7 @@ class ShireCompileTest : BasePlatformTestCase() {
         val file = myFixture.configureByText("test.shire", code)
 
         val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
-        assertEquals("Normal String /", compile.output)
+        assertEquals("Normal String /", compile.shireOutput)
     }
 
     fun testWithFrontmatter() {
@@ -35,7 +35,7 @@ class ShireCompileTest : BasePlatformTestCase() {
         val file = myFixture.configureByText("test.shire", code)
 
         val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
-        assertEquals("\n\nSummary webpage:\n", compile.output)
+        assertEquals("\n\nSummary webpage:\n", compile.shireOutput)
         compile.config!!.let {
             assertEquals("Summary", it.name)
             assertEquals("Generate Summary", it.description)
@@ -60,7 +60,7 @@ class ShireCompileTest : BasePlatformTestCase() {
         val file = myFixture.configureByText("test.shire", code)
 
         val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
-        assertEquals("\n\nSummary webpage:\n", compile.output)
+        assertEquals("\n\nSummary webpage:\n", compile.shireOutput)
     }
 
     fun testShouldCheckFile() {
@@ -99,7 +99,7 @@ class ShireCompileTest : BasePlatformTestCase() {
         val file = myFixture.configureByText("test.shire", code)
 
         val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
-        assertEquals("\n\nSummary webpage:", compile.output)
+        assertEquals("\n\nSummary webpage:", compile.shireOutput)
         val filenameRules = compile.config!!.preFilter
 
         assertEquals(1, filenameRules.size)
@@ -124,7 +124,7 @@ class ShireCompileTest : BasePlatformTestCase() {
         val file = myFixture.configureByText("test.shire", code)
 
         val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
-        assertEquals("\n\nSummary webpage:", compile.output)
+        assertEquals("\n\nSummary webpage:", compile.shireOutput)
         val map = compile.config!!.variables
 
 
@@ -150,7 +150,7 @@ class ShireCompileTest : BasePlatformTestCase() {
         val file = myFixture.configureByText("test.shire", code)
 
         val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
-        assertEquals("\n\nSummary webpage:", compile.output)
+        assertEquals("\n\nSummary webpage:", compile.shireOutput)
         val when_ = compile.config?.when_
 
         assertEquals(when_!!.display(), "\$selection.length() >= 1 && \$selection.first() == \"p\"")
@@ -179,7 +179,7 @@ class ShireCompileTest : BasePlatformTestCase() {
         val file = myFixture.configureByText("test.shire", code)
 
         val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
-        assertEquals("\n\nSummary webpage:", compile.output)
+        assertEquals("\n\nSummary webpage:", compile.shireOutput)
         val when_ = compile.config?.when_
 
         assertEquals(when_!!.display(), "\$fileName.contains(\".java\") && \$filePath.contains(\"src/main/java\")")
@@ -197,7 +197,7 @@ class ShireCompileTest : BasePlatformTestCase() {
         val file = myFixture.configureByText("test.shire", code)
 
         val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
-        assertEquals("\n\nSummary webpage:", compile.output)
+        assertEquals("\n\nSummary webpage:", compile.shireOutput)
         val when_ = compile.config?.when_
 
         assertEquals(when_!!.display(), "\$fileName.matches(\"/.*.java/\")")

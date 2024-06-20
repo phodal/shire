@@ -93,8 +93,8 @@ class ShireProcessProcessor(val project: Project) {
     fun executeTask(newScript: ShireFile) {
         val devInsCompiler = createCompiler(project, newScript)
         val result = devInsCompiler.compile()
-        if (result.output != "") {
-            ShirelangNotifications.notify(project, result.output)
+        if (result.shireOutput != "") {
+            ShirelangNotifications.notify(project, result.shireOutput)
         }
 
         if (result.hasError) {
@@ -108,8 +108,8 @@ class ShireProcessProcessor(val project: Project) {
             if (result.nextJob != null) {
                 val nextJob = result.nextJob!!
                 val nextResult = createCompiler(project, nextJob).compile()
-                if (nextResult.output != "") {
-                    ShirelangNotifications.notify(project, nextResult.output)
+                if (nextResult.shireOutput != "") {
+                    ShirelangNotifications.notify(project, nextResult.shireOutput)
                 }
             }
         }
