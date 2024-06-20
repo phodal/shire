@@ -292,6 +292,7 @@ object FrontmatterParser {
             val funcCall = expr.funcCall
             val args = parseParameters(funcCall)
 
+            val firstArg = args[0]
             when (funcCall?.funcName?.text) {
                 "grep" -> {
                     processor.add(PatternActionFunc.Grep(*args.toTypedArray()))
@@ -302,7 +303,11 @@ object FrontmatterParser {
                 }
 
                 "sed" -> {
-                    processor.add(PatternActionFunc.Sed(args[0], args[1]))
+                    if (firstArg.startsWith("/") && firstArg.endsWith("/")) {
+                        processor.add(PatternActionFunc.Sed(firstArg, args[1], true))
+                    } else {
+                        processor.add(PatternActionFunc.Sed(firstArg, args[1]))
+                    }
                 }
 
                 "xargs" -> {
@@ -314,11 +319,11 @@ object FrontmatterParser {
                 }
 
                 "head" -> {
-                    processor.add(PatternActionFunc.Head(args[0].toInt()))
+                    processor.add(PatternActionFunc.Head(firstArg.toInt()))
                 }
 
                 "tail" -> {
-                    processor.add(PatternActionFunc.Tail(args[0].toInt()))
+                    processor.add(PatternActionFunc.Tail(firstArg.toInt()))
                 }
 
                 "print" -> {

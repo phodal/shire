@@ -40,7 +40,7 @@ sealed class PatternActionFunc(open val funcName: String) {
      * @property pattern The pattern to search for.
      * @property replacements The string to replace matches with.
      */
-    class Sed(val pattern: String, val replacements: String) : PatternActionFunc("sed")
+    class Sed(val pattern: String, val replacements: String, val isRegex: Boolean = true) : PatternActionFunc("sed")
 
     /**
      * Sort subclass for sorting with one or more arguments.

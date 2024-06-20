@@ -65,25 +65,68 @@ class PatternActionProcessor(val myProject: Project, val editor: Editor, val hol
                 }
 
                 is PatternActionFunc.Sed -> {
-                    (result as String)
-                        .replace(action.pattern.toRegex(), action.replacements)
+                    when (result) {
+                        is Array<*> -> {
+                            (result as Array<String>).joinToString("\n") { line ->
+                                line.replace(
+                                    action.pattern.toRegex(),
+                                    action.replacements
+                                )
+                            }
+                        }
+                        else -> {
+                            (result as String).split("\n").joinToString("\n") { line ->
+                                line.replace(
+                                    action.pattern.toRegex(),
+                                    action.replacements
+                                )
+                            }
+                        }
+                    }
                 }
 
                 is PatternActionFunc.Sort -> {
-                    (result as String).split("\n")
-                        .sorted().joinToString("\n")
+                    when (result) {
+                        is Array<*> -> {
+                            (result as Array<String>).sorted().joinToString("\n")
+                        }
+                        else -> {
+                            (result as String).split("\n").sorted().joinToString("\n")
+                        }
+                    }
                 }
 
                 is PatternActionFunc.Uniq -> {
-                    (result as String).split("\n").distinct().joinToString("\n")
+                    when (result) {
+                        is Array<*> -> {
+                            (result as Array<String>).distinct().joinToString("\n")
+                        }
+                        else -> {
+                            (result as String).split("\n").distinct().joinToString("\n")
+                        }
+                    }
                 }
 
                 is PatternActionFunc.Head -> {
-                    (result as String).split("\n").take(action.number.toInt()).joinToString("\n")
+                    when (result) {
+                        is Array<*> -> {
+                            (result as Array<String>).take(action.number.toInt()).joinToString("\n")
+                        }
+                        else -> {
+                            (result as String).split("\n").take(action.number.toInt()).joinToString("\n")
+                        }
+                    }
                 }
 
                 is PatternActionFunc.Tail -> {
-                    (result as String).split("\n").takeLast(action.number.toInt()).joinToString("\n")
+                    when (result) {
+                        is Array<*> -> {
+                            (result as Array<String>).takeLast(action.number.toInt()).joinToString("\n")
+                        }
+                        else -> {
+                            (result as String).split("\n").takeLast(action.number.toInt()).joinToString("\n")
+                        }
+                    }
                 }
 
                 is PatternActionFunc.Cat -> {
