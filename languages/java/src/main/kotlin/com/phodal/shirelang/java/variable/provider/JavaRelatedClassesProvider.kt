@@ -4,6 +4,7 @@ import com.intellij.openapi.roots.ProjectFileIndex
 import com.intellij.psi.*
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.PsiUtil
+import com.phodal.shirecore.provider.psi.RelatedClassesProvider
 
 /**
  * This class JavaRelatedClassesProvider implements the RelatedClassesProvider interface and provides a method to
@@ -91,5 +92,10 @@ class JavaRelatedClassesProvider : RelatedClassesProvider {
     private fun canBeRemoved(member: PsiMember): Boolean {
         if (member.modifierList?.hasModifierProperty("public") == true) return false
         return member.annotations.isEmpty()
+    }
+
+    private fun isProjectContent(element: PsiElement): Boolean {
+        val virtualFile = PsiUtil.getVirtualFile(element) ?: return false
+        return ProjectFileIndex.getInstance(element.project).isInContent(virtualFile)
     }
 }
