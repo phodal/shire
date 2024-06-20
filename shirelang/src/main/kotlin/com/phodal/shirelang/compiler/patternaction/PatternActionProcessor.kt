@@ -51,9 +51,17 @@ class PatternActionProcessor(val myProject: Project, val editor: Editor, val hol
                 }
 
                 is PatternActionFunc.Grep -> {
-                    (result as String).split("\n")
-                        .filter { line -> action.patterns.any { line.contains(it) } }
-                        .joinToString("\n")
+                    when (result) {
+                        is Array<*> -> {
+                            (result as Array<String>).filter { line -> action.patterns.any { line.contains(it) } }
+                                .joinToString("\n")
+                        }
+                        else -> {
+                            (result as String).split("\n")
+                                .filter { line -> action.patterns.any { line.contains(it) } }
+                                .joinToString("\n")
+                        }
+                    }
                 }
 
                 is PatternActionFunc.Sed -> {
