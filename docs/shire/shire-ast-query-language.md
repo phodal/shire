@@ -8,7 +8,45 @@ nav_order: 9
 Shire AQL, is a query language that allows you to query the AST of the current file. It is used in Shire to define the 
 context of the current file and to define the actions that can be performed on the current file.
 
+## Possible Design
 
+ChatGPT sample:
+
+```aql
+query {
+  // 变量声明部分
+  from {
+    /* ... variable declarations ... */
+  }
+
+  // 条件部分
+  where {
+    /* ... logical formula ... */
+  }
+
+  // 结果部分
+  select {
+    /* ... expressions ... */
+  }
+}
+```
+
+Better sample:
+
+```
+query {
+  from {
+    variable_declaration
+  }
+  where {
+    name = "myVariable"
+  }
+  select {
+    name: name,
+    type: type
+  }
+}
+```
 
 ## Reference
 

@@ -14,6 +14,10 @@ enum class PsiContextVariable(val variableName: String) {
      */
     CURRENT_CLASS_CODE("currentClassCode"),
 
+    CURRENT_METHOD_NAME("currentMethodName"),
+
+    CURRENT_METHOD_CODE("currentMethodCode"),
+
     /**
      * Represents the input and output of PsiElement and PsiFile.
      */

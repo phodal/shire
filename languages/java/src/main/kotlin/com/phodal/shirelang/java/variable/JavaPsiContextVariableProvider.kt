@@ -31,6 +31,14 @@ class JavaPsiContextVariableProvider : PsiContextVariableProvider {
                 sourceFile.text
             }
 
+            PsiContextVariable.CURRENT_METHOD_NAME -> {
+                (psiElement as? PsiMethod)?.name ?: ""
+            }
+
+            PsiContextVariable.CURRENT_METHOD_CODE -> {
+                (psiElement as? PsiMethod)?.body?.text ?: ""
+            }
+
             PsiContextVariable.RELATED_CLASSES -> {
                 JavaRelatedClassesProvider().lookup(psiElement.parent).joinToString("\n") { it.text }
             }
