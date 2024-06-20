@@ -4,12 +4,10 @@ import com.intellij.execution.console.ConsoleViewWrapperBase
 import com.intellij.execution.process.ProcessHandler
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.progress.Task.Backgroundable
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.agent.CustomAgent
 import com.phodal.shirecore.agent.CustomAgentExecutor
-import com.phodal.shirelang.compiler.SymbolTable
-import com.phodal.shirelang.compiler.hobbit.HobbitHole
-import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.ShireConfiguration
 import com.phodal.shirelang.run.flow.ShireConversationService
 import com.phodal.shirelang.utils.ShireCoroutineScope
@@ -46,7 +44,7 @@ class ShireCustomAgentRunner(
 
                 console.print("\nDone!", ConsoleViewContentType.SYSTEM_OUTPUT)
                 myProject.getService(ShireConversationService::class.java)
-                    .updateLlmResponse(configuration.getScriptPath(), llmResult.toString())
+                    .refreshLlmResponseCache(configuration.getScriptPath(), llmResult.toString())
                 processHandler.detachProcess()
             }
         }

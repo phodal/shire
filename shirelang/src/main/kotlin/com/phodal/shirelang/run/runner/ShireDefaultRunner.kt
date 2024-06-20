@@ -20,8 +20,8 @@ class ShireDefaultRunner(
     override val processHandler: ProcessHandler,
     override val prompt: String,
     private val isLocalMode: Boolean,
- ) : ShireRunner(configuration, processHandler, console, myProject, prompt) {
-   override fun execute() {
+) : ShireRunner(configuration, processHandler, console, myProject, prompt) {
+    override fun execute() {
         ApplicationManager.getApplication().invokeLater {
             if (isLocalMode) {
                 console.print(ShireBundle.message("shire.run.local.mode"), ConsoleViewContentType.SYSTEM_OUTPUT)
@@ -34,13 +34,16 @@ class ShireDefaultRunner(
                 runBlocking {
                     LlmProvider.provider(myProject)?.stream(prompt, "", false)?.collect {
                         llmResult.append(it)
+
                         console.print(it, ConsoleViewContentType.NORMAL_OUTPUT)
-                    } ?: console.print("No LLM provider found", ConsoleViewContentType.ERROR_OUTPUT)
+                    } ?: console.print(ShireBundle.message("shire.llm.notfound"), ConsoleViewContentType.ERROR_OUTPUT)
                 }
 
-                console.print("\nDone!", ConsoleViewContentType.SYSTEM_OUTPUT)
+                console.print(ShireBundle.message("shire.llm.done"), ConsoleViewContentType.SYSTEM_OUTPUT)
+
                 myProject.getService(ShireConversationService::class.java)
-                    .updateLlmResponse(configuration.getScriptPath(), llmResult.toString())
+                    .refreshLlmResponseCache(configuration.getScriptPath(), llmResult.toString())
+
                 processHandler.detachProcess()
             }
         }

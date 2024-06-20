@@ -21,7 +21,6 @@ import com.phodal.shirelang.run.ShireConsoleView
 import com.phodal.shirelang.utils.Code
 import kotlinx.coroutines.runBlocking
 
-
 @Service(Service.Level.PROJECT)
 class ShireProcessProcessor(val project: Project) {
     private val conversationService = project.getService(ShireConversationService::class.java)
@@ -30,12 +29,12 @@ class ShireProcessProcessor(val project: Project) {
      * This function takes a ShireFile as input and returns a list of PsiElements that are comments.
      * It iterates through the ShireFile and adds any comments it finds to the list.
      *
-     * @param devInFile the ShireFile to search for comments
+     * @param shireFile the ShireFile to search for comments
      * @return a list of PsiElements that are comments
      */
-    private fun lookupFlagComment(devInFile: ShireFile): List<PsiElement> {
-        val comments = mutableListOf<PsiElement>()
-        devInFile.accept(object : ShireVisitor() {
+    private fun collectComments(shireFile: ShireFile): List<PsiComment> {
+        val comments = mutableListOf<PsiComment>()
+        shireFile.accept(object : ShireVisitor() {
             override fun visitComment(comment: PsiComment) {
                 comments.add(comment)
             }
@@ -52,7 +51,7 @@ class ShireProcessProcessor(val project: Project) {
      *
      * Flag comment format:
      * ```shire
-     * [flow]:flowable.devin, means next step is flowable.devin
+     * [flow]:flowable.shire, means next step is flowable.shire
      * ```
      *
      * @param output The output of the script
@@ -60,11 +59,10 @@ class ShireProcessProcessor(val project: Project) {
      * @param scriptPath The path of the script file
      */
     fun process(output: String, event: ProcessEvent, scriptPath: String, consoleView: ShireConsoleView?) {
-        conversationService.updateIdeOutput(scriptPath, output)
+        conversationService.refreshIdeOutput(scriptPath, output)
 
         val code = Code.parse(conversationService.getLlmResponse(scriptPath))
-        val isShireCode = code.language == ShireLanguage.INSTANCE
-        if (isShireCode) {
+        if (code.language == ShireLanguage.INSTANCE) {
             runInEdt {
                 executeTask(ShireFile.fromString(project, code.text), consoleView)
             }
@@ -72,12 +70,12 @@ class ShireProcessProcessor(val project: Project) {
 
         when {
             event.exitCode == 0 -> {
-                val devInFile: ShireFile? = runReadAction { ShireFile.lookup(project, scriptPath) }
-                val comment = lookupFlagComment(devInFile!!).firstOrNull() ?: return
-                if (comment.textRange.startOffset == 0) {
-                    val text = comment.text
-                    if (text.startsWith("[flow]:")) {
-                        val nextScript = text.substring(7)
+                val shireFile: ShireFile = runReadAction { ShireFile.lookup(project, scriptPath) } ?: return
+                val firstComment = collectComments(shireFile).firstOrNull() ?: return
+                if (firstComment.textRange.startOffset == 0) {
+                    val text = firstComment.text
+                    if (text.startsWith(ShireCompiler.FLOW_FALG)) {
+                        val nextScript = text.substring(ShireCompiler.FLOW_FALG.length)
                         val newScript = ShireFile.lookup(project, nextScript) ?: return
                         this.executeTask(newScript, consoleView)
                     }
@@ -85,7 +83,7 @@ class ShireProcessProcessor(val project: Project) {
             }
 
             event.exitCode != 0 -> {
-                conversationService.tryFixWithLlm(scriptPath, consoleView)
+                conversationService.retryScriptExecution(scriptPath, consoleView)
             }
         }
     }
@@ -95,45 +93,30 @@ class ShireProcessProcessor(val project: Project) {
      * @param newScript The new script to be run.
      */
     private fun executeTask(newScript: ShireFile, consoleView: ShireConsoleView?) {
-        val devInsCompiler = createCompiler(project, newScript)
-        val result = devInsCompiler.compile()
+        val shireCompiler = createCompiler(project, newScript)
+        val result = shireCompiler.compile()
         if (result.shireOutput != "") {
             ShirelangNotifications.notify(project, result.shireOutput)
         }
 
         if (result.hasError) {
-            if (consoleView != null) {
-                runBlocking {
-                    LlmProvider.provider(project)?.stream(result.shireOutput, "Shirelang", true)
-                        ?.collect {
-                            consoleView.print(it, ConsoleViewContentType.NORMAL_OUTPUT)
-                        }
-                }
+            if (consoleView == null) return
+
+            runBlocking {
+                LlmProvider.provider(project)?.stream(result.shireOutput, "Shirelang", true)
+                    ?.collect {
+                        consoleView.print(it, ConsoleViewContentType.NORMAL_OUTPUT)
+                    }
             }
         } else {
-            if (result.nextJob != null) {
-                val nextJob = result.nextJob!!
-                val nextResult = createCompiler(project, nextJob).compile()
-                if (nextResult.shireOutput != "") {
-                    ShirelangNotifications.notify(project, nextResult.shireOutput)
-                }
+            if (result.nextJob == null) return
+
+            val nextJob = result.nextJob!!
+            val nextResult = createCompiler(project, nextJob).compile()
+            if (nextResult.shireOutput != "") {
+                ShirelangNotifications.notify(project, nextResult.shireOutput)
             }
         }
-    }
-
-    /**
-     * Creates a new instance of `ShiresCompiler`.
-     *
-     * @param project The current project.
-     * @param text The source code text.
-     * @return A new instance of `ShiresCompiler`.
-     */
-    private fun createCompiler(
-        project: Project,
-        text: String,
-    ): ShireCompiler {
-        val devInFile = ShireFile.fromString(project, text)
-        return createCompiler(project, devInFile)
     }
 
     private fun createCompiler(
@@ -148,13 +131,4 @@ class ShireProcessProcessor(val project: Project) {
 
         return ShireCompiler(project, devInFile, editor, element)
     }
-
-    /**
-     * 1. We need to call LLM to get the task list
-     * 2. According to the input and output to decide the next step
-     */
-    fun createAgentTasks(): List<ShireFile> {
-        TODO()
-    }
-
 }

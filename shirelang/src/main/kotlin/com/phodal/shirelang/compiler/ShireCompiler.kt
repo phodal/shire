@@ -48,6 +48,10 @@ class ShireCompiler(
 
     private val symbolTable = SymbolTable()
 
+    companion object {
+        val FLOW_FALG = "[flow]:"
+    }
+
     /**
      * @return ShireCompiledResult object containing the compiled result
      */
@@ -72,8 +76,8 @@ class ShireCompiler(
 
                 ShireTypes.USED -> processUsed(psiElement as ShireUsed)
                 ShireTypes.COMMENTS -> {
-                    if (psiElement.text.startsWith("[flow]:")) {
-                        val fileName = psiElement.text.substringAfter("[flow]:").trim()
+                    if (psiElement.text.startsWith(FLOW_FALG)) {
+                        val fileName = psiElement.text.substringAfter(FLOW_FALG).trim()
                         val content =
                             myProject.guessProjectDir()?.findFileByRelativePath(fileName)?.let { virtualFile ->
                                 virtualFile.inputStream.bufferedReader().use { reader -> reader.readText() }
