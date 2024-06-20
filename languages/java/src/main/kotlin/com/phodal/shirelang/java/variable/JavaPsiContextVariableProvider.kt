@@ -6,7 +6,7 @@ import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.search.searches.ClassInheritorsSearch
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.testIntegration.TestFinderHelper
-import com.phodal.shirecore.provider.variable.PsiVariable
+import com.phodal.shirecore.provider.variable.PsiContextVariable
 import com.phodal.shirecore.provider.variable.PsiContextVariableProvider
 import com.phodal.shirecore.provider.context.ToolchainPrepareContext
 import com.phodal.shirecore.provider.context.ToolchainProvider
@@ -15,7 +15,7 @@ import com.phodal.shirelang.java.variable.provider.JavaRelatedClassesProvider
 import kotlinx.coroutines.runBlocking
 
 class JavaPsiContextVariableProvider : PsiContextVariableProvider {
-    override fun resolveVariableValue(psiElement: PsiElement?, variable: PsiVariable): Any {
+    override fun resolveVariableValue(psiElement: PsiElement?, variable: PsiContextVariable): Any {
         val project = psiElement?.project ?: return ""
         if (psiElement.language.id != "JAVA") return ""
 
@@ -23,45 +23,44 @@ class JavaPsiContextVariableProvider : PsiContextVariableProvider {
         val sourceFile: PsiJavaFile = psiElement.containingFile as PsiJavaFile
 
         return when (variable) {
-            PsiVariable.CURRENT_CLASS_NAME -> {
+            PsiContextVariable.CURRENT_CLASS_NAME -> {
                 clazz?.name ?: ""
             }
 
-            PsiVariable.CURRENT_CLASS_CODE -> {
+            PsiContextVariable.CURRENT_CLASS_CODE -> {
                 sourceFile.text
             }
 
-            PsiVariable.RELATED_CLASSES -> {
+            PsiContextVariable.RELATED_CLASSES -> {
                 JavaRelatedClassesProvider().lookup(psiElement.parent).joinToString("\n") { it.text }
             }
 
-            PsiVariable.SIMILAR_TEST_CASE -> {
+            PsiContextVariable.SIMILAR_TEST_CASE -> {
                 return listOf<String>()
             }
 
-            PsiVariable.IMPORTS -> {
+            PsiContextVariable.IMPORTS -> {
                 sourceFile.importList?.text ?: ""
             }
 
-            PsiVariable.IS_NEW_FILE -> {
-                val sourceElement = TestFinderHelper.findClassesForTest(psiElement)
-                return sourceElement.isEmpty()
+            PsiContextVariable.IS_NEED_CREATE_FILE -> {
+                return TestFinderHelper.findClassesForTest(psiElement).isEmpty()
             }
 
-            PsiVariable.TARGET_TEST_FILE_NAME -> {
+            PsiContextVariable.TARGET_TEST_FILE_NAME -> {
                 val testFileName = sourceFile.name.replace(".java", "") + "Test"
                 "$testFileName.java"
             }
 
-            PsiVariable.UNDER_TEST_METHOD_CODE -> {
+            PsiContextVariable.UNDER_TEST_METHOD_CODE -> {
                 return lookupUnderTestMethod(project, psiElement)
             }
 
-            PsiVariable.FRAMEWORK_CONTEXT -> {
+            PsiContextVariable.FRAMEWORK_CONTEXT -> {
                 runBlocking {
                     val prepareContext = ToolchainPrepareContext(sourceFile, psiElement)
                     val contextItems =
-                        ToolchainProvider.gatherToolchainContextItems(project, prepareContext)
+                        ToolchainProvider.collectToolchainContext(project, prepareContext)
 
                     contextItems.joinToString("\n") { it.text }
                 }

@@ -3,7 +3,7 @@ package com.phodal.shirecore.provider.variable
 /**
  * Enum representing variables used in the generation of code structures.
  */
-enum class PsiVariable(val variableName: String) {
+enum class PsiContextVariable(val variableName: String) {
     /**
      * Represents the PsiNameIdentifierOwner of the current class, used to retrieve the class name.
      */
@@ -32,7 +32,7 @@ enum class PsiVariable(val variableName: String) {
     /**
      * Flag indicating whether the code structure is being generated in a new file.
      */
-    IS_NEW_FILE("isNewFile"),
+    IS_NEED_CREATE_FILE("isNeedCreateFile"),
 
     /**
      * The name of the target test file where the code structure will be generated.
@@ -44,8 +44,10 @@ enum class PsiVariable(val variableName: String) {
      */
     UNDER_TEST_METHOD_CODE("underTestMethodCode"),
 
+    /**
+     * Represents the framework information required for the code structure.
+     */
     FRAMEWORK_CONTEXT("frameworkContext")
-
     ;
 
     companion object {
@@ -55,7 +57,7 @@ enum class PsiVariable(val variableName: String) {
          * @param variableName the variable name to search for
          * @return the PsiVariable with the given variable name
          */
-        fun fromVariableName(variableName: String): PsiVariable? {
+        fun fromVariableName(variableName: String): PsiContextVariable? {
             return values().firstOrNull { it.variableName == variableName }
         }
     }

@@ -28,7 +28,7 @@ interface ToolchainProvider {
         private val EP_NAME: LanguageExtension<ToolchainProvider> =
             LanguageExtension("com.phodal.shireToolchainProvider")
 
-        suspend fun gatherToolchainContextItems(
+        suspend fun collectToolchainContext(
             project: Project,
             toolchainPrepareContext: ToolchainPrepareContext,
         ): List<ToolchainContextItem> {
