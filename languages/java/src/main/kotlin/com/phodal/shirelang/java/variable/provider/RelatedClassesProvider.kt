@@ -1,6 +1,8 @@
 package com.phodal.shirelang.java.variable.provider
 
+import com.intellij.openapi.roots.ProjectFileIndex
 import com.intellij.psi.PsiElement
+import com.intellij.psi.util.PsiUtil
 
 /**
  * The `RelatedClassesProvider` interface is used to provide related classes for a given element.
@@ -25,4 +27,11 @@ interface RelatedClassesProvider {
      * todo: spike is need for field or class
      */
     fun lookup(element: PsiElement): List<PsiElement>
+
+    fun cleanUp(psiClass: PsiElement): PsiElement
+
+    fun isProjectContent(element: PsiElement): Boolean {
+        val virtualFile = PsiUtil.getVirtualFile(element)
+        return virtualFile == null || ProjectFileIndex.getInstance(element.project).isInContent(virtualFile)
+    }
 }

@@ -55,7 +55,7 @@ class JavaRelatedClassesProvider : RelatedClassesProvider {
      * @param psiClass the PsiClass to be cleaned up
      * @return a new PsiClass with the unnecessary elements removed
      */
-    fun cleanUp(psiClass: PsiClass): PsiClass {
+    private fun cleanUp(psiClass: PsiClass): PsiClass {
         val psiElement = psiClass.copy() as PsiClass
         psiElement.containingFile.setName(psiClass.containingFile.name)
 
@@ -69,6 +69,10 @@ class JavaRelatedClassesProvider : RelatedClassesProvider {
 
         psiElement.docComment?.delete()
         return psiElement
+    }
+
+    override fun cleanUp(psiClass: PsiElement): PsiElement {
+        return cleanUp(psiClass as PsiClass)
     }
 
     private fun findSuperClasses(psiClass: PsiClass): List<PsiClass> {
@@ -87,10 +91,5 @@ class JavaRelatedClassesProvider : RelatedClassesProvider {
     private fun canBeRemoved(member: PsiMember): Boolean {
         if (member.modifierList?.hasModifierProperty("public") == true) return false
         return member.annotations.isEmpty()
-    }
-
-    private fun isProjectContent(element: PsiElement): Boolean {
-        val virtualFile = PsiUtil.getVirtualFile(element)
-        return virtualFile == null || ProjectFileIndex.getInstance(element.project).isInContent(virtualFile)
     }
 }
