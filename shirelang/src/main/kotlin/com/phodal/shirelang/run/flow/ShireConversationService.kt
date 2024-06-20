@@ -2,7 +2,9 @@ package com.phodal.shirelang.run.flow
 
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.project.Project
+import com.phodal.shire.llm.LlmProvider
 import com.phodal.shirelang.compiler.ShireCompiledResult
+import kotlinx.coroutines.runBlocking
 
 @Service(Service.Level.PROJECT)
 class ShireConversationService(val project: Project) {
@@ -96,13 +98,13 @@ class ShireConversationService(val project: Project) {
             """.trimIndent()
         )
 
-//        val finalPrompt = prompt.toString()
-//        sendToChatWindow(project, ChatActionType.CHAT) { panel, service ->
-//            service.handlePromptAndResponse(panel, object : ContextPrompter() {
-//                override fun displayPrompt(): String = finalPrompt
-//                override fun requestPrompt(): String = finalPrompt
-//            }, null, true)
-//        }
+        val finalPrompt = prompt.toString()
+        runBlocking {
+            LlmProvider.provider(project)?.stream(finalPrompt, "Shirelang", true)
+                ?.collect {
+                    updateLlmResponse(scriptPath, it)
+                }
+        }
     }
 
     fun getLlmResponse(scriptPath: String): String {

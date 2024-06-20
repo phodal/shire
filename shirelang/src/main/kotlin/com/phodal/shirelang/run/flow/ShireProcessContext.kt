@@ -1,13 +1,16 @@
 package com.phodal.shirelang.run.flow
 
-import com.phodal.shire.llm.model.Message
+import com.phodal.shire.llm.model.ChatMessage
 import com.phodal.shirelang.compiler.ShireCompiledResult
 
+/**
+ * The `ShireProcessContext` class represents the context of a Shire process.
+ */
 data class ShireProcessContext(
     val scriptPath: String,
     val compiledResult: ShireCompiledResult,
     val llmResponse: String,
     val ideOutput: String,
-    val messages: MutableList<Message> = mutableListOf(),
+    val chatMessages: MutableList<ChatMessage> = mutableListOf(),
     var hadReRun: Boolean = false
 )
