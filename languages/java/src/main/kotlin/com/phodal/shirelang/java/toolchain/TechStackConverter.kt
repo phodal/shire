@@ -7,7 +7,8 @@ import com.phodal.shirelang.java.archmeta.SpringLibrary
 
 object TechStackConverter {
     fun convertTechStack(project: Project): TechStack {
-        val libraryDataList = JavaLibraryConverter.prepareLibraryData(project)
+        val libraryDataList =
+            GradleBuildTool().prepareLibraryData(project) ?: MavenBuildTool().prepareLibraryData(project)
 
         val techStack = TechStack()
         var hasMatchSpringMvc = false

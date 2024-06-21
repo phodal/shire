@@ -10,7 +10,7 @@ import org.jetbrains.plugins.gradle.service.execution.GradleRunConfiguration
 import org.jetbrains.plugins.gradle.service.project.GradleTasksIndices
 import org.jetbrains.plugins.gradle.util.GradleTaskData
 
-object JavaTasksUtil {
+object GradleTasksUtil {
     fun collectGradleTasks(project: Project): List<TextCompletionInfo> {
         val indices = GradleTasksIndices.getInstance(project)
 

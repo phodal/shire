@@ -14,9 +14,11 @@ import com.intellij.openapi.vfs.VirtualFile
  * Implementations of this interface are expected to provide specific functionality for different build tools.
  */
 interface BuildTool {
-    fun prepareLibraryData(project: Project): List<CommonLibraryData>
+    fun prepareLibraryData(project: Project): List<CommonLibraryData>?
 
     fun collectTasks(project: Project): List<TextCompletionInfo>
 
     fun configureRun(project: Project, virtualFile: VirtualFile, taskName: String): LocatableConfigurationBase<*>?
 }
+
+data class CommonLibraryData(val groupId: String?, val artifactId: String?, val version: String?)
