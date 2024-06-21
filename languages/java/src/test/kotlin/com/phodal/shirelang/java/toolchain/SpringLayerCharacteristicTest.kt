@@ -1,5 +1,6 @@
 package com.phodal.shirelang.java.toolchain
 
+import com.phodal.shirelang.java.archmeta.layer.SpringLayerCharacteristic
 import org.junit.Test
 
 class SpringLayerCharacteristicTest {

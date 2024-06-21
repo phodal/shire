@@ -4,6 +4,8 @@ import com.intellij.openapi.externalSystem.model.project.LibraryData
 import com.intellij.openapi.externalSystem.service.project.ProjectDataManager
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.toolset.TestStack
+import com.phodal.shirelang.java.archmeta.LibraryDescriptor
+import com.phodal.shirelang.java.archmeta.SpringLibrary
 import org.jetbrains.plugins.gradle.util.GradleConstants
 
 object GradleLibraryConverter {

@@ -1,4 +1,4 @@
-package com.phodal.shirelang.java.layer
+package com.phodal.shirelang.java.archmeta.layer
 
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.project.Project

@@ -1,4 +1,4 @@
-package com.phodal.shirelang.java.toolchain
+package com.phodal.shirelang.java.archmeta
 
 data class SpringDataLibraryDescriptor(val shortText: String, val coords: List<String>)
 data class LibraryDescriptor(val shortText: String, val coords: String)

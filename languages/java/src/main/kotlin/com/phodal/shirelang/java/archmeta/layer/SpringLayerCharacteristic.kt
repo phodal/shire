@@ -1,4 +1,4 @@
-package com.phodal.shirelang.java.toolchain
+package com.phodal.shirelang.java.archmeta.layer
 
 import com.intellij.psi.PsiClass
 import kotlinx.serialization.Serializable
