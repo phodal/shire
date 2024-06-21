@@ -29,4 +29,6 @@ Documentation: [Shire AI Coding & Agents Language](https://shire.phodal.com/)
 
 ## LICENSE
 
+Shire SQL is based on Android Open Source Project, which is licensed under the Apache License 2.0.
+
 This code is distributed under the MPL 2.0 license. See `LICENSE` in this directory.

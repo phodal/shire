@@ -22,6 +22,7 @@ query {
   // 条件部分
   where {
     /* ... logical formula ... */
+    // support for regex, similar search, embedding search, tf-idf, and other advanced search
   }
 
   // 结果部分

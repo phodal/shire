@@ -1,0 +1,203 @@
+/*
+ * Copyright (C) 2017 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/* SQLite grammar adapted from http://www.sqlite.org/docsrc/doc/trunk/art/syntax/all-bnf.html
+ * This should correspond directly to diagrams in the "SQL Syntax" part of SQLite documentation,
+ * e.g. https://sqlite.org/lang_select.html. See also all diagrams here: http://www.sqlite.org/syntaxdiagrams.html
+ *
+ * Unfortunately the grammar linked above skips the most basic definitions, like string-literal,
+ * table-name or digit, so we need to fill in these gaps ourselves.
+ *
+ * The grammar for expressions (`expr`) also needed to be reworked, see below.
+ *
+ * This file is used by Grammar-Kit to generate the lexer, parser, node types and PSI classes for Android SQL.
+ */
+{
+  parserClass="com.phodal.shirelang.saql.parser.SaqlParser"
+  parserUtilClass="com.phodal.shirelang.saql.parser.SaqlParserUtil"
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="Saql"
+  psiImplClassSuffix="Impl"
+  psiPackage="com.phodal.shirelang.saql.psi"
+  psiImplPackage="com.phodal.shirelang.saql.psi.impl"
+  psiImplUtilClass="com.phodal.shirelang.saql.psi.PsiImplUtil"
+
+  elementTypeHolderClass="com.phodal.shirelang.saql.psi.SaqlPsiTypes"
+  elementTypeClass="com.phodal.shirelang.saql.psi.SaqlAstNodeType"
+  tokenTypeClass="com.phodal.shirelang.saql.psi.SaqlTokenType"
+
+//  classHeader='generatedFilesHeader.txt'
+
+  tokens=[
+    // In the flex file we manually insert %caseless, in the preview only upper case keywords work.
+
+    NUMERIC_LITERAL='regexp:(([0-9]+(\.[0-9]*)?|\.[0-9]+)(E(\+|-)?[0-9]+)?)|(0x[0-9a-f]+)'
+
+    // Manually tweaked in the flex file to handle literals without the closing character.
+    SINGLE_QUOTE_STRING_LITERAL="regexp:X?'(''|[^'])*'"
+    DOUBLE_QUOTE_STRING_LITERAL="regexp:X?\"(\"\"|[^\"])*\""
+    BRACKET_LITERAL="regexp:\[[^\]]*\]"
+    BACKTICK_LITERAL="regexp:`(``|[^`])*`"
+
+    // Some approximation of what's actually allowed. This doesn't seem to be defined anywhere.
+    IDENTIFIER='regexp:([:letter:]|_)([:letter:]|[:digit:]|_)*'
+    NAMED_PARAMETER='regexp::\w+' // Simple regexp for Live Preview, this is tweaked in the flex file.
+    COMMENT='regexp:/\*.*\*/' // Simple regexp for Live Preview, this is tweaked in the flex file.
+    LINE_COMMENT='regexp:--[^r\n]*'
+
+    AMP='&'
+    BAR='|'
+    COMMA=','
+    CONCAT='||'
+    DIV='/'
+    DOT='.'
+    EQ='='
+    EQEQ='=='
+    GT='>'
+    GTE='>='
+    LPAREN='('
+    LT='<'
+    LTE='<='
+    MINUS='-'
+    MOD='%'
+    NOT_EQ='!='
+    PLUS='+'
+    RPAREN=')'
+    SEMICOLON=';'
+    SHL='<<'
+    SHR='>>'
+    STAR='*'
+    TILDE='~'
+    UNEQ='<>'
+
+    // More keywords from https://sqlite.org/lang_keywords.html that don't appear in the grammar below, but we want to treat them as
+    // keywords (so that the IDE escapes them just in case).
+    FULL='FULL'
+    RIGHT='RIGHT'
+
+    // Grammar-Kit's live preview emulates PsiBuilder's behavior of ignoring whitespace, by
+    // looking for a token type that matches a space and is not used otherwise. Here's one:
+    WHITE_SPACE_FOR_LIVE_PREVIEW='regexp:\s+'
+  ]
+
+  extends(".*_expression")=expression
+
+  implements(".*_name")="com.phodal.shirelang.saql.psi.SaqlNameElement"
+  mixin(".*_name")="com.phodal.shirelang.saql.psi.AbstractSaqlNameElement"
+  generateTokenAccessors(".*_name")=false
+  generate=[names='long' java='8']
+}
+
+root ::= statement ';'?
+
+private statement ::=
+  (
+  select_statement
+  ) { name="statement" }
+
+// Name of a table that is already in scope for the current query.
+selected_table_name ::= name {
+  methods=[getReference]
+}
+
+// Name of a table defined in the schema or using a WITH clause.
+defined_table_name ::= name {
+  methods=[getReference]
+}
+
+database_name ::= name
+
+private index_name ::= name
+
+column_name ::= name {
+  methods=[getReference]
+}
+
+collation_name ::= name
+
+// Variant of with_clause_select_statement that is inside parens and consumes all input until the matching paren.
+private subquery_greedy ::= select_statement | with_clause_select_statement {
+  recoverWhile=subquery_recover
+}
+
+private subquery_recover ::= !')'
+
+
+// The following rules are not part of the SQLite grammar, but are used to define the grammar for expressions.
+
+select_statement ::= select_core (compound_operator select_core)* order_clause? limit_clause?
+
+limit_clause ::= LIMIT expression ( ( OFFSET | ',' ) expression )?
+
+order_clause ::= ORDER BY ordering_term ( ',' ordering_term )*
+
+select_core ::= select_core_select | select_core_values
+
+select_core_select ::= SELECT ( DISTINCT | ALL )? result_columns from_clause? where_clause? group_by_clause?
+
+group_by_clause ::= GROUP BY expression ( ',' expression )* ( HAVING expression )?
+
+where_clause ::= WHERE expression
+
+from_clause ::= FROM table_or_subquery ( join_operator table_or_subquery join_constraint? )*
+
+result_columns ::= result_column ( ',' result_column )* {
+  implements="com.phodal.shirelang.saql.psi.AndroidSqlTableElement"
+  methods=[getSqlTable]
+}
+
+select_core_values ::= VALUES '(' expression ( ',' expression )* ')' ( ',' '(' expression ( ',' expression )* ')' )*
+
+table_or_subquery ::= from_table | select_subquery | '(' table_or_subquery ')'
+
+from_table ::= ( database_name '.' )? defined_table_name ( ( AS )? table_alias_name )? ( INDEXED BY index_name | NOT INDEXED )? {
+  implements="com.phodal.shirelang.saql.psi.AndroidSqlTableElement"
+  methods=[getSqlTable]
+}
+
+select_subquery ::= '(' &(SELECT|VALUES|WITH) subquery_greedy ')' ( ( AS )? table_alias_name )? {
+  implements="com.phodal.shirelang.saql.psi.AndroidSqlTableElement"
+  methods=[getSqlTable]
+  pin=2
+}
+
+table_alias_name ::= name {
+  implements="com.intellij.psi.PsiNamedElement"
+  methods=[getName setName]
+}
+
+result_column ::=
+  '*'
+  | selected_table_name '.' '*'
+  | expression ( ( AS )? column_alias_name )?
+
+column_alias_name ::= name {
+  implements="com.intellij.psi.PsiNamedElement"
+  methods=[getName setName]
+}
+
+join_operator ::= ',' | ( NATURAL )? ( LEFT ( OUTER )? | INNER | CROSS )? JOIN
+
+join_constraint ::= ON expression | USING '(' column_name ( ',' column_name )* ')'
+
+ordering_term ::= expression ( COLLATE collation_name )? ( ASC | DESC )?
+
+compound_operator ::= UNION ALL? | INTERSECT | EXCEPT
+
+private name ::= IDENTIFIER | BRACKET_LITERAL | BACKTICK_LITERAL | string_literal
+private string_literal ::= SINGLE_QUOTE_STRING_LITERAL | DOUBLE_QUOTE_STRING_LITERAL
+
