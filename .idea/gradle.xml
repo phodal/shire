@@ -13,6 +13,7 @@
             <option value="$PROJECT_DIR$/languages" />
             <option value="$PROJECT_DIR$/languages/java" />
             <option value="$PROJECT_DIR$/plugin" />
+            <option value="$PROJECT_DIR$/saql" />
             <option value="$PROJECT_DIR$/shirelang" />
             <option value="$PROJECT_DIR$/toolsets" />
             <option value="$PROJECT_DIR$/toolsets/git" />

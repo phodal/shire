@@ -28,6 +28,11 @@
 
 package com.phodal.shirelang.saql.lexer;
 
+import com.intellij.lexer.FlexLexer;
+import com.intellij.psi.tree.IElementType;
+//import static com.phodal.shirelang.saql.psi.ShireTypes.*;
+import com.intellij.psi.TokenType;
+
 %%
 
 %{
