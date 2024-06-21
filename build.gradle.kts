@@ -31,6 +31,7 @@ val ideaPlugins = listOf(
     "org.jetbrains.plugins.terminal",
     "com.intellij.java",
     "org.jetbrains.plugins.gradle",
+    "org.jetbrains.idea.maven",
     "org.jetbrains.kotlin",
     "JavaScript",
     "com.jetbrains.restClient"

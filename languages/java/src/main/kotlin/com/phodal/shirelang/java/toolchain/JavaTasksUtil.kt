@@ -1,16 +1,23 @@
 package com.phodal.shirelang.java.toolchain
 
 import com.intellij.execution.RunManager
+import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.externalSystem.service.ui.completion.TextCompletionInfo
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
+import com.intellij.openapi.vfs.VirtualFile
 import com.phodal.shirelang.java.impl.GRADLE_COMPLETION_COMPARATOR
+import org.jetbrains.idea.maven.execution.MavenRunConfiguration
+import org.jetbrains.idea.maven.execution.MavenRunConfigurationType
+import org.jetbrains.idea.maven.execution.MavenRunnerParameters
+import org.jetbrains.idea.maven.project.MavenProject
+import org.jetbrains.idea.maven.project.MavenProjectsManager
 import org.jetbrains.plugins.gradle.service.execution.GradleExternalTaskConfigurationType
 import org.jetbrains.plugins.gradle.service.execution.GradleRunConfiguration
 import org.jetbrains.plugins.gradle.service.project.GradleTasksIndices
 import org.jetbrains.plugins.gradle.util.GradleTaskData
 
-object GradleTasksUtil {
+object JavaTasksUtil {
     fun collectGradleTasks(project: Project): List<TextCompletionInfo> {
         val indices = GradleTasksIndices.getInstance(project)
 
@@ -54,5 +61,47 @@ object GradleTasksUtil {
         runManager.selectedConfiguration = configuration
 
         return runConfiguration
+    }
+
+    fun createConfigForMaven(virtualFile: VirtualFile, project: Project): MavenRunConfiguration? {
+        val projectsManager = MavenProjectsManager.getInstance(project);
+
+        val mavenProject: MavenProject = projectsManager.findProject(virtualFile) ?: return null
+        val module = runReadAction { projectsManager.findModule(mavenProject) } ?: return null
+
+        var trulyMavenProject = projectsManager.projects.firstOrNull {
+            it.mavenId.artifactId == module.name
+        }
+
+        if (trulyMavenProject == null) {
+            trulyMavenProject = projectsManager.projects.first() ?: return null
+        }
+
+        val pomFile = trulyMavenProject.file.name
+
+        val parameters = MavenRunnerParameters(
+            true, trulyMavenProject.directory, pomFile, listOf("test"),
+            projectsManager.explicitProfiles.enabledProfiles, arrayListOf()
+        )
+
+        // $MODULE_WORKING_DIR$
+        //
+        // -ea Method: com.example.demo.MathHelperTest should_ReturnSum_When_GivenTwoPositiveNumbers
+        // /Users/phodal/Library/Java/JavaVirtualMachines/corretto-18.0.2/Contents/Home/bin/java
+        // -ea -Didea.test.cyclic.buffer.size=1048576
+        // -javaagent:ideaIU-2024.1/lib/idea_rt.jar=54637:1/bin -Dfile.encoding=UTF-8
+        // -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8
+
+        val runnerAndConfigurationSettings =
+            MavenRunConfigurationType.createRunnerAndConfigurationSettings(null, null, parameters, project)
+
+        val runManager = RunManager.getInstance(project)
+
+        val configuration = runnerAndConfigurationSettings.configuration
+
+        runManager.addConfiguration(runnerAndConfigurationSettings)
+        runManager.selectedConfiguration = runnerAndConfigurationSettings
+
+        return configuration as MavenRunConfiguration
     }
 }
