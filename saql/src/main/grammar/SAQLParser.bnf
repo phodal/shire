@@ -34,7 +34,7 @@
   psiImplClassSuffix="Impl"
   psiPackage="com.phodal.shirelang.saql.psi"
   psiImplPackage="com.phodal.shirelang.saql.psi.impl"
-  psiImplUtilClass="com.phodal.shirelang.saql.psi.PsiImplUtil"
+  psiImplUtilClass="com.phodal.shirelang.saql.psi.ShirePsiImplUtil"
 
   elementTypeHolderClass="com.phodal.shirelang.saql.psi.SaqlPsiTypes"
   elementTypeClass="com.phodal.shirelang.saql.psi.SaqlAstNodeType"
@@ -176,8 +176,8 @@ select_subquery ::= '(' &(SELECT|VALUES|WITH) subquery_greedy ')' ( ( AS )? tabl
 }
 
 table_alias_name ::= name {
-  implements="com.intellij.psi.PsiNamedElement"
-  methods=[getName setName]
+//  implements="com.intellij.psi.PsiNamedElement"
+//  methods=[getName setName]
 }
 
 result_column ::=
@@ -186,8 +186,8 @@ result_column ::=
   | expression ( ( AS )? column_alias_name )?
 
 column_alias_name ::= name {
-  implements="com.intellij.psi.PsiNamedElement"
-  methods=[getName setName]
+//  implements="com.intellij.psi.PsiNamedElement"
+//  methods=[getName setName]
 }
 
 join_operator ::= ',' | ( NATURAL )? ( LEFT ( OUTER )? | INNER | CROSS )? JOIN

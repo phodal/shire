@@ -202,25 +202,25 @@ project(":saql") {
         implementation(project(":core"))
     }
 
-//    tasks {
-//        generateLexer {
-//            sourceFile.set(file("src/main/grammar/_SAQLLexer.flex"))
-//            targetOutputDir.set(file("src/gen/com/phodal/shirelang/saql/lexer"))
-//            purgeOldFiles.set(true)
-//        }
-//
-//        generateParser {
-//            sourceFile.set(file("src/main/grammar/SAQLParser.bnf"))
-//            targetRootOutputDir.set(file("src/gen"))
-//            pathToParser.set("com/phodal/shirelang/saql/parser/ShireParser.java")
-//            pathToPsiRoot.set("com/phodal/shirelang/saql/psi")
-//            purgeOldFiles.set(true)
-//        }
-//
-//        withType<KotlinCompile> {
-//            dependsOn(generateLexer, generateParser)
-//        }
-//    }
+    tasks {
+        generateLexer {
+            sourceFile.set(file("src/main/grammar/_SAQLLexer.flex"))
+            targetOutputDir.set(file("src/gen/com/phodal/shirelang/saql/lexer"))
+            purgeOldFiles.set(true)
+        }
+
+        generateParser {
+            sourceFile.set(file("src/main/grammar/SAQLParser.bnf"))
+            targetRootOutputDir.set(file("src/gen"))
+            pathToParser.set("com/phodal/shirelang/saql/parser/ShireParser.java")
+            pathToPsiRoot.set("com/phodal/shirelang/saql/psi")
+            purgeOldFiles.set(true)
+        }
+
+        withType<KotlinCompile> {
+            dependsOn(generateLexer, generateParser)
+        }
+    }
 
     sourceSets {
         main {

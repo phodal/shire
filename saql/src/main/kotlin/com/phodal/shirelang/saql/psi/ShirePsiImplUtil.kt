@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-@file:JvmName("PsiImplUtil")
+@file:JvmName("ShirePsiImplUtil")
 
 package com.phodal.shirelang.saql.psi
 
