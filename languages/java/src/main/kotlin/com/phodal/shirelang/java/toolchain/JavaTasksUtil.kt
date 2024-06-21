@@ -6,7 +6,7 @@ import com.intellij.openapi.externalSystem.service.ui.completion.TextCompletionI
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
 import com.intellij.openapi.vfs.VirtualFile
-import com.phodal.shirelang.java.impl.GRADLE_COMPLETION_COMPARATOR
+import com.phodal.shirelang.java.impl.JAVA_TASK_COMPLETION_COMPARATOR
 import org.jetbrains.idea.maven.execution.MavenRunConfiguration
 import org.jetbrains.idea.maven.execution.MavenRunConfigurationType
 import org.jetbrains.idea.maven.execution.MavenRunnerParameters
@@ -25,7 +25,7 @@ object JavaTasksUtil {
             .filterNot { it.isInherited }
             .groupBy { it.name }
             .map { TextCompletionInfo(it.key, it.value.first().description) }
-            .sortedWith(Comparator.comparing({ it.text }, GRADLE_COMPLETION_COMPARATOR))
+            .sortedWith(Comparator.comparing({ it.text }, JAVA_TASK_COMPLETION_COMPARATOR))
 
         return tasks
     }
@@ -103,5 +103,15 @@ object JavaTasksUtil {
         runManager.selectedConfiguration = runnerAndConfigurationSettings
 
         return configuration as MavenRunConfiguration
+    }
+
+    fun collectMavenTasks(project: Project): List<TextCompletionInfo> {
+        val projectsManager = MavenProjectsManager.getInstance(project)
+        val mavenProjects: List<MavenProject> = projectsManager.projects
+        val tasks = mavenProjects.flatMap { it.plugins }.flatMap { it.executions }
+            .map { TextCompletionInfo(it.executionId, it.phase) }
+            .sortedWith(Comparator.comparing({ it.text }, JAVA_TASK_COMPLETION_COMPARATOR))
+
+        return tasks
     }
 }

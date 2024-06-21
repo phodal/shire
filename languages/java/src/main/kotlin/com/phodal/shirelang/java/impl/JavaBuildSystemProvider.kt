@@ -35,7 +35,7 @@ open class JavaBuildSystemProvider : BuildSystemProvider() {
 
 }
 
-val GRADLE_COMPLETION_COMPARATOR = Comparator<String> { o1, o2 ->
+val JAVA_TASK_COMPLETION_COMPARATOR = Comparator<String> { o1, o2 ->
     when {
         o1.startsWith("--") && o2.startsWith("--") -> o1.compareTo(o2)
         o1.startsWith("-") && o2.startsWith("--") -> -1
