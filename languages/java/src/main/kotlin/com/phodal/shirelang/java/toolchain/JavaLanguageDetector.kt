@@ -11,7 +11,7 @@ import com.intellij.pom.java.LanguageLevel
 import com.intellij.psi.PsiFile
 import com.intellij.psi.util.PsiUtil
 
-object JavaToolchain {
+object JavaLanguageDetector {
     fun detectLanguageLevel(project: Project, sourceFile: PsiFile?): LanguageLevel? {
         val projectSdk = ProjectRootManager.getInstance(project).projectSdk
         if (projectSdk != null) {

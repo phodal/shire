@@ -5,7 +5,7 @@ import com.intellij.openapi.project.Project
 import com.phodal.shirecore.buildsystem.BuildSystemContext
 import com.phodal.shirecore.provider.context.BuildSystemProvider
 import com.phodal.shirelang.java.toolchain.GradleTasksUtil
-import com.phodal.shirelang.java.toolchain.JavaToolchain
+import com.phodal.shirelang.java.toolchain.JavaLanguageDetector
 import org.jetbrains.plugins.gradle.util.GradleConstants
 
 open class JavaBuildSystemProvider : BuildSystemProvider() {
@@ -22,7 +22,7 @@ open class JavaBuildSystemProvider : BuildSystemProvider() {
             buildToolName = "Maven"
         }
 
-        val javaVersion = JavaToolchain.detectLanguageLevel(project, null)
+        val javaVersion = JavaLanguageDetector.detectLanguageLevel(project, null)
 
         return BuildSystemContext(
             buildToolName = buildToolName,
