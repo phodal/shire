@@ -10,7 +10,6 @@ import com.phodal.shirecore.provider.variable.PsiContextVariable
 import com.phodal.shirecore.provider.variable.PsiContextVariableProvider
 import com.phodal.shirecore.provider.context.ToolchainPrepareContext
 import com.phodal.shirecore.provider.context.ToolchainProvider
-import com.phodal.shirelang.java.toolchain.getContainingClass
 import com.phodal.shirelang.java.variable.provider.JavaRelatedClassesProvider
 import kotlinx.coroutines.runBlocking
 
@@ -102,4 +101,27 @@ class JavaPsiContextVariableProvider : PsiContextVariableProvider {
         }
     }
 
+}
+
+fun PsiElement.getContainingClass(): PsiClass? {
+    var context: PsiElement? = this.context
+    while (context != null) {
+        if (context is PsiClass) return context
+        if (context is PsiMember) return context.containingClass
+
+        context = context.context
+    }
+
+    return null
+}
+
+fun PsiElement.getContainingMethod(): PsiMethod? {
+    var context: PsiElement? = this.context
+    while (context != null) {
+        if (context is PsiMethod) return context
+
+        context = context.context
+    }
+
+    return null
 }
