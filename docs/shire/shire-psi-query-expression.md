@@ -1,11 +1,11 @@
 ---
 layout: default
-title: Shire AST Query Language (In Progress)
+title: Shire PSI Query Expression
 parent: Shire Language
 nav_order: 7
 ---
 
-Shire AQL, is a query language that allows you to query the AST of the current file. It is used in Shire to define the 
+Shire PSI Query Language, is a query language that allows you to query the AST of the current file. It is used in Shire to define the 
 context of the current file and to define the actions that can be performed on the current file.
 
 ## Possible Design
@@ -17,11 +17,11 @@ Design
 variables
   "var1": query {
      // 变量声明部分
-     from  // datasource, like, dir, file symbol
+     from  {} // datasource, like, dir, file symbol
      // 条件部分 
-     where //  AST expand, and functions support for  regex, and methods: similar search, embedding search, tf-idf, and other advanced search
+     where {} //  AST expand, and functions support for  regex, and methods: similar search, embedding search, tf-idf, and other advanced search
      // 结果部分
-     select // Node, or Node's attribute, or Node's children 
+     select {} // Node, or Node's attribute, or Node's children 
   }
 ---
 ```
