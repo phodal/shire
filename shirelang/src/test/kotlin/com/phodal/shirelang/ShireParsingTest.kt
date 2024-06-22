@@ -75,5 +75,9 @@ class ShireParsingTest : ParsingTestCase("parser", "shire", ShireParserDefinitio
     fun testVariableAccess() {
         doTest(true)
     }
+
+    fun testShirePsiQueryExpression() {
+        doTest(true)
+    }
 }
 

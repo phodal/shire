@@ -15,54 +15,74 @@
   extends(".*Expr") = expr
 
   tokens=[
-    AGENT_START        = "AGENT_START"
-    COMMAND_START      = "COMMAND_START"
-    VARIABLE_START     = "VARIABLE_START"
-    CODE_BLOCK_START   = "CODE_BLOCK_START"
-    CODE_BLOCK_END     = "CODE_BLOCK_END"
-    CODE_BLOCK         = "CODE_BLOCK"
-    CODE_CONTENT       = "CODE_CONTENT"
-    IDENTIFIER         = "IDENTIFIER"
-    LANGUAGE_ID        = "LANGUAGE_ID"
-    VARIABLE_ID        = "VARIABLE_ID"
-    COMMAND_ID         = "COMMAND_ID"
-    AGENT_ID           = "AGENT_ID"
-    COLON              = "COLON"
-    COMMAND_PROP       = "COMMAND_PROP"
-    SHARP              = "SHARP"
-    LINE_INFO          = "LINE_INFO"
-    FRONTMATTER_START  = "FRONTMATTER_START"
-    FRONTMATTER_END    = "FRONTMATTER_END"
-    FRONTMATTER_KEY    = "FRONTMATTER_KEY"
-    LBRACKET           = "LBRACKET"
-    RBRACKET           = "RBRACKET"
-    INDENT             = "INDENT"
-    ARROW              = "ARROW"
-    OPEN_BRACE         = "{"
-    CLOSE_BRACE        = "}"
-    LPAREN             = "("
-    RPAREN             = ")"
-    CASE               = "case"
-    DEFAULT            = "default"
-    WHEN               = "when"
-    IF                 = 'if'
-    ELSE               = 'else'
-    ELSEIF             = 'elseif'
-    END                = 'end'
-    ENDIF              = 'endif'
+    Space                = 'regexp:\s+' // this need to be commented out when generating the flex file
+    COMMENT              = 'regexp://[^\r\n]*'
+    BLOCK_COMMENT        = 'regexp:/[*][^*]*[*]+([^/*][^*]*[*]+)*/'
+//    AGENT_START          = "@"
+    AGENT_START          = "regexp:X?@"
+//    COMMAND_START        = "/"
+    COMMAND_START        = "regexp:X?/"
+//    VARIABLE_START       = "$"
+    VARIABLE_START       = "regexp:X?\\$"
+    CODE_BLOCK_START     = "regexp:X?```[a-zA-Z]*"
+    CODE_BLOCK_END       = "regexp:X?```"
+    SINGLE_QUOTED_STRING ="regexp:X?'(''|[^'])*'"
+    DOUBLE_QUOTED_STRING ="regexp:X?\"(\"\"|[^\"])*\""
+    QUOTE_STRING         = "regexp:X?'(''|[^'])*' | X?\"(\"\"|[^\"])*\""
+    CODE_BLOCK           = "CODE_BLOCK"
+    CODE_CONTENT         = "CODE_CONTENT"
+    IDENTIFIER           = "IDENTIFIER"
+    LANGUAGE_ID          = "LANGUAGE_ID"
+    VARIABLE_ID          = "VARIABLE_ID"
+    COMMAND_ID           = "COMMAND_ID"
+    AGENT_ID             = "AGENT_ID"
+//    COLON                = ":"
+    COLON                = "regexp:X?:"
+    COMMAND_PROP         = "COMMAND_PROP"
+    SHARP                = "SHARP"
+//    LINE_INFO            = "LINE_INFO" => L1C2 L[0-9]+(C[0-9]+)?(-L[0-9]+(C[0-9]+)?)?
+    LINE_INFO            = "regexp:X?L[0-9]+(C[0-9]+)?(-L[0-9]+(C[0-9]+)?)?"
+//    FRONTMATTER_START    = "---"
+    FRONTMATTER_START    = "regexp:X?---"
+//    FRONTMATTER_END      = "---"
+    FRONTMATTER_END      = "regexp:X?---"
+    FRONTMATTER_KEY      = 'regexp:[_a-zA-Z]\w*'
+    IDENTIFIER           = 'regexp:[_a-zA-Z]\w*'
+//    LBRACKET             = "["
+    LBRACKET             = "regexp:X?\\["
+//    RBRACKET             = "RBRACKET"
+    RBRACKET             = "regexp:X?\\]"
+    INDENT               = "INDENT"
+    ARROW                = "regexp:X?->"
+    OPEN_BRACE           = "{"
+    CLOSE_BRACE          = "}"
+    LPAREN               = "("
+    RPAREN               = ")"
+    NEWLINE              = "regexp:\n"
+    CASE                 = "case"
+    DEFAULT              = "default"
+    WHEN                 = "when"
+    IF                   = 'if'
+    ELSE                 = 'else'
+    ELSEIF               = 'elseif'
+    END                  = 'end'
+    ENDIF                = 'endif'
+    FROM                 = 'from'
+    WHERE                = 'where'
+    SELECT               = 'select'
 
     // operators
-    DASH               = "-"
-    EQEQ               = '=='
-    NEQ                = '!='
-    LT                 = '<'
-    GT                 = '>'
-    LTE                = '<='
-    GTE                = '>='
-    ANDAND             = '&&'
-    OROR               = '||'
-    DOT                = '.'
-    NOT                = '!'
+    DASH                 = "-"
+    EQEQ                 = '=='
+    NEQ                  = '!='
+    LT                   = '<'
+    GT                   = '>'
+    LTE                  = '<='
+    GTE                  = '>='
+    ANDAND               = '&&'
+    OROR                 = '||'
+    DOT                  = '.'
+    NOT                  = '!'
   ]
 }
 
@@ -73,7 +93,7 @@ frontMatterHeader ::= FRONTMATTER_START NEWLINE frontMatterEntries FRONTMATTER_E
 frontMatterEntries ::= ((frontMatterEntry) WHITE_SPACE?)*
 frontMatterEntry ::=
     "when" WHITE_SPACE? COLON WHITE_SPACE? conditionExpr NEWLINE?
-    | frontMatterKey WHITE_SPACE? COLON WHITE_SPACE? (frontMatterValue | patternAction) NEWLINE?
+    | frontMatterKey WHITE_SPACE? COLON WHITE_SPACE? (frontMatterValue | patternAction | queryStatement) NEWLINE?
 
 frontMatterKey ::= FRONTMATTER_KEY | QUOTE_STRING | pattern
 frontMatterValue ::= IDENTIFIER | NUMBER | QUOTE_STRING | DATE | BOOLEAN | frontMatterArray | (NEWLINE objectKeyValue)
@@ -132,7 +152,6 @@ expressionList ::= expr (',' expr)*
 /// variable block
 variableExpr ::= "{" WHITE_SPACE? expr WHITE_SPACE? "}"
 
-
 literalExpr ::= literal
 parenExpr ::= '(' expr ')'
 // when
@@ -166,3 +185,16 @@ velocityExpr ::=
     | SHARP 'elseif' '(' WHITE_SPACE? VARIABLE_START? expr WHITE_SPACE? ')'
     | SHARP 'end'
     | SHARP 'endif'
+
+queryStatement ::= OPEN_BRACE SPACE? from_clause SPACE? where_clause SPACE? select_clause SPACE CLOSE_BRACE
+
+from_clause ::= FROM SPACE? OPEN_BRACE SPACE? psi_element_decl SPACE? CLOSE_BRACE SPACE?
+
+psi_element_decl ::= SPACE? psi_type SPACE+ variable_decl ("," SPACE+  psi_type SPACE+  variable_decl)*
+
+where_clause ::= WHERE SPACE? OPEN_BRACE SPACE? expr SPACE? CLOSE_BRACE SPACE?
+
+select_clause ::= SELECT SPACE? OPEN_BRACE SPACE? expr SPACE?  CLOSE_BRACE SPACE?
+
+psi_type ::= IDENTIFIER
+variable_decl ::= IDENTIFIER

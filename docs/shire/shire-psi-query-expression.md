@@ -30,12 +30,19 @@ For example:
 
 ```shire
 ---
-variables
-  "var1": query {
-     from dir("src/main/kotlin") files
-     where similar("fun main") and not similar("fun test")
-     // 结果部分
-     select file, "This file contains main function"
+variables:
+  "allController": {
+    from {
+        PsiClass clazz // here is a comment
+    }
+    where {
+        clazz.extends("org.springframework.web.bind.annotation.RestController") and
+        clazz.getAnAnnotation() = "org.springframework.web.bind.annotation.RequestMapping"
+    }
+
+    select {
+        clazz.id, clazz.name, "code"
+    }
   }
 ---
 ```

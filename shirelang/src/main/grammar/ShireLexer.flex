@@ -42,14 +42,19 @@ import java.util.regex.Pattern;
 %s FRONT_MATTER_VAL_OBJECT
 %s PATTERN_ACTION_BLOCK
 %s CONDITION_EXPR_BLOCK
+%s QUERY_STATEMENT_BLOCK
 
 %s LANG_ID
 
+SPACE                    = [ \t\n\x0B\f\r]+
 IDENTIFIER               = [a-zA-Z0-9][_\-a-zA-Z0-9]*
 FRONTMATTER_KEY          = [a-zA-Z0-9][_\-a-zA-Z0-9]*
 DATE                     = [0-9]{4}-[0-9]{2}-[0-9]{2}
 STRING                   = [a-zA-Z0-9][_\-a-zA-Z0-9]*
 INDENT                   = "  "
+
+COMMENT                  = "//"[^\r\n]*
+BLOCK_COMMENT            = "/"[*][^*]*[*]+([^/*][^*]*[*]+)*"/"
 
 EscapedChar              = "\\" [^\n]
 RegexWord                = [^\r\n\\\"' \t$`()] | {EscapedChar}
@@ -205,6 +210,7 @@ END                      =end
   ":"                     { yybegin(FRONT_MATTER_VALUE_BLOCK);return COLON; }
   {NEWLINE}               { return NEWLINE; }
   "---"                   { yybegin(YYINITIAL); return FRONTMATTER_END; }
+  "{"                     { yybegin(QUERY_STATEMENT_BLOCK); return OPEN_BRACE; }
   "  "                    { yybegin(FRONT_MATTER_VAL_OBJECT); return INDENT; }
   [^]                     { yypushback(yylength()); yybegin(YYINITIAL); }
 }
@@ -267,6 +273,22 @@ END                      =end
 <COMMENT_BLOCK> {
   {COMMENTS}              { return comment(); }
   [^]                     { yypushback(yylength()); yybegin(YYINITIAL); return TEXT_SEGMENT; }
+}
+
+<QUERY_STATEMENT_BLOCK> {
+  "from"                  { return FROM; }
+  "where"                 { return WHERE; }
+  "select"                { return SELECT; }
+  {IDENTIFIER}            { return IDENTIFIER; }
+
+  "{"                     { return OPEN_BRACE; }
+  "}"                     { return CLOSE_BRACE; }
+  {SPACE}                 { return SPACE; }
+  {COMMENT}               { return COMMENT; }
+  {BLOCK_COMMENT}         { return BLOCK_COMMENT; }
+
+  ","                     { return COMMA; }
+  [^]                     { yypushback(yylength()); yybegin(FRONT_MATTER_BLOCK); }
 }
 
 <YYUSED> {
