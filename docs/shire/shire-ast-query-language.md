@@ -1,8 +1,8 @@
 ---
 layout: default
-title: Shire AST Query Language
+title: Shire AST Query Language (In Progress)
 parent: Shire Language
-nav_order: 9
+nav_order: 7
 ---
 
 Shire AQL, is a query language that allows you to query the AST of the current file. It is used in Shire to define the 
@@ -17,23 +17,51 @@ ChatGPT sample:
 variables
   "var1": query {
      // 变量声明部分
-     from {
-         /* ... variable declarations ... */
-     }
-     // 条件部分
-     where {
-       /* ... logical formula ... */
-       // support for  regex, and methods: similar search, embedding search, tf-idf, and other advanced search
-     }
-   
+     from  // datasource, like
+     // 条件部分 
+     where //  AST expand, and functions support for  regex, and methods: similar search, embedding search, tf-idf, and other advanced search
      // 结果部分
-     select {
-       /* ... expressions ... */
-       // 
-     }
-}
+     select // Node, or Node's attribute, or Node's children 
+  }
 ---
 ```
+
+## Example Query Expression
+
+Example AST query expression which will support use our AST node and S-Expression to query the AST tree.
+
+A ChatGPT generate for example:
+
+```kotlin
+val query = """
+    (MethodDeclaration
+        (Modifier public)
+        (Type void)
+        (Identifier main)
+        (ParameterList
+            (Parameter
+                (Type String)
+                (Identifier args)
+            )
+        )
+        (Block
+            (Statement
+                (ExpressionStatement
+                    (MethodCall
+                        (Identifier println)
+                        (Arguments
+                            (Expression
+                                (Literal "Hello, World!")
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    )
+""".trimIndent()
+```
+
 
 ## Reference
 
