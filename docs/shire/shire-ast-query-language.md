@@ -12,41 +12,27 @@ context of the current file and to define the actions that can be performed on t
 
 ChatGPT sample:
 
-```aql
-query {
-  // 变量声明部分
-  from {
-    /* ... variable declarations ... */
-  }
-
-  // 条件部分
-  where {
-    /* ... logical formula ... */
-    // support for regex, similar search, embedding search, tf-idf, and other advanced search
-  }
-
-  // 结果部分
-  select {
-    /* ... expressions ... */
-  }
+```shire
+---
+variables
+  "var1": query {
+     // 变量声明部分
+     from {
+         /* ... variable declarations ... */
+     }
+     // 条件部分
+     where {
+       /* ... logical formula ... */
+       // support for  regex, and methods: similar search, embedding search, tf-idf, and other advanced search
+     }
+   
+     // 结果部分
+     select {
+       /* ... expressions ... */
+       // 
+     }
 }
-```
-
-Better sample:
-
-```
-query {
-  from {
-    variable_declaration
-  }
-  where {
-    name = "myVariable"
-  }
-  select {
-    name: name,
-    type: type
-  }
-}
+---
 ```
 
 ## Reference
@@ -63,10 +49,57 @@ select /* ... expressions ... */
 
 For Example:
 
-```sql
-from int x, int y
-where x = 3 and y in [0 .. 2]
-select x, y, x * y as product, "product: " + product
+```codeql
+import java
+
+from Class c, Class superclass
+where superclass = c.getASupertype()
+select c, "This class extends the class $@.", superclass, superclass.getName()
+```
+
+Java
+
+```codeql
+from Person p
+where parentOf(p) = parentOf("King Basil") and
+  not p = "King Basil"
+  and not p.isDeceased()
+select p
+```
+
+JavaScript
+
+```codeql
+import javascript
+
+from Comment c
+where c.getText().regexpMatch("(?si).*\\bTODO\\b.*")
+select c
+```
+
+Better Java Example:
+
+```codeql
+import java
+
+from Constructor c, Annotation ann, AnnotationType anntp
+where ann = c.getAnAnnotation() and
+    anntp = ann.getType() and
+    anntp.hasQualifiedName("java.lang", "SuppressWarnings")
+select ann, ann.getValue("value")
+```
+
+Java 2
+
+```codeql
+import java
+
+from LTExpr expr
+where expr.getLeftOperand().getType().hasName("int") and
+    expr.getRightOperand().getType().hasName("long") and
+    exists(LoopStmt l | l.getCondition().getAChildExpr*() = expr) and
+    not expr.getAnOperand().isCompileTimeConstant()
+select expr
 ```
 
 ### TreeSitter
