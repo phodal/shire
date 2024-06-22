@@ -89,6 +89,7 @@ COLON                    =:
 SHARP                    =#
 LBRACKET                 =\[
 RBRACKET                 =\]
+COMMA                    =,
 
 DEFAULT                  =default
 CASE                     =case
@@ -103,6 +104,7 @@ END                      =end
 %{
     private boolean isCodeStart = false;
     private boolean isInsideShireTemplate = false;
+    private boolean isInsideQueryExpression = false;
 %}
 
 %{
@@ -281,15 +283,19 @@ END                      =end
   "from"                  { return FROM; }
   "where"                 { return WHERE; }
   "select"                { return SELECT; }
-  {IDENTIFIER}            { return IDENTIFIER; }
 
-  "{"                     { return OPEN_BRACE; }
-  "}"                     { return CLOSE_BRACE; }
-  {SPACE}                 { return SPACE; }
+  "{"                     { isInsideQueryExpression = true; yybegin(EXPR_BLOCK); return OPEN_BRACE; }
+  "}"                     { isInsideQueryExpression = false; return CLOSE_BRACE; }
+
+  {IDENTIFIER}            { if (isInsideQueryExpression) { yypushback(yylength()); yybegin(EXPR_BLOCK); } else { return IDENTIFIER; } }
+
   {COMMENT}               { return COMMENT; }
   {BLOCK_COMMENT}         { return BLOCK_COMMENT; }
 
-  ","                     { return COMMA; }
+  {WHITE_SPACE}           { return WHITE_SPACE; }
+  {NEWLINE}               { return NEWLINE; }
+
+  {COMMA}                 { return COMMA; }
   [^]                     { yypushback(yylength()); yybegin(FRONT_MATTER_BLOCK); }
 }
 
@@ -352,6 +358,7 @@ END                      =end
   ","                  { return COMMA; }
   "!"                  { return NOT; }
   "&&"                 { return ANDAND; }
+  "and"                { return AND; }
   "||"                 { return OROR; }
   "."                  { return DOT; }
   "=="                 { return EQEQ; }
@@ -364,10 +371,12 @@ END                      =end
   "{"                  { return OPEN_BRACE; }
   "}"                  { return CLOSE_BRACE; }
 
+  {COMMA}              { return COMMA; }
   {NUMBER}             { return NUMBER; }
   {IDENTIFIER}         { return IDENTIFIER; }
+  {QUOTE_STRING}       { return QUOTE_STRING; }
   {WHITE_SPACE}        { return WHITE_SPACE; }
-  [^]                  { yypushback(yylength()); if (isInsideShireTemplate) { yybegin(CODE_BLOCK); } else { yybegin(YYINITIAL); } }
+  [^]                  { yypushback(yylength()); if (isInsideShireTemplate) { yybegin(CODE_BLOCK); }  else if (isInsideQueryExpression) { yybegin(QUERY_STATEMENT_BLOCK);} else { yybegin(YYINITIAL); } }
 }
 
 <CODE_BLOCK> {

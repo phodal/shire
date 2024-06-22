@@ -2,11 +2,10 @@
 variables:
   "allController": {
     from {
-        PsiClass clazz // here is a comment
+        PsiClass clazz
     }
     where {
-        clazz.extends("org.springframework.web.bind.annotation.RestController") and
-        clazz.getAnAnnotation() = "org.springframework.web.bind.annotation.RequestMapping"
+        clazz.extends("org.springframework.web.bind.annotation.RestController")
     }
 
     select {

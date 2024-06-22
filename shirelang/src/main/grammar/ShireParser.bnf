@@ -15,7 +15,6 @@
   extends(".*Expr") = expr
 
   tokens=[
-    Space                = 'regexp:\s+' // this need to be commented out when generating the flex file
     COMMENT              = 'regexp://[^\r\n]*'
     BLOCK_COMMENT        = 'regexp:/[*][^*]*[*]+([^/*][^*]*[*]+)*/'
     CODE_BLOCK_START     = "regexp:X?```[a-zA-Z]*"
@@ -63,6 +62,7 @@
     LTE                  = '<='
     GTE                  = '>='
     ANDAND               = '&&'
+    AND                  = 'and'
     OROR                 = '||'
     DOT                  = '.'
     NOT                  = '!'
@@ -131,7 +131,7 @@ simpleRefExpr ::= IDENTIFIER {extends=refExpr elementType=refExpr}
 qualRefExpr ::= expr '.' IDENTIFIER {extends=refExpr elementType=refExpr}
 
 logicalOrExpr ::= expr '||' expr
-logicalAndExpr ::= expr '&&' expr
+logicalAndExpr ::= expr ('&&' | 'and') expr
 eqComparisonExpr ::= expr eqComparisonOp expr
 ineqComparisonExpr ::= expr WHITE_SPACE? ineqComparisonOp WHITE_SPACE? expr
 callExpr ::= refExpr '(' expressionList? ')'
@@ -180,15 +180,15 @@ velocityExpr ::=
     | '#' 'end'
     | '#' 'endif'
 
-queryStatement ::= OPEN_BRACE SPACE? from_clause SPACE? where_clause SPACE? select_clause SPACE CLOSE_BRACE
+queryStatement ::= OPEN_BRACE (NEWLINE | WHITE_SPACE)* from_clause where_clause select_clause (NEWLINE | WHITE_SPACE)* CLOSE_BRACE
 
-from_clause ::= FROM SPACE? OPEN_BRACE SPACE? psi_element_decl SPACE? CLOSE_BRACE SPACE?
+from_clause ::= FROM WHITE_SPACE* OPEN_BRACE (NEWLINE | WHITE_SPACE)* psi_element_decl (NEWLINE | WHITE_SPACE)? CLOSE_BRACE (NEWLINE | WHITE_SPACE)*
 
-psi_element_decl ::= SPACE? psi_type SPACE+ variable_decl ("," SPACE+  psi_type SPACE+  variable_decl)*
+psi_element_decl ::= WHITE_SPACE? psi_type WHITE_SPACE+ variable_decl ("," WHITE_SPACE?  psi_type WHITE_SPACE+ variable_decl)* (NEWLINE | WHITE_SPACE)*
 
-where_clause ::= WHERE SPACE? OPEN_BRACE SPACE? expr SPACE? CLOSE_BRACE SPACE?
+where_clause ::= WHERE WHITE_SPACE? OPEN_BRACE (NEWLINE | WHITE_SPACE)* expr (NEWLINE | WHITE_SPACE)* CLOSE_BRACE (NEWLINE | WHITE_SPACE)*
 
-select_clause ::= SELECT SPACE? OPEN_BRACE SPACE? expr SPACE?  CLOSE_BRACE SPACE?
+select_clause ::= SELECT WHITE_SPACE? OPEN_BRACE (NEWLINE | WHITE_SPACE)* expr ( WHITE_SPACE? ',' WHITE_SPACE? expr)* (NEWLINE | WHITE_SPACE)* CLOSE_BRACE (NEWLINE | WHITE_SPACE)*
 
 psi_type ::= IDENTIFIER
 variable_decl ::= IDENTIFIER
