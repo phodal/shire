@@ -18,29 +18,17 @@
     Space                = 'regexp:\s+' // this need to be commented out when generating the flex file
     COMMENT              = 'regexp://[^\r\n]*'
     BLOCK_COMMENT        = 'regexp:/[*][^*]*[*]+([^/*][^*]*[*]+)*/'
-//    AGENT_START          = "@"
-    AGENT_START          = "regexp:X?@"
-//    COMMAND_START        = "/"
-    COMMAND_START        = "regexp:X?/"
-//    VARIABLE_START       = "$"
-    VARIABLE_START       = "regexp:X?\\$"
     CODE_BLOCK_START     = "regexp:X?```[a-zA-Z]*"
     CODE_BLOCK_END       = "regexp:X?```"
-    SINGLE_QUOTED_STRING ="regexp:X?'(''|[^'])*'"
-    DOUBLE_QUOTED_STRING ="regexp:X?\"(\"\"|[^\"])*\""
+    SINGLE_QUOTED_STRING = "regexp:X?'(''|[^'])*'"
+    DOUBLE_QUOTED_STRING = "regexp:X?\"(\"\"|[^\"])*\""
     QUOTE_STRING         = "regexp:X?'(''|[^'])*' | X?\"(\"\"|[^\"])*\""
     CODE_BLOCK           = "CODE_BLOCK"
     CODE_CONTENT         = "CODE_CONTENT"
-    IDENTIFIER           = "IDENTIFIER"
-    LANGUAGE_ID          = "LANGUAGE_ID"
-    VARIABLE_ID          = "VARIABLE_ID"
-    COMMAND_ID           = "COMMAND_ID"
-    AGENT_ID             = "AGENT_ID"
-//    COLON                = ":"
+    IDENTIFIER           = 'regexp:[_a-zA-Z0-9]\w*'
     COLON                = "regexp:X?:"
-    COMMAND_PROP         = "COMMAND_PROP"
-    SHARP                = "SHARP"
-//    LINE_INFO            = "LINE_INFO" => L1C2 L[0-9]+(C[0-9]+)?(-L[0-9]+(C[0-9]+)?)?
+    COMMAND_PROP         = "regexp:X?[^\\ \\t\\r\\n]*"
+    SHARP                = "#"
     LINE_INFO            = "regexp:X?L[0-9]+(C[0-9]+)?(-L[0-9]+(C[0-9]+)?)?"
     FRONTMATTER_START    = "FRONTMATTER_START"
     FRONTMATTER_END      = "FRONTMATTER_END"
@@ -78,6 +66,8 @@
     OROR                 = '||'
     DOT                  = '.'
     NOT                  = '!'
+    COMMA                = ','
+    PIPE                 = '|'
   ]
 }
 
@@ -162,26 +152,33 @@ private literal ::= NUMBER
   | "$" IDENTIFIER
 
 used ::= (
-    AGENT_START AGENT_ID
-    | COMMAND_START COMMAND_ID (COLON COMMAND_PROP (SHARP LINE_INFO)?)?
-    | VARIABLE_START (varId | varAccess)
+    agentStart agentId
+    | commandStart commandId (COLON COMMAND_PROP (SHARP LINE_INFO)?)?
+    | variableStart (variableId | varAccess)
 )
 
+agentStart ::= '@'
+commandStart ::= '/'
+variableStart ::= '$'
+
+agentId ::= IDENTIFIER
+commandId ::= IDENTIFIER
+variableId ::= IDENTIFIER
+languageId ::= IDENTIFIER
+
 // just make template pass success not fail
-varAccess ::= OPEN_BRACE WHITE_SPACE? varId WHITE_SPACE? (DOT WHITE_SPACE? varId)* WHITE_SPACE? CLOSE_BRACE
+varAccess ::= OPEN_BRACE WHITE_SPACE? variableId WHITE_SPACE? (DOT WHITE_SPACE? variableId)* WHITE_SPACE? CLOSE_BRACE
 
-varId ::= VARIABLE_ID
-
-code ::=  CODE_BLOCK_START (LANGUAGE_ID | VARIABLE_START expr)? NEWLINE? code_contents? CODE_BLOCK_END?
+code ::=  CODE_BLOCK_START (languageId | variableStart expr)? NEWLINE? code_contents? CODE_BLOCK_END?
 
 code_contents ::= (NEWLINE | CODE_CONTENT)*
 
 velocityExpr ::=
-     SHARP 'if' '(' WHITE_SPACE? VARIABLE_START? expr WHITE_SPACE?  ')'
-    | SHARP 'else'
-    | SHARP 'elseif' '(' WHITE_SPACE? VARIABLE_START? expr WHITE_SPACE? ')'
-    | SHARP 'end'
-    | SHARP 'endif'
+     '#' 'if' '(' WHITE_SPACE? variableStart? expr WHITE_SPACE?  ')'
+    | '#' 'else'
+    | '#' 'elseif' '(' WHITE_SPACE? variableStart? expr WHITE_SPACE? ')'
+    | '#' 'end'
+    | '#' 'endif'
 
 queryStatement ::= OPEN_BRACE SPACE? from_clause SPACE? where_clause SPACE? select_clause SPACE CLOSE_BRACE
 

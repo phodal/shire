@@ -1,7 +1,8 @@
 ShireFile
   CodeBlockElement(CODE)
     PsiElement(ShireTokenType.CODE_BLOCK_START)('```')
-    PsiElement(ShireTokenType.LANGUAGE_ID)('java')
+    ShireLanguageIdImpl(LANGUAGE_ID)
+      PsiElement(ShireTokenType.IDENTIFIER)('java')
     PsiElement(ShireTokenType.NEWLINE)('\n')
     ASTWrapperPsiElement(CODE_CONTENTS)
       PsiElement(ShireTokenType.CODE_CONTENT)('@Target({ElementType.TYPE})')

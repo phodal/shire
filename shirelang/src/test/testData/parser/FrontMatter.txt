@@ -41,7 +41,7 @@ ShireFile
             PsiElement(ShireTokenType.[)('[')
             ShireFrontMatterValueImpl(FRONT_MATTER_VALUE)
               PsiElement(ShireTokenType.IDENTIFIER)('markdown')
-            PsiElement(ShireTokenType.COMMA)(',')
+            PsiElement(ShireTokenType.,)(',')
             PsiWhiteSpace(' ')
             ShireFrontMatterValueImpl(FRONT_MATTER_VALUE)
               PsiElement(ShireTokenType.IDENTIFIER)('frontmatter')

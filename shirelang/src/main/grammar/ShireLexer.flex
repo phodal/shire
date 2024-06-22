@@ -65,10 +65,10 @@ LPAREN                   = \(
 RPAREN                   = \)
 PIPE                     = \|
 
-VARIABLE_ID              = [a-zA-Z0-9][_\-a-zA-Z0-9]*
-AGENT_ID                 = [a-zA-Z0-9][_\-a-zA-Z0-9]*
-COMMAND_ID               = [a-zA-Z0-9][_\-a-zA-Z0-9]*
-LANGUAGE_ID              = [a-zA-Z][_\-a-zA-Z0-9 .]*
+//VARIABLE_ID              = [a-zA-Z0-9][_\-a-zA-Z0-9]*
+//AGENT_ID                 = [a-zA-Z0-9][_\-a-zA-Z0-9]*
+//COMMAND_ID               = [a-zA-Z0-9][_\-a-zA-Z0-9]*
+//LANGUAGE_ID              = [a-zA-Z][_\-a-zA-Z0-9 .]*
 NUMBER                   = [0-9]+
 BOOLEAN                  = true|false|TRUE|FALSE|"true"|"false"
 
@@ -208,10 +208,12 @@ END                      =end
   {IDENTIFIER}            { return IDENTIFIER; }
   {PATTERN_EXPR}          { return PATTERN_EXPR; }
   ":"                     { yybegin(FRONT_MATTER_VALUE_BLOCK);return COLON; }
-  {NEWLINE}               { return NEWLINE; }
-  "---"                   { yybegin(YYINITIAL); return FRONTMATTER_END; }
   "{"                     { yybegin(QUERY_STATEMENT_BLOCK); return OPEN_BRACE; }
   "  "                    { yybegin(FRONT_MATTER_VAL_OBJECT); return INDENT; }
+  {NEWLINE}               { return NEWLINE; }
+
+  // end for block
+  "---"                   { yybegin(YYINITIAL); return FRONTMATTER_END; }
   [^]                     { yypushback(yylength()); yybegin(YYINITIAL); }
 }
 
@@ -305,7 +307,7 @@ END                      =end
 }
 
 <COMMAND_BLOCK> {
-  {COMMAND_ID}            { return COMMAND_ID; }
+  {IDENTIFIER}            { return IDENTIFIER; }
   {COLON}                 { yybegin(COMMAND_VALUE_BLOCK); return COLON; }
   [^]                     { yypushback(1); yybegin(YYINITIAL); }
 }
@@ -322,12 +324,11 @@ END                      =end
 }
 
 <AGENT_BLOCK> {
-  {AGENT_ID}           { yybegin(YYINITIAL); return AGENT_ID; }
+  {IDENTIFIER}         { yybegin(YYINITIAL); return IDENTIFIER; }
   [^]                  { return TokenType.BAD_CHARACTER; }
 }
 
 <VARIABLE_BLOCK> {
-  {VARIABLE_ID}        { return VARIABLE_ID; }
   {IDENTIFIER}         { return IDENTIFIER; }
   "{"                  { return OPEN_BRACE; }
   "}"                  { return CLOSE_BRACE; }
@@ -377,7 +378,7 @@ END                      =end
 
 <LANG_ID> {
    "```"             { return CODE_BLOCK_START; }
-   {LANGUAGE_ID}     { return LANGUAGE_ID;  }
+   {IDENTIFIER}      { return IDENTIFIER;  }
    "$"               { isInsideShireTemplate = true; yybegin(EXPR_BLOCK); return VARIABLE_START; }
    [^]               { yypushback(yylength()); yybegin(CODE_BLOCK); }
 }

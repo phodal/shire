@@ -9,6 +9,7 @@ import com.intellij.openapi.project.guessProjectDir
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.TokenType.WHITE_SPACE
+import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.elementType
 import com.phodal.shirecore.agent.CustomAgent
 import com.phodal.shirelang.compile.VariableTemplateCompiler
@@ -73,7 +74,6 @@ class ShireCompiler(
 
                     output.append(psiElement.text)
                 }
-
                 ShireTypes.USED -> processUsed(psiElement as ShireUsed)
                 ShireTypes.COMMENTS -> {
                     if (psiElement.text.startsWith(FLOW_FALG)) {
@@ -88,6 +88,13 @@ class ShireCompiler(
                             result.nextJob = shireFile
                         }
                     }
+                }
+
+                ShireTypes.FRONTMATTER_START -> {
+                    val nextElement = PsiTreeUtil.findChildOfType(
+                        psiElement.parent, ShireFrontMatterHeader::class.java
+                    ) ?: continue
+                    result.config = FrontmatterParser.parse(nextElement)
                 }
 
                 ShireTypes.FRONT_MATTER_HEADER -> {

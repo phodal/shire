@@ -48,5 +48,5 @@ ShireFile
   PsiElement(ShireTokenType.TEXT_SEGMENT)('---')
   PsiElement(ShireTokenType.NEWLINE)('\n')
   PsiElement(ShireTokenType.NEWLINE)('\n')
-  PsiElement(ShireTokenType.VARIABLE_START)('$')
-  PsiElement(ShireTokenType.VARIABLE_ID)('allController')
+  PsiElement(VARIABLE_START)('$')
+  PsiElement(ShireTokenType.IDENTIFIER)('allController')
