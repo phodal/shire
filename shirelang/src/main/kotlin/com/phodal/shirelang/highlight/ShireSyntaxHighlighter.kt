@@ -23,7 +23,10 @@ class ShireSyntaxHighlighter : SyntaxHighlighter {
         private val KEYWORDS: TokenSet = TokenSet.create(
             ShireTypes.CASE,
             ShireTypes.DEFAULT,
-            ShireTypes.WHEN
+            ShireTypes.WHEN,
+            ShireTypes.SELECT,
+            ShireTypes.WHERE,
+            ShireTypes.FROM,
         )
 
 
