@@ -14,7 +14,6 @@ include(
     // cross-platform core?
     "core-api",
     "shirelang",
-    "saql",
 
     "languages:java",
 

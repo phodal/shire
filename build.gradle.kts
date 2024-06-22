@@ -187,48 +187,6 @@ project(":shirelang") {
     }
 }
 
-project(":saql") {
-    apply {
-        plugin("org.jetbrains.grammarkit")
-    }
-
-    intellij {
-        version.set(prop("platformVersion"))
-        plugins.set((listOf<String>() + "org.intellij.plugins.markdown" + "com.jetbrains.sh" + "Git4Idea"))
-    }
-
-    dependencies {
-        implementation(project(":"))
-        implementation(project(":core"))
-    }
-
-    tasks {
-        generateLexer {
-            sourceFile.set(file("src/main/grammar/_SAQLLexer.flex"))
-            targetOutputDir.set(file("src/gen/com/phodal/shirelang/saql/lexer"))
-            purgeOldFiles.set(true)
-        }
-
-        generateParser {
-            sourceFile.set(file("src/main/grammar/SAQLParser.bnf"))
-            targetRootOutputDir.set(file("src/gen"))
-            pathToParser.set("com/phodal/shirelang/saql/parser/ShireParser.java")
-            pathToPsiRoot.set("com/phodal/shirelang/saql/psi")
-            purgeOldFiles.set(true)
-        }
-
-        withType<KotlinCompile> {
-            dependsOn(generateLexer, generateParser)
-        }
-    }
-
-    sourceSets {
-        main {
-            java.srcDirs("src/gen")
-        }
-    }
-}
-
 project(":plugin") {
     apply {
         plugin("org.jetbrains.changelog")
