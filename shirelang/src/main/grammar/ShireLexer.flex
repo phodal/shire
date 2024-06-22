@@ -205,7 +205,7 @@ END                      =end
 
 <FRONT_MATTER_BLOCK> {
   {WHEN}                  { return WHEN; }
-  {FRONTMATTER_KEY}       { return FRONTMATTER_KEY; }
+  {IDENTIFIER}            { return IDENTIFIER; }
   {PATTERN_EXPR}          { return PATTERN_EXPR; }
   ":"                     { yybegin(FRONT_MATTER_VALUE_BLOCK);return COLON; }
   {NEWLINE}               { return NEWLINE; }

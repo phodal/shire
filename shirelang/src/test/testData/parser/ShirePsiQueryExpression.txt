@@ -1,7 +1,7 @@
 ShireFile
   PsiElement(ShireTokenType.FRONTMATTER_START)('---')
   PsiElement(ShireTokenType.NEWLINE)('\n')
-  PsiElement(ShireTokenType.FRONTMATTER_KEY)('variables')
+  PsiElement(ShireTokenType.IDENTIFIER)('variables')
   PsiElement(ShireTokenType.COLON)(':')
   PsiElement(ShireTokenType.NEWLINE)('\n')
   PsiElement(ShireTokenType.INDENT)('  ')

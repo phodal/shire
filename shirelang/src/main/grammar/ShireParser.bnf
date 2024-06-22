@@ -42,16 +42,11 @@
     SHARP                = "SHARP"
 //    LINE_INFO            = "LINE_INFO" => L1C2 L[0-9]+(C[0-9]+)?(-L[0-9]+(C[0-9]+)?)?
     LINE_INFO            = "regexp:X?L[0-9]+(C[0-9]+)?(-L[0-9]+(C[0-9]+)?)?"
-//    FRONTMATTER_START    = "---"
-    FRONTMATTER_START    = "regexp:X?---"
-//    FRONTMATTER_END      = "---"
-    FRONTMATTER_END      = "regexp:X?---"
-    FRONTMATTER_KEY      = 'regexp:[_a-zA-Z]\w*'
+    FRONTMATTER_START    = "FRONTMATTER_START"
+    FRONTMATTER_END      = "FRONTMATTER_END"
     IDENTIFIER           = 'regexp:[_a-zA-Z]\w*'
-//    LBRACKET             = "["
-    LBRACKET             = "regexp:X?\\["
-//    RBRACKET             = "RBRACKET"
-    RBRACKET             = "regexp:X?\\]"
+    LBRACKET             = "["
+    RBRACKET             = "]"
     INDENT               = "INDENT"
     ARROW                = "regexp:X?->"
     OPEN_BRACE           = "{"
@@ -95,9 +90,11 @@ frontMatterEntry ::=
     "when" WHITE_SPACE? COLON WHITE_SPACE? conditionExpr NEWLINE?
     | frontMatterKey WHITE_SPACE? COLON WHITE_SPACE? (frontMatterValue | patternAction | queryStatement) NEWLINE?
 
-frontMatterKey ::= FRONTMATTER_KEY | QUOTE_STRING | pattern
+frontMatterKey ::= frontMatterId | QUOTE_STRING | pattern
 frontMatterValue ::= IDENTIFIER | NUMBER | QUOTE_STRING | DATE | BOOLEAN | frontMatterArray | (NEWLINE objectKeyValue)
 frontMatterArray ::= LBRACKET (frontMatterValue (COMMA frontMatterValue)*) RBRACKET
+
+frontMatterId ::= IDENTIFIER
 
 objectKeyValue ::= (INDENT keyValue NEWLINE?)*
 keyValue ::= frontMatterEntry

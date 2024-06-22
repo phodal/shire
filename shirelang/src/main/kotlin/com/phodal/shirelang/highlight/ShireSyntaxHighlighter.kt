@@ -59,7 +59,7 @@ class ShireSyntaxHighlighter : SyntaxHighlighter {
             ATTRIBUTES[ShireTypes.FRONTMATTER_START] = DefaultLanguageHighlighterColors.KEYWORD
             ATTRIBUTES[ShireTypes.FRONTMATTER_END] = DefaultLanguageHighlighterColors.KEYWORD
 
-            ATTRIBUTES[ShireTypes.FRONTMATTER_KEY] = DefaultLanguageHighlighterColors.CONSTANT
+            ATTRIBUTES[ShireTypes.FRONT_MATTER_ID] = DefaultLanguageHighlighterColors.CONSTANT
 
             // func name
             ATTRIBUTES[ShireTypes.IDENTIFIER] = DefaultLanguageHighlighterColors.IDENTIFIER

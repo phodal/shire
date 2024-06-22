@@ -23,7 +23,7 @@ class ShireCompletionContributor : CompletionContributor() {
         extend(CompletionType.BASIC, PlatformPatterns.psiElement(ShireTypes.COMMAND_ID), BuiltinCommandCompletion())
         extend(CompletionType.BASIC, PlatformPatterns.psiElement(ShireTypes.AGENT_ID), CustomAgentCompletion())
 
-        extend(CompletionType.BASIC, PlatformPatterns.psiElement(ShireTypes.FRONTMATTER_KEY), HobbitHoleKeyCompletion())
+        extend(CompletionType.BASIC, PlatformPatterns.psiElement(ShireTypes.FRONT_MATTER_ID), HobbitHoleKeyCompletion())
         extend(CompletionType.BASIC, hobbitHolePattern(), HobbitHoleCompletion())
         extend(CompletionType.BASIC, whenConditionPattern(), WhenConditionCompletionProvider())
         extend(CompletionType.BASIC, whenConditionFuncPattern(), WhenConditionFunctionCompletionProvider())
@@ -80,7 +80,7 @@ class ShireCompletionContributor : CompletionContributor() {
             .inside(psiElement<ShireFrontMatterEntry>())
             .afterLeafSkipping(
                 PlatformPatterns.psiElement(ShireTypes.COLON),
-                PlatformPatterns.psiElement().withElementType(ShireTypes.FRONTMATTER_KEY)
+                PlatformPatterns.psiElement().withElementType(ShireTypes.FRONT_MATTER_ID)
             )
     }
 
