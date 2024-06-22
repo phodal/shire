@@ -157,7 +157,7 @@ from_clause ::= FROM table_or_subquery ( join_operator table_or_subquery join_co
 
 result_columns ::= result_column ( ',' result_column )* {
   implements="com.phodal.shirelang.saql.psi.SaqlTableElement"
-//  methods=[getSqlTable]
+  methods=[getSqlTable]
 }
 
 select_core_values ::= VALUES '(' expression ( ',' expression )* ')' ( ',' '(' expression ( ',' expression )* ')' )*
@@ -166,12 +166,12 @@ table_or_subquery ::= from_table | select_subquery | '(' table_or_subquery ')'
 
 from_table ::= ( database_name '.' )? defined_table_name ( ( AS )? table_alias_name )? ( INDEXED BY index_name | NOT INDEXED )? {
   implements="com.phodal.shirelang.saql.psi.SaqlTableElement"
-//  methods=[getSqlTable]
+  methods=[getSqlTable]
 }
 
 select_subquery ::= '(' &(SELECT|VALUES|WITH) subquery_greedy ')' ( ( AS )? table_alias_name )? {
   implements="com.phodal.shirelang.saql.psi.SaqlTableElement"
-//  methods=[getSqlTable]
+  methods=[getSqlTable]
   pin=2
 }
 
