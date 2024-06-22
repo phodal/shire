@@ -10,14 +10,14 @@ context of the current file and to define the actions that can be performed on t
 
 ## Possible Design
 
-ChatGPT sample:
+Design
 
 ```shire
 ---
 variables
   "var1": query {
      // 变量声明部分
-     from  // datasource, like
+     from  // datasource, like, dir, file symbol
      // 条件部分 
      where //  AST expand, and functions support for  regex, and methods: similar search, embedding search, tf-idf, and other advanced search
      // 结果部分
@@ -26,42 +26,19 @@ variables
 ---
 ```
 
-## Example Query Expression
+For example:
 
-Example AST query expression which will support use our AST node and S-Expression to query the AST tree.
-
-A ChatGPT generate for example:
-
-```kotlin
-val query = """
-    (MethodDeclaration
-        (Modifier public)
-        (Type void)
-        (Identifier main)
-        (ParameterList
-            (Parameter
-                (Type String)
-                (Identifier args)
-            )
-        )
-        (Block
-            (Statement
-                (ExpressionStatement
-                    (MethodCall
-                        (Identifier println)
-                        (Arguments
-                            (Expression
-                                (Literal "Hello, World!")
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-""".trimIndent()
+```shire
+---
+variables
+  "var1": query {
+     from dir("src/main/kotlin") files
+     where similar("fun main") and not similar("fun test")
+     // 结果部分
+     select file, "This file contains main function"
+  }
+---
 ```
-
 
 ## Reference
 
@@ -156,3 +133,38 @@ JSON Path Query Language Reference: https://goessner.net/articles/JsonPath/
 $.store.book[*].author
 ```
 
+## Example Query Expression
+
+Example AST query expression which will support use our AST node and S-Expression to query the AST tree.
+
+A ChatGPT generate for example:
+
+```kotlin
+val query = """
+    (MethodDeclaration
+        (Modifier public)
+        (Type void)
+        (Identifier main)
+        (ParameterList
+            (Parameter
+                (Type String)
+                (Identifier args)
+            )
+        )
+        (Block
+            (Statement
+                (ExpressionStatement
+                    (MethodCall
+                        (Identifier println)
+                        (Arguments
+                            (Expression
+                                (Literal "Hello, World!")
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    )
+""".trimIndent()
+```
