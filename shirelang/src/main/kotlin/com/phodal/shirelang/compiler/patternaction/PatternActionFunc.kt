@@ -1,5 +1,8 @@
 package com.phodal.shirelang.compiler.patternaction
 
+import com.phodal.shirelang.compiler.hobbit.ast.Statement
+import com.phodal.shirelang.compiler.hobbit.ast.VariableElement
+
 /**
  * The `PatternActionFunc` is a sealed class in Kotlin that represents a variety of pattern action functions.
  * Each subclass represents a different function, and each has a unique set of properties relevant to its function.
@@ -89,4 +92,19 @@ sealed class PatternActionFunc(open val funcName: String) {
      * Paths can be absolute or relative to the current working directory.
      */
     class Cat(vararg val paths: String) : PatternActionFunc("cat")
+
+    /**
+     * Select subclass for selecting one or more elements.
+     */
+    class From(val variable: List<VariableElement>) : PatternActionFunc("select")
+
+    /**
+     * Where subclass for filtering elements.
+     */
+    class Where(val statement: Statement) : PatternActionFunc("where")
+
+    /**
+     * OrderBy subclass for ordering elements.
+     */
+    class Select(val variable: List<Statement>) : PatternActionFunc("orderBy")
 }

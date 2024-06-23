@@ -17,9 +17,9 @@ object ShireAstQLParser {
         )
     }
 
-    private fun parseFrom(fromClause: ShireFromClause): List<VariableStatement> {
+    private fun parseFrom(fromClause: ShireFromClause): List<VariableElement> {
         return fromClause.psiElementDecl.variableDeclList.map {
-            VariableStatement(it.psiType.identifier.text, it.identifier.text)
+            VariableElement(it.psiType.identifier.text, it.identifier.text)
         }
     }
 

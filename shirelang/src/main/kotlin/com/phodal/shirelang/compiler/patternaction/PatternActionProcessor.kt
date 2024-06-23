@@ -1,5 +1,6 @@
 package com.phodal.shirelang.compiler.patternaction
 
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
@@ -139,6 +140,18 @@ class PatternActionProcessor(val myProject: Project, val editor: Editor, val hol
 
                 is PatternActionFunc.Xargs -> {
                     action.variables
+                }
+
+                is PatternActionFunc.From -> {
+                    logger<PatternActionProcessor>().info("Unsupported function: ${action.funcName}")
+                }
+
+                is PatternActionFunc.Where -> {
+                    logger<PatternActionProcessor>().info("Unsupported function: ${action.funcName}")
+                }
+
+                is PatternActionFunc.Select -> {
+                    logger<PatternActionProcessor>().info("Unsupported function: ${action.funcName}")
                 }
             }
         }
