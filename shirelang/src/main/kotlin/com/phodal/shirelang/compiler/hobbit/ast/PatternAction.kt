@@ -32,6 +32,12 @@ data class PatternAction(
                     PatternAction(action.pattern, action.processors)
                 }
 
+                // todo: add abstract syntax tree for query statement
+                is FrontMatterType.QueryStatement -> {
+                    val action = value.value as? ShirePsiQueryStatement ?: return null
+                    PatternAction("", listOf(PatternActionFunc.Grep(action.toString())))
+                }
+
                 else -> {
                     logger<PatternAction>().error("Unknown pattern processor type: $value")
                     null

@@ -186,7 +186,26 @@ sealed class FrontMatterType(val value: Any) {
         }
     }
 
-    // ShirePsiQueryStatement
+    /**
+     * The [QueryStatement] class is a subclass of [FrontMatterType] that represents a query statement.
+     * for example:
+     * ```shire
+     * ---
+     * variables:
+     *   "var1": {
+     *       from {
+     *           PsiClass clazz
+     *       }
+     *       where {
+     *         clazz.extends("org.springframework.web.bind.annotation.RestController") and clazz.getAnAnnotation() == "org.springframework.web.bind.annotation.RequestMapping"
+     *       }
+     *       select {
+     *         clazz.id, clazz.name, "code"
+     *       }
+     *   }
+     * ---
+     * ```
+     */
     class QueryStatement(private val statement: ShirePsiQueryStatement) : FrontMatterType("") {
         override fun display(): String {
             return statement.toString()

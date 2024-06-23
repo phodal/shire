@@ -181,7 +181,7 @@ queryStatement ::= blockStart from_clause where_clause select_clause blockEnd
 
 from_clause ::= FROM blockStart psi_element_decl blockEnd
 
-psi_element_decl ::= psi_type variable_decl ("," psi_type variable_decl)* (NEWLINE)*
+psi_element_decl ::= variable_decl ("," variable_decl)* (NEWLINE)*
 
 where_clause ::= WHERE blockStart expr blockEnd
 
@@ -190,5 +190,5 @@ select_clause ::= SELECT blockStart expr (',' expr)* blockEnd
 private blockStart ::= NEWLINE* "{" NEWLINE*
 private blockEnd ::= NEWLINE* "}" NEWLINE*
 
+variable_decl ::= psi_type IDENTIFIER
 psi_type ::= IDENTIFIER
-variable_decl ::= IDENTIFIER

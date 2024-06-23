@@ -1,11 +1,9 @@
 package com.phodal.shirelang.compiler.hobbit.ast
 
-import com.intellij.psi.PsiElement
-
 class ShirePsiQueryStatement(
     val from: List<VariableStatement>,
-    val where: LogicalExpression,
-    val select: List<LogicalExpression>,
+    val where: Statement,
+    val select: List<Statement>,
 ) {
     override fun toString(): String {
         return """
@@ -21,7 +19,8 @@ class ShirePsiQueryStatement(
 }
 
 class VariableStatement(
-    val variableType: Class<out PsiElement>,
+//    private val variableType: Class<out PsiElement>,
+    val variableType: String,
     val value: String,
 ) {
     override fun toString(): String {

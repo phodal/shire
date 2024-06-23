@@ -61,13 +61,13 @@ object FrontmatterParser {
 
                     ShireTypes.LOGICAL_AND_EXPR -> {
                         lastKey = HobbitHole.WHEN
-                        frontMatter[lastKey] = parseLogicAndExpr(child as ShireLogicalAndExpr)
+                        frontMatter[lastKey] = parseLogicAndExprToType(child as ShireLogicalAndExpr)
                             ?: FrontMatterType.STRING("Logical expression parsing failed: ${child.text}")
                     }
 
                     ShireTypes.LOGICAL_OR_EXPR -> {
                         lastKey = HobbitHole.WHEN
-                        frontMatter[lastKey] = parseLogicOrExpr(child as ShireLogicalOrExpr)
+                        frontMatter[lastKey] = parseLogicOrExprToType(child as ShireLogicalOrExpr)
                             ?: FrontMatterType.STRING("Logical expression parsing failed: ${child.text}")
                     }
 
@@ -77,7 +77,7 @@ object FrontmatterParser {
                     }
 
                     ShireTypes.QUERY_STATEMENT -> {
-                        frontMatter[lastKey] = PsiQLParser.parse(child as ShireQueryStatement)
+                        frontMatter[lastKey] = ShireAstQLParser.parse(child as ShireQueryStatement)
                     }
 
                     else -> {
@@ -90,33 +90,56 @@ object FrontmatterParser {
         return frontMatter
     }
 
-    private fun parseLogicAndExpr(child: ShireLogicalAndExpr): FrontMatterType? {
+    private fun parseLogicAndExprToType(child: ShireLogicalAndExpr): FrontMatterType? {
+        val logicalExpression = parseLogicAndExpr(child) ?: return null
+        return FrontMatterType.Expression(logicalExpression)
+    }
+
+    private fun parseLogicAndExpr(child: ShireLogicalAndExpr): LogicalExpression? {
         val left = child.exprList.firstOrNull() ?: return null
         val right = child.exprList.lastOrNull() ?: return null
 
-        return FrontMatterType.Expression(
-            LogicalExpression(
-                left = parseExpr(left),
-                operator = OperatorType.And,
-                right = parseExpr(right)
-            )
+        val logicalExpression = LogicalExpression(
+            left = parseExpr(left),
+            operator = OperatorType.And,
+            right = parseExpr(right)
         )
+        return logicalExpression
     }
 
-    private fun parseLogicOrExpr(child: ShireLogicalOrExpr): FrontMatterType? {
+    private fun parseLogicOrExprToType(child: ShireLogicalOrExpr): FrontMatterType? {
+        val logicOrExpr = parseLogicOrExpr(child) ?: return null
+        return FrontMatterType.Expression(logicOrExpr)
+    }
+
+    private fun parseLogicOrExpr(child: ShireLogicalOrExpr): LogicalExpression? {
         val left = child.exprList.firstOrNull() ?: return null
         val right = child.exprList.lastOrNull() ?: return null
 
-        return FrontMatterType.Expression(
-            LogicalExpression(
-                left = parseExpr(left),
-                operator = OperatorType.Or,
-                right = parseExpr(right)
-            )
+        val logicOrExpr = LogicalExpression(
+            left = parseExpr(left),
+            operator = OperatorType.Or,
+            right = parseExpr(right)
         )
+        return logicOrExpr
     }
 
-    private fun parseExpr(expr: PsiElement): Statement = when (expr.elementType) {
+    /**
+     * This function is used to parse an expression of type PsiElement into a Statement. The type of Statement returned depends on the type of the expression.
+     *
+     * @param expr The PsiElement expression to be parsed. This expression can be of type CALL_EXPR, EQ_COMPARISON_EXPR, INEQ_COMPARISON_EXPR, or any other type.
+     *
+     * If the expression is of type CALL_EXPR, the function finds the first child of type ShireExpr and builds a method call with the found ShireExpr and the list of expressions in the ShireCallExpr.
+     *
+     * If the expression is of type EQ_COMPARISON_EXPR, the function parses the first and last child of the expression into a Comparison statement with an equal operator.
+     *
+     * If the expression is of type INEQ_COMPARISON_EXPR, the function parses the first and last child of the expression into a Comparison statement with an operator determined by the ineqComparisonOp text of the ShireIneqComparisonExpr.
+     *
+     * If the expression is of any other type, the function logs a warning and returns a Comparison statement with an equal operator and empty string operands.
+     *
+     * @return A Statement parsed from the given expression. The type of Statement depends on the type of the expression.
+     */
+    fun parseExpr(expr: PsiElement): Statement = when (expr.elementType) {
         ShireTypes.CALL_EXPR -> {
             val refExpr = PsiTreeUtil
                 .findChildrenOfType(expr, ShireExpr::class.java)
@@ -142,6 +165,16 @@ object FrontmatterParser {
             val operatorType = OperatorType.fromString(exp.ineqComparisonOp.text)
 
             Comparison(variable, Operator(operatorType), value)
+        }
+
+        ShireTypes.LOGICAL_AND_EXPR -> {
+            parseLogicAndExpr(expr as ShireLogicalAndExpr)
+                ?: Comparison(FrontMatterType.STRING(""), Operator(OperatorType.Equal), FrontMatterType.STRING(""))
+        }
+
+        ShireTypes.LOGICAL_OR_EXPR -> {
+            parseLogicOrExpr(expr as ShireLogicalOrExpr)
+                ?: Comparison(FrontMatterType.STRING(""), Operator(OperatorType.Equal), FrontMatterType.STRING(""))
         }
 
         else -> {
