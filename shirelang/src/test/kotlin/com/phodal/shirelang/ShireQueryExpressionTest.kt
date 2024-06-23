@@ -8,15 +8,9 @@ import com.phodal.shirelang.compiler.patternaction.PatternActionProcessor
 import com.phodal.shirelang.psi.ShireFile
 
 class ShireQueryExpressionTest : BasePlatformTestCase() {
-    val javaHelloWorld = """
-        public class HelloWorld {
-            public static void main(String[] args) {
-                System.out.println("Hello, World");
-            }
-        }
-    """.trimIndent()
-
     fun testShouldGetFromExpression() {
+        val sampleText = """HelloWorld.txt""".trimIndent()
+
         val code = """
             ---
             variables:
@@ -25,11 +19,11 @@ class ShireQueryExpressionTest : BasePlatformTestCase() {
                     File clazz // the class
                 }
                 where {
-                    clazz.name == "HelloWorld.txt"
+                    clazz.text == "HelloWorld.txt"
                 }
             
                 select {
-                    clazz.id, clazz.name, "code"
+                    clazz.toString(), 
                 }
               }
             ---
@@ -37,7 +31,7 @@ class ShireQueryExpressionTest : BasePlatformTestCase() {
             ${'$'}allController
         """.trimIndent()
 
-        myFixture.addFileToProject("HelloWorld.txt", javaHelloWorld)
+        myFixture.addFileToProject("HelloWorld.txt", sampleText)
         val file = myFixture.addFileToProject("sample.shire", code)
 
         myFixture.openFileInEditor(file.virtualFile)
@@ -51,14 +45,13 @@ class ShireQueryExpressionTest : BasePlatformTestCase() {
         val selectDisplay = (patternActionFuncs[2] as PatternActionFunc.Select).variable.map { it.display() }
 
 
-        assertEquals(whereDisplay, "clazz.name == \"HelloWorld.txt\"")
+        assertEquals(whereDisplay, "clazz.text == \"HelloWorld.txt\"")
         assertEquals(selectDisplay, listOf("clazz.id", "clazz.name", "\"code\""))
 
         val results = hole.variables.mapValues {
             PatternActionProcessor(project, editor, hole).execute(it.value)
         }
 
-        println(results)
-//        assertEquals(results["allController"], listOf("HelloWorld", "code"))
+        assertEquals(results["allController"], listOf("HelloWorld", "code"))
     }
 }
