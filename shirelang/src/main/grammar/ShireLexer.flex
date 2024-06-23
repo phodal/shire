@@ -53,8 +53,11 @@ DATE                     = [0-9]{4}-[0-9]{2}-[0-9]{2}
 STRING                   = [a-zA-Z0-9][_\-a-zA-Z0-9]*
 INDENT                   = "  "
 
-COMMENT                  = "//"[^\r\n]*
-BLOCK_COMMENT            = "/"[*][^*]*[*]+([^/*][^*]*[*]+)*"/"
+EOL=\R
+//WHITE_SPACE=\s+
+WHITE_SPACE              = [ \t]+
+COMMENT="//"[^\r\n]*
+BLOCK_COMMENT=[/][*][^*]*[*]+([^/*][^*]*[*]+)*[/]
 
 EscapedChar              = "\\" [^\n]
 RegexWord                = [^\r\n\\\"' \t$`()] | {EscapedChar}
@@ -73,7 +76,6 @@ NUMBER                   = [0-9]+
 BOOLEAN                  = true|false|TRUE|FALSE|"true"|"false"
 
 TEXT_SEGMENT             = [^$/@#\n]+
-WHITE_SPACE              = [ \t]+
 DOUBLE_QUOTED_STRING     = \"([^\\\"\r\n]|\\[^\r\n])*\"?
 SINGLE_QUOTED_STRING     = '([^\\'\r\n]|\\[^\r\n])*'?
 QUOTE_STRING             = {DOUBLE_QUOTED_STRING}|{SINGLE_QUOTED_STRING}

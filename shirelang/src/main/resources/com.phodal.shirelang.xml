@@ -35,6 +35,7 @@
 
         <lang.foldingBuilder language="Shire"
                              implementationClass="com.phodal.shirelang.folding.ShireFoldingBuilder"/>
+        <lang.commenter language="Shire" implementationClass="com.phodal.shirelang.ShireCommenter"/>
 
         <languageInjector implementation="com.phodal.shirelang.ShireLanguageInjector"/>
 

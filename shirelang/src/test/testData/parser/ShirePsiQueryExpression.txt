@@ -34,6 +34,8 @@ ShireFile
                       PsiElement(ShireTokenType.WHITE_SPACE)(' ')
                       ShireVariableDeclImpl(VARIABLE_DECL)
                         PsiElement(ShireTokenType.IDENTIFIER)('clazz')
+                      PsiElement(ShireTokenType.WHITE_SPACE)(' ')
+                      PsiComment(ShireTokenType.COMMENT)('// the class')
                       PsiElement(ShireTokenType.NEWLINE)('\n')
                       PsiElement(ShireTokenType.WHITE_SPACE)('    ')
                     PsiElement(ShireTokenType.})('}')
