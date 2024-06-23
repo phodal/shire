@@ -76,6 +76,10 @@ object FrontmatterParser {
                         frontMatter[lastKey] = FrontMatterType.Expression(parseExpr(child))
                     }
 
+                    ShireTypes.QUERY_STATEMENT -> {
+                        frontMatter[lastKey] = PsiQLParser.parse(child as ShireQueryStatement)
+                    }
+
                     else -> {
                         logger.warn("processFrontmatter, Unknown frontmatter type: ${child.elementType}")
                     }

@@ -271,8 +271,5 @@ class ShireCompileTest : BasePlatformTestCase() {
         assertEquals("  \"var2\": /.*ple.shire/ { cat | grep(\"fileName\") | sort }\n" +
                 "Summary webpage: \$fileName\n" +
                 "when: \$fileName.matches(\"/.*.java/\")", results["var2"].toString())
-
-//        val template = ShireTemplateCompiler(project, hole, compile.symbolTable, compile.shireOutput).compile()
-//        assertEquals("Generate Summary", template)
     }
 }
