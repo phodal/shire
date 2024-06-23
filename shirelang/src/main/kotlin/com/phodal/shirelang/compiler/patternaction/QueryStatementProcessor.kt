@@ -65,22 +65,53 @@ class QueryStatementProcessor(val myProject: Project, editor: Editor, hole: Hobb
                                 }
                             }
 
-                            OperatorType.And -> TODO()
-                            OperatorType.GreaterEqual -> TODO()
-                            OperatorType.GreaterThan -> TODO()
-                            OperatorType.LessEqual -> TODO()
-                            OperatorType.LessThan -> TODO()
-                            OperatorType.Not -> TODO()
-                            OperatorType.NotEqual -> TODO()
-                            OperatorType.Or -> TODO()
+                            OperatorType.And -> {
+                                if (left != null && left == right) {
+                                    result.add(element)
+                                }
+                            }
+
+                            OperatorType.GreaterEqual -> {
+                                if (left as Comparable<Any> >= right as Comparable<Any>) {
+                                    result.add(element)
+                                }
+                            }
+
+                            OperatorType.GreaterThan -> {
+                                if (left as Comparable<Any> > right as Comparable<Any>) {
+                                    result.add(element)
+                                }
+                            }
+
+                            OperatorType.LessEqual -> {
+                                if (left as Comparable<Any> <= right as Comparable<Any>) {
+                                    result.add(element)
+                                }
+                            }
+
+                            OperatorType.LessThan -> {
+                                if (left as Comparable<Any> < right as Comparable<Any>) {
+                                    result.add(element)
+                                }
+                            }
+
+                            OperatorType.NotEqual -> {
+                                if (left != null && left != right) {
+                                    result.add(element)
+                                }
+                            }
+
+                            OperatorType.Or -> {
+                                if (left == true || right == true) {
+                                    result.add(element)
+                                }
+                            }
+
+                            else -> {
+                                logger<QueryStatementProcessor>().warn("unknown operator: $operator")
+                            }
                         }
                     }
-
-                    is MethodCall -> TODO()
-                    is NotExpression -> TODO()
-                    is StringComparison -> TODO()
-                    is StringOperatorStatement -> TODO()
-                    is Value -> TODO()
 
                     else -> {
                         logger<QueryStatementProcessor>().warn("unknown statement: $whereStmt")
@@ -99,8 +130,7 @@ class QueryStatementProcessor(val myProject: Project, editor: Editor, hole: Hobb
             }
 
             else -> {
-                logger<QueryStatementProcessor>().warn("unknown expression: ${type.value}")
-                return null
+                throw IllegalArgumentException("unknown type: $type")
             }
         }
     }
@@ -155,17 +185,22 @@ class QueryStatementProcessor(val myProject: Project, editor: Editor, hole: Hobb
 
     private fun evaluate(type: FrontMatterType, element: PsiElement): Any? {
         return when (type) {
-            is FrontMatterType.ARRAY -> TODO()
-            is FrontMatterType.BOOLEAN -> TODO()
-            is FrontMatterType.DATE -> TODO()
+            is FrontMatterType.ARRAY -> {
+                (type.value as List<FrontMatterType>).map {
+                    evaluate(it, element)
+                }
+            }
+
             is FrontMatterType.EXPRESSION -> {
                 evalExpression(type, element)
             }
 
-            is FrontMatterType.IDENTIFIER -> TODO()
-            is FrontMatterType.NUMBER -> TODO()
-            is FrontMatterType.OBJECT -> TODO()
-            is FrontMatterType.STRING -> {
+            is FrontMatterType.BOOLEAN,
+            is FrontMatterType.DATE,
+            is FrontMatterType.IDENTIFIER,
+            is FrontMatterType.NUMBER,
+            is FrontMatterType.STRING,
+            -> {
                 type.value
             }
 
