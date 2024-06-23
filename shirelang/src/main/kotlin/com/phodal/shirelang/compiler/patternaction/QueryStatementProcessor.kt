@@ -46,78 +46,54 @@ class QueryStatementProcessor(val myProject: Project, editor: Editor, hole: Hobb
         whereStmt: Statement,
         variables: Map<String, List<PsiElement>>,
     ): List<Any> {
-        return when (whereStmt) {
-            is Comparison -> {
-                val operator = whereStmt.operator
-                // compare value
-                val left = evaluate(whereStmt.left, variables)
-                val right = evaluate(whereStmt.right, variables)
+        return variables.flatMap { (variableName, elements) ->
+            when (whereStmt) {
+                is Comparison -> {
+                    val operator = whereStmt.operator
+                    val left = evaluate(whereStmt.left, variableName, elements)
+                    val right = evaluate(whereStmt.right, variableName, elements)
 
-                when(operator.type) {
-                    OperatorType.And,
-                    OperatorType.Equal -> {
-                        if (left == right) {
-                            return listOf(left)
+                    when(operator.type) {
+                        OperatorType.Equal -> {
+                            if (left == right) {
+                                return listOf(left)
+                            }
                         }
+                        OperatorType.And -> TODO()
+                        OperatorType.GreaterEqual -> TODO()
+                        OperatorType.GreaterThan -> TODO()
+                        OperatorType.LessEqual -> TODO()
+                        OperatorType.LessThan -> TODO()
+                        OperatorType.Not -> TODO()
+                        OperatorType.NotEqual -> TODO()
+                        OperatorType.Or -> TODO()
                     }
-                    OperatorType.GreaterEqual -> TODO()
-                    OperatorType.GreaterThan -> TODO()
-                    OperatorType.LessEqual -> TODO()
-                    OperatorType.LessThan -> TODO()
-                    OperatorType.Not -> {
-                        if (left != right) {
-                            return listOf(left)
-                        }
-                    }
-                    OperatorType.NotEqual -> {
-                        if (left != right) {
-                            return listOf(left)
-                        }
-                    }
-                    OperatorType.Or -> {
-                        return listOf(left)
-                    }
+
+                    emptyList()
                 }
 
-                emptyList()
-            }
-
-            is LogicalExpression -> {
-                emptyList()
-            }
-
-            is MethodCall -> {
-                val value = whereStmt.objectName.display()
-                val variables = variables[value]  ?: return emptyList()
-                variables.map {
-                    // use reflection to call method
+                is MethodCall -> {
+                    val value = whereStmt.objectName.display()
+                    val variables = variables[value]  ?: return emptyList()
+                    variables.map {
+                        // use reflection to call method
 //                    it.
+                    }
                 }
-            }
 
-            is NotExpression -> {
-                emptyList()
-            }
+                is NotExpression -> TODO()
+                is StringComparison -> TODO()
+                is StringOperatorStatement -> TODO()
+                is Value -> TODO()
 
-            is StringComparison -> {
-                emptyList()
-            }
-
-            is StringOperatorStatement -> {
-                emptyList()
-            }
-
-            is Value -> {
-                emptyList()
-            }
-
-            else -> {
-                return emptyList()
+                else -> {
+                    return emptyList()
+                }
             }
         }
     }
 
-    private fun evaluate(left: FrontMatterType, variables: Map<String, List<PsiElement>>): Any {
+    private fun evaluate(left: FrontMatterType, variableName: String, elements: List<PsiElement>): Any {
         return when (left) {
             is FrontMatterType.ARRAY -> TODO()
             is FrontMatterType.BOOLEAN -> TODO()
@@ -125,9 +101,7 @@ class QueryStatementProcessor(val myProject: Project, editor: Editor, hole: Hobb
             is FrontMatterType.DATE -> TODO()
             is FrontMatterType.ERROR -> TODO()
             is FrontMatterType.EXPRESSION -> {
-                val value = left.display()
-                val variables = variables[value]  ?: return emptyList<PsiElement>()
-                return variables
+                // TODO
             }
             is FrontMatterType.IDENTIFIER -> TODO()
             is FrontMatterType.NUMBER -> TODO()
