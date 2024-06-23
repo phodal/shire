@@ -23,7 +23,7 @@ internal class ShireParserDefinition : ParserDefinition {
     override fun createLexer(project: Project?): Lexer = ShireLexerAdapter()
 
     @NotNull
-    override fun getCommentTokens(): TokenSet = TokenSet.EMPTY
+    override fun getCommentTokens(): TokenSet = SHIRE_COMMENTS
 
     @NotNull
     override fun getStringLiteralElements(): TokenSet = TokenSet.EMPTY
