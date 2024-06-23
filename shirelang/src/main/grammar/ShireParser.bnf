@@ -182,13 +182,13 @@ velocityExpr ::=
 
 queryStatement ::= OPEN_BRACE (NEWLINE | WHITE_SPACE)* from_clause where_clause select_clause (NEWLINE | WHITE_SPACE)* CLOSE_BRACE
 
-from_clause ::= FROM WHITE_SPACE* OPEN_BRACE (NEWLINE | WHITE_SPACE)* psi_element_decl (NEWLINE | WHITE_SPACE)? CLOSE_BRACE (NEWLINE | WHITE_SPACE)*
+from_clause ::= FROM OPEN_BRACE (NEWLINE | WHITE_SPACE)* psi_element_decl (NEWLINE | WHITE_SPACE)? CLOSE_BRACE (NEWLINE | WHITE_SPACE)*
 
-psi_element_decl ::= WHITE_SPACE? psi_type WHITE_SPACE+ variable_decl ("," WHITE_SPACE?  psi_type WHITE_SPACE+ variable_decl)* (NEWLINE | WHITE_SPACE)*
+psi_element_decl ::= psi_type variable_decl ("," psi_type variable_decl)* (NEWLINE)*
 
-where_clause ::= WHERE WHITE_SPACE? OPEN_BRACE (NEWLINE | WHITE_SPACE)* expr (NEWLINE | WHITE_SPACE)* CLOSE_BRACE (NEWLINE | WHITE_SPACE)*
+where_clause ::= WHERE OPEN_BRACE (NEWLINE)* expr (NEWLINE)* CLOSE_BRACE (NEWLINE)*
 
-select_clause ::= SELECT WHITE_SPACE? OPEN_BRACE (NEWLINE | WHITE_SPACE)* expr ( WHITE_SPACE? ',' WHITE_SPACE? expr)* (NEWLINE | WHITE_SPACE)* CLOSE_BRACE (NEWLINE | WHITE_SPACE)*
+select_clause ::= SELECT OPEN_BRACE (NEWLINE)* expr (',' expr)* (NEWLINE)* CLOSE_BRACE (NEWLINE)*
 
 psi_type ::= IDENTIFIER
 variable_decl ::= IDENTIFIER

@@ -68,10 +68,6 @@ LPAREN                   = \(
 RPAREN                   = \)
 PIPE                     = \|
 
-//VARIABLE_ID              = [a-zA-Z0-9][_\-a-zA-Z0-9]*
-//AGENT_ID                 = [a-zA-Z0-9][_\-a-zA-Z0-9]*
-//COMMAND_ID               = [a-zA-Z0-9][_\-a-zA-Z0-9]*
-//LANGUAGE_ID              = [a-zA-Z][_\-a-zA-Z0-9 .]*
 NUMBER                   = [0-9]+
 BOOLEAN                  = true|false|TRUE|FALSE|"true"|"false"
 
@@ -266,7 +262,7 @@ AND                      =and
   ","                    { return COMMA; }
   "("                    { return LPAREN; }
   ")"                    { return RPAREN; }
-  {WHITE_SPACE}          { return WHITE_SPACE; }
+  {WHITE_SPACE}          { return TokenType.WHITE_SPACE; }
   {NEWLINE}              { return NEWLINE; }
 
   // keywords
@@ -299,7 +295,7 @@ AND                      =and
   {COMMENT}               { return COMMENT; }
   {BLOCK_COMMENT}         { return BLOCK_COMMENT; }
 
-  {WHITE_SPACE}           { return WHITE_SPACE; }
+  {WHITE_SPACE}           { return TokenType.WHITE_SPACE; }
   {NEWLINE}               { return NEWLINE; }
 
   {COMMA}                 { return COMMA; }
@@ -382,7 +378,7 @@ AND                      =and
   {NUMBER}             { return NUMBER; }
   {IDENTIFIER}         { return IDENTIFIER; }
   {QUOTE_STRING}       { return QUOTE_STRING; }
-  {WHITE_SPACE}        { return WHITE_SPACE; }
+  {WHITE_SPACE}        { return TokenType.WHITE_SPACE; }
   [^]                  { yypushback(yylength()); if (isInsideShireTemplate) { yybegin(CODE_BLOCK); }  else if (isInsideQueryExpression) { yybegin(QUERY_STATEMENT_BLOCK);} else { yybegin(YYINITIAL); } }
 }
 
