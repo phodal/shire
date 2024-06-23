@@ -18,8 +18,9 @@ class QueryStatementProcessor(val myProject: Project, editor: Editor, hole: Hobb
 
         val variables: Map<String, List<PsiElement>> = buildVariables(fromStmt)
         val handledElements = processCondition(whereStmt.statement, variables)
+        val selectElements = processSelect(selectStmt, handledElements)
 
-        return processSelect(selectStmt, handledElements)
+        return selectElements.joinToString("\n")
     }
 
     private fun buildVariables(fromStmt: PatternActionFunc.From): Map<String, List<PsiElement>> {
@@ -174,13 +175,13 @@ class QueryStatementProcessor(val myProject: Project, editor: Editor, hole: Hobb
         }
     }
 
-    private fun processSelect(selectStmt: PatternActionFunc.Select, handledElements: List<PsiElement>): String {
-        return selectStmt.statements.map {
+    private fun processSelect(selectStmt: PatternActionFunc.Select, handledElements: List<PsiElement>): List<String> {
+        return selectStmt.statements.flatMap {
             processSelectStatement(it, handledElements)
-        }.joinToString("\n")
+        }
     }
 
-    private fun processSelectStatement(statement: Statement, handledElements: List<PsiElement>): String {
+    private fun processSelectStatement(statement: Statement, handledElements: List<PsiElement>): List<String> {
         val result = mutableListOf<String>()
         handledElements.forEach { element ->
             when (statement) {
@@ -196,6 +197,6 @@ class QueryStatementProcessor(val myProject: Project, editor: Editor, hole: Hobb
             }
         }
 
-        return result.joinToString("\n")
+        return result
     }
 }
