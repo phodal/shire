@@ -67,7 +67,7 @@ open class HobbitHole(
      *
      * Which is used for: [IntentionAction.isAvailable], [DumbAwareAction.update] to check is show menu.
      */
-    val when_: FrontMatterType.Expression? = null,
+    val when_: FrontMatterType.EXPRESSION? = null,
 
     /**
      * The list of rule files to apply for the action.
@@ -83,7 +83,7 @@ open class HobbitHole(
      * The list of actions that this action depends on.
      * We use it for Directed Acyclic Graph (DAG) to represent dependencies between actions.
      */
-    val finalize: FrontMatterType.Expression? = null,
+    val finalize: FrontMatterType.EXPRESSION? = null,
 ) : Smials {
     fun pickupElement() {
         this.selectionStrategy.select()
@@ -171,7 +171,7 @@ open class HobbitHole(
                 }
             }
 
-            val whenCondition = frontMatterMap[WHEN] as? FrontMatterType.Expression
+            val whenCondition = frontMatterMap[WHEN] as? FrontMatterType.EXPRESSION
 
             return HobbitHole(
                 name,

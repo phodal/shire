@@ -252,7 +252,7 @@ data class MethodCall(
     override fun evaluate(variables: Map<String, String>): Any {
         val value = when (objectName) {
             is FrontMatterType.STRING -> variables[objectName.value]
-            is FrontMatterType.Variable -> variables[objectName.value]
+            is FrontMatterType.VARIABLE -> variables[objectName.value]
             else -> null
         } ?: throw IllegalArgumentException("Variable not found: ${objectName.value}")
 

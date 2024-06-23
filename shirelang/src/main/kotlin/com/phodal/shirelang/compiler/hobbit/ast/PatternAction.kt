@@ -33,7 +33,7 @@ data class PatternAction(
                     PatternAction(action.pattern, action.processors)
                 }
 
-                is FrontMatterType.QueryStatement -> {
+                is FrontMatterType.QUERY_STATEMENT -> {
                     val action = value.value as? ShirePsiQueryStatement ?: return null
                     PatternAction("", action.toPatternActionFunc(), true)
                 }

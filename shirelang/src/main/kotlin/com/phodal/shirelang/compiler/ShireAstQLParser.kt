@@ -14,7 +14,7 @@ object ShireAstQLParser {
             parseSelect(statement.selectClause)
         )
 
-        return FrontMatterType.QueryStatement(value)
+        return FrontMatterType.QUERY_STATEMENT(value)
     }
 
     private fun parseFrom(fromClause: ShireFromClause): List<VariableElement> {

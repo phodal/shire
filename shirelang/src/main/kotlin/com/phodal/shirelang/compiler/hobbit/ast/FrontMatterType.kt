@@ -3,7 +3,7 @@ package com.phodal.shirelang.compiler.hobbit.ast
 
 /**
  * The `FrontMatterType` is a sealed class in Kotlin that represents different types of front matter data.
- * It has several subclasses to represent different types of data: [STRING], [NUMBER], [DATE], [BOOLEAN], [ARRAY], [OBJECT], [PATTERN], [CaseMatch], [Variable], [Expression], [IDENTIFIER].
+ * It has several subclasses to represent different types of data: [STRING], [NUMBER], [DATE], [BOOLEAN], [ARRAY], [OBJECT], [PATTERN], [CASE_MATCH], [VARIABLE], [EXPRESSION], [IDENTIFIER].
  * Each subclass overrides the `display()` function to return a string representation of the data.
  *
  * @property value The value of the front matter data.
@@ -17,9 +17,9 @@ package com.phodal.shirelang.compiler.hobbit.ast
  * @see ARRAY A subclass of `FrontMatterType` that represents a JSON array.
  * @see OBJECT A subclass of `FrontMatterType` that represents a JSON object.
  * @see PATTERN A subclass of `FrontMatterType` that represents a pattern action.
- * @see CaseMatch A subclass of `FrontMatterType` that represents a case match.
- * @see Variable A subclass of `FrontMatterType` that represents a variable.
- * @see Expression A subclass of `FrontMatterType` that represents an expression.
+ * @see CASE_MATCH A subclass of `FrontMatterType` that represents a case match.
+ * @see VARIABLE A subclass of `FrontMatterType` that represents a variable.
+ * @see EXPRESSION A subclass of `FrontMatterType` that represents an expression.
  * @see IDENTIFIER A subclass of `FrontMatterType` that represents an identifier.
  */
 sealed class FrontMatterType(val value: Any) {
@@ -122,7 +122,7 @@ sealed class FrontMatterType(val value: Any) {
      * }
      * ---
      */
-    class CaseMatch(value: Map<String, PATTERN>) : FrontMatterType(value) {
+    class CASE_MATCH(value: Map<String, PATTERN>) : FrontMatterType(value) {
         /**
          * output sample:
          * ```shire
@@ -150,7 +150,7 @@ sealed class FrontMatterType(val value: Any) {
     /**
      * Variable same start with $, other will same to String or IDENTIFIER
      */
-    class Variable(value: String) : FrontMatterType(value) {
+    class VARIABLE(value: String) : FrontMatterType(value) {
         override fun display(): String {
             return "\$$value"
         }
@@ -165,14 +165,14 @@ sealed class FrontMatterType(val value: Any) {
      * ---
      * ```
      */
-    class Expression(value: Statement) : FrontMatterType(value) {
+    class EXPRESSION(value: Statement) : FrontMatterType(value) {
         override fun display(): String {
             return (value as Statement).display()
         }
     }
 
     /**
-     * Identifier for the front matter config expression and template, like [Expression] or [MethodCall]
+     * Identifier for the front matter config expression and template, like [EXPRESSION] or [MethodCall]
      *
      * ```shire
      * ---
@@ -187,7 +187,7 @@ sealed class FrontMatterType(val value: Any) {
     }
 
     /**
-     * The [QueryStatement] class is a subclass of [FrontMatterType] that represents a query statement.
+     * The [QUERY_STATEMENT] class is a subclass of [FrontMatterType] that represents a query statement.
      * for example:
      * ```shire
      * ---
@@ -206,7 +206,7 @@ sealed class FrontMatterType(val value: Any) {
      * ---
      * ```
      */
-    class QueryStatement(value: ShirePsiQueryStatement) : FrontMatterType(value) {
+    class QUERY_STATEMENT(value: ShirePsiQueryStatement) : FrontMatterType(value) {
         override fun display(): String {
             return value.toString()
         }

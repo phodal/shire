@@ -73,7 +73,7 @@ object FrontmatterParser {
 
                     ShireTypes.CALL_EXPR -> {
                         lastKey = HobbitHole.WHEN
-                        frontMatter[lastKey] = FrontMatterType.Expression(parseExpr(child))
+                        frontMatter[lastKey] = FrontMatterType.EXPRESSION(parseExpr(child))
                     }
 
                     ShireTypes.QUERY_STATEMENT -> {
@@ -92,7 +92,7 @@ object FrontmatterParser {
 
     private fun parseLogicAndExprToType(child: ShireLogicalAndExpr): FrontMatterType? {
         val logicalExpression = parseLogicAndExpr(child) ?: return null
-        return FrontMatterType.Expression(logicalExpression)
+        return FrontMatterType.EXPRESSION(logicalExpression)
     }
 
     private fun parseLogicAndExpr(child: ShireLogicalAndExpr): LogicalExpression? {
@@ -109,7 +109,7 @@ object FrontmatterParser {
 
     private fun parseLogicOrExprToType(child: ShireLogicalOrExpr): FrontMatterType? {
         val logicOrExpr = parseLogicOrExpr(child) ?: return null
-        return FrontMatterType.Expression(logicOrExpr)
+        return FrontMatterType.EXPRESSION(logicOrExpr)
     }
 
     private fun parseLogicOrExpr(child: ShireLogicalOrExpr): LogicalExpression? {
@@ -203,7 +203,7 @@ object FrontmatterParser {
             ShireTypes.REF_EXPR -> {
                 val refExpr = expr as ShireRefExpr
                 val methodCall = buildMethodCall(refExpr, null)
-                FrontMatterType.Expression(methodCall)
+                FrontMatterType.EXPRESSION(methodCall)
             }
 
             // callExpr ::= refExpr '(' expressionList? ')'
@@ -214,7 +214,7 @@ object FrontmatterParser {
 
                 val expressionList = (expr as ShireCallExpr).expressionList
                 val methodCall = this.buildMethodCall(refExpr, expressionList?.children)
-                FrontMatterType.Expression(methodCall)
+                FrontMatterType.EXPRESSION(methodCall)
             }
 
             null -> {
@@ -258,7 +258,7 @@ object FrontmatterParser {
 
             ShireTypes.VARIABLE_START -> {
                 val next = ref.lastChild
-                FrontMatterType.Variable(next.text)
+                FrontMatterType.VARIABLE(next.text)
             }
 
             else -> {

@@ -121,10 +121,10 @@ class QueryStatementProcessor(val myProject: Project, editor: Editor, hole: Hobb
         return when (left) {
             is FrontMatterType.ARRAY -> TODO()
             is FrontMatterType.BOOLEAN -> TODO()
-            is FrontMatterType.CaseMatch -> TODO()
+            is FrontMatterType.CASE_MATCH -> TODO()
             is FrontMatterType.DATE -> TODO()
             is FrontMatterType.ERROR -> TODO()
-            is FrontMatterType.Expression -> {
+            is FrontMatterType.EXPRESSION -> {
                 val value = left.display()
                 val variables = variables[value]  ?: return emptyList<PsiElement>()
                 return variables
@@ -133,11 +133,11 @@ class QueryStatementProcessor(val myProject: Project, editor: Editor, hole: Hobb
             is FrontMatterType.NUMBER -> TODO()
             is FrontMatterType.OBJECT -> TODO()
             is FrontMatterType.PATTERN -> TODO()
-            is FrontMatterType.QueryStatement -> TODO()
+            is FrontMatterType.QUERY_STATEMENT -> TODO()
             is FrontMatterType.STRING -> {
                 return left.display()
             }
-            is FrontMatterType.Variable -> TODO()
+            is FrontMatterType.VARIABLE -> TODO()
         }
     }
 

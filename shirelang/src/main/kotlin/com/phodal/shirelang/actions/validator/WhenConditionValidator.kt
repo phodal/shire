@@ -59,7 +59,7 @@ class WhenConditionValidator(
             return WhenConditionValidator(PsiVariables.fromPsiFile(file))
         }
 
-        fun isAvailable(conditions: FrontMatterType.Expression, file: PsiFile): Boolean {
+        fun isAvailable(conditions: FrontMatterType.EXPRESSION, file: PsiFile): Boolean {
             val variables: Map<String, String> = build(file).buildPsiVariable()
             return (conditions.value as Statement).evaluate(variables) == true
         }
