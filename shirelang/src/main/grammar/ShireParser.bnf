@@ -105,9 +105,6 @@ caseCondition ::= DEFAULT | pattern | QUOTE_STRING
 
 pattern ::= PATTERN_EXPR
 
-private blockStart ::= NEWLINE* "{" NEWLINE*
-private blockEnd ::= NEWLINE* "}" NEWLINE*
-
 // todo
 conditionExpr ::= expr
 expr ::=
@@ -180,15 +177,18 @@ velocityExpr ::=
     | '#' 'end'
     | '#' 'endif'
 
-queryStatement ::= OPEN_BRACE (NEWLINE)* from_clause where_clause select_clause (NEWLINE)* CLOSE_BRACE
+queryStatement ::= blockStart from_clause where_clause select_clause blockEnd
 
-from_clause ::= FROM OPEN_BRACE (NEWLINE)* psi_element_decl (NEWLINE)? CLOSE_BRACE (NEWLINE)*
+from_clause ::= FROM blockStart psi_element_decl blockEnd
 
 psi_element_decl ::= psi_type variable_decl ("," psi_type variable_decl)* (NEWLINE)*
 
-where_clause ::= WHERE OPEN_BRACE (NEWLINE)* expr (NEWLINE)* CLOSE_BRACE (NEWLINE)*
+where_clause ::= WHERE blockStart expr blockEnd
 
-select_clause ::= SELECT OPEN_BRACE (NEWLINE)* expr (',' expr)* (NEWLINE)* CLOSE_BRACE (NEWLINE)*
+select_clause ::= SELECT blockStart expr (',' expr)* blockEnd
+
+private blockStart ::= NEWLINE* "{" NEWLINE*
+private blockEnd ::= NEWLINE* "}" NEWLINE*
 
 psi_type ::= IDENTIFIER
 variable_decl ::= IDENTIFIER

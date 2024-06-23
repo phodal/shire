@@ -110,7 +110,7 @@ ShireFile
                     PsiElement(ShireTokenType.NEWLINE)('\n')
                   PsiWhiteSpace('  ')
                   PsiElement(ShireTokenType.})('}')
-                PsiElement(ShireTokenType.NEWLINE)('\n')
+                  PsiElement(ShireTokenType.NEWLINE)('\n')
     PsiElement(ShireTokenType.FRONTMATTER_END)('---')
   PsiElement(ShireTokenType.NEWLINE)('\n')
   PsiElement(ShireTokenType.NEWLINE)('\n')
