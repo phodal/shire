@@ -96,7 +96,7 @@ sealed class PatternActionFunc(open val funcName: String) {
     /**
      * Select subclass for selecting one or more elements.
      */
-    class From(val variable: List<VariableElement>) : PatternActionFunc("select")
+    class From(val variables: List<VariableElement>) : PatternActionFunc("select")
 
     /**
      * Where subclass for filtering elements.

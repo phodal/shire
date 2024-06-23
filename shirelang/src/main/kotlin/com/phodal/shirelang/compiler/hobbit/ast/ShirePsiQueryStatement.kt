@@ -28,8 +28,8 @@ class ShirePsiQueryStatement(
 }
 
 class VariableElement(
-    private val variableType: String,
-    private val value: String,
+    val variableType: String,
+    val value: String,
 ) {
     override fun toString(): String {
         return "$variableType $value"
