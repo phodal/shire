@@ -82,7 +82,7 @@ frontMatterEntry ::=
 
 frontMatterKey ::= frontMatterId | QUOTE_STRING | pattern
 frontMatterValue ::= IDENTIFIER | NUMBER | QUOTE_STRING | DATE | BOOLEAN | frontMatterArray | (NEWLINE objectKeyValue)
-frontMatterArray ::= LBRACKET (frontMatterValue (COMMA frontMatterValue)*) RBRACKET
+frontMatterArray ::= "[" (frontMatterValue (COMMA frontMatterValue)*) "]"
 
 frontMatterId ::= IDENTIFIER
 
