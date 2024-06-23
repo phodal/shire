@@ -183,6 +183,10 @@ object FrontmatterParser {
             methodCall
         }
 
+        ShireTypes.LITERAL_EXPR -> {
+            Value(parseLiteral(expr))
+        }
+
         else -> {
             logger.warn("parseExpr, Unknown expression type: ${expr.elementType}")
             Comparison(FrontMatterType.STRING(""), Operator(OperatorType.Equal), FrontMatterType.STRING(""))

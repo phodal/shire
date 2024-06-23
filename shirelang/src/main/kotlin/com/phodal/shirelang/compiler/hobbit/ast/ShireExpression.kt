@@ -33,6 +33,30 @@ abstract class Statement {
 }
 
 /**
+ * This function `evaluate` is used to evaluate the `value` based on its type.
+ *
+ * @param variables A map of variables where the key is a `String` and the value is also a `String`.
+ *
+ * @return Returns the value of the `FrontMatterType` if it is one of the supported types (STRING, NUMBER, DATE, BOOLEAN).
+ *
+ * @throws IllegalArgumentException If the `FrontMatterType` is not one of the supported types,
+ * an `IllegalArgumentException` is thrown with a message indicating the unsupported value type.
+ *
+ * @since 1.0
+ */
+data class Value(val value: FrontMatterType) : Statement() {
+    override fun evaluate(variables: Map<String, String>): Any {
+        return when (value) {
+            is FrontMatterType.STRING -> value.value
+            is FrontMatterType.NUMBER -> value.value
+            is FrontMatterType.DATE -> value.value
+            is FrontMatterType.BOOLEAN -> value.value
+            else -> throw IllegalArgumentException("Unsupported value type: $value")
+        }
+    }
+}
+
+/**
  * Enumeration of operator types used in logical and comparison expressions.
  *
  * @property display The string representation of the operator.
