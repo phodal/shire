@@ -179,8 +179,12 @@ object FrontmatterParser {
 
         ShireTypes.REF_EXPR -> {
             val refExpr = expr as ShireRefExpr
-            val methodCall = buildMethodCall(refExpr, null)
-            methodCall
+            if (refExpr.expr == null) {
+                Value(FrontMatterType.IDENTIFIER(refExpr.identifier.text))
+            } else {
+                val methodCall = buildMethodCall(refExpr, null)
+                methodCall
+            }
         }
 
         ShireTypes.LITERAL_EXPR -> {
@@ -202,8 +206,12 @@ object FrontmatterParser {
             // fake refExpr ::= expr? '.' IDENTIFIER
             ShireTypes.REF_EXPR -> {
                 val refExpr = expr as ShireRefExpr
-                val methodCall = buildMethodCall(refExpr, null)
-                FrontMatterType.EXPRESSION(methodCall)
+                if (refExpr.expr == null) {
+                    FrontMatterType.IDENTIFIER(refExpr.identifier.text)
+                } else {
+                    val methodCall = buildMethodCall(refExpr, null)
+                    FrontMatterType.EXPRESSION(methodCall)
+                }
             }
 
             // callExpr ::= refExpr '(' expressionList? ')'
@@ -217,9 +225,6 @@ object FrontmatterParser {
                 FrontMatterType.EXPRESSION(methodCall)
             }
 
-            null -> {
-                FrontMatterType.STRING("")
-            }
             else -> {
                 logger.warn("parseRefExpr, Unknown expression type: ${expr?.elementType}")
                 FrontMatterType.STRING("")
@@ -229,7 +234,12 @@ object FrontmatterParser {
 
 
     private fun buildMethodCall(refExpr: ShireRefExpr, expressionList: Array<PsiElement>?): MethodCall {
-        val left = parseRefExpr(refExpr.expr)
+        val left = if (refExpr.expr == null) {
+            FrontMatterType.IDENTIFIER(refExpr.identifier.text)
+        } else {
+            parseRefExpr(refExpr.expr)
+        }
+
         val id = refExpr.expr?.nextSibling?.nextSibling
         val right = FrontMatterType.IDENTIFIER(id?.text ?: "")
 
@@ -237,7 +247,7 @@ object FrontmatterParser {
             parseRefExpr(it)
         }
 
-        return MethodCall(left, right, args ?: emptyList())
+        return MethodCall(left, right, args)
     }
 
     private fun parseLiteral(ref: PsiElement): FrontMatterType {

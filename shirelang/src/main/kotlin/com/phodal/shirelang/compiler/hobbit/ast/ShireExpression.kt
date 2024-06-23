@@ -18,16 +18,17 @@ abstract class Statement {
             is LogicalExpression -> "${this.left.display()} ${this.operator.display} ${this.right.display()}"
             is NotExpression -> "!${this.operand.display()}"
             is MethodCall -> {
-                val parameters = this.arguments.joinToString(", ") {
+                val parameters = this.arguments?.joinToString(", ") {
                     when (it) {
                         is FrontMatterType -> it.display()
                         else -> it.toString()
                     }
                 }
-                "${this.objectName.display()}.${this.methodName.display()}($parameters)"
+                val formattedParameters = if (parameters.isNullOrEmpty()) "" else "($parameters)"
+                "${this.objectName.display()}.${this.methodName.display()}$formattedParameters"
             }
-
-            else -> ""
+            is Value -> this.value.display()
+            else -> throw IllegalArgumentException("Unsupported statement type: $this")
         }
     }
 }
@@ -247,7 +248,7 @@ data class NotExpression(val operand: Statement) : Statement() {
 data class MethodCall(
     val objectName: FrontMatterType,
     val methodName: FrontMatterType,
-    val arguments: List<Any>,
+    val arguments: List<Any>?,
 ) : Statement() {
     override fun evaluate(variables: Map<String, String>): Any {
         val value = when (objectName) {
@@ -256,7 +257,7 @@ data class MethodCall(
             else -> null
         } ?: throw IllegalArgumentException("Variable not found: ${objectName.value}")
 
-        val parameters: List<Any> = this.arguments.map {
+        val parameters: List<Any>? = this.arguments?.map {
             when (it) {
                 is FrontMatterType.STRING -> it.display().removeSurrounding("\"")
                 is FrontMatterType.NUMBER -> it.value
@@ -270,16 +271,40 @@ data class MethodCall(
         return when (method) {
             ExpressionBuiltInMethod.LENGTH -> value.length
             ExpressionBuiltInMethod.TRIM -> value.trim()
-            ExpressionBuiltInMethod.CONTAINS -> value.contains(parameters[0] as String)
-            ExpressionBuiltInMethod.STARTS_WITH -> value.startsWith(parameters[0] as String)
-            ExpressionBuiltInMethod.ENDS_WITH -> value.endsWith(parameters[0] as String)
+            ExpressionBuiltInMethod.CONTAINS -> {
+                if (parameters != null) {
+                    value.contains(parameters[0] as String)
+                } else {
+                    throw IllegalArgumentException("Missing parameter for method: $methodName")
+                }
+            }
+            ExpressionBuiltInMethod.STARTS_WITH -> {
+                if (parameters != null) {
+                    value.startsWith(parameters[0] as String)
+                } else {
+                    throw IllegalArgumentException("Missing parameter for method: $methodName")
+                }
+            }
+            ExpressionBuiltInMethod.ENDS_WITH -> {
+                if (parameters != null) {
+                    value.endsWith(parameters[0] as String)
+                } else {
+                    throw IllegalArgumentException("Missing parameter for method: $methodName")
+                }
+            }
             ExpressionBuiltInMethod.LOWERCASE -> value.lowercase()
             ExpressionBuiltInMethod.UPPERCASE -> value.uppercase()
             ExpressionBuiltInMethod.IS_EMPTY -> value.isEmpty()
             ExpressionBuiltInMethod.IS_NOT_EMPTY -> value.isNotEmpty()
             ExpressionBuiltInMethod.FIRST -> value.first().toString()
             ExpressionBuiltInMethod.LAST -> value.last().toString()
-            ExpressionBuiltInMethod.MATCHES -> value.matches((parameters[0] as String).toRegex())
+            ExpressionBuiltInMethod.MATCHES -> {
+                if (parameters != null) {
+                    value.matches((parameters[0] as String).toRegex())
+                } else {
+                    throw IllegalArgumentException("Missing parameter for method: $methodName")
+                }
+            }
             else -> throw IllegalArgumentException("Unsupported method: $methodName")
         }
     }

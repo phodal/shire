@@ -50,8 +50,8 @@ class QueryStatementProcessor(val myProject: Project, editor: Editor, hole: Hobb
             when (whereStmt) {
                 is Comparison -> {
                     val operator = whereStmt.operator
-                    val left = evaluate(whereStmt.left, variableName, elements)
-                    val right = evaluate(whereStmt.right, variableName, elements)
+                    val left = evaluate(whereStmt.left, elements, variableName)
+                    val right = evaluate(whereStmt.right, elements, variableName)
 
                     when(operator.type) {
                         OperatorType.Equal -> {
@@ -93,7 +93,7 @@ class QueryStatementProcessor(val myProject: Project, editor: Editor, hole: Hobb
         }
     }
 
-    private fun evaluate(left: FrontMatterType, variableName: String, elements: List<PsiElement>): Any {
+    private fun evaluate(left: FrontMatterType, elements: List<PsiElement>, variableName: String): List<Any> {
         return when (left) {
             is FrontMatterType.ARRAY -> TODO()
             is FrontMatterType.BOOLEAN -> TODO()
@@ -101,7 +101,9 @@ class QueryStatementProcessor(val myProject: Project, editor: Editor, hole: Hobb
             is FrontMatterType.DATE -> TODO()
             is FrontMatterType.ERROR -> TODO()
             is FrontMatterType.EXPRESSION -> {
-                // TODO
+                elements.map {
+                    it.text
+                }
             }
             is FrontMatterType.IDENTIFIER -> TODO()
             is FrontMatterType.NUMBER -> TODO()
@@ -109,7 +111,9 @@ class QueryStatementProcessor(val myProject: Project, editor: Editor, hole: Hobb
             is FrontMatterType.PATTERN -> TODO()
             is FrontMatterType.QUERY_STATEMENT -> TODO()
             is FrontMatterType.STRING -> {
-                return left.display()
+                elements.map {
+                    it.text
+                }
             }
             is FrontMatterType.VARIABLE -> TODO()
         }
