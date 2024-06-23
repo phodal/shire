@@ -180,9 +180,9 @@ velocityExpr ::=
     | '#' 'end'
     | '#' 'endif'
 
-queryStatement ::= OPEN_BRACE (NEWLINE | WHITE_SPACE)* from_clause where_clause select_clause (NEWLINE | WHITE_SPACE)* CLOSE_BRACE
+queryStatement ::= OPEN_BRACE (NEWLINE)* from_clause where_clause select_clause (NEWLINE)* CLOSE_BRACE
 
-from_clause ::= FROM OPEN_BRACE (NEWLINE | WHITE_SPACE)* psi_element_decl (NEWLINE | WHITE_SPACE)? CLOSE_BRACE (NEWLINE | WHITE_SPACE)*
+from_clause ::= FROM OPEN_BRACE (NEWLINE)* psi_element_decl (NEWLINE)? CLOSE_BRACE (NEWLINE)*
 
 psi_element_decl ::= psi_type variable_decl ("," psi_type variable_decl)* (NEWLINE)*
 
