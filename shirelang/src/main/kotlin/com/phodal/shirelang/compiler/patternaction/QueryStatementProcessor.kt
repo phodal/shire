@@ -3,6 +3,7 @@ package com.phodal.shirelang.compiler.patternaction
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiNameIdentifierOwner
 import com.phodal.shirecore.provider.shire.ShireSymbolProvider
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.ast.*
@@ -46,41 +47,61 @@ class QueryStatementProcessor(val myProject: Project, editor: Editor, hole: Hobb
         whereStmt: Statement,
         variables: Map<String, List<PsiElement>>,
     ): List<Any> {
-        when (whereStmt) {
+        return when (whereStmt) {
             is Comparison -> {
+                val operator = whereStmt.operator
+                when(operator.type) {
+                    OperatorType.Equal -> {
+                        // compare value
+                        val value = whereStmt.variable
 
+                    }
+                    OperatorType.And -> TODO()
+                    OperatorType.GreaterEqual -> TODO()
+                    OperatorType.GreaterThan -> TODO()
+                    OperatorType.LessEqual -> TODO()
+                    OperatorType.LessThan -> TODO()
+                    OperatorType.Not -> TODO()
+                    OperatorType.NotEqual -> TODO()
+                    OperatorType.Or -> TODO()
+                }
+
+                emptyList()
             }
 
             is LogicalExpression -> {
-
+                emptyList()
             }
 
             is MethodCall -> {
-
+                val value = whereStmt.objectName.display()
+                val variables = variables[value]  ?: return emptyList()
+                variables.map {
+                    // use reflection to call method
+//                    it.
+                }
             }
 
             is NotExpression -> {
-
+                emptyList()
             }
 
             is StringComparison -> {
-
+                emptyList()
             }
 
             is StringOperatorStatement -> {
-
+                emptyList()
             }
 
             is Value -> {
-
+                emptyList()
             }
 
             else -> {
                 return emptyList()
             }
         }
-
-        return emptyList()
     }
 
     private fun processSelect(selectStmt: PatternActionFunc.Select, handledElements: List<Any>): String {

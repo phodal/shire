@@ -156,6 +156,7 @@ project(":shirelang") {
 
     dependencies {
         implementation("org.apache.velocity:velocity-engine-core:2.3")
+        implementation(kotlin("reflect"))
         implementation(project(":"))
         implementation(project(":core"))
     }
