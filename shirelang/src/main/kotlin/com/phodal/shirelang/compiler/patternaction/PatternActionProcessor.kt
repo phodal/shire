@@ -19,6 +19,14 @@ class PatternActionProcessor(val myProject: Project, val editor: Editor, val hol
      * Each function output will be the input of the next function.
      */
     fun execute(actionTransform: PatternActionTransform): String {
+        if (actionTransform.patternActionFuncs.isEmpty()) {
+            return ""
+        }
+
+        if (actionTransform.isQueryStatement) {
+            return QueryStatementProcessor(myProject, editor, hole).execute(actionTransform)
+        }
+
         var input: Any = ""
         // todo: update rules for input type
         if (actionTransform.pattern.isNotBlank()) {
@@ -57,6 +65,7 @@ class PatternActionProcessor(val myProject: Project, val editor: Editor, val hol
                             (result as Array<String>).filter { line -> action.patterns.any { line.contains(it) } }
                                 .joinToString("\n")
                         }
+
                         else -> {
                             (result as String).split("\n")
                                 .filter { line -> action.patterns.any { line.contains(it) } }
@@ -75,6 +84,7 @@ class PatternActionProcessor(val myProject: Project, val editor: Editor, val hol
                                 )
                             }
                         }
+
                         else -> {
                             (result as String).split("\n").joinToString("\n") { line ->
                                 line.replace(
@@ -91,6 +101,7 @@ class PatternActionProcessor(val myProject: Project, val editor: Editor, val hol
                         is Array<*> -> {
                             (result as Array<String>).sorted().joinToString("\n")
                         }
+
                         else -> {
                             (result as String).split("\n").sorted().joinToString("\n")
                         }
@@ -102,6 +113,7 @@ class PatternActionProcessor(val myProject: Project, val editor: Editor, val hol
                         is Array<*> -> {
                             (result as Array<String>).distinct().joinToString("\n")
                         }
+
                         else -> {
                             (result as String).split("\n").distinct().joinToString("\n")
                         }
@@ -113,6 +125,7 @@ class PatternActionProcessor(val myProject: Project, val editor: Editor, val hol
                         is Array<*> -> {
                             (result as Array<String>).take(action.number.toInt()).joinToString("\n")
                         }
+
                         else -> {
                             (result as String).split("\n").take(action.number.toInt()).joinToString("\n")
                         }
@@ -124,6 +137,7 @@ class PatternActionProcessor(val myProject: Project, val editor: Editor, val hol
                         is Array<*> -> {
                             (result as Array<String>).takeLast(action.number.toInt()).joinToString("\n")
                         }
+
                         else -> {
                             (result as String).split("\n").takeLast(action.number.toInt()).joinToString("\n")
                         }
@@ -142,16 +156,9 @@ class PatternActionProcessor(val myProject: Project, val editor: Editor, val hol
                     action.variables
                 }
 
-                is PatternActionFunc.From -> {
-                    logger<PatternActionProcessor>().info("Unsupported function: ${action.funcName}")
-                }
-
-                is PatternActionFunc.Where -> {
-                    logger<PatternActionProcessor>().info("Unsupported function: ${action.funcName}")
-                }
-
-                is PatternActionFunc.Select -> {
-                    logger<PatternActionProcessor>().info("Unsupported function: ${action.funcName}")
+                else -> {
+                    logger<PatternActionProcessor>().error("Unknown pattern processor type: $action")
+                    ""
                 }
             }
         }

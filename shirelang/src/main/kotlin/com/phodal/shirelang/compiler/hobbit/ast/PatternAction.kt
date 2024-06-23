@@ -13,6 +13,7 @@ import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 data class PatternAction(
     val pattern: String,
     val patternFuncs: List<PatternActionFunc>,
+    val isQueryStatement: Boolean = false
 ) {
     companion object {
         /**
@@ -34,7 +35,7 @@ data class PatternAction(
 
                 is FrontMatterType.QueryStatement -> {
                     val action = value.value as? ShirePsiQueryStatement ?: return null
-                    PatternAction("", action.toPatternActionFunc())
+                    PatternAction("", action.toPatternActionFunc(), true)
                 }
 
                 else -> {

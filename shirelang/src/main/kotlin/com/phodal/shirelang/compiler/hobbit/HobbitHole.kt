@@ -166,7 +166,7 @@ open class HobbitHole(
                     // remove pattern sus
                     PatternAction.from(value)?.let {
                         val pattern = it.pattern.removeSurrounding("/")
-                        variables[variable] = PatternActionTransform(variable, pattern, it.patternFuncs)
+                        variables[variable] = PatternActionTransform(variable, pattern, it.patternFuncs, it.isQueryStatement)
                     }
                 }
             }

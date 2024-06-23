@@ -25,5 +25,6 @@ class PatternActionTransform(
     val variable: String,
     val pattern: String,
     val patternActionFuncs: List<PatternActionFunc>,
+    val isQueryStatement: Boolean = false
 ) {
 }
