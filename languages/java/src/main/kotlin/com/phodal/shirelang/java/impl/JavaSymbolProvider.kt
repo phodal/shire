@@ -9,6 +9,9 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.ide.highlighter.JavaFileType
 import com.intellij.lang.java.JavaLanguage
 import com.intellij.openapi.project.Project
+import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiFile
+import com.intellij.psi.PsiJavaFile
 import com.intellij.psi.PsiManager
 import com.intellij.psi.PsiPackageStatement
 import com.intellij.psi.impl.file.impl.JavaFileManagerImpl
@@ -51,6 +54,46 @@ class JavaSymbolProvider : ShireSymbolProvider {
         }
 
         return lookupElements
+    }
+
+    override fun lookupElementByName(project: Project, name: String): List<PsiElement>? {
+        val searchScope = ProjectScope.getProjectScope(project)
+        val virtualFiles = FileTypeIndex.getFiles(JavaFileType.INSTANCE, searchScope)
+        val psiManager = PsiManager.getInstance(project)
+
+        return when (name) {
+            "PsiFile" -> {
+                virtualFiles.mapNotNull(psiManager::findFile).toList()
+            }
+
+            "PsiPackage" -> {
+                virtualFiles.mapNotNull { psiManager.findFile(it) }
+                    .flatMap { PsiTreeUtil.getChildrenOfTypeAsList(it, PsiPackageStatement::class.java) }
+                    .toList()
+            }
+
+            "PsiClass" -> {
+                virtualFiles.mapNotNull { psiManager.findFile(it) as PsiJavaFile }
+                    .flatMap { it.classes.toList() }
+                    .toList()
+            }
+
+            "PsiMethod" -> {
+                virtualFiles.mapNotNull { psiManager.findFile(it) as PsiJavaFile }
+                    .flatMap { it.classes.toList() }
+                    .flatMap { it.methods.toList() }
+            }
+
+            "PsiField" -> {
+                virtualFiles.mapNotNull { psiManager.findFile(it) as PsiJavaFile }
+                    .flatMap { it.classes.toList() }
+                    .flatMap { it.fields.toList() }
+            }
+
+            else -> {
+                null
+            }
+        }
     }
 
     override fun resolveSymbol(project: Project, symbol: String): List<String> {
@@ -100,7 +143,7 @@ class JavaSymbolProvider : ShireSymbolProvider {
         project: Project,
         clazzName: String,
         scope: GlobalSearchScope,
-        methodName: String
+        methodName: String,
     ): List<String> {
         val psiClass = JavaFileManagerImpl(project).findClass(clazzName, scope)
         if (psiClass != null) {
