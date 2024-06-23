@@ -7,4 +7,8 @@
         <module name="com.phodal.shirelang"/>
         <module name="com.phodal.shirecore"/>
     </content>
+
+    <extensions defaultExtensionNs="com.phodal">
+        <shireSymbolProvider implementation="com.phodal.shirelang.impl.DefaultShireSymbolProvider" />
+    </extensions>
 </idea-plugin>

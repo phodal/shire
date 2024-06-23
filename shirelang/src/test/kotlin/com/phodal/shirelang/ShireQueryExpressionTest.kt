@@ -20,10 +20,10 @@ class ShireQueryExpressionTest : BasePlatformTestCase() {
             variables:
               "allController": {
                 from {
-                    PsiClass clazz // the class
+                    File clazz // the class
                 }
                 where {
-                    clazz.extends("org.springframework.web.bind.annotation.RestController") and clazz.getAnAnnotation() == "org.springframework.web.bind.annotation.RequestMapping"
+                    clazz.name == "HelloWorld.txt"
                 }
             
                 select {
@@ -35,7 +35,7 @@ class ShireQueryExpressionTest : BasePlatformTestCase() {
             ${'$'}allController
         """.trimIndent()
 
-        myFixture.addFileToProject("HelloWorld.java", javaHelloWorld)
+        myFixture.addFileToProject("HelloWorld.txt", javaHelloWorld)
         val file = myFixture.addFileToProject("sample.shire", code)
 
         myFixture.openFileInEditor(file.virtualFile)
