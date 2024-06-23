@@ -206,9 +206,9 @@ sealed class FrontMatterType(val value: Any) {
      * ---
      * ```
      */
-    class QueryStatement(private val statement: ShirePsiQueryStatement) : FrontMatterType("") {
+    class QueryStatement(value: ShirePsiQueryStatement) : FrontMatterType(value) {
         override fun display(): String {
-            return statement.toString()
+            return value.toString()
         }
     }
 }

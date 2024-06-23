@@ -8,13 +8,13 @@ import com.phodal.shirelang.psi.ShireWhereClause
 
 object ShireAstQLParser {
     fun parse(statement: ShireQueryStatement): FrontMatterType {
-        return FrontMatterType.QueryStatement(
-            ShirePsiQueryStatement(
-                parseFrom(statement.fromClause),
-                parseWhere(statement.whereClause),
-                parseSelect(statement.selectClause)
-            )
+        val value = ShirePsiQueryStatement(
+            parseFrom(statement.fromClause),
+            parseWhere(statement.whereClause),
+            parseSelect(statement.selectClause)
         )
+
+        return FrontMatterType.QueryStatement(value)
     }
 
     private fun parseFrom(fromClause: ShireFromClause): List<VariableElement> {

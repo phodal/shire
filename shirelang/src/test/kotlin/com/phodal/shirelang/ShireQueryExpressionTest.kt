@@ -48,6 +48,7 @@ class ShireQueryExpressionTest : BasePlatformTestCase() {
             PatternActionProcessor(project, editor, hole).execute(it.value)
         }
 
+        println(results)
 //        assertEquals(results["allController"], listOf("HelloWorld", "code"))
     }
 }

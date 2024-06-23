@@ -177,6 +177,12 @@ object FrontmatterParser {
                 ?: Comparison(FrontMatterType.STRING(""), Operator(OperatorType.Equal), FrontMatterType.STRING(""))
         }
 
+        ShireTypes.REF_EXPR -> {
+            val refExpr = expr as ShireRefExpr
+            val methodCall = buildMethodCall(refExpr, null)
+            methodCall
+        }
+
         else -> {
             logger.warn("parseExpr, Unknown expression type: ${expr.elementType}")
             Comparison(FrontMatterType.STRING(""), Operator(OperatorType.Equal), FrontMatterType.STRING(""))
@@ -207,6 +213,9 @@ object FrontmatterParser {
                 FrontMatterType.Expression(methodCall)
             }
 
+            null -> {
+                FrontMatterType.STRING("")
+            }
             else -> {
                 logger.warn("parseRefExpr, Unknown expression type: ${expr?.elementType}")
                 FrontMatterType.STRING("")
