@@ -13,7 +13,7 @@ abstract class Statement {
         return when (this) {
             is Operator -> this.type.display
             is StringOperatorStatement -> this.type.display
-            is Comparison -> "${this.variable.display()} ${this.operator.display()} ${this.value.display()}"
+            is Comparison -> "${this.left.display()} ${this.operator.display()} ${this.right.display()}"
             is StringComparison -> "${this.variable} ${this.operator.display()} ${this.value}"
             is LogicalExpression -> "${this.left.display()} ${this.operator.display} ${this.right.display()}"
             is NotExpression -> "!${this.operand.display()}"
@@ -147,26 +147,26 @@ data class StringOperatorStatement(val type: StringOperator) : Statement() {
 /**
  * Represents a comparison expression, including a variable, an operator, and a value.
  *
- * @property variable The name of the variable being compared.
+ * @property left The name of the variable being compared.
  * @property operator The operator used for comparison.
- * @property value The value being compared against.
+ * @property right The value being compared against.
  */
 data class Comparison(
-    val variable: FrontMatterType,
+    val left: FrontMatterType,
     val operator: Operator,
-    val value: FrontMatterType,
+    val right: FrontMatterType,
 ) : Statement() {
     override fun evaluate(variables: Map<String, String>): Boolean {
-        val variableValue = when (variable.value) {
-            is MethodCall -> variable.value.evaluate(variables)
-            is FrontMatterType.STRING -> variable.value.value
+        val variableValue = when (left.value) {
+            is MethodCall -> left.value.evaluate(variables)
+            is FrontMatterType.STRING -> left.value.value
             else -> {
-                logger<Comparison>().error("Variable not found: ${variable.value}, will use: ${variables[variable.value]}")
-                variables[variable.value]
+                logger<Comparison>().error("Variable not found: ${left.value}, will use: ${variables[left.value]}")
+                variables[left.value]
             }
         }
 
-        val value = value.value
+        val value = right.value
 
         return when (operator.type) {
             OperatorType.Equal -> variableValue == value
