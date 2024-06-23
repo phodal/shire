@@ -75,10 +75,10 @@ ShireFile ::= frontMatterHeader? (used | code | velocityExpr | TEXT_SEGMENT | NE
 
 frontMatterHeader ::= FRONTMATTER_START NEWLINE frontMatterEntries FRONTMATTER_END
 
-frontMatterEntries ::= ((frontMatterEntry) WHITE_SPACE?)*
+frontMatterEntries ::= frontMatterEntry*
 frontMatterEntry ::=
-    "when" WHITE_SPACE? COLON WHITE_SPACE? conditionExpr NEWLINE?
-    | frontMatterKey WHITE_SPACE? COLON WHITE_SPACE? (frontMatterValue | patternAction | queryStatement) NEWLINE?
+    "when" COLON conditionExpr NEWLINE?
+    | frontMatterKey COLON (frontMatterValue | patternAction | queryStatement) NEWLINE?
 
 frontMatterKey ::= frontMatterId | QUOTE_STRING | pattern
 frontMatterValue ::= IDENTIFIER | NUMBER | QUOTE_STRING | DATE | BOOLEAN | frontMatterArray | (NEWLINE objectKeyValue)
@@ -89,24 +89,24 @@ frontMatterId ::= IDENTIFIER
 objectKeyValue ::= (INDENT keyValue NEWLINE?)*
 keyValue ::= frontMatterEntry
 
-patternAction ::= pattern WHITE_SPACE? actionBlock
+patternAction ::= pattern actionBlock
 actionBlock ::=  blockStart (actionBody) blockEnd
 actionBody ::= (actionExpr PIPE)* actionExpr
-actionExpr ::= WHITE_SPACE? (caseBody | funcCall) WHITE_SPACE?
+actionExpr ::= caseBody | funcCall
 
-funcCall ::= funcName (LPAREN pipelineArgs? RPAREN)?
+funcCall ::= funcName ("(" pipelineArgs? ")")?
 funcName ::= IDENTIFIER
 pipelineArgs ::= (pipelineArg (COMMA pipelineArg)*)?
 pipelineArg ::= NUMBER | IDENTIFIER | QUOTE_STRING
 
-caseBody ::= CASE (WHITE_SPACE | NEWLINE)* QUOTE_STRING blockStart casePatternAction* blockEnd
+caseBody ::= CASE NEWLINE* QUOTE_STRING blockStart casePatternAction* blockEnd
 casePatternAction ::= caseCondition blockStart (actionExpr PIPE)* actionExpr blockEnd
 caseCondition ::= DEFAULT | pattern | QUOTE_STRING
 
 pattern ::= PATTERN_EXPR
 
-private blockStart ::= (WHITE_SPACE | NEWLINE)* OPEN_BRACE (WHITE_SPACE | NEWLINE)*
-private blockEnd ::= (WHITE_SPACE | NEWLINE)* CLOSE_BRACE (WHITE_SPACE | NEWLINE)*
+private blockStart ::= NEWLINE* "{" NEWLINE*
+private blockEnd ::= NEWLINE* "}" NEWLINE*
 
 // todo
 conditionExpr ::= expr
@@ -133,16 +133,16 @@ qualRefExpr ::= expr '.' IDENTIFIER {extends=refExpr elementType=refExpr}
 logicalOrExpr ::= expr '||' expr
 logicalAndExpr ::= expr ('&&' | 'and') expr
 eqComparisonExpr ::= expr eqComparisonOp expr
-ineqComparisonExpr ::= expr WHITE_SPACE? ineqComparisonOp WHITE_SPACE? expr
+ineqComparisonExpr ::= expr ineqComparisonOp expr
 callExpr ::= refExpr '(' expressionList? ')'
 expressionList ::= expr (',' expr)*
 /// variable block
-variableExpr ::= "{" WHITE_SPACE? expr WHITE_SPACE? "}"
+variableExpr ::= "{" expr "}"
 
 literalExpr ::= literal
 parenExpr ::= '(' expr ')'
 // when
-private eqComparisonOp ::= WHITE_SPACE? ('==' | 'and') WHITE_SPACE?
+private eqComparisonOp ::= '==' | 'and' | 'AND'
 ineqComparisonOp ::= '<=' | '>=' | '<' | '>' | '!='
 
 private literal ::= NUMBER
@@ -167,16 +167,16 @@ variableId ::= IDENTIFIER
 languageId ::= IDENTIFIER
 
 // just make template pass success not fail
-varAccess ::= OPEN_BRACE WHITE_SPACE? variableId WHITE_SPACE? (DOT WHITE_SPACE? variableId)* WHITE_SPACE? CLOSE_BRACE
+varAccess ::= OPEN_BRACE variableId (DOT variableId)* CLOSE_BRACE
 
 code ::=  CODE_BLOCK_START (languageId | variableStart expr)? NEWLINE? code_contents? CODE_BLOCK_END?
 
 code_contents ::= (NEWLINE | CODE_CONTENT)*
 
 velocityExpr ::=
-     '#' 'if' '(' WHITE_SPACE? variableStart? expr WHITE_SPACE?  ')'
+     '#' 'if' '('variableStart? expr ')'
     | '#' 'else'
-    | '#' 'elseif' '(' WHITE_SPACE? variableStart? expr WHITE_SPACE? ')'
+    | '#' 'elseif' '(' variableStart? expr ')'
     | '#' 'end'
     | '#' 'endif'
 
