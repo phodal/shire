@@ -106,5 +106,5 @@ sealed class PatternActionFunc(open val funcName: String) {
     /**
      * OrderBy subclass for ordering elements.
      */
-    class Select(val variable: List<Statement>) : PatternActionFunc("orderBy")
+    class Select(val statements: List<Statement>) : PatternActionFunc("orderBy")
 }

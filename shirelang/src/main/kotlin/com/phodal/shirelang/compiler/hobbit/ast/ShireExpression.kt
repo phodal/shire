@@ -24,7 +24,7 @@ abstract class Statement {
                         else -> it.toString()
                     }
                 }
-                val formattedParameters = if (parameters.isNullOrEmpty()) "" else "($parameters)"
+                val formattedParameters = if (parameters == null) "" else "($parameters)"
                 "${this.objectName.display()}.${this.methodName.display()}$formattedParameters"
             }
             is Value -> this.value.display()

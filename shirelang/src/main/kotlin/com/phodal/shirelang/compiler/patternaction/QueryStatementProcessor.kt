@@ -47,8 +47,8 @@ class QueryStatementProcessor(val myProject: Project, editor: Editor, hole: Hobb
     private fun processCondition(
         whereStmt: Statement,
         variables: Map<String, List<PsiElement>>,
-    ): List<Any> {
-        val result = mutableListOf<Any>()
+    ): List<PsiElement> {
+        val result = mutableListOf<PsiElement>()
         variables.forEach { (variableName, elements) ->
             elements.forEach { element ->
                 when (whereStmt) {
@@ -91,63 +91,74 @@ class QueryStatementProcessor(val myProject: Project, editor: Editor, hole: Hobb
         return result
     }
 
+    private fun evalExpression(type: FrontMatterType, element: PsiElement): Any? {
+        when (type.value) {
+            is MethodCall -> {
+                return invokeMethodOrField(type.value, element)
+            }
+
+            else -> {
+                logger<QueryStatementProcessor>().warn("unknown expression: ${type.value}")
+                return null
+            }
+        }
+    }
+
+    private fun invokeMethodOrField(methodCall: MethodCall, element: PsiElement): Any? {
+        val methodName = methodCall.methodName.display()
+        val methodArgs = methodCall.arguments
+
+        val isField = methodArgs == null
+
+        if (isField) {
+            val field = element.javaClass.fields.find {
+                it.name == methodName
+            }
+
+            if (field != null) {
+                return field.get(element)
+            }
+        }
+
+        // use reflection to call method
+        val method = element.javaClass.methods.find {
+            it.name == methodName
+        }
+        if (method != null) {
+            if (methodArgs == null) {
+                return method.invoke(element)
+            }
+
+            return method.invoke(element, methodArgs)
+        }
+
+        if (isField) {
+            // maybe getter, we try to find getter, first upper case method name first letter
+            val getterName = "get${
+                methodName.replaceFirstChar {
+                    if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
+                }
+            }"
+            val getter = element.javaClass.methods.find {
+                it.name == getterName
+            }
+
+            if (getter != null) {
+                return getter.invoke(element)
+            }
+        }
+
+        logger<QueryStatementProcessor>().warn("method or field not found: $methodName")
+        return null
+    }
+
     private fun evaluate(type: FrontMatterType, element: PsiElement): Any? {
         return when (type) {
             is FrontMatterType.ARRAY -> TODO()
             is FrontMatterType.BOOLEAN -> TODO()
             is FrontMatterType.DATE -> TODO()
             is FrontMatterType.EXPRESSION -> {
-                when (type.value) {
-                    is MethodCall -> {
-                        val methodCall = type.value
-                        val methodName = methodCall.methodName.display()
-                        val methodArgs = methodCall.arguments
-
-                        val isField = methodArgs == null
-
-                        if (isField) {
-                            val field = element.javaClass.fields.find {
-                                it.name == methodName
-                            }
-
-                            if (field != null) {
-                                return field.get(element)
-                            }
-                        }
-
-                        // use reflection to call method
-                        val method = element.javaClass.methods.find {
-                            it.name == methodName
-                        }
-                        if (method != null) {
-                            return method.invoke(element, methodArgs)
-                        }
-
-                        if (isField) {
-                            // maybe getter, we try to find getter, first upper case method name first letter
-                            val getterName = "get${
-                                methodName.replaceFirstChar {
-                                    if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
-                                }
-                            }"
-                            val getter = element.javaClass.methods.find {
-                                it.name == getterName
-                            }
-
-                            if (getter != null) {
-                                return getter.invoke(element)
-                            }
-                        }
-
-                        logger<QueryStatementProcessor>().warn("method or field not found: $methodName")
-                        return null
-                    }
-
-                    else -> {
-                        logger<QueryStatementProcessor>().warn("unknown expression: ${type.value}")
-                        return null
-                    }
-                }
+                evalExpression(type, element)
             }
 
             is FrontMatterType.IDENTIFIER -> TODO()
@@ -157,14 +168,34 @@ class QueryStatementProcessor(val myProject: Project, editor: Editor, hole: Hobb
                 type.value
             }
 
-            is FrontMatterType.VARIABLE -> TODO()
             else -> {
                 throw IllegalArgumentException("unknown type: $type")
             }
         }
     }
 
-    private fun processSelect(selectStmt: PatternActionFunc.Select, handledElements: List<Any>): String {
-        return "select"
+    private fun processSelect(selectStmt: PatternActionFunc.Select, handledElements: List<PsiElement>): String {
+        return selectStmt.statements.map {
+            processSelectStatement(it, handledElements)
+        }.joinToString("\n")
+    }
+
+    private fun processSelectStatement(statement: Statement, handledElements: List<PsiElement>): String {
+        val result = mutableListOf<String>()
+        handledElements.forEach { element ->
+            when (statement) {
+                is Value -> {
+                    result.add(statement.display())
+                }
+
+                is MethodCall -> {
+                    invokeMethodOrField(statement, element)?.let {
+                        result.add(it.toString())
+                    }
+                }
+            }
+        }
+
+        return result.joinToString("\n")
     }
 }

@@ -23,7 +23,7 @@ class ShireQueryExpressionTest : BasePlatformTestCase() {
                 }
             
                 select {
-                    clazz.toString(), 
+                    clazz.toString(), "code"
                 }
               }
             ---
@@ -42,16 +42,19 @@ class ShireQueryExpressionTest : BasePlatformTestCase() {
 
         val patternActionFuncs = hole.variables.first().value.patternActionFuncs
         val whereDisplay = (patternActionFuncs[1] as PatternActionFunc.Where).statement.display()
-        val selectDisplay = (patternActionFuncs[2] as PatternActionFunc.Select).variable.map { it.display() }
+        val selectDisplay = (patternActionFuncs[2] as PatternActionFunc.Select).statements.map { it.display() }
 
 
         assertEquals(whereDisplay, "clazz.text == \"HelloWorld.txt\"")
-        assertEquals(selectDisplay, listOf("clazz.id", "clazz.name", "\"code\""))
+        assertEquals(selectDisplay, listOf("clazz.toString", "\"code\""))
 
         val results = hole.variables.mapValues {
             PatternActionProcessor(project, editor, hole).execute(it.value)
         }
 
-        assertEquals(results["allController"], listOf("HelloWorld", "code"))
+        assertEquals(results["allController"], """
+            PsiFile(plain text):HelloWorld.txt
+            "code"
+            """.trimIndent())
     }
 }
