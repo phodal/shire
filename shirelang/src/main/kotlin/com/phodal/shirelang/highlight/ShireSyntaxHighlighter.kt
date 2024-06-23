@@ -27,11 +27,15 @@ class ShireSyntaxHighlighter : SyntaxHighlighter {
             ShireTypes.SELECT,
             ShireTypes.WHERE,
             ShireTypes.FROM,
+            ShireTypes.IF,
+            ShireTypes.ELSE,
+            ShireTypes.ELSEIF,
+            ShireTypes.END,
+            ShireTypes.ENDIF,
+            ShireTypes.AND,
         )
 
-
         init {
-
             SyntaxHighlighterBase.fillMap(
                 ATTRIBUTES,
                 KEYWORDS,
@@ -39,6 +43,8 @@ class ShireSyntaxHighlighter : SyntaxHighlighter {
             )
 
             ATTRIBUTES[ShireTypes.COMMENTS] = DefaultLanguageHighlighterColors.LINE_COMMENT
+            ATTRIBUTES[ShireTypes.COMMENT] = DefaultLanguageHighlighterColors.LINE_COMMENT
+            ATTRIBUTES[ShireTypes.BLOCK_COMMENT] = DefaultLanguageHighlighterColors.BLOCK_COMMENT
 
             ATTRIBUTES[ShireTypes.VARIABLE_START] = DefaultLanguageHighlighterColors.KEYWORD
             ATTRIBUTES[ShireTypes.VARIABLE_ID] = DefaultLanguageHighlighterColors.CONSTANT

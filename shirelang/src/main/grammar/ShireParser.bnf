@@ -142,7 +142,7 @@ variableExpr ::= "{" WHITE_SPACE? expr WHITE_SPACE? "}"
 literalExpr ::= literal
 parenExpr ::= '(' expr ')'
 // when
-private eqComparisonOp ::= WHITE_SPACE? ('==') WHITE_SPACE?
+private eqComparisonOp ::= WHITE_SPACE? ('==' | 'and') WHITE_SPACE?
 ineqComparisonOp ::= '<=' | '>=' | '<' | '>' | '!='
 
 private literal ::= NUMBER

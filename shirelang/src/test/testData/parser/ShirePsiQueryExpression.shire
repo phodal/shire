@@ -5,7 +5,7 @@ variables:
         PsiClass clazz
     }
     where {
-        clazz.extends("org.springframework.web.bind.annotation.RestController")
+        clazz.extends("org.springframework.web.bind.annotation.RestController") and clazz.getAnAnnotation() == "org.springframework.web.bind.annotation.RequestMapping"
     }
 
     select {

@@ -100,6 +100,7 @@ ELSE                     =else
 ELSEIF                   =elseif
 ENDIF                    =endif
 END                      =end
+AND                      =and
 
 %{
     private boolean isCodeStart = false;
@@ -202,6 +203,10 @@ END                      =end
   {CODE_CONTENT}          { return content(); }
   {NEWLINE}               { return NEWLINE;  }
   "["                     { yypushback(yylength()); yybegin(COMMENT_BLOCK);  }
+
+  {COMMENT}               { return COMMENT; }
+  {BLOCK_COMMENT}         { return BLOCK_COMMENT; }
+  {COMMENTS}              { return COMMENTS; }
   [^]                     { yypushback(yylength()); return TEXT_SEGMENT; }
 }
 
@@ -350,6 +355,7 @@ END                      =end
   {ELSEIF}             { return ELSEIF; }
   {ENDIF}              { return ENDIF; }
   {END}                { return END; }
+  {AND}                { return AND; }
   "("                  { return LPAREN; }
   ")"                  { return RPAREN; }
   "<"                  { return LT; }
@@ -358,7 +364,6 @@ END                      =end
   ","                  { return COMMA; }
   "!"                  { return NOT; }
   "&&"                 { return ANDAND; }
-  "and"                { return AND; }
   "||"                 { return OROR; }
   "."                  { return DOT; }
   "=="                 { return EQEQ; }
