@@ -104,6 +104,8 @@ AND                      =and
     private boolean isCodeStart = false;
     private boolean isInsideShireTemplate = false;
     private boolean isInsideQueryExpression = false;
+    private boolean isInsideFrontMatter = false;
+    private boolean isFMObjectStart = false;
 %}
 
 %{
@@ -193,11 +195,38 @@ AND                      =and
 
         return COMMAND_PROP;
     }
+
+
+    /** @param offset offset from currently matched token start (could be negative) */
+    private char getCharAtOffset(final int offset) {
+      final int loc = getTokenStart() + offset;
+      return 0 <= loc && loc < zzBuffer.length() ? zzBuffer.charAt(loc) : (char) -1;
+    }
+
+    private boolean isAfterEol() {
+      final char prev = getCharAtOffset(-1);
+      return prev == (char)-1 || prev == '\n';
+    }
+
+    private IElementType getWhitespaceType() {
+      if (!isInsideFrontMatter) {
+          return TokenType.WHITE_SPACE;
+      }
+
+      if (isAfterEol() && !isFMObjectStart) {
+          isFMObjectStart = true;
+          yybegin(FRONT_MATTER_VAL_OBJECT);
+          return INDENT;
+      } else {
+          isFMObjectStart = false;
+          return TokenType.WHITE_SPACE;
+      }
+    }
 %}
 
 %%
 <YYINITIAL> {
-  "---"                   { yybegin(FRONT_MATTER_BLOCK); return FRONTMATTER_START; }
+  "---"                   { isInsideFrontMatter = true; yybegin(FRONT_MATTER_BLOCK); return FRONTMATTER_START; }
   {CODE_CONTENT}          { return content(); }
   {NEWLINE}               { return NEWLINE;  }
   "["                     { yypushback(yylength()); yybegin(COMMENT_BLOCK);  }
@@ -214,16 +243,16 @@ AND                      =and
   {PATTERN_EXPR}          { return PATTERN_EXPR; }
   ":"                     { yybegin(FRONT_MATTER_VALUE_BLOCK);return COLON; }
   "{"                     { yybegin(QUERY_STATEMENT_BLOCK); return OPEN_BRACE; }
-  "  "                    { yybegin(FRONT_MATTER_VAL_OBJECT); return INDENT; }
-  {NEWLINE}               { return NEWLINE; }
 
-  // end for block
-  "---"                   { yybegin(YYINITIAL); return FRONTMATTER_END; }
+  {WHITE_SPACE}           { return getWhitespaceType(); }
+  {NEWLINE}               { return NEWLINE; }
+  "---"                   { isInsideFrontMatter = false; yybegin(YYINITIAL); return FRONTMATTER_END; }
   [^]                     { yypushback(yylength()); yybegin(YYINITIAL); }
 }
 
 <FRONT_MATTER_VAL_OBJECT> {
   {QUOTE_STRING}          { return QUOTE_STRING; }
+  ":"                     { yybegin(FRONT_MATTER_VALUE_BLOCK); return COLON; }
   [^]                     { yypushback(yylength()); yybegin(FRONT_MATTER_BLOCK); }
 }
 
@@ -237,7 +266,6 @@ AND                      =and
   "["                     { return LBRACKET; }
   "]"                     { return RBRACKET; }
   ","                     { return COMMA; }
-  " "                     { return TokenType.WHITE_SPACE; }
   "!"                     { return NOT; }
   "&&"                    { return ANDAND; }
   "||"                    { return OROR; }
@@ -248,10 +276,12 @@ AND                      =and
   "<="                    { return LTE; }
   ">"                     { return GT; }
   ">="                    { return GTE; }
-  " "                     { return TokenType.WHITE_SPACE; }
+  {WHITE_SPACE}           { return getWhitespaceType(); }
+//  " "                   { return TokenType.WHITE_SPACE; }
   "$"                     { return VARIABLE_START; }
   "("                     { return LPAREN; }
   ")"                     { return RPAREN; }
+
   [^]                     { yypushback(yylength()); yybegin(FRONT_MATTER_BLOCK); }
 }
 
@@ -378,7 +408,7 @@ AND                      =and
   {NUMBER}             { return NUMBER; }
   {IDENTIFIER}         { return IDENTIFIER; }
   {QUOTE_STRING}       { return QUOTE_STRING; }
-  {WHITE_SPACE}        { return TokenType.WHITE_SPACE; }
+  {WHITE_SPACE}        { return getWhitespaceType(); }
   [^]                  { yypushback(yylength()); if (isInsideShireTemplate) { yybegin(CODE_BLOCK); }  else if (isInsideQueryExpression) { yybegin(QUERY_STATEMENT_BLOCK);} else { yybegin(YYINITIAL); } }
 }
 

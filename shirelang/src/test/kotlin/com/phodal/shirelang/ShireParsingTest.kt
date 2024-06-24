@@ -79,5 +79,9 @@ class ShireParsingTest : ParsingTestCase("parser", "shire", ShireParserDefinitio
     fun testShirePsiQueryExpression() {
         doTest(true)
     }
+
+    fun testMultipleFMVariable() {
+        doTest(true)
+    }
 }
 
