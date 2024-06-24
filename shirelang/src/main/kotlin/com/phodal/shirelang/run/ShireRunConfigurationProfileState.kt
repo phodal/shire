@@ -38,11 +38,13 @@ open class ShireRunConfigurationProfileState(
     private val myProject: Project,
     private val configuration: ShireConfiguration,
 ) : RunProfileState {
-    private val executionConsole: ConsoleViewImpl = ConsoleViewImpl(myProject, true)
-    val console: ShireConsoleView
-        get() = ShireConsoleView(executionConsole)
+    private var executionConsole: ConsoleViewImpl? = null
+    var console: ShireConsoleView? = null
 
     override fun execute(executor: Executor?, runner: ProgramRunner<*>): ExecutionResult {
+        executionConsole = ConsoleViewImpl(myProject, true)
+        console = ShireConsoleView(executionConsole!!)
+
         val processHandler = ShireProcessHandler(configuration.name)
         ProcessTerminatedListener.attach(processHandler)
 
@@ -50,16 +52,16 @@ open class ShireRunConfigurationProfileState(
         processHandler.addProcessListener(ShireProcessAdapter(sb, configuration))
 
         // start message log in here
-        console.addMessageFilter { line, _ ->
+        console!!.addMessageFilter { line, _ ->
             sb.append(line)
             null
         }
 
-        console.attachToProcess(processHandler)
+        console!!.attachToProcess(processHandler)
 
         val file: ShireFile? = ShireFile.lookup(myProject, configuration.getScriptPath())
         if (file == null) {
-            console.print("File not found: ${configuration.getScriptPath()}", ConsoleViewContentType.ERROR_OUTPUT)
+            console!!.print("File not found: ${configuration.getScriptPath()}", ConsoleViewContentType.ERROR_OUTPUT)
             processHandler.destroyProcess()
             return DefaultExecutionResult(console, processHandler)
         }
@@ -76,7 +78,7 @@ open class ShireRunConfigurationProfileState(
         val input = compileResult.shireOutput
 
         val promptText = ShireTemplateCompiler(myProject, compileResult.config!!, symbolTable, input).compile()
-        logCompiled(console, promptText)
+        logCompiled(console!!, promptText)
 
         if (promptText.contains(SHIRE_ERROR)) {
             processHandler.exitWithError()
@@ -85,10 +87,10 @@ open class ShireRunConfigurationProfileState(
 
         val agent = compileResult.executeAgent
         val shireRunner: ShireRunner = if (agent != null) {
-            ShireCustomAgentRunner(myProject, configuration, console, processHandler, promptText, agent)
+            ShireCustomAgentRunner(myProject, configuration, console!!, processHandler, promptText, agent)
         } else {
             val isLocalMode = compileResult.isLocalCommand
-            ShireDefaultRunner(myProject, configuration, console, processHandler, promptText, isLocalMode)
+            ShireDefaultRunner(myProject, configuration, console!!, processHandler, promptText, isLocalMode)
         }
 
         shireRunner.execute()
