@@ -206,19 +206,6 @@ AND                      =and
       final char prev = getCharAtOffset(-1);
       return prev == (char)-1 || prev == '\n';
     }
-
-    private IElementType getWhitespaceType() {
-      if (!isInsideFrontMatter) {
-          return TokenType.WHITE_SPACE;
-      }
-
-      if (isAfterEol()) {
-          yybegin(FRONT_MATTER_VAL_OBJECT);
-          return INDENT;
-      } else {
-          return TokenType.WHITE_SPACE;
-      }
-    }
 %}
 
 %%
@@ -241,7 +228,7 @@ AND                      =and
   ":"                     { yybegin(FRONT_MATTER_VALUE_BLOCK);return COLON; }
   "{"                     { yybegin(QUERY_STATEMENT_BLOCK); return OPEN_BRACE; }
 
-  {WHITE_SPACE}           { return getWhitespaceType(); }
+  {INDENT}                { yybegin(FRONT_MATTER_VAL_OBJECT); return INDENT; }
   {NEWLINE}               { return NEWLINE; }
   "---"                   { isInsideFrontMatter = false; yybegin(YYINITIAL); return FRONTMATTER_END; }
   [^]                     { yypushback(yylength()); yybegin(YYINITIAL); }
@@ -273,8 +260,7 @@ AND                      =and
   "<="                    { return LTE; }
   ">"                     { return GT; }
   ">="                    { return GTE; }
-  {WHITE_SPACE}           { return getWhitespaceType(); }
-//  " "                   { return TokenType.WHITE_SPACE; }
+  {WHITE_SPACE}           { return TokenType.WHITE_SPACE; }
   "$"                     { return VARIABLE_START; }
   "("                     { return LPAREN; }
   ")"                     { return RPAREN; }
@@ -405,7 +391,7 @@ AND                      =and
   {NUMBER}             { return NUMBER; }
   {IDENTIFIER}         { return IDENTIFIER; }
   {QUOTE_STRING}       { return QUOTE_STRING; }
-  {WHITE_SPACE}        { return getWhitespaceType(); }
+  {WHITE_SPACE}        { return TokenType.WHITE_SPACE; }
   [^]                  { yypushback(yylength()); if (isInsideShireTemplate) { yybegin(CODE_BLOCK); }  else if (isInsideQueryExpression) { yybegin(QUERY_STATEMENT_BLOCK);} else { yybegin(YYINITIAL); } }
 }
 
