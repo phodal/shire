@@ -1,4 +1,4 @@
-package com.phodal.shirelang.custom.schema
+package com.phodal.shirecore.schema
 
 import com.intellij.openapi.project.Project
 import com.jetbrains.jsonSchema.extension.JsonSchemaFileProvider

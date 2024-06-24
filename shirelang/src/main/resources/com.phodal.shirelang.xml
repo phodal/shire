@@ -80,10 +80,6 @@
         </group>
     </actions>
 
-    <extensions defaultExtensionNs="JavaScript.JsonSchema">
-        <ProviderFactory implementation="com.phodal.shirelang.custom.schema.ShireCustomAgentSchemaProviderFactory"/>
-    </extensions>
-
     <applicationListeners>
 <!--        <listener class="com.phodal.shirelang.modify.ShireModificationListener" topic="com.intellij.openapi.vfs.newvfs.BulkFileListener"/>-->
     </applicationListeners>
