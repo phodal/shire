@@ -17,20 +17,7 @@ class ShireFoldingBuilder : FoldingBuilderEx() {
 
     override fun buildFoldRegions(root: PsiElement, document: Document, quick: Boolean): Array<FoldingDescriptor> {
         val descriptors = mutableListOf<FoldingDescriptor>()
-        root.accept(object : ShireVisitor() {
-            override fun visitElement(element: PsiElement) {
-                when (element.elementType) {
-                    ShireTypes.FRONT_MATTER_HEADER -> {
-                        descriptors.add(FoldingDescriptor(element.node, element.textRange))
-                    }
-
-                    ShireTypes.CODE -> {
-                        descriptors.add(FoldingDescriptor(element.node, element.textRange))
-                    }
-                }
-                element.acceptChildren(this)
-            }
-        })
+        root.accept(ShireFoldingVisitor(descriptors))
 
         return descriptors.toTypedArray()
     }
@@ -53,5 +40,28 @@ class ShireFoldingBuilder : FoldingBuilderEx() {
             ShireTypes.CODE -> false
             else -> false
         }
+    }
+}
+
+class ShireFoldingVisitor(private val descriptors: MutableList<FoldingDescriptor>) : ShireVisitor() {
+    override fun visitElement(element: PsiElement) {
+        when (element.elementType) {
+            ShireTypes.FRONT_MATTER_HEADER -> {
+                descriptors.add(FoldingDescriptor(element.node, element.textRange))
+            }
+
+            ShireTypes.CODE -> {
+                descriptors.add(FoldingDescriptor(element.node, element.textRange))
+            }
+        }
+        element.acceptChildren(this)
+    }
+
+    override fun visitQueryStatement(o: ShireQueryStatement) {
+        descriptors.add(FoldingDescriptor(o.node, o.textRange))
+    }
+
+    override fun visitCaseBody(o: ShireCaseBody) {
+        descriptors.add(FoldingDescriptor(o.node, o.textRange))
     }
 }
