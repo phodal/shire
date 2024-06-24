@@ -342,6 +342,10 @@ project(":") {
     dependencies {
         implementation(project(":core"))
 
+        // custom agent deps
+        implementation(libs.json.pathkt)
+        implementation(libs.okhttp)
+        implementation(libs.okhttp.sse)
         // open ai deps
         implementation("com.theokanning.openai-gpt3-java:service:0.18.2")
         implementation("com.squareup.retrofit2:converter-jackson:2.11.0")
