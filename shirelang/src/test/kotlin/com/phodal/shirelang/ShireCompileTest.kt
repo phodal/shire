@@ -154,7 +154,7 @@ class ShireCompileTest : BasePlatformTestCase() {
         assertEquals("\n\nSummary webpage:", compile.shireOutput)
         val when_ = compile.config?.when_
 
-        assertEquals(when_!!.display(), "\$selection.length() >= 1 && \$selection.first() == \"p\"")
+        assertEquals(when_!!.display(), "\$selection.length >= 1 && \$selection.first == \"p\"")
 
         val variables: Map<String, String> = mapOf(
             "selection" to """public class HelloWorld {
