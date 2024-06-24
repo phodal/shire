@@ -61,11 +61,13 @@ data class CustomAgent(
      */
     val defaultTimeout: Long = 10,
     val enabled: Boolean = true,
-    val actionLocation: ShireActionLocation,
+    val actionLocation: ShireActionLocation = ShireActionLocation.CONTEXT_MENU,
 ) {
     var state: CustomAgentState = CustomAgentState.START
 
     companion object {
+        private val cacheForVersion: MutableMap<String, List<CustomAgent>> = mutableMapOf()
+
         fun loadFromProject(project: Project): List<CustomAgent> {
             val configFiles =
                 FilenameIndex.getAllFilesByExt(
@@ -77,8 +79,14 @@ data class CustomAgent(
 
             val firstFile = configFiles.first()
 
+            val content = firstFile.inputStream.reader().readText()
+
+            if (cacheForVersion.containsKey(content)) {
+                return cacheForVersion[content]!!
+            }
+
             val configs: List<CustomAgent> = try {
-                Json.decodeFromString(firstFile.inputStream.reader().readText())
+                Json.decodeFromString(content)
             } catch (e: Exception) {
                 logger<CustomAgent>().error("Failed to load custom agent configuration", e)
                 emptyList()

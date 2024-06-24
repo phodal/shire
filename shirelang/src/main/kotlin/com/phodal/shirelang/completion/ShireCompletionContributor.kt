@@ -6,24 +6,27 @@ import com.intellij.patterns.ElementPattern
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.patterns.PsiElementPattern
 import com.intellij.psi.PsiElement
+import com.intellij.psi.tree.IElementType
 import com.phodal.shirelang.completion.dataprovider.BuiltinCommand
 import com.phodal.shirelang.completion.provider.*
 import com.phodal.shirelang.psi.ShireFrontMatterEntry
-import com.phodal.shirelang.psi.ShireRefExpr
 import com.phodal.shirelang.psi.ShireTypes
 import com.phodal.shirelang.psi.ShireUsed
 
 class ShireCompletionContributor : CompletionContributor() {
     init {
-        extend(CompletionType.BASIC, PlatformPatterns.psiElement(ShireTypes.LANGUAGE_ID), CodeFenceLanguageCompletion())
+        extend(CompletionType.BASIC, identifierAfter(ShireTypes.CODE_BLOCK_START), CodeFenceLanguageCompletion())
 
-        extend(CompletionType.BASIC, PlatformPatterns.psiElement(ShireTypes.VARIABLE_ID), VariableCompletionProvider())
-        extend(CompletionType.BASIC, PlatformPatterns.psiElement(ShireTypes.VARIABLE_ID), AgentToolOverviewCompletion())
+        extend(CompletionType.BASIC, identifierAfter(ShireTypes.AGENT_START), CustomAgentCompletion())
 
-        extend(CompletionType.BASIC, PlatformPatterns.psiElement(ShireTypes.COMMAND_ID), BuiltinCommandCompletion())
-        extend(CompletionType.BASIC, PlatformPatterns.psiElement(ShireTypes.AGENT_ID), CustomAgentCompletion())
+        extend(CompletionType.BASIC, identifierAfter(ShireTypes.VARIABLE_START), VariableCompletionProvider())
 
-        extend(CompletionType.BASIC, PlatformPatterns.psiElement(ShireTypes.FRONT_MATTER_ID), HobbitHoleKeyCompletion())
+        // FOR
+        extend(CompletionType.BASIC, identifierAfter(ShireTypes.VARIABLE_START), AgentToolOverviewCompletion())
+
+        extend(CompletionType.BASIC, identifierAfter(ShireTypes.COMMAND_START), BuiltinCommandCompletion())
+
+        extend(CompletionType.BASIC, identifierAfter(ShireTypes.FRONTMATTER_START), HobbitHoleKeyCompletion())
         extend(CompletionType.BASIC, hobbitHolePattern(), HobbitHoleCompletion())
         extend(CompletionType.BASIC, whenConditionPattern(), WhenConditionCompletionProvider())
         extend(CompletionType.BASIC, whenConditionFuncPattern(), WhenConditionFunctionCompletionProvider())
@@ -66,6 +69,10 @@ class ShireCompletionContributor : CompletionContributor() {
     private fun baseUsedPattern(): PsiElementPattern.Capture<PsiElement> =
         PlatformPatterns.psiElement()
             .inside(psiElement<ShireUsed>())
+
+    private fun identifierAfter(type: IElementType): ElementPattern<out PsiElement> =
+        PlatformPatterns.psiElement(ShireTypes.IDENTIFIER)
+            .afterLeaf(PlatformPatterns.psiElement().withElementType(type))
 
     private fun commandPropPattern(text: String): PsiElementPattern.Capture<PsiElement> =
         baseUsedPattern()

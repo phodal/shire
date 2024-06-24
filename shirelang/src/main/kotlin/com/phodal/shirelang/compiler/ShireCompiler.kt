@@ -50,7 +50,7 @@ class ShireCompiler(
     private val symbolTable = SymbolTable()
 
     companion object {
-        val FLOW_FALG = "[flow]:"
+        const val FLOW_FALG = "[flow]:"
     }
 
     /**

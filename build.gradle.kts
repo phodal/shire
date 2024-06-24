@@ -16,6 +16,7 @@ plugins {
     alias(libs.plugins.changelog) // Gradle Changelog Plugin
     alias(libs.plugins.qodana) // Gradle Qodana Plugin
     alias(libs.plugins.kover) // Gradle Kover Plugin
+    alias(libs.plugins.serialization)
 
     id("org.jetbrains.grammarkit") version "2022.3.2.2"
 }
@@ -58,6 +59,7 @@ allprojects {
     dependencies {
         compileOnly(kotlin("stdlib-jdk8"))
         implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
+        implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.0")
     }
 
     intellij {
@@ -105,9 +107,12 @@ allprojects {
 }
 
 project(":core") {
+    apply {
+        plugin("org.jetbrains.kotlin.plugin.serialization")
+    }
+
     dependencies {
         implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.0")
-//        implementation("org.jgrapht:jgrapht-core:1.5.2")
     }
 }
 
