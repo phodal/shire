@@ -152,7 +152,8 @@ class QueryStatementProcessor(val myProject: Project, editor: Editor, hole: Hobb
         }
 
         // use reflection to call method
-        val method = element.javaClass.methods.find {
+        val allMethods = element.javaClass.methods
+        val method = allMethods.find {
             it.name == methodName
         }
         if (method != null) {
@@ -170,7 +171,7 @@ class QueryStatementProcessor(val myProject: Project, editor: Editor, hole: Hobb
                     if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
                 }
             }"
-            val getter = element.javaClass.methods.find {
+            val getter = allMethods.find {
                 it.name == getterName
             }
 
@@ -179,7 +180,16 @@ class QueryStatementProcessor(val myProject: Project, editor: Editor, hole: Hobb
             }
         }
 
-        logger<QueryStatementProcessor>().warn("method or field not found: $methodName")
+        val supportMethodNames: List<String> = allMethods.map {
+            it.name
+        }
+        val supportFieldNames: List<String> = element.javaClass.fields.map {
+            it.name
+        }
+
+        logger<QueryStatementProcessor>().error("method or field not found: $methodName" +
+                "\nsupported methods: $supportMethodNames" +
+                "\nsupported fields: $supportFieldNames")
         return null
     }
 
