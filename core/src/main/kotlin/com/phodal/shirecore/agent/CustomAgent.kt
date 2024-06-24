@@ -1,8 +1,13 @@
 package com.phodal.shirecore.agent
 
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
+import com.intellij.psi.search.FilenameIndex
 import com.phodal.shirecore.action.ShireActionLocation
+import com.phodal.shirecore.schema.CUSTOM_AGENT_JSON_EXTENSION
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.decodeFromString
 
 @Serializable
 data class CustomFlowTransition(
@@ -61,8 +66,28 @@ data class CustomAgent(
     var state: CustomAgentState = CustomAgentState.START
 
     companion object {
-        fun loadFromProject(myProject: Project): List<CustomAgent> {
-            return emptyList()
+        fun loadFromProject(project: Project): List<CustomAgent> {
+            val configFiles =
+                FilenameIndex.getAllFilesByExt(
+                    project,
+                    CUSTOM_AGENT_JSON_EXTENSION
+                )
+
+            if (configFiles.isEmpty()) return emptyList()
+
+            val firstFile = configFiles.first()
+
+            val configs: List<CustomAgent> = try {
+                Json.decodeFromString(firstFile.inputStream.reader().readText())
+            } catch (e: Exception) {
+                logger<CustomAgent>().error("Failed to load custom agent configuration", e)
+                emptyList()
+            }
+
+            /**
+             * Only return enabled agents
+             */
+            return configs.filter { it.enabled }
         }
     }
 }
