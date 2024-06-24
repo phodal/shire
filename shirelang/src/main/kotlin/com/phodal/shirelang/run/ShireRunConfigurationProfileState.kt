@@ -38,8 +38,9 @@ open class ShireRunConfigurationProfileState(
     private val myProject: Project,
     private val configuration: ShireConfiguration,
 ) : RunProfileState {
-    val executionConsole: ConsoleViewImpl = ConsoleViewImpl(myProject, true)
-    val console = ShireConsoleView(executionConsole)
+    private val executionConsole: ConsoleViewImpl = ConsoleViewImpl(myProject, true)
+    val console: ShireConsoleView
+        get() = ShireConsoleView(executionConsole)
 
     override fun execute(executor: Executor?, runner: ProgramRunner<*>): ExecutionResult {
         val processHandler = ShireProcessHandler(configuration.name)
