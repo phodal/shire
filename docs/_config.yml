@@ -1,6 +1,6 @@
 remote_theme: pmarsceill/just-the-docs
 
-title: Shire - AI Coding & Agents Language
+title: Shire - Generate your coding Agent
 description: Shire offers a straightforward AI Coding & Agents Language that enables communication between an LLM and control IDE for automated programming.
 
 heading_anchors: true
