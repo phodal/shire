@@ -141,13 +141,11 @@ object FrontmatterParser {
      */
     fun parseExpr(expr: PsiElement): Statement = when (expr.elementType) {
         ShireTypes.CALL_EXPR -> {
-            val refExpr = PsiTreeUtil
-                .findChildrenOfType(expr, ShireExpr::class.java)
-                .first() as ShireRefExpr
+            val shireCallExpr = expr as ShireCallExpr
+            val expressionList = shireCallExpr.expressionList
+            val hasParentheses = expressionList?.prevSibling?.text == "("
 
-            val expressionList = (expr as ShireCallExpr).expressionList
-
-            buildMethodCall(refExpr, expressionList?.children)
+            buildMethodCall(shireCallExpr.refExpr, expressionList?.children, hasParentheses)
         }
 
         ShireTypes.EQ_COMPARISON_EXPR -> {
@@ -182,7 +180,7 @@ object FrontmatterParser {
             if (refExpr.expr == null) {
                 Value(FrontMatterType.IDENTIFIER(refExpr.identifier.text))
             } else {
-                val methodCall = buildMethodCall(refExpr, null)
+                val methodCall = buildMethodCall(refExpr, null, false)
                 methodCall
             }
         }
@@ -209,19 +207,18 @@ object FrontmatterParser {
                 if (refExpr.expr == null) {
                     FrontMatterType.IDENTIFIER(refExpr.identifier.text)
                 } else {
-                    val methodCall = buildMethodCall(refExpr, null)
+                    val methodCall = buildMethodCall(refExpr, null, false)
                     FrontMatterType.EXPRESSION(methodCall)
                 }
             }
 
-            // callExpr ::= refExpr '(' expressionList? ')'
             ShireTypes.CALL_EXPR -> {
-                val refExpr = PsiTreeUtil
-                    .findChildrenOfType(expr, ShireExpr::class.java)
-                    .first() as ShireRefExpr
+                val shireCallExpr = expr as ShireCallExpr
 
-                val expressionList = (expr as ShireCallExpr).expressionList
-                val methodCall = this.buildMethodCall(refExpr, expressionList?.children)
+                val expressionList = shireCallExpr.expressionList
+                val hasParentheses = expressionList?.prevSibling?.text == "("
+
+                val methodCall = this.buildMethodCall(expr.refExpr, expressionList?.children, hasParentheses)
                 FrontMatterType.EXPRESSION(methodCall)
             }
 
@@ -233,7 +230,7 @@ object FrontmatterParser {
     }
 
 
-    private fun buildMethodCall(refExpr: ShireRefExpr, expressionList: Array<PsiElement>?): MethodCall {
+    private fun buildMethodCall(refExpr: ShireRefExpr, expressionList: Array<PsiElement>?, hasParentheses: Boolean): MethodCall {
         val left = if (refExpr.expr == null) {
             FrontMatterType.IDENTIFIER(refExpr.identifier.text)
         } else {
@@ -243,8 +240,13 @@ object FrontmatterParser {
         val id = refExpr.expr?.nextSibling?.nextSibling
         val right = FrontMatterType.IDENTIFIER(id?.text ?: "")
 
-        val args = expressionList?.map {
+        var args = expressionList?.map {
             parseRefExpr(it)
+        }
+
+        // fix for () lost in display()
+        if (hasParentheses && args == null) {
+            args = emptyList()
         }
 
         return MethodCall(left, right, args)
