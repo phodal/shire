@@ -105,7 +105,6 @@ AND                      =and
     private boolean isInsideShireTemplate = false;
     private boolean isInsideQueryExpression = false;
     private boolean isInsideFrontMatter = false;
-    private boolean isFMObjectStart = false;
 %}
 
 %{
@@ -213,12 +212,10 @@ AND                      =and
           return TokenType.WHITE_SPACE;
       }
 
-      if (isAfterEol() && !isFMObjectStart) {
-          isFMObjectStart = true;
+      if (isAfterEol()) {
           yybegin(FRONT_MATTER_VAL_OBJECT);
           return INDENT;
       } else {
-          isFMObjectStart = false;
           return TokenType.WHITE_SPACE;
       }
     }
