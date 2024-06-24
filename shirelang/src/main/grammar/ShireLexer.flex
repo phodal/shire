@@ -105,6 +105,8 @@ AND                      =and
     private boolean isInsideShireTemplate = false;
     private boolean isInsideQueryExpression = false;
     private boolean isInsideFrontMatter = false;
+    private boolean patternActionBraceStart = false;
+    private int patternActionBraceLevel = 0;
 %}
 
 %{
@@ -260,22 +262,31 @@ AND                      =and
   "<="                    { return LTE; }
   ">"                     { return GT; }
   ">="                    { return GTE; }
-  {WHITE_SPACE}           { return TokenType.WHITE_SPACE; }
   "$"                     { return VARIABLE_START; }
   "("                     { return LPAREN; }
   ")"                     { return RPAREN; }
 
+  {WHITE_SPACE}           { return TokenType.WHITE_SPACE; }
   [^]                     { yypushback(yylength()); yybegin(FRONT_MATTER_BLOCK); }
 }
 
 <PATTERN_ACTION_BLOCK> {
-  "{"                    { return OPEN_BRACE; }
-  "}"                    { return CLOSE_BRACE; }
+  "{"                    { patternActionBraceStart = true; patternActionBraceLevel++; return OPEN_BRACE; }
+  "}"                    { patternActionBraceLevel--; return CLOSE_BRACE; }
   "|"                    { return PIPE; }
   ","                    { return COMMA; }
   "("                    { return LPAREN; }
   ")"                    { return RPAREN; }
-  {WHITE_SPACE}          { return TokenType.WHITE_SPACE; }
+  {WHITE_SPACE}          {
+          if (patternActionBraceStart && patternActionBraceLevel == 0) {
+              patternActionBraceStart = false;
+              yybegin(FRONT_MATTER_VAL_OBJECT);
+              return INDENT;
+          } else {
+              return TokenType.WHITE_SPACE;
+          }
+      }
+
   {NEWLINE}              { return NEWLINE; }
 
   // keywords
@@ -287,7 +298,7 @@ AND                      =and
   {QUOTE_STRING}         { return QUOTE_STRING; }
   {PATTERN_EXPR}         { return PATTERN_EXPR; }
   "=>"                   { return ARROW; }
-  [^]                    { yypushback(yylength()); yybegin(FRONT_MATTER_VALUE_BLOCK); }
+  [^]                    { patternActionBraceStart = false; yypushback(yylength()); yybegin(FRONT_MATTER_VALUE_BLOCK); }
 }
 
 <COMMENT_BLOCK> {
@@ -299,20 +310,24 @@ AND                      =and
   "from"                  { return FROM; }
   "where"                 { return WHERE; }
   "select"                { return SELECT; }
-
-  "{"                     { isInsideQueryExpression = true; yybegin(EXPR_BLOCK); return OPEN_BRACE; }
-  "}"                     { isInsideQueryExpression = false; return CLOSE_BRACE; }
-
+  "{"                     { patternActionBraceLevel++; isInsideQueryExpression = true; yybegin(EXPR_BLOCK); return OPEN_BRACE; }
+  "}"                     { patternActionBraceLevel--; if (patternActionBraceLevel == 0) { isInsideQueryExpression = false; } return CLOSE_BRACE; }
   {IDENTIFIER}            { if (isInsideQueryExpression) { yypushback(yylength()); yybegin(EXPR_BLOCK); } else { return IDENTIFIER; } }
-
   {COMMENT}               { return COMMENT; }
   {BLOCK_COMMENT}         { return BLOCK_COMMENT; }
-
-  {WHITE_SPACE}           { return TokenType.WHITE_SPACE; }
-  {NEWLINE}               { return NEWLINE; }
-
   {COMMA}                 { return COMMA; }
-  [^]                     { yypushback(yylength()); yybegin(FRONT_MATTER_BLOCK); }
+
+  {NEWLINE}               { return NEWLINE; }
+  {WHITE_SPACE}           {
+          if (isInsideQueryExpression && patternActionBraceLevel == 0) {
+              isInsideQueryExpression = false;
+              yybegin(FRONT_MATTER_VAL_OBJECT);
+              return INDENT;
+          } else {
+              return TokenType.WHITE_SPACE;
+          }
+      }
+  [^]                     { isInsideQueryExpression = false; yypushback(yylength()); yybegin(FRONT_MATTER_BLOCK); }
 }
 
 <YYUSED> {
