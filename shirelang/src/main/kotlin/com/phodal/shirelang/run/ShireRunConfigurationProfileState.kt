@@ -77,7 +77,7 @@ open class ShireRunConfigurationProfileState(
 
         val input = compileResult.shireOutput
 
-        val promptText = ShireTemplateCompiler(myProject, compileResult.config!!, symbolTable, input).compile()
+        val promptText = ShireTemplateCompiler(myProject, compileResult.config, symbolTable, input).compile()
         logCompiled(console!!, promptText)
 
         if (promptText.contains(SHIRE_ERROR)) {

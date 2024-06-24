@@ -18,10 +18,7 @@ import com.phodal.shirelang.compiler.exec.*
 import com.phodal.shirelang.completion.dataprovider.BuiltinCommand
 import com.phodal.shirelang.completion.dataprovider.CustomCommand
 import com.phodal.shirelang.parser.CodeBlockElement
-import com.phodal.shirelang.psi.ShireFile
-import com.phodal.shirelang.psi.ShireFrontMatterHeader
-import com.phodal.shirelang.psi.ShireTypes
-import com.phodal.shirelang.psi.ShireUsed
+import com.phodal.shirelang.psi.*
 import kotlinx.coroutines.runBlocking
 
 
@@ -74,6 +71,7 @@ class ShireCompiler(
 
                     output.append(psiElement.text)
                 }
+
                 ShireTypes.USED -> processUsed(psiElement as ShireUsed)
                 ShireTypes.COMMENTS -> {
                     if (psiElement.text.startsWith(FLOW_FALG)) {
@@ -105,6 +103,7 @@ class ShireCompiler(
                 ShireTypes.VELOCITY_EXPR -> {
                     logger.info("Velocity expression found: ${psiElement.text}")
                 }
+
                 else -> {
                     output.append(psiElement.text)
                     logger.warn("Unknown element type: ${psiElement.elementType}")
@@ -163,8 +162,10 @@ class ShireCompiler(
             }
 
             ShireTypes.AGENT_START -> {
+                val shireAgentId = id as ShireAgentId
                 val configs = CustomAgent.loadFromProject(myProject).filter {
-                    it.name == id?.text
+                    it.name == shireAgentId.quoteString?.text?.removeSurrounding("\"")?.removeSurrounding("'")
+                            || it.name == shireAgentId.identifier?.text
                 }
 
                 if (configs.isNotEmpty()) {
@@ -186,7 +187,8 @@ class ShireCompiler(
 
                 val lineNo = try {
                     val containingFile = currentElement.containingFile
-                    val document: Document? = PsiDocumentManager.getInstance(firstChild!!.project).getDocument(containingFile)
+                    val document: Document? =
+                        PsiDocumentManager.getInstance(firstChild!!.project).getDocument(containingFile)
                     document?.getLineNumber(firstChild.textRange.startOffset) ?: 0
                 } catch (e: Exception) {
                     0

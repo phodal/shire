@@ -70,10 +70,7 @@ data class CustomAgent(
 
         fun loadFromProject(project: Project): List<CustomAgent> {
             val configFiles =
-                FilenameIndex.getAllFilesByExt(
-                    project,
-                    CUSTOM_AGENT_JSON_EXTENSION
-                )
+                FilenameIndex.getAllFilesByExt(project, CUSTOM_AGENT_JSON_EXTENSION)
 
             if (configFiles.isEmpty()) return emptyList()
 

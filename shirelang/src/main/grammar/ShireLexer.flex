@@ -362,6 +362,7 @@ AND                      =and
 
 <AGENT_BLOCK> {
   {IDENTIFIER}         { yybegin(YYINITIAL); return IDENTIFIER; }
+  {QUOTE_STRING}       { yybegin(YYINITIAL); return QUOTE_STRING; }
   [^]                  { return TokenType.BAD_CHARACTER; }
 }
 

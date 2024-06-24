@@ -12,7 +12,7 @@ import com.phodal.shirelang.compiler.variable._base.VariableResolverContext
  */
 class ShireTemplateCompiler(
     private val myProject: Project,
-    private val hole: HobbitHole,
+    private val hole: HobbitHole?,
     private val symbolTable: SymbolTable,
     private val input: String,
 ) {

@@ -158,7 +158,7 @@ agentStart ::= '@'
 commandStart ::= '/'
 variableStart ::= '$'
 
-agentId ::= IDENTIFIER
+agentId ::= IDENTIFIER | QUOTE_STRING
 commandId ::= IDENTIFIER
 variableId ::= IDENTIFIER
 languageId ::= IDENTIFIER

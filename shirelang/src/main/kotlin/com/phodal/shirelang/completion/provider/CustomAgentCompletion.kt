@@ -15,7 +15,9 @@ class CustomAgentCompletion : CompletionProvider<CompletionParameters>() {
     ) {
         val configs: List<CustomAgent> = CustomAgent.loadFromProject(parameters.originalFile.project)
         configs.forEach {
-            result.addElement(LookupElementBuilder.create(it.name).withTypeText(it.description, true))
+            result.addElement(LookupElementBuilder
+                .create("\"${it.name}\"")
+                .withTypeText(it.description, true))
         }
     }
 }
