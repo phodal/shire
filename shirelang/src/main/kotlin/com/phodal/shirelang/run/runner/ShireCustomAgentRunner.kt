@@ -6,7 +6,7 @@ import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.agent.CustomAgent
-import com.phodal.shirecore.agent.CustomAgentExecutor
+import com.phodal.shire.agent.CustomAgentExecutor
 import com.phodal.shirelang.run.ShireConfiguration
 import com.phodal.shirelang.run.flow.ShireConversationService
 import com.phodal.shirelang.utils.ShireCoroutineScope
