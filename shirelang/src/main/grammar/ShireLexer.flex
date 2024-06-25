@@ -108,7 +108,7 @@ AFTER_STREAMING          =afterStreaming
 %{
     private boolean isCodeStart = false;
     private boolean isInsideShireTemplate = false;
-    private boolean isInsideQueryExpression = false;
+    private boolean isInsideFunctionBlock = false;
     private boolean isInsideFrontMatter = false;
     private boolean patternActionBraceStart = false;
     private int patternActionBraceLevel = 0;
@@ -237,7 +237,7 @@ AFTER_STREAMING          =afterStreaming
   {IDENTIFIER}            { return IDENTIFIER; }
   {PATTERN_EXPR}          { return PATTERN_EXPR; }
   ":"                     { yybegin(FRONT_MATTER_VALUE_BLOCK);return COLON; }
-  "{"                     { yybegin(FUNCTION_DECL_BLOCK); return OPEN_BRACE; }
+  "{"                     { patternActionBraceLevel++; yybegin(FUNCTION_DECL_BLOCK); return OPEN_BRACE; }
 
   {INDENT}                { yybegin(FRONT_MATTER_VAL_OBJECT); return INDENT; }
   {NEWLINE}               { return NEWLINE; }
@@ -320,15 +320,19 @@ AFTER_STREAMING          =afterStreaming
   "where"                 { return WHERE; }
   "select"                { return SELECT; }
   "condition"             { return CONDITION; }
-  "{"                     { patternActionBraceLevel++; isInsideQueryExpression = true; yybegin(EXPR_BLOCK); return OPEN_BRACE; }
-  "}"                     { patternActionBraceLevel--; if (patternActionBraceLevel == 0) { isInsideQueryExpression = false; } return CLOSE_BRACE; }
-  {IDENTIFIER}            { if (isInsideQueryExpression) { yypushback(yylength()); yybegin(EXPR_BLOCK); } else { return IDENTIFIER; } }
+  "case"                  { return CASE; }
+  "default"               { return DEFAULT; }
+
+  "{"                     { patternActionBraceLevel++; isInsideFunctionBlock = true; yybegin(EXPR_BLOCK); return OPEN_BRACE; }
+  "}"                     { patternActionBraceLevel--; if (patternActionBraceLevel == 0) { isInsideFunctionBlock = false; } return CLOSE_BRACE; }
+  {IDENTIFIER}            { if (isInsideFunctionBlock) { yypushback(yylength()); yybegin(EXPR_BLOCK); } else { return IDENTIFIER; } }
 
   {NUMBER}                { return NUMBER; }
   {DATE}                  { return DATE; }
   {BOOLEAN}               { return BOOLEAN; }
   {QUOTE_STRING}          { return QUOTE_STRING; }
   {PATTERN_EXPR}          { yybegin(PATTERN_ACTION_BLOCK); return PATTERN_EXPR; }
+
   "["                     { return LBRACKET; }
   "]"                     { return RBRACKET; }
   ","                     { return COMMA; }
@@ -353,8 +357,9 @@ AFTER_STREAMING          =afterStreaming
 
   {NEWLINE}               { return NEWLINE; }
   {WHITE_SPACE}           {
-          if (isInsideQueryExpression && patternActionBraceLevel == 0) {
-              isInsideQueryExpression = false;
+          if (isInsideFunctionBlock && patternActionBraceLevel == 0) {
+              isInsideFunctionBlock = false;
+              System.out.println("PatternActionBraceLevel: " + patternActionBraceLevel);
               yybegin(FRONT_MATTER_VAL_OBJECT);
               return INDENT;
           } else {
@@ -363,7 +368,7 @@ AFTER_STREAMING          =afterStreaming
       }
 
   [^]                     {
-          isInsideQueryExpression = false;
+          isInsideFunctionBlock = false;
           yypushback(yylength());
           yybegin(FRONT_MATTER_BLOCK);
       }
@@ -391,7 +396,7 @@ AFTER_STREAMING          =afterStreaming
 
 <COMMAND_VALUE_BLOCK> {
   {COMMAND_PROP}          { return command_value();  }
-  [^]                     { yypushback(1); yybegin(YYINITIAL); }
+  [^]                     { yypushback(yylength()); yybegin(YYINITIAL); }
 }
 
 <LINE_BLOCK> {
@@ -448,7 +453,7 @@ AFTER_STREAMING          =afterStreaming
   {IDENTIFIER}         { return IDENTIFIER; }
   {QUOTE_STRING}       { return QUOTE_STRING; }
   {WHITE_SPACE}        { return TokenType.WHITE_SPACE; }
-  [^]                  { yypushback(yylength()); if (isInsideShireTemplate) { yybegin(CODE_BLOCK); }  else if (isInsideQueryExpression) { yybegin(FUNCTION_DECL_BLOCK);} else { yybegin(YYINITIAL); } }
+  [^]                  { yypushback(yylength()); if (isInsideShireTemplate) { yybegin(CODE_BLOCK); }  else if (isInsideFunctionBlock) { yybegin(FUNCTION_DECL_BLOCK);} else { yybegin(YYINITIAL); } }
 }
 
 <CODE_BLOCK> {

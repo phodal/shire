@@ -111,8 +111,8 @@ caseBody ::= conditionFlag? CASE NEWLINE* ('condition' | QUOTE_STRING) blockStar
 casePatternAction ::= caseCondition blockStart (actionExpr PIPE)* actionExpr blockEnd
 caseCondition ::= DEFAULT | pattern | QUOTE_STRING
 
-conditionFlag ::= 'condition' blockStart (conditionStatement)* blockEnd
-conditionStatement ::= (WHITE_SPACE | INDENT)? caseCondition blockStart conditionExpr blockEnd NEWLINE?
+conditionFlag ::= 'condition' blockStart conditionStatement* blockEnd
+conditionStatement ::= caseCondition blockStart conditionExpr blockEnd NEWLINE?
 
 pattern ::= PATTERN_EXPR
 
