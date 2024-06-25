@@ -15,7 +15,7 @@ import com.phodal.shirelang.psi.ShireUsed
 
 class ShireCompletionContributor : CompletionContributor() {
     init {
-        extend(CompletionType.BASIC, identifierAfter(ShireTypes.CODE_BLOCK_START), CodeFenceLanguageCompletion())
+        extend(CompletionType.BASIC, PlatformPatterns.psiElement(ShireTypes.LANGUAGE_IDENTIFIER), CodeFenceLanguageCompletion())
 
         extend(CompletionType.BASIC, identifierAfter(ShireTypes.AGENT_START), CustomAgentCompletion())
 

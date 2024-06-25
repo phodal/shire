@@ -33,7 +33,7 @@ class CodeFenceLanguageCompletion : CompletionProvider<CompletionParameters>() {
 
     private class MyInsertHandler : InsertHandler<LookupElement> {
         override fun handleInsert(context: InsertionContext, item: LookupElement) {
-            context.document.insertString(context.tailOffset, "\n\n")
+            context.document.insertString(context.tailOffset, "\n\n```\n")
             context.editor.caretModel.moveCaretRelatively(1, 0, false, false, false)
         }
     }
