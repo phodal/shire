@@ -11,15 +11,14 @@ variables:
 onStreaming: { /* functions */ }
 onStreamingEnd: { parseCode("json") | verifyCode("json") | runCode("json") }
 afterStreaming: {
-    flags {
-      "variable-sucesss" { $selection.length > 1 }
-      "jsonpath-success" { jsonpath("$.phoneNumbers[:1].type") }
-      "fail" { $content.contains("error") && $content.regex("exception") }
+    condition {
+      "variable-success" { $selection.length > 1 }
+      "jsonpath-success" { jsonpath("/bookstore/book[price>35]") }
     }
-    case flags {
+    case condition {
       "variable-sucesss" { done }
       "jsonpath-success" { task() }
-      "fail" { task() }
+      default { task() }
     }
   }
 ---

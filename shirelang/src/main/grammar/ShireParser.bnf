@@ -51,6 +51,7 @@
     FROM                 = 'from'
     WHERE                = 'where'
     SELECT               = 'select'
+    CONDITION            = 'condition'
 
     WHEN                 = "when"
     ON_STREAMING         = "onStreaming"
@@ -106,11 +107,12 @@ funcName ::= IDENTIFIER
 pipelineArgs ::= (pipelineArg (COMMA pipelineArg)*)?
 pipelineArg ::= NUMBER | IDENTIFIER | QUOTE_STRING
 
-caseBody ::= flagCondition? CASE NEWLINE* (QUOTE_STRING | IDENTIFIER) blockStart casePatternAction* blockEnd
+caseBody ::= conditionFlag? CASE NEWLINE* ('condition' | QUOTE_STRING) blockStart casePatternAction* blockEnd
 casePatternAction ::= caseCondition blockStart (actionExpr PIPE)* actionExpr blockEnd
 caseCondition ::= DEFAULT | pattern | QUOTE_STRING
 
-flagCondition ::= IDENTIFIER blockStart (actionExpr PIPE)* actionExpr blockEnd
+conditionFlag ::= 'condition' blockStart (conditionStatement)* blockEnd
+conditionStatement ::= (WHITE_SPACE | INDENT)? caseCondition blockStart conditionExpr blockEnd NEWLINE?
 
 pattern ::= PATTERN_EXPR
 
@@ -175,7 +177,7 @@ languageId ::= LANGUAGE_IDENTIFIER
 // just make template pass success not fail
 varAccess ::= OPEN_BRACE variableId (DOT variableId)* CLOSE_BRACE
 
-code ::=  CODE_BLOCK_START (languageId | variableStart expr)? NEWLINE? code_contents? CODE_BLOCK_END?
+code ::= CODE_BLOCK_START (languageId | variableStart expr)? NEWLINE? code_contents? CODE_BLOCK_END?
 
 code_contents ::= (NEWLINE | CODE_CONTENT)*
 

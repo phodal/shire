@@ -42,7 +42,7 @@ import java.util.regex.Pattern;
 %s FRONT_MATTER_VAL_OBJECT
 %s PATTERN_ACTION_BLOCK
 %s CONDITION_EXPR_BLOCK
-%s QUERY_STATEMENT_BLOCK
+%s FUNCTION_DECL_BLOCK
 
 %s LANG_ID
 
@@ -93,16 +93,17 @@ DEFAULT                  =default
 CASE                     =case
 ARROW                    ==>
 WHEN                     =when
-// "onStreaming" | "onStreamingEnd" | "afterStreaming"
-ON_STREAMING             =onStreaming
-ON_STREAMING_END         =onStreamingEnd
-AFTER_STREAMING          =afterStreaming
+CONDITION                =condition
 IF                       =if
 ELSE                     =else
 ELSEIF                   =elseif
 ENDIF                    =endif
 END                      =end
 AND                      =and
+
+ON_STREAMING             =onStreaming
+ON_STREAMING_END         =onStreamingEnd
+AFTER_STREAMING          =afterStreaming
 
 %{
     private boolean isCodeStart = false;
@@ -236,7 +237,7 @@ AND                      =and
   {IDENTIFIER}            { return IDENTIFIER; }
   {PATTERN_EXPR}          { return PATTERN_EXPR; }
   ":"                     { yybegin(FRONT_MATTER_VALUE_BLOCK);return COLON; }
-  "{"                     { yybegin(QUERY_STATEMENT_BLOCK); return OPEN_BRACE; }
+  "{"                     { yybegin(FUNCTION_DECL_BLOCK); return OPEN_BRACE; }
 
   {INDENT}                { yybegin(FRONT_MATTER_VAL_OBJECT); return INDENT; }
   {NEWLINE}               { return NEWLINE; }
@@ -314,13 +315,38 @@ AND                      =and
   [^]                     { yypushback(yylength()); yybegin(YYINITIAL); return TEXT_SEGMENT; }
 }
 
-<QUERY_STATEMENT_BLOCK> {
+<FUNCTION_DECL_BLOCK> {
   "from"                  { return FROM; }
   "where"                 { return WHERE; }
   "select"                { return SELECT; }
+  "condition"             { return CONDITION; }
   "{"                     { patternActionBraceLevel++; isInsideQueryExpression = true; yybegin(EXPR_BLOCK); return OPEN_BRACE; }
   "}"                     { patternActionBraceLevel--; if (patternActionBraceLevel == 0) { isInsideQueryExpression = false; } return CLOSE_BRACE; }
   {IDENTIFIER}            { if (isInsideQueryExpression) { yypushback(yylength()); yybegin(EXPR_BLOCK); } else { return IDENTIFIER; } }
+
+  {NUMBER}                { return NUMBER; }
+  {DATE}                  { return DATE; }
+  {BOOLEAN}               { return BOOLEAN; }
+  {QUOTE_STRING}          { return QUOTE_STRING; }
+  {PATTERN_EXPR}          { yybegin(PATTERN_ACTION_BLOCK); return PATTERN_EXPR; }
+  "["                     { return LBRACKET; }
+  "]"                     { return RBRACKET; }
+  ","                     { return COMMA; }
+  "!"                     { return NOT; }
+  "&&"                    { return ANDAND; }
+  "||"                    { return OROR; }
+  "."                     { return DOT; }
+  "=="                    { return EQEQ; }
+  "!="                    { return NEQ; }
+  "<"                     { return LT; }
+  "<="                    { return LTE; }
+  ">"                     { return GT; }
+  ">="                    { return GTE; }
+  "$"                     { return VARIABLE_START; }
+  "("                     { return LPAREN; }
+  ")"                     { return RPAREN; }
+  "|"                     { return PIPE; }
+
   {COMMENT}               { return COMMENT; }
   {BLOCK_COMMENT}         { return BLOCK_COMMENT; }
   {COMMA}                 { return COMMA; }
@@ -335,7 +361,12 @@ AND                      =and
               return TokenType.WHITE_SPACE;
           }
       }
-  [^]                     { isInsideQueryExpression = false; yypushback(yylength()); yybegin(FRONT_MATTER_BLOCK); }
+
+  [^]                     {
+          isInsideQueryExpression = false;
+          yypushback(yylength());
+          yybegin(FRONT_MATTER_BLOCK);
+      }
 }
 
 <YYUSED> {
@@ -348,6 +379,7 @@ AND                      =and
   {NEWLINE}               { return NEWLINE; }
   {TEXT_SEGMENT}          { return TEXT_SEGMENT; }
   {SHARP}                 { yybegin(EXPR_BLOCK); return SHARP; }
+
   [^]                     { return TokenType.BAD_CHARACTER; }
 }
 
@@ -416,7 +448,7 @@ AND                      =and
   {IDENTIFIER}         { return IDENTIFIER; }
   {QUOTE_STRING}       { return QUOTE_STRING; }
   {WHITE_SPACE}        { return TokenType.WHITE_SPACE; }
-  [^]                  { yypushback(yylength()); if (isInsideShireTemplate) { yybegin(CODE_BLOCK); }  else if (isInsideQueryExpression) { yybegin(QUERY_STATEMENT_BLOCK);} else { yybegin(YYINITIAL); } }
+  [^]                  { yypushback(yylength()); if (isInsideShireTemplate) { yybegin(CODE_BLOCK); }  else if (isInsideQueryExpression) { yybegin(FUNCTION_DECL_BLOCK);} else { yybegin(YYINITIAL); } }
 }
 
 <CODE_BLOCK> {
