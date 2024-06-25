@@ -9,7 +9,7 @@ permalink: /
 <p align="center">
   <img src="images/pluginIcon.svg" width="160px" height="160px"  alt="logo" />
 </p>
-<h1 align="center">Shire - Generate your coding Agent</h1>
+<h1 align="center">Shire - AI Coding & Agents Language</h1>
 <p align="center">
   <a href="https://github.com/phodal/shire/actions/workflows/build.yml">
     <img src="https://github.com/phodal/shire/workflows/Build/badge.svg" alt="Build" />

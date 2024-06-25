@@ -5,9 +5,12 @@ parent: Shire Language
 nav_order: 1
 ---
 
-## Hobbit Hole 
+Shire 主要由两部分组成：
 
-HobbitHole is a Frontmatter-based language that allows you to  
+- Hobbit Hole，用于定义数据处理流程与 IDE 交互 逻辑。
+- Shire Template，用于编译和生成最终的提示词。
+
+## Hobbit Hole 
 
 Here is the detail
 
@@ -23,5 +26,7 @@ Here is the detail
 We use Velocity Template to generate the final prompt, and you can access the context variables in the template.
 
 ```shire
+Explain follow code
 
+$beforeCursor
 ```
