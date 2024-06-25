@@ -1,8 +1,9 @@
 ---
-menuActivate: "xxx"
-onStreamStart: [""]
-onStreamFinish: ["VerifyCode", "RunCode"]
-finishFlag: {
+activateMenu: "xxx"
+beforeActivate: [""]
+onStreaming: { /* functions */ }
+onStreamingDone: ["VerifyCode", "RunCode"]
+afterStreaming: {
     flags: {
       "variable-sucesss": $selection.length > 1
       "jsonpath-success": jsonpath("$.phoneNumbers[:1].type")
@@ -16,8 +17,13 @@ finishFlag: {
   }
 ---
 
-afterStreamFinish:
+nextAction:
 
 - //bookstore/book[price>35]
 - $.phoneNumbers[:1].type
 - Regex
+
+onStreamingDone:
+
+- Array of processor
+- Object flow

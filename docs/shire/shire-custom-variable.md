@@ -1,0 +1,25 @@
+---
+layout: default
+title: Shire Custom Variable
+parent: Shire Language
+nav_order: 6
+---
+
+for example:
+
+```shire
+---
+variables:
+  "var1": "demo"
+  "var2": /.*.java/ { grep("error.log") | sort | xargs("rm")}
+  "var3": /.*.log/ {
+    case "$0" {
+      "error" { grep("ERROR") | sort | xargs("notify_admin") }
+      "warn" { grep("WARN") | sort | xargs("notify_admin") }
+      "info" { grep("INFO") | sort | xargs("notify_user") }
+      default  { grep("ERROR") | sort | xargs("notify_admin") }
+    }
+  }
+  "var4": 42
+---
+```
