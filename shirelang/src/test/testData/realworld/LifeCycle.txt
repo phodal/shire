@@ -73,7 +73,7 @@ ShireFile
   PsiWhiteSpace(' ')
   PsiComment(ShireTokenType.BLOCK_COMMENT)('/* functions */')
   PsiWhiteSpace(' ')
-  PsiErrorElement:ShireTokenType.NEWLINE or ShireTokenType.from expected, got '}'
+  PsiErrorElement:<function body> or ShireTokenType.NEWLINE expected, got '}'
     PsiElement(ShireTokenType.})('}')
   PsiElement(DUMMY_BLOCK)
     PsiElement(ShireTokenType.NEWLINE)('\n')

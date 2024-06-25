@@ -81,8 +81,8 @@ frontMatterHeader ::= FRONTMATTER_START NEWLINE frontMatterEntries FRONTMATTER_E
 
 frontMatterEntries ::= frontMatterEntry*
 frontMatterEntry ::=
-    lifecycleId COLON (conditionExpr | functionBody) NEWLINE?
-    | frontMatterKey COLON (frontMatterValue | patternAction | queryStatement) NEWLINE?
+    lifecycleId COLON conditionExpr NEWLINE?
+    | frontMatterKey COLON (frontMatterValue | patternAction | functionStatement) NEWLINE?
 
 private lifecycleId ::= "when" | "onStreaming" | "onStreamingEnd" | "afterStreaming"
 
@@ -98,7 +98,6 @@ keyValue ::= frontMatterEntry
 patternAction ::= pattern actionBlock
 actionBlock ::=  blockStart (actionBody) blockEnd
 
-functionBody ::= blockStart (actionBody) blockEnd
 actionBody ::= (actionExpr PIPE)* actionExpr
 actionExpr ::= flagCondition | caseBody | funcCall
 
@@ -187,7 +186,13 @@ velocityExpr ::=
     | '#' 'end'
     | '#' 'endif'
 
-queryStatement ::= blockStart from_clause where_clause select_clause blockEnd
+functionStatement ::= blockStart functionBody blockEnd
+
+functionBody ::=
+    queryStatement
+    | actionBlock
+
+queryStatement ::= from_clause where_clause select_clause
 
 from_clause ::= FROM blockStart psi_element_decl blockEnd
 

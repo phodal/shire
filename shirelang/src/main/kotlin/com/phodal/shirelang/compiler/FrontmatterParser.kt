@@ -76,8 +76,8 @@ object FrontmatterParser {
                         frontMatter[lastKey] = FrontMatterType.EXPRESSION(parseExpr(child))
                     }
 
-                    ShireTypes.QUERY_STATEMENT -> {
-                        frontMatter[lastKey] = ShireAstQLParser.parse(child as ShireQueryStatement)
+                    ShireTypes.FUNCTION_STATEMENT -> {
+                        frontMatter[lastKey] = parseFunction(child as ShireFunctionStatement)
                     }
 
                     else -> {
@@ -88,6 +88,19 @@ object FrontmatterParser {
         }
 
         return frontMatter
+    }
+
+    private fun parseFunction(statement: ShireFunctionStatement): FrontMatterType {
+        return when(val body = statement.functionBody.firstChild) {
+            is ShireQueryStatement -> {
+                 ShireAstQLParser.parse(body)
+            }
+
+            else -> {
+                logger.error("parseFunction, Unknown function type: ${body.elementType}")
+                FrontMatterType.STRING("Unknown function type: ${body.elementType}")
+            }
+        }
     }
 
     private fun parseLogicAndExprToType(child: ShireLogicalAndExpr): FrontMatterType? {
