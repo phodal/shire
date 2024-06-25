@@ -406,9 +406,9 @@ AFTER_STREAMING          =afterStreaming
 }
 
 <AGENT_BLOCK> {
-  {IDENTIFIER}         { yybegin(YYINITIAL); return IDENTIFIER; }
-  {QUOTE_STRING}       { yybegin(YYINITIAL); return QUOTE_STRING; }
-  [^]                  { return TokenType.BAD_CHARACTER; }
+  {IDENTIFIER}           { yybegin(YYINITIAL); return IDENTIFIER; }
+  {QUOTE_STRING}         { yybegin(YYINITIAL); return QUOTE_STRING; }
+  [^]                    { yypushback(yylength()); yybegin(YYINITIAL); }
 }
 
 <VARIABLE_BLOCK> {

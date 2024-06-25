@@ -23,13 +23,13 @@ afterStreaming: {
   }
 ---
 
-nextAction:
-
-- //bookstore/book[price>35]
-- $.phoneNumbers[:1].type
-- Regex
-
 onStreamingDone:
 
 - Array of processor
 - Object flow
+
+```markdown
+- //bookstore/book[price>35]
+- $.phoneNumbers[:1].type
+- Regex
+```
