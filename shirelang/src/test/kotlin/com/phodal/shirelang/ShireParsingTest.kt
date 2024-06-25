@@ -84,4 +84,3 @@ class ShireParsingTest : ParsingTestCase("parser", "shire", ShireParserDefinitio
         doTest(true)
     }
 }
-

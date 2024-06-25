@@ -1,6 +1,23 @@
 ---
-onProcessing: [""]
-onResponseFinish: ["VerifyCode", "RunCode"]
-afterFinish: OpenFile
+menuActivate: "xxx"
+onStreamStart: [""]
+onStreamFinish: ["VerifyCode", "RunCode"]
+finishFlag: {
+    flags: {
+      "variable-sucesss": $selection.length > 1
+      "jsonpath-success": jsonpath("$.phoneNumbers[:1].type")
+      "fail": '$content.contains("error") && $content.regex("exception")'
+    }
+    case flags {
+      "variable-sucesss" { done }
+      "jsonpath-success" { task() }
+      "fail" { task() }
+    }
+  }
 ---
 
+afterStreamFinish:
+
+- //bookstore/book[price>35]
+- $.phoneNumbers[:1].type
+- Regex
