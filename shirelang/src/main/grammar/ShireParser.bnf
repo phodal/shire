@@ -43,7 +43,6 @@
     NEWLINE              = "regexp:\n"
     CASE                 = "case"
     DEFAULT              = "default"
-    WHEN                 = "when"
     IF                   = 'if'
     ELSE                 = 'else'
     ELSEIF               = 'elseif'
@@ -52,6 +51,11 @@
     FROM                 = 'from'
     WHERE                = 'where'
     SELECT               = 'select'
+
+    WHEN                 = "when"
+    ON_STREAMING         = "onStreaming"
+    ON_STREAMING_END     = "onStreamingEnd"
+    AFTER_STREAMING      = "afterStreaming"
 
     // operators
     DASH                 = "-"
@@ -77,8 +81,10 @@ frontMatterHeader ::= FRONTMATTER_START NEWLINE frontMatterEntries FRONTMATTER_E
 
 frontMatterEntries ::= frontMatterEntry*
 frontMatterEntry ::=
-    "when" COLON conditionExpr NEWLINE?
+    lifecycleId COLON conditionExpr NEWLINE?
     | frontMatterKey COLON (frontMatterValue | patternAction | queryStatement) NEWLINE?
+
+private lifecycleId ::= "when" | "onStreaming" | "onStreamingEnd" | "afterStreaming"
 
 frontMatterKey ::= frontMatterId | QUOTE_STRING | pattern
 frontMatterValue ::= IDENTIFIER | NUMBER | QUOTE_STRING | DATE | BOOLEAN | frontMatterArray | (NEWLINE objectKeyValue)

@@ -1,7 +1,7 @@
 ---
 when: "xxx"
 onStreaming: { /* functions */ }
-onStreamingDone: ["VerifyCode", "RunCode"]
+onStreamingEnd: ["VerifyCode", "RunCode"]
 afterStreaming: {
     flags {
       "variable-sucesss": $selection.length > 1

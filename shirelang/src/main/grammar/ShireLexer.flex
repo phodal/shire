@@ -93,6 +93,10 @@ DEFAULT                  =default
 CASE                     =case
 ARROW                    ==>
 WHEN                     =when
+// "onStreaming" | "onStreamingEnd" | "afterStreaming"
+ON_STREAMING             =onStreaming
+ON_STREAMING_END         =onStreamingEnd
+AFTER_STREAMING          =afterStreaming
 IF                       =if
 ELSE                     =else
 ELSEIF                   =elseif
@@ -225,6 +229,10 @@ AND                      =and
 
 <FRONT_MATTER_BLOCK> {
   {WHEN}                  { return WHEN; }
+  {ON_STREAMING}          { return ON_STREAMING; }
+  {ON_STREAMING_END}      { return ON_STREAMING_END; }
+  {AFTER_STREAMING}       { return AFTER_STREAMING; }
+
   {IDENTIFIER}            { return IDENTIFIER; }
   {PATTERN_EXPR}          { return PATTERN_EXPR; }
   ":"                     { yybegin(FRONT_MATTER_VALUE_BLOCK);return COLON; }
