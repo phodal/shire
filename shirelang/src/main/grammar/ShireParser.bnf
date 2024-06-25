@@ -81,7 +81,7 @@ frontMatterHeader ::= FRONTMATTER_START NEWLINE frontMatterEntries FRONTMATTER_E
 
 frontMatterEntries ::= frontMatterEntry*
 frontMatterEntry ::=
-    lifecycleId COLON conditionExpr NEWLINE?
+    lifecycleId COLON (conditionExpr | functionBody) NEWLINE?
     | frontMatterKey COLON (frontMatterValue | patternAction | queryStatement) NEWLINE?
 
 private lifecycleId ::= "when" | "onStreaming" | "onStreamingEnd" | "afterStreaming"
@@ -97,17 +97,21 @@ keyValue ::= frontMatterEntry
 
 patternAction ::= pattern actionBlock
 actionBlock ::=  blockStart (actionBody) blockEnd
+
+functionBody ::= blockStart (actionBody) blockEnd
 actionBody ::= (actionExpr PIPE)* actionExpr
-actionExpr ::= caseBody | funcCall
+actionExpr ::= flagCondition | caseBody | funcCall
 
 funcCall ::= funcName ("(" pipelineArgs? ")")?
 funcName ::= IDENTIFIER
 pipelineArgs ::= (pipelineArg (COMMA pipelineArg)*)?
 pipelineArg ::= NUMBER | IDENTIFIER | QUOTE_STRING
 
-caseBody ::= CASE NEWLINE* QUOTE_STRING blockStart casePatternAction* blockEnd
+caseBody ::= CASE NEWLINE* (QUOTE_STRING | IDENTIFIER) blockStart casePatternAction* blockEnd
 casePatternAction ::= caseCondition blockStart (actionExpr PIPE)* actionExpr blockEnd
 caseCondition ::= DEFAULT | pattern | QUOTE_STRING
+
+flagCondition ::= IDENTIFIER blockStart (actionExpr PIPE)* actionExpr blockEnd
 
 pattern ::= PATTERN_EXPR
 

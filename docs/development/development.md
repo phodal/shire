@@ -6,6 +6,8 @@ has_children: true
 permalink: /development
 ---
 
+{: .note }
+Due to my Sabbatical Leave and responsibilities in caring for my child, updates to this document may not be as frequent.
 
 核心概念：
 
