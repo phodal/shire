@@ -39,8 +39,8 @@ nav_order: 1
   {
     "name": "DevInInsert",
     "description": "Update，並指定20秒的timeout時間",
-    "url": "http://127.0.0.1:8765/api/agent/devins-sample",
-    "responseAction": "DevIns",
+    "url": "http://127.0.0.1:8765/api/agent/shire-sample",
+    "responseAction": "Shire",
     "defaultTimeout": 20
   },
   {

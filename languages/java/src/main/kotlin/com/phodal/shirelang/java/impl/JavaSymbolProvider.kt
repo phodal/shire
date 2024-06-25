@@ -114,7 +114,7 @@ class JavaSymbolProvider : ShireSymbolProvider {
             return pkg.classes.map { it.qualifiedName!! }
         }
 
-        // for single class, with function name, like `cc.unitmesh.idea.provider.JavaCustomDevInsSymbolProvider`
+        // for single class, with function name, like `cc.unitmesh.idea.provider.JavaCustomShireSymbolProvider`
         val clazz = JavaFileManagerImpl(project).findClass(symbol, scope)
         if (clazz != null) {
             return clazz.methods.map { "${clazz.qualifiedName}#${it.name}" }

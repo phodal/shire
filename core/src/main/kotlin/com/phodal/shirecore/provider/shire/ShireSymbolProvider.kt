@@ -8,7 +8,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 
 /**
- * The symbol provider for DevIns completion and execution
+ * The symbol provider for Shire completion and execution
  * - Completion will be triggered by like `/symbol:`, and the symbol provider will provide the completion for the symbol.
  * - Execution will be triggered by like `/symbol:java.lang.String`, all load children level elements, like `java.lang.String#length()`
  *
