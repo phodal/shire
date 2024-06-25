@@ -99,14 +99,14 @@ patternAction ::= pattern actionBlock
 actionBlock ::=  blockStart (actionBody) blockEnd
 
 actionBody ::= (actionExpr PIPE)* actionExpr
-actionExpr ::= flagCondition | caseBody | funcCall
+actionExpr ::= funcCall | caseBody
 
 funcCall ::= funcName ("(" pipelineArgs? ")")?
 funcName ::= IDENTIFIER
 pipelineArgs ::= (pipelineArg (COMMA pipelineArg)*)?
 pipelineArg ::= NUMBER | IDENTIFIER | QUOTE_STRING
 
-caseBody ::= CASE NEWLINE* (QUOTE_STRING | IDENTIFIER) blockStart casePatternAction* blockEnd
+caseBody ::= flagCondition? CASE NEWLINE* (QUOTE_STRING | IDENTIFIER) blockStart casePatternAction* blockEnd
 casePatternAction ::= caseCondition blockStart (actionExpr PIPE)* actionExpr blockEnd
 caseCondition ::= DEFAULT | pattern | QUOTE_STRING
 
@@ -186,11 +186,11 @@ velocityExpr ::=
     | '#' 'end'
     | '#' 'endif'
 
-functionStatement ::= blockStart functionBody blockEnd
+functionStatement ::= blockStart functionBody? blockEnd
 
 functionBody ::=
     queryStatement
-    | actionBlock
+    | actionBody
 
 queryStatement ::= from_clause where_clause select_clause
 

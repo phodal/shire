@@ -91,11 +91,14 @@ object FrontmatterParser {
     }
 
     private fun parseFunction(statement: ShireFunctionStatement): FrontMatterType {
-        return when(val body = statement.functionBody.firstChild) {
+        return when(val body = statement.functionBody?.firstChild) {
             is ShireQueryStatement -> {
                  ShireAstQLParser.parse(body)
             }
 
+            null -> {
+                FrontMatterType.EMPTY()
+            }
             else -> {
                 logger.error("parseFunction, Unknown function type: ${body.elementType}")
                 FrontMatterType.STRING("Unknown function type: ${body.elementType}")

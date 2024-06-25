@@ -59,6 +59,12 @@ sealed class FrontMatterType(val value: Any) {
         }
     }
 
+    class EMPTY() : FrontMatterType("") {
+        override fun display(): String {
+            return ""
+        }
+    }
+
     /**
      * The `ARRAY` class is a subclass of `FrontMatterType` that represents a JSON array.
      *
