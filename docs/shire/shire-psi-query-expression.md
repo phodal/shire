@@ -5,7 +5,8 @@ parent: Shire Language
 nav_order: 7
 ---
 
-Shire PSI Query Language, is a query language that allows you to query the AST of the current file. It is used in Shire to define the 
+Shire PSI Query Language, is a query language that allows you to query the AST of the current file. It is used in Shire
+to define the
 context of the current file and to define the actions that can be performed on the current file.
 
 ## Possible Design
@@ -36,10 +37,8 @@ variables:
         PsiClass clazz // here is a comment
     }
     where {
-        clazz.extends("org.springframework.web.bind.annotation.RestController") and
-        clazz.getAnAnnotation() = "org.springframework.web.bind.annotation.RequestMapping"
+        clazz.extends("org.springframework.web.bind.annotation.RestController") and clazz.getAnAnnotation() == "org.springframework.web.bind.annotation.RequestMapping"
     }
-
     select {
         clazz.id, clazz.name, "code"
     }

@@ -42,6 +42,20 @@ nav_order: 1
     "url": "http://127.0.0.1:8765/api/agent/devins-sample",
     "responseAction": "DevIns",
     "defaultTimeout": 20
+  },
+  {
+    "name": "内部 API 集成",
+    "url": "http://127.0.0.1:8765/api/agent/api-market",
+    "auth": {
+      "type": "Bearer",
+      "token": "eyJhbGci"
+    },
+    "connector": {
+      "requestFormat": "{\"customFields\": {\"model\": \"yi-34b-chat\", \"stream\": true}}",
+      "responseFormat": "$.choices[0].delta.content"
+    },
+    "responseAction": "Direct",
+    "interactive": "ChatPanel"
   }
 ]
 ```
