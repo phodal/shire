@@ -1,6 +1,6 @@
 ---
 layout: default
-title: `when` Condition Visible
+title: When
 parent: Lifecycle
 nav_order: 1
 ---
@@ -50,7 +50,7 @@ when: $filePath.contains("src/main/java") && $fileName.contains(".java")
 
 - "length"     -> value.length
 - "trim"       -> value.trim()
-- "contains"   -> value.contains(parameters[0] as String)
+- "contains"    -> value.contains(parameters[0] as String)
 - "startsWith" -> value.startsWith(parameters[0] as String)
 - "endsWith"   -> value.endsWith(parameters[0] as String)
 - "lowercase"  -> value.lowercase()
