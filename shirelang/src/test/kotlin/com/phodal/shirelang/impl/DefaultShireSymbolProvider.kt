@@ -28,15 +28,15 @@ class DefaultShireSymbolProvider : ShireSymbolProvider {
 
         return when (name) {
             "String" -> {
-                return emptyList()
+                emptyList()
             }
 
             "File" -> {
-                return virtualFiles.mapNotNull { PsiManager.getInstance(project).findFile(it) }.toList()
+                virtualFiles.mapNotNull { PsiManager.getInstance(project).findFile(it) }.toList()
             }
 
             else -> {
-                return emptyList()
+                emptyList()
             }
         }
     }

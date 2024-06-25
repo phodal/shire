@@ -5,6 +5,6 @@ ShireFile
       PsiElement(ShireTokenType.LANGUAGE_IDENTIFIER)('typescript jsx')
     PsiElement(ShireTokenType.NEWLINE)('\n')
     ASTWrapperPsiElement(CODE_CONTENTS)
-      PsiElement(ShireTokenType.CODE_CONTENT)('import { Button } from '@material-ui/core';')
+      PsiElement(ShireTokenType.CODE_CONTENT)('import { Button } from '@unitmesh-ui/core';')
       PsiElement(ShireTokenType.NEWLINE)('\n')
     PsiElement(ShireTokenType.CODE_BLOCK_END)('```')
