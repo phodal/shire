@@ -2,7 +2,7 @@
 layout: default
 title: onStreamingDone
 parent: Lifecycle
-nav_order: 6
+nav_order: 3
 ---
 
 `postProcessor` 提供一系列的后处理器，用于对生成的代码进行处理。

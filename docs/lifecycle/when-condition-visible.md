@@ -1,11 +1,11 @@
 ---
 layout: default
-title: activateMenu
+title: `when` Condition Visible
 parent: Lifecycle
 nav_order: 1
 ---
 
-`Condition Visible` 用于定义一个条件，当条件为真时，将显示对应的 Action。
+Activate Menu 是一类 `Condition Visible` 用于定义一个条件，当条件为真时，将显示对应的 Action。
 
 当前支持 Action 类型：ContextMenu（右键）和 Intention Action（意图感知，通过 Alt+Enter）。
 

@@ -1,10 +1,9 @@
 ---
-activateMenu: "xxx"
-beforeActivate: [""]
+when: "xxx"
 onStreaming: { /* functions */ }
 onStreamingDone: ["VerifyCode", "RunCode"]
 afterStreaming: {
-    flags: {
+    flags {
       "variable-sucesss": $selection.length > 1
       "jsonpath-success": jsonpath("$.phoneNumbers[:1].type")
       "fail": '$content.contains("error") && $content.regex("exception")'
