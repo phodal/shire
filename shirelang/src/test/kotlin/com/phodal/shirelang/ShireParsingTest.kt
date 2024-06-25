@@ -83,4 +83,8 @@ class ShireParsingTest : ParsingTestCase("parser", "shire", ShireParserDefinitio
     fun testMultipleFMVariable() {
         doTest(true)
     }
+
+    fun testAfterStream() {
+        doTest(true)
+    }
 }

@@ -82,7 +82,7 @@ frontMatterHeader ::= FRONTMATTER_START NEWLINE frontMatterEntries FRONTMATTER_E
 
 frontMatterEntries ::= frontMatterEntry*
 frontMatterEntry ::=
-    lifecycleId COLON conditionExpr NEWLINE?
+    lifecycleId COLON (functionStatement | conditionExpr) NEWLINE?
     | frontMatterKey COLON (frontMatterValue | patternAction | functionStatement) NEWLINE?
 
 private lifecycleId ::= "when" | "onStreaming" | "onStreamingEnd" | "afterStreaming"
