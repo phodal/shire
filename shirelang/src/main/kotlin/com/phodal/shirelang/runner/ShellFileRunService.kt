@@ -13,6 +13,7 @@ import com.phodal.shirecore.provider.shire.FileRunService
 
 class ShellFileRunService : FileRunService {
     override fun runConfigurationClass(project: Project): Class<out RunProfile> = ShRunConfiguration::class.java
+
     override fun createConfiguration(project: Project, virtualFile: VirtualFile): RunConfiguration? {
         val psiFile = PsiManager.getInstance(project).findFile(virtualFile) as? ShFile ?: return null
         val configurationSetting = RunManager.getInstance(project)

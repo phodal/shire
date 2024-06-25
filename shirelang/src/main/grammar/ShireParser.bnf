@@ -161,7 +161,7 @@ variableStart ::= '$'
 agentId ::= IDENTIFIER | QUOTE_STRING
 commandId ::= IDENTIFIER
 variableId ::= IDENTIFIER
-languageId ::= IDENTIFIER
+languageId ::= LANGUAGE_IDENTIFIER
 
 // just make template pass success not fail
 varAccess ::= OPEN_BRACE variableId (DOT variableId)* CLOSE_BRACE

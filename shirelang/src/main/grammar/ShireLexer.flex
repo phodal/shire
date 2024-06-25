@@ -51,14 +51,14 @@ IDENTIFIER               = [a-zA-Z0-9][_\-a-zA-Z0-9]*
 FRONTMATTER_KEY          = [a-zA-Z0-9][_\-a-zA-Z0-9]*
 DATE                     = [0-9]{4}-[0-9]{2}-[0-9]{2}
 STRING                   = [a-zA-Z0-9][_\-a-zA-Z0-9]*
-INDENT                   = "  "
+// in Intellij Platform, the language id enable whitespace
+LANGUAGE_IDENTIFIER      = [a-zA-Z][_\-a-zA-Z0-9 .]*
 
 EOL=\R
-//WHITE_SPACE=\s+
+INDENT                   = "  "
 WHITE_SPACE              = [ \t]+
-COMMENT="//"[^\r\n]*
-BLOCK_COMMENT=[/][*][^*]*[*]+([^/*][^*]*[*]+)*[/]
-
+COMMENT                  = "//"[^\r\n]*
+BLOCK_COMMENT            = [/][*][^*]*[*]+([^/*][^*]*[*]+)*[/]
 EscapedChar              = "\\" [^\n]
 RegexWord                = [^\r\n\\\"' \t$`()] | {EscapedChar}
 REGEX                    = \/{RegexWord}+\/
@@ -419,7 +419,7 @@ AND                      =and
 
 <LANG_ID> {
    "```"             { return CODE_BLOCK_START; }
-   {IDENTIFIER}      { return IDENTIFIER;  }
+   {LANGUAGE_IDENTIFIER}     { return LANGUAGE_IDENTIFIER;  }
    "$"               { isInsideShireTemplate = true; yybegin(EXPR_BLOCK); return VARIABLE_START; }
    [^]               { yypushback(yylength()); yybegin(CODE_BLOCK); }
 }
