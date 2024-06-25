@@ -6,7 +6,7 @@ import com.intellij.execution.runners.ExecutionEnvironment
 import com.intellij.openapi.util.Key
 
 class ShireBeforeRunProviderDelegate : RunConfigurationBeforeRunProviderDelegate {
-    private val DEVIN_BEFORE_KEY_PREFIX: String = "Shire.BeforeRunTask"
+    private val SHIRE_BEFORE_RUN_TASK_KEY: String = "Shire.BeforeRunTask"
     private val KEY_MAP: MutableMap<String, Key<Boolean>> = HashMap()
 
     override fun beforeRun(environment: ExecutionEnvironment) {
@@ -24,7 +24,7 @@ class ShireBeforeRunProviderDelegate : RunConfigurationBeforeRunProviderDelegate
             runConfiguration.name
         ) { key: String ->
             Key.create(
-                DEVIN_BEFORE_KEY_PREFIX + "_" + key
+                SHIRE_BEFORE_RUN_TASK_KEY + "_" + key
             )
         }
     }

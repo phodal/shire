@@ -54,7 +54,7 @@ class ShireCompiler(
      * @return ShireCompiledResult object containing the compiled result
      */
     fun compile(): ShireCompiledResult {
-        result.input = file.text
+        result.sourceCode = file.text
         val iterator = file.children.iterator()
 
         while (iterator.hasNext()) {
@@ -222,31 +222,31 @@ class ShireCompiler(
 
             BuiltinCommand.WRITE -> {
                 result.isLocalCommand = true
-                val devInCode: CodeBlockElement? = lookupNextCode(used)
-                if (devInCode == null) {
+                val shireCode: CodeBlockElement? = lookupNextCode(used)
+                if (shireCode == null) {
                     PrintShireCommand("/" + commandNode.commandName + ":" + prop)
                 } else {
-                    WriteShireCommand(myProject, prop, devInCode.text, used)
+                    WriteShireCommand(myProject, prop, shireCode.text, used)
                 }
             }
 
             BuiltinCommand.PATCH -> {
                 result.isLocalCommand = true
-                val devInCode: CodeBlockElement? = lookupNextCode(used)
-                if (devInCode == null) {
+                val shireCode: CodeBlockElement? = lookupNextCode(used)
+                if (shireCode == null) {
                     PrintShireCommand("/" + commandNode.commandName + ":" + prop)
                 } else {
-                    PatchShireCommand(myProject, prop, devInCode.text)
+                    PatchShireCommand(myProject, prop, shireCode.text)
                 }
             }
 
             BuiltinCommand.COMMIT -> {
                 result.isLocalCommand = true
-                val devInCode: CodeBlockElement? = lookupNextCode(used)
-                if (devInCode == null) {
+                val shireCode: CodeBlockElement? = lookupNextCode(used)
+                if (shireCode == null) {
                     PrintShireCommand("/" + commandNode.commandName + ":" + prop)
                 } else {
-                    CommitShireCommand(myProject, devInCode.text)
+                    CommitShireCommand(myProject, shireCode.text)
                 }
             }
 
@@ -302,22 +302,22 @@ class ShireCompiler(
     }
 
     private fun lookupNextCode(used: ShireUsed): CodeBlockElement? {
-        val devInCode: CodeBlockElement?
+        val shireCode: CodeBlockElement?
         var next: PsiElement? = used
         while (true) {
             next = next?.nextSibling
             if (next == null) {
-                devInCode = null
+                shireCode = null
                 break
             }
 
             if (next.elementType == ShireTypes.CODE) {
-                devInCode = next as CodeBlockElement
+                shireCode = next as CodeBlockElement
                 break
             }
         }
 
-        return devInCode
+        return shireCode
     }
 
     private fun lookupNextTextSegment(used: ShireUsed): String {

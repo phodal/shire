@@ -67,7 +67,7 @@ class ShireConversationService(val project: Project) {
         val compiledResult = conversation.compiledResult
         if (compiledResult.isLocalCommand) {
             val message =
-                ShireBundle.message("shire.prompt.fix.command", compiledResult.input, compiledResult.shireOutput)
+                ShireBundle.message("shire.prompt.fix.command", compiledResult.sourceCode, compiledResult.shireOutput)
             prompt.append(message)
         }
 

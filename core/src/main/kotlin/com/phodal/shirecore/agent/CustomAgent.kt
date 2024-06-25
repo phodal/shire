@@ -57,11 +57,11 @@ data class CustomAgent(
     val interactive: InteractionType = InteractionType.ChatPanel,
     val auth: CustomAgentAuth? = null,
     /**
-     * 10 minutes
+     * Default to 10 minutes
      */
     val defaultTimeout: Long = 10,
     val enabled: Boolean = true,
-    val actionLocation: ShireActionLocation = ShireActionLocation.CONTEXT_MENU,
+    val isLocalAgent: Boolean = false,
 ) {
     var state: CustomAgentState = CustomAgentState.START
 

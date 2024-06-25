@@ -15,7 +15,7 @@ import com.intellij.openapi.fileEditor.FileDocumentManager
 import java.util.concurrent.atomic.AtomicReference
 
 class ShireProgramRunner : GenericProgramRunner<RunnerSettings>(), Disposable {
-    private val RUNNER_ID: String = "DevInsProgramRunner"
+    private val RUNNER_ID: String = "ShireProgramRunner"
 
     private val connection = ApplicationManager.getApplication().messageBus.connect(this)
 

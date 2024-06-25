@@ -12,7 +12,7 @@ class ShireFileStub(file: ShireFile?, private val flags: Int) : PsiFileStubImpl<
     object Type : IStubFileElementType<ShireFileStub>(ShireLanguage.INSTANCE) {
         override fun getStubVersion(): Int = 1
 
-        override fun getExternalId(): String = "devin.file"
+        override fun getExternalId(): String = "shire.file"
 
         override fun serialize(stub: ShireFileStub, dataStream: StubOutputStream) {
             dataStream.writeByte(stub.flags)

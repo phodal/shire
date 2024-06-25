@@ -26,7 +26,7 @@ class ShireRunFileAction : DumbAwareAction() {
         e.presentation.isEnabledAndVisible = file is ShireFile
 
         if (e.presentation.text.isNullOrBlank()) {
-            e.presentation.text = "Run DevIn file: ${file.name}"
+            e.presentation.text = "Run Shire file: ${file.name}"
         }
     }
 

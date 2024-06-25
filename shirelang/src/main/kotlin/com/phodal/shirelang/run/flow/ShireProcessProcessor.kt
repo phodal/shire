@@ -121,7 +121,7 @@ class ShireProcessProcessor(val project: Project) {
 
     private fun createCompiler(
         project: Project,
-        devInFile: ShireFile,
+        shireFile: ShireFile,
     ): ShireCompiler {
         val editor = FileEditorManager.getInstance(project).selectedTextEditor
         val element: PsiElement? = editor?.caretModel?.currentCaret?.offset?.let {
@@ -129,6 +129,6 @@ class ShireProcessProcessor(val project: Project) {
             SelectElementStrategy.getElementAtOffset(psiFile, it)
         }
 
-        return ShireCompiler(project, devInFile, editor, element)
+        return ShireCompiler(project, shireFile, editor, element)
     }
 }

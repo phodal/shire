@@ -63,8 +63,8 @@ enum class BuiltinCommand(
 
         fun example(command: BuiltinCommand): String {
             val commandName = command.commandName
-            val inputStream = BuiltinCommand::class.java.getResourceAsStream("/agent/toolExamples/$commandName.devin")
-                ?: throw IllegalStateException("Example file not found: $commandName.devin")
+            val inputStream = BuiltinCommand::class.java.getResourceAsStream("/agent/toolExamples/$commandName.shire")
+                ?: throw IllegalStateException("Example file not found: $commandName.shire")
 
             return inputStream.use {
                 it.readAllBytes().toString(StandardCharsets.UTF_8)

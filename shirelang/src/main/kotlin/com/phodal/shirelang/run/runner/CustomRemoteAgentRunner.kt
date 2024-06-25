@@ -7,6 +7,7 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.agent.CustomAgent
 import com.phodal.shire.agent.CustomAgentExecutor
+import com.phodal.shirelang.ShireBundle
 import com.phodal.shirelang.run.ShireConfiguration
 import com.phodal.shirelang.run.flow.ShireConversationService
 import com.phodal.shirelang.utils.ShireCoroutineScope
@@ -14,7 +15,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-class ShireCustomAgentRunner(
+class CustomRemoteAgentRunner(
     override val myProject: Project,
     override val configuration: ShireConfiguration,
     override val console: ConsoleViewWrapperBase,
@@ -27,7 +28,7 @@ class ShireCustomAgentRunner(
             val stringFlow: Flow<String>? = CustomAgentExecutor(project = myProject).execute(prompt, agent)
 
             if (stringFlow == null) {
-                console.print("No LLM provider found", ConsoleViewContentType.ERROR_OUTPUT)
+                console.print(ShireBundle.message("shire.llm.notfound"), ConsoleViewContentType.ERROR_OUTPUT)
                 processHandler.detachProcess()
                 return@invokeLater
             }

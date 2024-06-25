@@ -6,9 +6,9 @@ import com.phodal.shirelang.psi.ShireFile
 
 data class ShireCompiledResult(
     /**
-     * The origin DevIns content
+     * The origin Shire content
      */
-    var input: String = "",
+    var sourceCode: String = "",
 
     /**
      * Output String of a compiler result, not the final result
