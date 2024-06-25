@@ -31,7 +31,7 @@ class ShireIntentionAction(private val hobbitHole: HobbitHole?, file: PsiFile) :
     }
 
     override fun invoke(project: Project, editor: Editor?, file: PsiFile?) {
-        hobbitHole?.setupProcessor(project, editor, file)
+        hobbitHole?.setupStreamingEndProcessor(project, editor, file)
         hobbitHole?.pickupElement()
         ShirelangNotifications.notify(project, "Shire Intention")
     }

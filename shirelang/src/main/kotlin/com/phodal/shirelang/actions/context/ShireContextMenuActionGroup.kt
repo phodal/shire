@@ -48,7 +48,7 @@ class ShireContextMenuAction(private val config: DynamicShireActionConfig) :
         val editor = FileEditorManager.getInstance(project).selectedTextEditor
         val file = e.getData(CommonDataKeys.PSI_FILE)
 
-        config.hole?.setupProcessor(project, editor, file)
+        config.hole?.setupStreamingEndProcessor(project, editor, file)
         config.hole?.pickupElement()
 
         ShireRunFileAction.executeShireFile(e, project, config)

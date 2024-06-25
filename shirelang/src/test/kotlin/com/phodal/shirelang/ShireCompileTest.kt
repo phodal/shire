@@ -5,7 +5,6 @@ import com.phodal.shirecore.action.ShireActionLocation
 import com.phodal.shirecore.agent.InteractionType
 import com.phodal.shirelang.compiler.FrontmatterParser
 import com.phodal.shirelang.compiler.ShireCompiler
-import com.phodal.shirelang.compiler.ShireTemplateCompiler
 import com.phodal.shirelang.compiler.hobbit.ast.LogicalExpression
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 import com.phodal.shirelang.compiler.patternaction.PatternActionProcessor
@@ -101,7 +100,7 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
         assertEquals("\n\nSummary webpage:", compile.shireOutput)
-        val filenameRules = compile.config!!.preFilter
+        val filenameRules = compile.config!!.ruleBasedFilter
 
         assertEquals(1, filenameRules.size)
         assertEquals("/**.java/", filenameRules[0].pattern)

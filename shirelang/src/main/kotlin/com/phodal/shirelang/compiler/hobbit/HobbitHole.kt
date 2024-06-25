@@ -15,6 +15,7 @@ import com.phodal.shirelang.compiler.hobbit._base.Smials
 import com.phodal.shirelang.compiler.hobbit.ast.FrontMatterType
 import com.phodal.shirelang.compiler.hobbit.ast.PatternAction
 import com.phodal.shirelang.compiler.hobbit.ast.RuleBasedPatternAction
+import com.phodal.shirelang.compiler.hobbit.ast.TaskRoutes
 import com.phodal.shirelang.compiler.patternaction.PatternActionTransform
 import com.phodal.shirelang.psi.ShireFile
 
@@ -72,13 +73,24 @@ open class HobbitHole(
     /**
      * The list of rule files to apply for the action.
      */
-    val preFilter: List<RuleBasedPatternAction> = emptyList(),
+    val ruleBasedFilter: List<RuleBasedPatternAction> = emptyList(),
     /**
      * Post middleware actions, like
      * Logging, Metrics, CodeVerify, RunCode, ParseCode etc.
      *
      */
-    val postProcess: List<PostProcessor> = emptyList(),
+    val onStreamingEnd: List<PostProcessor> = emptyList(),
+
+    /**
+     * TBD
+     */
+    @Deprecated("TBD")
+    val onStreaming: List<PostProcessor> = emptyList(),
+
+    /**
+     * The list of actions that this action depends on.
+     */
+    val afterStreaming: TaskRoutes? = null,
     /**
      * The list of actions that this action depends on.
      * We use it for Directed Acyclic Graph (DAG) to represent dependencies between actions.
@@ -89,10 +101,10 @@ open class HobbitHole(
         this.selectionStrategy.select()
     }
 
-    fun setupProcessor(project: Project, editor: Editor?, file: PsiFile?) {
+    fun setupStreamingEndProcessor(project: Project, editor: Editor?, file: PsiFile?) {
         val language = file?.language?.id
         val context = PostCodeHandleContext(null, language, file)
-        postProcess.forEach {
+        onStreamingEnd.forEach {
             it.setup(context)
         }
     }
@@ -178,10 +190,10 @@ open class HobbitHole(
                 description,
                 InteractionType.from(interaction),
                 ShireActionLocation.from(actionLocation),
-                preFilter = filenameRules,
+                ruleBasedFilter = filenameRules,
                 restData = data,
                 selectionStrategy = SelectElementStrategy.fromString(selectionStrategy),
-                postProcess = postProcessors,
+                onStreamingEnd = postProcessors,
                 variables = variables,
                 when_ = whenCondition
             )
