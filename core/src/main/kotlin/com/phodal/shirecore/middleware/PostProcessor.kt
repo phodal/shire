@@ -53,8 +53,15 @@ interface PostProcessor {
             return EP_NAME.extensionList.map { it.processorName }
         }
 
-        fun execute(funcNode: List<PostProcessorNode>) {
-
+        fun execute(project: Project, funcNode: List<PostProcessorNode>, handleContext: PostCodeHandleContext) {
+            funcNode.forEach {
+                val handler = handler(it.funName)
+                if (handler != null) {
+                    handler.setup(handleContext)
+                    handler.execute(project, handleContext, "")
+                    handler.finish(handleContext)
+                }
+            }
         }
     }
 }

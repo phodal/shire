@@ -102,7 +102,7 @@
     </extensions>
 
     <extensions defaultExtensionNs="com.phodal">
-        <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.CodeVerifyProcessor"/>
+        <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.VerifyCodeProcessor"/>
         <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.TimeMetricProcessor"/>
     </extensions>
 </idea-plugin>

@@ -24,7 +24,7 @@ enum class BuiltinPostHandler(var handleName: String) {
     /**
      * Check has code error or PSI issue.
      */
-    CodeVerify("codeVerify"),
+    VerifyCode("verifyCode"),
 
     /**
      * Run generate text code

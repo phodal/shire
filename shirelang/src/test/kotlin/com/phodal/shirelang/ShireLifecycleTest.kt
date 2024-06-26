@@ -1,14 +1,13 @@
 package com.phodal.shirelang
 
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
+import com.phodal.shirecore.middleware.PostCodeHandleContext
 import com.phodal.shirecore.middleware.PostProcessor
 import com.phodal.shirelang.compiler.ShireCompiler
 import com.phodal.shirelang.psi.ShireFile
 
 class ShireLifecycleTest: BasePlatformTestCase() {
     fun testShouldHandleWhenStreamingEnd() {
-        val sampleText = """HelloWorld.txt""".trimIndent()
-
         val code = """
             ---
             onStreamingEnd:  { verifyCode | runCode }
@@ -17,7 +16,6 @@ class ShireLifecycleTest: BasePlatformTestCase() {
             ${'$'}allController
         """.trimIndent()
 
-        myFixture.addFileToProject("HelloWorld.txt", sampleText)
         val file = myFixture.addFileToProject("sample.shire", code)
 
         myFixture.openFileInEditor(file.virtualFile)
@@ -31,6 +29,7 @@ class ShireLifecycleTest: BasePlatformTestCase() {
         assertEquals(funcNode[0].funName, "verifyCode")
         assertEquals(funcNode[1].funName, "runCode")
 
-        PostProcessor.execute(funcNode)
+        val handleContext = PostCodeHandleContext(file, ShireLanguage.INSTANCE.displayName, file)
+        PostProcessor.execute(project, funcNode, handleContext)
     }
 }
