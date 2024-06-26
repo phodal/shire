@@ -29,7 +29,7 @@ class VerifyCodeProcessor : PostProcessor {
         return ""
     }
 
-    override fun execute(project: Project, context: PostCodeHandleContext, genText: String): String {
+    override fun execute(project: Project, context: PostCodeHandleContext): String {
         if (context.file == null) {
             return ""
         }

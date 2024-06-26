@@ -18,7 +18,7 @@ import com.phodal.shirelang.compiler.ShireCompiler
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.psi.ShireVisitor
 import com.phodal.shirelang.run.ShireConsoleView
-import com.phodal.shirelang.utils.Code
+import com.phodal.shirecore.markdown.Code
 import kotlinx.coroutines.runBlocking
 
 @Service(Service.Level.PROJECT)

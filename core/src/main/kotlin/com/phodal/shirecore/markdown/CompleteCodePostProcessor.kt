@@ -1,9 +1,9 @@
-package com.phodal.shirelang.utils
+package com.phodal.shirecore.markdown
 
 /**
  * will format complete code by prefix code and suffix code
  */
-class PostCodeProcessor(
+class CompleteCodePostProcessor(
     private val prefixCode: String,
     private val suffixCode: String,
     private val completeCode: String,

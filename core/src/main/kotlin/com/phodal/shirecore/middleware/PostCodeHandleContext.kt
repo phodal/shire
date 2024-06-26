@@ -16,4 +16,6 @@ class PostCodeHandleContext (
      * Convert code to file
      */
     val file: PsiFile? = null,
+
+    val genText: String? = null
 )

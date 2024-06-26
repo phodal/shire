@@ -1,4 +1,4 @@
-package com.phodal.shirelang.utils
+package com.phodal.shirecore.markdown
 
 import com.intellij.lang.Language
 import com.intellij.openapi.fileTypes.PlainTextLanguage

@@ -32,7 +32,7 @@ interface PostProcessor {
      * @param genText the generated text to be used in the execution
      * @return a string result of the execution
      */
-    fun execute(project: Project, context: PostCodeHandleContext, genText: String): String
+    fun execute(project: Project, context: PostCodeHandleContext): String
 
     /**
      * Clean up tasks, like metric for time, etc.
@@ -58,7 +58,7 @@ interface PostProcessor {
                 val handler = handler(it.funName)
                 if (handler != null) {
                     handler.setup(handleContext)
-                    handler.execute(project, handleContext, "")
+                    handler.execute(project, handleContext)
                     handler.finish(handleContext)
                 }
             }

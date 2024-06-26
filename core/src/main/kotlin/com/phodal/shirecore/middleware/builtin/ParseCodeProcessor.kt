@@ -1,27 +1,24 @@
 package com.phodal.shirecore.middleware.builtin
 
 import com.intellij.openapi.project.Project
+import com.phodal.shirecore.markdown.Code
 import com.phodal.shirecore.middleware.BuiltinPostHandler
 import com.phodal.shirecore.middleware.PostCodeHandleContext
 import com.phodal.shirecore.middleware.PostProcessor
 
-class TimeMetricProcessor : PostProcessor {
-    private var startTime: Long? = null
-
-    override val processorName: String = BuiltinPostHandler.TimeMetric.handleName
+class ParseCodeProcessor : PostProcessor {
+    override val processorName: String = BuiltinPostHandler.ParseCode.handleName
 
     override fun isApplicable(context: PostCodeHandleContext): Boolean {
         return true
     }
 
     override fun setup(context: PostCodeHandleContext): String {
-        startTime = System.currentTimeMillis()
-        return startTime.toString()
+        return ""
     }
 
     override fun execute(project: Project, context: PostCodeHandleContext): String {
-        val endTime = System.currentTimeMillis()
-        return (endTime - startTime!!).toString()
+        return Code.parse(context.genText ?: "").text
     }
 
     override fun finish(context: PostCodeHandleContext): String {

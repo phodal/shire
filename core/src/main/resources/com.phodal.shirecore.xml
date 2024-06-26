@@ -104,5 +104,6 @@
     <extensions defaultExtensionNs="com.phodal">
         <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.VerifyCodeProcessor"/>
         <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.TimeMetricProcessor"/>
+        <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.ParseCodeProcessor"/>
     </extensions>
 </idea-plugin>
