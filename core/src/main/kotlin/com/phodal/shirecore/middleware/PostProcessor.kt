@@ -3,6 +3,11 @@ package com.phodal.shirecore.middleware
 import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.project.Project
 
+data class PostProcessorNode(
+    val funName: String,
+    val args: List<Any>,
+)
+
 interface PostProcessor {
     val processorName: String
 
@@ -46,6 +51,10 @@ interface PostProcessor {
 
         fun allNames(): List<String> {
             return EP_NAME.extensionList.map { it.processorName }
+        }
+
+        fun execute(funcNode: List<PostProcessorNode>) {
+
         }
     }
 }

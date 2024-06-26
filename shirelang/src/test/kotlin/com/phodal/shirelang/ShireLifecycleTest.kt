@@ -1,6 +1,7 @@
 package com.phodal.shirelang
 
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
+import com.phodal.shirecore.middleware.PostProcessor
 import com.phodal.shirelang.compiler.ShireCompiler
 import com.phodal.shirelang.psi.ShireFile
 
@@ -24,10 +25,12 @@ class ShireLifecycleTest: BasePlatformTestCase() {
         val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
         val hole = compile.config!!
 
-        val postProcessors = hole.onStreamingEnd
+        val funcNode = hole.onStreamingEnd
 
-        assertEquals(postProcessors.size, 2)
-        assertEquals(postProcessors[0].funName, "verifyCode")
-        assertEquals(postProcessors[1].funName, "runCode")
+        assertEquals(funcNode.size, 2)
+        assertEquals(funcNode[0].funName, "verifyCode")
+        assertEquals(funcNode[1].funName, "runCode")
+
+        PostProcessor.execute(funcNode)
     }
 }

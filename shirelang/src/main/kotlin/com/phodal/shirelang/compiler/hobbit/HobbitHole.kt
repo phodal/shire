@@ -9,6 +9,7 @@ import com.phodal.shirecore.action.ShireActionLocation
 import com.phodal.shirecore.agent.InteractionType
 import com.phodal.shirecore.middleware.PostCodeHandleContext
 import com.phodal.shirecore.middleware.PostProcessor
+import com.phodal.shirecore.middleware.PostProcessorNode
 import com.phodal.shirecore.middleware.select.SelectElementStrategy
 import com.phodal.shirelang.compiler.FrontmatterParser
 import com.phodal.shirelang.compiler.hobbit._base.Smials
@@ -80,7 +81,7 @@ open class HobbitHole(
      * It allows for the definition of various operations such as logging, metrics collection, code verification,
      * execution of code, or parsing code, among others.
      */
-    val onStreamingEnd: List<ProcessFuncNode> = emptyList(),
+    val onStreamingEnd: List<PostProcessorNode> = emptyList(),
 
     /**
      * TBD, keep it for future use.
@@ -204,15 +205,15 @@ open class HobbitHole(
             }.associateBy { it.variable }.toMutableMap()
         }
 
-        private fun buildStreamingEndProcessors(item: FrontMatterType): List<ProcessFuncNode> {
-            val endProcessors: MutableList<ProcessFuncNode> = mutableListOf()
+        private fun buildStreamingEndProcessors(item: FrontMatterType): List<PostProcessorNode> {
+            val endProcessors: MutableList<PostProcessorNode> = mutableListOf()
             when (item) {
                 is FrontMatterType.ARRAY -> {
                     item.toValue().forEach { matterType ->
                         when (matterType) {
                             is FrontMatterType.EXPRESSION -> {
                                 val handleName = toFuncName(matterType)
-                                endProcessors.add(ProcessFuncNode(handleName, emptyList()))
+                                endProcessors.add(PostProcessorNode(handleName, emptyList()))
                             }
 
                             else -> {}
@@ -222,7 +223,7 @@ open class HobbitHole(
 
                 is FrontMatterType.STRING -> {
                     val handleName = item.value as String
-                    endProcessors.add(ProcessFuncNode(handleName, emptyList()))
+                    endProcessors.add(PostProcessorNode(handleName, emptyList()))
                 }
 
                 else -> {}
