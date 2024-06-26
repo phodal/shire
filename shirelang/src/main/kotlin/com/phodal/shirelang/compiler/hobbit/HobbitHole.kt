@@ -153,20 +153,21 @@ open class HobbitHole(
                 }
             }
 
-            val selectionStrategy = frontMatterMap[STRATEGY_SELECTION]?.value as? String ?: ""
-            val endProcessors: MutableList<ProcessFuncNode> = frontMatterMap[ON_STREAMING_END]?.let {
+            val selectionStrategy = SelectElementStrategy.fromString(
+                frontMatterMap[STRATEGY_SELECTION]?.value as? String ?: ""
+            )
+
+            val endProcessors = frontMatterMap[ON_STREAMING_END]?.let {
                 buildStreamingEndProcessors(it)
             } ?: mutableListOf()
 
-            val filenameRules: MutableList<RuleBasedPatternAction> =
-                (frontMatterMap[FILENAME_RULES] as? FrontMatterType.OBJECT)?.let {
-                    buildFilenameRules(it)
-                } ?: mutableListOf()
+            val filenameRules = (frontMatterMap[FILENAME_RULES] as? FrontMatterType.OBJECT)?.let {
+                buildFilenameRules(it.toValue())
+            } ?: mutableListOf()
 
-            val variables: MutableMap<String, PatternActionTransform> =
-                (frontMatterMap[VARIABLES] as? FrontMatterType.OBJECT)?.let {
-                    buildVariableTransformations(it)
-                } ?: mutableMapOf()
+            val variables = (frontMatterMap[VARIABLES] as? FrontMatterType.OBJECT)?.let {
+                buildVariableTransformations(it.toValue())
+            } ?: mutableMapOf()
 
             val whenCondition = frontMatterMap[WHEN] as? FrontMatterType.EXPRESSION
 
@@ -177,44 +178,37 @@ open class HobbitHole(
                 ShireActionLocation.from(actionLocation),
                 ruleBasedFilter = filenameRules,
                 restData = data,
-                selectionStrategy = SelectElementStrategy.fromString(selectionStrategy),
+                selectionStrategy = selectionStrategy,
                 onStreamingEnd = endProcessors,
                 variables = variables,
                 when_ = whenCondition
             )
         }
 
-        private fun buildFilenameRules(obj: FrontMatterType.OBJECT): MutableList<RuleBasedPatternAction> {
-            val filenameRules: MutableList<RuleBasedPatternAction> = mutableListOf()
-            (obj.value as Map<String, FrontMatterType>).forEach { (key, value) ->
+        private fun buildFilenameRules(obj: Map<String, FrontMatterType>): List<RuleBasedPatternAction> {
+            return obj.mapNotNull { (key, value) ->
                 val text = key.removeSurrounding("\"")
                 PatternAction.from(value)?.let {
-                    filenameRules.add(RuleBasedPatternAction(text, it.patternFuncs))
+                    RuleBasedPatternAction(text, it.patternFuncs)
                 }
             }
-            return filenameRules
         }
 
-        private fun buildVariableTransformations(variableObject: FrontMatterType.OBJECT): MutableMap<String, PatternActionTransform> {
-            val variables: MutableMap<String, PatternActionTransform> = mutableMapOf()
-            (variableObject.value as Map<String, FrontMatterType>).forEach { (key, value) ->
+        private fun buildVariableTransformations(variableObject: Map<String, FrontMatterType>): MutableMap<String, PatternActionTransform> {
+            return variableObject.mapNotNull { (key, value) ->
                 val variable = key.removeSurrounding("\"")
-                // remove pattern sus
                 PatternAction.from(value)?.let {
                     val pattern = it.pattern.removeSurrounding("/")
-                    variables[variable] =
-                        PatternActionTransform(variable, pattern, it.patternFuncs, it.isQueryStatement)
+                    PatternActionTransform(variable, pattern, it.patternFuncs, it.isQueryStatement)
                 }
-            }
-
-            return variables
+            }.associateBy { it.variable }.toMutableMap()
         }
 
-        private fun buildStreamingEndProcessors(item: FrontMatterType): MutableList<ProcessFuncNode> {
+        private fun buildStreamingEndProcessors(item: FrontMatterType): List<ProcessFuncNode> {
             val endProcessors: MutableList<ProcessFuncNode> = mutableListOf()
             when (item) {
                 is FrontMatterType.ARRAY -> {
-                    (item.value as List<FrontMatterType>).forEach { matterType ->
+                    item.toValue().forEach { matterType ->
                         when (matterType) {
                             is FrontMatterType.EXPRESSION -> {
                                 val handleName = toFuncName(matterType)

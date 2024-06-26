@@ -25,6 +25,7 @@ package com.phodal.shirelang.compiler.hobbit.ast
  */
 sealed class FrontMatterType(val value: Any) {
     open fun display(): String = value.toString()
+    open fun toValue(): Any = value
 
     class STRING(value: String) : FrontMatterType(value) {
         override fun display(): String {
@@ -77,6 +78,10 @@ sealed class FrontMatterType(val value: Any) {
         override fun display(): String {
             return (value as List<FrontMatterType>).joinToString(", ", "[", "]") { it.display() }
         }
+
+        override fun toValue(): List<FrontMatterType> {
+            return (value as List<FrontMatterType>)
+        }
     }
 
     /**
@@ -97,6 +102,10 @@ sealed class FrontMatterType(val value: Any) {
                 "{",
                 "}"
             ) { "\"${it.key}\": ${it.value.display()}" }
+        }
+
+        override fun toValue(): Map<String, FrontMatterType> {
+            return value as Map<String, FrontMatterType>
         }
     }
 
