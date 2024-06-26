@@ -18,4 +18,10 @@ data class TaskRoutes(
     val conditions: Map<FrontMatterType.STRING, Condition>,
     val cases: List<Case>,
     val defaultTask: Task,
-)
+) {
+    companion object {
+        fun from(expression: FrontMatterType.EXPRESSION): TaskRoutes? {
+            return null
+        }
+    }
+}

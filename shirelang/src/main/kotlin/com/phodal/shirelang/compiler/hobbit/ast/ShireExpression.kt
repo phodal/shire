@@ -1,6 +1,7 @@
 package com.phodal.shirelang.compiler.hobbit.ast
 
 import com.intellij.openapi.diagnostic.logger
+import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 import java.util.regex.Pattern
 
 /**
@@ -34,6 +35,7 @@ abstract class Statement {
 
                 "${this.objectName.display()}${dotWithTarget}$formattedParameters"
             }
+
             is Value -> this.value.display()
             else -> throw IllegalArgumentException("Unsupported statement type: $this")
         }
@@ -285,6 +287,7 @@ data class MethodCall(
                     throw IllegalArgumentException("Missing parameter for method: $methodName")
                 }
             }
+
             ExpressionBuiltInMethod.STARTS_WITH -> {
                 if (parameters != null) {
                     value.startsWith(parameters[0] as String)
@@ -292,6 +295,7 @@ data class MethodCall(
                     throw IllegalArgumentException("Missing parameter for method: $methodName")
                 }
             }
+
             ExpressionBuiltInMethod.ENDS_WITH -> {
                 if (parameters != null) {
                     value.endsWith(parameters[0] as String)
@@ -299,6 +303,7 @@ data class MethodCall(
                     throw IllegalArgumentException("Missing parameter for method: $methodName")
                 }
             }
+
             ExpressionBuiltInMethod.LOWERCASE -> value.lowercase()
             ExpressionBuiltInMethod.UPPERCASE -> value.uppercase()
             ExpressionBuiltInMethod.IS_EMPTY -> value.isEmpty()
@@ -312,8 +317,40 @@ data class MethodCall(
                     throw IllegalArgumentException("Missing parameter for method: $methodName")
                 }
             }
+
             else -> throw IllegalArgumentException("Unsupported method: $methodName")
         }
     }
+}
 
+data class Processor(
+    val processors: List<PatternActionFunc>
+) : Statement() {
+    override fun evaluate(variables: Map<String, String>): List<PatternActionFunc> {
+        return processors
+    }
+}
+
+data class CaseKeyValue(
+    val key: FrontMatterType,
+    val value: FrontMatterType,
+) : Statement() {
+    override fun evaluate(variables: Map<String, String>): Any {
+        return key.display() to value
+    }
+}
+
+/**
+ * Switch case
+ */
+data class ConditionCase(
+    val conditions: List<FrontMatterType>,
+    val cases: List<FrontMatterType>,
+) : Statement() {
+    override fun evaluate(variables: Map<String, String>): Any {
+        val condition = conditions.map { it.display() }
+        val case = cases.map { it.display() }
+
+        return condition to case
+    }
 }

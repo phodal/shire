@@ -117,6 +117,7 @@ open class HobbitHole(
         const val INTERACTION = "interaction"
         const val STRATEGY_SELECTION = "selectionStrategy"
         const val ON_STREAMING_END = "onStreamingEnd"
+        const val AFTER_STREAMING = "afterStreaming"
         private const val DESCRIPTION = "description"
         private const val FILENAME_RULES = "filenameRules"
         private const val VARIABLES = "variables"
@@ -170,6 +171,10 @@ open class HobbitHole(
                 buildVariableTransformations(it.toValue())
             } ?: mutableMapOf()
 
+            val afterStreaming: TaskRoutes? = (frontMatterMap[AFTER_STREAMING] as? FrontMatterType.EXPRESSION)?.let {
+                buildTaskRoutes(it)
+            }
+
             val whenCondition = frontMatterMap[WHEN] as? FrontMatterType.EXPRESSION
 
             return HobbitHole(
@@ -181,9 +186,14 @@ open class HobbitHole(
                 restData = data,
                 selectionStrategy = selectionStrategy,
                 onStreamingEnd = endProcessors,
+                afterStreaming = afterStreaming,
                 variables = variables,
                 when_ = whenCondition
             )
+        }
+
+        private fun buildTaskRoutes(expression: FrontMatterType.EXPRESSION) : TaskRoutes? {
+            return TaskRoutes.from(expression)
         }
 
         private fun buildFilenameRules(obj: Map<String, FrontMatterType>): List<RuleBasedPatternAction> {

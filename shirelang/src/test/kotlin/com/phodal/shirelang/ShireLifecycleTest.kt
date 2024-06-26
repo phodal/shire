@@ -32,4 +32,35 @@ class ShireLifecycleTest: BasePlatformTestCase() {
         val handleContext = PostCodeHandleContext(file, ShireLanguage.INSTANCE.displayName, file)
         PostProcessor.execute(project, funcNode, handleContext)
     }
+
+    fun testShouldHandleWhenAfterStreaming() {
+        val code = """
+            ---
+            afterStreaming: {
+              condition {
+                "variable-success" { ${"$"}selection.length > 1 }
+                "jsonpath-success" { jsonpath("$['store']['book'][0]['title']") }
+              }
+              case condition {
+                "variable-success" { done }
+                "jsonpath-success" { task() }
+                default { task() }
+              }
+            }
+            ---
+            
+            ${'$'}allController
+        """.trimIndent()
+
+        val file = myFixture.addFileToProject("sample.shire", code)
+
+        myFixture.openFileInEditor(file.virtualFile)
+
+        val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
+        val hole = compile.config!!
+
+        val funcNode = hole.afterStreaming
+
+        println(funcNode)
+    }
 }

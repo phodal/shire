@@ -1,7 +1,6 @@
 package com.phodal.shirelang.compiler
 
 import com.intellij.openapi.diagnostic.logger
-import com.intellij.openapi.util.NlsSafe
 import com.intellij.psi.PsiElement
 import com.intellij.psi.TokenType.WHITE_SPACE
 import com.intellij.psi.util.PsiTreeUtil
@@ -241,16 +240,59 @@ object FrontmatterParser {
         }
 
         is ShireActionExpr -> {
-            expr.funcCall?.let { it ->
-                val args = parseParameters(it)
-                MethodCall(FrontMatterType.IDENTIFIER(it.funcName.text), FrontMatterType.EMPTY(), args)
+            when (expr.firstChild) {
+                is ShireFuncCall -> {
+                    val args = parseParameters(expr.funcCall)
+                    MethodCall(FrontMatterType.IDENTIFIER(expr.funcCall!!.funcName.text), FrontMatterType.EMPTY(), args)
+                }
+
+                is ShireCaseBody -> {
+                    parseExprCaseBody(expr.firstChild as ShireCaseBody)
+                }
+
+                else -> {
+                    logger.warn("parseExpr, Unknown action expression type: ${expr.firstChild.elementType}")
+                    null
+                }
             }
+        }
+
+        is ShireConditionStatement -> {
+            val condition = parseLiteral(expr.caseCondition)
+            val body = parseRefExpr(expr.expr)
+
+            CaseKeyValue(condition, body)
         }
 
         else -> {
             logger.warn("parseExpr, Unknown expression type: ${expr.elementType}")
             null
         }
+    }
+
+    private fun parseExprCaseBody(firstChild: ShireCaseBody): ConditionCase? {
+        val condition = firstChild.conditionFlag?.conditionStatementList?.mapNotNull {
+            val condition = parseExpr(it)
+            if (condition != null) {
+                FrontMatterType.EXPRESSION(condition)
+            } else {
+                logger.warn("parseExprCaseBody, Unknown condition type: ${it.elementType}")
+                null
+            }
+        } ?: emptyList()
+
+        val body = firstChild.casePatternActionList.mapNotNull {
+            FrontMatterType.EXPRESSION(parseCaseItem(it))
+        }
+
+        return ConditionCase(condition, body)
+    }
+
+    private fun parseCaseItem(action: ShireCasePatternAction): CaseKeyValue {
+        val key = parseLiteral(action.caseCondition)
+
+        val funcs =  parseActionBody(action.actionBody)
+        return CaseKeyValue(key, FrontMatterType.EXPRESSION(Processor(funcs)))
     }
 
     private fun parseRefExpr(expr: PsiElement?): FrontMatterType {
@@ -278,6 +320,18 @@ object FrontmatterParser {
 
                 val methodCall = this.buildMethodCall(expr.refExpr, expressionList?.children, hasParentheses)
                 FrontMatterType.EXPRESSION(methodCall)
+            }
+
+            ShireTypes.INEQ_COMPARISON_EXPR -> {
+                val variable = parseRefExpr(expr!!.children.firstOrNull())
+                val value = parseRefExpr(expr.children.lastOrNull())
+                val comparison = Comparison(
+                    variable,
+                    Operator(OperatorType.fromString((expr as ShireIneqComparisonExpr).ineqComparisonOp.text)),
+                    value
+                )
+
+                FrontMatterType.EXPRESSION(comparison)
             }
 
             else -> {
@@ -333,6 +387,10 @@ object FrontmatterParser {
             ShireTypes.VARIABLE_START -> {
                 val next = ref.lastChild
                 FrontMatterType.VARIABLE(next.text)
+            }
+
+            ShireTypes.DEFAULT -> {
+                FrontMatterType.IDENTIFIER(ref.text)
             }
 
             else -> {
@@ -410,17 +468,25 @@ object FrontmatterParser {
     private fun parsePatternAction(element: PsiElement): FrontMatterType {
         val pattern = element.children.firstOrNull()?.text ?: ""
 
-        val processor: MutableList<PatternActionFunc> = mutableListOf()
         val actionBlock = PsiTreeUtil.getChildOfType(element, ShireActionBlock::class.java)
-        actionBlock?.actionBody?.actionExprList?.map { expr ->
+        val actionBody = actionBlock?.actionBody
+
+        val processor: MutableList<PatternActionFunc> = parseActionBody(actionBody)
+
+        return FrontMatterType.PATTERN(RuleBasedPatternAction(pattern, processor))
+    }
+
+    private fun parseActionBody(actionBody: ShireActionBody?): MutableList<PatternActionFunc> {
+        val processor: MutableList<PatternActionFunc> = mutableListOf()
+        actionBody?.actionExprList?.mapNotNull { expr ->
             val funcCall = expr.funcCall
             val args = parseParameters(funcCall) ?: emptyList()
 
             when (funcCall?.funcName?.text) {
                 "grep" -> {
                     if (args.isEmpty()) {
-                        logger.warn("parsePatternAction, grep requires at least 1 argument")
-                        return FrontMatterType.ERROR("grep requires at least 1 argument")
+                        logger.error("parsePatternAction, grep requires at least 1 argument")
+                        return@mapNotNull null
                     }
 
                     processor.add(PatternActionFunc.Grep(*args.toTypedArray()))
@@ -432,8 +498,8 @@ object FrontmatterParser {
 
                 "sed" -> {
                     if (args.size < 2) {
-                        logger.warn("parsePatternAction, sed requires at least 2 arguments")
-                        return FrontMatterType.ERROR("sed requires at least 2 arguments")
+                        logger.error("parsePatternAction, sed requires at least 2 arguments")
+                        return@mapNotNull null
                     }
 
                     if (args[0].startsWith("/") && args[0].endsWith("/")) {
@@ -476,14 +542,14 @@ object FrontmatterParser {
                 }
 
                 else -> {
-                    // remove surrounding quotes
-                    val text = expr.text.removeSurrounding("\"")
-                    processor.add(PatternActionFunc.Prompt(text))
+//                    processor.add(PatternActionFunc.Prompt(text))
+                    val funcName = funcCall?.funcName?.text ?: ""
+                    processor.add(PatternActionFunc.UserCustom(funcName, args))
                 }
             }
         }
 
-        return FrontMatterType.PATTERN(RuleBasedPatternAction(pattern, processor))
+        return processor
     }
 
     private fun parseParameters(funcCall: ShireFuncCall?): List<String>? =

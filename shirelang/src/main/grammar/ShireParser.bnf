@@ -108,7 +108,7 @@ pipelineArgs ::= (pipelineArg (COMMA pipelineArg)*)?
 pipelineArg ::= NUMBER | IDENTIFIER | QUOTE_STRING
 
 caseBody ::= conditionFlag? CASE NEWLINE* ('condition' | QUOTE_STRING) blockStart casePatternAction* blockEnd
-casePatternAction ::= caseCondition blockStart (actionExpr PIPE)* actionExpr blockEnd
+casePatternAction ::= caseCondition blockStart actionBody blockEnd
 caseCondition ::= DEFAULT | pattern | QUOTE_STRING
 
 conditionFlag ::= 'condition' blockStart conditionStatement* blockEnd
