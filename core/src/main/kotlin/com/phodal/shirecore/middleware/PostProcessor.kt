@@ -22,7 +22,9 @@ interface PostProcessor {
     /**
      * Some init tasks, like metric for time, etc.
      */
-    fun setup(context: PostCodeHandleContext): String
+    fun setup(context: PostCodeHandleContext): String {
+        return ""
+    }
 
     /**
      * Executes a function with the given project, context, and generated text.
@@ -37,7 +39,9 @@ interface PostProcessor {
     /**
      * Clean up tasks, like metric for time, etc.
      */
-    fun finish(context: PostCodeHandleContext): String
+    fun finish(context: PostCodeHandleContext): String? {
+        return ""
+    }
 
     companion object {
         private val EP_NAME: ExtensionPointName<PostProcessor> =

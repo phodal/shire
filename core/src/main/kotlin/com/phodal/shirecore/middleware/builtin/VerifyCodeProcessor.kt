@@ -24,11 +24,6 @@ class VerifyCodeProcessor : PostProcessor {
         return true
     }
 
-    override fun setup(context: PostCodeHandleContext): String {
-        // do nothing
-        return ""
-    }
-
     override fun execute(project: Project, context: PostCodeHandleContext): String {
         if (context.file == null) {
             return ""
@@ -41,11 +36,6 @@ class VerifyCodeProcessor : PostProcessor {
 
         return errors.joinToString("\n")
     }
-
-    override fun finish(context: PostCodeHandleContext): String {
-        return ""
-    }
-
 
     /**
      * This function is used to collect syntax errors from a given PsiFile and then execute a specified action with the list of errors.

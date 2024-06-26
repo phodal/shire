@@ -23,8 +23,4 @@ class TimeMetricProcessor : PostProcessor {
         val endTime = System.currentTimeMillis()
         return (endTime - startTime!!).toString()
     }
-
-    override fun finish(context: PostCodeHandleContext): String {
-        return ""
-    }
 }

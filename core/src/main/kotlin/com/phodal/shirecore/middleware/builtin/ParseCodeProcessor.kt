@@ -13,15 +13,7 @@ class ParseCodeProcessor : PostProcessor {
         return true
     }
 
-    override fun setup(context: PostCodeHandleContext): String {
-        return ""
-    }
-
     override fun execute(project: Project, context: PostCodeHandleContext): String {
         return Code.parse(context.genText ?: "").text
-    }
-
-    override fun finish(context: PostCodeHandleContext): String {
-        return ""
     }
 }
