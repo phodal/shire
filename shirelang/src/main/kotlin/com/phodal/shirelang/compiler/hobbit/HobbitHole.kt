@@ -154,9 +154,32 @@ open class HobbitHole(
 
             val selectionStrategy = frontMatterMap[STRATEGY_SELECTION]?.value as? String ?: ""
 
-            val postProcessors: List<PostProcessor> = emptyList()
-            frontMatterMap[ON_STREAMING_END]?.value?.let {
-                PostProcessor.handler(it as String)
+            val postProcessors: MutableList<PostProcessor> = mutableListOf()
+            frontMatterMap[ON_STREAMING_END]?.value?.let { item ->
+                when (item) {
+                    is FrontMatterType.ARRAY -> {
+                        (item.value as List<FrontMatterType>).forEach { matterType ->
+                            when (matterType) {
+                                is FrontMatterType.EXPRESSION -> {
+                                    val handleName = toFuncName(matterType.value as FrontMatterType.EXPRESSION)
+                                    PostProcessor.handler(handleName)?.let {
+                                        postProcessors.add(it)
+                                    }
+                                }
+
+                                else -> {}
+                            }
+                        }
+                    }
+
+                    is FrontMatterType.STRING -> {
+                        PostProcessor.handler(item as String)?.let {
+                            postProcessors.add(it)
+                        }
+                    }
+
+                    else -> {}
+                }
             }
 
             val filenameRules: MutableList<RuleBasedPatternAction> = mutableListOf()
@@ -178,7 +201,8 @@ open class HobbitHole(
                     // remove pattern sus
                     PatternAction.from(value)?.let {
                         val pattern = it.pattern.removeSurrounding("/")
-                        variables[variable] = PatternActionTransform(variable, pattern, it.patternFuncs, it.isQueryStatement)
+                        variables[variable] =
+                            PatternActionTransform(variable, pattern, it.patternFuncs, it.isQueryStatement)
                     }
                 }
             }
@@ -197,6 +221,10 @@ open class HobbitHole(
                 variables = variables,
                 when_ = whenCondition
             )
+        }
+
+        private fun toFuncName(expression: FrontMatterType.EXPRESSION): String {
+            return expression.display()
         }
     }
 }

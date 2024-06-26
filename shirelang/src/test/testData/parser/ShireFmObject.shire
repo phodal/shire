@@ -3,7 +3,7 @@ name: "Java to Kotlin"
 description: "Convert Java to Kotlin file"
 interaction: AppendCursor
 actionLocation: ContextMenu
-onStreamingEnd:  { VerifyCode | RunCode }
+onStreamingEnd:  { verifyCode | runCode }
 filenameRules:
   "/**.java/": "You should thinking in best Kotlin way."
 ---

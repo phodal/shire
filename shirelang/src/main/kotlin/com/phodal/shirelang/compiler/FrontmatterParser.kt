@@ -111,6 +111,15 @@ object FrontmatterParser {
             is ShireQueryStatement -> {
                  ShireAstQLParser.parse(body)
             }
+            is ShireActionBody -> {
+                val expressions = body.actionExprList.mapNotNull {
+                    parseExpr(it)
+                }.map {
+                    FrontMatterType.EXPRESSION(it)
+                }
+
+                FrontMatterType.ARRAY(expressions)
+            }
 
             null -> {
                 FrontMatterType.EMPTY()
