@@ -10,7 +10,7 @@ nav_order: 1
     description: "AutoTest"
     interaction: AppendCursor
     actionLocation: ContextMenu
-    when: $fileName.contains(".java") && $filePath.contains("src/main/java")
+    when: { $fileName.contains(".java") && $filePath.contains("src/main/java") }
     variables:
       "frameworkContext": /.*/build\.gradle\.kts/ { grep("org.springframework.boot:spring-boot-starter-jdbc") | print("This project use Spring Framework")}
     ---

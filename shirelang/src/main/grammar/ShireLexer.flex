@@ -325,9 +325,9 @@ AFTER_STREAMING          =afterStreaming
 
   "{"                     { patternActionBraceLevel++; isInsideFunctionBlock = true; yybegin(EXPR_BLOCK); return OPEN_BRACE; }
   "}"                     { patternActionBraceLevel--; if (patternActionBraceLevel == 0) { isInsideFunctionBlock = false; } return CLOSE_BRACE; }
-  {IDENTIFIER}            { if (isInsideFunctionBlock) { yypushback(yylength()); yybegin(EXPR_BLOCK); } else { return IDENTIFIER; } }
 
   {NUMBER}                { return NUMBER; }
+  {IDENTIFIER}            { if (isInsideFunctionBlock) { yypushback(yylength()); yybegin(EXPR_BLOCK); } else { return IDENTIFIER; } }
   {DATE}                  { return DATE; }
   {BOOLEAN}               { return BOOLEAN; }
   {QUOTE_STRING}          { return QUOTE_STRING; }

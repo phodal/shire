@@ -41,7 +41,7 @@ name: "AutoTest"
 description: "AutoTest"
 actionLocation: ContextMenu
 interaction: AppendCursor
-when: $fileName.contains(".java") && $filePath.contains("src/main/java")
+when: { $fileName.contains(".java") && $filePath.contains("src/main/java") }
 ---
 
 @ext-context.autotest

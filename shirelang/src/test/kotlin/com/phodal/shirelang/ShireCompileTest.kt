@@ -192,8 +192,8 @@ class ShireCompileTest : BasePlatformTestCase() {
 }"""
         )
 
-//        val result = (when_.value as LogicalExpression).evaluate(variables)
-//        assertTrue(result)
+        val result = (when_.value as LogicalExpression).evaluate(variables)
+        assertTrue(result)
     }
 
     fun testShouldHandleForWhenConditionForContains() {
