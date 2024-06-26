@@ -48,18 +48,19 @@ class ShireRunFileAction : DumbAwareAction() {
             val configProducer = RunConfigurationProducer.getInstance(ShireRunConfigurationProducer::class.java)
 
             val existingConfiguration = configProducer.findExistingConfiguration(context)
-            val runnerAndConfigurationSettings =
-                existingConfiguration
-                    ?: RunManager.getInstance(project).createConfiguration(config.name, ShireConfigurationType::class.java)
+            val runnerAndConfigurationSettings = existingConfiguration
+                ?: RunManager.getInstance(project).createConfiguration(config.name, ShireConfigurationType::class.java)
 
             val runConfiguration = runnerAndConfigurationSettings.configuration as ShireConfiguration
 
             runConfiguration.setScriptPath(config.shireFile.virtualFile.path)
 
             val executorInstance = DefaultRunExecutor.getRunExecutorInstance()
-            val builder = ExecutionEnvironmentBuilder.createOrNull(executorInstance, runConfiguration) ?: return
+            val executionEnvironment = ExecutionEnvironmentBuilder
+                .createOrNull(executorInstance, runConfiguration)
+                ?.build() ?: return
 
-            ExecutionManager.getInstance(project).restartRunProfile(builder.build())
+            ExecutionManager.getInstance(project).restartRunProfile(executionEnvironment)
         }
     }
 }

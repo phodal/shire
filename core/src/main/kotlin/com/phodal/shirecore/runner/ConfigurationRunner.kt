@@ -71,10 +71,7 @@ interface ConfigurationRunner {
         Disposer.register(connection, runContext)
 
         runInEdt {
-            connection.subscribe(
-                ExecutionManager.EXECUTION_TOPIC,
-                CheckExecutionListener(runnerId(), runContext)
-            )
+            connection.subscribe(ExecutionManager.EXECUTION_TOPIC, CheckExecutionListener(runnerId(), runContext))
 
             try {
                 configurations.startRunConfigurationExecution(runContext)

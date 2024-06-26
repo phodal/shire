@@ -12,5 +12,8 @@ abstract class ShireRunner(
     open val myProject: Project,
     open val prompt: String,
 ) {
-    abstract fun execute()
+    abstract fun execute(postFunction: () -> Unit)
+    fun prepareTask() {
+
+    }
 }

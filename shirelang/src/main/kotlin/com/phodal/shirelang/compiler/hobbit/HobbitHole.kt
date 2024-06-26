@@ -111,6 +111,14 @@ open class HobbitHole(
         }
     }
 
+    fun executeStreamingEndProcessor(project: Project, editor: Editor?, file: PsiFile?) {
+        val language = file?.language?.id
+        val context = PostCodeHandleContext(null, language, file)
+        onStreamingEnd.forEach { funcNode ->
+            PostProcessor.handler(funcNode.funName)?.execute(project, context)
+        }
+    }
+
     companion object {
         const val NAME = "name"
         const val ACTION_LOCATION = "actionLocation"
@@ -175,7 +183,11 @@ open class HobbitHole(
             } ?: mutableMapOf()
 
             val afterStreaming: TaskRoutes? = (frontMatterMap[AFTER_STREAMING] as? FrontMatterType.ARRAY)?.let {
-                TaskRoutes.from(it)
+                try {
+                    TaskRoutes.from(it)
+                } catch (e: Exception) {
+                    null
+                }
             }
 
             val whenCondition = frontMatterMap[WHEN] as? FrontMatterType.EXPRESSION

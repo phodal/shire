@@ -77,7 +77,8 @@ open class ShireRunConfigurationProfileState(
 
         val input = compileResult.shireOutput
 
-        val promptText = ShireTemplateCompiler(myProject, compileResult.config, symbolTable, input).compile()
+        val hobbitHole = compileResult.config
+        val promptText = ShireTemplateCompiler(myProject, hobbitHole, symbolTable, input).compile()
         logCompiled(console!!, promptText)
 
         if (promptText.contains(SHIRE_ERROR)) {
@@ -96,7 +97,11 @@ open class ShireRunConfigurationProfileState(
             }
         }
 
-        shireRunner.execute()
+        shireRunner.prepareTask()
+        shireRunner.execute {
+            hobbitHole?.executeStreamingEndProcessor(myProject, editor, null)
+//            hobbitHole?.afterStreaming
+        }
 
         return DefaultExecutionResult(console, processHandler)
     }
