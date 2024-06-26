@@ -27,8 +27,8 @@ class ShireLifecycleTest: BasePlatformTestCase() {
 
         val postProcessors = hole.onStreamingEnd
 
-        println(postProcessors)
-
-//        assertEquals(postProcessors.size, 2)
+        assertEquals(postProcessors.size, 2)
+        assertEquals(postProcessors[0].funName, "verifyCode")
+        assertEquals(postProcessors[1].funName, "runCode")
     }
 }

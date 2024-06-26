@@ -79,7 +79,7 @@ open class HobbitHole(
      * Logging, Metrics, CodeVerify, RunCode, ParseCode etc.
      *
      */
-    val onStreamingEnd: List<PostProcessor> = emptyList(),
+    val onStreamingEnd: List<ProcessFuncNode> = emptyList(),
 
     /**
      * TBD
@@ -104,8 +104,8 @@ open class HobbitHole(
     fun setupStreamingEndProcessor(project: Project, editor: Editor?, file: PsiFile?) {
         val language = file?.language?.id
         val context = PostCodeHandleContext(null, language, file)
-        onStreamingEnd.forEach {
-            it.setup(context)
+        onStreamingEnd.forEach { funcNode ->
+            PostProcessor.handler(funcNode.funName)?.setup(context)
         }
     }
 
@@ -154,7 +154,7 @@ open class HobbitHole(
 
             val selectionStrategy = frontMatterMap[STRATEGY_SELECTION]?.value as? String ?: ""
 
-            val endProcessors: MutableList<PostProcessor> = mutableListOf()
+            val endProcessors: MutableList<ProcessFuncNode> = mutableListOf()
             frontMatterMap[ON_STREAMING_END]?.let { item ->
                 when (item) {
                     is FrontMatterType.ARRAY -> {
@@ -162,9 +162,7 @@ open class HobbitHole(
                             when (matterType) {
                                 is FrontMatterType.EXPRESSION -> {
                                     val handleName = toFuncName(matterType)
-                                    PostProcessor.handler(handleName)?.let {
-                                        endProcessors.add(it)
-                                    }
+                                    endProcessors.add(ProcessFuncNode(handleName, emptyList()))
                                 }
 
                                 else -> {}
@@ -173,9 +171,8 @@ open class HobbitHole(
                     }
 
                     is FrontMatterType.STRING -> {
-                        PostProcessor.handler(item as String)?.let {
-                            endProcessors.add(it)
-                        }
+                        val handleName = item.value as String
+                        endProcessors.add(ProcessFuncNode(handleName, emptyList()))
                     }
 
                     else -> {}
