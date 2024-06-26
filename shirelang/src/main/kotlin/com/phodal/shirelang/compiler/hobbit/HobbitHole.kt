@@ -118,6 +118,7 @@ open class HobbitHole(
         const val STRATEGY_SELECTION = "selectionStrategy"
         const val ON_STREAMING_END = "onStreamingEnd"
         const val AFTER_STREAMING = "afterStreaming"
+        const val ON_STREAMING = "onStreaming"
         private const val DESCRIPTION = "description"
         private const val FILENAME_RULES = "filenameRules"
         private const val VARIABLES = "variables"
@@ -138,7 +139,9 @@ open class HobbitHole(
                 INTERACTION to "The output of the action can be a file, a string, etc.",
                 ACTION_LOCATION to "The location of the action, can [ShireActionLocation]",
                 STRATEGY_SELECTION to "The strategy to select the element to apply the action",
+                FILENAME_RULES to "Custom prompt based on the file name",
                 ON_STREAMING_END to "After Streaming end middleware actions, like Logging, Metrics, CodeVerify, RunCode, ParseCode etc.",
+                AFTER_STREAMING to "Decision to run the task after streaming, routing to different tasks",
             )
         }
 
