@@ -154,9 +154,18 @@ open class HobbitHole(
             }
 
             val selectionStrategy = frontMatterMap[STRATEGY_SELECTION]?.value as? String ?: ""
-            val endProcessors: MutableList<ProcessFuncNode> = buildStreamingEndProcessors(frontMatterMap)
-            val filenameRules: MutableList<RuleBasedPatternAction> = buildFilenamePatternRules(frontMatterMap)
-            val variables: MutableMap<String, PatternActionTransform> = buildVariableTransformations(frontMatterMap)
+            val endProcessors: MutableList<ProcessFuncNode> = frontMatterMap[ON_STREAMING_END]?.let {
+                buildStreamingEndProcessors(it)
+            } ?: mutableListOf()
+
+            val filenameRules: MutableList<RuleBasedPatternAction> = (frontMatterMap[FILENAME_RULES] as? FrontMatterType.OBJECT)?.let {
+                buildFilenameRules(it)
+            } ?: mutableListOf()
+
+            val variables: MutableMap<String, PatternActionTransform> = (frontMatterMap[VARIABLES] as? FrontMatterType.OBJECT)?.let {
+                buildVariableTransformations(it)
+            } ?: mutableMapOf()
+
             val whenCondition = frontMatterMap[WHEN] as? FrontMatterType.EXPRESSION
 
             return HobbitHole(
@@ -173,11 +182,10 @@ open class HobbitHole(
             )
         }
 
-        private fun buildFilenamePatternRules(frontMatterMap: MutableMap<String, FrontMatterType>): MutableList<RuleBasedPatternAction> {
+        private fun buildFilenameRules(objectType: FrontMatterType.OBJECT): MutableList<RuleBasedPatternAction> {
             val filenameRules: MutableList<RuleBasedPatternAction> = mutableListOf()
-            val filenamesMap = frontMatterMap[FILENAME_RULES] as? FrontMatterType.OBJECT
-            filenamesMap?.let {
-                (filenamesMap.value as? Map<String, FrontMatterType>)?.forEach { (key, value) ->
+            objectType.let {
+                (objectType.value as? Map<String, FrontMatterType>)?.forEach { (key, value) ->
                     val text = key.removeSurrounding("\"")
                     PatternAction.from(value)?.let {
                         filenameRules.add(RuleBasedPatternAction(text, it.patternFuncs))
@@ -187,9 +195,9 @@ open class HobbitHole(
             return filenameRules
         }
 
-        private fun buildVariableTransformations(frontMatterMap: MutableMap<String, FrontMatterType>): MutableMap<String, PatternActionTransform> {
+        private fun buildVariableTransformations(variableObject: FrontMatterType.OBJECT): MutableMap<String, PatternActionTransform> {
             val variables: MutableMap<String, PatternActionTransform> = mutableMapOf()
-            val variablesMap = frontMatterMap[VARIABLES] as? FrontMatterType.OBJECT
+            val variablesMap = variableObject
             variablesMap?.let {
                 (variablesMap.value as? Map<String, FrontMatterType>)?.forEach { (key, value) ->
                     val variable = key.removeSurrounding("\"")
@@ -204,9 +212,9 @@ open class HobbitHole(
             return variables
         }
 
-        private fun buildStreamingEndProcessors(frontMatterMap: MutableMap<String, FrontMatterType>): MutableList<ProcessFuncNode> {
+        private fun buildStreamingEndProcessors(frontMatterType: FrontMatterType): MutableList<ProcessFuncNode> {
             val endProcessors: MutableList<ProcessFuncNode> = mutableListOf()
-            frontMatterMap[ON_STREAMING_END]?.let { item ->
+            frontMatterType.let { item ->
                 when (item) {
                     is FrontMatterType.ARRAY -> {
                         (item.value as List<FrontMatterType>).forEach { matterType ->
