@@ -171,8 +171,8 @@ open class HobbitHole(
                 buildVariableTransformations(it.toValue())
             } ?: mutableMapOf()
 
-            val afterStreaming: TaskRoutes? = (frontMatterMap[AFTER_STREAMING] as? FrontMatterType.EXPRESSION)?.let {
-                buildTaskRoutes(it)
+            val afterStreaming: TaskRoutes? = (frontMatterMap[AFTER_STREAMING] as? FrontMatterType.ARRAY)?.let {
+                TaskRoutes.from(it)
             }
 
             val whenCondition = frontMatterMap[WHEN] as? FrontMatterType.EXPRESSION
@@ -190,10 +190,6 @@ open class HobbitHole(
                 variables = variables,
                 when_ = whenCondition
             )
-        }
-
-        private fun buildTaskRoutes(expression: FrontMatterType.EXPRESSION) : TaskRoutes? {
-            return TaskRoutes.from(expression)
         }
 
         private fun buildFilenameRules(obj: Map<String, FrontMatterType>): List<RuleBasedPatternAction> {

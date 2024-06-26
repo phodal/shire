@@ -5,6 +5,7 @@ import com.phodal.shirecore.middleware.PostCodeHandleContext
 import com.phodal.shirecore.middleware.PostProcessor
 import com.phodal.shirelang.compiler.ShireCompiler
 import com.phodal.shirelang.psi.ShireFile
+import junit.framework.TestCase
 
 class ShireLifecycleTest: BasePlatformTestCase() {
     fun testShouldHandleWhenStreamingEnd() {
@@ -59,8 +60,13 @@ class ShireLifecycleTest: BasePlatformTestCase() {
         val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
         val hole = compile.config!!
 
-        val funcNode = hole.afterStreaming
+        val funcNode = hole.afterStreaming!!
 
-        println(funcNode)
+        TestCase.assertEquals(funcNode.conditions.size, 2)
+        TestCase.assertEquals(funcNode.conditions[0].conditionKey, "\"variable-success\"")
+
+        TestCase.assertEquals(funcNode.cases.size, 3)
+        TestCase.assertEquals(funcNode.cases[0].caseKey, "\"variable-success\"")
+
     }
 }
