@@ -7,6 +7,7 @@ import com.intellij.execution.configurations.RunConfiguration
 import com.intellij.execution.configurations.RunProfile
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.diagnostic.logger
+import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
@@ -110,5 +111,20 @@ interface FileRunService {
         }
 
         return null
+    }
+
+    companion object {
+        val EP_NAME: ExtensionPointName<FileRunService> = ExtensionPointName("com.phodal.shireFileRunService")
+
+        fun all(): List<FileRunService> {
+            return EP_NAME.extensionList
+        }
+
+        fun provider(project: Project, file: VirtualFile): FileRunService? {
+            val fileRunServices = EP_NAME.extensionList
+            return fileRunServices.firstOrNull {
+                it.createConfiguration(project, file) != null
+            }
+        }
     }
 }
