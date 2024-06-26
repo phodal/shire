@@ -106,7 +106,7 @@ class ShireCompiler(
 
                 else -> {
                     output.append(psiElement.text)
-                    logger.warn("Unknown element type: ${psiElement.elementType}")
+                    logger.warn("Unknown element type: ${psiElement.elementType}, text: ${psiElement.text}")
                 }
             }
         }

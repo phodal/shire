@@ -25,7 +25,14 @@ abstract class Statement {
                     }
                 }
                 val formattedParameters = if (parameters == null) "" else "($parameters)"
-                "${this.objectName.display()}.${this.methodName.display()}$formattedParameters"
+
+                val dotWithTarget = if (this.methodName is FrontMatterType.EMPTY) {
+                    ""
+                } else {
+                    ".${this.methodName.display()}"
+                }
+
+                "${this.objectName.display()}${dotWithTarget}$formattedParameters"
             }
             is Value -> this.value.display()
             else -> throw IllegalArgumentException("Unsupported statement type: $this")

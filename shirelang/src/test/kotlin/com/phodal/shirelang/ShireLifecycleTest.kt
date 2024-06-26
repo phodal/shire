@@ -27,6 +27,8 @@ class ShireLifecycleTest: BasePlatformTestCase() {
 
         val postProcessors = hole.onStreamingEnd
 
+        println(postProcessors)
+
 //        assertEquals(postProcessors.size, 2)
     }
 }

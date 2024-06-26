@@ -241,12 +241,9 @@ object FrontmatterParser {
         }
 
         is ShireActionExpr -> {
-            expr.funcCall?.let {
+            expr.funcCall?.let { it ->
                 val args = parseParameters(it)
-                MethodCall(
-                    FrontMatterType.IDENTIFIER(it.funcName.text),
-                    FrontMatterType.EMPTY(),
-                    args.map { FrontMatterType.STRING(it) })
+                MethodCall(FrontMatterType.IDENTIFIER(it.funcName.text), FrontMatterType.EMPTY(), args)
             }
         }
 
@@ -417,7 +414,7 @@ object FrontmatterParser {
         val actionBlock = PsiTreeUtil.getChildOfType(element, ShireActionBlock::class.java)
         actionBlock?.actionBody?.actionExprList?.map { expr ->
             val funcCall = expr.funcCall
-            val args = parseParameters(funcCall)
+            val args = parseParameters(funcCall) ?: emptyList()
 
             when (funcCall?.funcName?.text) {
                 "grep" -> {
@@ -489,7 +486,7 @@ object FrontmatterParser {
         return FrontMatterType.PATTERN(RuleBasedPatternAction(pattern, processor))
     }
 
-    private fun parseParameters(funcCall: ShireFuncCall?): List<@NlsSafe String> =
+    private fun parseParameters(funcCall: ShireFuncCall?): List<String>? =
         PsiTreeUtil.findChildOfType(funcCall, ShirePipelineArgs::class.java)
             ?.let {
                 it.pipelineArgList.map { arg -> arg }
@@ -502,7 +499,7 @@ object FrontmatterParser {
                     ShireTypes.IDENTIFIER -> it.text.removeSurrounding("\"")
                     else -> it.text
                 }
-            } ?: emptyList()
+            }
 
     private fun parseArray(element: PsiElement): List<FrontMatterType> {
         val array = mutableListOf<FrontMatterType>()

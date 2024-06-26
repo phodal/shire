@@ -155,13 +155,13 @@ open class HobbitHole(
             val selectionStrategy = frontMatterMap[STRATEGY_SELECTION]?.value as? String ?: ""
 
             val endProcessors: MutableList<PostProcessor> = mutableListOf()
-            frontMatterMap[ON_STREAMING_END]?.value?.let { item ->
+            frontMatterMap[ON_STREAMING_END]?.let { item ->
                 when (item) {
                     is FrontMatterType.ARRAY -> {
                         (item.value as List<FrontMatterType>).forEach { matterType ->
                             when (matterType) {
                                 is FrontMatterType.EXPRESSION -> {
-                                    val handleName = toFuncName(matterType.value as FrontMatterType.EXPRESSION)
+                                    val handleName = toFuncName(matterType)
                                     PostProcessor.handler(handleName)?.let {
                                         endProcessors.add(it)
                                     }
