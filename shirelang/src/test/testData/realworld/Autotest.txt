@@ -251,7 +251,7 @@ ShireFile
                         PsiElement(ShireTokenType.NEWLINE)('\n')
                         PsiWhiteSpace('        ')
                         ShirePsiElementDeclImpl(PSI_ELEMENT_DECL)
-                          ShireVariableDeclImpl(VARIABLE_DECL)
+                          ShirePsiVarDeclImpl(PSI_VAR_DECL)
                             ShirePsiTypeImpl(PSI_TYPE)
                               PsiElement(ShireTokenType.IDENTIFIER)('PsiClass')
                             PsiWhiteSpace(' ')
