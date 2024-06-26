@@ -154,7 +154,7 @@ open class HobbitHole(
 
             val selectionStrategy = frontMatterMap[STRATEGY_SELECTION]?.value as? String ?: ""
 
-            val postProcessors: MutableList<PostProcessor> = mutableListOf()
+            val endProcessors: MutableList<PostProcessor> = mutableListOf()
             frontMatterMap[ON_STREAMING_END]?.value?.let { item ->
                 when (item) {
                     is FrontMatterType.ARRAY -> {
@@ -163,7 +163,7 @@ open class HobbitHole(
                                 is FrontMatterType.EXPRESSION -> {
                                     val handleName = toFuncName(matterType.value as FrontMatterType.EXPRESSION)
                                     PostProcessor.handler(handleName)?.let {
-                                        postProcessors.add(it)
+                                        endProcessors.add(it)
                                     }
                                 }
 
@@ -174,7 +174,7 @@ open class HobbitHole(
 
                     is FrontMatterType.STRING -> {
                         PostProcessor.handler(item as String)?.let {
-                            postProcessors.add(it)
+                            endProcessors.add(it)
                         }
                     }
 
@@ -217,7 +217,7 @@ open class HobbitHole(
                 ruleBasedFilter = filenameRules,
                 restData = data,
                 selectionStrategy = SelectElementStrategy.fromString(selectionStrategy),
-                onStreamingEnd = postProcessors,
+                onStreamingEnd = endProcessors,
                 variables = variables,
                 when_ = whenCondition
             )
