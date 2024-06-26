@@ -2,7 +2,6 @@ package com.phodal.shirelang
 
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.phodal.shirelang.compiler.ShireCompiler
-import com.phodal.shirelang.compiler.patternaction.PatternActionProcessor
 import com.phodal.shirelang.psi.ShireFile
 
 class ShireLifecycleTest: BasePlatformTestCase() {

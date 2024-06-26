@@ -74,15 +74,16 @@ open class HobbitHole(
      * The list of rule files to apply for the action.
      */
     val ruleBasedFilter: List<RuleBasedPatternAction> = emptyList(),
+
     /**
-     * Post middleware actions, like
-     * Logging, Metrics, CodeVerify, RunCode, ParseCode etc.
-     *
+     * This property represents a list of post-middleware actions to be executed after the streaming process ends.
+     * It allows for the definition of various operations such as logging, metrics collection, code verification,
+     * execution of code, or parsing code, among others.
      */
     val onStreamingEnd: List<ProcessFuncNode> = emptyList(),
 
     /**
-     * TBD
+     * TBD, keep it for future use.
      */
     @Deprecated("TBD")
     val onStreaming: List<PostProcessor> = emptyList(),
@@ -153,7 +154,57 @@ open class HobbitHole(
             }
 
             val selectionStrategy = frontMatterMap[STRATEGY_SELECTION]?.value as? String ?: ""
+            val endProcessors: MutableList<ProcessFuncNode> = buildStreamingEndProcessors(frontMatterMap)
+            val filenameRules: MutableList<RuleBasedPatternAction> = buildFilenamePatternRules(frontMatterMap)
+            val variables: MutableMap<String, PatternActionTransform> = buildVariableTransformations(frontMatterMap)
+            val whenCondition = frontMatterMap[WHEN] as? FrontMatterType.EXPRESSION
 
+            return HobbitHole(
+                name,
+                description,
+                InteractionType.from(interaction),
+                ShireActionLocation.from(actionLocation),
+                ruleBasedFilter = filenameRules,
+                restData = data,
+                selectionStrategy = SelectElementStrategy.fromString(selectionStrategy),
+                onStreamingEnd = endProcessors,
+                variables = variables,
+                when_ = whenCondition
+            )
+        }
+
+        private fun buildFilenamePatternRules(frontMatterMap: MutableMap<String, FrontMatterType>): MutableList<RuleBasedPatternAction> {
+            val filenameRules: MutableList<RuleBasedPatternAction> = mutableListOf()
+            val filenamesMap = frontMatterMap[FILENAME_RULES] as? FrontMatterType.OBJECT
+            filenamesMap?.let {
+                (filenamesMap.value as? Map<String, FrontMatterType>)?.forEach { (key, value) ->
+                    val text = key.removeSurrounding("\"")
+                    PatternAction.from(value)?.let {
+                        filenameRules.add(RuleBasedPatternAction(text, it.patternFuncs))
+                    }
+                }
+            }
+            return filenameRules
+        }
+
+        private fun buildVariableTransformations(frontMatterMap: MutableMap<String, FrontMatterType>): MutableMap<String, PatternActionTransform> {
+            val variables: MutableMap<String, PatternActionTransform> = mutableMapOf()
+            val variablesMap = frontMatterMap[VARIABLES] as? FrontMatterType.OBJECT
+            variablesMap?.let {
+                (variablesMap.value as? Map<String, FrontMatterType>)?.forEach { (key, value) ->
+                    val variable = key.removeSurrounding("\"")
+                    // remove pattern sus
+                    PatternAction.from(value)?.let {
+                        val pattern = it.pattern.removeSurrounding("/")
+                        variables[variable] =
+                            PatternActionTransform(variable, pattern, it.patternFuncs, it.isQueryStatement)
+                    }
+                }
+            }
+            return variables
+        }
+
+        private fun buildStreamingEndProcessors(frontMatterMap: MutableMap<String, FrontMatterType>): MutableList<ProcessFuncNode> {
             val endProcessors: MutableList<ProcessFuncNode> = mutableListOf()
             frontMatterMap[ON_STREAMING_END]?.let { item ->
                 when (item) {
@@ -178,46 +229,7 @@ open class HobbitHole(
                     else -> {}
                 }
             }
-
-            val filenameRules: MutableList<RuleBasedPatternAction> = mutableListOf()
-            val filenamesMap = frontMatterMap[FILENAME_RULES] as? FrontMatterType.OBJECT
-            filenamesMap?.let {
-                (filenamesMap.value as? Map<String, FrontMatterType>)?.forEach { (key, value) ->
-                    val text = key.removeSurrounding("\"")
-                    PatternAction.from(value)?.let {
-                        filenameRules.add(RuleBasedPatternAction(text, it.patternFuncs))
-                    }
-                }
-            }
-
-            val variables: MutableMap<String, PatternActionTransform> = mutableMapOf()
-            val variablesMap = frontMatterMap[VARIABLES] as? FrontMatterType.OBJECT
-            variablesMap?.let {
-                (variablesMap.value as? Map<String, FrontMatterType>)?.forEach { (key, value) ->
-                    val variable = key.removeSurrounding("\"")
-                    // remove pattern sus
-                    PatternAction.from(value)?.let {
-                        val pattern = it.pattern.removeSurrounding("/")
-                        variables[variable] =
-                            PatternActionTransform(variable, pattern, it.patternFuncs, it.isQueryStatement)
-                    }
-                }
-            }
-
-            val whenCondition = frontMatterMap[WHEN] as? FrontMatterType.EXPRESSION
-
-            return HobbitHole(
-                name,
-                description,
-                InteractionType.from(interaction),
-                ShireActionLocation.from(actionLocation),
-                ruleBasedFilter = filenameRules,
-                restData = data,
-                selectionStrategy = SelectElementStrategy.fromString(selectionStrategy),
-                onStreamingEnd = endProcessors,
-                variables = variables,
-                when_ = whenCondition
-            )
+            return endProcessors
         }
 
         private fun toFuncName(expression: FrontMatterType.EXPRESSION): String {
