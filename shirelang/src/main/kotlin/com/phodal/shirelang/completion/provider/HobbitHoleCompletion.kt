@@ -62,7 +62,7 @@ class HobbitHoleCompletion : CompletionProvider<CompletionParameters>() {
                     )
                 }
             }
-            HobbitHole.POST_PROCESSOR -> {
+            HobbitHole.ON_STREAMING_END -> {
                 PostProcessor.allNames().forEach {
                     result.addElement(
                         LookupElementBuilder

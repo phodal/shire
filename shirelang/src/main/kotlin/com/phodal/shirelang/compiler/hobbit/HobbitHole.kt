@@ -114,7 +114,7 @@ open class HobbitHole(
         const val ACTION_LOCATION = "actionLocation"
         const val INTERACTION = "interaction"
         const val STRATEGY_SELECTION = "selectionStrategy"
-        const val POST_PROCESSOR = "postProcessors"
+        const val ON_STREAMING_END = "onStreamingEnd"
         private const val DESCRIPTION = "description"
         private const val FILENAME_RULES = "filenameRules"
         private const val VARIABLES = "variables"
@@ -135,7 +135,7 @@ open class HobbitHole(
                 INTERACTION to "The output of the action can be a file, a string, etc.",
                 ACTION_LOCATION to "The location of the action, can [ShireActionLocation]",
                 STRATEGY_SELECTION to "The strategy to select the element to apply the action",
-                POST_PROCESSOR to "The list of post processors",
+                ON_STREAMING_END to "After Streaming end middleware actions, like Logging, Metrics, CodeVerify, RunCode, ParseCode etc.",
             )
         }
 
@@ -155,7 +155,7 @@ open class HobbitHole(
             val selectionStrategy = frontMatterMap[STRATEGY_SELECTION]?.value as? String ?: ""
 
             val postProcessors: List<PostProcessor> = emptyList()
-            frontMatterMap[POST_PROCESSOR]?.value?.let {
+            frontMatterMap[ON_STREAMING_END]?.value?.let {
                 PostProcessor.handler(it as String)
             }
 
