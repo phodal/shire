@@ -85,7 +85,7 @@ frontMatterEntry ::=
     lifecycleId COLON (functionStatement | conditionExpr) NEWLINE?
     | frontMatterKey COLON (frontMatterValue | patternAction | functionStatement) NEWLINE?
 
-private lifecycleId ::= "when" | "onStreaming" | "onStreamingEnd" | "afterStreaming"
+lifecycleId ::= "when" | "onStreaming" | "onStreamingEnd" | "afterStreaming"
 
 frontMatterKey ::= frontMatterId | QUOTE_STRING | pattern
 frontMatterValue ::= IDENTIFIER | NUMBER | QUOTE_STRING | DATE | BOOLEAN | frontMatterArray | (NEWLINE objectKeyValue)
@@ -192,6 +192,7 @@ functionStatement ::= blockStart functionBody? blockEnd
 functionBody ::=
     queryStatement
     | actionBody
+    | conditionExpr
 
 queryStatement ::= from_clause where_clause select_clause
 

@@ -10,7 +10,7 @@ object ShireAstQLParser {
     fun parse(statement: ShireQueryStatement): FrontMatterType {
         val value = ShirePsiQueryStatement(
             parseFrom(statement.fromClause),
-            parseWhere(statement.whereClause),
+            parseWhere(statement.whereClause)!!,
             parseSelect(statement.selectClause)
         )
 
@@ -23,12 +23,12 @@ object ShireAstQLParser {
         }
     }
 
-    private fun parseWhere(whereClause: ShireWhereClause): Statement {
+    private fun parseWhere(whereClause: ShireWhereClause): Statement? {
         return FrontmatterParser.parseExpr(whereClause.expr)
     }
 
     private fun parseSelect(selectClause: ShireSelectClause): List<Statement> {
-        return selectClause.exprList.map {
+        return selectClause.exprList.mapNotNull {
             FrontmatterParser.parseExpr(it)
         }
     }

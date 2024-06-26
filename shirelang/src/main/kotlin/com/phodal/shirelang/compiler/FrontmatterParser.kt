@@ -7,7 +7,6 @@ import com.intellij.psi.TokenType.WHITE_SPACE
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.elementType
 import com.phodal.shirelang.compiler.hobbit.*
-import com.phodal.shirelang.compiler.hobbit.ast.RuleBasedPatternAction
 import com.phodal.shirelang.compiler.hobbit.ast.*
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 import com.phodal.shirelang.psi.*
@@ -45,6 +44,7 @@ object FrontmatterParser {
         frontMatterEntries.forEach { entry ->
             entry.children.forEach { child ->
                 when (child.elementType) {
+                    ShireTypes.LIFECYCLE_ID,
                     ShireTypes.FRONT_MATTER_KEY -> {
                         lastKey = child.text
                     }
@@ -60,24 +60,40 @@ object FrontmatterParser {
                     }
 
                     ShireTypes.LOGICAL_AND_EXPR -> {
-                        lastKey = HobbitHole.WHEN
                         frontMatter[lastKey] = parseLogicAndExprToType(child as ShireLogicalAndExpr)
                             ?: FrontMatterType.STRING("Logical expression parsing failed: ${child.text}")
                     }
 
                     ShireTypes.LOGICAL_OR_EXPR -> {
-                        lastKey = HobbitHole.WHEN
                         frontMatter[lastKey] = parseLogicOrExprToType(child as ShireLogicalOrExpr)
                             ?: FrontMatterType.STRING("Logical expression parsing failed: ${child.text}")
                     }
 
                     ShireTypes.CALL_EXPR -> {
-                        lastKey = HobbitHole.WHEN
-                        frontMatter[lastKey] = FrontMatterType.EXPRESSION(parseExpr(child))
+                        parseExpr(child)?.let {
+                            frontMatter[lastKey] = FrontMatterType.EXPRESSION(it)
+                        }
                     }
 
                     ShireTypes.FUNCTION_STATEMENT -> {
                         frontMatter[lastKey] = parseFunction(child as ShireFunctionStatement)
+                    }
+
+                    /**
+                     * For blocked when condition
+                     *
+                     * ```shire
+                     * when: { $filePath.contains("src/main/java") && $fileName.contains(".java") }
+                     * ```
+                     */
+                    ShireTypes.VARIABLE_EXPR -> {
+                        // ignore
+                        val childExpr = (child as ShireVariableExpr).expr
+                        if (childExpr != null) {
+                            parseExpr(childExpr)?.let {
+                                frontMatter[lastKey] = FrontMatterType.EXPRESSION(it)
+                            }
+                        }
                     }
 
                     else -> {
@@ -100,6 +116,11 @@ object FrontmatterParser {
                 FrontMatterType.EMPTY()
             }
             else -> {
+                val expr = parseExpr(body)
+                if (expr is Statement) {
+                    return FrontMatterType.EXPRESSION(expr)
+                }
+
                 logger.error("parseFunction, Unknown function type: ${body.elementType}")
                 FrontMatterType.STRING("Unknown function type: ${body.elementType}")
             }
@@ -115,11 +136,15 @@ object FrontmatterParser {
         val left = child.exprList.firstOrNull() ?: return null
         val right = child.exprList.lastOrNull() ?: return null
 
+        val leftStmt = parseExpr(left) ?: return null
+        val rightStmt = parseExpr(right) ?: return null
+
         val logicalExpression = LogicalExpression(
-            left = parseExpr(left),
+            left = leftStmt,
             operator = OperatorType.And,
-            right = parseExpr(right)
+            right = rightStmt
         )
+
         return logicalExpression
     }
 
@@ -132,10 +157,13 @@ object FrontmatterParser {
         val left = child.exprList.firstOrNull() ?: return null
         val right = child.exprList.lastOrNull() ?: return null
 
+        val leftStmt = parseExpr(left) ?: return null
+        val rightStmt = parseExpr(right) ?: return null
+
         val logicOrExpr = LogicalExpression(
-            left = parseExpr(left),
+            left = leftStmt,
             operator = OperatorType.Or,
-            right = parseExpr(right)
+            right = rightStmt
         )
         return logicOrExpr
     }
@@ -155,7 +183,7 @@ object FrontmatterParser {
      *
      * @return A Statement parsed from the given expression. The type of Statement depends on the type of the expression.
      */
-    fun parseExpr(expr: PsiElement): Statement = when (expr.elementType) {
+    fun parseExpr(expr: PsiElement): Statement? = when (expr.elementType) {
         ShireTypes.CALL_EXPR -> {
             val shireCallExpr = expr as ShireCallExpr
             val expressionList = shireCallExpr.expressionList
@@ -207,7 +235,7 @@ object FrontmatterParser {
 
         else -> {
             logger.warn("parseExpr, Unknown expression type: ${expr.elementType}")
-            Comparison(FrontMatterType.STRING(""), Operator(OperatorType.Equal), FrontMatterType.STRING(""))
+            null
         }
     }
 

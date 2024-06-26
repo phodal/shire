@@ -5,7 +5,13 @@ parent: Lifecycle
 nav_order: 3
 ---
 
-`postProcessor` 提供一系列的后处理器，用于对生成的代码进行处理。
+`onStreamingDone` 即在 Streaming 完成后通过一系列的后处理器对生成的内容进行处理，诸如：
+
+- CodeVerify，检查代码错误或 PSI 问题
+- RunCode，运行生成的代码
+- ParseCode，解析生成的代码块
+
+如下是内置的后处理器：
 
 ```kotlin
 enum class BuiltinPostHandler(var handleName: String) {

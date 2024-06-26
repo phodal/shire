@@ -167,6 +167,35 @@ class ShireCompileTest : BasePlatformTestCase() {
         assertTrue(result)
     }
 
+    fun testShouldHandleForWhenConditionInVariableExpr() {
+        val code = """
+            ---
+            when: { ${'$'}selection.length >= 1 && ${'$'}selection.first() == 'p' }
+            ---
+            
+            Summary webpage:
+        """.trimIndent()
+
+        val file = myFixture.configureByText("test.shire", code)
+
+        val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
+        assertEquals("\n\nSummary webpage:", compile.shireOutput)
+        val when_ = compile.config?.when_
+
+        assertEquals(when_!!.display(), "\$selection.length >= 1 && \$selection.first == \"p\"")
+
+        val variables: Map<String, String> = mapOf(
+            "selection" to """public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, World");
+    }
+}"""
+        )
+
+//        val result = (when_.value as LogicalExpression).evaluate(variables)
+//        assertTrue(result)
+    }
+
     fun testShouldHandleForWhenConditionForContains() {
         val code = """
             ---
