@@ -5,7 +5,6 @@ import com.intellij.execution.ui.ConsoleView
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.Key
 import com.phodal.shirecore.action.ShireActionLocation
 import com.phodal.shirecore.agent.InteractionType
 import com.phodal.shirecore.middleware.PostCodeHandleContext
@@ -51,19 +50,9 @@ open class HobbitHole(
     val selectionStrategy: SelectElementStrategy = SelectElementStrategy.Blocked,
 
     /**
-     * The list of rule files to apply for the action.
-     */
-    val fileContentFilters: List<String> = emptyList(),
-
-    /**
      * The list of variables to apply for the action.
      */
     val variables: MutableMap<String, PatternActionTransform> = mutableMapOf(),
-
-    /**
-     * The rest of the data.
-     */
-    val restData: Map<String, FrontMatterType> = mutableMapOf(),
 
     /**
      * This code snippet declares a variable 'when_' of type List<VariableCondition> and initializes it with an empty list.
@@ -95,11 +84,11 @@ open class HobbitHole(
      * The list of actions that this action depends on.
      */
     val afterStreaming: TaskRoutes? = null,
+
     /**
-     * The list of actions that this action depends on.
-     * We use it for Directed Acyclic Graph (DAG) to represent dependencies between actions.
+     * The rest of the data.
      */
-    val finalize: FrontMatterType.EXPRESSION? = null,
+    val userData: Map<String, FrontMatterType> = mutableMapOf(),
 ) : Smials {
     fun pickupElement(project: Project, editor: Editor?): SelectedEntry? {
         this.selectionStrategy.select(project, editor)
@@ -204,13 +193,13 @@ open class HobbitHole(
                 description,
                 InteractionType.from(interaction),
                 ShireActionLocation.from(actionLocation),
-                ruleBasedFilter = filenameRules,
-                restData = data,
                 selectionStrategy = selectionStrategy,
-                onStreamingEnd = endProcessors,
-                afterStreaming = afterStreaming,
                 variables = variables,
-                when_ = whenCondition
+                userData = data,
+                when_ = whenCondition,
+                ruleBasedFilter = filenameRules,
+                onStreamingEnd = endProcessors,
+                afterStreaming = afterStreaming
             )
         }
 

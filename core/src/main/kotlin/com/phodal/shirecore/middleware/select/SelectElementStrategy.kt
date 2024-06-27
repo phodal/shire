@@ -9,14 +9,8 @@ import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.util.PsiUtilBase
 
 sealed class SelectedEntry(open val element: Any) {
-    class Text(override val element: String) : SelectedEntry(element) {
-
-    }
-
-    class Entry(override val element: PsiElement) : SelectedEntry(element) {
-
-    }
-
+    class Text(override val element: String) : SelectedEntry(element)
+    class Entry(override val element: PsiElement) : SelectedEntry(element)
 }
 
 sealed class SelectElementStrategy {
