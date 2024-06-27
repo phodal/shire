@@ -26,12 +26,12 @@ class VerifyCodeProcessor : PostProcessor {
     }
 
     override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?): String {
-        if (context.file == null) {
+        if (context.currentFile == null) {
             return ""
         }
 
         var errors: List<String> = listOf()
-        collectSyntaxError<PsiFile>(context.file.virtualFile, project) {
+        collectSyntaxError<PsiFile>(context.currentFile!!.virtualFile, project) {
             errors = it
         }
 
