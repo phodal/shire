@@ -3,6 +3,7 @@ package com.phodal.shirecore.middleware.builtin
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer
 import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerEx
 import com.intellij.execution.ui.ConsoleView
+import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.runReadAction
@@ -26,13 +27,27 @@ class VerifyCodeProcessor : PostProcessor {
     }
 
     override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?): String {
-        if (context.currentFile == null) {
+        val code = context.pipeData["output"]
+        if (code !is VirtualFile) {
+            console?.print("No code to verify\n", ConsoleViewContentType.ERROR_OUTPUT)
+            return ""
+        }
+
+        val psiFile = PsiManager.getInstance(project).findFile(code)
+        if (psiFile == null) {
+            console?.print("No code to verify\n", ConsoleViewContentType.ERROR_OUTPUT)
             return ""
         }
 
         var errors: List<String> = listOf()
-        collectSyntaxError<PsiFile>(context.currentFile!!.virtualFile, project) {
+        collectSyntaxError<PsiFile>(psiFile.virtualFile, project) {
             errors = it
+        }
+
+        if (errors.isNotEmpty()) {
+            console?.print("Syntax errors found:\n${errors.joinToString("\n")}\n", ConsoleViewContentType.ERROR_OUTPUT)
+        } else {
+            console?.print("No syntax errors found\n", ConsoleViewContentType.SYSTEM_OUTPUT)
         }
 
         return errors.joinToString("\n")

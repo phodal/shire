@@ -30,11 +30,14 @@ class SaveFileProcessor : PostProcessor {
             outputFile?.setBinaryContent(content?.toByteArray() ?: ByteArray(0))
 
             outputFile
-        }
+        } ?: throw IllegalStateException("Failed to save file")
 
-        context.pipeData["output"] = outputFile?.canonicalPath ?: ""
+        context.pipeData["output"] = outputFile
 
-        console?.print("Saved to ${outputFile?.canonicalPath}\n", ConsoleViewContentType.SYSTEM_OUTPUT)
-        return outputFile?.path ?: ""
+        // refresh index
+        project.guessProjectDir()?.refresh(true, true)
+
+        console?.print("Saved to ${outputFile.canonicalPath}\n", ConsoleViewContentType.SYSTEM_OUTPUT)
+        return outputFile.path ?: ""
     }
 }
