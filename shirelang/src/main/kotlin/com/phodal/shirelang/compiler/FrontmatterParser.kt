@@ -465,11 +465,11 @@ object FrontmatterParser {
         }
     }
 
-    private fun parsePatternAction(element: PsiElement): FrontMatterType {
-        val pattern = element.children.firstOrNull()?.text ?: ""
+    private fun parsePatternAction(element: PsiElement): FrontMatterType? {
+        val pattern = element.children.firstOrNull()?.text ?: return null
 
         val actionBlock = PsiTreeUtil.getChildOfType(element, ShireActionBlock::class.java)
-        val actionBody = actionBlock?.actionBody
+        val actionBody = actionBlock?.actionBody ?: return null
 
         val processor: MutableList<PatternActionFunc> = parseActionBody(actionBody)
 
