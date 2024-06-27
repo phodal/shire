@@ -106,5 +106,6 @@
         <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.TimeMetricProcessor"/>
         <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.ParseCodeProcessor"/>
         <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.RunCodeProcessor"/>
+        <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.SaveFileProcessor"/>
     </extensions>
 </idea-plugin>

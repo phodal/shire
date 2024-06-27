@@ -4,6 +4,7 @@ import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.DumbAwareAction
 import com.phodal.shirecore.action.ShireActionLocation
+import com.phodal.shirecore.middleware.PostCodeHandleContext
 import com.phodal.shirelang.ShireIcons
 import com.phodal.shirelang.actions.ShireRunFileAction
 import com.phodal.shirelang.actions.dynamic.DynamicShireActionConfig
@@ -48,8 +49,11 @@ class ShireContextMenuAction(private val config: DynamicShireActionConfig) :
         val editor = FileEditorManager.getInstance(project).selectedTextEditor
         val file = e.getData(CommonDataKeys.PSI_FILE)
 
-        config.hole?.setupStreamingEndProcessor(project, editor, file)
+        val language = file?.language?.id
+        val content = PostCodeHandleContext.create(file, language, editor)
+
         config.hole?.pickupElement()
+        config.hole?.setupStreamingEndProcessor(project, content)
 
         ShireRunFileAction.executeShireFile(e, project, config)
     }

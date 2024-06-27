@@ -105,9 +105,7 @@ open class HobbitHole(
         this.selectionStrategy.select()
     }
 
-    fun setupStreamingEndProcessor(project: Project, editor: Editor?, file: PsiFile?) {
-        val language = file?.language?.id
-        val context = PostCodeHandleContext(null, language, file)
+    fun setupStreamingEndProcessor(project: Project, context: PostCodeHandleContext) {
         onStreamingEnd.forEach { funcNode ->
             PostProcessor.handler(funcNode.funName)?.setup(context)
         }
