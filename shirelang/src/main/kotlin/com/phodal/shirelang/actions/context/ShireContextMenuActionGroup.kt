@@ -50,11 +50,12 @@ class ShireContextMenuAction(private val config: DynamicShireActionConfig) :
         val file = e.getData(CommonDataKeys.PSI_FILE)
 
         val language = file?.language?.id
-        val content = PostCodeHandleContext.create(file, language, editor)
+        val context = PostCodeHandleContext.create(file, language, editor)
 
-        config.hole?.pickupElement(project, editor)
-        config.hole?.setupStreamingEndProcessor(project, content)
+        context.currentElement = config.hole?.pickupElement(project, editor)
+        config.hole?.setupStreamingEndProcessor(project, context)
 
+        PostCodeHandleContext.putData(context)
         ShireRunFileAction.executeShireFile(project, config, ShireRunFileAction.createRunConfig(e))
     }
 }

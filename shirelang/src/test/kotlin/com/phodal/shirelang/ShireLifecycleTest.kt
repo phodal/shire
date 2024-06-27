@@ -30,7 +30,7 @@ class ShireLifecycleTest: BasePlatformTestCase() {
         assertEquals(funcNode[0].funName, "verifyCode")
         assertEquals(funcNode[1].funName, "runCode")
 
-        val handleContext = PostCodeHandleContext(file, currentLanguage =  ShireLanguage.INSTANCE.displayName)
+        val handleContext = PostCodeHandleContext(currentLanguage =  ShireLanguage.INSTANCE.displayName)
         PostProcessor.execute(project, funcNode, handleContext, null)
     }
 

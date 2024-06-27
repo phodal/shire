@@ -1,15 +1,17 @@
 package com.phodal.shirecore.middleware
 
 import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.util.Key
 import com.intellij.openapi.util.NlsSafe
-import com.intellij.psi.PsiElement
+import com.intellij.openapi.util.UserDataHolderBase
 import com.intellij.psi.PsiFile
+import com.phodal.shirecore.middleware.select.SelectedEntry
 
 class PostCodeHandleContext(
     /**
      * The element to be handled, which will be load from current editor when parse code
      */
-    var currentElement: PsiElement? = null,
+    var currentElement: SelectedEntry? = null,
 
     /**
      * Convert code to file
@@ -42,12 +44,18 @@ class PostCodeHandleContext(
     val pipeData: MutableMap<String, Any> = mutableMapOf(),
 ) {
     companion object {
+        private val DATA_KEY: Key<PostCodeHandleContext> = Key.create(PostCodeHandleContext::class.java.name)
+
         fun create(file: PsiFile?, language: @NlsSafe String?, editor: Editor?): PostCodeHandleContext {
             return PostCodeHandleContext(
                 currentElement = null,
                 currentFile = file,
                 currentLanguage = language,
             )
+        }
+
+        fun putData(context: PostCodeHandleContext) {
+            UserDataHolderBase().putUserData(DATA_KEY, context)
         }
     }
 }

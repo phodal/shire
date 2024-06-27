@@ -42,10 +42,12 @@ class ShireIntentionAction(private val hobbitHole: HobbitHole?, val file: PsiFil
 
     override fun invoke(project: Project, editor: Editor?, file: PsiFile?) {
         val language = file?.language?.id
-        val content = PostCodeHandleContext.create(file, language, editor)
+        val context = PostCodeHandleContext.create(file, language, editor)
 
-        hobbitHole?.setupStreamingEndProcessor(project, content)
-        hobbitHole?.pickupElement(project, editor)
+        hobbitHole?.setupStreamingEndProcessor(project, context)
+        context.currentElement = hobbitHole?.pickupElement(project, editor)
+
+        PostCodeHandleContext.putData(context)
 
         val configs: List<DynamicShireActionConfig> =
             DynamicShireActionService.getInstance().getAction(ShireActionLocation.INTENTION_MENU)
