@@ -189,10 +189,10 @@ open class HobbitHole(
             val whenCondition = frontMatterMap[WHEN] as? FrontMatterType.EXPRESSION
 
             return HobbitHole(
-                name,
-                description,
-                InteractionType.from(interaction),
-                ShireActionLocation.from(actionLocation),
+                name = name,
+                description = description,
+                interaction = InteractionType.from(interaction),
+                actionLocation = ShireActionLocation.from(actionLocation),
                 selectionStrategy = selectionStrategy,
                 variables = variables,
                 userData = data,
