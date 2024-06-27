@@ -9,7 +9,7 @@ class PostCodeHandleContext(
     /**
      * The element to be handled, which will be load from current editor when parse code
      */
-    var currentElement: PsiElement?,
+    var currentElement: PsiElement? = null,
 
     /**
      * Convert code to file
@@ -19,7 +19,7 @@ class PostCodeHandleContext(
     /**
      * The language of the code to be handled, which will parse from the GenText when parse code
      */
-    var language: String?,
+    var currentLanguage: String?,
 
     /**
      * Convert code to file
@@ -46,7 +46,7 @@ class PostCodeHandleContext(
             return PostCodeHandleContext(
                 currentElement = null,
                 currentFile = file,
-                language = language,
+                currentLanguage = language,
             )
         }
     }

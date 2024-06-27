@@ -110,7 +110,11 @@ open class ShireRunConfigurationProfileState(
         shireRunner.prepareTask()
         shireRunner.execute {response ->
             val language = file.language.id
-            val context = PostCodeHandleContext(null, language, file, genText = response)
+            val context = PostCodeHandleContext(
+                currentLanguage =  language,
+                currentFile = file,
+                genText = response
+            )
 
             hobbitHole?.executeStreamingEndProcessor(myProject, console, context)
             hobbitHole?.executeAfterStreamingProcessor(myProject, console, context)
