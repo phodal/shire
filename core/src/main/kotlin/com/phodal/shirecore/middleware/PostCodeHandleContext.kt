@@ -1,5 +1,6 @@
 package com.phodal.shirecore.middleware
 
+import com.intellij.lang.Language
 import com.intellij.openapi.util.Key
 import com.intellij.openapi.util.UserDataHolderBase
 import com.intellij.psi.PsiFile
@@ -19,12 +20,17 @@ class PostCodeHandleContext(
     /**
      * The language of the code to be handled, which will parse from the GenText when parse code
      */
-    var currentLanguage: String?,
+    var currentLanguage: Language?,
 
     /**
      * Convert code to file
      */
     var targetFile: PsiFile? = null,
+
+    /**
+     * Target Language
+     */
+    var targetLanguage: Language? = null,
 
     /**
      * The generated text to be handled
@@ -45,12 +51,10 @@ class PostCodeHandleContext(
         private val DATA_KEY: Key<PostCodeHandleContext> = Key.create(PostCodeHandleContext::class.java.name)
 
         fun create(currentFile: PsiFile?,  selectedEntry: SelectedEntry?): PostCodeHandleContext {
-            val language = currentFile?.language?.id
-
             return PostCodeHandleContext(
                 selectedEntry = selectedEntry,
                 currentFile = currentFile,
-                currentLanguage = language,
+                currentLanguage = currentFile?.language,
             )
         }
 

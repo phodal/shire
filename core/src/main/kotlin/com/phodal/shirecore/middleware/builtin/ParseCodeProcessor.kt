@@ -14,7 +14,16 @@ class ParseCodeProcessor : PostProcessor {
         return true
     }
 
+    /**
+     * Todo: support parse [PostCodeHandleContext.currentParams] for language in parse
+     */
     override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?): String {
-        return Code.parse(context.genText ?: "").text
+        val code = Code.parse(context.genText ?: "")
+        val codeText = code.text
+        context.targetLanguage = code.language
+        context.pipeData["output"] = codeText
+        context.pipeData["code"] = codeText
+
+        return codeText
     }
 }
