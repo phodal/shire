@@ -288,17 +288,12 @@ object FrontmatterParser {
         } ?: emptyList()
 
         val body = firstChild.casePatternActionList.mapNotNull {
-            FrontMatterType.EXPRESSION(parseCaseItem(it))
+            val key = parseLiteral(it.caseCondition)
+            val conditionCases = parseActionBodyFuncCall(it.actionBody.actionExprList)
+            FrontMatterType.EXPRESSION(CaseKeyValue(key, FrontMatterType.EXPRESSION(Processor(conditionCases))))
         }
 
         return ConditionCase(condition, body)
-    }
-
-    private fun parseCaseItem(action: ShireCasePatternAction): CaseKeyValue {
-        val key = parseLiteral(action.caseCondition)
-
-        val funcs = parseActionBody(action.actionBody?.actionExprList)
-        return CaseKeyValue(key, FrontMatterType.EXPRESSION(Processor(funcs)))
     }
 
     private fun parseRefExpr(expr: PsiElement?): FrontMatterType {
@@ -483,19 +478,18 @@ object FrontmatterParser {
         val actionBlock = PsiTreeUtil.getChildOfType(element, ShireActionBlock::class.java)
         val actionBody = actionBlock?.actionBody ?: return null
 
-        val processor: MutableList<PatternActionFunc> = parseActionBody(actionBody?.actionExprList)
+        val processor: MutableList<PatternActionFunc> = parseActionBodyFuncCall(actionBody?.actionExprList)
 
         return FrontMatterType.PATTERN(RuleBasedPatternAction(pattern, processor))
     }
 
-    private fun parseActionBody(shireActionExprs: MutableList<ShireActionExpr>?): MutableList<PatternActionFunc> {
+    private fun parseActionBodyFuncCall(shireActionExprs: List<ShireActionExpr>?): MutableList<PatternActionFunc> {
         val processor: MutableList<PatternActionFunc> = mutableListOf()
-        shireActionExprs?.mapNotNull { expr ->
-            val funcCall = expr.funcCall
-            val patternActionFunc = parseActionBodyFunCall(funcCall, expr)
-
-            patternActionFunc?.let {
-                processor.add(it)
+        shireActionExprs?.forEach { expr ->
+            expr.funcCall?.let { funcCall ->
+                parseActionBodyFunCall(funcCall, expr)?.let {
+                    processor.add(it)
+                }
             }
         }
 
