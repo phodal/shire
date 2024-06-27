@@ -81,6 +81,15 @@ open class ShireRunConfigurationProfileState(
         val promptText = ShireTemplateCompiler(myProject, hobbitHole, symbolTable, input).compile()
         logCompiled(console!!, promptText)
 
+
+        // check prompt text had content or just new line with whitespace
+        val promptTextTrim = promptText.trim()
+        if (promptTextTrim.isEmpty()) {
+            console!!.print("No content to run", ConsoleViewContentType.ERROR_OUTPUT)
+            processHandler.destroyProcess()
+            return DefaultExecutionResult(console, processHandler)
+        }
+
         if (promptText.contains(SHIRE_ERROR)) {
             processHandler.exitWithError()
             return DefaultExecutionResult(console, processHandler)

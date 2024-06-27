@@ -156,6 +156,10 @@ class PatternActionProcessor(val myProject: Project, val editor: Editor, val hol
                     action.variables
                 }
 
+                is PatternActionFunc.UserCustom -> {
+                    logger<PatternActionProcessor>().error("TODO for User custom: ${action.funcName}")
+                }
+
                 else -> {
                     logger<PatternActionProcessor>().error("Unknown pattern processor type: ${action.funcName}")
                     ""

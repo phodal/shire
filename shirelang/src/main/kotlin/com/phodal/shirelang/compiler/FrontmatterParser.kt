@@ -553,8 +553,11 @@ object FrontmatterParser {
                     processor.add(PatternActionFunc.Cat(*args.toTypedArray()))
                 }
 
+                null -> {
+                    logger.warn("parsePatternAction, Unknown pattern action: ${expr.funcCall}")
+                }
+
                 else -> {
-//                    processor.add(PatternActionFunc.Prompt(text))
                     val funcName = funcCall?.funcName?.text ?: ""
                     processor.add(PatternActionFunc.UserCustom(funcName, args))
                 }
