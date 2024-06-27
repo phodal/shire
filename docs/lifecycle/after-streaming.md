@@ -7,6 +7,8 @@ nav_order: 4
 
 afterStreaming aka `TaskRoutes` in source code.
 
+### 多条件
+
 ```shire
 ---
 onStreamingEnd: { parseCode("json") }

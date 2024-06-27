@@ -16,7 +16,7 @@ nav_order: 3
 
 ```shire
 ---
-onStreamingEnd: { parseCode | saveFile | verifyCode | runCode }
+onStreamingEnd: { parseCode | saveFile | openFile | verifyCode | runCode }
 ---
 
 生成一个 python hello world，使用 markdown block  返回
@@ -62,5 +62,12 @@ enum class BuiltinPostHandler(var handleName: String) {
      * For example, TestCode should be in the correct directory, like java test should be in test directory.
      */
     InferCodeLocation("InferCodeLocation"),
+
+
+    /**
+     * Open file in the editor
+     */
+    OpenFile("openFile")
+    ;
 }
 ```

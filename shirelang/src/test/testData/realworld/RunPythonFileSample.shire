@@ -1,5 +1,5 @@
 ---
-onStreamingEnd: { parseCode | saveFile | verifyCode | runCode }
+onStreamingEnd: { parseCode | saveFile | openFile | verifyCode | runCode }
 ---
 
 生成一个 python hello world，使用 markdown block  返回

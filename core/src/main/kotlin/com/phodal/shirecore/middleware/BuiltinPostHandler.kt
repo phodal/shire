@@ -40,4 +40,11 @@ enum class BuiltinPostHandler(var handleName: String) {
      * For example, TestCode should be in the correct directory, like java test should be in test directory.
      */
     InferCodeLocation("InferCodeLocation"),
+
+
+    /**
+     * Open file in the editor
+     */
+    OpenFile("openFile")
+    ;
 }
