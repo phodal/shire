@@ -297,7 +297,7 @@ object FrontmatterParser {
     private fun parseCaseItem(action: ShireCasePatternAction): CaseKeyValue {
         val key = parseLiteral(action.caseCondition)
 
-        val funcs = parseActionBody(action.actionBody)
+        val funcs = parseActionBody(action.actionBody?.actionExprList)
         return CaseKeyValue(key, FrontMatterType.EXPRESSION(Processor(funcs)))
     }
 
@@ -483,14 +483,14 @@ object FrontmatterParser {
         val actionBlock = PsiTreeUtil.getChildOfType(element, ShireActionBlock::class.java)
         val actionBody = actionBlock?.actionBody ?: return null
 
-        val processor: MutableList<PatternActionFunc> = parseActionBody(actionBody)
+        val processor: MutableList<PatternActionFunc> = parseActionBody(actionBody?.actionExprList)
 
         return FrontMatterType.PATTERN(RuleBasedPatternAction(pattern, processor))
     }
 
-    private fun parseActionBody(actionBody: ShireActionBody?): MutableList<PatternActionFunc> {
+    private fun parseActionBody(shireActionExprs: MutableList<ShireActionExpr>?): MutableList<PatternActionFunc> {
         val processor: MutableList<PatternActionFunc> = mutableListOf()
-        actionBody?.actionExprList?.mapNotNull { expr ->
+        shireActionExprs?.mapNotNull { expr ->
             val funcCall = expr.funcCall
             val args = parseParameters(funcCall) ?: emptyList()
 
