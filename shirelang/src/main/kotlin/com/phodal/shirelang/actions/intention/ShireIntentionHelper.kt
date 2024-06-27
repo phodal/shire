@@ -25,12 +25,12 @@ class ShireIntentionHelper : IntentionAction, Iconable {
             return false
         }
 
-        val intentions = IntentionHelperUtil.getAiAssistantIntentions(project, editor, file)
+        val intentions = IntentionHelperUtil.getAiAssistantIntentions(project, editor, file, null)
         return intentions.isNotEmpty()
     }
 
     override fun invoke(project: Project, editor: Editor, file: PsiFile) {
-        val intentions = IntentionHelperUtil.getAiAssistantIntentions(project, editor, file)
+        val intentions = IntentionHelperUtil.getAiAssistantIntentions(project, editor, file, null)
 
         val title = ShireMainBundle.message("intentions.assistant.popup.title")
         val popupStep = CustomPopupStep(intentions, project, editor, file, title)

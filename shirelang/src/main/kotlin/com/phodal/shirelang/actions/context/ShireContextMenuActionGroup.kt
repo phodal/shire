@@ -55,6 +55,6 @@ class ShireContextMenuAction(private val config: DynamicShireActionConfig) :
         config.hole?.pickupElement()
         config.hole?.setupStreamingEndProcessor(project, content)
 
-        ShireRunFileAction.executeShireFile(e, project, config)
+        ShireRunFileAction.executeShireFile(project, config, ShireRunFileAction.createRunConfig(e))
     }
 }

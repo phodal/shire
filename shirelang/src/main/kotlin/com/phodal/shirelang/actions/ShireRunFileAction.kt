@@ -2,6 +2,7 @@ package com.phodal.shirelang.actions
 
 import com.intellij.execution.ExecutionManager
 import com.intellij.execution.RunManager
+import com.intellij.execution.RunnerAndConfigurationSettings
 import com.intellij.execution.actions.ConfigurationContext
 import com.intellij.execution.actions.RunConfigurationProducer
 import com.intellij.execution.executors.DefaultRunExecutor
@@ -34,24 +35,30 @@ class ShireRunFileAction : DumbAwareAction() {
         val file = e.getData(CommonDataKeys.PSI_FILE) as? ShireFile ?: return
         val project = file.project
         val config = DynamicShireActionConfig.from(file)
-        executeShireFile(e, project, config)
+
+        val existingConfiguration = createRunConfig(e)
+        executeShireFile(project, config, existingConfiguration)
     }
 
     companion object {
         const val ID: @NonNls String = "runShireFileAction"
-        fun executeShireFile(
-            e: AnActionEvent,
-            project: Project,
-            config: DynamicShireActionConfig,
-        ) {
+        fun createRunConfig(e: AnActionEvent): RunnerAndConfigurationSettings? {
             val context = ConfigurationContext.getFromContext(e.dataContext, e.place)
             val configProducer = RunConfigurationProducer.getInstance(ShireRunConfigurationProducer::class.java)
 
             val existingConfiguration = configProducer.findExistingConfiguration(context)
-            val runnerAndConfigurationSettings = existingConfiguration
-                ?: RunManager.getInstance(project).createConfiguration(config.name, ShireConfigurationType::class.java)
+            return existingConfiguration
+        }
 
-            val runConfiguration = runnerAndConfigurationSettings.configuration as ShireConfiguration
+        fun executeShireFile(
+            project: Project,
+            config: DynamicShireActionConfig,
+            runSettings: RunnerAndConfigurationSettings?,
+        ) {
+            val settings = runSettings ?: RunManager.getInstance(project)
+                .createConfiguration(config.name, ShireConfigurationType::class.java)
+
+            val runConfiguration = settings.configuration as ShireConfiguration
 
             runConfiguration.setScriptPath(config.shireFile.virtualFile.path)
 
