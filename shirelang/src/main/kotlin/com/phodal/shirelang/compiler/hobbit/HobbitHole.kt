@@ -111,8 +111,12 @@ open class HobbitHole(
         }
     }
 
-    fun executeAfterStreamingProcessor(myProject: Project, console: ConsoleView?, context: PostCodeHandleContext) {
-        // todo
+    fun executeAfterStreamingProcessor(
+        myProject: Project,
+        console: ConsoleView?,
+        context: PostCodeHandleContext,
+    ) {
+//        afterStreaming?.execute(myProject, console, context)
     }
 
     companion object {

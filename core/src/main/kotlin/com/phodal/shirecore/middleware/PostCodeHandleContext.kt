@@ -1,7 +1,6 @@
 package com.phodal.shirecore.middleware
 
 import com.intellij.openapi.util.Key
-import com.intellij.openapi.util.NlsSafe
 import com.intellij.openapi.util.UserDataHolderBase
 import com.intellij.psi.PsiFile
 import com.phodal.shirecore.middleware.select.SelectedEntry

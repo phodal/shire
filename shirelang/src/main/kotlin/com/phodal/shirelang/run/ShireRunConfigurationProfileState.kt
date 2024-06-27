@@ -82,7 +82,6 @@ open class ShireRunConfigurationProfileState(
         val promptText = ShireTemplateCompiler(myProject, hobbitHole, symbolTable, input).compile()
         logCompiled(console!!, promptText)
 
-
         // check prompt text had content or just new line with whitespace
         val promptTextTrim = promptText.trim()
         if (promptTextTrim.isEmpty()) {
@@ -111,6 +110,7 @@ open class ShireRunConfigurationProfileState(
         shireRunner.execute {response ->
             val language = file.language.id
             val context = PostCodeHandleContext(
+                selectedEntry = hobbitHole?.pickupElement(myProject, editor),
                 currentLanguage =  language,
                 currentFile = file,
                 genText = response
