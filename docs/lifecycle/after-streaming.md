@@ -9,17 +9,18 @@ afterStreaming aka `TaskRoutes` in source code.
 
 ```shire
 ---
+onStreamingEnd: { parseCode("json") }
 afterStreaming: {
     condition {
-      "variable-success" { $selection.length > 1 }
-      "jsonpath-success" { jsonpath("/bookstore/book[price>35]") }
-      default { true }
+      "error"       { output.length < 1 }
+      "json-result" { jsonpath("$.store.*") }
     }
     case condition {
-      "variable-sucesss" { done }
-      "jsonpath-success" { task() }
-      default { task() }
+      "error"       { notify("Failed to Generate JSON") }
+      "json-result" { execute("sample.shire") }
+      default       { notify("Failed to Generate JSON") /* mean nothing */ }
     }
   }
 ---
 ```
+
