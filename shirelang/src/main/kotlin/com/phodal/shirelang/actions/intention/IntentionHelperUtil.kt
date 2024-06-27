@@ -45,7 +45,7 @@ class ShireIntentionAction(private val hobbitHole: HobbitHole?, val file: PsiFil
         val content = PostCodeHandleContext.create(file, language, editor)
 
         hobbitHole?.setupStreamingEndProcessor(project, content)
-        hobbitHole?.pickupElement()
+        hobbitHole?.pickupElement(project, editor)
 
         val configs: List<DynamicShireActionConfig> =
             DynamicShireActionService.getInstance().getAction(ShireActionLocation.INTENTION_MENU)

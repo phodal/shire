@@ -5,25 +5,43 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
+import com.intellij.openapi.util.NlsSafe
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.util.PsiUtilBase
+
+sealed class SelectedEntry(open val element: Any) {
+    class Text(override val element: String) : SelectedEntry(element) {
+
+    }
+
+    class Entry(override val element: PsiElement) : SelectedEntry(element) {
+
+    }
+
+}
 
 sealed class SelectElementStrategy {
     /**
      * Selection element
      */
-    abstract fun select()
+    abstract fun select(project: Project, editor: Editor?): Any?
+
+    abstract fun getSelectedElement(project: Project, editor: Editor?): SelectedEntry?
 
     /**
      * Auto select parent block element, like function, class, etc.
      */
     object Blocked : SelectElementStrategy() {
-        override fun select() {
-            val project = ProjectManager.getInstance().openProjects.firstOrNull() ?: return
-            val editor = FileEditorManager.getInstance(project).selectedTextEditor ?: return
-            val elementToAction = DefaultPsiElementStrategy().getElementToAction(project, editor) ?: return
+        override fun select(project: Project, editor: Editor?): PsiElement? {
+            if (editor == null) {
+                return null
+            }
+
+            val elementToAction = DefaultPsiElementStrategy().getElementToAction(project, editor) ?: return null
             selectElement(elementToAction, editor)
+
+            return elementToAction
         }
 
         /**
@@ -38,33 +56,51 @@ sealed class SelectElementStrategy {
 
             editor.selectionModel.setSelection(startOffset, endOffset)
         }
-    }
 
-    object Selected: SelectElementStrategy() {
-        override fun select() {
-            // do nothing
-        }
-    }
-
-    object Default: SelectElementStrategy() {
-        override fun select() {
-            val project = ProjectManager.getInstance().openProjects.firstOrNull() ?: return
-            val editor = FileEditorManager.getInstance(project).selectedTextEditor ?: return
-
-            val selectionModel = editor.selectionModel
-            if (!selectionModel.hasSelection()) {
-                Blocked.select()
+        override fun getSelectedElement(project: Project, editor: Editor?): SelectedEntry? {
+            select(project, editor)?.let {
+                return SelectedEntry.Entry(it)
             }
+
+            return null
         }
     }
 
-    object SelectAll: SelectElementStrategy() {
-        override fun select() {
-            val project = ProjectManager.getInstance().openProjects.firstOrNull() ?: return
-            val editor = FileEditorManager.getInstance(project).selectedTextEditor ?: return
+    object SelectedText : SelectElementStrategy() {
+        override fun select(project: Project, editor: Editor?): @NlsSafe String? {
+            return editor?.selectionModel?.selectedText ?: ""
+        }
 
-            val selectionModel = editor.selectionModel
+        override fun getSelectedElement(project: Project, editor: Editor?): SelectedEntry? {
+            val selectedText = select(project, editor) ?: return null
+            return SelectedEntry.Text(selectedText)
+        }
+    }
+
+    object Default : SelectElementStrategy() {
+        override fun select(project: Project, editor: Editor?): PsiElement? {
+            val selectionModel = editor?.selectionModel ?: return null
+            if (!selectionModel.hasSelection()) {
+                return Blocked.select(project, editor)
+            }
+
+            return null
+        }
+
+        override fun getSelectedElement(project: Project, editor: Editor?): SelectedEntry? {
+            return Blocked.getSelectedElement(project, editor)
+        }
+    }
+
+    object SelectAll : SelectElementStrategy() {
+        override fun select(project: Project, editor: Editor?): String? {
+            val selectionModel = editor?.selectionModel ?: return null
             selectionModel.setSelection(0, editor.document.textLength)
+            return editor.document.text
+        }
+
+        override fun getSelectedElement(project: Project, editor: Editor?): SelectedEntry {
+            return SelectedEntry.Text(editor?.document?.text ?: "")
         }
     }
 
@@ -72,7 +108,7 @@ sealed class SelectElementStrategy {
         fun fromString(strategy: String): SelectElementStrategy {
             return when (strategy.lowercase()) {
                 "block" -> Blocked
-                "select" -> Selected
+                "select" -> SelectedText
                 "selectAll" -> SelectAll
                 else -> Default
             }

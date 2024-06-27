@@ -5,13 +5,13 @@ import com.intellij.execution.ui.ConsoleView
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
-import com.intellij.psi.PsiFile
 import com.phodal.shirecore.action.ShireActionLocation
 import com.phodal.shirecore.agent.InteractionType
 import com.phodal.shirecore.middleware.PostCodeHandleContext
 import com.phodal.shirecore.middleware.PostProcessor
 import com.phodal.shirecore.middleware.PostProcessorNode
 import com.phodal.shirecore.middleware.select.SelectElementStrategy
+import com.phodal.shirecore.middleware.select.SelectedEntry
 import com.phodal.shirelang.compiler.FrontmatterParser
 import com.phodal.shirelang.compiler.hobbit._base.Smials
 import com.phodal.shirelang.compiler.hobbit.ast.FrontMatterType
@@ -20,7 +20,6 @@ import com.phodal.shirelang.compiler.hobbit.ast.RuleBasedPatternAction
 import com.phodal.shirelang.compiler.hobbit.ast.TaskRoutes
 import com.phodal.shirelang.compiler.patternaction.PatternActionTransform
 import com.phodal.shirelang.psi.ShireFile
-import com.phodal.shirelang.run.ShireConsoleView
 
 /**
  * - Normal: the action is a normal action
@@ -101,8 +100,9 @@ open class HobbitHole(
      */
     val finalize: FrontMatterType.EXPRESSION? = null,
 ) : Smials {
-    fun pickupElement() {
-        this.selectionStrategy.select()
+    fun pickupElement(project: Project, editor: Editor?): SelectedEntry? {
+        this.selectionStrategy.select(project, editor)
+        return selectionStrategy.getSelectedElement(project, editor)
     }
 
     fun setupStreamingEndProcessor(project: Project, context: PostCodeHandleContext) {
