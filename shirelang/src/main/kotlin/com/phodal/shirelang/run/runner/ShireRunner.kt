@@ -12,7 +12,7 @@ abstract class ShireRunner(
     open val myProject: Project,
     open val prompt: String,
 ) {
-    abstract fun execute(postFunction: () -> Unit)
+    abstract fun execute(postFunction: (response: String) -> Unit)
     fun prepareTask() {
 
     }

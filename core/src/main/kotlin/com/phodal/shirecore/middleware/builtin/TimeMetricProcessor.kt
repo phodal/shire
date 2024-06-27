@@ -1,5 +1,6 @@
 package com.phodal.shirecore.middleware.builtin
 
+import com.intellij.execution.ui.ConsoleView
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.middleware.BuiltinPostHandler
 import com.phodal.shirecore.middleware.PostCodeHandleContext
@@ -19,7 +20,7 @@ class TimeMetricProcessor : PostProcessor {
         return startTime.toString()
     }
 
-    override fun execute(project: Project, context: PostCodeHandleContext): String {
+    override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?): String {
         val endTime = System.currentTimeMillis()
         return (endTime - startTime!!).toString()
     }

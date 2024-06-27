@@ -1,5 +1,6 @@
 package com.phodal.shirecore.middleware.builtin
 
+import com.intellij.execution.ui.ConsoleView
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.markdown.Code
 import com.phodal.shirecore.middleware.BuiltinPostHandler
@@ -13,7 +14,7 @@ class ParseCodeProcessor : PostProcessor {
         return true
     }
 
-    override fun execute(project: Project, context: PostCodeHandleContext): String {
+    override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?): String {
         return Code.parse(context.genText ?: "").text
     }
 }

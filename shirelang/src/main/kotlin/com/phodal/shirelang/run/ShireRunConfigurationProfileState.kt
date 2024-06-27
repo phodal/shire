@@ -18,6 +18,7 @@ import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Key
 import com.intellij.ui.components.panels.NonOpaquePanel
+import com.phodal.shirecore.middleware.PostCodeHandleContext
 import com.phodal.shirelang.compiler.ShireCompiler
 import com.phodal.shirelang.compiler.ShireTemplateCompiler
 import com.phodal.shirelang.compiler.error.SHIRE_ERROR
@@ -107,9 +108,12 @@ open class ShireRunConfigurationProfileState(
         }
 
         shireRunner.prepareTask()
-        shireRunner.execute {
-            hobbitHole?.executeStreamingEndProcessor(myProject, editor, null)
-//            hobbitHole?.afterStreaming
+        shireRunner.execute {response ->
+            val language = file.language.id
+            val context = PostCodeHandleContext(null, language, file, genText = response)
+
+            hobbitHole?.executeStreamingEndProcessor(myProject, console, context)
+            hobbitHole?.executeAfterStreamingProcessor(myProject, console, context)
         }
 
         return DefaultExecutionResult(console, processHandler)

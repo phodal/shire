@@ -1,6 +1,7 @@
 package com.phodal.shirelang.compiler.hobbit
 
 import com.intellij.codeInsight.intention.IntentionAction
+import com.intellij.execution.ui.ConsoleView
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
@@ -19,6 +20,7 @@ import com.phodal.shirelang.compiler.hobbit.ast.RuleBasedPatternAction
 import com.phodal.shirelang.compiler.hobbit.ast.TaskRoutes
 import com.phodal.shirelang.compiler.patternaction.PatternActionTransform
 import com.phodal.shirelang.psi.ShireFile
+import com.phodal.shirelang.run.ShireConsoleView
 
 /**
  * - Normal: the action is a normal action
@@ -111,12 +113,18 @@ open class HobbitHole(
         }
     }
 
-    fun executeStreamingEndProcessor(project: Project, editor: Editor?, file: PsiFile?) {
-        val language = file?.language?.id
-        val context = PostCodeHandleContext(null, language, file)
+    fun executeStreamingEndProcessor(
+        project: Project,
+        console: ConsoleView?,
+        context: PostCodeHandleContext,
+    ) {
         onStreamingEnd.forEach { funcNode ->
-            PostProcessor.handler(funcNode.funName)?.execute(project, context)
+            PostProcessor.handler(funcNode.funName)?.execute(project, context, console)
         }
+    }
+
+    fun executeAfterStreamingProcessor(myProject: Project, console: ConsoleView?, context: PostCodeHandleContext) {
+        // todo
     }
 
     companion object {

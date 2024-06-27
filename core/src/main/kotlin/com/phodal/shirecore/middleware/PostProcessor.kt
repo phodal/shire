@@ -1,5 +1,6 @@
 package com.phodal.shirecore.middleware
 
+import com.intellij.execution.ui.ConsoleView
 import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.project.Project
 
@@ -34,7 +35,7 @@ interface PostProcessor {
      * @param genText the generated text to be used in the execution
      * @return a string result of the execution
      */
-    fun execute(project: Project, context: PostCodeHandleContext): String
+    fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?): String
 
     /**
      * Clean up tasks, like metric for time, etc.
@@ -57,12 +58,12 @@ interface PostProcessor {
             return EP_NAME.extensionList.map { it.processorName }
         }
 
-        fun execute(project: Project, funcNode: List<PostProcessorNode>, handleContext: PostCodeHandleContext) {
+        fun execute(project: Project, funcNode: List<PostProcessorNode>, handleContext: PostCodeHandleContext, console: ConsoleView?) {
             funcNode.forEach {
                 val handler = handler(it.funName)
                 if (handler != null) {
                     handler.setup(handleContext)
-                    handler.execute(project, handleContext)
+                    handler.execute(project, handleContext, console)
                     handler.finish(handleContext)
                 }
             }

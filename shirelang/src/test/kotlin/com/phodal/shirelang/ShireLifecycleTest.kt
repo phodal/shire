@@ -31,7 +31,7 @@ class ShireLifecycleTest: BasePlatformTestCase() {
         assertEquals(funcNode[1].funName, "runCode")
 
         val handleContext = PostCodeHandleContext(file, ShireLanguage.INSTANCE.displayName, file)
-        PostProcessor.execute(project, funcNode, handleContext)
+        PostProcessor.execute(project, funcNode, handleContext, null)
     }
 
     fun testShouldHandleWhenAfterStreaming() {

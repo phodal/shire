@@ -21,7 +21,7 @@ class ShireDefaultRunner(
     override val prompt: String,
     private val isLocalMode: Boolean,
 ) : ShireRunner(configuration, processHandler, console, myProject, prompt) {
-    override fun execute(postFunction: () -> Unit) {
+    override fun execute(postFunction: (response: String) -> Unit) {
         ApplicationManager.getApplication().invokeLater {
             if (isLocalMode) {
                 console.print(ShireBundle.message("shire.run.local.mode"), ConsoleViewContentType.SYSTEM_OUTPUT)
@@ -41,10 +41,11 @@ class ShireDefaultRunner(
 
                 console.print(ShireBundle.message("shire.llm.done"), ConsoleViewContentType.SYSTEM_OUTPUT)
 
+                val response = llmResult.toString()
                 myProject.getService(ShireConversationService::class.java)
-                    .refreshLlmResponseCache(configuration.getScriptPath(), llmResult.toString())
+                    .refreshLlmResponseCache(configuration.getScriptPath(), response)
 
-                postFunction()
+                postFunction(response)
                 processHandler.detachProcess()
             }
         }

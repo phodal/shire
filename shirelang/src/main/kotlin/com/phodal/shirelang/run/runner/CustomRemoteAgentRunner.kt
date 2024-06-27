@@ -23,7 +23,7 @@ class CustomRemoteAgentRunner(
     override val prompt: String,
     private val agent: CustomAgent,
 ) : ShireRunner(configuration, processHandler, console, myProject, prompt) {
-    override fun execute(postFunction: () -> Unit) {
+    override fun execute(postFunction: (response: String) -> Unit) {
         ApplicationManager.getApplication().invokeLater {
             val stringFlow: Flow<String>? = CustomAgentExecutor(project = myProject).execute(prompt, agent)
 
@@ -43,10 +43,11 @@ class CustomRemoteAgentRunner(
                 }
 
                 console.print("\nDone!", ConsoleViewContentType.SYSTEM_OUTPUT)
+                val llmResponse = llmResult.toString()
                 myProject.getService(ShireConversationService::class.java)
-                    .refreshLlmResponseCache(configuration.getScriptPath(), llmResult.toString())
+                    .refreshLlmResponseCache(configuration.getScriptPath(), llmResponse)
 
-                postFunction()
+                postFunction(llmResponse)
                 processHandler.detachProcess()
             }
         }

@@ -2,6 +2,7 @@ package com.phodal.shirecore.middleware.builtin
 
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer
 import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerEx
+import com.intellij.execution.ui.ConsoleView
 import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.runReadAction
@@ -24,7 +25,7 @@ class VerifyCodeProcessor : PostProcessor {
         return true
     }
 
-    override fun execute(project: Project, context: PostCodeHandleContext): String {
+    override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?): String {
         if (context.file == null) {
             return ""
         }
