@@ -9,6 +9,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 fun properties(key: String) = providers.gradleProperty(key)
 fun environment(key: String) = providers.environmentVariable(key)
 
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     id("java") // Java support
     alias(libs.plugins.kotlin) // Kotlin support
