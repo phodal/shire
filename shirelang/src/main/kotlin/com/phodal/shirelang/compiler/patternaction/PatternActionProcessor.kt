@@ -157,7 +157,7 @@ class PatternActionProcessor(val myProject: Project, val editor: Editor, val hol
                 }
 
                 else -> {
-                    logger<PatternActionProcessor>().error("Unknown pattern processor type: $action")
+                    logger<PatternActionProcessor>().error("Unknown pattern processor type: ${action.funcName}")
                     ""
                 }
             }

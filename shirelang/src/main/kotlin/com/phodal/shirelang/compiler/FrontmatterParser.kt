@@ -96,6 +96,12 @@ object FrontmatterParser {
                         }
                     }
 
+                    ShireTypes.LITERAL_EXPR -> {
+                        parseExpr(child)?.let {
+                            frontMatter[lastKey] = FrontMatterType.EXPRESSION(it)
+                        }
+                    }
+
                     else -> {
                         logger.warn("processFrontmatter, Unknown frontmatter type: ${child.elementType}")
                     }
@@ -291,47 +297,53 @@ object FrontmatterParser {
     private fun parseCaseItem(action: ShireCasePatternAction): CaseKeyValue {
         val key = parseLiteral(action.caseCondition)
 
-        val funcs =  parseActionBody(action.actionBody)
+        val funcs = parseActionBody(action.actionBody)
         return CaseKeyValue(key, FrontMatterType.EXPRESSION(Processor(funcs)))
     }
 
     private fun parseRefExpr(expr: PsiElement?): FrontMatterType {
-        return when (expr?.elementType) {
-            ShireTypes.LITERAL_EXPR -> {
-                parseLiteral(expr!!)
+        return when (expr) {
+            is ShireLiteralExpr -> {
+                parseLiteral(expr)
             }
 
             // fake refExpr ::= expr? '.' IDENTIFIER
-            ShireTypes.REF_EXPR -> {
-                val refExpr = expr as ShireRefExpr
-                if (refExpr.expr == null) {
-                    FrontMatterType.IDENTIFIER(refExpr.identifier.text)
+            is ShireRefExpr -> {
+                if (expr.expr == null) {
+                    FrontMatterType.IDENTIFIER(expr.identifier.text)
                 } else {
-                    val methodCall = buildMethodCall(refExpr, null, false)
+                    val methodCall = buildMethodCall(expr, null, false)
                     FrontMatterType.EXPRESSION(methodCall)
                 }
             }
 
-            ShireTypes.CALL_EXPR -> {
-                val shireCallExpr = expr as ShireCallExpr
-
-                val expressionList = shireCallExpr.expressionList
+            is ShireCallExpr -> {
+                val expressionList = expr.expressionList
                 val hasParentheses = expressionList?.prevSibling?.text == "("
 
                 val methodCall = this.buildMethodCall(expr.refExpr, expressionList?.children, hasParentheses)
                 FrontMatterType.EXPRESSION(methodCall)
             }
 
-            ShireTypes.INEQ_COMPARISON_EXPR -> {
-                val variable = parseRefExpr(expr!!.children.firstOrNull())
+            is ShireIneqComparisonExpr -> {
+                val variable = parseRefExpr(expr.children.firstOrNull())
                 val value = parseRefExpr(expr.children.lastOrNull())
-                val comparison = Comparison(
-                    variable,
-                    Operator(OperatorType.fromString((expr as ShireIneqComparisonExpr).ineqComparisonOp.text)),
-                    value
-                )
+                val operator = Operator(OperatorType.fromString(expr.ineqComparisonOp.text))
 
+                val comparison = Comparison(variable, operator, value)
                 FrontMatterType.EXPRESSION(comparison)
+            }
+
+            is ShireLogicalAndExpr -> {
+                parseLogicAndExpr(expr)?.let {
+                    FrontMatterType.EXPRESSION(it)
+                } ?: FrontMatterType.ERROR("cannot parse ShireLogicalAndExpr: ${expr.text}")
+            }
+
+            is ShireLogicalOrExpr -> {
+                parseLogicOrExpr(expr)?.let {
+                    FrontMatterType.EXPRESSION(it)
+                } ?: FrontMatterType.ERROR("cannot parse ShireLogicalOrExpr: ${expr.text}")
             }
 
             else -> {
