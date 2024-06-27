@@ -2,6 +2,7 @@ package com.phodal.shirelang.compiler.hobbit
 
 import com.intellij.codeInsight.intention.IntentionAction
 import com.intellij.execution.ui.ConsoleView
+import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
@@ -107,6 +108,7 @@ open class HobbitHole(
         context: PostCodeHandleContext,
     ) {
         onStreamingEnd.forEach { funcNode ->
+            console?.print("execute: ${funcNode.funName}\n", ConsoleViewContentType.SYSTEM_OUTPUT)
             PostProcessor.handler(funcNode.funName)?.execute(project, context, console)
         }
     }
