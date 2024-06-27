@@ -41,11 +41,10 @@ class ShireIntentionAction(private val hobbitHole: HobbitHole?, val file: PsiFil
     }
 
     override fun invoke(project: Project, editor: Editor?, file: PsiFile?) {
-        val language = file?.language?.id
-        val context = PostCodeHandleContext.create(file, language, editor)
+        val pickupElement = hobbitHole?.pickupElement(project, editor)
+        val context = PostCodeHandleContext.create(file, pickupElement)
 
         hobbitHole?.setupStreamingEndProcessor(project, context)
-        context.currentElement = hobbitHole?.pickupElement(project, editor)
 
         PostCodeHandleContext.putData(context)
 

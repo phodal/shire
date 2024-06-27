@@ -1,6 +1,5 @@
 package com.phodal.shirecore.middleware
 
-import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.util.Key
 import com.intellij.openapi.util.NlsSafe
 import com.intellij.openapi.util.UserDataHolderBase
@@ -11,7 +10,7 @@ class PostCodeHandleContext(
     /**
      * The element to be handled, which will be load from current editor when parse code
      */
-    var currentElement: SelectedEntry? = null,
+    var selectedEntry: SelectedEntry? = null,
 
     /**
      * Convert code to file
@@ -46,10 +45,12 @@ class PostCodeHandleContext(
     companion object {
         private val DATA_KEY: Key<PostCodeHandleContext> = Key.create(PostCodeHandleContext::class.java.name)
 
-        fun create(file: PsiFile?, language: @NlsSafe String?, editor: Editor?): PostCodeHandleContext {
+        fun create(currentFile: PsiFile?,  selectedEntry: SelectedEntry?): PostCodeHandleContext {
+            val language = currentFile?.language?.id
+
             return PostCodeHandleContext(
-                currentElement = null,
-                currentFile = file,
+                selectedEntry = selectedEntry,
+                currentFile = currentFile,
                 currentLanguage = language,
             )
         }
