@@ -1,0 +1,10 @@
+<idea-plugin package="com.phodal.shirelang.python">
+    <!--suppress PluginXmlValidity -->
+    <dependencies>
+        <plugin id="com.intellij.modules.python"/>
+    </dependencies>
+
+    <extensions defaultExtensionNs="com.phodal">
+        <shireFileRunService implementation="com.phodal.shirelang.python.provider.ShirePythonRunService"/>
+    </extensions>
+</idea-plugin>

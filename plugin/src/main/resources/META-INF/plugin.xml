@@ -12,6 +12,7 @@
     <content>
         <module name="com.phodal.shirelang"/>
         <module name="com.phodal.shirelang.java"/>
+        <module name="com.phodal.shirelang.python"/>
         <module name="com.phodal.shirelang.git"/>
 
         <module name="com.phodal.shire.httpclient"/>
