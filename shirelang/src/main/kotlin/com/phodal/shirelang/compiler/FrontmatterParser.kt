@@ -492,79 +492,88 @@ object FrontmatterParser {
         val processor: MutableList<PatternActionFunc> = mutableListOf()
         shireActionExprs?.mapNotNull { expr ->
             val funcCall = expr.funcCall
-            val args = parseParameters(funcCall) ?: emptyList()
+            val patternActionFunc = parseActionBodyFunCall(funcCall, expr)
 
-            when (funcCall?.funcName?.text) {
-                "grep" -> {
-                    if (args.isEmpty()) {
-                        logger.error("parsePatternAction, grep requires at least 1 argument")
-                        return@mapNotNull null
-                    }
-
-                    processor.add(PatternActionFunc.Grep(*args.toTypedArray()))
-                }
-
-                "sort" -> {
-                    processor.add(PatternActionFunc.Sort(*args.toTypedArray()))
-                }
-
-                "sed" -> {
-                    if (args.size < 2) {
-                        logger.error("parsePatternAction, sed requires at least 2 arguments")
-                        return@mapNotNull null
-                    }
-
-                    if (args[0].startsWith("/") && args[0].endsWith("/")) {
-                        processor.add(PatternActionFunc.Sed(args[0], args[1], true))
-                    } else {
-                        processor.add(PatternActionFunc.Sed(args[0], args[1]))
-                    }
-                }
-
-                "xargs" -> {
-                    processor.add(PatternActionFunc.Xargs(*args.toTypedArray()))
-                }
-
-                "uniq" -> {
-                    processor.add(PatternActionFunc.Uniq(*args.toTypedArray()))
-                }
-
-                "head" -> {
-                    if (args.isEmpty()) {
-                        processor.add(PatternActionFunc.Head(10))
-                    } else {
-                        processor.add(PatternActionFunc.Head(args[0].toInt()))
-                    }
-                }
-
-                "tail" -> {
-                    if (args.isEmpty()) {
-                        processor.add(PatternActionFunc.Tail(10))
-                    } else {
-                        processor.add(PatternActionFunc.Tail(args[0].toInt()))
-                    }
-                }
-
-                "print" -> {
-                    processor.add(PatternActionFunc.Print(*args.toTypedArray()))
-                }
-
-                "cat" -> {
-                    processor.add(PatternActionFunc.Cat(*args.toTypedArray()))
-                }
-
-                null -> {
-                    logger.warn("parsePatternAction, Unknown pattern action: ${expr.funcCall}")
-                }
-
-                else -> {
-                    val funcName = funcCall?.funcName?.text ?: ""
-                    processor.add(PatternActionFunc.UserCustom(funcName, args))
-                }
+            patternActionFunc?.let {
+                processor.add(it)
             }
         }
 
         return processor
+    }
+
+    private fun parseActionBodyFunCall(funcCall: ShireFuncCall?, expr: ShireActionExpr, ): PatternActionFunc? {
+        val args = parseParameters(funcCall) ?: emptyList()
+        val patternActionFunc = when (funcCall?.funcName?.text) {
+            "grep" -> {
+                if (args.isEmpty()) {
+                    logger.error("parsePatternAction, grep requires at least 1 argument")
+                    return null
+                }
+
+                PatternActionFunc.Grep(*args.toTypedArray())
+            }
+
+            "sort" -> {
+                PatternActionFunc.Sort(*args.toTypedArray())
+            }
+
+            "sed" -> {
+                if (args.size < 2) {
+                    logger.error("parsePatternAction, sed requires at least 2 arguments")
+                    return null
+                }
+
+                if (args[0].startsWith("/") && args[0].endsWith("/")) {
+                    PatternActionFunc.Sed(args[0], args[1], true)
+                } else {
+                    PatternActionFunc.Sed(args[0], args[1])
+                }
+            }
+
+            "xargs" -> {
+                PatternActionFunc.Xargs(*args.toTypedArray())
+            }
+
+            "uniq" -> {
+                PatternActionFunc.Uniq(*args.toTypedArray())
+            }
+
+            "head" -> {
+                if (args.isEmpty()) {
+                    PatternActionFunc.Head(10)
+                } else {
+                    PatternActionFunc.Head(args[0].toInt())
+                }
+            }
+
+            "tail" -> {
+                if (args.isEmpty()) {
+                    PatternActionFunc.Tail(10)
+                } else {
+                    PatternActionFunc.Tail(args[0].toInt())
+                }
+            }
+
+            "print" -> {
+                PatternActionFunc.Print(*args.toTypedArray())
+            }
+
+            "cat" -> {
+                PatternActionFunc.Cat(*args.toTypedArray())
+            }
+
+            null -> {
+                logger.warn("parsePatternAction, Unknown pattern action: ${expr.funcCall}")
+                return null
+            }
+
+            else -> {
+                val funcName = funcCall.funcName.text ?: ""
+                PatternActionFunc.UserCustom(funcName, args)
+            }
+        }
+        return patternActionFunc
     }
 
     private fun parseParameters(funcCall: ShireFuncCall?): List<String>? =
