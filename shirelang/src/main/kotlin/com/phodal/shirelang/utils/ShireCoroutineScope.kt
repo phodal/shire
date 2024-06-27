@@ -1,7 +1,6 @@
 package com.phodal.shirelang.utils
 
 import com.intellij.openapi.components.Service
-import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
 import kotlinx.coroutines.CoroutineExceptionHandler

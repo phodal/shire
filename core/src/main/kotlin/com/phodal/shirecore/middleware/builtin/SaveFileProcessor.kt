@@ -2,6 +2,7 @@ package com.phodal.shirecore.middleware.builtin
 
 import com.intellij.execution.ui.ConsoleView
 import com.intellij.execution.ui.ConsoleViewContentType
+import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.fileTypes.PlainTextLanguage
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
@@ -20,14 +21,16 @@ class SaveFileProcessor : PostProcessor {
         val language = context.targetLanguage ?: PlainTextLanguage.INSTANCE
         val ext = language?.associatedFileType?.defaultExtension ?: "txt"
 
-        val outputDir = project.guessProjectDir()?.findChild(SHIRE_TEMP_OUTPUT)
-            ?: project.guessProjectDir()?.createChildDirectory(this, SHIRE_TEMP_OUTPUT)
+        val outputFile = runWriteAction {
+            val outputDir = project.guessProjectDir()?.findChild(SHIRE_TEMP_OUTPUT)
+                ?: project.guessProjectDir()?.createChildDirectory(this, SHIRE_TEMP_OUTPUT)
 
-        val outputFile = outputDir?.createChildData(this, "${System.currentTimeMillis()}.$ext")
+            val outputFile = outputDir?.createChildData(this, "${System.currentTimeMillis()}.$ext")
+            val content = context.pipeData["output"] as String?
+            outputFile?.setBinaryContent(content?.toByteArray() ?: ByteArray(0))
 
-        val content = context.pipeData["output"] as String?
-
-        outputFile?.setBinaryContent(content?.toByteArray() ?: ByteArray(0))
+            outputFile
+        }
 
         context.pipeData["output"] = outputFile?.canonicalPath ?: ""
 

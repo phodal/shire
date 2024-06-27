@@ -1,9 +1,5 @@
 package com.phodal.shirelang.compiler.hobbit.ast
 
-import com.intellij.execution.ui.ConsoleView
-import com.intellij.openapi.project.Project
-import com.phodal.shirecore.middleware.PostCodeHandleContext
-
 data class Condition(
     val conditionKey: String,
     val valueExpression: FrontMatterType.EXPRESSION,

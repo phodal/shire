@@ -1,5 +1,8 @@
 package com.phodal.shirecore.middleware.select
 
+import com.intellij.openapi.application.runInEdt
+import com.intellij.openapi.application.runReadAction
+import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
@@ -31,7 +34,10 @@ sealed class SelectElementStrategy {
             }
 
             val elementToAction = DefaultPsiElementStrategy().getElementToAction(project, editor) ?: return null
-            selectElement(elementToAction, editor)
+
+            runInEdt {
+                selectElement(elementToAction, editor)
+            }
 
             return elementToAction
         }
@@ -87,7 +93,11 @@ sealed class SelectElementStrategy {
     object SelectAll : SelectElementStrategy() {
         override fun select(project: Project, editor: Editor?): String? {
             val selectionModel = editor?.selectionModel ?: return null
-            selectionModel.setSelection(0, editor.document.textLength)
+
+            runInEdt {
+                selectionModel.setSelection(0, editor.document.textLength)
+            }
+
             return editor.document.text
         }
 

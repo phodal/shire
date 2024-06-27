@@ -3,6 +3,9 @@ package com.phodal.shirelang.compiler.hobbit
 import com.intellij.codeInsight.intention.IntentionAction
 import com.intellij.execution.ui.ConsoleView
 import com.intellij.execution.ui.ConsoleViewContentType
+import com.intellij.openapi.application.runInEdt
+import com.intellij.openapi.application.runReadAction
+import com.intellij.openapi.application.smartReadAction
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
@@ -92,8 +95,10 @@ open class HobbitHole(
     val userData: Map<String, FrontMatterType> = mutableMapOf(),
 ) : Smials {
     fun pickupElement(project: Project, editor: Editor?): SelectedEntry? {
-        this.selectionStrategy.select(project, editor)
-        return selectionStrategy.getSelectedElement(project, editor)
+        return runReadAction {
+            this.selectionStrategy.select(project, editor)
+            return@runReadAction selectionStrategy.getSelectedElement(project, editor)
+        }
     }
 
     fun setupStreamingEndProcessor(project: Project, context: PostCodeHandleContext) {

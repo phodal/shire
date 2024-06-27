@@ -29,25 +29,23 @@ class ShireDefaultRunner(
                 return@invokeLater
             }
 
-            ShireCoroutineScope.scope(myProject).launch {
-                val llmResult = StringBuilder()
-                runBlocking {
-                    LlmProvider.provider(myProject)?.stream(prompt, "", false)?.collect {
-                        llmResult.append(it)
+            val llmResult = StringBuilder()
+            runBlocking {
+                LlmProvider.provider(myProject)?.stream(prompt, "", false)?.collect {
+                    llmResult.append(it)
 
-                        console.print(it, ConsoleViewContentType.NORMAL_OUTPUT)
-                    } ?: console.print(ShireBundle.message("shire.llm.notfound"), ConsoleViewContentType.ERROR_OUTPUT)
-                }
-
-                console.print(ShireBundle.message("shire.llm.done"), ConsoleViewContentType.SYSTEM_OUTPUT)
-
-                val response = llmResult.toString()
-                myProject.getService(ShireConversationService::class.java)
-                    .refreshLlmResponseCache(configuration.getScriptPath(), response)
-
-                postFunction(response)
-                processHandler.detachProcess()
+                    console.print(it, ConsoleViewContentType.NORMAL_OUTPUT)
+                } ?: console.print(ShireBundle.message("shire.llm.notfound"), ConsoleViewContentType.ERROR_OUTPUT)
             }
+
+            console.print(ShireBundle.message("shire.llm.done"), ConsoleViewContentType.SYSTEM_OUTPUT)
+
+            val response = llmResult.toString()
+            myProject.getService(ShireConversationService::class.java)
+                .refreshLlmResponseCache(configuration.getScriptPath(), response)
+
+            postFunction(response)
+            processHandler.detachProcess()
         }
     }
 }
