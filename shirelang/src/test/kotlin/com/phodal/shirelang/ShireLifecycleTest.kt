@@ -39,7 +39,7 @@ class ShireLifecycleTest : BasePlatformTestCase() {
             ---
             afterStreaming: {
                 condition {
-                  "error"       { output.length < 1 }
+                  "error"       { output.length > 1 }
                   "json-result" { jsonpath("${'$'}.store.*") }
                 }
                 case condition {

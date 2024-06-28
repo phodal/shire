@@ -2,6 +2,8 @@ package com.phodal.shirelang.compiler.hobbit.execute
 
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
+import com.nfeld.jsonpathkt.JsonPath
+import com.nfeld.jsonpathkt.extension.read
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.ast.*
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
@@ -30,8 +32,40 @@ open class FunctionStatementProcessor(override val myProject: Project, val hole:
         }
     }
 
-    private fun invokeLocalMethodCall(statement: MethodCall, variableTable: MutableMap<String, Any?>): Any? {
-        logger<FunctionStatementProcessor>().warn("unknown stmt: $statement expr: ${statement.display()}")
+    fun invokeLocalMethodCall(statement: MethodCall, variableTable: MutableMap<String, Any?>): Any? {
+        val objName = statement.objectName.display()
+        val methodName = statement.methodName.display()
+        val methodArgs = statement.arguments
+
+        if (methodName == "") {
+            val firstArg = methodArgs?.get(0)
+            when (objName) {
+                "jsonpath" -> {
+                    val output = (variableTable["output"] ?: "").toString()
+                    val arg: String = when(firstArg) {
+                        is FrontMatterType.STRING -> (methodArgs[0] as FrontMatterType.STRING).value.toString()
+                        else -> firstArg.toString()
+                    }
+                    val json: String = try {
+                        JsonPath.parse(output)?.read<Any>(arg).toString()
+                    } catch (e: Exception) {
+                        logger<FunctionStatementProcessor>().warn("jsonpath error: $e")
+                        return null
+                    }
+
+                    return json
+                }
+                "print" -> {
+                    val value = firstArg
+                    println(value)
+                }
+
+                else -> {
+                    logger<FunctionStatementProcessor>().warn("unknown method: $objName")
+                }
+            }
+        }
+
         return null;
     }
 
