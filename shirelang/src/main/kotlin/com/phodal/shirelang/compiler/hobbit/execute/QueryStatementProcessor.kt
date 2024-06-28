@@ -17,8 +17,8 @@ class QueryStatementProcessor(val myProject: Project, hole: HobbitHole) : Functi
             transform.patternActionFuncs.find { it is PatternActionFunc.Select } as PatternActionFunc.Select
         val whereStmt = transform.patternActionFuncs.find { it is PatternActionFunc.Where } as PatternActionFunc.Where
 
-        val variables: Map<String, List<PsiElement>> = buildVariables(fromStmt)
-        val handledElements = processStatement(whereStmt.statement, variables)
+        val variableElementsMap: Map<String, List<PsiElement>> = buildVariables(fromStmt)
+        val handledElements = processStatement(whereStmt.statement, variableElementsMap)
         val selectElements = processSelect(selectStmt, handledElements)
 
         return selectElements.joinToString("\n")

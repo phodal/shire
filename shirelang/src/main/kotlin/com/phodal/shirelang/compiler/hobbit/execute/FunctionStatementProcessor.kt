@@ -7,15 +7,89 @@ import com.phodal.shirelang.compiler.hobbit.ast.*
 
 open class FunctionStatementProcessor(myProject: Project, hole: HobbitHole) {
     fun execute(statement: Statement, emptyMap: Any): Any {
-        return this.processStatement(statement, emptyMap as Map<String, List<Any>>)
+        return when (statement) {
+            is Comparison -> {
+                val result = executeComparison(statement, emptyMap)
+                result
+            }
+
+            else -> {
+                logger<FunctionStatementProcessor>().warn("unknown statement: $statement")
+                false
+            }
+        }
+    }
+
+    private fun FunctionStatementProcessor.executeComparison(
+        statement: Comparison,
+        emptyMap: Any,
+    ): Boolean {
+        val operator = statement.operator
+        val left = evaluate(statement.left, emptyMap)
+        val right = evaluate(statement.right, emptyMap)
+
+        return when (operator.type) {
+            OperatorType.Equal -> {
+                left == right
+            }
+
+            OperatorType.And -> {
+                left == right
+            }
+
+            OperatorType.GreaterEqual -> {
+                 if (left == null || right == null) {
+                     false
+                 } else {
+                     left as Comparable<Any> >= right as Comparable<Any>
+                 }
+            }
+
+            OperatorType.GreaterThan -> {
+                if (left == null || right == null) {
+                    false
+                } else {
+                    left as Comparable<Any> > right as Comparable<Any>
+                }
+            }
+
+            OperatorType.LessEqual -> {
+                if (left == null || right == null) {
+                    false
+                } else {
+                    left as Comparable<Any> <= right as Comparable<Any>
+                }
+            }
+
+            OperatorType.LessThan -> {
+                if (left == null || right == null) {
+                    false
+                } else {
+                    left as Comparable<Any> < right as Comparable<Any>
+                }
+            }
+
+            OperatorType.NotEqual -> {
+                left != right
+            }
+
+            OperatorType.Or -> {
+                left == true || right == true
+            }
+
+            else -> {
+                logger<FunctionStatementProcessor>().warn("unknown operator: $operator")
+                false
+            }
+        }
     }
 
     fun <T : Any> processStatement(
         statement: Statement,
-        variables: Map<String, List<T>>,
+        variableElementsMap: Map<String, List<T>>,
     ): List<T> {
         val result = mutableListOf<T>()
-        variables.forEach { (variableName, elements) ->
+        variableElementsMap.forEach { (variableName, elements) ->
             elements.forEach { element ->
                 when (statement) {
                     is Comparison -> {
@@ -73,13 +147,13 @@ open class FunctionStatementProcessor(myProject: Project, hole: HobbitHole) {
                             }
 
                             else -> {
-                                logger<QueryStatementProcessor>().warn("unknown operator: $operator")
+                                logger<FunctionStatementProcessor>().warn("unknown operator: $operator")
                             }
                         }
                     }
 
                     else -> {
-                        logger<QueryStatementProcessor>().warn("unknown statement: $statement")
+                        logger<FunctionStatementProcessor>().warn("unknown statement: $statement")
                     }
                 }
             }
