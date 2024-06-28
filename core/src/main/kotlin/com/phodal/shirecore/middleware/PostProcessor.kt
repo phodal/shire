@@ -23,7 +23,7 @@ interface PostProcessor {
     /**
      * Some init tasks, like metric for time, etc.
      */
-    fun setup(context: PostCodeHandleContext): String {
+    fun setup(context: PostCodeHandleContext): Any {
         return ""
     }
 
@@ -35,12 +35,12 @@ interface PostProcessor {
      * @param genText the generated text to be used in the execution
      * @return a string result of the execution
      */
-    fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?): String
+    fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?): Any
 
     /**
      * Clean up tasks, like metric for time, etc.
      */
-    fun finish(context: PostCodeHandleContext): String? {
+    fun finish(context: PostCodeHandleContext): Any? {
         return ""
     }
 

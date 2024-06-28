@@ -1,6 +1,7 @@
-package com.phodal.shirecore.codeedit
+package com.phodal.shirecore.provider.codeedit
 
 import com.intellij.lang.Language
+import com.intellij.lang.LanguageExtension
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 
@@ -16,6 +17,12 @@ interface CodeModifier {
      * @return True if the language is applicable, false otherwise.
      */
     fun isApplicable(language: Language): Boolean
+
+    /**
+     * According to the source file, project, and code, it will insert the code in a smart way.
+     */
+    fun smartInsert(sourceFile: VirtualFile, project: Project, code: String): Boolean
+
     /**
      * Inserts the provided test code into the specified source file in the given project.
      *
@@ -43,4 +50,13 @@ interface CodeModifier {
      * @return True if the class was successfully inserted, false otherwise.
      */
     fun insertClass(sourceFile: VirtualFile, project: Project, code: String): Boolean
+
+    companion object {
+        private val languageExtension: LanguageExtension<CodeModifier> =
+            LanguageExtension("com.phodal.shireCodeModifier")
+
+        fun forLanguage(language: Language): CodeModifier? {
+            return languageExtension.forLanguage(language)
+        }
+    }
 }

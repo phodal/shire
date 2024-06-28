@@ -63,7 +63,7 @@
         <extensionPoint qualifiedName="com.phodal.shireCodeModifier"
                         beanClass="com.intellij.lang.LanguageExtensionPoint" dynamic="true">
             <with attribute="implementationClass"
-                  implements="com.phodal.shirecore.codeedit.CodeModifier"/>
+                  implements="com.phodal.shirecore.provider.codeedit.CodeModifier"/>
         </extensionPoint>
 
         <!-- Code DataStructure -->
@@ -102,10 +102,13 @@
     </extensions>
 
     <extensions defaultExtensionNs="com.phodal">
-        <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.VerifyCodeProcessor"/>
         <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.TimeMetricProcessor"/>
+
+        <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.VerifyCodeProcessor"/>
         <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.ParseCodeProcessor"/>
         <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.RunCodeProcessor"/>
+        <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.InsertCodeProcessor"/>
+
         <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.SaveFileProcessor"/>
         <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.OpenFileProcessor"/>
     </extensions>

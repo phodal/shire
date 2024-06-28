@@ -10,7 +10,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.*
-import com.phodal.shirecore.codeedit.CodeModifier
+import com.phodal.shirecore.provider.codeedit.CodeModifier
 
 open class JavaCodeModifier : CodeModifier {
     private val log = logger<JavaCodeModifier>()

@@ -45,6 +45,11 @@ enum class BuiltinPostHandler(var handleName: String) {
     /**
      * Open file in the editor
      */
-    OpenFile("openFile")
+    OpenFile("openFile"),
+
+    /**
+     * Insert code to the editor by current cursor position.
+     */
+    InsertCode("insertCode")
     ;
 }
