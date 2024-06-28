@@ -1,20 +1,13 @@
 package com.phodal.shirelang.compiler.hobbit.execute
 
-import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.project.guessProjectDir
-import com.intellij.openapi.vfs.LocalFileSystem
-import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.openapi.vfs.findFile
-import com.intellij.openapi.vfs.readText
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
-import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 import com.phodal.shirelang.compiler.patternaction.PatternActionTransform
-import java.io.File
 
 
-class PatternActionProcessor(val myProject: Project, val editor: Editor, val hole: HobbitHole) {
+class PatternActionProcessor(override val myProject: Project, val editor: Editor, val hole: HobbitHole) :
+PatternFuncProcessor(myProject, editor, hole) {
     /**
      * We should execute the variable function with the given key and pipeline functions.
      *
@@ -56,133 +49,9 @@ class PatternActionProcessor(val myProject: Project, val editor: Editor, val hol
     fun execute(transform: PatternActionTransform, input: Any): String {
         var result = input
         transform.patternActionFuncs.forEach { action ->
-            result = when (action) {
-                is PatternActionFunc.Prompt -> {
-                    action.message
-                }
-
-                is PatternActionFunc.Grep -> {
-                    when (result) {
-                        is Array<*> -> {
-                            (result as Array<String>).filter { line -> action.patterns.any { line.contains(it) } }
-                                .joinToString("\n")
-                        }
-
-                        else -> {
-                            (result as String).split("\n")
-                                .filter { line -> action.patterns.any { line.contains(it) } }
-                                .joinToString("\n")
-                        }
-                    }
-                }
-
-                is PatternActionFunc.Sed -> {
-                    when (result) {
-                        is Array<*> -> {
-                            (result as Array<String>).joinToString("\n") { line ->
-                                line.replace(
-                                    action.pattern.toRegex(),
-                                    action.replacements
-                                )
-                            }
-                        }
-
-                        else -> {
-                            (result as String).split("\n").joinToString("\n") { line ->
-                                line.replace(
-                                    action.pattern.toRegex(),
-                                    action.replacements
-                                )
-                            }
-                        }
-                    }
-                }
-
-                is PatternActionFunc.Sort -> {
-                    when (result) {
-                        is Array<*> -> {
-                            (result as Array<String>).sorted().joinToString("\n")
-                        }
-
-                        else -> {
-                            (result as String).split("\n").sorted().joinToString("\n")
-                        }
-                    }
-                }
-
-                is PatternActionFunc.Uniq -> {
-                    when (result) {
-                        is Array<*> -> {
-                            (result as Array<String>).distinct().joinToString("\n")
-                        }
-
-                        else -> {
-                            (result as String).split("\n").distinct().joinToString("\n")
-                        }
-                    }
-                }
-
-                is PatternActionFunc.Head -> {
-                    when (result) {
-                        is Array<*> -> {
-                            (result as Array<String>).take(action.number.toInt()).joinToString("\n")
-                        }
-
-                        else -> {
-                            (result as String).split("\n").take(action.number.toInt()).joinToString("\n")
-                        }
-                    }
-                }
-
-                is PatternActionFunc.Tail -> {
-                    when (result) {
-                        is Array<*> -> {
-                            (result as Array<String>).takeLast(action.number.toInt()).joinToString("\n")
-                        }
-
-                        else -> {
-                            (result as String).split("\n").takeLast(action.number.toInt()).joinToString("\n")
-                        }
-                    }
-                }
-
-                is PatternActionFunc.Cat -> {
-                    executeCatFunc(action, input)
-                }
-
-                is PatternActionFunc.Print -> {
-                    action.texts.joinToString("\n")
-                }
-
-                is PatternActionFunc.Xargs -> {
-                    action.variables
-                }
-
-                is PatternActionFunc.UserCustom -> {
-                    logger<PatternActionProcessor>().error("TODO for User custom: ${action.funcName}")
-                }
-
-                else -> {
-                    logger<PatternActionProcessor>().error("Unknown pattern processor type: ${action.funcName}")
-                    ""
-                }
-            }
+            result = patternFunctionExecute(action, result, input)
         }
 
         return result.toString()
     }
-
-    private fun executeCatFunc(action: PatternActionFunc.Cat, input: Any): String {
-        val baseDir = myProject.guessProjectDir()!!
-        var paths = action.paths
-        if (action.paths.isEmpty()) {
-            paths = input as Array<String>
-        }
-        val absolutePaths: List<VirtualFile> = paths.mapNotNull {
-            baseDir.findFile(it) ?: LocalFileSystem.getInstance().findFileByIoFile(File(it))
-        }
-
-        return absolutePaths.joinToString("\n") { it.readText() }
-    }
-
 }

@@ -7,7 +7,7 @@ import com.phodal.shirelang.compiler.ShireCompiler
 import com.phodal.shirelang.psi.ShireFile
 import junit.framework.TestCase
 
-class ShireLifecycleTest: BasePlatformTestCase() {
+class ShireLifecycleTest : BasePlatformTestCase() {
     fun testShouldHandleWhenStreamingEnd() {
         val code = """
             ---
@@ -30,7 +30,7 @@ class ShireLifecycleTest: BasePlatformTestCase() {
         assertEquals(funcNode[0].funName, "verifyCode")
         assertEquals(funcNode[1].funName, "runCode")
 
-        val handleContext = PostCodeHandleContext(currentLanguage =  ShireLanguage.INSTANCE)
+        val handleContext = PostCodeHandleContext(currentLanguage = ShireLanguage.INSTANCE)
         PostProcessor.execute(project, funcNode, handleContext, null)
     }
 
@@ -38,16 +38,16 @@ class ShireLifecycleTest: BasePlatformTestCase() {
         val code = """
             ---
             afterStreaming: {
-              condition {
-                "variable-success" { ${"$"}selection.length > 1 }
-                "jsonpath-success" { jsonpath("$['store']['book'][0]['title']") }
+                condition {
+                  "error"       { output.length < 1 }
+                  "json-result" { jsonpath("${'$'}.store.*") }
+                }
+                case condition {
+                  "error"       { notify("Failed to Generate JSON") }
+                  "json-result" { execute("sample.shire") }
+                  default       { notify("Failed to Generate JSON") /* mean nothing */ }
+                }
               }
-              case condition {
-                "variable-success" { done }
-                "jsonpath-success" { task() }
-                default { task() }
-              }
-            }
             ---
             
             ${'$'}allController
@@ -63,12 +63,30 @@ class ShireLifecycleTest: BasePlatformTestCase() {
         val funcNode = hole.afterStreaming!!
 
         TestCase.assertEquals(funcNode.conditions.size, 2)
-        TestCase.assertEquals(funcNode.conditions[0].conditionKey, "\"variable-success\"")
+        TestCase.assertEquals(funcNode.conditions[0].conditionKey, "\"error\"")
 
         TestCase.assertEquals(funcNode.cases.size, 3)
-        TestCase.assertEquals(funcNode.cases[0].caseKey, "\"variable-success\"")
+        TestCase.assertEquals(funcNode.cases[0].caseKey, "\"error\"")
 
-        hole.executeAfterStreamingProcessor(myFixture.project, null,
-            PostCodeHandleContext(currentLanguage =  ShireLanguage.INSTANCE))
+        val genJson = """
+            {
+                "store": {
+                    "book": [
+                        {
+                            "category": "reference",
+                            "author": "Nigel Rees",
+                            "title": "Sayings of the Century",
+                            "price": 8.95
+                        }
+                    ]
+                }
+            }
+           """.trimIndent()
+        val handleContext = PostCodeHandleContext(
+            currentLanguage = ShireLanguage.INSTANCE,
+            genText = genJson
+        )
+
+        hole.executeAfterStreamingProcessor(myFixture.project, null, handleContext)
     }
 }

@@ -10,7 +10,7 @@ import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 import com.phodal.shirelang.compiler.patternaction.PatternActionTransform
 import java.util.*
 
-class QueryStatementProcessor(val myProject: Project, hole: HobbitHole) : FunctionStatementProcessor(myProject, hole) {
+class QueryStatementProcessor(override val myProject: Project, hole: HobbitHole) : FunctionStatementProcessor(myProject, hole) {
     fun execute(transform: PatternActionTransform): String {
         val fromStmt = transform.patternActionFuncs.find { it is PatternActionFunc.From } as PatternActionFunc.From
         val selectStmt =

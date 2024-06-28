@@ -4,12 +4,22 @@ import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.ast.*
+import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 
-open class FunctionStatementProcessor(myProject: Project, hole: HobbitHole) {
+open class FunctionStatementProcessor(open val myProject: Project, val hole: HobbitHole) {
     fun execute(statement: Statement, variableTable: MutableMap<String, Any?>): Any? {
         return when (statement) {
             is Comparison -> {
                 val result = executeComparison(statement, variableTable)
+                result
+            }
+
+            is Processor -> {
+                val result: Any = ""
+                statement.processors.forEach {
+                    execute(it, variableTable)
+                }
+
                 result
             }
 
@@ -18,6 +28,11 @@ open class FunctionStatementProcessor(myProject: Project, hole: HobbitHole) {
                 null
             }
         }
+    }
+
+    fun execute(patternFunc: PatternActionFunc, variableTable: MutableMap<String, Any?>) : Any? {
+
+        return null
     }
 
     private fun FunctionStatementProcessor.executeComparison(

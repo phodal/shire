@@ -1,7 +1,16 @@
 package com.phodal.shirelang.compiler.patternaction
 
+import com.intellij.openapi.diagnostic.logger
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.project.guessProjectDir
+import com.intellij.openapi.vfs.LocalFileSystem
+import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.vfs.findFile
+import com.intellij.openapi.vfs.readText
 import com.phodal.shirelang.compiler.hobbit.ast.Statement
 import com.phodal.shirelang.compiler.hobbit.ast.VariableElement
+import com.phodal.shirelang.compiler.hobbit.execute.PatternActionProcessor
+import java.io.File
 
 /**
  * The `PatternActionFunc` is a sealed class in Kotlin that represents a variety of pattern action functions.
