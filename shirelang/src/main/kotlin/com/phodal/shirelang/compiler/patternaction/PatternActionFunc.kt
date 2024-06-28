@@ -96,7 +96,7 @@ sealed class PatternActionFunc(open val funcName: String) {
     /**
      * Select subclass for selecting one or more elements.
      */
-    class From(val variables: List<VariableElement>) : PatternActionFunc("select")
+    class From(val variables: List<VariableElement>) : PatternActionFunc("from")
 
     /**
      * Where subclass for filtering elements.
@@ -106,10 +106,14 @@ sealed class PatternActionFunc(open val funcName: String) {
     /**
      * OrderBy subclass for ordering elements.
      */
-    class Select(val statements: List<Statement>) : PatternActionFunc("orderBy")
+    class Select(val statements: List<Statement>) : PatternActionFunc("select")
 
     /**
      * User Custom Functions
      */
-    class UserCustom(override val funcName: String, val args: List<String>) : PatternActionFunc(funcName)
+    class UserCustom(override val funcName: String, val args: List<String>) : PatternActionFunc(funcName) {
+        override fun toString(): String {
+            return "$funcName(${args.joinToString(", ")})"
+        }
+    }
 }

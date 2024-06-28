@@ -35,7 +35,7 @@ data class TaskRoutes(
     val defaultTask: Task,
 ) {
     fun execute(myProject: Project, console: ConsoleView?, context: PostCodeHandleContext, hobbitHole: HobbitHole): Case? {
-        val conditionResult = mutableMapOf<String, Any>()
+        val conditionResult = mutableMapOf<String, Any?>()
 
         val processor = FunctionStatementProcessor(myProject, hobbitHole)
         conditions.forEach {

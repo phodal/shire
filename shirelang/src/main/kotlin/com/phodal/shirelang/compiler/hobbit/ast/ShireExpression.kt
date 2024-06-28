@@ -35,8 +35,8 @@ abstract class Statement {
 
                 "${this.objectName.display()}${dotWithTarget}$formattedParameters"
             }
-
             is Value -> this.value.display()
+            is Processor -> this.processors.joinToString(" | ") { it.toString() }
             else -> throw IllegalArgumentException("Unsupported statement type: $this")
         }
     }

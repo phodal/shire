@@ -6,16 +6,16 @@ import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.ast.*
 
 open class FunctionStatementProcessor(myProject: Project, hole: HobbitHole) {
-    fun execute(statement: Statement, emptyMap: Any): Any {
+    fun execute(statement: Statement, variableTable: MutableMap<String, Any?>): Any? {
         return when (statement) {
             is Comparison -> {
-                val result = executeComparison(statement, emptyMap)
+                val result = executeComparison(statement, variableTable)
                 result
             }
 
             else -> {
-                logger<FunctionStatementProcessor>().warn("unknown statement: $statement")
-                false
+                logger<FunctionStatementProcessor>().warn("unknown stmt: $statement expr: ${statement.display()}")
+                null
             }
         }
     }
