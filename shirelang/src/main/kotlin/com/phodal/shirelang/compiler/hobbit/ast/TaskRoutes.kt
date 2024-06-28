@@ -4,8 +4,7 @@ import com.intellij.execution.ui.ConsoleView
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.middleware.PostCodeHandleContext
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
-import com.phodal.shirelang.compiler.patternaction.FunctionStatementProcessor
-import com.phodal.shirelang.compiler.patternaction.QueryStatementProcessor
+import com.phodal.shirelang.compiler.hobbit.execute.FunctionStatementProcessor
 
 
 data class TaskRoutesContext(
