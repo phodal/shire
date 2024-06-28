@@ -17,21 +17,25 @@ class ShireActionStartupActivity : ProjectActivity {
     override suspend fun execute(project: Project) {
         smartReadAction(project) {
             obtainShireFiles(project).forEach {
-                val psi: ShireFile = PsiManager.getInstance(project).findFile(it) as? ShireFile ?: return@forEach
-                val shireConfig = FrontmatterParser.parse(psi) ?: return@forEach
+                val shireConfig = FrontmatterParser.parse(it) ?: return@forEach
 
                 val configName = shireConfig.name
 
-                val shireActionConfig = DynamicShireActionConfig(configName, shireConfig, psi)
+                val shireActionConfig = DynamicShireActionConfig(configName, shireConfig, it)
                 DynamicShireActionService.getInstance().putAction(configName, shireActionConfig)
             }
         }
     }
 
-    private fun obtainShireFiles(project: Project): Collection<VirtualFile> {
-        ApplicationManager.getApplication().assertReadAccessAllowed()
-        val allScope = GlobalSearchScope.allScope(project)
-        val filesScope = GlobalSearchScope.getScopeRestrictedByFileTypes(allScope, ShireFileType.INSTANCE)
-        return FileTypeIndex.getFiles(ShireFileType.INSTANCE, filesScope)
+    companion object {
+        fun obtainShireFiles(project: Project): List<ShireFile> {
+            ApplicationManager.getApplication().assertReadAccessAllowed()
+            val allScope = GlobalSearchScope.allScope(project)
+            val filesScope = GlobalSearchScope.getScopeRestrictedByFileTypes(allScope, ShireFileType.INSTANCE)
+
+            return FileTypeIndex.getFiles(ShireFileType.INSTANCE, filesScope).mapNotNull {
+                PsiManager.getInstance(project).findFile(it) as? ShireFile
+            }
+        }
     }
 }

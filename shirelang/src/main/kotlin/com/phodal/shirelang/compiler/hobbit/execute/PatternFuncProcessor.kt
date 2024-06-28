@@ -8,6 +8,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.findFile
 import com.intellij.openapi.vfs.readText
 import com.phodal.shirecore.ShirelangNotifications
+import com.phodal.shirelang.actions.ShireRunFileAction
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 import java.io.File
@@ -131,7 +132,7 @@ open class PatternFuncProcessor(open val myProject: Project, hole: HobbitHole) {
             }
 
             is PatternActionFunc.ExecuteShire -> {
-                logger<PatternActionProcessor>().warn("TODO for ExecuteShire: ${action.string}")
+                ShireRunFileAction.runFile(myProject, action.string)
             }
 
             is PatternActionFunc.Notify -> {

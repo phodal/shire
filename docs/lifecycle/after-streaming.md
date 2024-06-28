@@ -12,7 +12,6 @@ nav_order: 4
 
 ```shire
 ---
-onStreamingEnd: { parseCode("json") }
 afterStreaming: {
     condition {
       "error"       { output.length < 1 }
@@ -20,7 +19,7 @@ afterStreaming: {
     }
     case condition {
       "error"       { notify("Failed to Generate JSON") }
-      "json-result" { execute("sample.shire") }
+      "json-result" { execute("sample.shire") } /* go to execute sample.shire */
       default       { notify("Failed to Generate JSON") /* mean nothing */ }
     }
   }
