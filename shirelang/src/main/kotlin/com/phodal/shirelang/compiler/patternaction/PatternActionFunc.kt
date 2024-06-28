@@ -117,6 +117,17 @@ sealed class PatternActionFunc(open val funcName: String) {
      */
     class Select(val statements: List<Statement>) : PatternActionFunc("select")
 
+
+    /**
+     * Execute a shire script
+     */
+    class ExecuteShire(val string: String) : PatternActionFunc("execute")
+
+    /**
+     * use IDE Notify
+     */
+    class Notify(val message: String) : PatternActionFunc("notify")
+
     /**
      * User Custom Functions
      */

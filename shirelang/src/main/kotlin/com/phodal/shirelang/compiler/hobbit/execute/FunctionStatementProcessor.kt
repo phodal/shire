@@ -6,7 +6,8 @@ import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.ast.*
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 
-open class FunctionStatementProcessor(open val myProject: Project, val hole: HobbitHole) {
+open class FunctionStatementProcessor(override val myProject: Project, val hole: HobbitHole) :
+    PatternFuncProcessor(myProject, hole) {
     fun execute(statement: Statement, variableTable: MutableMap<String, Any?>): Any? {
         return when (statement) {
             is Comparison -> {
@@ -15,12 +16,11 @@ open class FunctionStatementProcessor(open val myProject: Project, val hole: Hob
             }
 
             is Processor -> {
-                val result: Any = ""
-                statement.processors.forEach {
-                    execute(it, variableTable)
-                }
+                execute(statement.processors, variableTable)
+            }
 
-                result
+            is MethodCall -> {
+                invokeLocalMethodCall(statement, variableTable)
             }
 
             else -> {
@@ -30,8 +30,19 @@ open class FunctionStatementProcessor(open val myProject: Project, val hole: Hob
         }
     }
 
-    fun execute(patternFunc: PatternActionFunc, variableTable: MutableMap<String, Any?>) : Any? {
-        return null
+    private fun invokeLocalMethodCall(statement: MethodCall, variableTable: MutableMap<String, Any?>): Any? {
+        logger<FunctionStatementProcessor>().warn("unknown stmt: $statement expr: ${statement.display()}")
+        return null;
+    }
+
+    fun execute(processors: List<PatternActionFunc>, variableTable: MutableMap<String, Any?>): Any? {
+        val input: Any = variableTable["output"] ?: ""
+        var result: Any = variableTable["output"] ?: ""
+        processors.forEach { action ->
+            result = patternFunctionExecute(action, result, input)
+        }
+
+        return result.toString()
     }
 
     private fun FunctionStatementProcessor.executeComparison(
@@ -52,11 +63,11 @@ open class FunctionStatementProcessor(open val myProject: Project, val hole: Hob
             }
 
             OperatorType.GreaterEqual -> {
-                 if (left == null || right == null) {
-                     false
-                 } else {
-                     left as Comparable<Any> >= right as Comparable<Any>
-                 }
+                if (left == null || right == null) {
+                    false
+                } else {
+                    left as Comparable<Any> >= right as Comparable<Any>
+                }
             }
 
             OperatorType.GreaterThan -> {

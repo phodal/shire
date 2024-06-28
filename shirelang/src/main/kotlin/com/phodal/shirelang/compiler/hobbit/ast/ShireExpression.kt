@@ -29,6 +29,12 @@ abstract class Statement {
 
                 val dotWithTarget = if (this.methodName is FrontMatterType.EMPTY) {
                     ""
+                } else if(this.methodName is FrontMatterType.IDENTIFIER) {
+                    if (this.methodName.value == "") {
+                        ""
+                    } else {
+                        ".${this.methodName.display()}"
+                    }
                 } else {
                     ".${this.methodName.display()}"
                 }

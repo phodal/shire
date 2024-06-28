@@ -496,7 +496,7 @@ object FrontmatterParser {
         return processor
     }
 
-    private fun parseActionBodyFunCall(funcCall: ShireFuncCall?, expr: ShireActionExpr, ): PatternActionFunc? {
+     fun parseActionBodyFunCall(funcCall: ShireFuncCall?, expr: ShireActionExpr, ): PatternActionFunc? {
         val args = parseParameters(funcCall) ?: emptyList()
         val patternActionFunc = when (funcCall?.funcName?.text) {
             "grep" -> {
@@ -555,6 +555,15 @@ object FrontmatterParser {
 
             "cat" -> {
                 PatternActionFunc.Cat(*args.toTypedArray())
+            }
+
+            /// System APIs
+            "execute" -> {
+                PatternActionFunc.ExecuteShire(args[0])
+            }
+
+            "notify" -> {
+                PatternActionFunc.Notify(args[0])
             }
 
             null -> {

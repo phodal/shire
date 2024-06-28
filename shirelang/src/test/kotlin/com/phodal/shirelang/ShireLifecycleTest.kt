@@ -65,6 +65,8 @@ class ShireLifecycleTest : BasePlatformTestCase() {
         TestCase.assertEquals(funcNode.conditions.size, 2)
         TestCase.assertEquals(funcNode.conditions[0].conditionKey, "\"error\"")
 
+        assertEquals(funcNode.conditions[1].valueExpression.display(), "jsonpath(\"${'$'}.store.*\")")
+
         TestCase.assertEquals(funcNode.cases.size, 3)
         TestCase.assertEquals(funcNode.cases[0].caseKey, "\"error\"")
 

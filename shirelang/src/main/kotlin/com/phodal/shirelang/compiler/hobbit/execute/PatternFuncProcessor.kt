@@ -7,6 +7,7 @@ import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.findFile
 import com.intellij.openapi.vfs.readText
+import com.phodal.shirecore.ShirelangNotifications
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 import java.io.File
@@ -22,7 +23,7 @@ open class PatternFuncProcessor(open val myProject: Project, hole: HobbitHole) {
      *
      * @return The return type is `Any`. The actual return type depends on the type of `PatternActionFunc`. For example, if `PatternActionFunc` is `Prompt`, it returns a `String`. If `PatternActionFunc` is `Grep`, it returns a `String` joined by "\n" from an `Array` or `String` that contains the specified patterns. If `PatternActionFunc` is `Sed`, it returns a `String` joined by "\n" from an `Array` or `String` where the specified pattern has been replaced. If `PatternActionFunc` is `Sort`, it returns a sorted `String` joined by "\n" from an `Array` or `String`. If `PatternActionFunc` is `Uniq`, it returns a `String` joined by "\n" from an `Array` or `String` with distinct elements. If `PatternActionFunc` is `Head`, it returns a `String` joined by "\n" from the first 'n' elements of an `Array` or `String`. If `PatternActionFunc` is `Tail`, it returns a `String` joined by "\n" from the last 'n' elements of an `Array` or `String`. If `PatternActionFunc` is `Cat`, it executes the `executeCatFunc` function. If `PatternActionFunc` is `Print`, it returns a `String` joined by "\n" from the `texts` property of `Print`. If `PatternActionFunc` is `Xargs`, it returns the `variables` property of `Xargs`. If `PatternActionFunc` is `UserCustom`, it logs an error message. If `PatternActionFunc` is of an unknown type, it logs an error message and returns an empty `String`.
      */
-    fun patternFunctionExecute(action: PatternActionFunc, lastResult: Any, input: Any): Any {
+    open fun patternFunctionExecute(action: PatternActionFunc, lastResult: Any, input: Any): Any {
         return when (action) {
             is PatternActionFunc.Prompt -> {
                 action.message
@@ -126,8 +127,25 @@ open class PatternFuncProcessor(open val myProject: Project, hole: HobbitHole) {
             }
 
             is PatternActionFunc.UserCustom -> {
-                logger<PatternActionProcessor>().error("TODO for User custom: ${action.funcName}")
+                logger<PatternActionProcessor>().warn("TODO for User custom: ${action.funcName}")
             }
+
+            is PatternActionFunc.ExecuteShire -> {
+                logger<PatternActionProcessor>().warn("TODO for ExecuteShire: ${action.string}")
+            }
+
+            is PatternActionFunc.Notify -> {
+                ShirelangNotifications.notify(myProject, action.message)
+            }
+
+            is PatternActionFunc.From,
+            is PatternActionFunc.Select,
+            is PatternActionFunc.Where,
+            -> {
+                logger<PatternActionProcessor>().error("Unknown pattern processor type: ${action.funcName}")
+                // do nothing
+            }
+
 
             else -> {
                 logger<PatternActionProcessor>().error("Unknown pattern processor type: ${action.funcName}")
