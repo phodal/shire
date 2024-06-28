@@ -17,6 +17,16 @@ open class JavaCodeModifier : CodeModifier {
 
     override fun isApplicable(language: Language) = language is JavaLanguage
 
+    override fun smartInsert(sourceFile: VirtualFile, project: Project, code: String): Boolean {
+        // check sourceFile is tested file
+        val isTestFile = sourceFile.name.endsWith("Test.java")
+        if (!isTestFile) {
+            return insertTestCode(sourceFile, project, code)
+        }
+
+        return insertMethod(sourceFile, project, code)
+    }
+
     private fun lookupFile(project: Project, sourceFile: VirtualFile) =
         PsiManager.getInstance(project).findFile(sourceFile) as PsiJavaFile
 
