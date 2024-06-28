@@ -282,7 +282,11 @@ data class MethodCall(
             }
         }
 
-        val method = ExpressionBuiltInMethod.fromString(methodName.value.toString())
+        return evaluateExpression(methodName, parameters, value)
+    }
+
+    fun evaluateExpression(methodNode: FrontMatterType, parameters: List<Any>?, value: String): Comparable<*> {
+        val method = ExpressionBuiltInMethod.fromString(methodNode.value.toString())
         return when (method) {
             ExpressionBuiltInMethod.LENGTH -> value.length
             ExpressionBuiltInMethod.TRIM -> value.trim()
@@ -290,7 +294,7 @@ data class MethodCall(
                 if (parameters != null) {
                     value.contains(parameters[0] as String)
                 } else {
-                    throw IllegalArgumentException("Missing parameter for method: $methodName")
+                    throw IllegalArgumentException("Missing parameter for method: $methodNode")
                 }
             }
 
@@ -298,7 +302,7 @@ data class MethodCall(
                 if (parameters != null) {
                     value.startsWith(parameters[0] as String)
                 } else {
-                    throw IllegalArgumentException("Missing parameter for method: $methodName")
+                    throw IllegalArgumentException("Missing parameter for method: $methodNode")
                 }
             }
 
@@ -306,7 +310,7 @@ data class MethodCall(
                 if (parameters != null) {
                     value.endsWith(parameters[0] as String)
                 } else {
-                    throw IllegalArgumentException("Missing parameter for method: $methodName")
+                    throw IllegalArgumentException("Missing parameter for method: $methodNode")
                 }
             }
 
@@ -320,11 +324,11 @@ data class MethodCall(
                 if (parameters != null) {
                     value.matches((parameters[0] as String).toRegex())
                 } else {
-                    throw IllegalArgumentException("Missing parameter for method: $methodName")
+                    throw IllegalArgumentException("Missing parameter for method: $methodNode")
                 }
             }
 
-            else -> throw IllegalArgumentException("Unsupported method: $methodName")
+            else -> throw IllegalArgumentException("Unsupported method: $methodNode")
         }
     }
 }
