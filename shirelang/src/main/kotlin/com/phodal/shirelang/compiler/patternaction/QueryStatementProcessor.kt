@@ -1,7 +1,6 @@
 package com.phodal.shirelang.compiler.patternaction
 
 import com.intellij.openapi.diagnostic.logger
-import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.phodal.shirecore.provider.shire.ShireSymbolProvider
@@ -9,7 +8,7 @@ import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.ast.*
 import java.util.*
 
-class QueryStatementProcessor(val myProject: Project, editor: Editor, hole: HobbitHole) {
+class QueryStatementProcessor(val myProject: Project, hole: HobbitHole) : FunctionStatementProcessor(myProject, hole) {
     fun execute(transform: PatternActionTransform): String {
         val fromStmt = transform.patternActionFuncs.find { it is PatternActionFunc.From } as PatternActionFunc.From
         val selectStmt =
@@ -17,10 +16,14 @@ class QueryStatementProcessor(val myProject: Project, editor: Editor, hole: Hobb
         val whereStmt = transform.patternActionFuncs.find { it is PatternActionFunc.Where } as PatternActionFunc.Where
 
         val variables: Map<String, List<PsiElement>> = buildVariables(fromStmt)
-        val handledElements = processCondition(whereStmt.statement, variables)
+        val handledElements = processStatement(whereStmt.statement, variables)
         val selectElements = processSelect(selectStmt, handledElements)
 
         return selectElements.joinToString("\n")
+    }
+
+    fun execute(expression: Statement, variables: Map<String, List<PsiElement>>): List<PsiElement> {
+        return processStatement(expression, variables)
     }
 
     private fun buildVariables(fromStmt: PatternActionFunc.From): Map<String, List<PsiElement>> {
@@ -45,97 +48,7 @@ class QueryStatementProcessor(val myProject: Project, editor: Editor, hole: Hobb
         return elements
     }
 
-    private fun processCondition(
-        whereStmt: Statement,
-        variables: Map<String, List<PsiElement>>,
-    ): List<PsiElement> {
-        val result = mutableListOf<PsiElement>()
-        variables.forEach { (variableName, elements) ->
-            elements.forEach { element ->
-                when (whereStmt) {
-                    is Comparison -> {
-                        val operator = whereStmt.operator
-                        val left = evaluate(whereStmt.left, element)
-                        val right = evaluate(whereStmt.right, element)
-
-                        when (operator.type) {
-                            OperatorType.Equal -> {
-                                if (left != null && left == right) {
-                                    result.add(element)
-                                }
-                            }
-
-                            OperatorType.And -> {
-                                if (left != null && left == right) {
-                                    result.add(element)
-                                }
-                            }
-
-                            OperatorType.GreaterEqual -> {
-                                if (left as Comparable<Any> >= right as Comparable<Any>) {
-                                    result.add(element)
-                                }
-                            }
-
-                            OperatorType.GreaterThan -> {
-                                if (left as Comparable<Any> > right as Comparable<Any>) {
-                                    result.add(element)
-                                }
-                            }
-
-                            OperatorType.LessEqual -> {
-                                if (left as Comparable<Any> <= right as Comparable<Any>) {
-                                    result.add(element)
-                                }
-                            }
-
-                            OperatorType.LessThan -> {
-                                if (left as Comparable<Any> < right as Comparable<Any>) {
-                                    result.add(element)
-                                }
-                            }
-
-                            OperatorType.NotEqual -> {
-                                if (left != null && left != right) {
-                                    result.add(element)
-                                }
-                            }
-
-                            OperatorType.Or -> {
-                                if (left == true || right == true) {
-                                    result.add(element)
-                                }
-                            }
-
-                            else -> {
-                                logger<QueryStatementProcessor>().warn("unknown operator: $operator")
-                            }
-                        }
-                    }
-
-                    else -> {
-                        logger<QueryStatementProcessor>().warn("unknown statement: $whereStmt")
-                    }
-                }
-            }
-        }
-
-        return result
-    }
-
-    private fun evalExpression(type: FrontMatterType, element: PsiElement): Any? {
-        when (type.value) {
-            is MethodCall -> {
-                return invokeMethodOrField(type.value, element)
-            }
-
-            else -> {
-                throw IllegalArgumentException("unknown type: $type")
-            }
-        }
-    }
-
-    private fun invokeMethodOrField(methodCall: MethodCall, element: PsiElement): Any? {
+    override fun <T : Any> invokeMethodOrField(methodCall: MethodCall, element: T): Any? {
         val methodName = methodCall.methodName.display()
         val methodArgs = methodCall.arguments
 
@@ -191,33 +104,6 @@ class QueryStatementProcessor(val myProject: Project, editor: Editor, hole: Hobb
                 "\nsupported methods: $supportMethodNames" +
                 "\nsupported fields: $supportFieldNames")
         return null
-    }
-
-    private fun evaluate(type: FrontMatterType, element: PsiElement): Any? {
-        return when (type) {
-            is FrontMatterType.ARRAY -> {
-                (type.value as List<FrontMatterType>).map {
-                    evaluate(it, element)
-                }
-            }
-
-            is FrontMatterType.EXPRESSION -> {
-                evalExpression(type, element)
-            }
-
-            is FrontMatterType.BOOLEAN,
-            is FrontMatterType.DATE,
-            is FrontMatterType.IDENTIFIER,
-            is FrontMatterType.NUMBER,
-            is FrontMatterType.STRING,
-            -> {
-                type.value
-            }
-
-            else -> {
-                throw IllegalArgumentException("unknown type: $type")
-            }
-        }
     }
 
     private fun processSelect(selectStmt: PatternActionFunc.Select, handledElements: List<PsiElement>): List<String> {

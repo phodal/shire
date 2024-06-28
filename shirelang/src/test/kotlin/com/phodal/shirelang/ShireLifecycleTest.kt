@@ -68,5 +68,7 @@ class ShireLifecycleTest: BasePlatformTestCase() {
         TestCase.assertEquals(funcNode.cases.size, 3)
         TestCase.assertEquals(funcNode.cases[0].caseKey, "\"variable-success\"")
 
+        hole.executeAfterStreamingProcessor(myFixture.project, null,
+            PostCodeHandleContext(currentLanguage =  ShireLanguage.INSTANCE))
     }
 }

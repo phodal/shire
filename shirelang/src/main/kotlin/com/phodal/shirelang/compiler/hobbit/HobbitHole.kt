@@ -3,9 +3,7 @@ package com.phodal.shirelang.compiler.hobbit
 import com.intellij.codeInsight.intention.IntentionAction
 import com.intellij.execution.ui.ConsoleView
 import com.intellij.execution.ui.ConsoleViewContentType
-import com.intellij.openapi.application.runInEdt
 import com.intellij.openapi.application.runReadAction
-import com.intellij.openapi.application.smartReadAction
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
@@ -123,7 +121,7 @@ open class HobbitHole(
         console: ConsoleView?,
         context: PostCodeHandleContext,
     ) {
-//        afterStreaming?.execute(myProject, console, context)
+        afterStreaming?.execute(myProject, console, context, this)
     }
 
     companion object {

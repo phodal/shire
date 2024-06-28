@@ -24,7 +24,7 @@ class PatternActionProcessor(val myProject: Project, val editor: Editor, val hol
         }
 
         if (actionTransform.isQueryStatement) {
-            return QueryStatementProcessor(myProject, editor, hole).execute(actionTransform)
+            return QueryStatementProcessor(myProject, hole).execute(actionTransform)
         }
 
         var input: Any = ""
