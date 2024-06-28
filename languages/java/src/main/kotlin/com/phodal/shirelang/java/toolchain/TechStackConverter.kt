@@ -14,7 +14,7 @@ object TechStackConverter {
         var hasMatchSpringMvc = false
         var hasMatchSpringData = false
 
-        libraryDataList?.forEach {
+        libraryDataList.forEach {
             val name = it.groupId + ":" + it.artifactId
             if (!hasMatchSpringMvc) {
                 SpringLibrary.SPRING_MVC.forEach { entry: LibraryDescriptor ->
