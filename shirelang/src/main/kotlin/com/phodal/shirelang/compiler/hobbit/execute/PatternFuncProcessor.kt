@@ -1,7 +1,6 @@
 package com.phodal.shirelang.compiler.hobbit.execute
 
 import com.intellij.openapi.diagnostic.logger
-import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
 import com.intellij.openapi.vfs.LocalFileSystem
@@ -12,7 +11,7 @@ import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 import java.io.File
 
-open class PatternFuncProcessor(open val myProject: Project, editor: Editor, hole: HobbitHole) {
+open class PatternFuncProcessor(open val myProject: Project, hole: HobbitHole) {
     /**
      * This function `patternFunctionExecute` is used to execute a specific action based on the type of `PatternActionFunc` provided.
      * It takes three parameters: `action`, `input`, and `lastResult`.

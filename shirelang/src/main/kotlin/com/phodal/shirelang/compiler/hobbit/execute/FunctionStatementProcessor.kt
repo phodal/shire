@@ -31,7 +31,6 @@ open class FunctionStatementProcessor(open val myProject: Project, val hole: Hob
     }
 
     fun execute(patternFunc: PatternActionFunc, variableTable: MutableMap<String, Any?>) : Any? {
-
         return null
     }
 
