@@ -9,7 +9,6 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/core" />
-            <option value="$PROJECT_DIR$/core-api" />
             <option value="$PROJECT_DIR$/languages" />
             <option value="$PROJECT_DIR$/languages/java" />
             <option value="$PROJECT_DIR$/languages/shire-python" />
