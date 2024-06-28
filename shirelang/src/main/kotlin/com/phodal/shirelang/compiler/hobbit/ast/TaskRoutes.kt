@@ -63,6 +63,12 @@ data class TaskRoutes(
             }
         }
 
+        if (matchedCase.isEmpty()) {
+            val defaultCase = defaultTask as Task.Default
+            val statement = defaultCase.expression?.value as Statement
+            processor.execute(statement, variableTable)
+        }
+
         return matchedCase
     }
 

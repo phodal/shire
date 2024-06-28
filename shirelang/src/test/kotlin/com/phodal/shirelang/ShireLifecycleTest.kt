@@ -39,11 +39,13 @@ class ShireLifecycleTest : BasePlatformTestCase() {
             ---
             afterStreaming: {
                 condition {
-                  "error"       { output.length > 1 }
+                  "error"       { output.length < 1 }
+                  "success"     { output.length > 1 }
                   "json-result" { jsonpath("${'$'}.store.*") }
                 }
                 case condition {
                   "error"       { notify("Failed to Generate JSON") }
+                  "success"     { notify("Success to Generate JSON") }
                   "json-result" { execute("sample.shire") }
                   default       { notify("Failed to Generate JSON") /* mean nothing */ }
                 }
@@ -62,12 +64,12 @@ class ShireLifecycleTest : BasePlatformTestCase() {
 
         val funcNode = hole.afterStreaming!!
 
-        TestCase.assertEquals(funcNode.conditions.size, 2)
+        TestCase.assertEquals(funcNode.conditions.size, 3)
         TestCase.assertEquals(funcNode.conditions[0].conditionKey, "\"error\"")
 
-        assertEquals(funcNode.conditions[1].valueExpression.display(), "jsonpath(\"${'$'}.store.*\")")
+        assertEquals(funcNode.conditions[2].valueExpression.display(), "jsonpath(\"${'$'}.store.*\")")
 
-        TestCase.assertEquals(funcNode.cases.size, 3)
+        TestCase.assertEquals(funcNode.cases.size, 4)
         TestCase.assertEquals(funcNode.cases[0].caseKey, "\"error\"")
 
         val genJson = """
@@ -90,6 +92,9 @@ class ShireLifecycleTest : BasePlatformTestCase() {
         )
 
         val matchedCase = hole.afterStreaming?.execute(myFixture.project, null, handleContext, hole)
-        assertEquals(matchedCase?.size, 0)
+        assertEquals(matchedCase?.size, 2)
+
+        assertEquals(matchedCase?.get(0)?.caseKey, "\"success\"")
+        assertEquals(matchedCase?.get(1)?.caseKey, "\"json-result\"")
     }
 }

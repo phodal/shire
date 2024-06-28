@@ -81,11 +81,11 @@ open class FunctionStatementProcessor(override val myProject: Project, val hole:
 
     private fun FunctionStatementProcessor.executeComparison(
         statement: Comparison,
-        valueMap: Any,
+        value: Any,
     ): Boolean {
         val operator = statement.operator
-        val left = evaluate(statement.left, valueMap)
-        val right = evaluate(statement.right, valueMap)
+        val left = evaluate(statement.left, value)
+        val right = evaluate(statement.right, value)
 
         return when (operator.type) {
             OperatorType.Equal -> {
@@ -261,7 +261,23 @@ open class FunctionStatementProcessor(override val myProject: Project, val hole:
     }
 
     open fun <T : Any> invokeMethodOrField(methodCall: MethodCall, element: T): Any? {
-        //
+        val objName = methodCall.objectName.display()
+        val target = methodCall.methodName.display()
+
+       // handle for string call directly
+        if (objName == "output" && element is Map<*, *>) {
+            val value = element[objName] as String
+            when (target) {
+                "length" -> {
+                    return value.length
+                }
+
+                else -> {
+                    logger<FunctionStatementProcessor>().warn("unknown method: $target")
+                }
+            }
+        }
+
         return null
     }
 }
