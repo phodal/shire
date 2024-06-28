@@ -89,6 +89,7 @@ class ShireLifecycleTest : BasePlatformTestCase() {
             genText = genJson
         )
 
-        hole.executeAfterStreamingProcessor(myFixture.project, null, handleContext)
+        val matchedCase = hole.afterStreaming?.execute(myFixture.project, null, handleContext, hole)
+        assertEquals(matchedCase?.size, 0)
     }
 }

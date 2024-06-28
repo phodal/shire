@@ -34,7 +34,7 @@ data class TaskRoutes(
     val cases: List<Case>,
     val defaultTask: Task,
 ) {
-    fun execute(myProject: Project, console: ConsoleView?, context: PostCodeHandleContext, hobbitHole: HobbitHole): Case? {
+    fun execute(myProject: Project, console: ConsoleView?, context: PostCodeHandleContext, hobbitHole: HobbitHole): List<Case>? {
         val conditionResult = mutableMapOf<String, Any?>()
         val variableTable = mutableMapOf<String, Any?>()
 
@@ -47,14 +47,20 @@ data class TaskRoutes(
             conditionResult[it.conditionKey] = result
         }
 
-        val matchedCase = cases.find {
+        val matchedCase = cases.filter {
             val caseKey = it.caseKey
-            val caseValue = it.valueExpression
 
-            val caseStatement = caseValue.expression?.value as Statement
-            val result = processor.execute(caseStatement, conditionResult)
-
-            conditionResult[caseKey] == result
+            when(val condValue = conditionResult[caseKey]) {
+                is Boolean -> {
+                    condValue == true || condValue == "true"
+                }
+                is String -> {
+                    condValue.isNotEmpty()
+                }
+                else -> {
+                    false
+                }
+            }
         }
 
         return matchedCase

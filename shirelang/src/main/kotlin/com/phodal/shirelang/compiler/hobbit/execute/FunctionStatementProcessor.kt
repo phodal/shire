@@ -81,11 +81,11 @@ open class FunctionStatementProcessor(override val myProject: Project, val hole:
 
     private fun FunctionStatementProcessor.executeComparison(
         statement: Comparison,
-        emptyMap: Any,
+        valueMap: Any,
     ): Boolean {
         val operator = statement.operator
-        val left = evaluate(statement.left, emptyMap)
-        val right = evaluate(statement.right, emptyMap)
+        val left = evaluate(statement.left, valueMap)
+        val right = evaluate(statement.right, valueMap)
 
         return when (operator.type) {
             OperatorType.Equal -> {
