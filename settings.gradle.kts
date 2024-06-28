@@ -12,7 +12,7 @@ include(
     // idea core
     "core",
     // cross-platform core?
-    "core-api",
+//    "core-api",
     "shirelang",
 
     "languages:java",
