@@ -32,9 +32,12 @@ data class Case(
 data class TaskRoutes(
     val conditions: List<Condition>,
     val cases: List<Case>,
-    val defaultTask: Task,
+    /**
+     * A placeholder for the default task
+     */
+    val defaultTask: Task? = null,
 ) {
-    fun execute(myProject: Project, console: ConsoleView?, context: PostCodeHandleContext, hobbitHole: HobbitHole): List<Case>? {
+    fun execute(myProject: Project, console: ConsoleView?, context: PostCodeHandleContext, hobbitHole: HobbitHole): List<Case> {
         val conditionResult = mutableMapOf<String, Any?>()
         val variableTable = mutableMapOf<String, Any?>()
 
@@ -64,10 +67,14 @@ data class TaskRoutes(
         }
 
         if (matchedCase.isEmpty()) {
-            val defaultCase = defaultTask as Task.Default
-            val statement = defaultCase.expression?.value as Statement
-            processor.execute(statement, variableTable)
+            ((defaultTask as Task.Default).expression?.value as? Statement)?.let {
+                processor.execute(it, variableTable)
+            }
+
+            return emptyList()
         }
+
+
 
         return matchedCase
     }
@@ -90,18 +97,29 @@ data class TaskRoutes(
                         )
                     }
 
+                    var defaultTask: Task? = null
+
                     val cases: List<Case> = conditionCase.cases.map {
                         val caseKeyValue = it.value as CaseKeyValue
-                        Case(
-                            caseKeyValue.key.display(),
-                            Task.Default(caseKeyValue.value as FrontMatterType.EXPRESSION)
+                        val caseKey = caseKeyValue.key.display()
+
+                        val case = Case(
+                            caseKey,
+                            Task.CustomTask(caseKeyValue.value as FrontMatterType.EXPRESSION)
                         )
+
+                        if (caseKey == "default") {
+                            defaultTask = Task.Default(caseKeyValue.value as FrontMatterType.EXPRESSION)
+                        }
+
+
+                        case
                     }
 
                     TaskRoutes(
                         conditions = conditions,
                         cases = cases,
-                        defaultTask = Task.Default(null)
+                        defaultTask = defaultTask
                     )
                 }
 
