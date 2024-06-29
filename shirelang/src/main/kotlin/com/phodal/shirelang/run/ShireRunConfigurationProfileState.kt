@@ -98,21 +98,22 @@ open class ShireRunConfigurationProfileState(
         }
 
         val agent = compileResult.executeAgent
-        val context = ShireRunnerContext(
+        val shireRunnerContext = ShireRunnerContext(
             configuration = configuration,
             processHandler = processHandler,
             console = console!!,
             myProject = myProject,
             hole = hobbitHole,
-            prompt = promptText
+            prompt = promptText,
+            editor = editor,
         )
         val shireRunner: ShireRunner = when {
             agent != null -> {
-                CustomRemoteAgentRunner(context, agent)
+                CustomRemoteAgentRunner(shireRunnerContext, agent)
             }
             else -> {
                 val isLocalMode = compileResult.isLocalCommand
-                ShireDefaultRunner(context, isLocalMode)
+                ShireDefaultRunner(shireRunnerContext, isLocalMode)
             }
         }
 
