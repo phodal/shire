@@ -35,8 +35,7 @@ class ShireLifecycleTest : BasePlatformTestCase() {
     }
 
     fun testShouldHandleWhenAfterStreaming() {
-
-        val code2 = "hi"
+//        val code2 = "hi"
         val code = """
             ---
             afterStreaming: {
@@ -57,7 +56,7 @@ class ShireLifecycleTest : BasePlatformTestCase() {
             ${'$'}allController
         """.trimIndent()
 
-        myFixture.addFileToProject("sample2.shire", code2)
+//        myFixture.addFileToProject("sample2.shire", code2)
         val file = myFixture.addFileToProject("sample.shire", code)
 
         myFixture.openFileInEditor(file.virtualFile)
@@ -94,7 +93,7 @@ class ShireLifecycleTest : BasePlatformTestCase() {
             genText = genJson
         )
 
-        val matchedCase = hole.afterStreaming?.execute(myFixture.project, null, handleContext, hole)
+        val matchedCase = hole.afterStreaming?.execute(myFixture.project, handleContext, hole)
         assertEquals(matchedCase?.size, 2)
 
         assertEquals(matchedCase?.get(0)?.caseKey, "\"success\"")

@@ -1,6 +1,5 @@
 package com.phodal.shirelang.compiler.hobbit.ast
 
-import com.intellij.execution.ui.ConsoleView
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.middleware.PostCodeHandleContext
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
@@ -39,7 +38,6 @@ data class TaskRoutes(
 ) {
     fun execute(
         myProject: Project,
-        console: ConsoleView?,
         context: PostCodeHandleContext,
         hobbitHole: HobbitHole,
     ): List<Case> {

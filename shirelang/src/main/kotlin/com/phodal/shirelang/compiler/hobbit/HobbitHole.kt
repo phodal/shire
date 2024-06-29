@@ -121,7 +121,7 @@ open class HobbitHole(
         console: ConsoleView?,
         context: PostCodeHandleContext,
     ) {
-        afterStreaming?.execute(myProject, console, context, this)
+        afterStreaming?.execute(myProject, context, this)
     }
 
     companion object {
