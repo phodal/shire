@@ -10,6 +10,7 @@ import com.intellij.execution.runners.ExecutionEnvironmentBuilder
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
+import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
 import com.phodal.shirelang.ShireActionStartupActivity
@@ -73,10 +74,12 @@ class ShireRunFileAction : DumbAwareAction() {
 
         fun runFile(myProject: Project, fileName: String): Any {
             // first search fileName in project
-            val file = ShireActionStartupActivity.obtainShireFiles(myProject).find {
-                it.name == fileName
+            val file = runReadAction {
+                ShireActionStartupActivity.obtainShireFiles(myProject).find {
+                    it.name == fileName
+                }
             } ?: return "File not found"
-
+            
             val config = DynamicShireActionConfig.from(file)
             return executeShireFile(myProject, config, null)
         }
