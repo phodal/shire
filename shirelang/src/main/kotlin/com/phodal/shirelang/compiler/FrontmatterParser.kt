@@ -1,5 +1,6 @@
 package com.phodal.shirelang.compiler
 
+import com.intellij.openapi.application.invokeAndWaitIfNeeded
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.psi.PsiElement

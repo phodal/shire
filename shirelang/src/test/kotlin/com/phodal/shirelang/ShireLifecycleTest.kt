@@ -35,6 +35,8 @@ class ShireLifecycleTest : BasePlatformTestCase() {
     }
 
     fun testShouldHandleWhenAfterStreaming() {
+
+        val code2 = "hi"
         val code = """
             ---
             afterStreaming: {
@@ -46,7 +48,7 @@ class ShireLifecycleTest : BasePlatformTestCase() {
                 case condition {
                   "error"       { notify("Failed to Generate JSON") }
                   "success"     { notify("Success to Generate JSON") }
-                  "json-result" { execute("sample.shire") }
+                  "json-result" { execute("sample2.shire") }
                   default       { notify("Failed to Generate JSON") /* mean nothing */ }
                 }
               }
@@ -55,6 +57,7 @@ class ShireLifecycleTest : BasePlatformTestCase() {
             ${'$'}allController
         """.trimIndent()
 
+        myFixture.addFileToProject("sample2.shire", code2)
         val file = myFixture.addFileToProject("sample.shire", code)
 
         myFixture.openFileInEditor(file.virtualFile)

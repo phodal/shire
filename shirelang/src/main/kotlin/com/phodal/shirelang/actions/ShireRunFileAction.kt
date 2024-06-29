@@ -10,6 +10,8 @@ import com.intellij.execution.runners.ExecutionEnvironmentBuilder
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
+import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
@@ -19,6 +21,8 @@ import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.ShireConfiguration
 import com.phodal.shirelang.run.ShireConfigurationType
 import com.phodal.shirelang.run.ShireRunConfigurationProducer
+import com.phodal.shirelang.utils.ShireCoroutineScope
+import kotlinx.coroutines.launch
 import org.jetbrains.annotations.NonNls
 
 class ShireRunFileAction : DumbAwareAction() {
@@ -73,15 +77,18 @@ class ShireRunFileAction : DumbAwareAction() {
         }
 
         fun runFile(myProject: Project, fileName: String): Any {
-            // first search fileName in project
             val file = runReadAction {
                 ShireActionStartupActivity.obtainShireFiles(myProject).find {
                     it.name == fileName
                 }
             } ?: return "File not found"
 
-            val config = DynamicShireActionConfig.from(file)
-            return executeShireFile(myProject, config, null)
+            ApplicationManager.getApplication().invokeLater({
+                val config = DynamicShireActionConfig.from(file)
+                executeShireFile(myProject, config, null)
+            }, ModalityState.NON_MODAL)
+
+            return ""
         }
     }
 }

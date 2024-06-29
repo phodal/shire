@@ -11,6 +11,7 @@ import com.intellij.execution.process.ProcessEvent
 import com.intellij.execution.process.ProcessTerminatedListener
 import com.intellij.execution.runners.ProgramRunner
 import com.intellij.execution.ui.ConsoleViewContentType
+import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.application.ApplicationManager
@@ -38,7 +39,7 @@ import javax.swing.JComponent
 open class ShireRunConfigurationProfileState(
     private val myProject: Project,
     private val configuration: ShireConfiguration,
-) : RunProfileState {
+) : RunProfileState, Disposable {
     private var executionConsole: ConsoleViewImpl? = null
     var console: ShireConsoleView? = null
 
@@ -140,6 +141,11 @@ open class ShireRunConfigurationProfileState(
 
         console.print("\n--------------------\n", ConsoleViewContentType.NORMAL_OUTPUT)
     }
+
+    override fun dispose() {
+        console?.dispose()
+        executionConsole?.dispose()
+    }
 }
 
 class ShireConsoleView(private val executionConsole: ConsoleViewImpl) :
@@ -155,6 +161,11 @@ class ShireConsoleView(private val executionConsole: ConsoleViewImpl) :
         val toolbar = ActionManager.getInstance().createActionToolbar("BuildConsole", actionGroup, false)
         toolbar.targetComponent = baseComponent
         myPanel.add(toolbar.component, BorderLayout.EAST)
+    }
+
+    override fun dispose() {
+        super.dispose()
+        executionConsole.dispose()
     }
 }
 

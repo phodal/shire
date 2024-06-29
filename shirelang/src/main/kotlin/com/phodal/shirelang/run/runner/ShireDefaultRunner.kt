@@ -4,6 +4,7 @@ import com.intellij.execution.console.ConsoleViewWrapperBase
 import com.intellij.execution.process.ProcessHandler
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.project.Project
 import com.phodal.shire.llm.LlmProvider
 import com.phodal.shirelang.ShireBundle
@@ -22,7 +23,7 @@ class ShireDefaultRunner(
     private val isLocalMode: Boolean,
 ) : ShireRunner(configuration, processHandler, console, myProject, prompt) {
     override fun execute(postFunction: (response: String) -> Unit) {
-        ApplicationManager.getApplication().invokeLater {
+        ApplicationManager.getApplication().invokeLater({
             if (isLocalMode) {
                 console.print(ShireBundle.message("shire.run.local.mode"), ConsoleViewContentType.SYSTEM_OUTPUT)
                 processHandler.detachProcess()
@@ -48,7 +49,7 @@ class ShireDefaultRunner(
             postFunction(response)
             processHandler.detachProcess()
                 }
-        }
+        }, ModalityState.NON_MODAL)
     }
 }
 
