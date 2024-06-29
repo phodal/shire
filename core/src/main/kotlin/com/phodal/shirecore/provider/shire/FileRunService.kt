@@ -3,8 +3,10 @@ package com.phodal.shirecore.provider.shire
 import com.intellij.execution.RunManager
 import com.intellij.execution.RunnerAndConfigurationSettings
 import com.intellij.execution.actions.ConfigurationContext
+import com.intellij.execution.configurations.GeneralCommandLine
 import com.intellij.execution.configurations.RunConfiguration
 import com.intellij.execution.configurations.RunProfile
+import com.intellij.execution.util.ExecUtil
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.extensions.ExtensionPointName
@@ -12,6 +14,7 @@ import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiFile
 import com.phodal.shirecore.runner.RunServiceTask
 
 interface FileRunService {
@@ -124,6 +127,24 @@ interface FileRunService {
             val fileRunServices = EP_NAME.extensionList
             return fileRunServices.firstOrNull {
                 it.createConfiguration(project, file) != null
+            }
+        }
+
+        fun runInCli(project: Project, psiFile: PsiFile): String? {
+            val commandLine = when (psiFile.language.displayName.lowercase()) {
+                "python" -> GeneralCommandLine("python", psiFile.virtualFile.path)
+                "javascript" -> GeneralCommandLine("node", psiFile.virtualFile.path)
+                "ruby" -> GeneralCommandLine("ruby", psiFile.virtualFile.path)
+                else -> return null
+            }
+
+            commandLine.setWorkDirectory(project.basePath)
+            return try {
+                val output = ExecUtil.execAndGetOutput(commandLine)
+                output.stdout
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
             }
         }
     }

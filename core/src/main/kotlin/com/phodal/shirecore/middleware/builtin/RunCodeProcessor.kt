@@ -54,6 +54,11 @@ class RunCodeProcessor : PostProcessor {
     ) {
         val fileRunService = FileRunService.provider(project, file)
         if (fileRunService == null) {
+            FileRunService.runInCli(project, psiFile)?.let {
+                console?.print(it, NORMAL_OUTPUT)
+                return
+            }
+
             console?.print("No run service found\n", ERROR_OUTPUT)
             return
         }
