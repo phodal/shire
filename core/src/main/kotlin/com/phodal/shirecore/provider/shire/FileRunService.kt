@@ -119,10 +119,6 @@ interface FileRunService {
     companion object {
         val EP_NAME: ExtensionPointName<FileRunService> = ExtensionPointName("com.phodal.shireFileRunService")
 
-        fun all(): List<FileRunService> {
-            return EP_NAME.extensionList
-        }
-
         fun provider(project: Project, file: VirtualFile): FileRunService? {
             val fileRunServices = EP_NAME.extensionList
             return fileRunServices.firstOrNull {

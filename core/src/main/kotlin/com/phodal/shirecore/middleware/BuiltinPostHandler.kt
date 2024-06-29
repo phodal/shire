@@ -50,6 +50,11 @@ enum class BuiltinPostHandler(var handleName: String) {
     /**
      * Insert code to the editor by current cursor position.
      */
-    InsertCode("insertCode")
+    InsertCode("insertCode"),
+
+    /**
+     * Format code
+     */
+    FormatCode("formatCode")
     ;
 }

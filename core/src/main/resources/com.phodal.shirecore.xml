@@ -108,6 +108,7 @@
         <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.ParseCodeProcessor"/>
         <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.RunCodeProcessor"/>
         <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.InsertCodeProcessor"/>
+        <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.FormatCodeProcessor"/>
 
         <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.SaveFileProcessor"/>
         <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.OpenFileProcessor"/>
