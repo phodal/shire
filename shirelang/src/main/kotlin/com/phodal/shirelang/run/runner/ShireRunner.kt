@@ -7,21 +7,23 @@ import com.phodal.shirecore.agent.InteractionType
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.run.ShireConfiguration
 
-abstract class ShireRunner(
-    open val configuration: ShireConfiguration,
-    open val processHandler: ProcessHandler,
-    open val console: ConsoleViewWrapperBase,
-    open val myProject: Project,
-    open val hole: HobbitHole?,
-    open val prompt: String,
-) {
+data class ShireRunnerContext(
+    val configuration: ShireConfiguration,
+    val processHandler: ProcessHandler,
+    val console: ConsoleViewWrapperBase,
+    val myProject: Project,
+    val hole: HobbitHole?,
+    val prompt: String,
+)
+
+abstract class ShireRunner(open val context: ShireRunnerContext) {
     abstract fun execute(postFunction: (response: String) -> Unit)
     fun prepareTask() {
 
     }
 
     fun handleResult() {
-        when (hole?.interaction) {
+        when (context.hole?.interaction) {
             InteractionType.AppendCursor -> TODO()
             InteractionType.AppendCursorStream -> TODO()
             InteractionType.OutputFile -> TODO()
@@ -30,6 +32,7 @@ abstract class ShireRunner(
             InteractionType.InsertBeforeSelection -> {
                 TODO()
             }
+
             null -> TODO()
         }
     }

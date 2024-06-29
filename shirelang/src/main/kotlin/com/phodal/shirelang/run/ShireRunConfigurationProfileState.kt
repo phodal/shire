@@ -28,6 +28,7 @@ import com.phodal.shirelang.run.flow.ShireConversationService
 import com.phodal.shirelang.run.runner.CustomRemoteAgentRunner
 import com.phodal.shirelang.run.runner.ShireDefaultRunner
 import com.phodal.shirelang.run.runner.ShireRunner
+import com.phodal.shirelang.run.runner.ShireRunnerContext
 import java.awt.BorderLayout
 import javax.swing.JComponent
 
@@ -97,13 +98,21 @@ open class ShireRunConfigurationProfileState(
         }
 
         val agent = compileResult.executeAgent
+        val context = ShireRunnerContext(
+            configuration = configuration,
+            processHandler = processHandler,
+            console = console!!,
+            myProject = myProject,
+            hole = hobbitHole,
+            prompt = promptText
+        )
         val shireRunner: ShireRunner = when {
             agent != null -> {
-                CustomRemoteAgentRunner(myProject, configuration, console!!, processHandler, promptText, hobbitHole, agent)
+                CustomRemoteAgentRunner(context, agent)
             }
             else -> {
                 val isLocalMode = compileResult.isLocalCommand
-                ShireDefaultRunner(myProject, configuration, console!!, processHandler, promptText, hobbitHole, isLocalMode)
+                ShireDefaultRunner(context, isLocalMode)
             }
         }
 
