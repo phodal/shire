@@ -1,7 +1,7 @@
 <p align="center">
   <img src="plugin/src/main/resources/META-INF/pluginIcon.svg" width="160px" height="160px"  alt="logo" />
 </p>
-<h1 align="center">Shire - AI Coding & Agents Language</h1>
+<h1 align="center">Shire - AI Coding Agent Language</h1>
 <p align="center">
   <a href="https://github.com/phodal/shire/actions/workflows/build.yml">
     <img src="https://github.com/phodal/shire/workflows/Build/badge.svg" alt="Build" />
@@ -14,7 +14,7 @@
   </a>
 </p>
 
-Shire offers a straightforward AI Coding & Agents Language
+Shire offers a straightforward AI Coding Agent Language
 that enables communication between an LLM and control IDE for automated programming.
 
 > The concept of Shire originated from [AutoDev](https://github.com/unit-mesh/auto-dev), a subproject
@@ -30,7 +30,7 @@ Shire Data Architecture:
 
 ![Shire Data Architecture](docs/images/shire-data-flow.svg)
 
-Documentation: [Shire AI Coding & Agents Language](https://shire.phodal.com/)
+Documentation: [Shire AI Coding Agent Language](https://shire.phodal.com/)
 
 ## LICENSE
 
