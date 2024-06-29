@@ -1,5 +1,6 @@
 package com.phodal.shirelang.compiler
 
+import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.psi.PsiElement
 import com.intellij.psi.TokenType.WHITE_SPACE
@@ -31,8 +32,10 @@ object FrontmatterParser {
     }
 
     fun parse(file: ShireFile): HobbitHole? {
-        return PsiTreeUtil.getChildrenOfTypeAsList(file, ShireFrontMatterHeader::class.java).firstOrNull()?.let {
-            parse(it)
+        return runReadAction {
+            PsiTreeUtil.getChildrenOfTypeAsList(file, ShireFrontMatterHeader::class.java).firstOrNull()?.let {
+                parse(it)
+            }
         }
     }
 
@@ -579,7 +582,7 @@ object FrontmatterParser {
         return patternActionFunc
     }
 
-    private fun parseParameters(funcCall: ShireFuncCall?): List<String>? =
+    private fun parseParameters(funcCall: ShireFuncCall?): List<String>? = runReadAction {
         PsiTreeUtil.findChildOfType(funcCall, ShirePipelineArgs::class.java)
             ?.let {
                 it.pipelineArgList.map { arg -> arg }
@@ -593,6 +596,7 @@ object FrontmatterParser {
                     else -> it.text
                 }
             }
+    }
 
     private fun parseArray(element: PsiElement): List<FrontMatterType> {
         val array = mutableListOf<FrontMatterType>()

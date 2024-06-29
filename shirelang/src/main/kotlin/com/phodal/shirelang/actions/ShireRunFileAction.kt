@@ -79,7 +79,7 @@ class ShireRunFileAction : DumbAwareAction() {
                     it.name == fileName
                 }
             } ?: return "File not found"
-            
+
             val config = DynamicShireActionConfig.from(file)
             return executeShireFile(myProject, config, null)
         }
