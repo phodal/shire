@@ -29,6 +29,7 @@ class ShireDefaultRunner(
                 return@invokeLater
             }
 
+            ShireCoroutineScope.scope(myProject).launch {
             val llmResult = StringBuilder()
             runBlocking {
                 LlmProvider.provider(myProject)?.stream(prompt, "", false)?.collect {
@@ -46,6 +47,7 @@ class ShireDefaultRunner(
 
             postFunction(response)
             processHandler.detachProcess()
+                }
         }
     }
 }

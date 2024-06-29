@@ -18,10 +18,10 @@ class FormatCodeProcessor : PostProcessor {
     override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?): Any {
         val file = context.targetFile ?: return ""
 
-        val document = PsiDocumentManager.getInstance(project).getDocument(file)
-        val text = document?.text ?: return ""
+        val document = PsiDocumentManager.getInstance(project).getDocument(file) ?: return ""
 
         val endOffset = document.textLength
+
         /// todo: change to modify range
         val formattedText = CodeStyleManager.getInstance(project).reformatText(file, 0, endOffset)
 
