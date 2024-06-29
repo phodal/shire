@@ -11,8 +11,7 @@ import com.phodal.shirelang.ShireBundle
 import com.phodal.shirelang.run.ShireConfiguration
 import com.phodal.shirelang.run.flow.ShireConversationService
 import com.phodal.shirelang.utils.ShireCoroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 
 class ShireDefaultRunner(
     override val myProject: Project,
@@ -30,25 +29,25 @@ class ShireDefaultRunner(
                 return@invokeLater
             }
 
-            ShireCoroutineScope.scope(myProject).launch {
-            val llmResult = StringBuilder()
-            runBlocking {
-                LlmProvider.provider(myProject)?.stream(prompt, "", false)?.collect {
-                    llmResult.append(it)
+            CoroutineScope(Dispatchers.Main).launch {
+                val llmResult = StringBuilder()
+                runBlocking {
+                    LlmProvider.provider(myProject)?.stream(prompt, "", false)?.collect {
+                        llmResult.append(it)
 
-                    console.print(it, ConsoleViewContentType.NORMAL_OUTPUT)
-                } ?: console.print(ShireBundle.message("shire.llm.notfound"), ConsoleViewContentType.ERROR_OUTPUT)
-            }
-
-            console.print(ShireBundle.message("shire.llm.done"), ConsoleViewContentType.SYSTEM_OUTPUT)
-
-            val response = llmResult.toString()
-            myProject.getService(ShireConversationService::class.java)
-                .refreshLlmResponseCache(configuration.getScriptPath(), response)
-
-            postFunction(response)
-            processHandler.detachProcess()
+                        console.print(it, ConsoleViewContentType.NORMAL_OUTPUT)
+                    } ?: console.print(ShireBundle.message("shire.llm.notfound"), ConsoleViewContentType.ERROR_OUTPUT)
                 }
+
+                console.print(ShireBundle.message("shire.llm.done"), ConsoleViewContentType.SYSTEM_OUTPUT)
+
+                val response = llmResult.toString()
+                myProject.getService(ShireConversationService::class.java)
+                    .refreshLlmResponseCache(configuration.getScriptPath(), response)
+
+                postFunction(response)
+                processHandler.detachProcess()
+            }
         }, ModalityState.NON_MODAL)
     }
 }
