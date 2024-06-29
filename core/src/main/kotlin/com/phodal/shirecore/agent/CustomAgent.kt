@@ -54,7 +54,7 @@ data class CustomAgent(
     val connector: ConnectorConfig? = null,
     val responseAction: CustomAgentResponseAction = CustomAgentResponseAction.Direct,
     val transition: List<CustomFlowTransition> = emptyList(),
-    val interactive: InteractionType = InteractionType.ChatPanel,
+    val interactive: InteractionType = InteractionType.AppendCursor,
     val auth: CustomAgentAuth? = null,
     /**
      * Default to 10 minutes
