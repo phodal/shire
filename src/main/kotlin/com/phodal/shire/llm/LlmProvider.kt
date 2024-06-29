@@ -75,15 +75,5 @@ interface LlmProvider {
                 providers.first()
             }
         }
-
-        enum class ChatRole {
-            System,
-            Assistant,
-            User;
-
-            fun roleName(): String {
-                return this.name.lowercase()
-            }
-        }
     }
 }
