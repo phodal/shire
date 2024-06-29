@@ -8,6 +8,7 @@ import com.intellij.openapi.project.Project
 import com.phodal.shirecore.agent.CustomAgent
 import com.phodal.shire.agent.CustomAgentExecutor
 import com.phodal.shirelang.ShireBundle
+import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.run.ShireConfiguration
 import com.phodal.shirelang.run.flow.ShireConversationService
 import com.phodal.shirelang.utils.ShireCoroutineScope
@@ -21,8 +22,9 @@ class CustomRemoteAgentRunner(
     override val console: ConsoleViewWrapperBase,
     override val processHandler: ProcessHandler,
     override val prompt: String,
+    override val hole: HobbitHole?,
     private val agent: CustomAgent,
-) : ShireRunner(configuration, processHandler, console, myProject, prompt) {
+) : ShireRunner(configuration, processHandler, console, myProject, hole, prompt) {
     override fun execute(postFunction: (response: String) -> Unit) {
         ApplicationManager.getApplication().invokeLater {
             val stringFlow: Flow<String>? = CustomAgentExecutor(project = myProject).execute(prompt, agent)
