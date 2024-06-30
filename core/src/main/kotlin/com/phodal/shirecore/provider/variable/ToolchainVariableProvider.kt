@@ -1,12 +1,13 @@
 package com.phodal.shirecore.provider.variable
 
 import com.intellij.openapi.extensions.ExtensionPointName
+import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 
 interface ToolchainVariableProvider {
     fun isResolvable(variable: ToolchainVariable, psiElement: PsiElement?): Boolean
 
-    fun resolveAll(variable: ToolchainVariable, psiElement: PsiElement?): List<ToolchainVariable>
+    fun resolveAll(project: Project, psiElement: PsiElement?, variable: ToolchainVariable): List<ToolchainVariable>
 
     companion object {
         private val EP_NAME: ExtensionPointName<ToolchainVariableProvider> =

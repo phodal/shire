@@ -40,7 +40,7 @@ class BuiltinVariableResolver(
                 val provider = ToolchainVariableProvider.provide(toolchainVariable, context.element)
                 if (provider != null) {
                     result[it.key] = try {
-                        provider.resolveAll(toolchainVariable, context.element)
+                        provider.resolveAll(context.myProject, context.element, toolchainVariable)
                     } catch (e: Exception) {
                         logger<CompositeVariableResolver>().error("Failed to resolve variable: ${it.key}", e)
                         ""
