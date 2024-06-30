@@ -106,7 +106,7 @@
 
         <!-- Location Interaction  -->
         <extensionPoint qualifiedName="com.phodal.shireLocationInteraction"
-                        interface="com.phodal.shirecore.provider.shire.LocationInteraction"
+                        interface="com.phodal.shirelang.runner.LocationInteractionProvider"
                         dynamic="true"/>
     </extensionPoints>
 

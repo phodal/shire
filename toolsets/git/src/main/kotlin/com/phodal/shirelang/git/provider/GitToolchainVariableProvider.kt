@@ -47,9 +47,6 @@ class GitToolchainVariableProvider : ToolchainVariableProvider {
                     logger.warn("Diff context is empty or cannot get enough useful context.")
                     return variable
                 }
-//
-//                val commitMessageUi = dataContext.getData(VcsDataKeys.COMMIT_MESSAGE_CONTROL) as CommitMessage
-//                commitMessageUi.editorField.text = "hello, text"
 
                 variable.value = diffContext
                 return variable
