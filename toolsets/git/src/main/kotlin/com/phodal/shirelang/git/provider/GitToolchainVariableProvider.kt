@@ -41,7 +41,7 @@ class GitToolchainVariableProvider : ToolchainVariableProvider {
                 val commitWorkflowUi = dataContext.getData(VcsDataKeys.COMMIT_WORKFLOW_UI)
                     ?: return variable
                 val changes = getDiff(commitWorkflowUi) ?: return variable
-                val diffContext = project.service<VcsPrompting>().prepareContext(changes)
+                val diffContext = project.getService(VcsPrompting::class.java).prepareContext(changes)
 
                 if (diffContext.isEmpty() || diffContext == "\n") {
                     logger.warn("Diff context is empty or cannot get enough useful context.")
