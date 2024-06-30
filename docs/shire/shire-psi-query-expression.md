@@ -2,7 +2,7 @@
 layout: default
 title: Shire PSI Query Expression
 parent: Shire Language
-nav_order: 7
+nav_order: 8
 ---
 
 Shire PSI Query Language, is a query language that allows you to query the AST of the current file. It is used in Shire

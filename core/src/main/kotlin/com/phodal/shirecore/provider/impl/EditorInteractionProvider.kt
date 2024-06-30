@@ -9,7 +9,7 @@ import com.phodal.shirecore.provider.ide.LocationInteractionProvider
 
 class EditorInteractionProvider : LocationInteractionProvider {
     override fun isApplicable(context: LocationInteractionContext): Boolean {
-        TODO("Not yet implemented")
+        return true
     }
 
     override fun execute(context: LocationInteractionContext) {
@@ -39,9 +39,6 @@ class EditorInteractionProvider : LocationInteractionProvider {
             InteractionType.InsertBeforeSelection -> {
                 TODO()
             }
-
-            null -> TODO()
         }
-
     }
 }

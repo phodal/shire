@@ -8,11 +8,14 @@ import kotlinx.coroutines.flow.Flow
 
 data class LocationInteractionContext(
     val location: ShireActionLocation,
+    /**
+     * the interaction type
+     */
     val interactionType: InteractionType,
     /**
      * the LLM generate text stream, which can be used for [InteractionType.AppendCursorStream]
      */
-    val streamText: Flow<String>,
+    val streamText: Flow<String>? = null,
 
     val editor: Editor?,
 

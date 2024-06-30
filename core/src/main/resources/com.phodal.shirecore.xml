@@ -117,6 +117,7 @@
     </extensions>
 
     <extensions defaultExtensionNs="com.phodal">
+        <!-- code processors -->
         <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.TimeMetricProcessor"/>
 
         <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.VerifyCodeProcessor"/>
@@ -127,5 +128,8 @@
 
         <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.SaveFileProcessor"/>
         <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.OpenFileProcessor"/>
+
+        <!--   LocationInteractionProvider-->
+        <shireLocationInteraction implementation="com.phodal.shirecore.provider.impl.EditorInteractionProvider"/>
     </extensions>
 </idea-plugin>
