@@ -91,6 +91,16 @@
                   implements="com.phodal.shirecore.codemodel.VariableStructureProvider"/>
         </extensionPoint>
 
+
+        <!-- Toolchain Variable Provider -->
+        <extensionPoint qualifiedName="com.phodal.shireToolsetVariableProvider"
+                        interface="com.phodal.shirecore.provider.variable.ToolsetVariableProvider"
+                        dynamic="true"
+                        >
+
+        </extensionPoint>
+
+
         <!-- Post Code Middleware -->
         <extensionPoint qualifiedName="com.phodal.shirePostProcessor"
                         interface="com.phodal.shirecore.middleware.PostProcessor"

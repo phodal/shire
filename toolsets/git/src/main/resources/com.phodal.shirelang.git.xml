@@ -1,5 +1,7 @@
 <idea-plugin package="com.phodal.shirelang.git">
     <extensions defaultExtensionNs="com.phodal">
         <shireRevisionProvider implementation="com.phodal.shirelang.git.GitRevisionProvider"/>
+
+        <shirePsiVariableProvider language=""
     </extensions>
 </idea-plugin>
