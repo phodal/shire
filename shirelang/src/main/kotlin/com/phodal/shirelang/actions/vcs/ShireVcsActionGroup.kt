@@ -8,7 +8,6 @@ import com.phodal.shirecore.ShirelangNotifications
 import com.phodal.shirecore.action.ShireActionLocation
 import com.phodal.shirelang.ShireIcons
 import com.phodal.shirelang.actions.base.ShireActionGroup
-import com.phodal.shirelang.actions.base.ShireContextMenuAction
 import com.phodal.shirelang.actions.dynamic.DynamicShireActionConfig
 import com.phodal.shirelang.actions.dynamic.DynamicShireActionService
 

@@ -21,8 +21,6 @@ import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.ShireConfiguration
 import com.phodal.shirelang.run.ShireConfigurationType
 import com.phodal.shirelang.run.ShireRunConfigurationProducer
-import com.phodal.shirelang.utils.ShireCoroutineScope
-import kotlinx.coroutines.launch
 import org.jetbrains.annotations.NonNls
 
 class ShireRunFileAction : DumbAwareAction() {
