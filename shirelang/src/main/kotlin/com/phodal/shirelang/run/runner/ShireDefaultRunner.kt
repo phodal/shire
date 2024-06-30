@@ -3,7 +3,11 @@ package com.phodal.shirelang.run.runner
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
+import com.phodal.shirecore.action.ShireActionLocation
+import com.phodal.shirecore.agent.InteractionType
 import com.phodal.shirecore.llm.LlmProvider
+import com.phodal.shirecore.provider.ide.LocationInteractionContext
+import com.phodal.shirecore.provider.ide.LocationInteractionProvider
 import com.phodal.shirelang.ShireBundle
 import com.phodal.shirelang.run.flow.ShireConversationService
 import kotlinx.coroutines.*
@@ -18,6 +22,23 @@ class ShireDefaultRunner(
                 context.console.print(ShireBundle.message("shire.run.local.mode"), ConsoleViewContentType.SYSTEM_OUTPUT)
                 context.processHandler.detachProcess()
                 return@invokeLater
+            }
+
+            val interactionContext = LocationInteractionContext(
+                location = context.hole?.actionLocation ?: ShireActionLocation.INTENTION_MENU,
+                interactionType = InteractionType.AppendCursorStream,
+                editor = context.editor,
+                project = context.myProject,
+            )
+
+            if (context.hole?.interaction != null) {
+                val interactionProvider = LocationInteractionProvider.provide(interactionContext)
+                if (interactionProvider != null) {
+                    val response = interactionProvider.execute(interactionContext)
+                    postFunction(response)
+                    context.processHandler.detachProcess()
+                    return@invokeLater
+                }
             }
 
             CoroutineScope(Dispatchers.Main).launch {

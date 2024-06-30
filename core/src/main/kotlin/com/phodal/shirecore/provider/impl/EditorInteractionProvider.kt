@@ -12,9 +12,10 @@ class EditorInteractionProvider : LocationInteractionProvider {
         return true
     }
 
-    override fun execute(context: LocationInteractionContext) {
+    override fun execute(context: LocationInteractionContext): String {
         val msgs: List<ChatMessage> = listOf()
         val targetFile = context.editor?.virtualFile
+        val result: String = ""
 
         when (context.interactionType) {
             InteractionType.AppendCursor -> TODO()
@@ -40,5 +41,7 @@ class EditorInteractionProvider : LocationInteractionProvider {
                 TODO()
             }
         }
+
+        return result
     }
 }

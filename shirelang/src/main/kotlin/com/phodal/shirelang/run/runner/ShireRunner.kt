@@ -23,15 +23,7 @@ data class ShireRunnerContext(
 
 abstract class ShireRunner(open val context: ShireRunnerContext) {
     abstract fun execute(postFunction: (response: String) -> Unit)
+    fun prepareTask() {
 
-    fun editorInteraction() {
-        val context = LocationInteractionContext(
-            location = context.hole?.actionLocation ?: ShireActionLocation.INTENTION_MENU,
-            interactionType = InteractionType.AppendCursorStream,
-            editor = context.editor,
-            project = context.myProject,
-        )
-
-        LocationInteractionProvider.provide(context)?.execute(context)
     }
 }
