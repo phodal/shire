@@ -12,7 +12,7 @@ interface ToolchainVariableProvider {
         private val EP_NAME: ExtensionPointName<ToolchainVariableProvider> =
             ExtensionPointName("com.phodal.shireToolchainVariableProvider")
 
-        fun variable(variable: ToolchainVariable, element: PsiElement?): ToolchainVariableProvider? {
+        fun provide(variable: ToolchainVariable, element: PsiElement?): ToolchainVariableProvider? {
             return EP_NAME.extensionList.firstOrNull {
                 it.isResolvable(variable, element)
             }

@@ -2,9 +2,7 @@ package com.phodal.shirelang.compiler.variable
 
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.psi.PsiManager
-import com.phodal.shirecore.provider.variable.DefaultPsiContextVariableProvider
-import com.phodal.shirecore.provider.variable.PsiContextVariableProvider
-import com.phodal.shirecore.provider.variable.PsiContextVariable
+import com.phodal.shirecore.provider.variable.*
 import com.phodal.shirelang.compiler.variable._base.VariableResolver
 import com.phodal.shirelang.compiler.variable._base.VariableResolverContext
 
@@ -33,9 +31,26 @@ class BuiltinVariableResolver(
                     logger<CompositeVariableResolver>().error("Failed to resolve variable: ${it.key}", e)
                     ""
                 }
-            } else {
-                result[it.key] = ""
+
+                return@forEach
             }
+
+            val toolchainVariable = ToolchainVariable.from(it.key)
+            if (toolchainVariable != null) {
+                val provider = ToolchainVariableProvider.provide(toolchainVariable, context.element)
+                if (provider != null) {
+                    result[it.key] = try {
+                        provider.resolveAll(toolchainVariable, context.element)
+                    } catch (e: Exception) {
+                        logger<CompositeVariableResolver>().error("Failed to resolve variable: ${it.key}", e)
+                        ""
+                    }
+
+                    return@forEach
+                }
+            }
+
+            result[it.key] = ""
         }
 
         return result
