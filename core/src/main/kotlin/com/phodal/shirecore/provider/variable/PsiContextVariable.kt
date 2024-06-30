@@ -61,7 +61,7 @@ enum class PsiContextVariable(val variableName: String) {
          * @param variableName the variable name to search for
          * @return the PsiVariable with the given variable name
          */
-        fun fromVariableName(variableName: String): PsiContextVariable? {
+        fun from(variableName: String): PsiContextVariable? {
             return values().firstOrNull { it.variableName == variableName }
         }
     }

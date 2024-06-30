@@ -6,7 +6,7 @@ package com.phodal.shirecore.provider.variable
 enum class ToolchainVariable(val variableName: String, var value: Any? = null) {
     Diff("diff"),
 
-    HistoryCommitExample("historyCommitExample"),
+    HistoryCommitMessages("historyCommitExample"),
     ;
 
     companion object {

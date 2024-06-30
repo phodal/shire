@@ -7,7 +7,7 @@ import com.intellij.psi.PsiElement
 interface ToolchainVariableProvider {
     fun isResolvable(variable: ToolchainVariable, psiElement: PsiElement?): Boolean
 
-    fun resolveAll(project: Project, psiElement: PsiElement?, variable: ToolchainVariable): List<ToolchainVariable>
+    fun resolve(project: Project, element: PsiElement?, variable: ToolchainVariable): ToolchainVariable
 
     companion object {
         private val EP_NAME: ExtensionPointName<ToolchainVariableProvider> =

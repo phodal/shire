@@ -23,7 +23,7 @@ class BuiltinVariableResolver(
     override fun resolve(): Map<String, Any> {
         val result = mutableMapOf<String, Any>()
         context.symbolTable.getAllVariables().forEach {
-            val psiContextVariable = PsiContextVariable.fromVariableName(it.key)
+            val psiContextVariable = PsiContextVariable.from(it.key)
             if (psiContextVariable != null) {
                 result[it.key] = try {
                     variableProvider.resolveVariableValue(context.element, psiContextVariable)
@@ -40,7 +40,7 @@ class BuiltinVariableResolver(
                 val provider = ToolchainVariableProvider.provide(toolchainVariable, context.element)
                 if (provider != null) {
                     result[it.key] = try {
-                        provider.resolveAll(context.myProject, context.element, toolchainVariable)
+                        provider.resolve(context.myProject, context.element, toolchainVariable)
                     } catch (e: Exception) {
                         logger<CompositeVariableResolver>().error("Failed to resolve variable: ${it.key}", e)
                         ""

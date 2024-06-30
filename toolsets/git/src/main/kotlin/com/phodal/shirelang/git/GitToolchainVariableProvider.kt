@@ -7,7 +7,6 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vcs.VcsDataKeys
 import com.intellij.openapi.vcs.changes.Change
 import com.intellij.openapi.vcs.changes.CurrentContentRevision
-import com.intellij.openapi.vcs.ui.CommitMessage
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
 import com.intellij.vcs.commit.CommitWorkflowUi
@@ -28,57 +27,52 @@ class GitToolchainVariableProvider : ToolchainVariableProvider {
                 true
             }
 
-            ToolchainVariable.HistoryCommitExample -> {
+            ToolchainVariable.HistoryCommitMessages -> {
                 true
             }
         }
     }
 
-    override fun resolveAll(
-        project: Project,
-        element: PsiElement?,
-        variable: ToolchainVariable,
-    ): List<ToolchainVariable> {
-        return when (variable) {
+    override fun resolve(project: Project, element: PsiElement?, variable: ToolchainVariable, ): ToolchainVariable {
+        when (variable) {
             ToolchainVariable.Diff -> {
                 val dataContext = DataManager.getInstance().dataContextFromFocus.result
                 val commitWorkflowUi = dataContext.getData(VcsDataKeys.COMMIT_WORKFLOW_UI)
-                    ?: return listOf()
-                val changes = getChanges(commitWorkflowUi) ?: return listOf()
+                    ?: return variable
+                val changes = getDiff(commitWorkflowUi) ?: return variable
                 val diffContext = project.service<VcsPrompting>().prepareContext(changes)
 
                 if (diffContext.isEmpty() || diffContext == "\n") {
                     logger.warn("Diff context is empty or cannot get enough useful context.")
-                    return listOf()
+                    return variable
                 }
-
-                val commitMessageUi = dataContext.getData(VcsDataKeys.COMMIT_MESSAGE_CONTROL) as CommitMessage
-                commitMessageUi.editorField.text = "hello, text"
+//
+//                val commitMessageUi = dataContext.getData(VcsDataKeys.COMMIT_MESSAGE_CONTROL) as CommitMessage
+//                commitMessageUi.editorField.text = "hello, text"
 
                 variable.value = diffContext
-                listOf(ToolchainVariable.Diff)
+                return variable
             }
 
-            ToolchainVariable.HistoryCommitExample -> {
-                val exampleCommitMessages = findExampleCommitMessages(project)
+            ToolchainVariable.HistoryCommitMessages -> {
+                val exampleCommitMessages = getHistoryCommitMessages(project)
                 if (exampleCommitMessages != null) {
                     variable.value = exampleCommitMessages
-                    return listOf(variable)
                 }
-
-                listOf(ToolchainVariable.HistoryCommitExample)
             }
         }
+
+        return variable
     }
 
     /**
      * Finds example commit messages based on the project's VCS log, takes the first three commits.
-     * If the no user or user has not committed anything yet, the current branch name is used instead.
+     * If the no user or user has committed anything yet, the current branch name is used instead.
      *
      * @param project The project for which to find example commit messages.
      * @return A string containing example commit messages, or null if no example messages are found.
      */
-    private fun findExampleCommitMessages(project: Project): String? {
+    private fun getHistoryCommitMessages(project: Project): String? {
         val logProviders = VcsProjectLog.getLogProviders(project)
         val entry = logProviders.entries.firstOrNull() ?: return null
 
@@ -123,7 +117,7 @@ class GitToolchainVariableProvider : ToolchainVariableProvider {
         return builder.toString()
     }
 
-    fun getChanges(commitWorkflowUi: CommitWorkflowUi): List<Change>? {
+    private fun getDiff(commitWorkflowUi: CommitWorkflowUi): List<Change>? {
         val changes = commitWorkflowUi.getIncludedChanges()
         val unversionedFiles = commitWorkflowUi.getIncludedUnversionedFiles()
 
