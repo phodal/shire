@@ -3,7 +3,7 @@ package com.phodal.shirecore.provider.variable
 /**
  * Enum representing variables used in the generation of code structures.
  */
-enum class ToolsetVariable(val variableName: String) {
+enum class ToolchainVariable(val variableName: String, var value: Any? = null) {
     Diff("diff"),
 
     HistoryCommitExample("historyCommitExample"),
@@ -16,7 +16,7 @@ enum class ToolsetVariable(val variableName: String) {
          * @param variableName the variable name to search for
          * @return the PsiVariable with the given variable name
          */
-        fun from(variableName: String): ToolsetVariable? {
+        fun from(variableName: String): ToolchainVariable? {
             return values().firstOrNull { it.variableName == variableName }
         }
     }

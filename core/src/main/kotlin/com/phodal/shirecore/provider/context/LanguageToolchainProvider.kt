@@ -18,15 +18,15 @@ data class ToolchainPrepareContext(
     val extraItems: List<ToolchainContextItem> = emptyList(),
 )
 
-interface ToolchainProvider {
+interface LanguageToolchainProvider {
     fun isApplicable(project: Project, context: ToolchainPrepareContext): Boolean
 
     @RequiresBackgroundThread
     suspend fun collect(project: Project, context: ToolchainPrepareContext): List<ToolchainContextItem>
 
     companion object {
-        private val EP_NAME: LanguageExtension<ToolchainProvider> =
-            LanguageExtension("com.phodal.shireToolchainProvider")
+        private val EP_NAME: LanguageExtension<LanguageToolchainProvider> =
+            LanguageExtension("com.phodal.shireLanguageToolchainProvider")
 
         suspend fun collectToolchainContext(
             project: Project,

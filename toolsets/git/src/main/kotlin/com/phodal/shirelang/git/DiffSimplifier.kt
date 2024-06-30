@@ -15,7 +15,7 @@ import java.nio.file.PathMatcher
 import kotlin.math.min
 
 @Service(Service.Level.PROJECT)
-class DiffSimplifier(val project: Project) {
+class DiffSimplifier(private val project: Project) {
     private val logger = logger<DiffSimplifier>()
 
     /**

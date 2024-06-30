@@ -46,10 +46,10 @@
         </extensionPoint>
 
         <!-- Toolchain Provider -->
-        <extensionPoint qualifiedName="com.phodal.shireToolchainProvider"
+        <extensionPoint qualifiedName="com.phodal.shireLanguageToolchainProvider"
                         beanClass="com.intellij.lang.LanguageExtensionPoint" dynamic="true">
             <with attribute="implementationClass"
-                  implements="com.phodal.shirecore.provider.context.ToolchainProvider"/>
+                  implements="com.phodal.shirecore.provider.context.LanguageToolchainProvider"/>
         </extensionPoint>
 
         <!-- Toolchain Provider -->
@@ -93,8 +93,8 @@
 
 
         <!-- Toolchain Variable Provider -->
-        <extensionPoint qualifiedName="com.phodal.shireToolsetVariableProvider"
-                        interface="com.phodal.shirecore.provider.variable.ToolsetVariableProvider"
+        <extensionPoint qualifiedName="com.phodal.shireToolchainVariableProvider"
+                        interface="com.phodal.shirecore.provider.variable.ToolchainVariableProvider"
                         dynamic="true"
                         >
 

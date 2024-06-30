@@ -9,7 +9,7 @@ import com.intellij.testIntegration.TestFinderHelper
 import com.phodal.shirecore.provider.variable.PsiContextVariable
 import com.phodal.shirecore.provider.variable.PsiContextVariableProvider
 import com.phodal.shirecore.provider.context.ToolchainPrepareContext
-import com.phodal.shirecore.provider.context.ToolchainProvider
+import com.phodal.shirecore.provider.context.LanguageToolchainProvider
 import com.phodal.shirelang.java.variable.provider.JavaRelatedClassesProvider
 import kotlinx.coroutines.runBlocking
 
@@ -67,7 +67,7 @@ class JavaPsiContextVariableProvider : PsiContextVariableProvider {
                 runBlocking {
                     val prepareContext = ToolchainPrepareContext(sourceFile, psiElement)
                     val contextItems =
-                        ToolchainProvider.collectToolchainContext(project, prepareContext)
+                        LanguageToolchainProvider.collectToolchainContext(project, prepareContext)
 
                     contextItems.joinToString("\n") { it.text }
                 }

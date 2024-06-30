@@ -2,6 +2,6 @@
     <extensions defaultExtensionNs="com.phodal">
         <shireRevisionProvider implementation="com.phodal.shirelang.git.GitRevisionProvider"/>
 
-        <shirePsiVariableProvider language=""
+        <shireToolchainVariableProvider implementation="com.phodal.shirelang.git.GitToolchainVariableProvider"/>
     </extensions>
 </idea-plugin>

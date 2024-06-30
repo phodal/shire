@@ -9,10 +9,10 @@ import com.intellij.openapi.roots.ModuleRootManager
 import com.intellij.openapi.roots.ProjectRootManager
 import com.phodal.shirecore.provider.context.ToolchainContextItem
 import com.phodal.shirecore.provider.context.ToolchainPrepareContext
-import com.phodal.shirecore.provider.context.ToolchainProvider
+import com.phodal.shirecore.provider.context.LanguageToolchainProvider
 import com.phodal.shirelang.java.toolchain.JavaLanguageDetector
 
-class JavaToolchainProvider : ToolchainProvider {
+class JavaLanguageToolchainProvider : LanguageToolchainProvider {
     override fun isApplicable(project: Project, context: ToolchainPrepareContext): Boolean {
         val sourceFile = context.sourceFile ?: return false
         if (sourceFile.language != JavaLanguage.INSTANCE) return false
@@ -46,6 +46,6 @@ class JavaToolchainProvider : ToolchainProvider {
 
         val prompt = "You are working on a project that uses Java SDK version $languageLevel."
 
-        return ToolchainContextItem(JavaToolchainProvider::class, prompt)
+        return ToolchainContextItem(JavaLanguageToolchainProvider::class, prompt)
     }
 }
