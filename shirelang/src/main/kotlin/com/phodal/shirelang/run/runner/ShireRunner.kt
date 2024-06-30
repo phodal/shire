@@ -29,7 +29,7 @@ abstract class ShireRunner(open val context: ShireRunnerContext) {
 
     }
 
-    fun handleResult() {
+    fun editorInteraction() {
         val msgs: List<ChatMessage> = listOf()
         val targetFile = context.editor?.virtualFile
 

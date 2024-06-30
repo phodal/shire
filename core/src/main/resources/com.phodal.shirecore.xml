@@ -95,15 +95,18 @@
         <!-- Toolchain Variable Provider -->
         <extensionPoint qualifiedName="com.phodal.shireToolchainVariableProvider"
                         interface="com.phodal.shirecore.provider.variable.ToolchainVariableProvider"
-                        dynamic="true"
-                        >
-
+                        dynamic="true">
         </extensionPoint>
 
 
         <!-- Post Code Middleware -->
         <extensionPoint qualifiedName="com.phodal.shirePostProcessor"
                         interface="com.phodal.shirecore.middleware.PostProcessor"
+                        dynamic="true"/>
+
+        <!-- Location Interaction  -->
+        <extensionPoint qualifiedName="com.phodal.shireLocationInteraction"
+                        interface="com.phodal.shirecore.provider.shire.LocationInteraction"
                         dynamic="true"/>
     </extensionPoints>
 

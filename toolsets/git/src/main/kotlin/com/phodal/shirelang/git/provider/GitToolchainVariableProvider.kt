@@ -1,4 +1,4 @@
-package com.phodal.shirelang.git
+package com.phodal.shirelang.git.provider
 
 import com.intellij.ide.DataManager
 import com.intellij.openapi.components.service
@@ -16,6 +16,7 @@ import com.intellij.vcs.log.impl.VcsProjectLog
 import com.intellij.vcs.log.visible.filters.VcsLogFilterObject
 import com.phodal.shirecore.provider.variable.ToolchainVariable
 import com.phodal.shirecore.provider.variable.ToolchainVariableProvider
+import com.phodal.shirelang.git.VcsPrompting
 
 
 class GitToolchainVariableProvider : ToolchainVariableProvider {

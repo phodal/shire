@@ -1,7 +1,7 @@
 <idea-plugin package="com.phodal.shirelang.git">
     <extensions defaultExtensionNs="com.phodal">
-        <shireRevisionProvider implementation="com.phodal.shirelang.git.GitRevisionProvider"/>
+        <shireRevisionProvider implementation="com.phodal.shirelang.git.provider.GitRevisionProvider"/>
 
-        <shireToolchainVariableProvider implementation="com.phodal.shirelang.git.GitToolchainVariableProvider"/>
+        <shireToolchainVariableProvider implementation="com.phodal.shirelang.git.provider.GitToolchainVariableProvider"/>
     </extensions>
 </idea-plugin>

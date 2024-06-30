@@ -1,4 +1,4 @@
-package com.phodal.shirelang.git
+package com.phodal.shirelang.git.provider
 
 import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.codeInsight.lookup.LookupElementBuilder
@@ -18,6 +18,7 @@ import com.intellij.vcs.commit.ChangeListCommitState
 import com.intellij.vcs.commit.LocalChangesCommitter
 import com.phodal.shirecore.ShireCoreBundle
 import com.phodal.shirecore.provider.shire.RevisionProvider
+import com.phodal.shirelang.git.VcsPrompting
 import git4idea.GitCommit
 import git4idea.GitRevisionNumber
 import git4idea.changes.GitCommittedChangeListProvider
