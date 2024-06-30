@@ -72,6 +72,14 @@
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
         </group>
 
+        <group id="ShireVcsActionGroup"
+                class="com.phodal.shirelang.actions.vcs.ShireVcsActionGroup"
+                icon="com.phodal.shirelang.ShireIcons.DEFAULT"
+                description="Ask AI generate commit message">
+
+            <add-to-group group-id="Vcs.MessageActionGroup"/>
+        </group>
+
         <!-- Shire Intentions Action Group -->
         <group id="ShireIntentionsActionGroup" class="com.phodal.shirelang.actions.intention.ShireIntentionsActionGroup"
                icon="com.phodal.shirelang.ShireIcons.DEFAULT" searchable="false">
