@@ -20,12 +20,12 @@ import kotlinx.coroutines.runBlocking
 import java.nio.file.Path
 import kotlin.io.path.Path
 
-class FileGenerateTask(
+open class FileGenerateTask(
     @JvmField val project: Project,
     val messages: List<ChatMessage>,
     val fileName: String?,
-    val codeOnly: Boolean = false,
-    val taskName: String = ShireCoreBundle.message("intentions.request.background.process.title")
+    private val codeOnly: Boolean = false,
+    private val taskName: String = ShireCoreBundle.message("intentions.request.background.process.title")
 ) :
     Task.Backgroundable(project, taskName) {
     private val projectRoot = project.guessProjectDir()!!
@@ -68,7 +68,7 @@ class FileGenerateTask(
         }
     }
 
-    protected fun refreshAndOpenInEditor(file: Path, parentDir: VirtualFile) {
+    private fun refreshAndOpenInEditor(file: Path, parentDir: VirtualFile) {
         runBlocking {
             ProgressManager.getInstance().run(object : Modal(project, "Refreshing Project Model", true) {
                 override fun run(indicator: ProgressIndicator) {
