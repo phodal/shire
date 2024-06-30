@@ -62,11 +62,11 @@ class CustomAgentExecutor(val project: Project) : CustomSSEProcessor(project) {
 
         return when (agent.responseAction) {
             CustomAgentResponseAction.Stream -> {
-                streamSSE(call, promptText, messages = messages)
+                streamSSE(call, messages = messages)
             }
 
             else -> {
-                streamJson(call, promptText, messages)
+                streamJson(call, messages)
             }
         }
     }

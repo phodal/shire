@@ -42,7 +42,7 @@ open class CustomSSEProcessor(private val project: Project) {
     private val logger = logger<CustomSSEProcessor>()
 
 
-    fun streamJson(call: Call, promptText: String, messages: MutableList<Message>): Flow<String> = callbackFlow {
+    fun streamJson(call: Call, messages: MutableList<Message>): Flow<String> = callbackFlow {
         call.enqueue(JSONBodyResponseCallback(responseFormat) {
             withContext(Dispatchers.IO) {
                 send(it)
@@ -55,7 +55,7 @@ open class CustomSSEProcessor(private val project: Project) {
     }
 
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
-    fun streamSSE(call: Call, promptText: String, keepHistory: Boolean = false, messages: MutableList<Message>): Flow<String> {
+    fun streamSSE(call: Call, messages: MutableList<Message>): Flow<String> {
         val sseFlowable = Flowable
             .create({ emitter: FlowableEmitter<SSE> ->
                 call.enqueue(ResponseBodyCallback(emitter, true))
