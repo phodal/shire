@@ -19,4 +19,4 @@ Git toolchain provides the following variables:
 
 - `currentChanges`, which is the current changes in the current branch.
 - `currentBranch`, which is the current branch name.
-- `historyCommitMessage`, which is the commit message of the current commit.
+- `historyCommitMessages`, which is the commit message of the current commit.

@@ -35,12 +35,12 @@ class BuiltinVariableResolver(
                 return@forEach
             }
 
-            val toolchainVariable = ToolchainVariable.from(it.key)
-            if (toolchainVariable != null) {
-                val provider = ToolchainVariableProvider.provide(toolchainVariable, context.element)
+            val gitToolchainVariable = GitToolchainVariable.from(it.key)
+            if (gitToolchainVariable != null) {
+                val provider = ToolchainVariableProvider.provide(gitToolchainVariable, context.element)
                 if (provider != null) {
                     result[it.key] = try {
-                        provider.resolve(context.myProject, context.element, toolchainVariable)
+                        provider.resolve(context.myProject, context.element, gitToolchainVariable)
                     } catch (e: Exception) {
                         logger<CompositeVariableResolver>().error("Failed to resolve variable: ${it.key}", e)
                         ""
