@@ -40,7 +40,7 @@ Shire Data Architecture:
 
 Here’s an overview of its main features and functionalities:
 
-### Key Features
+### Advantages of Shire
 
 1. **Simple Syntax**: The language offers a straightforward syntax that allows for easy creation and manipulation of
    programming tasks. This is crucial for ensuring that the communication between the LLM and the IDE remains clear and
@@ -56,22 +56,3 @@ Here’s an overview of its main features and functionalities:
    correct errors in the code. This ensures that the generated code meets the desired quality standards.
 6. **Extensibility**: Shire is designed to be extensible, allowing developers to add new functionalities and adapt the
    language to their specific needs. This is particularly useful in rapidly evolving development environments.
-
-### Example Workflow
-
-1. **Task Specification**: A developer specifies a programming task in the Shire language, such as "Create a Python
-   function to sort a list of integers."
-2. **LLM Processing**: The LLM interprets the task and generates the corresponding code snippet.
-3. **IDE Execution**: The generated code is sent to the control IDE, where it can be executed and tested.
-4. **Feedback Loop**: The IDE provides feedback on the code execution (e.g., errors, performance metrics), which the LLM
-   uses to refine the code if necessary.
-5. **Iteration**: The process iterates until the code meets the required specifications.
-
-### Benefits
-
-- **Increased Efficiency**: Automating routine programming tasks can significantly increase development speed and
-  efficiency.
-- **Reduced Errors**: Automated code generation and error handling can reduce the incidence of bugs and improve code
-  quality.
-- **Focus on Complex Tasks**: By automating simpler tasks, developers can focus on more complex and creative aspects of
-  software development.

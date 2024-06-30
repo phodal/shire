@@ -66,21 +66,37 @@
                 <tspan x="499.1" y="107" fill="#087D18">"src/</tspan>
                 <tspan x="155" y="124" fill="#087D18">main/java"</tspan>
                 <tspan x="219.896" y="124" fill="#011C32">)</tspan>
-                <tspan x="155" y="141" fill="#0032B3">---</tspan>
-                <tspan x="168.176" y="141" fill="#011C32"></tspan>
-                <tspan x="155" y="158" fill="#011C32"></tspan>
-                <tspan x="155" y="175" fill="#861094">@ext-context.autotest</tspan>
-                <tspan x="155" y="192" fill="#011C32"></tspan>
-                <tspan x="155" y="209" fill="#011C32">Write unit test for following </tspan>
-                <tspan x="327.032" y="209" fill="#CC850A">${context.language}</tspan>
-                <tspan x="447.224" y="209" fill="#011C32"> code.</tspan>
-                <tspan x="155" y="226" fill="#861094"></tspan>
-                <tspan x="155" y="243" fill="#CC850A">${context.frameworkContext}</tspan>
-                <tspan x="155" y="260" fill="#0032B3"></tspan>
-                <tspan x="155" y="277" fill="#0032B3">/file:</tspan>
-                <tspan x="183.212" y="277" fill="#087D18">src/main/kotlin/com/phodal/blog/controller/</tspan>
-                <tspan x="155" y="294" fill="#087D18">UserController.kt</tspan>
-                <tspan x="261.164" y="294" fill="#861094"></tspan>
+                <tspan x="155" y="141" fill="#861094">onStreamingEnd</tspan>
+                <tspan x="257.228" y="141" fill="#011C32">: { </tspan>
+                <tspan x="271.832" y="141" fill="#013D4F">parseCode</tspan>
+                <tspan x="336.116" y="141" fill="#011C32"> </tspan>
+                <tspan x="339.128" y="141" fill="#0032B3">|</tspan>
+                <tspan x="342.632" y="141" fill="#011C32"> </tspan>
+                <tspan x="345.644" y="141" fill="#013D4F">saveFile</tspan>
+                <tspan x="394.46" y="141" fill="#011C32"> </tspan>
+                <tspan x="397.472" y="141" fill="#0032B3">|</tspan>
+                <tspan x="400.976" y="141" fill="#011C32"> </tspan>
+                <tspan x="403.988" y="141" fill="#013D4F">verifyCode</tspan>
+                <tspan x="470.18" y="141" fill="#011C32"> </tspan>
+                <tspan x="473.192" y="141" fill="#0032B3">|</tspan>
+                <tspan x="476.696" y="141" fill="#011C32"> </tspan>
+                <tspan x="479.708" y="141" fill="#013D4F">runCode</tspan>
+                <tspan x="532.46" y="141" fill="#011C32"> } </tspan>
+                <tspan x="155" y="158" fill="#0032B3">---</tspan>
+                <tspan x="168.176" y="158" fill="#011C32"></tspan>
+                <tspan x="155" y="175" fill="#011C32"></tspan>
+                <tspan x="155" y="192" fill="#861094">@ext-context.autotest</tspan>
+                <tspan x="155" y="209" fill="#011C32"></tspan>
+                <tspan x="155" y="226" fill="#011C32">Write unit test for following </tspan>
+                <tspan x="327.032" y="226" fill="#CC850A">${context.language}</tspan>
+                <tspan x="447.224" y="226" fill="#011C32"> code.</tspan>
+                <tspan x="155" y="243" fill="#861094"></tspan>
+                <tspan x="155" y="260" fill="#CC850A">${context.frameworkContext}</tspan>
+                <tspan x="155" y="277" fill="#0032B3"></tspan>
+                <tspan x="155" y="294" fill="#0032B3">/file:</tspan>
+                <tspan x="183.212" y="294" fill="#087D18">src/main/kotlin/com/phodal/blog/controller/</tspan>
+                <tspan x="155" y="311" fill="#087D18">UserController.kt</tspan>
+                <tspan x="261.164" y="311" fill="#861094"></tspan>
             </text>
         </g>
     </g>
