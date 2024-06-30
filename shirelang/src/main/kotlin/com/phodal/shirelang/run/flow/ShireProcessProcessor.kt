@@ -10,7 +10,7 @@ import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiUtilBase
 import com.intellij.openapi.fileEditor.FileEditorManager
-import com.phodal.shire.llm.LlmProvider
+import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.ShirelangNotifications
 import com.phodal.shirecore.middleware.select.SelectElementStrategy
 import com.phodal.shirelang.ShireLanguage

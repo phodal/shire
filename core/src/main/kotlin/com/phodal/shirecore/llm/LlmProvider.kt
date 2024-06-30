@@ -1,4 +1,4 @@
-package com.phodal.shire.llm
+package com.phodal.shirecore.llm
 
 import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.project.Project

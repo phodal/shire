@@ -1,4 +1,4 @@
-package com.phodal.shire.llm.model
+package com.phodal.shirecore.llm
 
 import kotlinx.serialization.Serializable
 

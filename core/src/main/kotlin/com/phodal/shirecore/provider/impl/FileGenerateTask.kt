@@ -1,4 +1,4 @@
-package com.phodal.shirelang.run.runner.tasks
+package com.phodal.shirecore.provider.impl
 
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.fileTypes.PlainTextLanguage
@@ -10,23 +10,22 @@ import com.intellij.openapi.project.guessProjectDir
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
-import com.phodal.shire.llm.LlmProvider
-import com.phodal.shire.llm.model.ChatMessage
-import com.phodal.shire.llm.model.ChatRole
+import com.phodal.shirecore.ShireCoreBundle
+import com.phodal.shirecore.llm.ChatMessage
+import com.phodal.shirecore.llm.ChatRole
+import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.markdown.Code
-import com.phodal.shirelang.ShireBundle
 import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.runBlocking
 import java.nio.file.Path
 import kotlin.io.path.Path
-import kotlinx.coroutines.flow.*
 
 class FileGenerateTask(
     @JvmField val project: Project,
     val messages: List<ChatMessage>,
     val fileName: String?,
     val codeOnly: Boolean = false,
-    val taskName: String = ShireBundle.message("intentions.request.background.process.title")
+    val taskName: String = ShireCoreBundle.message("intentions.request.background.process.title")
 ) :
     Task.Backgroundable(project, taskName) {
     private val projectRoot = project.guessProjectDir()!!

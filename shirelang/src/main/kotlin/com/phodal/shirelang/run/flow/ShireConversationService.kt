@@ -3,7 +3,7 @@ package com.phodal.shirelang.run.flow
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.project.Project
-import com.phodal.shire.llm.LlmProvider
+import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirelang.ShireBundle
 import com.phodal.shirelang.compiler.ShireCompiledResult
 import com.phodal.shirelang.run.ShireConsoleView

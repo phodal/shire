@@ -1,6 +1,6 @@
 package com.phodal.shirelang.run.flow
 
-import com.phodal.shire.llm.model.ChatMessage
+import com.phodal.shirecore.llm.ChatMessage
 import com.phodal.shirelang.compiler.ShireCompiledResult
 
 /**

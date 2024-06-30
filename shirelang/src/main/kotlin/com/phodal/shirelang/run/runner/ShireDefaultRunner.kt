@@ -3,7 +3,7 @@ package com.phodal.shirelang.run.runner
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
-import com.phodal.shire.llm.LlmProvider
+import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirelang.ShireBundle
 import com.phodal.shirelang.run.flow.ShireConversationService
 import kotlinx.coroutines.*

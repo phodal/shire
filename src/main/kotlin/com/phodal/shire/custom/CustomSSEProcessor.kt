@@ -5,7 +5,7 @@ import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.nfeld.jsonpathkt.JsonPath
 import com.nfeld.jsonpathkt.extension.read
-import com.phodal.shire.llm.model.ChatRole
+import com.phodal.shirecore.llm.ChatRole
 import com.theokanning.openai.completion.chat.ChatCompletionResult
 import com.theokanning.openai.service.SSE
 import io.reactivex.BackpressureStrategy

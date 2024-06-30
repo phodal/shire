@@ -1,6 +1,7 @@
 package com.phodal.shire.llm
 
 import com.intellij.openapi.project.Project
+import com.phodal.shirecore.llm.LlmProvider
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 

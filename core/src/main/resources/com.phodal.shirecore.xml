@@ -91,13 +91,11 @@
                   implements="com.phodal.shirecore.codemodel.VariableStructureProvider"/>
         </extensionPoint>
 
-
         <!-- Toolchain Variable Provider -->
         <extensionPoint qualifiedName="com.phodal.shireToolchainVariableProvider"
                         interface="com.phodal.shirecore.provider.variable.ToolchainVariableProvider"
                         dynamic="true">
         </extensionPoint>
-
 
         <!-- Post Code Middleware -->
         <extensionPoint qualifiedName="com.phodal.shirePostProcessor"
@@ -106,7 +104,11 @@
 
         <!-- Location Interaction  -->
         <extensionPoint qualifiedName="com.phodal.shireLocationInteraction"
-                        interface="com.phodal.shirelang.runner.LocationInteractionProvider"
+                        interface="com.phodal.shirecore.provider.ide.LocationInteractionProvider"
+                        dynamic="true"/>
+
+        <extensionPoint qualifiedName="com.phodal.shireLlmProvider"
+                        interface="com.phodal.shirecore.llm.LlmProvider"
                         dynamic="true"/>
     </extensionPoints>
 

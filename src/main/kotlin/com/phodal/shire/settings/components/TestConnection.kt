@@ -3,7 +3,7 @@ package com.phodal.shire.settings.components
 import com.intellij.openapi.project.Project
 import com.intellij.ui.dsl.builder.Align
 import com.intellij.ui.dsl.builder.Panel
-import com.phodal.shire.llm.LlmProvider
+import com.phodal.shirecore.llm.LlmProvider
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.swing.JLabel
