@@ -15,7 +15,7 @@ class CodeCompletionRequest(
     val tabWidth: Int,
     val fileUri: VirtualFile,
     val prefixText: String,
-    val offset: Int,
+    val startOffset: Int,
     val documentVersion: Long,
     val element: PsiElement?,
     val editor: Editor,

@@ -49,7 +49,7 @@ open class HobbitHole(
      * If not selected text, will according the element position to select the element block.
      * For example, if cursor in a function, select the function block.
      */
-    val selectionStrategy: SelectElementStrategy = SelectElementStrategy.Blocked,
+    val selectionStrategy: SelectElementStrategy? = null,
 
     /**
      * The list of variables to apply for the action.
@@ -94,8 +94,8 @@ open class HobbitHole(
 ) : Smials {
     fun pickupElement(project: Project, editor: Editor?): SelectedEntry? {
         return runReadAction {
-            this.selectionStrategy.select(project, editor)
-            return@runReadAction selectionStrategy.getSelectedElement(project, editor)
+            this.selectionStrategy?.select(project, editor)
+            return@runReadAction selectionStrategy?.getSelectedElement(project, editor)
         }
     }
 

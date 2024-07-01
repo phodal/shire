@@ -105,12 +105,12 @@ sealed class SelectElementStrategy {
     }
 
     companion object {
-        fun fromString(strategy: String): SelectElementStrategy {
+        fun fromString(strategy: String): SelectElementStrategy? {
             return when (strategy.lowercase()) {
                 "block" -> Blocked
                 "select" -> SelectedText
                 "selectAll" -> SelectAll
-                else -> Default
+                else -> null
             }
         }
 
@@ -135,17 +135,7 @@ sealed class SelectElementStrategy {
                 return elementToAction
             }
 
-            val element: PsiElement? = try {
-                editor.caretModel.currentCaret.offset.let {
-                    val psiFile = PsiUtilBase.getPsiFileInEditor(editor, myProject) ?: return@let null
-                    getElementAtOffset(psiFile, it)
-                }
-            } catch (e: Exception) {
-                logger<SelectElementStrategy>().error("Failed to resolve element", e)
-                null
-            }
-
-            return element
+            return null
         }
 
     }

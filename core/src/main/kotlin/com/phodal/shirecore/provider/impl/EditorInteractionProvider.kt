@@ -86,14 +86,13 @@ class EditorInteractionProvider : LocationInteractionProvider {
         val editor = context.editor
 
         val offset = editor.caretModel.offset
-        val element = SelectElementStrategy.resolvePsiElement(context.project, editor)
         val userPrompt = msgs.filter { it.role == ChatRole.User }.joinToString("\n") { it.content }
 
         val request = runReadAction {
             CodeCompletionRequest.create(
                 editor,
                 offset,
-                element,
+                element = null,
                 null,
                 userPrompt,
                 isReplacement = isReplacement,

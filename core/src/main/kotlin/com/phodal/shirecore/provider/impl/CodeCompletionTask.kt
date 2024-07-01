@@ -4,6 +4,7 @@ package com.phodal.shirecore.provider.impl
 import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.editor.Document
+import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
@@ -14,12 +15,12 @@ import com.phodal.shirecore.ShireCoreBundle
 import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.markdown.Code
+import com.phodal.shirecore.middleware.select.SelectElementStrategy
 import com.phodal.shirecore.provider.impl.dto.CodeCompletionRequest
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.launch
-import kotlin.jvm.internal.Ref
 
 class CodeCompletionTask(private val request: CodeCompletionRequest) :
     Task.Backgroundable(request.project, ShireCoreBundle.message("intentions.chat.code.complete.name")) {
@@ -34,14 +35,14 @@ class CodeCompletionTask(private val request: CodeCompletionRequest) :
     private var isCanceled: Boolean = false
 
     override fun run(indicator: ProgressIndicator) {
-        val prompt = promptText()
+        val prompt = promptText(request.editor)
 
         val flow: Flow<String> = LlmProvider.provider(request.project)!!.stream(prompt, "", false)
         logger.info("Prompt: $prompt")
 
         val editor = request.editor
         ShireCoroutineScope.scope(request.project).launch {
-            var currentOffset = request.offset
+            var currentOffset = request.startOffset
 
             val project = request.project
             val suggestion = StringBuilder()
@@ -64,7 +65,13 @@ class CodeCompletionTask(private val request: CodeCompletionRequest) :
             }
 
             if (request.isReplacement) {
-                InsertUtil.replaceText(project, editor, request.element, suggestion.toString())
+                // remove all selection code
+                val selectionModel = editor.selectionModel
+                val start = selectionModel.selectionStart
+                val end = selectionModel.selectionEnd
+                editor.document.deleteString(start, end)
+
+                InsertUtil.insertStringAndSaveChange(project, suggestion.toString(), editor.document, request.startOffset, false)
             }
 
             logger.info("Suggestion: $suggestion")
@@ -72,13 +79,31 @@ class CodeCompletionTask(private val request: CodeCompletionRequest) :
         }
     }
 
-    private fun promptText(): String {
+    private fun promptText(editor: Editor): String {
+        val selectionModel = editor.selectionModel
+        if (selectionModel.hasSelection()) {
+            val start = selectionModel.selectionStart
+            val end = selectionModel.selectionEnd
+            val selectedText = editor.document.getText(TextRange(start, end))
+            return selectedText
+        }
+
+        val element = SelectElementStrategy.resolvePsiElement(request.project, editor)
+        if (element != null) {
+            return element.text
+        }
+
+
+        return completionPrompt()
+    }
+
+    private fun completionPrompt(): String {
         val documentLength = request.editor.document.textLength
-        val prefix = if (request.offset > documentLength) {
+        val prefix = if (request.startOffset > documentLength) {
             request.prefixText
         } else {
             val text = request.editor.document.text
-            text.substring(0, request.offset)
+            text.substring(0, request.startOffset)
         }
 
         val prompt = "complete code for given code: \n$prefix"
