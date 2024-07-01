@@ -1,7 +1,7 @@
 ---
 layout: default
-title: AI Agent Quickstart
-parent: AI Agent
+title: Remote AI Agent
+parent: Workflow
 nav_order: 1
 ---
 
