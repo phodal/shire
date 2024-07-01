@@ -6,7 +6,7 @@ import com.phodal.shire.agent.CustomAgentExecutor
 import com.phodal.shirecore.agent.CustomAgent
 import com.phodal.shirelang.ShireBundle
 import com.phodal.shirelang.run.flow.ShireConversationService
-import com.phodal.shirelang.utils.ShireCoroutineScope
+import com.phodal.shirecore.ShireCoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
