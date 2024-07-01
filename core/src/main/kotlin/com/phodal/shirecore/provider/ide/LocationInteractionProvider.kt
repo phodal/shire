@@ -16,7 +16,7 @@ interface LocationInteractionProvider {
 
     companion object {
         private val EP_NAME: ExtensionPointName<LocationInteractionProvider> =
-            ExtensionPointName("com.phodal.shireSymbolProvider")
+            ExtensionPointName("com.phodal.shireLocationInteraction")
 
         fun provide(context: LocationInteractionContext): LocationInteractionProvider? {
             return EP_NAME.extensionList.firstOrNull {
