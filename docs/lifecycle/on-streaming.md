@@ -1,8 +1,10 @@
 ---
 layout: default
-title: onStreaming(TBD)
+title: onStreaming (Reserved)
 parent: Lifecycle
 nav_order: 1
 ---
 
-# 预留 API
+{: .note }
+> **Note:** This page is reserved for future use. It will be used to describe the `onStreaming` lifecycle event.
+

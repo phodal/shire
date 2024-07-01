@@ -1,7 +1,7 @@
 remote_theme: pmarsceill/just-the-docs
 
-title: Shire - Build coding agent
-description: Shire offers a straightforward AI coding agents language that enables communication between an LLM and control IDE for automated programming.
+title: Shire - AI coding agent language
+description: Shire offers a straightforward AI coding agent language that enables communication between an LLM and control IDE for automated programming.
 
 heading_anchors: true
 
@@ -74,7 +74,7 @@ back_to_top_text: "Back to top"
 #ga_tracking: UA-1234567-89
 ga_tracking_anonymize_ip: true # Use GDPR compliant Google Analytics settings (true by default)
 
-url: "https://ide.unitmesh.cc" # the base hostname & protocol for your site
+url: "https://shire.phodal.com" # the base hostname & protocol for your site
 
 # Aux links for the upper right navigation
 aux_links:
@@ -83,11 +83,11 @@ aux_links:
 
 # Makes Aux links open in a new tab. Default is false
 aux_links_new_tab: true
-
-mermaid:
-  # Version of mermaid library
-  # Pick an available version from https://cdn.jsdelivr.net/npm/mermaid/
-  version: "10.4.0"
+#
+#mermaid:
+#  # Version of mermaid library
+#  # Pick an available version from https://cdn.jsdelivr.net/npm/mermaid/
+#  version: "10.4.0"
 
 
 plugins:
