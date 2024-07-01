@@ -1,4 +1,4 @@
-package com.phodal.shirecore.provider.impl
+package com.phodal.shirecore.interaction
 
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.progress.ProgressManager
@@ -7,10 +7,11 @@ import com.phodal.shirecore.ShirelangNotifications
 import com.phodal.shirecore.agent.InteractionType
 import com.phodal.shirecore.llm.ChatMessage
 import com.phodal.shirecore.llm.ChatRole
-import com.phodal.shirecore.middleware.select.SelectElementStrategy
 import com.phodal.shirecore.provider.ide.LocationInteractionContext
 import com.phodal.shirecore.provider.ide.LocationInteractionProvider
-import com.phodal.shirecore.provider.impl.dto.CodeCompletionRequest
+import com.phodal.shirecore.interaction.dto.CodeCompletionRequest
+import com.phodal.shirecore.interaction.task.CodeCompletionTask
+import com.phodal.shirecore.interaction.task.FileGenerateTask
 
 class EditorInteractionProvider : LocationInteractionProvider {
     override fun isApplicable(context: LocationInteractionContext): Boolean {

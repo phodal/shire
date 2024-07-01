@@ -130,6 +130,6 @@
         <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.OpenFileProcessor"/>
 
         <!--   LocationInteractionProvider-->
-        <shireLocationInteraction implementation="com.phodal.shirecore.provider.impl.EditorInteractionProvider"/>
+        <shireLocationInteraction implementation="com.phodal.shirecore.interaction.EditorInteractionProvider"/>
     </extensions>
 </idea-plugin>

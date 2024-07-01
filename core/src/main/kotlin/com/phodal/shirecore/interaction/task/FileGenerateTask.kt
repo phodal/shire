@@ -1,4 +1,4 @@
-package com.phodal.shirecore.provider.impl
+package com.phodal.shirecore.interaction.task
 
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.fileTypes.PlainTextLanguage

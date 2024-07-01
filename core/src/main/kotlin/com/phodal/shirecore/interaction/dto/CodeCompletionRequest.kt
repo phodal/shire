@@ -1,4 +1,4 @@
-package com.phodal.shirecore.provider.impl.dto
+package com.phodal.shirecore.interaction.dto
 
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.editor.Editor
