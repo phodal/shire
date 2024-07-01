@@ -24,8 +24,20 @@ class EditorInteractionProvider : LocationInteractionProvider {
         val result: String = ""
 
         when (context.interactionType) {
-            InteractionType.AppendCursor -> TODO()
-            InteractionType.AppendCursorStream -> TODO()
+            InteractionType.AppendCursor,
+            InteractionType.AppendCursorStream,
+            -> {
+                val task = createTask(context, msgs, isReplacement = false)
+
+                if (task == null) {
+                    ShirelangNotifications.error(context.project, "Failed to create code completion task.")
+                    return ""
+                }
+
+                ProgressManager.getInstance()
+                    .runProcessWithProgressAsynchronously(task, BackgroundableProcessIndicator(task))
+            }
+
             InteractionType.OutputFile -> {
                 val fileName = targetFile?.name
                 val task = FileGenerateTask(context.project, msgs, fileName)
@@ -34,12 +46,7 @@ class EditorInteractionProvider : LocationInteractionProvider {
             }
 
             InteractionType.ReplaceSelection -> {
-                if (context.editor == null) {
-                    ShirelangNotifications.error(context.project, "Editor is null, please open a file to continue.")
-                    return ""
-                }
-
-                val task = createTask(context.editor, context, msgs)
+                val task = createTask(context, msgs, true)
 
                 if (task == null) {
                     ShirelangNotifications.error(context.project, "Failed to create code completion task.")
@@ -67,16 +74,23 @@ class EditorInteractionProvider : LocationInteractionProvider {
     }
 
     private fun createTask(
-        editor: Editor,
         context: LocationInteractionContext,
         msgs: List<ChatMessage>,
+        isReplacement: Boolean,
     ): CodeCompletionTask? {
+        if (context.editor == null) {
+            ShirelangNotifications.error(context.project, "Editor is null, please open a file to continue.")
+            return null
+        }
+
+        val editor = context.editor
+
         val offset = editor.caretModel.offset
         val element = SelectElementStrategy.resolvePsiElement(context.project, editor)
         val userPrompt = msgs.filter { it.role == ChatRole.User }.joinToString("\n") { it.content }
 
         val request = runReadAction {
-            CodeCompletionRequest.create(editor, offset, element, null, userPrompt, isReplacement = true)
+            CodeCompletionRequest.create(editor, offset, element, null, userPrompt, isReplacement = isReplacement)
         } ?: return null
 
         val task = CodeCompletionTask(request)
