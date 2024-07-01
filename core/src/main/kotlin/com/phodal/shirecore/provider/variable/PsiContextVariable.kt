@@ -51,7 +51,12 @@ enum class PsiContextVariable(val variableName: String) {
     /**
      * Represents the framework information required for the code structure.
      */
-    FRAMEWORK_CONTEXT("frameworkContext")
+    FRAMEWORK_CONTEXT("frameworkContext"),
+
+    /**
+     * codeSmell
+     */
+     CODE_SMELL("codeSmell")
     ;
 
     companion object {

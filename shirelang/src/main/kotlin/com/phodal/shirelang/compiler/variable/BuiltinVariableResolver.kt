@@ -26,7 +26,7 @@ class BuiltinVariableResolver(
             val psiContextVariable = PsiContextVariable.from(it.key)
             if (psiContextVariable != null) {
                 result[it.key] = try {
-                    variableProvider.resolveVariableValue(context.element, psiContextVariable)
+                    variableProvider.resolve(psiContextVariable, context.element, context.editor)
                 } catch (e: Exception) {
                     logger<CompositeVariableResolver>().error("Failed to resolve variable: ${it.key}", e)
                     ""

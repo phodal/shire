@@ -2,6 +2,7 @@ package com.phodal.shirecore.provider.variable
 
 import com.intellij.lang.Language
 import com.intellij.lang.LanguageExtension
+import com.intellij.openapi.editor.Editor
 import com.intellij.psi.PsiElement
 
 /**
@@ -10,27 +11,13 @@ import com.intellij.psi.PsiElement
  */
 interface PsiContextVariableProvider {
     /**
-     * Calculate the values for the given variable based on the provided PsiElement.
-     *
-     * @param psiElement the PsiElement for which to calculate variable values
-     * @return a map containing the resolved values for each PsiVariable based on the provided PsiElement
-     */
-    fun resolveAll(psiElement: PsiElement): Map<PsiContextVariable, Any> {
-        val result = mutableMapOf<PsiContextVariable, Any>()
-        for (variable in PsiContextVariable.values()) {
-            result[variable] = resolveVariableValue(psiElement, variable)
-        }
-        return result
-    }
-
-    /**
      * Calculate the value for the given variable based on the provided PsiElement.
      *
      * @param psiElement the PsiElement to use for resolving the variable value
      * @param variable the PsiVariable for which to calculate the value
      * @return the calculated value for the variable as a String
      */
-    fun resolveVariableValue(psiElement: PsiElement?, variable: PsiContextVariable): Any
+    fun resolve(variable: PsiContextVariable, psiElement: PsiElement?, editor: Editor): Any
 
     companion object {
         private val languageExtension: LanguageExtension<PsiContextVariableProvider> =

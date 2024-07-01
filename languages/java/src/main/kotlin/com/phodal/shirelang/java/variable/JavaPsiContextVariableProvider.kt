@@ -1,5 +1,6 @@
 package com.phodal.shirelang.java.variable
 
+import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.*
 import com.intellij.psi.search.GlobalSearchScope
@@ -10,11 +11,12 @@ import com.phodal.shirecore.provider.variable.PsiContextVariable
 import com.phodal.shirecore.provider.variable.PsiContextVariableProvider
 import com.phodal.shirecore.provider.context.ToolchainPrepareContext
 import com.phodal.shirecore.provider.context.LanguageToolchainProvider
+import com.phodal.shirecore.provider.variable.CodeSmellBuilder
 import com.phodal.shirelang.java.variable.provider.JavaRelatedClassesProvider
 import kotlinx.coroutines.runBlocking
 
 class JavaPsiContextVariableProvider : PsiContextVariableProvider {
-    override fun resolveVariableValue(psiElement: PsiElement?, variable: PsiContextVariable): Any {
+    override fun resolve(variable: PsiContextVariable, psiElement: PsiElement?, editor: Editor): Any {
         val project = psiElement?.project ?: return ""
         if (psiElement.language.id != "JAVA") return ""
 
@@ -71,6 +73,10 @@ class JavaPsiContextVariableProvider : PsiContextVariableProvider {
 
                     contextItems.joinToString("\n") { it.text }
                 }
+            }
+
+            PsiContextVariable.CODE_SMELL -> {
+                CodeSmellBuilder.collectElementProblemAsSting(psiElement, project, editor)
             }
         }
     }
