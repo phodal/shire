@@ -8,7 +8,6 @@ import com.intellij.openapi.editor.ScrollType
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiDocumentManager
-import com.intellij.psi.PsiElement
 import com.intellij.psi.codeStyle.CodeStyleManager
 import com.phodal.shirecore.ShireCoreBundle
 
@@ -45,7 +44,7 @@ object InsertUtil {
         editor.scrollingModel.scrollToCaret(ScrollType.MAKE_VISIBLE)
     }
 
-    fun replaceText(project: Project, editor: Editor, element: PsiElement?, output: String) {
+    fun replaceText(project: Project, editor: Editor, output: String) {
         val primaryCaret = editor.caretModel.primaryCaret;
         val start = runReadAction { primaryCaret.selectionStart }
         val end = runReadAction { primaryCaret.selectionEnd }

@@ -5,13 +5,13 @@ import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator
 import com.phodal.shirecore.ShirelangNotifications
 import com.phodal.shirecore.agent.InteractionType
+import com.phodal.shirecore.interaction.dto.CodeCompletionRequest
+import com.phodal.shirecore.interaction.task.BaseCodeGenTask
+import com.phodal.shirecore.interaction.task.FileGenerateTask
 import com.phodal.shirecore.llm.ChatMessage
 import com.phodal.shirecore.llm.ChatRole
 import com.phodal.shirecore.provider.ide.LocationInteractionContext
 import com.phodal.shirecore.provider.ide.LocationInteractionProvider
-import com.phodal.shirecore.interaction.dto.CodeCompletionRequest
-import com.phodal.shirecore.interaction.task.CodeCompletionTask
-import com.phodal.shirecore.interaction.task.FileGenerateTask
 
 class EditorInteractionProvider : LocationInteractionProvider {
     override fun isApplicable(context: LocationInteractionContext): Boolean {
@@ -78,7 +78,7 @@ class EditorInteractionProvider : LocationInteractionProvider {
         msgs: List<ChatMessage>,
         isReplacement: Boolean,
         postExecute: (String) -> Unit,
-    ): CodeCompletionTask? {
+    ): BaseCodeGenTask? {
         if (context.editor == null) {
             ShirelangNotifications.error(context.project, "Editor is null, please open a file to continue.")
             return null
@@ -101,7 +101,7 @@ class EditorInteractionProvider : LocationInteractionProvider {
             )
         } ?: return null
 
-        val task = CodeCompletionTask(request)
+        val task = BaseCodeGenTask(request)
         return task
     }
 }
