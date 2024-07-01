@@ -1,8 +1,6 @@
 package com.phodal.shirecore.middleware.select
 
 import com.intellij.openapi.application.runInEdt
-import com.intellij.openapi.application.runReadAction
-import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
@@ -131,6 +129,12 @@ sealed class SelectElementStrategy {
         }
 
         fun resolvePsiElement(myProject: Project, editor: Editor): PsiElement? {
+            val elementToAction = DefaultPsiElementStrategy().getElementToAction(myProject, editor)
+
+            if (elementToAction != null) {
+                return elementToAction
+            }
+
             val element: PsiElement? = try {
                 editor.caretModel.currentCaret.offset.let {
                     val psiFile = PsiUtilBase.getPsiFileInEditor(editor, myProject) ?: return@let null

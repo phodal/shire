@@ -2,6 +2,7 @@ package com.phodal.shirecore.provider.ide
 
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
+import com.intellij.psi.PsiElement
 import com.phodal.shirecore.action.ShireActionLocation
 import com.phodal.shirecore.agent.InteractionType
 import kotlinx.coroutines.flow.Flow
@@ -25,4 +26,6 @@ data class LocationInteractionContext(
      * the [com.phodal.shirecore.llm.ChatMessage]
      */
     val prompt: String,
+
+    val selectElement: PsiElement? = null,
 )

@@ -2,10 +2,8 @@ package com.phodal.shirecore.provider.impl
 
 
 import com.intellij.openapi.application.invokeLater
-import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.editor.Document
-import com.intellij.openapi.editor.ScrollType
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
@@ -15,8 +13,11 @@ import com.intellij.psi.codeStyle.CodeStyleManager
 import com.phodal.shirecore.ShireCoreBundle
 import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.llm.LlmProvider
+import com.phodal.shirecore.markdown.Code
 import com.phodal.shirecore.provider.impl.dto.CodeCompletionRequest
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.launch
 import kotlin.jvm.internal.Ref
 
@@ -27,9 +28,10 @@ class CodeCompletionTask(private val request: CodeCompletionRequest) :
     private val writeActionGroupId = "code.complete.intention.write.action"
     private val codeMessage = ShireCoreBundle.message("intentions.chat.code.complete.name")
 
-//    private val chunksString = request.element?.let { SimilarChunksWithPaths.createQuery(it, 60) }
+    //    private val chunksString = request.element?.let { SimilarChunksWithPaths.createQuery(it, 60) }
 //    private val commenter = request.element?.let { LanguageCommenters.INSTANCE.forLanguage(it.language) }
 //    private val commentPrefix = commenter?.lineCommentPrefix
+    private var isCanceled: Boolean = false
 
     override fun run(indicator: ProgressIndicator) {
         val prompt = promptText()
@@ -39,27 +41,34 @@ class CodeCompletionTask(private val request: CodeCompletionRequest) :
 
         val editor = request.editor
         ShireCoroutineScope.scope(request.project).launch {
-            val currentOffset = Ref.IntRef()
-            currentOffset.element = request.offset
+            var currentOffset = request.offset
 
             val project = request.project
-            val finalOutput = StringBuilder()
+            val suggestion = StringBuilder()
 
-            flow.collect {
-                finalOutput.append(it)
+            flow.cancellable().collect { char ->
+                if (isCanceled) {
+                    cancel()
+                    return@collect
+                }
+
+                val parsedContent = Code.parse(char).text;
+
+                suggestion.append(parsedContent)
                 invokeLater {
-                    WriteCommandAction.runWriteCommandAction(project, codeMessage, writeActionGroupId, {
-                        insertStringAndSaveChange(project, it, editor.document, currentOffset.element, false)
-                    })
-
-                    currentOffset.element += it.length
-                    editor.caretModel.moveToOffset(currentOffset.element)
-                    editor.scrollingModel.scrollToCaret(ScrollType.MAKE_VISIBLE)
+                    if (!isCanceled && !request.isReplacement) {
+                        InsertUtil.insertStreamingToDoc(project, parsedContent, editor, currentOffset)
+                        currentOffset += char.length
+                    }
                 }
             }
 
-            logger.info("Suggestion: $finalOutput")
-            request.postExecute?.invoke(finalOutput.toString())
+            if (request.isReplacement) {
+                InsertUtil.replaceText(project, editor, request.element, suggestion.toString())
+            }
+
+            logger.info("Suggestion: $suggestion")
+            request.postExecute?.invoke(suggestion.toString())
         }
     }
 
@@ -86,7 +95,7 @@ class CodeCompletionTask(private val request: CodeCompletionRequest) :
             suggestion: String,
             document: Document,
             startOffset: Int,
-            withReformat: Boolean
+            withReformat: Boolean,
         ) {
             document.insertString(startOffset, suggestion)
             PsiDocumentManager.getInstance(project).commitDocument(document)
