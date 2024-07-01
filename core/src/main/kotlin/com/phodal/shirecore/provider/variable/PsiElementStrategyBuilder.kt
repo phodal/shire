@@ -5,6 +5,7 @@ import com.intellij.lang.LanguageExtension
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiNameIdentifierOwner
 import com.phodal.shirecore.codemodel.model.ClassStructure
 
 interface PsiElementStrategyBuilder {
@@ -25,6 +26,11 @@ interface PsiElementStrategyBuilder {
      * Return the relative [PsiElement] with [PsiComment] for givenElement in the given project.
      */
     fun relativeElement(project: Project, givenElement: PsiElement, type: PsiComment): PsiElement?
+
+    /**
+     * Find the nearest target [PsiNameIdentifierOwner] for the given [PsiElement].
+     */
+    fun findNearestTarget(psiElement: PsiElement): PsiNameIdentifierOwner?
 
     companion object {
         private val languageExtension: LanguageExtension<PsiElementStrategyBuilder> =

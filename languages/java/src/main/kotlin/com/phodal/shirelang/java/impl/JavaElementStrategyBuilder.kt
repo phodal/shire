@@ -21,7 +21,7 @@ class JavaElementStrategyBuilder : PsiElementStrategyBuilder {
         TODO("Not yet implemented")
     }
 
-    fun findNearestTarget(psiElement: PsiElement): PsiNameIdentifierOwner? {
+    override fun findNearestTarget(psiElement: PsiElement): PsiNameIdentifierOwner? {
         if (psiElement is PsiMethod || psiElement is PsiClass) return psiElement as PsiNameIdentifierOwner
 
         val closestIdentifierOwner = PsiTreeUtil.getParentOfType(psiElement, PsiNameIdentifierOwner::class.java)
