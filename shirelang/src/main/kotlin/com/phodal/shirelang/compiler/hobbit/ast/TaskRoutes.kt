@@ -72,7 +72,7 @@ data class TaskRoutes(
         }
 
         if (matchedCase.isEmpty()) {
-            ((defaultTask as Task.Default).expression?.value as? Statement)?.let {
+            ((defaultTask as? Task.Default)?.expression?.value as? Statement)?.let {
                 processor.execute(it, variableTable)
             }
 
