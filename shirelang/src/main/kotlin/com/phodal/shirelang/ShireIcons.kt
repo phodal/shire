@@ -12,4 +12,8 @@ object ShireIcons {
     val Terminal: Icon = IconLoader.getIcon("/icons/terminal.svg", ShireIcons::class.java)
     @JvmField
     val Idea: Icon = IconLoader.getIcon("/icons/idea.svg", ShireIcons::class.java)
+    @JvmField
+    val PsiExpr: Icon = IconLoader.getIcon("/icons/shire-psi-expr.svg", ShireIcons::class.java)
+    @JvmField
+    val Variable: Icon = IconLoader.getIcon("/icons/variable.svg", ShireIcons::class.java)
 }
