@@ -4,7 +4,6 @@ package com.phodal.shirecore.provider.impl
 import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.editor.Document
-import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
@@ -15,7 +14,6 @@ import com.phodal.shirecore.ShireCoreBundle
 import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.markdown.Code
-import com.phodal.shirecore.middleware.select.SelectElementStrategy
 import com.phodal.shirecore.provider.impl.dto.CodeCompletionRequest
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
@@ -25,17 +23,10 @@ import kotlinx.coroutines.launch
 class CodeCompletionTask(private val request: CodeCompletionRequest) :
     Task.Backgroundable(request.project, ShireCoreBundle.message("intentions.chat.code.complete.name")) {
 
-
-    private val writeActionGroupId = "code.complete.intention.write.action"
-    private val codeMessage = ShireCoreBundle.message("intentions.chat.code.complete.name")
-
-    //    private val chunksString = request.element?.let { SimilarChunksWithPaths.createQuery(it, 60) }
-//    private val commenter = request.element?.let { LanguageCommenters.INSTANCE.forLanguage(it.language) }
-//    private val commentPrefix = commenter?.lineCommentPrefix
     private var isCanceled: Boolean = false
 
     override fun run(indicator: ProgressIndicator) {
-        val prompt = promptText(request.editor)
+        val prompt = completionPrompt()
 
         val flow: Flow<String> = LlmProvider.provider(request.project)!!.stream(prompt, "", false)
         logger.info("Prompt: $prompt")
@@ -71,30 +62,18 @@ class CodeCompletionTask(private val request: CodeCompletionRequest) :
                 val end = selectionModel.selectionEnd
                 editor.document.deleteString(start, end)
 
-                InsertUtil.insertStringAndSaveChange(project, suggestion.toString(), editor.document, request.startOffset, false)
+                InsertUtil.insertStringAndSaveChange(
+                    project,
+                    suggestion.toString(),
+                    editor.document,
+                    request.startOffset,
+                    false
+                )
             }
 
             logger.info("Suggestion: $suggestion")
             request.postExecute?.invoke(suggestion.toString())
         }
-    }
-
-    private fun promptText(editor: Editor): String {
-        val selectionModel = editor.selectionModel
-        if (selectionModel.hasSelection()) {
-            val start = selectionModel.selectionStart
-            val end = selectionModel.selectionEnd
-            val selectedText = editor.document.getText(TextRange(start, end))
-            return selectedText
-        }
-
-        val element = SelectElementStrategy.resolvePsiElement(request.project, editor)
-        if (element != null) {
-            return element.text
-        }
-
-
-        return completionPrompt()
     }
 
     private fun completionPrompt(): String {
