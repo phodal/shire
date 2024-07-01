@@ -98,6 +98,8 @@ open class BaseCodeGenTask(private val request: CodeCompletionRequest) :
 
             indicator.fraction = 0.8
             logger.info("Suggestion: $suggestion")
+
+            request.postExecute?.invoke(suggestion.toString())
         }
     }
 
