@@ -50,7 +50,7 @@ open class BaseCodeGenTask(private val request: CodeCompletionRequest) :
         indicator.fraction = 0.1
         indicator.text = ShireCoreBundle.message("intentions.step.prepare-context")
 
-        val prompt = promptText()
+        val prompt = runReadAction { promptText() }
 
         val flow: Flow<String> = LlmProvider.provider(request.project)!!.stream(prompt, "", false)
         logger.info("Prompt: $prompt")
