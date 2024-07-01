@@ -81,25 +81,26 @@ open class BaseCodeGenTask(private val request: CodeCompletionRequest) :
                     return@collect
                 }
 
-                val parsedContent = Code.parse(char).text;
+                suggestion.append(char)
 
-                suggestion.append(parsedContent)
                 invokeLater {
                     if (!isCanceled && !request.isReplacement) {
-                        InsertUtil.insertStreamingToDoc(project, parsedContent, editor, currentOffset)
+                        InsertUtil.insertStreamingToDoc(project, char, editor, currentOffset)
                         currentOffset += char.length
                     }
                 }
             }
 
             if (request.isReplacement) {
-                InsertUtil.replaceText(project, editor, suggestion.toString())
+                val parsedContent = Code.parse(suggestion.toString()).text
+                InsertUtil.replaceText(project, editor, parsedContent)
             }
 
             indicator.fraction = 0.8
             logger.info("Suggestion: $suggestion")
 
             request.postExecute?.invoke(suggestion.toString())
+            indicator.fraction = 1.0
         }
     }
 

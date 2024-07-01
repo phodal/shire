@@ -73,6 +73,8 @@ class CodeCompletionTask(private val request: CodeCompletionRequest) :
 
             logger.info("Suggestion: $suggestion")
             request.postExecute?.invoke(suggestion.toString())
+
+            indicator.fraction = 1.0
         }
     }
 
