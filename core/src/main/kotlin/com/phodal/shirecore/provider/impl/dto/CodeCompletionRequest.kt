@@ -21,6 +21,7 @@ class CodeCompletionRequest(
     val editor: Editor,
     val suffixText: String,
     val isReplacement: Boolean = false,
+    val postExecute: ((String) -> Unit)?,
 ) : Disposable {
     companion object {
         fun create(
@@ -29,7 +30,8 @@ class CodeCompletionRequest(
             element: PsiElement?,
             prefix: String?,
             suffix: String?,
-            isReplacement: Boolean = false
+            isReplacement: Boolean = false,
+            postExecute: (String) -> Unit,
         ): CodeCompletionRequest? {
             val project = editor.project ?: return null
             val document = editor.document
@@ -56,7 +58,8 @@ class CodeCompletionRequest(
                 element,
                 editor,
                 suffixText,
-                isReplacement
+                isReplacement,
+                postExecute = postExecute
             )
 
         }

@@ -1,7 +1,6 @@
 package com.phodal.shirecore.provider.impl
 
 import com.intellij.openapi.application.runReadAction
-import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator
 import com.phodal.shirecore.ShirelangNotifications
@@ -18,20 +17,22 @@ class EditorInteractionProvider : LocationInteractionProvider {
         return true
     }
 
-    override fun execute(context: LocationInteractionContext): String {
-        val msgs: List<ChatMessage> = listOf()
+    override fun execute(context: LocationInteractionContext, postExecute: (String) -> Unit) {
+        val msgs: List<ChatMessage> = listOf(
+            // todo: add system prompt
+            ChatMessage(ChatRole.User, context.prompt),
+        )
         val targetFile = context.editor?.virtualFile
-        val result: String = ""
 
         when (context.interactionType) {
             InteractionType.AppendCursor,
             InteractionType.AppendCursorStream,
             -> {
-                val task = createTask(context, msgs, isReplacement = false)
+                val task = createTask(context, msgs, isReplacement = false, postExecute = postExecute)
 
                 if (task == null) {
                     ShirelangNotifications.error(context.project, "Failed to create code completion task.")
-                    return ""
+                    return
                 }
 
                 ProgressManager.getInstance()
@@ -40,17 +41,17 @@ class EditorInteractionProvider : LocationInteractionProvider {
 
             InteractionType.OutputFile -> {
                 val fileName = targetFile?.name
-                val task = FileGenerateTask(context.project, msgs, fileName)
+                val task = FileGenerateTask(context.project, msgs, fileName, postExecute = postExecute)
                 ProgressManager.getInstance()
                     .runProcessWithProgressAsynchronously(task, BackgroundableProcessIndicator(task))
             }
 
             InteractionType.ReplaceSelection -> {
-                val task = createTask(context, msgs, true)
+                val task = createTask(context, msgs, true, postExecute)
 
                 if (task == null) {
                     ShirelangNotifications.error(context.project, "Failed to create code completion task.")
-                    return ""
+                    return
                 }
 
                 ProgressManager.getInstance()
@@ -59,7 +60,7 @@ class EditorInteractionProvider : LocationInteractionProvider {
 
             InteractionType.ReplaceCurrentFile -> {
                 val fileName = targetFile?.name
-                val task = FileGenerateTask(context.project, msgs, fileName)
+                val task = FileGenerateTask(context.project, msgs, fileName, postExecute = postExecute)
 
                 ProgressManager.getInstance()
                     .runProcessWithProgressAsynchronously(task, BackgroundableProcessIndicator(task))
@@ -69,14 +70,13 @@ class EditorInteractionProvider : LocationInteractionProvider {
                 TODO()
             }
         }
-
-        return result
     }
 
     private fun createTask(
         context: LocationInteractionContext,
         msgs: List<ChatMessage>,
         isReplacement: Boolean,
+        postExecute: (String) -> Unit,
     ): CodeCompletionTask? {
         if (context.editor == null) {
             ShirelangNotifications.error(context.project, "Editor is null, please open a file to continue.")
@@ -90,7 +90,15 @@ class EditorInteractionProvider : LocationInteractionProvider {
         val userPrompt = msgs.filter { it.role == ChatRole.User }.joinToString("\n") { it.content }
 
         val request = runReadAction {
-            CodeCompletionRequest.create(editor, offset, element, null, userPrompt, isReplacement = isReplacement)
+            CodeCompletionRequest.create(
+                editor,
+                offset,
+                element,
+                null,
+                userPrompt,
+                isReplacement = isReplacement,
+                postExecute = postExecute
+            )
         } ?: return null
 
         val task = CodeCompletionTask(request)

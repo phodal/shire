@@ -43,10 +43,10 @@ class CodeCompletionTask(private val request: CodeCompletionRequest) :
             currentOffset.element = request.offset
 
             val project = request.project
-            val suggestion = StringBuilder()
+            val finalOutput = StringBuilder()
 
             flow.collect {
-                suggestion.append(it)
+                finalOutput.append(it)
                 invokeLater {
                     WriteCommandAction.runWriteCommandAction(project, codeMessage, writeActionGroupId, {
                         insertStringAndSaveChange(project, it, editor.document, currentOffset.element, false)
@@ -58,7 +58,8 @@ class CodeCompletionTask(private val request: CodeCompletionRequest) :
                 }
             }
 
-            logger.info("Suggestion: $suggestion")
+            logger.info("Suggestion: $finalOutput")
+            request.postExecute?.invoke(finalOutput.toString())
         }
     }
 

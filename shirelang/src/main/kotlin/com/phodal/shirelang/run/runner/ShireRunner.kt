@@ -4,10 +4,6 @@ import com.intellij.execution.process.ProcessHandler
 import com.intellij.execution.ui.ConsoleView
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
-import com.phodal.shirecore.action.ShireActionLocation
-import com.phodal.shirecore.agent.InteractionType
-import com.phodal.shirecore.provider.ide.LocationInteractionContext
-import com.phodal.shirecore.provider.ide.LocationInteractionProvider
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.run.ShireConfiguration
 

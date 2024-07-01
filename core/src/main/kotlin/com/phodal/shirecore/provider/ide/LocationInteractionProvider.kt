@@ -12,7 +12,7 @@ import com.intellij.openapi.extensions.ExtensionPointName
 interface LocationInteractionProvider {
     fun isApplicable(context: LocationInteractionContext): Boolean
 
-    fun execute(context: LocationInteractionContext) : String
+    fun execute(context: LocationInteractionContext, postExecute: (String) -> Unit)
 
     companion object {
         private val EP_NAME: ExtensionPointName<LocationInteractionProvider> =

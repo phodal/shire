@@ -29,14 +29,16 @@ class ShireDefaultRunner(
                 interactionType = InteractionType.AppendCursorStream,
                 editor = context.editor,
                 project = context.myProject,
+                prompt = context.prompt
             )
 
             if (context.hole?.interaction != null) {
                 val interactionProvider = LocationInteractionProvider.provide(interactionContext)
                 if (interactionProvider != null) {
-                    val response = interactionProvider.execute(interactionContext)
-                    postFunction(response)
-                    context.processHandler.detachProcess()
+                    interactionProvider.execute(interactionContext) {
+                        postFunction(it)
+                        context.processHandler.detachProcess()
+                    }
                     return@invokeLater
                 }
             }

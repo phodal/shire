@@ -20,4 +20,9 @@ data class LocationInteractionContext(
     val editor: Editor?,
 
     val project: Project,
+
+    /**
+     * the [com.phodal.shirecore.llm.ChatMessage]
+     */
+    val prompt: String,
 )

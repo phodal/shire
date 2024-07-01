@@ -25,7 +25,8 @@ open class FileGenerateTask(
     val messages: List<ChatMessage>,
     val fileName: String?,
     private val codeOnly: Boolean = false,
-    private val taskName: String = ShireCoreBundle.message("intentions.request.background.process.title")
+    private val taskName: String = ShireCoreBundle.message("intentions.request.background.process.title"),
+    val postExecute: ((String) -> Unit)?
 ) :
     Task.Backgroundable(project, taskName) {
     private val projectRoot = project.guessProjectDir()!!
@@ -66,6 +67,8 @@ open class FileGenerateTask(
             file.writeText(result)
             refreshAndOpenInEditor(Path(projectRoot.path), projectRoot)
         }
+
+        postExecute?.invoke(result)
     }
 
     private fun refreshAndOpenInEditor(file: Path, parentDir: VirtualFile) {
