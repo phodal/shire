@@ -6,8 +6,7 @@ import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import junit.framework.TestCase
 
 class JavaTestHelperTest : BasePlatformTestCase() {
-
-    val code = """
+    private val code: String = """
         import org.junit.Test;
 
 public class MathHelperTest {
@@ -62,7 +61,8 @@ public class MathHelperTest {
                 }
             }
         """.trimIndent()
-        val psiFile = myFixture.addFileToProject("MathHelperTest.java", code)
+
+        myFixture.addFileToProject("MathHelperTest.java", code)
         val psiFile2 = myFixture.addFileToProject("MathHelper.java", code2) as PsiJavaFile
 
         val addMethod = psiFile2.classes.first().methods.first() as PsiMethod

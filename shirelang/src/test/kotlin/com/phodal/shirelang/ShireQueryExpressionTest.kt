@@ -38,7 +38,6 @@ class ShireQueryExpressionTest : BasePlatformTestCase() {
 
         val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
         val hole = compile.config!!
-        val editor = myFixture.editor
 
         val patternActionFuncs = hole.variables.first().value.patternActionFuncs
         val whereDisplay = (patternActionFuncs[1] as PatternActionFunc.Where).statement.display()
