@@ -40,34 +40,24 @@ object JavaTestHelper {
 
     fun findSimilarTestCases(psiElement: PsiElement, minScore: Double = 1.0): List<PsiMethod> {
         val psiMethod = psiElement as? PsiMethod ?: return emptyList()
-
         val methodName = psiMethod.name
 
-        val allTestFile = psiElement.containingFile.containingDirectory.files
-            .filter { it.name.contains("Test") }
-            .map { it as PsiJavaFile }
-
-        val allTestMethod: List<PsiMethod> = allTestFile.flatMap { javaFile ->
-            javaFile.classes.flatMap { it.methods.toList() }
-        }
+        val containingDirectory = psiElement.containingFile.containingDirectory
+        val allTestMethods = containingDirectory.files
+            .asSequence()
+            .filter { it.name.contains("Test") && it is PsiJavaFile }
+            .flatMap { (it as PsiJavaFile).classes.asSequence() }
+            .flatMap { it.methods.asSequence() }
+            .toList()
 
         val tfIdf = TfIdf<String, List<PsiMethod>>()
         tfIdf.setTokenizer(CodeNamingTokenizer())
 
-        allTestMethod.forEach {
-            tfIdf.addDocument(it.name, it)
-        }
+        allTestMethods.forEach { tfIdf.addDocument(it.name, it) }
 
-        val results : MutableList<PsiMethod> = mutableListOf()
-        val scores = tfIdf.tfidfs(methodName)
-
-        scores.forEachIndexed { index, measure ->
-            if (measure > minScore) {
-                results += allTestMethod[index]
+        return tfIdf.tfidfs(methodName)
+            .mapIndexedNotNull { index, measure ->
+                if (measure > minScore) allTestMethods[index] else null
             }
-        }
-
-        return results
     }
-
 }
