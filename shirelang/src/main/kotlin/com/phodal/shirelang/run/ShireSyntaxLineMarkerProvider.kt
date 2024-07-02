@@ -10,7 +10,7 @@ import com.phodal.shirelang.psi.ShireCaseBody
 import com.phodal.shirelang.psi.ShireFrontMatterEntry
 import com.phodal.shirelang.psi.ShireQueryStatement
 
-class ShirePsiExprLineMarkerProvider : LineMarkerProvider {
+class ShireSyntaxLineMarkerProvider : LineMarkerProvider {
     override fun getLineMarkerInfo(element: PsiElement): LineMarkerInfo<*>? {
         if (element !is ShireFrontMatterEntry) return null
 

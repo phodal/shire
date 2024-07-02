@@ -48,7 +48,7 @@
                                   implementationClass="com.phodal.shirelang.run.ShireRunLineMarkersProvider"/>
 
         <codeInsight.lineMarkerProvider language="Shire"
-                                        implementationClass="com.phodal.shirelang.run.ShirePsiExprLineMarkerProvider"/>
+                                        implementationClass="com.phodal.shirelang.run.ShireSyntaxLineMarkerProvider"/>
 
         <intentionAction>
             <className>com.phodal.shirelang.actions.intention.ShireIntentionHelper</className>
