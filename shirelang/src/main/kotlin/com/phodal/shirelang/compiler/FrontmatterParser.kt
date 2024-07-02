@@ -10,6 +10,7 @@ import com.phodal.shirelang.compiler.hobbit.*
 import com.phodal.shirelang.compiler.hobbit.ast.*
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 import com.phodal.shirelang.psi.*
+import org.intellij.grammar.generator.Case
 
 object FrontmatterParser {
     private val logger = logger<FrontmatterParser>()
@@ -270,7 +271,7 @@ object FrontmatterParser {
             val condition = parseLiteral(expr.caseCondition)
             val body = parseRefExpr(expr.expr)
 
-            CaseKeyValue(condition, body)
+            CaseKeyValue(condition, body as FrontMatterType.EXPRESSION)
         }
 
         else -> {
@@ -493,12 +494,21 @@ object FrontmatterParser {
                     processor.add(it)
                 }
             }
+            expr.caseBody?.let { caseBody ->
+                parseExprCaseBody(caseBody)?.let { conditionCase ->
+                    conditionCase.cases.map {
+                        val keyValue = (it as FrontMatterType.EXPRESSION).value as CaseKeyValue
+                        processor.add(PatternActionFunc.CaseMatch(keyValue))
+                    }
+                }
+            }
         }
+
 
         return Processor(processor)
     }
 
-     fun parseActionBodyFunCall(funcCall: ShireFuncCall?, expr: ShireActionExpr, ): PatternActionFunc? {
+    fun parseActionBodyFunCall(funcCall: ShireFuncCall?, expr: ShireActionExpr): PatternActionFunc? {
         val args = parseParameters(funcCall) ?: emptyList()
         val patternActionFunc = when (funcCall?.funcName?.text) {
             "grep" -> {

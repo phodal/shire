@@ -343,7 +343,7 @@ data class Processor(
 
 data class CaseKeyValue(
     val key: FrontMatterType,
-    val value: FrontMatterType,
+    val value: FrontMatterType.EXPRESSION,
 ) : Statement() {
     override fun evaluate(variables: Map<String, String>): Any {
         return key.display() to value

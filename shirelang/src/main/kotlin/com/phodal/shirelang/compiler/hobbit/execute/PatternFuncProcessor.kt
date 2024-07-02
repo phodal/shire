@@ -149,6 +149,10 @@ open class PatternFuncProcessor(open val myProject: Project, hole: HobbitHole) {
                 // do nothing
             }
 
+            is PatternActionFunc.CaseMatch -> {
+                action.keyValue.value
+            }
+
 
             else -> {
                 logger<PatternActionProcessor>().error("Unknown pattern processor type: ${action.funcName}")

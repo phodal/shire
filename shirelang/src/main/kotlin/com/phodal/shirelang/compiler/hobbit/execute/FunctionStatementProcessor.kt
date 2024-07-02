@@ -66,7 +66,7 @@ open class FunctionStatementProcessor(override val myProject: Project, val hole:
             }
         }
 
-        return null;
+        return null
     }
 
     fun execute(processors: List<PatternActionFunc>, variableTable: MutableMap<String, Any?>): Any? {

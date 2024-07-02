@@ -1,6 +1,6 @@
 package com.phodal.shirelang.compiler.patternaction
 
-import com.phodal.shirelang.compiler.hobbit.ast.ConditionCase
+import com.phodal.shirelang.compiler.hobbit.ast.CaseKeyValue
 import com.phodal.shirelang.compiler.hobbit.ast.Statement
 import com.phodal.shirelang.compiler.hobbit.ast.VariableElement
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc.*
@@ -119,6 +119,11 @@ sealed class PatternActionFunc(open val funcName: String) {
      * use IDE Notify
      */
     class Notify(val message: String) : PatternActionFunc("notify")
+
+    /**
+     * Case Match
+     */
+    class CaseMatch(val keyValue: CaseKeyValue) : PatternActionFunc("switch")
 
     /**
      * User Custom Functions
