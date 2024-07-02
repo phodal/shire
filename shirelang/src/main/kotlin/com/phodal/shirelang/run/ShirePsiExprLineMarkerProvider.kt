@@ -15,21 +15,36 @@ class ShirePsiExprLineMarkerProvider : LineMarkerProvider {
             return null
         }
 
-        if (element.functionStatement?.functionBody?.queryStatement == null) {
-            return null
+        if (element.functionStatement?.functionBody?.queryStatement != null) {
+            val firstChildKeyElement = element.frontMatterKey!!.firstChild
+
+            return LineMarkerInfo(
+                firstChildKeyElement,
+                firstChildKeyElement.textRange,
+                ShireIcons.PsiExpr,
+                null,
+                null,
+                GutterIconRenderer.Alignment.LEFT
+            ) {
+                ""
+            }
         }
 
-        val firstChildKeyElement = element.frontMatterKey!!.firstChild
+        if (element.functionStatement?.functionBody?.actionBody != null) {
+            val firstChildKeyElement = element.frontMatterKey!!.firstChild
 
-        return LineMarkerInfo(
-            firstChildKeyElement,
-            firstChildKeyElement.textRange,
-            ShireIcons.PsiExpr,
-            null,
-            null,
-            GutterIconRenderer.Alignment.LEFT
-        ) {
-            ""
+            return LineMarkerInfo(
+                firstChildKeyElement,
+                firstChildKeyElement.textRange,
+                ShireIcons.Pipeline,
+                null,
+                null,
+                GutterIconRenderer.Alignment.LEFT
+            ) {
+                ""
+            }
         }
+
+        return null
     }
 }

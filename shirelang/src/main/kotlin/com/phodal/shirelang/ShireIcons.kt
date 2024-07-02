@@ -15,5 +15,9 @@ object ShireIcons {
     @JvmField
     val PsiExpr: Icon = IconLoader.getIcon("/icons/shire-psi-expr.svg", ShireIcons::class.java)
     @JvmField
-    val Variable: Icon = IconLoader.getIcon("/icons/variable.svg", ShireIcons::class.java)
+    val Variable: Icon = IconLoader.getIcon("/icons/shire-variable.svg", ShireIcons::class.java)
+    @JvmField
+    val Pipeline: Icon = IconLoader.getIcon("/icons/shire-pipeline.svg", ShireIcons::class.java)
+    @JvmField
+    val Case: Icon = IconLoader.getIcon("/icons/shire-case.svg", ShireIcons::class.java)
 }
