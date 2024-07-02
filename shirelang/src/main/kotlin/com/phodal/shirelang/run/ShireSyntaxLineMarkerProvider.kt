@@ -14,7 +14,7 @@ class ShireSyntaxLineMarkerProvider : LineMarkerProvider {
     override fun getLineMarkerInfo(element: PsiElement): LineMarkerInfo<*>? {
         if (element !is ShireFrontMatterEntry) return null
 
-        val key = element.frontMatterKey!!.firstChild
+        val key = element.frontMatterKey?.firstChild ?: return null
 
         val patternAction = element.patternAction
         if (patternAction != null) {
