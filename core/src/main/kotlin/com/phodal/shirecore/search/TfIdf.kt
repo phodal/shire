@@ -109,7 +109,7 @@ class WordTokenizer(options: RegexTokenizerOptions? = null) : RegexpTokenizer(op
     }
 }
 
-class CodeTokenizer(opts: RegexTokenizerOptions? = null) : RegexpTokenizer(opts) {
+class CodeNamingTokenizer(opts: RegexTokenizerOptions? = null) : RegexpTokenizer(opts) {
     init {
         whitespacePattern = Regex(
             "(?<=[a-z])(?=[A-Z])|" +       // camelCase 分词
@@ -133,7 +133,8 @@ class CodeTokenizer(opts: RegexTokenizerOptions? = null) : RegexpTokenizer(opts)
 class TfIdf<K, V> {
     private val documents: MutableList<DocumentType> = mutableListOf()
     private var _idfCache: MutableMap<String, Double> = mutableMapOf()
-    var tokenizer: RegexpTokenizer = CodeTokenizer()
+
+    var tokenizer: RegexpTokenizer = WordTokenizer()
 
     companion object {
         fun tf(term: String, document: DocumentType): Int {

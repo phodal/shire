@@ -20,45 +20,30 @@ class JavaPsiContextVariableProvider : PsiContextVariableProvider {
         val sourceFile: PsiJavaFile = psiElement.containingFile as PsiJavaFile
 
         return when (variable) {
-            PsiContextVariable.CURRENT_CLASS_NAME -> {
-                clazz?.name ?: ""
-            }
+            PsiContextVariable.IMPORTS -> sourceFile.importList?.text ?: ""
 
-            PsiContextVariable.CURRENT_CLASS_CODE -> {
-                sourceFile.text
-            }
+            PsiContextVariable.CURRENT_CLASS_NAME -> clazz?.name ?: ""
 
-            PsiContextVariable.CURRENT_METHOD_NAME -> {
-                (psiElement as? PsiMethod)?.name ?: ""
-            }
+            PsiContextVariable.CURRENT_CLASS_CODE -> sourceFile.text
 
-            PsiContextVariable.CURRENT_METHOD_CODE -> {
-                (psiElement as? PsiMethod)?.body?.text ?: ""
-            }
+            PsiContextVariable.CURRENT_METHOD_NAME -> (psiElement as? PsiMethod)?.name ?: ""
+
+            PsiContextVariable.CURRENT_METHOD_CODE -> (psiElement as? PsiMethod)?.body?.text ?: ""
 
             PsiContextVariable.RELATED_CLASSES -> {
                 JavaRelatedClassesProvider().lookup(psiElement.parent).joinToString("\n") { it.text }
             }
 
             PsiContextVariable.SIMILAR_TEST_CASE -> {
-                return JavaTestHelper.findSimilarTestCases(psiElement).joinToString("\n") { it.text }
+                JavaTestHelper.findSimilarTestCases(psiElement).joinToString("\n") { it.text }
             }
 
-            PsiContextVariable.IMPORTS -> {
-                sourceFile.importList?.text ?: ""
-            }
+            PsiContextVariable.IS_NEED_CREATE_FILE -> TestFinderHelper.findClassesForTest(psiElement).isEmpty()
 
-            PsiContextVariable.IS_NEED_CREATE_FILE -> {
-                return TestFinderHelper.findClassesForTest(psiElement).isEmpty()
-            }
-
-            PsiContextVariable.TARGET_TEST_FILE_NAME -> {
-                val testFileName = sourceFile.name.replace(".java", "") + "Test"
-                "$testFileName.java"
-            }
+            PsiContextVariable.TARGET_TEST_FILE_NAME -> sourceFile.name.replace(".java", "") + "Test.java"
 
             PsiContextVariable.UNDER_TEST_METHOD_CODE -> {
-                return JavaTestHelper.lookupUnderTestMethod(project, psiElement)
+                JavaTestHelper.lookupUnderTestMethod(project, psiElement)
             }
 
             PsiContextVariable.FRAMEWORK_CONTEXT -> {
@@ -71,9 +56,7 @@ class JavaPsiContextVariableProvider : PsiContextVariableProvider {
                 }
             }
 
-            PsiContextVariable.CODE_SMELL -> {
-                CodeSmellBuilder.collectElementProblemAsSting(psiElement, project, editor)
-            }
+            PsiContextVariable.CODE_SMELL -> CodeSmellBuilder.collectElementProblemAsSting(psiElement, project, editor)
         }
     }
 }

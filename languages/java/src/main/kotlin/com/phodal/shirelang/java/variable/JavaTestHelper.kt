@@ -8,6 +8,7 @@ import com.intellij.psi.PsiMethodCallExpression
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.search.searches.ClassInheritorsSearch
 import com.intellij.psi.util.PsiTreeUtil
+import com.phodal.shirecore.search.CodeNamingTokenizer
 import com.phodal.shirecore.search.TfIdf
 
 object JavaTestHelper {
@@ -51,6 +52,8 @@ object JavaTestHelper {
         }
 
         val tfIdf = TfIdf<String, List<PsiMethod>>()
+        tfIdf.setTokenizer(CodeNamingTokenizer())
+
         allTestMethod.forEach {
             tfIdf.addDocument(it.name, it)
         }
