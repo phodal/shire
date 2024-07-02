@@ -309,7 +309,7 @@ class ShireCompileTest : BasePlatformTestCase() {
                   "error" { grep("ERROR") | sort | xargs("notify_admin") }
                   "warn" { grep("WARN") | sort | xargs("notify_admin") }
                   "info" { grep("INFO") | sort | xargs("notify_user") }
-                  default  { grep("ERROR") | sort | xargs("notify_admin") }
+                  default  { grep("shire") | sort }
                 }
               }
             ---
@@ -328,6 +328,6 @@ class ShireCompileTest : BasePlatformTestCase() {
             PatternActionProcessor(project, hole).execute(it.value)
         }
 
-//        assertEquals("", results["var1"])
+        assertEquals("/src/test.shire", results["var1"])
     }
 }

@@ -153,7 +153,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                 val actions = evaluateCase(action, input) ?: return ""
                 FunctionStatementProcessor(myProject, hole)
                     .execute(actions.value as Statement, mutableMapOf(
-                        "input" to input
+                        "output" to parseInput(input),
                     ))
                     .toString()
             }
