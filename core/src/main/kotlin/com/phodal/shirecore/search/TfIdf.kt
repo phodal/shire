@@ -67,7 +67,7 @@ interface RegexTokenizerOptions {
 
 open class RegexpTokenizer(opts: RegexTokenizerOptions? = null) : Tokenizer() {
     var whitespacePattern = Regex("\\s+")
-    private var discardEmpty: Boolean = true
+    var discardEmpty: Boolean = true
     private var _gaps: Boolean? = null
 
     init {
@@ -86,7 +86,7 @@ open class RegexpTokenizer(opts: RegexTokenizerOptions? = null) : Tokenizer() {
         }
     }
 
-    fun tokenize(s: String): List<String> {
+    open fun tokenize(s: String): List<String> {
         val results: List<String>
 
         if (_gaps == true) {
@@ -98,7 +98,7 @@ open class RegexpTokenizer(opts: RegexTokenizerOptions? = null) : Tokenizer() {
         }
     }
 
-    private fun without(arr: List<String>, vararg values: String): List<String> {
+    fun without(arr: List<String>, vararg values: String): List<String> {
         return arr.filter { it !in values }
     }
 }
@@ -109,10 +109,31 @@ class WordTokenizer(options: RegexTokenizerOptions? = null) : RegexpTokenizer(op
     }
 }
 
+class CodeTokenizer(opts: RegexTokenizerOptions? = null) : RegexpTokenizer(opts) {
+    init {
+        whitespacePattern = Regex(
+            "(?<=[a-z])(?=[A-Z])|" +       // camelCase 分词
+                    "(?<=[A-Z])(?=[A-Z][a-z])|" +  // PascalCase 分词
+                    "(?<=[A-Za-z])(?=[0-9])|" +    // 字母和数字分词
+                    "(?<=[0-9])(?=[A-Za-z])|" +    // 数字和字母分词
+                    "_+"                           // under_score 分词
+        )
+    }
+
+    override fun tokenize(s: String): List<String> {
+        val results = whitespacePattern.split(s)
+        return if (discardEmpty) {
+            without(results, "", " ").map { it.lowercase() }
+        } else {
+            results.map { it.lowercase() }
+        }
+    }
+}
+
 class TfIdf<K, V> {
     private val documents: MutableList<DocumentType> = mutableListOf()
     private var _idfCache: MutableMap<String, Double> = mutableMapOf()
-    var tokenizer: RegexpTokenizer = WordTokenizer()
+    var tokenizer: RegexpTokenizer = CodeTokenizer()
 
     companion object {
         fun tf(term: String, document: DocumentType): Int {
@@ -141,7 +162,7 @@ class TfIdf<K, V> {
 
         when (text) {
             is String -> {
-                val tokens = tokenizer.tokenize(text.lowercase())
+                val tokens = tokenizer.tokenize(text)
                 stopOut = true
                 doc = tokens.fold(mutableMapOf("__key" to key)) { acc, term ->
                     if (term !in ourStopwords) {
@@ -193,7 +214,7 @@ class TfIdf<K, V> {
 
     fun tfidf(terms: Any, d: Int): Double {
         val termsList = if (terms is String) {
-            tokenizer.tokenize(terms.lowercase())
+            tokenizer.tokenize(terms)
         } else {
             terms as List<String>
         }
@@ -204,13 +225,14 @@ class TfIdf<K, V> {
         }
     }
 
-    fun listTerms(d: Int): List<TermData> {
+    fun listTerms(index: Int): List<TermData> {
         val terms = mutableListOf<TermData>()
-        for ((term, value) in documents[d] as Map<String, Int>) {
+        for ((term, value) in documents[index] as Map<String, Int>) {
             if (term != "__key") {
-                terms.add(TermData(term, tf(term, documents[d]), idf(term), tfidf(term, d)))
+                terms.add(TermData(term, tf(term, documents[index]), idf(term), tfidf(term, index)))
             }
         }
+
         return terms.sortedByDescending { it.tfidf }
     }
 

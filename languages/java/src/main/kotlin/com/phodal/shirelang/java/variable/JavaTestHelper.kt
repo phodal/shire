@@ -5,7 +5,6 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiJavaFile
 import com.intellij.psi.PsiMethod
 import com.intellij.psi.PsiMethodCallExpression
-import com.intellij.psi.PsiNamedElement
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.search.searches.ClassInheritorsSearch
 import com.intellij.psi.util.PsiTreeUtil
@@ -38,7 +37,7 @@ object JavaTestHelper {
         }
     }
 
-    fun findSimilarTestCases(psiElement: PsiElement): List<PsiElement> {
+    fun findSimilarTestCases(psiElement: PsiElement): List<PsiMethod> {
         val psiMethod = psiElement as? PsiMethod ?: return emptyList()
 
         val methodName = psiMethod.name
@@ -51,16 +50,21 @@ object JavaTestHelper {
             javaFile.classes.flatMap { it.methods.toList() }
         }
 
-        val tfIdf = TfIdf<String, List<PsiNamedElement>>()
+        val tfIdf = TfIdf<String, List<PsiMethod>>()
         allTestMethod.forEach {
             tfIdf.addDocument(it.name, it)
         }
 
-        tfIdf.tfidfs(methodName) { index: Int, measure: Double, key: Any? ->
-            println("Score: $index, Measure: $measure, Key: $key")
+        val results : MutableList<PsiMethod> = mutableListOf()
+        val scores = tfIdf.tfidfs(methodName)
+
+        scores.forEachIndexed { index, measure ->
+            if (measure > 1) {
+                results += allTestMethod[index]
+            }
         }
 
-        return emptyList()
+        return results
     }
 
 }
