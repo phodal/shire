@@ -1,6 +1,5 @@
 package com.phodal.shirelang.compiler
 
-import com.intellij.openapi.application.invokeAndWaitIfNeeded
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.psi.PsiElement
@@ -293,8 +292,8 @@ object FrontmatterParser {
 
         val body = firstChild.casePatternActionList.mapNotNull {
             val key = parseLiteral(it.caseCondition)
-            val conditionCases = parseActionBodyFuncCall(it.actionBody.actionExprList)
-            FrontMatterType.EXPRESSION(CaseKeyValue(key, FrontMatterType.EXPRESSION(Processor(conditionCases))))
+            val processor = parseActionBodyFuncCall(it.actionBody.actionExprList)
+            FrontMatterType.EXPRESSION(CaseKeyValue(key, FrontMatterType.EXPRESSION(processor)))
         }
 
         return ConditionCase(condition, body)
@@ -482,12 +481,11 @@ object FrontmatterParser {
         val actionBlock = PsiTreeUtil.getChildOfType(element, ShireActionBlock::class.java)
         val actionBody = actionBlock?.actionBody ?: return null
 
-        val processor: MutableList<PatternActionFunc> = parseActionBodyFuncCall(actionBody?.actionExprList)
-
+        val processor: List<PatternActionFunc> = parseActionBodyFuncCall(actionBody.actionExprList).processors
         return FrontMatterType.PATTERN(RuleBasedPatternAction(pattern, processor))
     }
 
-    private fun parseActionBodyFuncCall(shireActionExprs: List<ShireActionExpr>?): MutableList<PatternActionFunc> {
+    private fun parseActionBodyFuncCall(shireActionExprs: List<ShireActionExpr>?): Processor {
         val processor: MutableList<PatternActionFunc> = mutableListOf()
         shireActionExprs?.forEach { expr ->
             expr.funcCall?.let { funcCall ->
@@ -497,7 +495,7 @@ object FrontmatterParser {
             }
         }
 
-        return processor
+        return Processor(processor)
     }
 
      fun parseActionBodyFunCall(funcCall: ShireFuncCall?, expr: ShireActionExpr, ): PatternActionFunc? {

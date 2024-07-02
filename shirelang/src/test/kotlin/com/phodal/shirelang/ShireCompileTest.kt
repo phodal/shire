@@ -9,6 +9,7 @@ import com.phodal.shirelang.compiler.hobbit.ast.LogicalExpression
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 import com.phodal.shirelang.compiler.hobbit.execute.PatternActionProcessor
 import com.phodal.shirelang.psi.ShireFile
+import junit.framework.TestCase
 
 class ShireCompileTest : BasePlatformTestCase() {
     fun testNormalString() {
@@ -296,8 +297,42 @@ class ShireCompileTest : BasePlatformTestCase() {
             PatternActionProcessor(project, editor, hole).execute(it.value)
         }
 
-        assertEquals("  \"var2\": /.*ple.shire/ { cat | grep(\"fileName\") | sort }\n" +
-                "Summary webpage: \$fileName\n" +
-                "when: \$fileName.matches(\"/.*.java/\")", results["var2"].toString())
+        assertEquals(
+            "  \"var2\": /.*ple.shire/ { cat | grep(\"fileName\") | sort }\n" +
+                    "Summary webpage: \$fileName\n" +
+                    "when: \$fileName.matches(\"/.*.java/\")", results["var2"].toString()
+        )
+    }
+
+    fun testShouldComputePatterCaseResult() {
+        val code = """
+            ---
+            variables:
+              "var1": /.*.shire/ {
+                case "${'$'}0" {
+                  "error" { grep("ERROR") | sort | xargs("notify_admin") }
+                  "warn" { grep("WARN") | sort | xargs("notify_admin") }
+                  "info" { grep("INFO") | sort | xargs("notify_user") }
+                  default  { grep("ERROR") | sort | xargs("notify_admin") }
+                }
+              }
+            ---
+
+            ${'$'}var1
+            """.trimIndent()
+
+        val file = myFixture.configureByText("test.shire", code)
+
+        val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
+        val hole = compile.config!!
+
+        TestCase.assertEquals(1, hole.variables.size)
+
+        val editor = myFixture.editor
+        val results = hole.variables.mapValues {
+            PatternActionProcessor(project, editor, hole).execute(it.value)
+        }
+
+        assertEquals("", results["var1"])
     }
 }
