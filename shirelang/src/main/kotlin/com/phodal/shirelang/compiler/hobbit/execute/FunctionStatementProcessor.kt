@@ -8,7 +8,7 @@ import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.ast.*
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 
-open class FunctionStatementProcessor(override val myProject: Project, val hole: HobbitHole) :
+open class FunctionStatementProcessor(override val myProject: Project, override val hole: HobbitHole) :
     PatternFuncProcessor(myProject, hole) {
     fun execute(statement: Statement, variableTable: MutableMap<String, Any?>): Any? {
         return when (statement) {

@@ -123,7 +123,7 @@ sealed class PatternActionFunc(open val funcName: String) {
     /**
      * Case Match
      */
-    class CaseMatch(val keyValue: CaseKeyValue) : PatternActionFunc("switch")
+    class CaseMatch(val keyValue: List<CaseKeyValue>) : PatternActionFunc("switch")
 
     /**
      * User Custom Functions

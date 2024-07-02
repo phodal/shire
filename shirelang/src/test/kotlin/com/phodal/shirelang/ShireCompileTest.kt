@@ -259,11 +259,8 @@ class ShireCompileTest : BasePlatformTestCase() {
         assertEquals(1, table.getAllVariables().size)
         assertEquals(11, table.getVariable("fileName").lineDeclared)
 
-
-        val editor = myFixture.editor
-
         val results = hole.variables.mapValues {
-            PatternActionProcessor(project, editor, hole).execute(it.value)
+            PatternActionProcessor(project, hole).execute(it.value)
         }
 
         assertEquals("demo", results["var1"])
@@ -291,10 +288,9 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
         val hole = compile.config!!
-        val editor = myFixture.editor
 
         val results = hole.variables.mapValues {
-            PatternActionProcessor(project, editor, hole).execute(it.value)
+            PatternActionProcessor(project, hole).execute(it.value)
         }
 
         assertEquals(
@@ -328,9 +324,8 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         TestCase.assertEquals(1, hole.variables.size)
 
-        val editor = myFixture.editor
         val results = hole.variables.mapValues {
-            PatternActionProcessor(project, editor, hole).execute(it.value)
+            PatternActionProcessor(project, hole).execute(it.value)
         }
 
 //        assertEquals("", results["var1"])

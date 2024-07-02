@@ -1,12 +1,11 @@
 package com.phodal.shirelang.compiler.hobbit.execute
 
-import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.patternaction.PatternActionTransform
 
 
-class PatternActionProcessor(override val myProject: Project, val editor: Editor, val hole: HobbitHole) :
+class PatternActionProcessor(override val myProject: Project, override val hole: HobbitHole) :
 PatternFuncProcessor(myProject, hole) {
     /**
      * We should execute the variable function with the given key and pipeline functions.

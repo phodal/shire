@@ -49,7 +49,7 @@ class ShireQueryExpressionTest : BasePlatformTestCase() {
         assertEquals(selectDisplay, listOf("clazz.toString", "\"code\""))
 
         val results = hole.variables.mapValues {
-            PatternActionProcessor(project, editor, hole).execute(it.value)
+            PatternActionProcessor(project, hole).execute(it.value)
         }
 
         assertEquals(results["allController"], """

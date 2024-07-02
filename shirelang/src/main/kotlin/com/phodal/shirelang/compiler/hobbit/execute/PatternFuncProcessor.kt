@@ -1,7 +1,5 @@
 package com.phodal.shirelang.compiler.hobbit.execute
 
-import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.application.invokeAndWaitIfNeeded
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
@@ -12,10 +10,12 @@ import com.intellij.openapi.vfs.readText
 import com.phodal.shirecore.ShirelangNotifications
 import com.phodal.shirelang.actions.ShireRunFileAction
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
+import com.phodal.shirelang.compiler.hobbit.ast.FrontMatterType
+import com.phodal.shirelang.compiler.hobbit.ast.Statement
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 import java.io.File
 
-open class PatternFuncProcessor(open val myProject: Project, hole: HobbitHole) {
+open class PatternFuncProcessor(open val myProject: Project, open val hole: HobbitHole) {
     /**
      * This function `patternFunctionExecute` is used to execute a specific action based on the type of `PatternActionFunc` provided.
      * It takes three parameters: `action`, `input`, and `lastResult`.
@@ -150,13 +150,42 @@ open class PatternFuncProcessor(open val myProject: Project, hole: HobbitHole) {
             }
 
             is PatternActionFunc.CaseMatch -> {
-                action.keyValue.value
+                val actions = evaluateCase(action, input) ?: return ""
+                FunctionStatementProcessor(myProject, hole)
+                    .execute(actions.value as Statement, mutableMapOf(
+                        "input" to input
+                    ))
+                    .toString()
             }
-
 
             else -> {
                 logger<PatternActionProcessor>().error("Unknown pattern processor type: ${action.funcName}")
                 ""
+            }
+        }
+    }
+
+    private fun evaluateCase(action: PatternActionFunc.CaseMatch, input: Any, ): FrontMatterType.EXPRESSION? {
+        var fitCondition = action.keyValue.firstOrNull { it.key.toValue() == parseInput(input) }
+        if (fitCondition == null) {
+            fitCondition = action.keyValue.firstOrNull { it.key.toValue() == "default" }
+        }
+
+        return fitCondition?.value
+    }
+
+    private fun parseInput(input: Any): String {
+        return when (input) {
+            is String -> {
+                input
+            }
+
+            is Array<*> -> {
+                input.firstOrNull().toString()
+            }
+
+            else -> {
+                input.toString()
             }
         }
     }

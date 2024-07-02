@@ -13,7 +13,7 @@ class UserCustomVariableResolver(
         }
 
         return context.hole.variables.mapValues {
-            PatternActionProcessor(context.myProject, context.editor, context.hole).execute(it.value)
+            PatternActionProcessor(context.myProject, context.hole).execute(it.value)
         }
     }
 }

@@ -496,10 +496,11 @@ object FrontmatterParser {
             }
             expr.caseBody?.let { caseBody ->
                 parseExprCaseBody(caseBody)?.let { conditionCase ->
-                    conditionCase.cases.map {
-                        val keyValue = (it as FrontMatterType.EXPRESSION).value as CaseKeyValue
-                        processor.add(PatternActionFunc.CaseMatch(keyValue))
+                    val cases = conditionCase.cases.map {
+                        (it as FrontMatterType.EXPRESSION).value as CaseKeyValue
                     }
+
+                    processor.add(PatternActionFunc.CaseMatch(cases))
                 }
             }
         }
