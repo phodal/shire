@@ -11,7 +11,7 @@ We use velocity template to generate code. Here is a simple example:
     
     Refactor code:
     
-    ```${context.langauge}
+    ```${context.language}
     ${context.selection}
     ```
 
