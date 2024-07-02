@@ -2,6 +2,7 @@ package com.phodal.shirelang
 
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.smartReadAction
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.ProjectActivity
 import com.intellij.psi.PsiManager
@@ -13,15 +14,20 @@ import com.phodal.shirelang.compiler.FrontmatterParser
 import com.phodal.shirelang.psi.ShireFile
 
 class ShireActionStartupActivity : ProjectActivity {
+    private val logger = logger<ShireActionStartupActivity>()
+
     override suspend fun execute(project: Project) {
         smartReadAction(project) {
             obtainShireFiles(project).forEach {
-                val shireConfig = FrontmatterParser.parse(it) ?: return@forEach
+                val shireConfig = try {
+                    FrontmatterParser.parse(it)
+                } catch (e: Exception) {
+                    logger.warn("parse shire config error for file: ${it.virtualFile.path}", e)
+                    return@forEach
+                } ?: return@forEach
 
-                val configName = shireConfig.name
-
-                val shireActionConfig = DynamicShireActionConfig(configName, shireConfig, it)
-                DynamicShireActionService.getInstance().putAction(configName, shireActionConfig)
+                val shireActionConfig = DynamicShireActionConfig(shireConfig.name, shireConfig, it)
+                DynamicShireActionService.getInstance().putAction(shireConfig.name, shireActionConfig)
             }
         }
     }
