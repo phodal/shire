@@ -17,30 +17,26 @@ import java.util.function.Consumer
 
 
 object JavaTestHelper {
-    fun lookupUnderTestMethod(project: Project, psiElement: PsiElement): String {
+    fun extractMethodCalls(project: Project, psiElement: PsiElement): String {
         val searchScope = GlobalSearchScope.allScope(project)
 
         return when (psiElement) {
             is PsiMethod -> {
-                val calls = PsiTreeUtil
-                    .findChildrenOfAnyType(psiElement.body, PsiMethodCallExpression::class.java)
-                    .toList()
 
-                return calls
-                    .mapNotNull(PsiMethodCallExpression::resolveMethod)
-                    .filter {
-                        if (it.containingClass == null) return@filter false
-
-                        ClassInheritorsSearch
-                            .search(it.containingClass!!, searchScope, true)
-                            .findAll().isNotEmpty()
-                    }.joinToString("\n") {
-                        it.text
-                    }
+                PsiTreeUtil.findChildrenOfAnyType(psiElement.body, PsiMethodCallExpression::class.java)
+                    .filter { isMethodCallFromInheritedClass(it, searchScope) }
+                    .joinToString("\n") { it.text }
             }
 
             else -> ""
         }
+    }
+
+    private fun isMethodCallFromInheritedClass(callExpression: PsiMethodCallExpression, searchScope: GlobalSearchScope): Boolean {
+        val resolvedMethod = callExpression.resolveMethod() ?: return false
+        val containingClass = resolvedMethod.containingClass ?: return false
+
+        return ClassInheritorsSearch.search(containingClass, searchScope, true).findAll().isNotEmpty()
     }
 
     fun searchSimilarTestCases(psiElement: PsiElement, minScore: Double = 1.0): List<PsiMethod> {

@@ -2,7 +2,6 @@ package com.phodal.shirelang.java.variable
 
 import com.intellij.openapi.editor.Editor
 import com.intellij.psi.*
-import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.testIntegration.TestFinderHelper
 import com.phodal.shirecore.provider.context.LanguageToolchainProvider
 import com.phodal.shirecore.provider.context.ToolchainPrepareContext
@@ -44,7 +43,7 @@ class JavaPsiContextVariableProvider : PsiContextVariableProvider {
             PsiContextVariable.TARGET_TEST_FILE_NAME -> sourceFile.name.replace(".java", "") + "Test.java"
 
             PsiContextVariable.UNDER_TEST_METHOD_CODE -> {
-                JavaTestHelper.lookupUnderTestMethod(project, psiElement)
+                JavaTestHelper.extractMethodCalls(project, psiElement)
             }
 
             PsiContextVariable.FRAMEWORK_CONTEXT -> {
