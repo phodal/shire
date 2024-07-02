@@ -5,15 +5,25 @@ import com.intellij.codeInsight.daemon.LineMarkerProvider
 import com.intellij.openapi.editor.markup.GutterIconRenderer
 import com.intellij.psi.PsiElement
 import com.phodal.shirelang.ShireIcons
-import com.phodal.shirelang.psi.ShireQueryStatement
+import com.phodal.shirelang.psi.ShireFrontMatterEntry
 
 class ShirePsiExprLineMarkerProvider : LineMarkerProvider {
     override fun getLineMarkerInfo(element: PsiElement): LineMarkerInfo<*>? {
-        if (element !is ShireQueryStatement) return null
+        if (element !is ShireFrontMatterEntry) return null
+
+        if (element.functionStatement == null) {
+            return null
+        }
+
+        if (element.functionStatement?.functionBody?.queryStatement == null) {
+            return null
+        }
+
+        val firstChildKeyElement = element.frontMatterKey!!.firstChild
 
         return LineMarkerInfo(
-            element,
-            element.textRange,
+            firstChildKeyElement,
+            firstChildKeyElement.textRange,
             ShireIcons.PsiExpr,
             null,
             null,
