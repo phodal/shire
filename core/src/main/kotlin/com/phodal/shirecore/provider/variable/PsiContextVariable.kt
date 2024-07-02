@@ -59,6 +59,10 @@ enum class PsiContextVariable(val variableName: String, val description: String?
      * codeSmell
      */
     CODE_SMELL("codeSmell", "Include psi error and warning"),
+
+    METHOD_CALLER("methodCaller", "The method that initiates the current call"),
+
+    CALLED_METHOD("calledMethod", "The method that is being called by the current method"),
     ;
 
     companion object {

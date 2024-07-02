@@ -2,6 +2,7 @@ package com.phodal.shirelang.java.variable
 
 import com.intellij.openapi.editor.Editor
 import com.intellij.psi.*
+import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.testIntegration.TestFinderHelper
 import com.phodal.shirecore.provider.context.LanguageToolchainProvider
 import com.phodal.shirecore.provider.context.ToolchainPrepareContext
@@ -57,6 +58,14 @@ class JavaPsiContextVariableProvider : PsiContextVariableProvider {
             }
 
             PsiContextVariable.CODE_SMELL -> CodeSmellBuilder.collectElementProblemAsSting(psiElement, project, editor)
+            PsiContextVariable.METHOD_CALLER -> {
+                if (psiElement !is PsiMethod) return ""
+                return JavaTestHelper.findCallers(psiElement).joinToString("\n") { it.text }
+            }
+            PsiContextVariable.CALLED_METHOD -> {
+                if (psiElement !is PsiMethod) return ""
+                return JavaTestHelper.findCallees(psiElement).joinToString("\n") { it.text }
+            }
         }
     }
 }

@@ -4,12 +4,17 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiMethod
 import com.intellij.psi.PsiMethodCallExpression
+import com.intellij.psi.PsiReference
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.search.PsiShortNamesCache
 import com.intellij.psi.search.searches.ClassInheritorsSearch
+import com.intellij.psi.search.searches.MethodReferencesSearch
+import com.intellij.psi.search.searches.ReferencesSearch
 import com.intellij.psi.util.*
 import com.phodal.shirecore.search.CodeNamingTokenizer
 import com.phodal.shirecore.search.TfIdf
+import java.util.function.Consumer
+
 
 object JavaTestHelper {
     fun lookupUnderTestMethod(project: Project, psiElement: PsiElement): String {
@@ -69,15 +74,12 @@ object JavaTestHelper {
             val testMethods = mutableListOf<PsiMethod>()
             val scope = GlobalSearchScope.projectScope(project)
 
-            // 获取所有文件名中包含 'Test' 的类
-            PsiShortNamesCache.getInstance(project).getAllClassNames()
+            PsiShortNamesCache.getInstance(project).allClassNames
                 .filter { it.contains("Test") }
                 .forEach { className ->
-                    // 获取所有匹配的类
                     PsiShortNamesCache.getInstance(project).getClassesByName(className, scope)
                         .filter { it.containingFile.name.endsWith("Test.java") }
                         .forEach { psiClass ->
-                            // 收集所有方法
                             testMethods.addAll(psiClass.methods)
                         }
                 }
@@ -86,4 +88,52 @@ object JavaTestHelper {
         }
 
         return cachedValue.value
-    }}
+    }
+
+    /**
+     * Finds all the callers of a given method.
+     *
+     * @param method the method for which callers need to be found
+     * @return a list of PsiMethod objects representing the callers of the given method
+     */
+    fun findCallers(method: PsiMethod): List<PsiMethod> {
+        val callers: MutableList<PsiMethod> = ArrayList()
+
+        val references = ReferencesSearch.search(method).findAll()
+
+        for (reference in references) {
+            val element = reference.element
+
+            if (element is PsiMethodCallExpression) {
+                val callerMethod = element.resolveMethod()
+                if (callerMethod != null) {
+                    callers.add(callerMethod)
+                }
+            }
+        }
+
+        return callers
+    }
+
+    /**
+     * Finds all the methods called by the given method.
+     *
+     * @param method the method for which callees need to be found
+     * @return a list of PsiMethod objects representing the methods called by the given method
+     */
+    fun findCallees(method: PsiMethod): List<PsiMethod> {
+        val callees: MutableList<PsiMethod> = ArrayList()
+
+        MethodReferencesSearch.search(method).forEach(Consumer { reference: PsiReference ->
+            val element = reference.element
+            if (element is PsiMethodCallExpression) {
+                val resolvedMethod = element.resolveMethod()
+                if (resolvedMethod != null) {
+                    callees.add(resolvedMethod)
+                }
+            }
+        })
+
+        return callees
+    }
+}
