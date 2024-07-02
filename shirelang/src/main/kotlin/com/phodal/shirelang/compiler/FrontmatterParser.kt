@@ -279,8 +279,8 @@ object FrontmatterParser {
         }
     }
 
-    private fun parseExprCaseBody(firstChild: ShireCaseBody): ConditionCase? {
-        val condition = firstChild.conditionFlag?.conditionStatementList?.mapNotNull {
+    private fun parseExprCaseBody(caseBody: ShireCaseBody): ConditionCase? {
+        val condition = caseBody.conditionFlag?.conditionStatementList?.mapNotNull {
             val condition = parseExpr(it)
             if (condition != null) {
                 FrontMatterType.EXPRESSION(condition)
@@ -290,7 +290,7 @@ object FrontmatterParser {
             }
         } ?: emptyList()
 
-        val body = firstChild.casePatternActionList.mapNotNull {
+        val body = caseBody.casePatternActionList.mapNotNull {
             val key = parseLiteral(it.caseCondition)
             val processor = parseActionBodyFuncCall(it.actionBody.actionExprList)
             FrontMatterType.EXPRESSION(CaseKeyValue(key, FrontMatterType.EXPRESSION(processor)))
