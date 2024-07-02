@@ -21,23 +21,23 @@ class RunnerResult(
     val isSolved: Boolean get() = status == RunnerStatus.Solved
 
     companion object {
-        val NO_LOCAL_CHECK = RunnerResult(RunnerStatus.Unchecked, "check.result.local.check.unavailable")
-        val CONNECTION_FAILED = RunnerResult(RunnerStatus.Unchecked, "check.result.connection.failed")
-        val SOLVED = RunnerResult(RunnerStatus.Solved)
-        val CANCELED = RunnerResult(RunnerStatus.Unchecked, "check.result.canceled")
-        val UNCHECKED = RunnerResult(RunnerStatus.Unchecked)
+//        val NO_LOCAL_CHECK = RunnerResult(RunnerStatus.Unchecked, "check.result.local.check.unavailable")
+//        val CONNECTION_FAILED = RunnerResult(RunnerStatus.Unchecked, "check.result.connection.failed")
+//        val SOLVED = RunnerResult(RunnerStatus.Solved)
+//        val CANCELED = RunnerResult(RunnerStatus.Unchecked, "check.result.canceled")
+//        val UNCHECKED = RunnerResult(RunnerStatus.Unchecked)
 
         val noTestsRun: RunnerResult
             get() = RunnerResult(
                 RunnerStatus.Unchecked,
                 "check.no.tests.with.help.guide",
             )
-
-        val failedToCheck: RunnerResult
-            get() = RunnerResult(
-                RunnerStatus.Unchecked,
-                "error.failed.to.launch.checking.with.help.guide",
-            )
+//
+//        val failedToCheck: RunnerResult
+//            get() = RunnerResult(
+//                RunnerStatus.Unchecked,
+//                "error.failed.to.launch.checking.with.help.guide",
+//            )
 
     }
 
