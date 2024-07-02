@@ -1,17 +1,13 @@
 package com.phodal.shirelang.java.variable
 
 import com.intellij.openapi.editor.Editor
-import com.intellij.openapi.project.Project
 import com.intellij.psi.*
-import com.intellij.psi.search.GlobalSearchScope
-import com.intellij.psi.search.searches.ClassInheritorsSearch
-import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.testIntegration.TestFinderHelper
+import com.phodal.shirecore.provider.context.LanguageToolchainProvider
+import com.phodal.shirecore.provider.context.ToolchainPrepareContext
+import com.phodal.shirecore.provider.variable.CodeSmellBuilder
 import com.phodal.shirecore.provider.variable.PsiContextVariable
 import com.phodal.shirecore.provider.variable.PsiContextVariableProvider
-import com.phodal.shirecore.provider.context.ToolchainPrepareContext
-import com.phodal.shirecore.provider.context.LanguageToolchainProvider
-import com.phodal.shirecore.provider.variable.CodeSmellBuilder
 import com.phodal.shirelang.java.variable.provider.JavaRelatedClassesProvider
 import kotlinx.coroutines.runBlocking
 
@@ -45,7 +41,7 @@ class JavaPsiContextVariableProvider : PsiContextVariableProvider {
             }
 
             PsiContextVariable.SIMILAR_TEST_CASE -> {
-                return listOf<String>()
+                return JavaTestHelper.findSimilarTestCases(psiElement).joinToString("\n") { it.text }
             }
 
             PsiContextVariable.IMPORTS -> {
@@ -62,7 +58,7 @@ class JavaPsiContextVariableProvider : PsiContextVariableProvider {
             }
 
             PsiContextVariable.UNDER_TEST_METHOD_CODE -> {
-                return lookupUnderTestMethod(project, psiElement)
+                return JavaTestHelper.lookupUnderTestMethod(project, psiElement)
             }
 
             PsiContextVariable.FRAMEWORK_CONTEXT -> {
@@ -80,33 +76,6 @@ class JavaPsiContextVariableProvider : PsiContextVariableProvider {
             }
         }
     }
-
-    private fun lookupUnderTestMethod(project: Project, psiElement: PsiElement): String {
-        val searchScope = GlobalSearchScope.allScope(project)
-
-        return when (psiElement) {
-            is PsiMethod -> {
-                val calls = PsiTreeUtil
-                    .findChildrenOfAnyType(psiElement.body, PsiMethodCallExpression::class.java)
-                    .toList()
-
-                return calls
-                    .mapNotNull(PsiMethodCallExpression::resolveMethod)
-                    .filter {
-                        if (it.containingClass == null) return@filter false
-
-                        ClassInheritorsSearch
-                            .search(it.containingClass!!, searchScope, true)
-                            .findAll().isNotEmpty()
-                    }.joinToString("\n") {
-                        it.text
-                    }
-            }
-
-            else -> ""
-        }
-    }
-
 }
 
 fun PsiElement.getContainingClass(): PsiClass? {

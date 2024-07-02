@@ -43,7 +43,7 @@ var ourStopwords = listOf(
 )
 
 typealias DocumentType = Any
-typealias TfIdfCallback = (i: Int, measure: Double, key: Any?) -> Unit
+typealias TfIdfCallback = (index: Int, measure: Double, key: Any?) -> Unit
 
 open class Tokenizer {
     open fun trim(array: MutableList<String>): List<String> {
@@ -193,7 +193,7 @@ class TfIdf<K, V> {
 
     fun tfidf(terms: Any, d: Int): Double {
         val termsList = if (terms is String) {
-            tokenizer.tokenize(terms.toLowerCase())
+            tokenizer.tokenize(terms.lowercase())
         } else {
             terms as List<String>
         }
