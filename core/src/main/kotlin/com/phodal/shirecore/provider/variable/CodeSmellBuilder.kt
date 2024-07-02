@@ -63,26 +63,7 @@ object CodeSmellBuilder  {
         project: Project,
         editor: Editor
     ): String {
-        val commentSymbol = commentPrefix(element)
-
-        return collectProblems(project, editor, element)?.let { problem ->
-            var relatedCode = ""
-            getCanonicalName(problem).map {
-                val classContext = PsiElementDataBuilder.forLanguage(element.language)?.lookupElement(project, it)
-                classContext.let { context ->
-                    relatedCode += context?.format() ?: ""
-                }
-            }
-
-            buildString {
-                if (relatedCode.isNotEmpty()) {
-                    append("\n\n$commentSymbol relative static analysis result:\n$problem")
-                    relatedCode.split("\n").forEach {
-                        append("\n$commentSymbol $it")
-                    }
-                }
-            }
-        } ?: ""
+        return collectProblems(project, editor, element) ?: ""
     }
 
     fun commentPrefix(element: PsiElement): String {
