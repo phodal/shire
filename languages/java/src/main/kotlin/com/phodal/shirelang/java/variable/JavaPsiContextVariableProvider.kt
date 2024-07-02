@@ -35,7 +35,7 @@ class JavaPsiContextVariableProvider : PsiContextVariableProvider {
             }
 
             PsiContextVariable.SIMILAR_TEST_CASE -> {
-                JavaTestHelper.findSimilarTestCases(psiElement).joinToString("\n") { it.text }
+                JavaTestHelper.searchSimilarTestCases(psiElement).joinToString("\n") { it.text }
             }
 
             PsiContextVariable.IS_NEED_CREATE_FILE -> TestFinderHelper.findClassesForTest(psiElement).isEmpty()

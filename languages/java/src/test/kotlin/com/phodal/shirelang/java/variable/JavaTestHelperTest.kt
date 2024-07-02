@@ -67,7 +67,7 @@ public class MathHelperTest {
 
         val addMethod = psiFile2.classes.first().methods.first() as PsiMethod
 
-        val testCases = JavaTestHelper.findSimilarTestCases(addMethod)
+        val testCases = JavaTestHelper.searchSimilarTestCases(addMethod)
         TestCase.assertEquals(2, testCases.size)
     }
 }

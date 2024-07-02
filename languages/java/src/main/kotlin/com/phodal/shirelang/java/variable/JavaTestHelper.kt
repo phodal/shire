@@ -2,7 +2,6 @@ package com.phodal.shirelang.java.variable
 
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiJavaFile
 import com.intellij.psi.PsiMethod
 import com.intellij.psi.PsiMethodCallExpression
 import com.intellij.psi.search.GlobalSearchScope
@@ -39,7 +38,7 @@ object JavaTestHelper {
         }
     }
 
-    fun findSimilarTestCases(psiElement: PsiElement, minScore: Double = 1.0): List<PsiMethod> {
+    fun searchSimilarTestCases(psiElement: PsiElement, minScore: Double = 1.0): List<PsiMethod> {
         val project = psiElement.project
         val psiMethod = psiElement as? PsiMethod ?: return emptyList()
         val methodName = psiMethod.name
@@ -59,7 +58,13 @@ object JavaTestHelper {
             }
     }
 
-    fun getAllTestMethods(project: Project): List<PsiMethod> {
+    /**
+     * Retrieves all test methods from the given project.
+     *
+     * @param project the project from which to retrieve the test methods
+     * @return a list of PsiMethod objects representing all test methods found in the project
+     */
+    private fun getAllTestMethods(project: Project): List<PsiMethod> {
         val cachedValue: CachedValue<List<PsiMethod>> = CachedValuesManager.getManager(project).createCachedValue {
             val testMethods = mutableListOf<PsiMethod>()
             val scope = GlobalSearchScope.projectScope(project)
