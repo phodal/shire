@@ -38,7 +38,7 @@ object JavaTestHelper {
         }
     }
 
-    fun findSimilarTestCases(psiElement: PsiElement): List<PsiMethod> {
+    fun findSimilarTestCases(psiElement: PsiElement, minScore: Double = 1.0): List<PsiMethod> {
         val psiMethod = psiElement as? PsiMethod ?: return emptyList()
 
         val methodName = psiMethod.name
@@ -62,7 +62,7 @@ object JavaTestHelper {
         val scores = tfIdf.tfidfs(methodName)
 
         scores.forEachIndexed { index, measure ->
-            if (measure > 1) {
+            if (measure > minScore) {
                 results += allTestMethod[index]
             }
         }
