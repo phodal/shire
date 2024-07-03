@@ -10,7 +10,6 @@ import com.phodal.shirelang.compiler.hobbit.*
 import com.phodal.shirelang.compiler.hobbit.ast.*
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 import com.phodal.shirelang.psi.*
-import org.intellij.grammar.generator.Case
 
 object FrontmatterParser {
     private val logger = logger<FrontmatterParser>()
