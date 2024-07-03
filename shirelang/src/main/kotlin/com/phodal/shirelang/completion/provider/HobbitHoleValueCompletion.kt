@@ -35,10 +35,9 @@ class HobbitHoleValueCompletion : CompletionProvider<CompletionParameters>() {
                 ShireActionLocation.all().forEach {
                     result.addElement(
                         LookupElementBuilder
-                            .create(it.name)
+                            .create(it.location)
                             .withIcon(ShireIcons.DEFAULT)
                             .withInsertHandler { context, _ ->
-                                // insert space before the action location
                                 context.document.insertString(context.startOffset, " ")
                             }
                             .withTypeText(it.description, true)
