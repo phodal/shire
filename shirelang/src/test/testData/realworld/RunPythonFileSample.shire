@@ -1,6 +1,8 @@
 ---
-onStreamingEnd: { parseCode | saveFile | openFile | verifyCode | runCode }
+interaction: AppendCursor
 ---
 
-生成一个 python hello world，使用 markdown block  返回
+hi
+
+Hello! How can I assist you today?
 

@@ -149,10 +149,16 @@ open class HobbitHole(
             return mapOf(
                 NAME to "The display name of the action",
                 DESCRIPTION to "The tips for the action",
+                WHEN to "The condition to run the action",
+
                 INTERACTION to "The output of the action can be a file, a string, etc.",
                 ACTION_LOCATION to "The location of the action, can [ShireActionLocation]",
-                STRATEGY_SELECTION to "The strategy to select the element to apply the action",
+
                 FILENAME_RULES to "Custom prompt based on the file name",
+                STRATEGY_SELECTION to "The strategy to select the element to apply the action",
+                VARIABLES to "The list of variables to apply for the action",
+
+                ON_STREAMING to "TBD    ",
                 ON_STREAMING_END to "After Streaming end middleware actions, like Logging, Metrics, CodeVerify, RunCode, ParseCode etc.",
                 AFTER_STREAMING to "Decision to run the task after streaming, routing to different tasks",
             )

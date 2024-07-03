@@ -26,7 +26,9 @@ class ShireCompletionContributor : CompletionContributor() {
 
         extend(CompletionType.BASIC, identifierAfter(ShireTypes.COMMAND_START), BuiltinCommandCompletion())
 
-        extend(CompletionType.BASIC, identifierAfter(ShireTypes.FRONTMATTER_START), HobbitHoleKeyCompletion())
+        extend(CompletionType.BASIC, PlatformPatterns.psiElement(ShireTypes.LIFECYCLE_ID), HobbitHoleKeyCompletion())
+        extend(CompletionType.BASIC, PlatformPatterns.psiElement(ShireTypes.FRONT_MATTER_ID), HobbitHoleKeyCompletion())
+
         extend(CompletionType.BASIC, hobbitHolePattern(), HobbitHoleCompletion())
         extend(CompletionType.BASIC, whenConditionPattern(), WhenConditionCompletionProvider())
         extend(CompletionType.BASIC, whenConditionFuncPattern(), WhenConditionFunctionCompletionProvider())
