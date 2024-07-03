@@ -10,12 +10,17 @@ import com.intellij.psi.tree.IElementType
 import com.phodal.shirelang.completion.dataprovider.BuiltinCommand
 import com.phodal.shirelang.completion.provider.*
 import com.phodal.shirelang.psi.ShireFrontMatterEntry
+import com.phodal.shirelang.psi.ShireFrontMatterHeader
 import com.phodal.shirelang.psi.ShireTypes
 import com.phodal.shirelang.psi.ShireUsed
 
 class ShireCompletionContributor : CompletionContributor() {
     init {
-        extend(CompletionType.BASIC, PlatformPatterns.psiElement(ShireTypes.LANGUAGE_IDENTIFIER), CodeFenceLanguageCompletion())
+        extend(
+            CompletionType.BASIC,
+            PlatformPatterns.psiElement(ShireTypes.LANGUAGE_IDENTIFIER),
+            CodeFenceLanguageCompletion()
+        )
 
         extend(CompletionType.BASIC, identifierAfter(ShireTypes.AGENT_START), CustomAgentCompletion())
 
@@ -26,9 +31,8 @@ class ShireCompletionContributor : CompletionContributor() {
 
         extend(CompletionType.BASIC, identifierAfter(ShireTypes.COMMAND_START), BuiltinCommandCompletion())
 
-//        extend(CompletionType.BASIC, PlatformPatterns.psiElement(ShireTypes.LIFECYCLE_ID), HobbitHoleKeyCompletion())
-//        extend(CompletionType.BASIC, PlatformPatterns.psiElement(ShireTypes.FRONT_MATTER_ID), HobbitHoleKeyCompletion())
-        extend(CompletionType.BASIC, hobbitHolePattern(), HobbitHoleCompletion())
+        extend(CompletionType.BASIC, hobbitHoleKey(), HobbitHoleKeyCompletion())
+        extend(CompletionType.BASIC, hobbitHolePattern(), HobbitHoleValueCompletion())
 
         extend(CompletionType.BASIC, whenConditionPattern(), WhenConditionCompletionProvider())
         extend(CompletionType.BASIC, whenConditionFuncPattern(), WhenConditionFunctionCompletionProvider())
@@ -105,6 +109,13 @@ class ShireCompletionContributor : CompletionContributor() {
             .afterLeafSkipping(
                 PlatformPatterns.psiElement(ShireTypes.IDENTIFIER),
                 PlatformPatterns.psiElement(ShireTypes.DOT),
+            )
+    }
+
+    private fun hobbitHoleKey(): PsiElementPattern.Capture<PsiElement> {
+        return PlatformPatterns.psiElement(ShireTypes.IDENTIFIER)
+            .andNot(
+                PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(ShireTypes.COLON))
             )
     }
 
