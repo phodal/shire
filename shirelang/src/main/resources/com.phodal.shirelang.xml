@@ -55,11 +55,11 @@
                                     id="shireDocumentationProvider"
                                     implementationClass="com.phodal.shirelang.documentation.ShireDocumentationProvider"/>
 
-<!--        <localInspection language="Shire" groupPath="Shire" groupName="Lints"-->
-<!--                         displayName="Duplicate agent declaration"-->
-<!--                         enabledByDefault="true"-->
-<!--                         level="ERROR"-->
-<!--                         implementationClass="com.phodal.shirelang.lints.ShireDuplicateAgentInspection"/>-->
+        <localInspection language="Shire" groupPath="Shire" groupName="Lints"
+                         displayName="Duplicate agent declaration"
+                         enabledByDefault="true"
+                         level="ERROR"
+                         implementationClass="com.phodal.shirelang.lints.ShireDuplicateAgentInspection"/>
 
         <intentionAction>
             <className>com.phodal.shirelang.actions.intention.ShireIntentionHelper</className>
