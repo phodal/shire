@@ -34,11 +34,6 @@ import java.io.IOException
 import java.io.InputStreamReader
 import java.nio.charset.StandardCharsets
 
-class ShireHttpException(val error: String, private val statusCode: Int) : RuntimeException(error) {
-    override fun toString(): String {
-        return "ShireHttpException(error='$message', statusCode=$statusCode)"
-    }
-}
 
 /**
  * Callback to parse Server Sent Events (SSE) from raw InputStream and
@@ -55,9 +50,10 @@ class ResponseBodyCallback(private val emitter: FlowableEmitter<SSE>, private va
                 if (response.body == null) {
                     throw ShireHttpException("Response body is null", response.code)
                 } else {
-                    throw ShireHttpException(response.body?.toString() ?: "", response.code)
+                    throw ShireHttpException(response.body?.string() ?: "", response.code)
                 }
             }
+
             val inputStream = response.body!!.byteStream()
             reader = BufferedReader(InputStreamReader(inputStream, StandardCharsets.UTF_8))
             var line: String? = null
