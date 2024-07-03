@@ -119,10 +119,7 @@ class ShireProcessProcessor(val project: Project) {
         }
     }
 
-    private fun createCompiler(
-        project: Project,
-        shireFile: ShireFile,
-    ): ShireCompiler {
+    private fun createCompiler(project: Project, shireFile: ShireFile): ShireCompiler {
         val editor = FileEditorManager.getInstance(project).selectedTextEditor
         val element: PsiElement? = editor?.caretModel?.currentCaret?.offset?.let {
             val psiFile = PsiUtilBase.getPsiFileInEditor(editor, project) ?: return@let null

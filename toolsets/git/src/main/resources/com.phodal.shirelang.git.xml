@@ -3,5 +3,7 @@
         <shireRevisionProvider implementation="com.phodal.shirelang.git.provider.GitRevisionProvider"/>
 
         <shireToolchainVariableProvider implementation="com.phodal.shirelang.git.provider.GitToolchainVariableProvider"/>
+
+        <shireActionLocationEditor implementation="com.phodal.shirelang.git.provider.GitActionLocationEditor"/>
     </extensions>
 </idea-plugin>

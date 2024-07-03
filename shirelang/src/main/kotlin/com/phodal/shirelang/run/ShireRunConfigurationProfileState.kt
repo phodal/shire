@@ -15,11 +15,11 @@ import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Key
 import com.intellij.ui.components.panels.NonOpaquePanel
 import com.phodal.shirecore.middleware.PostCodeHandleContext
+import com.phodal.shirecore.provider.context.ActionLocationEditor
 import com.phodal.shirelang.compiler.ShireCompiler
 import com.phodal.shirelang.compiler.ShireTemplateCompiler
 import com.phodal.shirelang.compiler.error.SHIRE_ERROR
@@ -69,8 +69,7 @@ open class ShireRunConfigurationProfileState(
             return DefaultExecutionResult(console, processHandler)
         }
 
-        val editor = FileEditorManager.getInstance(myProject).selectedTextEditor
-        val compiler = ShireCompiler(myProject, file, editor)
+        val compiler = ShireCompiler(myProject, file, ActionLocationEditor.defaultEditor(myProject))
         val compileResult = compiler.compile()
 
         val symbolTable = compileResult.symbolTable
@@ -81,6 +80,9 @@ open class ShireRunConfigurationProfileState(
         val input = compileResult.shireOutput
 
         val hobbitHole = compileResult.config
+
+        val locationEditor = ActionLocationEditor.provide(myProject, hobbitHole?.actionLocation)
+
         val promptText = ShireTemplateCompiler(myProject, hobbitHole, symbolTable, input).compile()
         logCompiled(console!!, promptText)
 
@@ -105,7 +107,7 @@ open class ShireRunConfigurationProfileState(
             myProject = myProject,
             hole = hobbitHole,
             prompt = promptText,
-            editor = editor,
+            editor = locationEditor,
         )
         val shireRunner: ShireRunner = when {
             agent != null -> {
@@ -120,7 +122,7 @@ open class ShireRunConfigurationProfileState(
         shireRunner.prepareTask()
         shireRunner.execute {response ->
             val context = PostCodeHandleContext(
-                selectedEntry = hobbitHole?.pickupElement(myProject, editor),
+                selectedEntry = hobbitHole?.pickupElement(myProject, locationEditor),
                 currentLanguage = file.language,
                 currentFile = file,
                 genText = response

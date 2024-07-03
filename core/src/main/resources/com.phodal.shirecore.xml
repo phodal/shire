@@ -118,6 +118,10 @@
         <extensionPoint qualifiedName="com.phodal.shireLlmProvider"
                         interface="com.phodal.shirecore.llm.LlmProvider"
                         dynamic="true"/>
+
+        <extensionPoint qualifiedName="com.phodal.shireActionLocationEditor"
+                        interface="com.phodal.shirecore.provider.context.ActionLocationEditor"
+                        dynamic="true"/>
     </extensionPoints>
 
     <extensions defaultExtensionNs="JavaScript.JsonSchema">
