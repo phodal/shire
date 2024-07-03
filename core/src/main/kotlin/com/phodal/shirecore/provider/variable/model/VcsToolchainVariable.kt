@@ -3,12 +3,12 @@ package com.phodal.shirecore.provider.variable.model
 /**
  * Enum representing variables used in the generation of code structures.
  */
-enum class VcsToolchainVariable(val variableName: String, var value: Any? = null) {
-    CurrentChanges("currentChanges"),
+enum class VcsToolchainVariable(val variableName: String, var value: Any? = null, val description: String = "") {
+    CurrentChanges("currentChanges", description = "The code changes in the current working directory"),
 
-    CurrentBranch("currentBranch"),
+    CurrentBranch("currentBranch", description = "The name of the current branch"),
 
-    HistoryCommitMessages("historyCommitMessages"),
+    HistoryCommitMessages("historyCommitMessages", description = "The commit messages in the history"),
     ;
 
     companion object {

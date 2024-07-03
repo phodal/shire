@@ -7,7 +7,9 @@ import com.intellij.codeInsight.completion.PrioritizedLookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.util.ProcessingContext
 import com.phodal.shirecore.provider.variable.model.PsiContextVariable
+import com.phodal.shirecore.provider.variable.model.VcsToolchainVariable
 import com.phodal.shirelang.ShireIcons
+import com.phodal.shirelang.completion.dataprovider.CompositeVariableProvider
 import com.phodal.shirelang.completion.dataprovider.ContextVariable
 
 class VariableCompletionProvider : CompletionProvider<CompletionParameters>() {
@@ -16,25 +18,13 @@ class VariableCompletionProvider : CompletionProvider<CompletionParameters>() {
         context: ProcessingContext,
         result: CompletionResultSet,
     ) {
-        ContextVariable.values().forEach {
+        CompositeVariableProvider.all().forEach {
             val withTypeText =
                 PrioritizedLookupElement.withPriority(
-                    LookupElementBuilder.create(it.variable)
+                    LookupElementBuilder.create(it.name)
                         .withIcon(ShireIcons.Variable)
                         .withTypeText(it.description, true),
-                    99.0
-                )
-            result.addElement(withTypeText)
-        }
-
-        PsiContextVariable.values().forEach {
-            val withTypeText =
-                PrioritizedLookupElement.withPriority(
-                    LookupElementBuilder.create(it.variableName)
-                        .withIcon(ShireIcons.Variable)
-                        .withTypeText(it.description, true)
-                        ,
-                    90.0
+                    it.priority
                 )
             result.addElement(withTypeText)
         }
