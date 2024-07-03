@@ -13,7 +13,7 @@ import com.phodal.shirecore.middleware.select.SelectElementStrategy
 import com.phodal.shirelang.ShireIcons
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 
-class HobbitHoleCompletion : CompletionProvider<CompletionParameters>() {
+class HobbitHoleValueCompletion : CompletionProvider<CompletionParameters>() {
     private val HOBBIT = "hobbit"
 
     override fun addCompletions(
@@ -51,7 +51,7 @@ class HobbitHoleCompletion : CompletionProvider<CompletionParameters>() {
                     result.addElement(
                         LookupElementBuilder
                             .create(it.name)
-                            .withIcon(ShireIcons.DEFAULT)
+                            .withIcon(ShireIcons.Idea)
                             .withInsertHandler { context, _ ->
                                 context.document.insertString(context.startOffset, " ")
                             }
@@ -65,7 +65,7 @@ class HobbitHoleCompletion : CompletionProvider<CompletionParameters>() {
                     result.addElement(
                         LookupElementBuilder
                             .create(it)
-                            .withIcon(ShireIcons.DEFAULT)
+                            .withIcon(ShireIcons.Idea)
                             .withInsertHandler { context, _ ->
                                 context.document.insertString(context.startOffset, " ")
                             }
