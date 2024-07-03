@@ -1,11 +1,11 @@
 package com.phodal.shirecore.action
 
-enum class ShireActionLocation(val location: String) {
-    CONTEXT_MENU("ContextMenu"),
-    INTENTION_MENU("IntentionMenu"),
-    TERMINAL_MENU("TerminalMenu"),
-    COMMIT_MENU("CommitMenu"),
-    RunPanel("RunPanel")
+enum class ShireActionLocation(val location: String, val description: String) {
+    CONTEXT_MENU("ContextMenu", "Show in Context Menu by Right Click"),
+    INTENTION_MENU("IntentionMenu", "Show in Intention Menu by Alt+Enter"),
+    TERMINAL_MENU("TerminalMenu", "Show in Terminal panel menu bar"),
+    COMMIT_MENU("CommitMenu", "Show in Commit panel menu bar"),
+    RunPanel("RunPanel", "Show in Run panel which is the bottom of the IDE")
     ;
 
     companion object {
@@ -20,8 +20,8 @@ enum class ShireActionLocation(val location: String) {
             }
         }
 
-        fun all(): List<String> {
-            return values().map { it.location }
+        fun all(): Array<ShireActionLocation> {
+            return values()
         }
 
         fun default(): String {
