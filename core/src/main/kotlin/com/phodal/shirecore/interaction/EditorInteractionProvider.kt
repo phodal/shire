@@ -11,13 +11,11 @@ import com.phodal.shirecore.agent.InteractionType
 import com.phodal.shirecore.interaction.dto.CodeCompletionRequest
 import com.phodal.shirecore.interaction.task.BaseCodeGenTask
 import com.phodal.shirecore.interaction.task.FileGenerateTask
-import com.phodal.shirecore.interaction.task.InsertUtil
 import com.phodal.shirecore.llm.ChatMessage
 import com.phodal.shirecore.llm.ChatRole
 import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.provider.ide.LocationInteractionContext
 import com.phodal.shirecore.provider.ide.LocationInteractionProvider
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.launch
@@ -93,6 +91,7 @@ class EditorInteractionProvider : LocationInteractionProvider {
                         }
                     }
 
+                    postExecute.invoke(suggestion.toString())
                 }
             }
         }
