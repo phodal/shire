@@ -6,10 +6,14 @@
     </dependencies>
 
     <extensions defaultExtensionNs="com.phodal">
+        <fileStructureProvider language="JAVA"
+                               implementationClass="com.phodal.shirelang.java.codemodel.JavaFileStructureProvider"/>
         <classStructureProvider language="JAVA"
                                 implementationClass="com.phodal.shirelang.java.codemodel.JavaClassStructureProvider"/>
         <methodStructureProvider language="JAVA"
                                  implementationClass="com.phodal.shirelang.java.codemodel.JavaMethodStructureProvider"/>
+        <variableStructureProvider language="JAVA"
+                                   implementationClass="com.phodal.shirelang.java.codemodel.JavaVariableStructureProvider"/>
 
         <shireRefactoringTool
                 language="JAVA"

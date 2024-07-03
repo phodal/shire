@@ -116,3 +116,26 @@ fun isProjectContent(element: PsiElement): Boolean {
     val project = runReadAction { element.project }
     return virtualFile == null || ProjectFileIndex.getInstance(project).isInContent(virtualFile)
 }
+
+fun PsiElement.getContainingClass(): PsiClass? {
+    var context: PsiElement? = this.context
+    while (context != null) {
+        if (context is PsiClass) return context
+        if (context is PsiMember) return context.containingClass
+
+        context = context.context
+    }
+
+    return null
+}
+
+fun PsiElement.getContainingMethod(): PsiMethod? {
+    var context: PsiElement? = this.context
+    while (context != null) {
+        if (context is PsiMethod) return context
+
+        context = context.context
+    }
+
+    return null
+}
