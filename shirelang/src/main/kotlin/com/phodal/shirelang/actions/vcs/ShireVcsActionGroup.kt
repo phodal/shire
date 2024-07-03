@@ -4,9 +4,9 @@ import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.DumbAwareAction
-import com.phodal.shirecore.ShirelangNotifications
 import com.phodal.shirecore.action.ShireActionLocation
 import com.phodal.shirelang.ShireIcons
+import com.phodal.shirelang.actions.ShireRunFileAction
 import com.phodal.shirelang.actions.base.ShireActionGroup
 import com.phodal.shirelang.actions.dynamic.DynamicShireActionConfig
 import com.phodal.shirelang.actions.dynamic.DynamicShireActionService
@@ -30,6 +30,8 @@ class ShireVcsActionGroup : ShireActionGroup() {
 class ShireVcsAction(val config: DynamicShireActionConfig) :
     DumbAwareAction(config.name, config.hole?.description, ShireIcons.DEFAULT) {
     override fun actionPerformed(e: AnActionEvent) {
-        ShirelangNotifications.notify(e.project!!, "VCS Action: ${config.name}")
+        val project = e.project ?: return
+
+        ShireRunFileAction.executeShireFile(project, config, ShireRunFileAction.createRunConfig(e))
     }
 }
