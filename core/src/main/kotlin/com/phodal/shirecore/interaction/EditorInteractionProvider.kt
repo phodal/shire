@@ -26,17 +26,13 @@ class EditorInteractionProvider : LocationInteractionProvider {
     }
 
     override fun execute(context: LocationInteractionContext, postExecute: (String) -> Unit) {
-        val msgs: List<ChatMessage> = listOf(
-            // todo: add system prompt
-            ChatMessage(ChatRole.User, context.prompt),
-        )
         val targetFile = context.editor?.virtualFile
 
         when (context.interactionType) {
             InteractionType.AppendCursor,
             InteractionType.AppendCursorStream,
             -> {
-                val task = createTask(context, msgs, isReplacement = false, postExecute = postExecute, false)
+                val task = createTask(context, context.prompt, isReplacement = false, postExecute = postExecute, false)
 
                 if (task == null) {
                     ShirelangNotifications.error(context.project, "Failed to create code completion task.")
@@ -49,13 +45,13 @@ class EditorInteractionProvider : LocationInteractionProvider {
 
             InteractionType.OutputFile -> {
                 val fileName = targetFile?.name
-                val task = FileGenerateTask(context.project, msgs, fileName, postExecute = postExecute)
+                val task = FileGenerateTask(context.project, context.prompt, fileName, postExecute = postExecute)
                 ProgressManager.getInstance()
                     .runProcessWithProgressAsynchronously(task, BackgroundableProcessIndicator(task))
             }
 
             InteractionType.ReplaceSelection -> {
-                val task = createTask(context, msgs, true, postExecute, false)
+                val task = createTask(context, context.prompt, true, postExecute, false)
 
                 if (task == null) {
                     ShirelangNotifications.error(context.project, "Failed to create code completion task.")
@@ -68,14 +64,14 @@ class EditorInteractionProvider : LocationInteractionProvider {
 
             InteractionType.ReplaceCurrentFile -> {
                 val fileName = targetFile?.name
-                val task = FileGenerateTask(context.project, msgs, fileName, postExecute = postExecute)
+                val task = FileGenerateTask(context.project, context.prompt, fileName, postExecute = postExecute)
 
                 ProgressManager.getInstance()
                     .runProcessWithProgressAsynchronously(task, BackgroundableProcessIndicator(task))
             }
 
             InteractionType.InsertBeforeSelection -> {
-                val task = createTask(context, msgs, false, postExecute, isInsertBefore = true)
+                val task = createTask(context, context.prompt, false, postExecute, isInsertBefore = true)
 
                 if (task == null) {
                     ShirelangNotifications.error(context.project, "Failed to create code completion task.")
@@ -107,7 +103,7 @@ class EditorInteractionProvider : LocationInteractionProvider {
 
     private fun createTask(
         context: LocationInteractionContext,
-        msgs: List<ChatMessage>,
+        userPrompt: String,
         isReplacement: Boolean,
         postExecute: (String) -> Unit,
         isInsertBefore: Boolean,
@@ -124,8 +120,6 @@ class EditorInteractionProvider : LocationInteractionProvider {
         } else {
             editor.caretModel.offset
         }
-
-        val userPrompt = msgs.filter { it.role == ChatRole.User }.joinToString("\n") { it.content }
 
         val request = runReadAction {
             CodeCompletionRequest.create(

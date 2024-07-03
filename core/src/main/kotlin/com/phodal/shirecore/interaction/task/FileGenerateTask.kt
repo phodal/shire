@@ -22,7 +22,7 @@ import kotlin.io.path.Path
 
 open class FileGenerateTask(
     @JvmField val project: Project,
-    val messages: List<ChatMessage>,
+    val prompt: String,
     val fileName: String?,
     private val codeOnly: Boolean = false,
     private val taskName: String = ShireCoreBundle.message("intentions.request.background.process.title"),
@@ -32,10 +32,7 @@ open class FileGenerateTask(
     private val projectRoot = project.guessProjectDir()!!
 
     override fun run(indicator: ProgressIndicator) {
-        val requestPrompt = messages.filter { it.role == ChatRole.User }.joinToString("\n") { it.content }
-        val systemPrompt = messages.filter { it.role == ChatRole.System }.joinToString("\n") { it.content }
-
-        val stream = LlmProvider.provider(project)?.stream(requestPrompt, systemPrompt, false)
+        val stream = LlmProvider.provider(project)?.stream(prompt, "", false)
             ?: return
 
         var result = ""
