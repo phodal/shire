@@ -1,4 +1,4 @@
-package com.phodal.shirecore.provider.variable
+package com.phodal.shirecore.provider.psi
 
 import com.intellij.lang.Language
 import com.intellij.lang.LanguageExtension

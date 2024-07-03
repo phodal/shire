@@ -1,6 +1,6 @@
 package com.phodal.shirelang.completion.dataprovider
 
-import com.phodal.shirecore.provider.variable.PsiContextVariable
+import com.phodal.shirecore.provider.variable.model.PsiContextVariable
 
 data class VariableDisplay(
     val name: String,

@@ -6,7 +6,7 @@ import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.codeInsight.completion.PrioritizedLookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.util.ProcessingContext
-import com.phodal.shirecore.provider.variable.PsiContextVariable
+import com.phodal.shirecore.provider.variable.model.PsiContextVariable
 import com.phodal.shirelang.ShireIcons
 import com.phodal.shirelang.completion.dataprovider.ContextVariable
 

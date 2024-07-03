@@ -1,4 +1,4 @@
-package com.phodal.shirecore.provider.variable
+package com.phodal.shirecore.provider.variable.impl
 
 import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerEx
 import com.intellij.lang.LanguageCommenters
@@ -15,7 +15,7 @@ object CodeSmellBuilder  {
      * @param element The PsiElement for which the problems are to be collected.
      * @return A string containing all the problems found, separated by new lines, or `null` if no problems were found.
      */
-    fun collectProblems(project: Project, editor: Editor, element: PsiElement): String? {
+    private fun collectProblems(project: Project, editor: Editor, element: PsiElement): String? {
         val range = element.textRange
         val document = editor.document
         var errors: MutableList<String> = mutableListOf()

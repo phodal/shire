@@ -1,4 +1,4 @@
-package com.phodal.shirecore.provider.variable
+package com.phodal.shirecore.provider.variable.model
 
 /**
  * Represents the context variables that can be used in the code structure generation process.

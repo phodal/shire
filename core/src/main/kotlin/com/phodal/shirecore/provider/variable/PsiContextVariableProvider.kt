@@ -3,13 +3,16 @@ package com.phodal.shirecore.provider.variable
 import com.intellij.lang.Language
 import com.intellij.lang.LanguageExtension
 import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
+import com.phodal.shirecore.provider.variable.impl.DefaultPsiContextVariableProvider
+import com.phodal.shirecore.provider.variable.model.PsiContextVariable
 
 /**
  * Resolve variables for code struct generation.
  * This is used to provide the variables that are used in the code struct generation.
  */
-interface PsiContextVariableProvider {
+interface PsiContextVariableProvider : VariableProvider<PsiContextVariable> {
     /**
      * Calculate the value for the given variable based on the provided PsiElement.
      *
@@ -17,7 +20,7 @@ interface PsiContextVariableProvider {
      * @param variable the PsiVariable for which to calculate the value
      * @return the calculated value for the variable as a String
      */
-    fun resolve(variable: PsiContextVariable, psiElement: PsiElement?, editor: Editor): Any
+    override fun resolve(variable: PsiContextVariable, project: Project, editor: Editor, psiElement: PsiElement?): Any
 
     companion object {
         private val languageExtension: LanguageExtension<PsiContextVariableProvider> =

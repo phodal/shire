@@ -2,6 +2,7 @@ package com.phodal.shirelang.git.provider
 
 import com.intellij.ide.DataManager
 import com.intellij.openapi.diagnostic.logger
+import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vcs.VcsDataKeys
 import com.intellij.openapi.vcs.changes.Change
@@ -13,7 +14,7 @@ import com.intellij.vcs.log.VcsLogFilterCollection
 import com.intellij.vcs.log.VcsLogProvider
 import com.intellij.vcs.log.impl.VcsProjectLog
 import com.intellij.vcs.log.visible.filters.VcsLogFilterObject
-import com.phodal.shirecore.provider.variable.GitToolchainVariable
+import com.phodal.shirecore.provider.variable.model.VcsToolchainVariable
 import com.phodal.shirecore.provider.variable.ToolchainVariableProvider
 import com.phodal.shirelang.git.VcsPrompting
 
@@ -21,21 +22,22 @@ import com.phodal.shirelang.git.VcsPrompting
 class GitToolchainVariableProvider : ToolchainVariableProvider {
     private val logger = logger<GitToolchainVariableProvider>()
 
-    override fun isResolvable(variable: GitToolchainVariable, psiElement: PsiElement?): Boolean {
+    override fun isResolvable(variable: VcsToolchainVariable, psiElement: PsiElement?): Boolean {
         return when (variable) {
-            GitToolchainVariable.CurrentChanges -> true
-            GitToolchainVariable.HistoryCommitMessages -> true
-            GitToolchainVariable.CurrentBranch -> true
+            VcsToolchainVariable.CurrentChanges -> true
+            VcsToolchainVariable.HistoryCommitMessages -> true
+            VcsToolchainVariable.CurrentBranch -> true
         }
     }
 
     override fun resolve(
+        variable: VcsToolchainVariable,
         project: Project,
-        element: PsiElement?,
-        variable: GitToolchainVariable,
-    ): GitToolchainVariable {
+        editor: Editor,
+        psiElement: PsiElement?,
+    ): VcsToolchainVariable {
         when (variable) {
-            GitToolchainVariable.CurrentChanges -> {
+            VcsToolchainVariable.CurrentChanges -> {
                 val dataContext = DataManager.getInstance().dataContextFromFocus.result
                 val commitWorkflowUi = dataContext.getData(VcsDataKeys.COMMIT_WORKFLOW_UI)
                     ?: return variable
@@ -51,7 +53,7 @@ class GitToolchainVariableProvider : ToolchainVariableProvider {
                 return variable
             }
 
-            GitToolchainVariable.CurrentBranch -> {
+            VcsToolchainVariable.CurrentBranch -> {
                 val logProviders = VcsProjectLog.getLogProviders(project)
                 val entry = logProviders.entries.firstOrNull() ?: return variable
 
@@ -61,7 +63,7 @@ class GitToolchainVariableProvider : ToolchainVariableProvider {
                 variable.value = branch
             }
 
-            GitToolchainVariable.HistoryCommitMessages -> {
+            VcsToolchainVariable.HistoryCommitMessages -> {
                 val exampleCommitMessages = getHistoryCommitMessages(project)
                 if (exampleCommitMessages != null) {
                     variable.value = exampleCommitMessages

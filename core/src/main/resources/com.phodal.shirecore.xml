@@ -32,7 +32,7 @@
                         dynamic="true"/>
 
         <extensionPoint qualifiedName="com.phodal.shireElementStrategyBuilder"
-                        interface="com.phodal.shirecore.provider.variable.PsiElementStrategyBuilder "
+                        interface="com.phodal.shirecore.provider.psi.PsiElementStrategyBuilder "
                         dynamic="true"/>
 
         <extensionPoint qualifiedName="com.phodal.shireRefactoringTool"
