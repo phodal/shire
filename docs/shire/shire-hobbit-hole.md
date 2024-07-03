@@ -22,13 +22,14 @@ actionLocation: ContextMenu
 ### Interaction Type
 
 ```kotlin
-enum class InteractionType {
-    ChatPanel,          // 输出结果到聊天 Panel
-    AppendCursor,       // 在当前光标位置追加内容
-    AppendCursorStream, // 在当前光标位置追加内容，以流式输出
-    OutputFile,         // 输出到文件
-    ReplaceSelection,   // 替换当前选中内容
-    ReplaceCurrentFile, // 替换当前文件的内容
+enum class InteractionType(val description: String) {
+    AppendCursor("Append content at the current cursor position"),
+    AppendCursorStream("Append content at the current cursor position, stream output"),
+    OutputFile("Output to a file"),
+    ReplaceSelection("Replace the currently selected content"),
+    ReplaceCurrentFile("Replace the content of the current file"),
+    InsertBeforeSelection("Insert content before the currently selected content"),
+    RunPanel("Show Result in Run panel which is the bottom of the IDE")
     ;
 }
 ```
@@ -50,6 +51,8 @@ enum class ShireActionLocation(val location: String, val description: String) {
 当 COMMIT_MENU 项多于一个时，将会用 PopupMenu 显示；当只有一个时，将直接显示在 Commit 菜单中。
 
 ## 示例
+
+### 自动化测试示例
 
 ```shire
 ---
