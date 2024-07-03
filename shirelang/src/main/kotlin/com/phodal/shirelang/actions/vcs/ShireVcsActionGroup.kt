@@ -15,7 +15,8 @@ class ShireVcsActionGroup : ActionGroup() {
     override fun getActionUpdateThread() = ActionUpdateThread.BGT
 
     override fun update(e: AnActionEvent) {
-//        e.presentation.isPopupGroup = shireActionConfigs().size > 1
+        val isMultipleActions = shireActionConfigs().size > 1
+        e.presentation.isVisible = isMultipleActions
         e.presentation.isPopupGroup = true
     }
 

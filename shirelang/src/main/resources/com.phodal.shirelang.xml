@@ -89,10 +89,18 @@
         <group id="ShireVcsActionGroup"
                 class="com.phodal.shirelang.actions.vcs.ShireVcsActionGroup"
                 icon="com.phodal.shirelang.ShireIcons.DEFAULT"
-                description="Ask AI generate commit message">
+                description="Shire VCS Action">
 
             <add-to-group group-id="Vcs.MessageActionGroup"/>
         </group>
+
+        <action id="autodev.Vcs.CommitMessage"
+                class="com.phodal.shirelang.actions.vcs.ShireVcsSingleAction"
+                icon="com.phodal.shirelang.ShireIcons.DEFAULT"
+                description="Shire VCS Action">
+
+            <add-to-group group-id="Vcs.MessageActionGroup"/>
+        </action>
 
         <!-- Shire Intentions Action Group -->
         <group id="ShireIntentionsActionGroup" class="com.phodal.shirelang.actions.intention.ShireIntentionsActionGroup"
