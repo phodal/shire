@@ -1,5 +1,6 @@
 package com.phodal.shirecore.interaction.task
 
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.fileTypes.PlainTextLanguage
 import com.intellij.openapi.progress.ProgressIndicator
@@ -50,7 +51,11 @@ open class FileGenerateTask(
             fileName
         }
 
-        val file = project.guessProjectDir()!!.toNioPath().resolve(inferFileName).toFile()
+        val file = project.guessProjectDir()?.toNioPath()?.resolve(inferFileName)?.toFile()
+        if (file == null) {
+            logger<FileGenerateTask>().error("Failed to create file")
+            return
+        }
         if (!file.exists()) {
             file.createNewFile()
         }
@@ -59,7 +64,6 @@ open class FileGenerateTask(
             val code = Code.parse(result).text
             file.writeText(code)
             refreshAndOpenInEditor(file.toPath(), projectRoot)
-            return
         } else {
             file.writeText(result)
             refreshAndOpenInEditor(Path(projectRoot.path), projectRoot)
