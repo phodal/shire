@@ -9,6 +9,7 @@ import com.phodal.shirecore.provider.context.ToolchainPrepareContext
 import com.phodal.shirecore.provider.variable.impl.CodeSmellBuilder
 import com.phodal.shirecore.provider.variable.model.PsiContextVariable
 import com.phodal.shirecore.provider.variable.PsiContextVariableProvider
+import com.phodal.shirecore.search.SimilarChunksSearch
 import com.phodal.shirelang.java.util.JavaTestHelper
 import com.phodal.shirelang.java.util.getContainingClass
 import com.phodal.shirelang.java.variable.provider.JavaRelatedClassesProvider
@@ -67,6 +68,8 @@ class JavaPsiContextVariableProvider : PsiContextVariableProvider {
                 if (psiElement !is PsiMethod) return ""
                 return JavaTestHelper.findCallees(psiElement).joinToString("\n") { it.text }
             }
+
+            PsiContextVariable.SIMILAR_CODE -> return SimilarChunksSearch.createQuery(psiElement) ?: ""
         }
     }
 }

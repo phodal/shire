@@ -63,6 +63,8 @@ enum class PsiContextVariable(val variableName: String, val description: String?
     METHOD_CALLER("methodCaller", "The method that initiates the current call"),
 
     CALLED_METHOD("calledMethod", "The method that is being called by the current method"),
+
+    SIMILAR_CODE("similarCode", "Recently 20 files similar code based on the tf-idf search")
     ;
 
     companion object {

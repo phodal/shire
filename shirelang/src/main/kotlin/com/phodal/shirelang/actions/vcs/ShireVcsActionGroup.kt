@@ -1,5 +1,6 @@
 package com.phodal.shirelang.actions.vcs
 
+import com.intellij.ide.DataManager
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
