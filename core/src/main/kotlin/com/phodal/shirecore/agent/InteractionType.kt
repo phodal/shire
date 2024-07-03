@@ -7,6 +7,7 @@ enum class InteractionType(val description: String) {
     ReplaceSelection("Replace the currently selected content"),
     ReplaceCurrentFile("Replace the content of the current file"),
     InsertBeforeSelection("Insert content before the currently selected content"),
+    RunPanel("Show Result in Run panel which is the bottom of the IDE")
     ;
 
     companion object {
@@ -18,7 +19,8 @@ enum class InteractionType(val description: String) {
                 "ReplaceSelection" -> ReplaceSelection
                 "ReplaceCurrentFile" -> ReplaceCurrentFile
                 "InsertBeforeSelection" -> InsertBeforeSelection
-                else -> AppendCursor
+                "RunPanel" -> RunPanel
+                else -> RunPanel
             }
         }
     }

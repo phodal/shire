@@ -1,17 +1,26 @@
 package com.phodal.shirecore.interaction
 
+import com.intellij.execution.ui.ConsoleViewContentType
+import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator
+import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.ShirelangNotifications
 import com.phodal.shirecore.agent.InteractionType
 import com.phodal.shirecore.interaction.dto.CodeCompletionRequest
 import com.phodal.shirecore.interaction.task.BaseCodeGenTask
 import com.phodal.shirecore.interaction.task.FileGenerateTask
+import com.phodal.shirecore.interaction.task.InsertUtil
 import com.phodal.shirecore.llm.ChatMessage
 import com.phodal.shirecore.llm.ChatRole
+import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.provider.ide.LocationInteractionContext
 import com.phodal.shirecore.provider.ide.LocationInteractionProvider
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.cancellable
+import kotlinx.coroutines.launch
 
 class EditorInteractionProvider : LocationInteractionProvider {
     override fun isApplicable(context: LocationInteractionContext): Boolean {
@@ -69,6 +78,22 @@ class EditorInteractionProvider : LocationInteractionProvider {
 
             InteractionType.InsertBeforeSelection -> {
                 TODO()
+            }
+
+            InteractionType.RunPanel -> {
+                val flow: Flow<String> = LlmProvider.provider(context.project)!!.stream(context.prompt, "", false)
+                ShireCoroutineScope.scope(context.project).launch {
+                    val suggestion = StringBuilder()
+
+                    flow.cancellable().collect { char ->
+                        suggestion.append(char)
+
+                        invokeLater {
+                            context.console.print(char, ConsoleViewContentType.NORMAL_OUTPUT)
+                        }
+                    }
+
+                }
             }
         }
     }

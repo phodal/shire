@@ -1,5 +1,6 @@
 package com.phodal.shirecore.provider.ide
 
+import com.intellij.execution.ui.ConsoleView
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
@@ -28,4 +29,9 @@ data class LocationInteractionContext(
     val prompt: String,
 
     val selectElement: PsiElement? = null,
+
+    /**
+     * the console view
+     */
+    val console: ConsoleView,
 )

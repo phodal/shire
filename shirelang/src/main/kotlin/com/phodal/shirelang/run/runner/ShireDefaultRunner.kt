@@ -29,7 +29,8 @@ class ShireDefaultRunner(
                 interactionType = context.hole?.interaction ?: InteractionType.AppendCursorStream,
                 editor = context.editor,
                 project = context.myProject,
-                prompt = context.prompt
+                prompt = context.prompt,
+                console = context.console,
             )
 
             if (context.hole?.interaction != null) {
