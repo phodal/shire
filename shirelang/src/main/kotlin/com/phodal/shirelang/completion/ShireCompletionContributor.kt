@@ -31,6 +31,8 @@ class ShireCompletionContributor : CompletionContributor() {
         extend(CompletionType.BASIC, whenConditionPattern(), WhenConditionCompletionProvider())
         extend(CompletionType.BASIC, whenConditionFuncPattern(), WhenConditionFunctionCompletionProvider())
 
+//        extend(CompletionType.BASIC, PlatformPatterns.psiElement(ShireTypes.FROM), QueryStatementCompletion())
+
         // command completion
         extend(
             CompletionType.BASIC,
