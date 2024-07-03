@@ -40,8 +40,16 @@ class GitToolchainVariableProvider : ToolchainVariableProvider {
             VcsToolchainVariable.CurrentChanges -> {
                 val dataContext = DataManager.getInstance().dataContextFromFocus.result
                 val commitWorkflowUi = dataContext.getData(VcsDataKeys.COMMIT_WORKFLOW_UI)
-                    ?: return variable
-                val changes = getDiff(commitWorkflowUi) ?: return variable
+                if (commitWorkflowUi !is CommitWorkflowUi) {
+                    logger.warn("Cannot get commit workflow UI.")
+                    return variable
+                }
+                val changes = getDiff(commitWorkflowUi)
+                if (changes == null) {
+                    logger.warn("Cannot get changes.")
+                    return variable
+                }
+
                 val diffContext = project.getService(VcsPrompting::class.java).prepareContext(changes)
 
                 if (diffContext.isEmpty() || diffContext == "\n") {

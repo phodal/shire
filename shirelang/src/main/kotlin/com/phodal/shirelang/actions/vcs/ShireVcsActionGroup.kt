@@ -16,7 +16,8 @@ class ShireVcsActionGroup : ShireActionGroup() {
     override fun getActionUpdateThread() = ActionUpdateThread.BGT
 
     override fun update(e: AnActionEvent) {
-        e.presentation.isPopupGroup = getActionsByType(e, ShireActionLocation.COMMIT_MENU).size > 1
+//        e.presentation.isPopupGroup = getActionsByType(e, ShireActionLocation.COMMIT_MENU).size > 1
+        e.presentation.isPopupGroup = true
     }
 
     override fun getChildren(e: AnActionEvent?): Array<AnAction> {
@@ -33,6 +34,6 @@ class ShireVcsAction(val config: DynamicShireActionConfig) :
     override fun actionPerformed(e: AnActionEvent) {
         val project = e.project ?: return
 
-        ShireRunFileAction.executeShireFile(project, config, ShireRunFileAction.createRunConfig(e))
+        ShireRunFileAction.executeShireFile(project, config, null)
     }
 }
