@@ -23,7 +23,7 @@ class JavaClassStructureProvider : ClassStructureProvider {
         val methods = psiElement.methods.toList()
 
         val usages =
-            if (gatherUsages) findUsages(psiElement as PsiNameIdentifierOwner) else emptyList()
+            if (gatherUsages) Companion.findUsages(psiElement as PsiNameIdentifierOwner) else emptyList()
 
         val annotations: List<String> = psiElement.annotations.mapNotNull {
             it.text
@@ -38,24 +38,26 @@ class JavaClassStructureProvider : ClassStructureProvider {
         )
     }
 
-    /**
-     * This method is used to find usages of a given PsiNameIdentifierOwner in the project.
-     *
-     * @param nameIdentifierOwner the PsiNameIdentifierOwner for which usages need to be found
-     * @return a list of PsiReference objects representing the usages of the given PsiNameIdentifierOwner
-     */
-    private fun findUsages(nameIdentifierOwner: PsiNameIdentifierOwner): List<PsiReference> {
-        val project = nameIdentifierOwner.project
-        val searchScope = GlobalSearchScope.allScope(project) as SearchScope
+    companion object {
+        /**
+         * This method is used to find usages of a given PsiNameIdentifierOwner in the project.
+         *
+         * @param nameIdentifierOwner the PsiNameIdentifierOwner for which usages need to be found
+         * @return a list of PsiReference objects representing the usages of the given PsiNameIdentifierOwner
+         */
+        fun findUsages(nameIdentifierOwner: PsiNameIdentifierOwner): List<PsiReference> {
+            val project = nameIdentifierOwner.project
+            val searchScope = GlobalSearchScope.allScope(project) as SearchScope
 
-        return when (nameIdentifierOwner) {
-            is PsiMethod -> {
-                MethodReferencesSearch.search(nameIdentifierOwner, searchScope, true)
-            }
+            return when (nameIdentifierOwner) {
+                is PsiMethod -> {
+                    MethodReferencesSearch.search(nameIdentifierOwner, searchScope, true)
+                }
 
-            else -> {
-                ReferencesSearch.search((nameIdentifierOwner as PsiElement), searchScope, true)
-            }
-        }.findAll().map { it as PsiReference }
+                else -> {
+                    ReferencesSearch.search((nameIdentifierOwner as PsiElement), searchScope, true)
+                }
+            }.findAll().map { it as PsiReference }
+        }
     }
 }
