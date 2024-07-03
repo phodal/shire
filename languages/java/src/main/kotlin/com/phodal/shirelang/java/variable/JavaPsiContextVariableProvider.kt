@@ -8,6 +8,7 @@ import com.phodal.shirecore.provider.context.ToolchainPrepareContext
 import com.phodal.shirecore.provider.variable.CodeSmellBuilder
 import com.phodal.shirecore.provider.variable.PsiContextVariable
 import com.phodal.shirecore.provider.variable.PsiContextVariableProvider
+import com.phodal.shirelang.java.util.JavaTestHelper
 import com.phodal.shirelang.java.variable.provider.JavaRelatedClassesProvider
 import kotlinx.coroutines.runBlocking
 

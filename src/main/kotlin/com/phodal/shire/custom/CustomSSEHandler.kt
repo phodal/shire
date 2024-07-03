@@ -36,13 +36,12 @@ import org.jetbrains.annotations.VisibleForTesting
  *
  * @constructor Creates an instance of `CustomSSEProcessor`.
  */
-open class CustomSSEProcessor(private val project: Project) {
+open class CustomSSEHandler(private val project: Project) {
     open var hasSuccessRequest: Boolean = false
     private var parseFailedResponses: MutableList<String> = mutableListOf()
     open val requestFormat: String = ""
     open val responseFormat: String = ""
-    private val logger = logger<CustomSSEProcessor>()
-
+    private val logger = logger<CustomSSEHandler>()
 
     fun streamJson(call: Call, messages: MutableList<Message>): Flow<String> = callbackFlow {
         call.enqueue(JSONBodyResponseCallback(responseFormat) {

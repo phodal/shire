@@ -1,4 +1,4 @@
-package com.phodal.shirelang.java.variable
+package com.phodal.shirelang.java.util
 
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement

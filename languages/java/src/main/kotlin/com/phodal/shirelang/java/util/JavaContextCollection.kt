@@ -1,4 +1,4 @@
-package com.phodal.shirelang.java.impl.util
+package com.phodal.shirelang.java.util
 
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.psi.*

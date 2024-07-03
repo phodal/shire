@@ -4,7 +4,7 @@ import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.phodal.shire.custom.CustomRequest
-import com.phodal.shire.custom.CustomSSEProcessor
+import com.phodal.shire.custom.CustomSSEHandler
 import com.phodal.shire.custom.Message
 import com.phodal.shire.custom.updateCustomFormat
 import com.phodal.shirecore.agent.AuthType
@@ -20,7 +20,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.util.concurrent.TimeUnit
 
 @Service(Service.Level.PROJECT)
-class CustomAgentExecutor(val project: Project) : CustomSSEProcessor(project) {
+class CustomAgentExecutor(val project: Project) : CustomSSEHandler(project) {
     private var client = OkHttpClient()
     private val logger = logger<CustomAgentExecutor>()
     private val messages: MutableList<Message> = mutableListOf()

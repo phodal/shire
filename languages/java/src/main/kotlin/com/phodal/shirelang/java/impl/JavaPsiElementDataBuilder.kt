@@ -8,9 +8,11 @@ import com.intellij.psi.search.GlobalSearchScope
 import com.phodal.shirecore.codemodel.ClassStructureProvider
 import com.phodal.shirecore.codemodel.model.ClassStructure
 import com.phodal.shirecore.provider.psi.PsiElementDataBuilder
-import com.phodal.shirelang.java.impl.util.JavaContextCollection
+import com.phodal.shirelang.java.util.JavaContextCollection
 
 open class JavaPsiElementDataBuilder : PsiElementDataBuilder {
+    private val s = "RequestMapping"
+
     /**
      * Returns the base route of a given Kotlin language method.
      *
@@ -26,16 +28,12 @@ open class JavaPsiElementDataBuilder : PsiElementDataBuilder {
         if (element !is PsiMethod) return ""
 
         val containingClass = element.containingClass ?: return ""
-        containingClass.annotations.forEach {
-            if (it.qualifiedName?.endsWith("RequestMapping") == true) {
-                val value = it.findAttributeValue("value") ?: return ""
-                if (value is PsiLiteralExpression) {
-                    return value.value as String
-                }
-            }
-        }
+        val requestMappingAnnotation = containingClass.annotations.firstOrNull {
+            it.qualifiedName?.endsWith("RequestMapping") == true
+        } ?: return ""
 
-        return ""
+        val value = requestMappingAnnotation.findAttributeValue("value") as? PsiLiteralExpression
+        return value?.value as? String ?: ""
     }
 
     override fun inboundData(element: PsiElement): Map<String, String> {

@@ -3,6 +3,7 @@ package com.phodal.shirelang.java.variable
 import com.intellij.psi.PsiJavaFile
 import com.intellij.psi.PsiMethod
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
+import com.phodal.shirelang.java.util.JavaTestHelper
 import junit.framework.TestCase
 
 class JavaTestHelperTest : BasePlatformTestCase() {
