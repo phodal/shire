@@ -1,9 +1,8 @@
 ---
 name: "{{name}}"
-description: ""
+description: "Here is a description of the action."
 interaction: AppendCursor
 actionLocation: ContextMenu
-interaction: AppendCursor
 ---
 
 [notes]: For more options, see [the docs](https://shire.phodal.com/)
