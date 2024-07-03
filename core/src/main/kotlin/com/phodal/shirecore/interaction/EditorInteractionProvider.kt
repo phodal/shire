@@ -9,10 +9,8 @@ import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.ShirelangNotifications
 import com.phodal.shirecore.agent.InteractionType
 import com.phodal.shirecore.interaction.dto.CodeCompletionRequest
-import com.phodal.shirecore.interaction.task.BaseCodeGenTask
+import com.phodal.shirecore.interaction.task.BasicChatCompletionTask
 import com.phodal.shirecore.interaction.task.FileGenerateTask
-import com.phodal.shirecore.llm.ChatMessage
-import com.phodal.shirecore.llm.ChatRole
 import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.provider.ide.LocationInteractionContext
 import com.phodal.shirecore.provider.ide.LocationInteractionProvider
@@ -107,7 +105,7 @@ class EditorInteractionProvider : LocationInteractionProvider {
         isReplacement: Boolean,
         postExecute: (String) -> Unit,
         isInsertBefore: Boolean,
-    ): BaseCodeGenTask? {
+    ): BasicChatCompletionTask? {
         if (context.editor == null) {
             ShirelangNotifications.error(context.project, "Editor is null, please open a file to continue.")
             return null
@@ -125,16 +123,14 @@ class EditorInteractionProvider : LocationInteractionProvider {
             CodeCompletionRequest.create(
                 editor,
                 offset,
-                element = null,
-                null,
-                userPrompt,
+                userPrompt = userPrompt,
                 isReplacement = isReplacement,
                 postExecute = postExecute,
                 isInsertBefore = isInsertBefore,
             )
         } ?: return null
 
-        val task = BaseCodeGenTask(request)
+        val task = BasicChatCompletionTask(request)
         return task
     }
 }

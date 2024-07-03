@@ -23,17 +23,19 @@ class CodeCompletionRequest(
     val isReplacement: Boolean = false,
     val postExecute: ((String) -> Unit)?,
     val isInsertBefore: Boolean,
+    val userPrompt: String,
 ) : Disposable {
     companion object {
         fun create(
             editor: Editor,
             offset: Int,
-            element: PsiElement?,
-            prefix: String?,
-            suffix: String?,
+            element: PsiElement? = null,
+            prefix: String? = null,
+            suffix: String? = null,
             isReplacement: Boolean = false,
             postExecute: (String) -> Unit,
             isInsertBefore: Boolean,
+            userPrompt: String,
         ): CodeCompletionRequest? {
             val project = editor.project ?: return null
             val document = editor.document
@@ -63,6 +65,7 @@ class CodeCompletionRequest(
                 isReplacement,
                 postExecute = postExecute,
                 isInsertBefore = isInsertBefore,
+                userPrompt
             )
 
         }
