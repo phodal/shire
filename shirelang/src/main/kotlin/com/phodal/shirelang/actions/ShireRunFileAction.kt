@@ -13,6 +13,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.application.runReadAction
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
 import com.phodal.shirelang.ShireActionStartupActivity
@@ -59,8 +60,13 @@ class ShireRunFileAction : DumbAwareAction() {
             config: DynamicShireActionConfig,
             runSettings: RunnerAndConfigurationSettings?,
         ) {
-            val settings = runSettings ?: RunManager.getInstance(project)
-                .createConfiguration(config.name, ShireConfigurationType::class.java)
+            val settings = try {
+                runSettings ?: RunManager.getInstance(project)
+                    .createConfiguration(config.name, ShireConfigurationType::class.java)
+            } catch (e: Exception) {
+                logger<ShireRunFileAction>().error("Failed to create configuration", e)
+                return
+            }
 
             val runConfiguration = settings.configuration as ShireConfiguration
 
@@ -69,7 +75,12 @@ class ShireRunFileAction : DumbAwareAction() {
             val executorInstance = DefaultRunExecutor.getRunExecutorInstance()
             val executionEnvironment = ExecutionEnvironmentBuilder
                 .createOrNull(executorInstance, runConfiguration)
-                ?.build() ?: return
+                ?.build()
+
+            if (executionEnvironment == null) {
+                logger<ShireRunFileAction>().error("Failed to create execution environment")
+                return
+            }
 
             ExecutionManager.getInstance(project).restartRunProfile(executionEnvironment)
         }
