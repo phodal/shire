@@ -18,7 +18,6 @@ class ShireVcsActionGroup : ShireActionGroup() {
         e.presentation.isPopupGroup = getActionsByType(e, ShireActionLocation.COMMIT_MENU).size > 1
     }
 
-    /// todo: spike for logic in commit menu
     override fun getChildren(e: AnActionEvent?): Array<AnAction> {
         val configs: List<DynamicShireActionConfig> =
             DynamicShireActionService.getInstance().getAction(ShireActionLocation.COMMIT_MENU)
@@ -33,5 +32,4 @@ class ShireVcsAction(val config: DynamicShireActionConfig) :
     override fun actionPerformed(e: AnActionEvent) {
         ShirelangNotifications.notify(e.project!!, "VCS Action: ${config.name}")
     }
-
 }
