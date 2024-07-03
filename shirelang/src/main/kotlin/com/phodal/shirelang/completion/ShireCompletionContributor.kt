@@ -113,10 +113,19 @@ class ShireCompletionContributor : CompletionContributor() {
     }
 
     private fun hobbitHoleKey(): PsiElementPattern.Capture<PsiElement> {
-        return PlatformPatterns.psiElement(ShireTypes.IDENTIFIER)
-            .andNot(
-                PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(ShireTypes.COLON))
-            )
+        val excludedElements = listOf(
+            ShireTypes.COLON,
+            ShireTypes.DOT,
+            ShireTypes.AGENT_START,
+            ShireTypes.VARIABLE_START,
+            ShireTypes.COMMAND_START
+        ).map { PlatformPatterns.psiElement().afterLeaf(PlatformPatterns.psiElement(it)) }
+
+        return excludedElements.fold(
+            PlatformPatterns.psiElement(ShireTypes.IDENTIFIER)
+        ) { pattern, excludedPattern ->
+            pattern.andNot(excludedPattern)
+        }
     }
 
     private fun valuePatterns(listOf: List<BuiltinCommand>): ElementPattern<out PsiElement> {
