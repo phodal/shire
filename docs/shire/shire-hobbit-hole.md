@@ -36,17 +36,18 @@ enum class InteractionType {
 ### Action Location
 
 ```kotlin
-enum class ShireActionLocation(val location: String) {
-    CONTEXT_MENU("ContextMenu"),      // 在鼠标右键菜单中
-    INTENTION_MENU("IntentionMenu"),  // 在 Intention 菜单中，通过 Alt+Enter 快捷键触发
-    TERMINAL_MENU("TerminalMenu"),    // 在 Terminal 菜单中
-    COMMIT_MENU("CommitMenu"),        // 在 Commit 菜单中
-    RunPanel("RunPanel")              // 在 Run 面板中
+enum class ShireActionLocation(val location: String, val description: String) {
+    CONTEXT_MENU("ContextMenu", "Show in Context Menu by Right Click"),
+    INTENTION_MENU("IntentionMenu", "Show in Intention Menu by Alt+Enter"),
+    TERMINAL_MENU("TerminalMenu", "Show in Terminal panel menu bar"),
+    COMMIT_MENU("CommitMenu", "Show in Commit panel menu bar"),
+    RUN_PANEL("RunPanel", "Show in Run panel which is the bottom of the IDE")
     ;
 }
 ```
 
-
+{: .note }
+当 COMMIT_MENU 项多于一个时，将会用 PopupMenu 显示；当只有一个时，将直接显示在 Commit 菜单中。
 
 ## 示例
 
