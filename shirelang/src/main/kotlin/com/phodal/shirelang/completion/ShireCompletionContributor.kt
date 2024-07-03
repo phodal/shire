@@ -26,14 +26,12 @@ class ShireCompletionContributor : CompletionContributor() {
 
         extend(CompletionType.BASIC, identifierAfter(ShireTypes.COMMAND_START), BuiltinCommandCompletion())
 
-        extend(CompletionType.BASIC, PlatformPatterns.psiElement(ShireTypes.LIFECYCLE_ID), HobbitHoleKeyCompletion())
-        extend(CompletionType.BASIC, PlatformPatterns.psiElement(ShireTypes.FRONT_MATTER_ID), HobbitHoleKeyCompletion())
-
+//        extend(CompletionType.BASIC, PlatformPatterns.psiElement(ShireTypes.LIFECYCLE_ID), HobbitHoleKeyCompletion())
+//        extend(CompletionType.BASIC, PlatformPatterns.psiElement(ShireTypes.FRONT_MATTER_ID), HobbitHoleKeyCompletion())
         extend(CompletionType.BASIC, hobbitHolePattern(), HobbitHoleCompletion())
+
         extend(CompletionType.BASIC, whenConditionPattern(), WhenConditionCompletionProvider())
         extend(CompletionType.BASIC, whenConditionFuncPattern(), WhenConditionFunctionCompletionProvider())
-
-//        extend(CompletionType.BASIC, PlatformPatterns.psiElement(ShireTypes.FROM), QueryStatementCompletion())
 
         // command completion
         extend(
@@ -90,8 +88,8 @@ class ShireCompletionContributor : CompletionContributor() {
         return PlatformPatterns.psiElement()
             .inside(psiElement<ShireFrontMatterEntry>())
             .afterLeafSkipping(
-                PlatformPatterns.psiElement(ShireTypes.COLON),
-                PlatformPatterns.psiElement().withElementType(ShireTypes.FRONT_MATTER_ID)
+                PlatformPatterns.psiElement().withElementType(ShireTypes.FRONT_MATTER_KEY),
+                PlatformPatterns.psiElement(ShireTypes.COLON)
             )
     }
 

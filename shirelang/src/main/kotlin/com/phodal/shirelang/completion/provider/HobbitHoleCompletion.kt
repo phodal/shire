@@ -37,6 +37,10 @@ class HobbitHoleCompletion : CompletionProvider<CompletionParameters>() {
                         LookupElementBuilder
                             .create(it)
                             .withIcon(ShireIcons.DEFAULT)
+                            .withInsertHandler { context, _ ->
+                                // insert space before the action location
+                                context.document.insertString(context.startOffset, " ")
+                            }
                             .withTypeText("Action Location", true)
                     )
                 }
@@ -48,6 +52,9 @@ class HobbitHoleCompletion : CompletionProvider<CompletionParameters>() {
                         LookupElementBuilder
                             .create(it.name)
                             .withIcon(ShireIcons.DEFAULT)
+                            .withInsertHandler { context, _ ->
+                                context.document.insertString(context.startOffset, " ")
+                            }
                             .withTypeText(it.description, true)
                     )
                 }
@@ -59,6 +66,9 @@ class HobbitHoleCompletion : CompletionProvider<CompletionParameters>() {
                         LookupElementBuilder
                             .create(it)
                             .withIcon(ShireIcons.DEFAULT)
+                            .withInsertHandler { context, _ ->
+                                context.document.insertString(context.startOffset, " ")
+                            }
                     )
                 }
             }
@@ -68,6 +78,9 @@ class HobbitHoleCompletion : CompletionProvider<CompletionParameters>() {
                         LookupElementBuilder
                             .create(it)
                             .withIcon(ShireIcons.DEFAULT)
+                            .withInsertHandler { context, _ ->
+                                context.document.insertString(context.startOffset, " ")
+                            }
                     )
                 }
             }
