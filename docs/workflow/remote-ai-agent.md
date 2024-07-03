@@ -55,8 +55,7 @@ nav_order: 1
       "requestFormat": "{\"customFields\": {\"model\": \"yi-34b-chat\", \"stream\": true}}",
       "responseFormat": "$.choices[0].delta.content"
     },
-    "responseAction": "Direct",
-    "interactive": "ChatPanel"
+    "responseAction": "Direct"
   }
 ]
 ```
