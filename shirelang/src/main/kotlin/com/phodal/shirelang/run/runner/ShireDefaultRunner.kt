@@ -38,7 +38,11 @@ class ShireDefaultRunner(
                 if (interactionProvider != null) {
                     interactionProvider.execute(interactionContext) {
                         postFunction(it)
-                        context.processHandler.detachProcess()
+                        try {
+                            context.processHandler.detachProcess()
+                        } catch (e: Exception) {
+                            context.console.print(e.message ?: "Error", ConsoleViewContentType.ERROR_OUTPUT)
+                        }
                     }
                     return@invokeLater
                 }

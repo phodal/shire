@@ -85,8 +85,13 @@ open class BaseCodeGenTask(private val request: CodeCompletionRequest) :
 
                 invokeLater {
                     if (!isCanceled && !request.isReplacement) {
-                        InsertUtil.insertStreamingToDoc(project, char, editor, currentOffset)
-                        currentOffset += char.length
+                        if (request.isInsertBefore) {
+                            InsertUtil.insertStreamingToDoc(project, char, editor, currentOffset)
+                            currentOffset += char.length
+                        } else {
+                            InsertUtil.insertStreamingToDoc(project, char, editor, currentOffset)
+                            currentOffset += char.length
+                        }
                     }
                 }
             }

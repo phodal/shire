@@ -22,6 +22,7 @@ class CodeCompletionRequest(
     val suffixText: String,
     val isReplacement: Boolean = false,
     val postExecute: ((String) -> Unit)?,
+    val isInsertBefore: Boolean,
 ) : Disposable {
     companion object {
         fun create(
@@ -32,6 +33,7 @@ class CodeCompletionRequest(
             suffix: String?,
             isReplacement: Boolean = false,
             postExecute: (String) -> Unit,
+            isInsertBefore: Boolean,
         ): CodeCompletionRequest? {
             val project = editor.project ?: return null
             val document = editor.document
@@ -59,7 +61,8 @@ class CodeCompletionRequest(
                 editor,
                 suffixText,
                 isReplacement,
-                postExecute = postExecute
+                postExecute = postExecute,
+                isInsertBefore = isInsertBefore,
             )
 
         }

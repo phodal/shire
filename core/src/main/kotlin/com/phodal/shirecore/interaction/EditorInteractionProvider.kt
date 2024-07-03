@@ -36,7 +36,7 @@ class EditorInteractionProvider : LocationInteractionProvider {
             InteractionType.AppendCursor,
             InteractionType.AppendCursorStream,
             -> {
-                val task = createTask(context, msgs, isReplacement = false, postExecute = postExecute)
+                val task = createTask(context, msgs, isReplacement = false, postExecute = postExecute, false)
 
                 if (task == null) {
                     ShirelangNotifications.error(context.project, "Failed to create code completion task.")
@@ -55,7 +55,7 @@ class EditorInteractionProvider : LocationInteractionProvider {
             }
 
             InteractionType.ReplaceSelection -> {
-                val task = createTask(context, msgs, true, postExecute)
+                val task = createTask(context, msgs, true, postExecute, false)
 
                 if (task == null) {
                     ShirelangNotifications.error(context.project, "Failed to create code completion task.")
@@ -75,7 +75,15 @@ class EditorInteractionProvider : LocationInteractionProvider {
             }
 
             InteractionType.InsertBeforeSelection -> {
-                TODO()
+                val task = createTask(context, msgs, false, postExecute, isInsertBefore = true)
+
+                if (task == null) {
+                    ShirelangNotifications.error(context.project, "Failed to create code completion task.")
+                    return
+                }
+
+                ProgressManager.getInstance()
+                    .runProcessWithProgressAsynchronously(task, BackgroundableProcessIndicator(task))
             }
 
             InteractionType.RunPanel -> {
@@ -102,6 +110,7 @@ class EditorInteractionProvider : LocationInteractionProvider {
         msgs: List<ChatMessage>,
         isReplacement: Boolean,
         postExecute: (String) -> Unit,
+        isInsertBefore: Boolean,
     ): BaseCodeGenTask? {
         if (context.editor == null) {
             ShirelangNotifications.error(context.project, "Editor is null, please open a file to continue.")
@@ -110,7 +119,12 @@ class EditorInteractionProvider : LocationInteractionProvider {
 
         val editor = context.editor
 
-        val offset = editor.caretModel.offset
+        val offset = if (isInsertBefore) {
+            context.editor.selectionModel.selectionStart
+        } else {
+            editor.caretModel.offset
+        }
+
         val userPrompt = msgs.filter { it.role == ChatRole.User }.joinToString("\n") { it.content }
 
         val request = runReadAction {
@@ -121,7 +135,8 @@ class EditorInteractionProvider : LocationInteractionProvider {
                 null,
                 userPrompt,
                 isReplacement = isReplacement,
-                postExecute = postExecute
+                postExecute = postExecute,
+                isInsertBefore = isInsertBefore,
             )
         } ?: return null
 
