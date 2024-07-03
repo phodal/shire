@@ -45,6 +45,7 @@ nav_order: 1
   },
   {
     "name": "内部 API 集成",
+    "description": "sample",
     "url": "http://127.0.0.1:8765/api/agent/api-market",
     "auth": {
       "type": "Bearer",
