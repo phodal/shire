@@ -1,4 +1,4 @@
-package com.phodal.shire.custom
+package com.phodal.shire.custom.sse
 
 import com.nfeld.jsonpathkt.JsonPath
 import com.nfeld.jsonpathkt.extension.read
