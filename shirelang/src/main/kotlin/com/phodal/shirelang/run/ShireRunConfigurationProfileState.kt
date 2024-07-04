@@ -21,8 +21,7 @@ import com.intellij.ui.components.panels.NonOpaquePanel
 import com.phodal.shirelang.compiler.SHIRE_ERROR
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.flow.ShireConversationService
-import com.phodal.shirelang.run.runner.compileFinalPrompt
-import com.phodal.shirelang.run.runner.normalExecute
+import com.phodal.shirelang.run.runner.ShireRunner
 import java.awt.BorderLayout
 import javax.swing.JComponent
 
@@ -63,7 +62,7 @@ open class ShireRunConfigurationProfileState(
             return DefaultExecutionResult(console, processHandler)
         }
 
-        val runData = compileFinalPrompt(shireFile, myProject, console, configuration, configuration.getUserInput())
+        val runData = ShireRunner.compileFinalPrompt(shireFile, myProject, console, configuration, configuration.getUserInput())
 
         if (runData.finalPrompt.isEmpty()) {
             console!!.print("No content to run", ConsoleViewContentType.ERROR_OUTPUT)
@@ -79,7 +78,7 @@ open class ShireRunConfigurationProfileState(
         myProject.getService(ShireConversationService::class.java)
             .createConversation(configuration.getScriptPath(), runData.compileResult)
 
-        normalExecute(runData, processHandler, myProject, console, configuration)
+        ShireRunner.normalExecute(runData, processHandler, myProject, console, configuration)
 
         return DefaultExecutionResult(console, processHandler)
     }
