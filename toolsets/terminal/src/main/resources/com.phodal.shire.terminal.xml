@@ -1,0 +1,9 @@
+<idea-plugin package="com.phodal.shire.terminal">
+    <!--suppress PluginXmlValidity -->
+    <dependencies>
+        <plugin id="org.jetbrains.plugins.terminal"/>
+    </dependencies>
+
+    <extensions defaultExtensionNs="com.phodal">
+    </extensions>
+</idea-plugin>

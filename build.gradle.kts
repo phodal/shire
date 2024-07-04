@@ -161,6 +161,17 @@ project(":toolsets:httpclient") {
     }
 }
 
+project(":toolsets:terminal") {
+    intellij {
+        version.set(prop("ideaVersion"))
+        plugins.set(ideaPlugins)
+    }
+
+    dependencies {
+        implementation(project(":core"))
+    }
+}
+
 project(":shirelang") {
     apply {
         plugin("org.jetbrains.grammarkit")

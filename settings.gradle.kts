@@ -20,4 +20,5 @@ include(
 
     "toolsets:git",
     "toolsets:httpclient",
+    "toolsets:terminal",
 )

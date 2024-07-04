@@ -17,6 +17,7 @@
             <option value="$PROJECT_DIR$/toolsets" />
             <option value="$PROJECT_DIR$/toolsets/git" />
             <option value="$PROJECT_DIR$/toolsets/httpclient" />
+            <option value="$PROJECT_DIR$/toolsets/terminal" />
           </set>
         </option>
       </GradleProjectSettings>
