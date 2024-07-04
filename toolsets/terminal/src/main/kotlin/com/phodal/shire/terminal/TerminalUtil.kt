@@ -33,7 +33,7 @@ object TerminalUtil {
                 onChunk = { string ->
                     sb.append(string)
                 },
-                onDone = {
+                onFinish = {
                     runInEdt {
                         CopyPasteManager.copyTextToClipboard(sb.toString())
                         controller.performPaste(e.dataContext)
@@ -61,7 +61,7 @@ object TerminalUtil {
                 onChunk = { string ->
                     widget.terminalStarter?.sendString(string, true)
                 },
-                onDone = {})
+                onFinish = {})
         )
 
         return false

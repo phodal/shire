@@ -6,5 +6,5 @@ class TerminalHandler(
     val userInput: String,
     val project: Project,
     val onChunk: (str: String) -> Any?,
-    val onDone: ((str: String) -> Any?)?,
+    val onFinish: ((str: String) -> Any?)?,
 )

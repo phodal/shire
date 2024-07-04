@@ -123,8 +123,8 @@
                         interface="com.phodal.shirecore.provider.context.ActionLocationEditor"
                         dynamic="true"/>
 
-        <extensionPoint qualifiedName="com.phodal.shireShireActionExecutor"
-                        interface="com.phodal.shirecore.provider.action.CustomActionLocationExecutor"
+        <extensionPoint qualifiedName="com.phodal.shireTerminalExecutor"
+                        interface="com.phodal.shirecore.provider.action.TerminalLocationExecutor"
                         dynamic="true"/>
     </extensionPoints>
 

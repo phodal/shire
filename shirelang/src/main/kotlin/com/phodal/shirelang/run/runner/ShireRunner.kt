@@ -4,15 +4,21 @@ import com.intellij.execution.console.ConsoleViewWrapperBase
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.phodal.shirecore.config.ShireActionLocation
+import com.phodal.shirecore.config.interaction.PostFunction
+import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.middleware.PostCodeHandleContext
+import com.phodal.shirecore.provider.action.TerminalLocationExecutor
 import com.phodal.shirecore.provider.context.ActionLocationEditor
+import com.phodal.shirelang.ShireBundle
 import com.phodal.shirelang.compiler.SHIRE_ERROR
 import com.phodal.shirelang.compiler.ShireParsedResult
 import com.phodal.shirelang.compiler.ShireSyntaxAnalyzer
 import com.phodal.shirelang.compiler.ShireTemplateCompiler
+import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.ShireConfiguration
 import com.phodal.shirelang.run.ShireConsoleView
@@ -22,6 +28,10 @@ import com.phodal.shirelang.run.executor.ShireDefaultLlmExecutor
 import com.phodal.shirelang.run.executor.ShireLlmExecutor
 import com.phodal.shirelang.run.executor.ShireLlmExecutorContext
 import com.phodal.shirelang.run.flow.ShireConversationService
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class ShireRunner(
     private val shireFile: ShireFile,
@@ -31,6 +41,8 @@ class ShireRunner(
     private val userInput: String,
     private val processHandler: ShireProcessHandler
 ) {
+    private val terminalLocationExecutor = TerminalLocationExecutor.provide(project)
+
     fun execute() {
         val syntaxAnalyzer = ShireSyntaxAnalyzer(project, shireFile, ActionLocationEditor.defaultEditor(project))
         val parsedResult = syntaxAnalyzer.parse()
@@ -42,9 +54,33 @@ class ShireRunner(
             .createConversation(configuration.getScriptPath(), runnerContext.compileResult)
 
         if (runnerContext.hole?.actionLocation == ShireActionLocation.TERMINAL_MENU) {
-            //
+            executeTerminalTask(runnerContext) { response, textRange ->
+                executePostFunction(runnerContext, runnerContext.hole, null, null)
+            }
         } else {
             executeLlmTask(runnerContext)
+        }
+    }
+
+    private fun executeTerminalTask(context: ShireRunnerContext, postFunction: PostFunction) {
+        CoroutineScope(Dispatchers.Main).launch {
+            val handler = terminalLocationExecutor?.buildBundler()
+            val llmResult = StringBuilder()
+            runBlocking {
+                LlmProvider.provider(project)?.stream(context.finalPrompt, "", false)?.collect {
+                    llmResult.append(it)
+                    handler?.onChunk?.invoke(it)
+                } ?: console.print(
+                    ShireBundle.message("shire.llm.notfound"),
+                    ConsoleViewContentType.ERROR_OUTPUT
+                )
+            }
+
+            val response = llmResult.toString()
+            handler?.onFinish?.invoke(response)
+
+            postFunction(response, null)
+            processHandler.detachProcess()
         }
     }
 
@@ -55,6 +91,11 @@ class ShireRunner(
             ShireTemplateCompiler(project, hobbitHole, compileResult.variableTable, compileResult.shireOutput)
         if (userInput.isNotEmpty()) {
             templateCompiler.putCustomVariable("input", userInput)
+        }
+
+        val terminalInput = terminalLocationExecutor?.getUserInput()
+        if (terminalInput != null) {
+            templateCompiler.putCustomVariable("input", terminalInput)
         }
 
         val promptTextTrim = templateCompiler.compile().trim()
@@ -108,23 +149,32 @@ class ShireRunner(
 
         shireLlmExecutor.prepareTask()
         shireLlmExecutor.execute { response, textRange ->
-            var currentFile: PsiFile? = null
-            runData.editor?.virtualFile?.also {
-                currentFile = runReadAction { PsiManager.getInstance(project).findFile(it) }
-            }
-
-            val context = PostCodeHandleContext(
-                selectedEntry = hobbitHole?.pickupElement(project, runData.editor),
-                currentLanguage = currentFile?.language,
-                currentFile = currentFile,
-                genText = response,
-                modifiedTextRange = textRange,
-                editor = runData.editor,
-            )
-
-            hobbitHole?.executeStreamingEndProcessor(project, console, context)
-            hobbitHole?.executeAfterStreamingProcessor(project, console, context)
+            executePostFunction(runData, hobbitHole, response, textRange)
         }
+    }
+
+    private fun executePostFunction(
+        runData: ShireRunnerContext,
+        hobbitHole: HobbitHole?,
+        response: String?,
+        textRange: TextRange?,
+    ) {
+        var currentFile: PsiFile? = null
+        runData.editor?.virtualFile?.also {
+            currentFile = runReadAction { PsiManager.getInstance(project).findFile(it) }
+        }
+
+        val context = PostCodeHandleContext(
+            selectedEntry = hobbitHole?.pickupElement(project, runData.editor),
+            currentLanguage = currentFile?.language,
+            currentFile = currentFile,
+            genText = response,
+            modifiedTextRange = textRange,
+            editor = runData.editor,
+        )
+
+        hobbitHole?.executeStreamingEndProcessor(project, console, context)
+        hobbitHole?.executeAfterStreamingProcessor(project, console, context)
     }
 
     private fun printCompiledOutput(
