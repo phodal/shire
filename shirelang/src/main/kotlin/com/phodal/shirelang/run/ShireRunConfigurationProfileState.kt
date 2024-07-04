@@ -31,10 +31,10 @@ import com.phodal.shirelang.compiler.ShireCompiledResult
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.flow.ShireConversationService
-import com.phodal.shirelang.run.runner.CustomRemoteAgentLlmRunner
-import com.phodal.shirelang.run.runner.ShireDefaultLlmRunner
-import com.phodal.shirelang.run.runner.ShireLlmRunner
-import com.phodal.shirelang.run.runner.ShireLlmRunnerContext
+import com.phodal.shirelang.run.runner.CustomRemoteAgentLlmExecutor
+import com.phodal.shirelang.run.runner.ShireDefaultLlmExecutor
+import com.phodal.shirelang.run.runner.ShireLlmExecutor
+import com.phodal.shirelang.run.runner.ShireLlmExecutorContext
 import java.awt.BorderLayout
 import javax.swing.JComponent
 
@@ -172,7 +172,7 @@ open class ShireRunConfigurationProfileState(
         configuration: ShireConfiguration,
     ) {
         val agent = runData.compileResult.executeAgent
-        val shireLlmRunnerContext = ShireLlmRunnerContext(
+        val shireLlmExecutorContext = ShireLlmExecutorContext(
             configuration = configuration,
             processHandler = processHandler,
             console = console!!,
@@ -181,19 +181,19 @@ open class ShireRunConfigurationProfileState(
             prompt = runData.finalPrompt,
             editor = runData.editor,
         )
-        val shireLlmRunner: ShireLlmRunner = when {
+        val shireLlmExecutor: ShireLlmExecutor = when {
             agent != null -> {
-                CustomRemoteAgentLlmRunner(shireLlmRunnerContext, agent)
+                CustomRemoteAgentLlmExecutor(shireLlmExecutorContext, agent)
             }
 
             else -> {
                 val isLocalMode = runData.compileResult.isLocalCommand
-                ShireDefaultLlmRunner(shireLlmRunnerContext, isLocalMode)
+                ShireDefaultLlmExecutor(shireLlmExecutorContext, isLocalMode)
             }
         }
 
-        shireLlmRunner.prepareTask()
-        shireLlmRunner.execute { response, textRange ->
+        shireLlmExecutor.prepareTask()
+        shireLlmExecutor.execute { response, textRange ->
             var currentFile: PsiFile? = null
             runData.editor?.virtualFile?.also {
                 currentFile = runReadAction { PsiManager.getInstance(project).findFile(it) }

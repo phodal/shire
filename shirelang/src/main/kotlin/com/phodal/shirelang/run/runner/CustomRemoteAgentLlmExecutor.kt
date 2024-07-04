@@ -12,10 +12,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-class CustomRemoteAgentLlmRunner(
-    override val context: ShireLlmRunnerContext,
+class CustomRemoteAgentLlmExecutor(
+    override val context: ShireLlmExecutorContext,
     private val agent: CustomAgent,
-) : ShireLlmRunner(context) {
+) : ShireLlmExecutor(context) {
     override fun execute(postFunction: PostFunction) {
         ApplicationManager.getApplication().invokeLater {
             val stringFlow: Flow<String>? = CustomAgentExecutor(project = context.myProject).execute(context.prompt, agent)
