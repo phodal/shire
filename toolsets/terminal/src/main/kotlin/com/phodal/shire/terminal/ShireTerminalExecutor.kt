@@ -26,9 +26,9 @@ class ShireTerminalExecutor : TerminalLocationExecutor {
         val content = getContent(project) ?: return null
         val findWidgetByContent = TerminalToolWindowManager.findWidgetByContent(content) ?: return null
         val controller: TerminalPromptController? = lookupTerminalPromptControllerByView(findWidgetByContent)
+
         if (controller == null) {
-            trySendMsgInOld(project, userInput, content)
-            return null
+            return trySendMsgInOld(project, userInput, content)
         }
 
         val sb = StringBuilder()

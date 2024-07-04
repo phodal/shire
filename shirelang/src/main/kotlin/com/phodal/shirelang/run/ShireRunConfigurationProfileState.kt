@@ -19,7 +19,6 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Key
 import com.intellij.ui.components.panels.NonOpaquePanel
 import com.phodal.shirelang.psi.ShireFile
-import com.phodal.shirelang.run.flow.ShireConversationService
 import com.phodal.shirelang.run.runner.ShireRunner
 import java.awt.BorderLayout
 import javax.swing.JComponent

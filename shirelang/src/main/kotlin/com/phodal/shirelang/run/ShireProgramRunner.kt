@@ -1,5 +1,6 @@
 package com.phodal.shirelang.run
 
+import com.intellij.execution.ExecutionResult
 import com.phodal.shirelang.run.flow.ShireProcessProcessor
 import com.intellij.execution.configurations.RunProfile
 import com.intellij.execution.configurations.RunProfileState
@@ -29,6 +30,7 @@ class ShireProgramRunner : GenericProgramRunner<RunnerSettings>(), Disposable {
         val shireState = state as ShireRunConfigurationProfileState
 
 //        FileDocumentManager.getInstance().saveAllDocuments()
+        var executeResult: ExecutionResult? = null
 
         val result = AtomicReference<RunContentDescriptor>()
 
@@ -38,6 +40,8 @@ class ShireProgramRunner : GenericProgramRunner<RunnerSettings>(), Disposable {
                     val consoleView = (environment.state as? ShireRunConfigurationProfileState)?.console
                     environment.project.getService(ShireProcessProcessor::class.java)
                         .process(string, event, scriptPath, consoleView)
+
+                    // if need, maybe we need a toggle to show the run content
                 }
             })
 
@@ -46,8 +50,8 @@ class ShireProgramRunner : GenericProgramRunner<RunnerSettings>(), Disposable {
 
 
         ApplicationManager.getApplication().invokeAndWait {
-            val showRunContent = showRunContent(shireState.execute(environment.executor, this), environment)
-            result.set(showRunContent)
+            executeResult = shireState.execute(environment.executor, this)
+            result.set(showRunContent(executeResult, environment))
         }
 
         return result.get()
