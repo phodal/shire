@@ -2,7 +2,7 @@ package com.phodal.shirelang
 
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.jetbrains.rd.util.first
-import com.phodal.shirelang.compiler.ShireCompiler
+import com.phodal.shirelang.compiler.ShireSyntaxAnalyzer
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 import com.phodal.shirelang.compiler.hobbit.execute.PatternActionProcessor
 import com.phodal.shirelang.psi.ShireFile
@@ -36,7 +36,7 @@ class ShireQueryExpressionTest : BasePlatformTestCase() {
 
         myFixture.openFileInEditor(file.virtualFile)
 
-        val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
         val hole = compile.config!!
 
         val patternActionFuncs = hole.variables.first().value.patternActionFuncs

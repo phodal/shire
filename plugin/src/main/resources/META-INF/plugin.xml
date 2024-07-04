@@ -16,5 +16,6 @@
         <module name="com.phodal.shirelang.git"/>
 
         <module name="com.phodal.shire.httpclient"/>
+        <module name="com.phodal.shire.terminal"/>
     </content>
 </idea-plugin>

@@ -6,11 +6,12 @@ import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
+import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirecore.middleware.PostCodeHandleContext
 import com.phodal.shirecore.provider.context.ActionLocationEditor
 import com.phodal.shirelang.compiler.SHIRE_ERROR
-import com.phodal.shirelang.compiler.ShireCompiledResult
-import com.phodal.shirelang.compiler.ShireCompiler
+import com.phodal.shirelang.compiler.ShireParsedResult
+import com.phodal.shirelang.compiler.ShireSyntaxAnalyzer
 import com.phodal.shirelang.compiler.ShireTemplateCompiler
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.ShireConfiguration
@@ -31,19 +32,23 @@ class ShireRunner(
     private val processHandler: ShireProcessHandler
 ) {
     fun execute() {
-        val compiler = ShireCompiler(project, shireFile, ActionLocationEditor.defaultEditor(project))
-        val compileResult = compiler.compile()
+        val syntaxAnalyzer = ShireSyntaxAnalyzer(project, shireFile, ActionLocationEditor.defaultEditor(project))
+        val parsedResult = syntaxAnalyzer.parse()
 
-        val runnerContext = processTemplateCompile(compileResult)
+        val runnerContext = processTemplateCompile(parsedResult)
         if (runnerContext.hasError) return
 
         project.getService(ShireConversationService::class.java)
             .createConversation(configuration.getScriptPath(), runnerContext.compileResult)
 
-        executeLlmTask(runnerContext)
+        if (runnerContext.hole?.actionLocation == ShireActionLocation.TERMINAL_MENU) {
+            //
+        } else {
+            executeLlmTask(runnerContext)
+        }
     }
 
-    private fun processTemplateCompile(compileResult: ShireCompiledResult): ShireRunnerContext {
+    private fun processTemplateCompile(compileResult: ShireParsedResult): ShireRunnerContext {
         val hobbitHole = compileResult.config
 
         val templateCompiler =

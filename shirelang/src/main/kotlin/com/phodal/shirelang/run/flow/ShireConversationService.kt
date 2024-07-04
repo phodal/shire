@@ -5,7 +5,7 @@ import com.intellij.openapi.components.Service
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirelang.ShireBundle
-import com.phodal.shirelang.compiler.ShireCompiledResult
+import com.phodal.shirelang.compiler.ShireParsedResult
 import com.phodal.shirelang.run.ShireConsoleView
 import kotlinx.coroutines.runBlocking
 
@@ -13,7 +13,7 @@ import kotlinx.coroutines.runBlocking
 class ShireConversationService(val project: Project) {
     private val cachedConversations: MutableMap<String, ShireProcessContext> = mutableMapOf()
 
-    fun createConversation(scriptPath: String, result: ShireCompiledResult): ShireProcessContext {
+    fun createConversation(scriptPath: String, result: ShireParsedResult): ShireProcessContext {
         val conversation = ShireProcessContext(scriptPath, result, "", "")
         cachedConversations[scriptPath] = conversation
         return conversation

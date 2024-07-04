@@ -3,7 +3,7 @@ package com.phodal.shirelang
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.phodal.shirecore.middleware.PostCodeHandleContext
 import com.phodal.shirecore.middleware.PostProcessor
-import com.phodal.shirelang.compiler.ShireCompiler
+import com.phodal.shirelang.compiler.ShireSyntaxAnalyzer
 import com.phodal.shirelang.psi.ShireFile
 import junit.framework.TestCase
 
@@ -21,7 +21,7 @@ class ShireLifecycleTest : BasePlatformTestCase() {
 
         myFixture.openFileInEditor(file.virtualFile)
 
-        val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
         val hole = compile.config!!
 
         val funcNode = hole.onStreamingEnd
@@ -61,7 +61,7 @@ class ShireLifecycleTest : BasePlatformTestCase() {
 
         myFixture.openFileInEditor(file.virtualFile)
 
-        val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
         val hole = compile.config!!
 
         val funcNode = hole.afterStreaming!!

@@ -14,7 +14,7 @@ import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.ShirelangNotifications
 import com.phodal.shirecore.middleware.select.SelectElementStrategy
 import com.phodal.shirelang.ShireLanguage
-import com.phodal.shirelang.compiler.ShireCompiler
+import com.phodal.shirelang.compiler.ShireSyntaxAnalyzer
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.psi.ShireVisitor
 import com.phodal.shirelang.run.ShireConsoleView
@@ -74,8 +74,8 @@ class ShireProcessProcessor(val project: Project) {
                 val firstComment = collectComments(shireFile).firstOrNull() ?: return
                 if (firstComment.textRange.startOffset == 0) {
                     val text = firstComment.text
-                    if (text.startsWith(ShireCompiler.FLOW_FALG)) {
-                        val nextScript = text.substring(ShireCompiler.FLOW_FALG.length)
+                    if (text.startsWith(ShireSyntaxAnalyzer.FLOW_FALG)) {
+                        val nextScript = text.substring(ShireSyntaxAnalyzer.FLOW_FALG.length)
                         val newScript = ShireFile.lookup(project, nextScript) ?: return
                         this.executeTask(newScript, consoleView)
                     }
@@ -94,7 +94,7 @@ class ShireProcessProcessor(val project: Project) {
      */
     private fun executeTask(newScript: ShireFile, consoleView: ShireConsoleView?) {
         val shireCompiler = createCompiler(project, newScript)
-        val result = shireCompiler.compile()
+        val result = shireCompiler.parse()
         if (result.shireOutput != "") {
             ShirelangNotifications.notify(project, result.shireOutput)
         }
@@ -112,20 +112,20 @@ class ShireProcessProcessor(val project: Project) {
             if (result.nextJob == null) return
 
             val nextJob = result.nextJob!!
-            val nextResult = createCompiler(project, nextJob).compile()
+            val nextResult = createCompiler(project, nextJob).parse()
             if (nextResult.shireOutput != "") {
                 ShirelangNotifications.notify(project, nextResult.shireOutput)
             }
         }
     }
 
-    private fun createCompiler(project: Project, shireFile: ShireFile): ShireCompiler {
+    private fun createCompiler(project: Project, shireFile: ShireFile): ShireSyntaxAnalyzer {
         val editor = FileEditorManager.getInstance(project).selectedTextEditor
         val element: PsiElement? = editor?.caretModel?.currentCaret?.offset?.let {
             val psiFile = PsiUtilBase.getPsiFileInEditor(editor, project) ?: return@let null
             SelectElementStrategy.getElementAtOffset(psiFile, it)
         }
 
-        return ShireCompiler(project, shireFile, editor, element)
+        return ShireSyntaxAnalyzer(project, shireFile, editor, element)
     }
 }

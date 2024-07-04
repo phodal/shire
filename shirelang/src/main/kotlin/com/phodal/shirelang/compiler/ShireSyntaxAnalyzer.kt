@@ -23,7 +23,7 @@ import com.phodal.shirelang.psi.*
 import kotlinx.coroutines.runBlocking
 
 
-val CACHED_COMPILE_RESULT = mutableMapOf<String, ShireCompiledResult>()
+val CACHED_COMPILE_RESULT = mutableMapOf<String, ShireParsedResult>()
 
 /**
  * ShireCompiler class is responsible for compiling Shire files by processing different elements such as text segments, newlines, code blocks, used commands, comments, agents, variables, and builtin commands.
@@ -34,15 +34,15 @@ val CACHED_COMPILE_RESULT = mutableMapOf<String, ShireCompiledResult>()
  * The lookupNextCode() function looks up the next code block element following a used command.
  * The lookupNextTextSegment() function looks up the next text segment following a used command.
  */
-class ShireCompiler(
+class ShireSyntaxAnalyzer(
     private val myProject: Project,
     private val file: ShireFile,
     private val editor: Editor? = null,
     private val element: PsiElement? = null,
 ) {
     private var skipNextCode: Boolean = false
-    private val logger = logger<ShireCompiler>()
-    private val result = ShireCompiledResult()
+    private val logger = logger<ShireSyntaxAnalyzer>()
+    private val result = ShireParsedResult()
     private val output: StringBuilder = StringBuilder()
 
     private val variableTable = VariableTable()
@@ -54,7 +54,7 @@ class ShireCompiler(
     /**
      * @return ShireCompiledResult object containing the compiled result
      */
-    fun compile(): ShireCompiledResult {
+    fun parse(): ShireParsedResult {
         result.sourceCode = file.text
         val iterator = file.children.iterator()
 
@@ -129,7 +129,7 @@ class ShireCompiler(
                 if (command == null) {
                     CustomCommand.fromString(myProject, id?.text ?: "")?.let { cmd ->
                         ShireFile.fromString(myProject, cmd.content).let { file ->
-                            ShireCompiler(myProject, file).compile().let {
+                            ShireSyntaxAnalyzer(myProject, file).parse().let {
                                 output.append(it.shireOutput)
                                 result.hasError = it.hasError
                             }

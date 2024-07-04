@@ -4,7 +4,7 @@ import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirecore.config.InteractionType
 import com.phodal.shirelang.compiler.parser.FrontmatterParser
-import com.phodal.shirelang.compiler.ShireCompiler
+import com.phodal.shirelang.compiler.ShireSyntaxAnalyzer
 import com.phodal.shirelang.compiler.hobbit.ast.LogicalExpression
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 import com.phodal.shirelang.compiler.hobbit.execute.PatternActionProcessor
@@ -16,7 +16,7 @@ class ShireCompileTest : BasePlatformTestCase() {
         val code = "Normal String /"
         val file = myFixture.configureByText("test.shire", code)
 
-        val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
         assertEquals("Normal String /", compile.shireOutput)
     }
 
@@ -35,7 +35,7 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         val file = myFixture.configureByText("test.shire", code)
 
-        val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
         assertEquals("\n\nSummary webpage:\n", compile.shireOutput)
         compile.config!!.let {
             assertEquals("Summary", it.name)
@@ -60,7 +60,7 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         val file = myFixture.configureByText("test.shire", code)
 
-        val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
         assertEquals("\n\nSummary webpage:\n", compile.shireOutput)
     }
 
@@ -99,7 +99,7 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         val file = myFixture.configureByText("test.shire", code)
 
-        val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
         assertEquals("\n\nSummary webpage:", compile.shireOutput)
         val filenameRules = compile.config!!.ruleBasedFilter
 
@@ -124,7 +124,7 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         val file = myFixture.configureByText("test.shire", code)
 
-        val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
         assertEquals("\n\nSummary webpage:", compile.shireOutput)
         val map = compile.config!!.variables
 
@@ -150,7 +150,7 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         val file = myFixture.configureByText("test.shire", code)
 
-        val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
         assertEquals("\n\nSummary webpage:", compile.shireOutput)
         val when_ = compile.config?.when_
 
@@ -179,7 +179,7 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         val file = myFixture.configureByText("test.shire", code)
 
-        val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
         assertEquals("\n\nSummary webpage:", compile.shireOutput)
         val when_ = compile.config?.when_
 
@@ -208,7 +208,7 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         val file = myFixture.configureByText("test.shire", code)
 
-        val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
         assertEquals("\n\nSummary webpage:", compile.shireOutput)
         val when_ = compile.config?.when_
 
@@ -226,7 +226,7 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         val file = myFixture.configureByText("test.shire", code)
 
-        val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
         assertEquals("\n\nSummary webpage:", compile.shireOutput)
         val when_ = compile.config?.when_
 
@@ -251,7 +251,7 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         val file = myFixture.configureByText("test.shire", code)
 
-        val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
         val table = compile.variableTable
 
         val hole = compile.config!!
@@ -286,7 +286,7 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         myFixture.openFileInEditor(file.virtualFile)
 
-        val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
         val hole = compile.config!!
 
         val results = hole.variables.mapValues {
@@ -319,7 +319,7 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         val file = myFixture.configureByText("test.shire", code)
 
-        val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
         val hole = compile.config!!
 
         TestCase.assertEquals(1, hole.variables.size)

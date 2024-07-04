@@ -5,7 +5,7 @@ import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.variable.VariableTable
 import com.phodal.shirelang.psi.ShireFile
 
-data class ShireCompiledResult(
+data class ShireParsedResult(
     /**
      * The origin Shire content
      */
