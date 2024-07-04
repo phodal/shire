@@ -26,7 +26,7 @@ class ShireDefaultRunner(
             }
 
             val interactionContext = LocationInteractionContext(
-                location = context.hole?.actionLocation ?: ShireActionLocation.INTENTION_MENU,
+                location = context.hole?.actionLocation ?: ShireActionLocation.RUN_PANEL,
                 interactionType = context.hole?.interaction ?: InteractionType.AppendCursorStream,
                 editor = context.editor,
                 project = context.myProject,

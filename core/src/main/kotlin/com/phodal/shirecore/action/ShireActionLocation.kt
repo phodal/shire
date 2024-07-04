@@ -5,7 +5,8 @@ enum class ShireActionLocation(val location: String, val description: String) {
     INTENTION_MENU("IntentionMenu", "Show in Intention Menu by Alt+Enter"),
     TERMINAL_MENU("TerminalMenu", "Show in Terminal panel menu bar"),
     COMMIT_MENU("CommitMenu", "Show in Commit panel menu bar"),
-    RUN_PANEL("RunPanel", "Show in Run panel which is the bottom of the IDE")
+    RUN_PANEL("RunPanel", "Show in Run panel which is the bottom of the IDE"),
+    INPUT_BOX("InputBox", "Show in Input Box")
     ;
 
     companion object {
@@ -16,6 +17,7 @@ enum class ShireActionLocation(val location: String, val description: String) {
                 "TerminalMenu" -> TERMINAL_MENU
                 "CommitMenu" -> COMMIT_MENU
                 "RunPanel" -> RUN_PANEL
+                "InputBox" -> INPUT_BOX
                 else -> RUN_PANEL
             }
         }

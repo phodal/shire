@@ -96,13 +96,22 @@
         </group>
 
         <!-- When one commit menu -->
-        <action id="autodev.Vcs.CommitMessage"
+        <action id="ShireCommitMessage"
                 class="com.phodal.shirelang.actions.vcs.ShireVcsSingleAction"
                 icon="com.phodal.shirelang.ShireIcons.DEFAULT"
                 description="Shire VCS Action">
 
             <add-to-group group-id="Vcs.MessageActionGroup"/>
         </action>
+
+        <action id="ShireCustomInputBox"
+                class="com.phodal.shirelang.actions.input.ShireInputBoxAction"
+                description="You can custom any assistant as you want!"
+                icon="com.phodal.shirelang.ShireIcons.DEFAULT"
+        >
+            <keyboard-shortcut keymap="$default" first-keystroke="control BACK_SLASH"/>
+        </action>
+
 
         <!-- Shire Intentions Action Group -->
         <group id="ShireIntentionsActionGroup" class="com.phodal.shirelang.actions.intention.ShireIntentionsActionGroup"

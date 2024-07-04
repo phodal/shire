@@ -35,7 +35,7 @@ class CodeCompletionRequest(
             suffix: String? = null,
             isReplacement: Boolean = false,
             postExecute: PostFunction,
-            isInsertBefore: Boolean,
+            isInsertBefore: Boolean = false,
             userPrompt: String,
         ): CodeCompletionRequest? {
             val project = editor.project ?: return null
