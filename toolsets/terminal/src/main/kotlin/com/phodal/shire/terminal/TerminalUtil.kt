@@ -10,25 +10,26 @@ import com.intellij.terminal.ui.TerminalWidget
 import com.intellij.ui.components.panels.Wrapper
 import com.intellij.ui.content.Content
 import com.phodal.shire.terminal.ShireTerminalAction.executeAction
-import com.phodal.shirecore.toolchain.terminal.TerminalHandler
+import com.phodal.shirecore.provider.action.terminal.TerminalHandler
 import org.jetbrains.plugins.terminal.TerminalToolWindowFactory
 import org.jetbrains.plugins.terminal.TerminalToolWindowManager
 import org.jetbrains.plugins.terminal.exp.TerminalPromptController
 
 object TerminalUtil {
-    fun sendMsg(project: Project, data: String, e: AnActionEvent) {
+    fun sendMsg(project: Project, userInput: String, e: AnActionEvent) {
         val content = getContent(project) ?: return
         val findWidgetByContent = TerminalToolWindowManager.findWidgetByContent(content) ?: return
         val controller: TerminalPromptController? = lookupTerminalPromptControllerByView(findWidgetByContent)
         if (controller == null) {
-            trySendMsgInOld(project, data, content)
+            trySendMsgInOld(project, userInput, content)
             return
         }
 
         val sb = StringBuilder()
         executeAction(
             TerminalHandler(
-                data, project,
+                userInput,
+                project,
                 onChunk = { string ->
                     sb.append(string)
                 },
@@ -51,10 +52,12 @@ object TerminalUtil {
         return null
     }
 
-    private fun trySendMsgInOld(project: Project, data: String, content: Content): Boolean {
+    private fun trySendMsgInOld(project: Project, userInput: String, content: Content): Boolean {
         val widget = TerminalToolWindowManager.getWidgetByContent(content) ?: return true
         executeAction(
-            TerminalHandler(data, project,
+            TerminalHandler(
+                userInput,
+                project,
                 onChunk = { string ->
                     widget.terminalStarter?.sendString(string, true)
                 },

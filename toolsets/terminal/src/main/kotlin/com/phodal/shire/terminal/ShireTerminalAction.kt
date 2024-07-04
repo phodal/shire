@@ -16,7 +16,7 @@ import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.SwingHelper
 import com.intellij.util.ui.UIUtil
 import com.phodal.shirecore.ShireCoreBundle
-import com.phodal.shirecore.toolchain.terminal.TerminalHandler
+import com.phodal.shirecore.provider.action.terminal.TerminalHandler
 import java.awt.Component
 import java.awt.Font
 import java.awt.Point
@@ -33,8 +33,8 @@ object ShireTerminalAction {
         val project = e.project ?: return
         val contextComponent = e.getData(PlatformCoreDataKeys.CONTEXT_COMPONENT) ?: return
 
-        showInputBoxPopup(contextComponent, getPreferredPopupPoint(e)) { string ->
-            TerminalUtil.sendMsg(project, string, e)
+        showInputBoxPopup(contextComponent, getPreferredPopupPoint(e)) { userInput ->
+            TerminalUtil.sendMsg(project, userInput, e)
         }
     }
 
