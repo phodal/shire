@@ -1,15 +1,16 @@
 package com.phodal.shirecore.middleware.builtin
 
 import com.intellij.execution.ui.ConsoleView
-import com.intellij.openapi.application.invokeLater
-import com.intellij.openapi.application.runInEdt
-import com.intellij.openapi.application.runWriteAction
+import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.codeStyle.CodeStyleManager
 import com.phodal.shirecore.middleware.BuiltinPostHandler
 import com.phodal.shirecore.middleware.PostCodeHandleContext
 import com.phodal.shirecore.middleware.PostProcessor
+import com.phodal.shirecore.workerThread
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 class FormatCodeProcessor : PostProcessor {
     override val processorName: String = BuiltinPostHandler.FormatCode.handleName
@@ -22,8 +23,8 @@ class FormatCodeProcessor : PostProcessor {
         val file = context.currentFile ?: return ""
         val document = PsiDocumentManager.getInstance(project).getDocument(file) ?: return ""
 
-        invokeLater {
-            runWriteAction {
+        CoroutineScope(workerThread).launch {
+            WriteCommandAction.runWriteCommandAction(project) {
                 val codeStyleManager = CodeStyleManager.getInstance(project)
                 if (context.modifiedTextRange != null) {
                     codeStyleManager.reformatText(file, listOf(context.modifiedTextRange))
