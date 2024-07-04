@@ -8,7 +8,7 @@ import java.awt.Component
 
 interface TerminalLocationExecutor {
     fun getComponent(e: AnActionEvent): Component?
-    fun buildBundler(): TerminalHandler?
+    fun bundler(project: Project, userInput: String): TerminalHandler?
 
     companion object {
         private val EP_NAME: ExtensionPointName<TerminalLocationExecutor> =

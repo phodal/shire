@@ -64,7 +64,7 @@ class ShireRunner(
 
     private fun executeTerminalTask(context: ShireRunnerContext, postFunction: PostFunction) {
         CoroutineScope(Dispatchers.Main).launch {
-            val handler = terminalLocationExecutor?.buildBundler()
+            val handler = terminalLocationExecutor?.bundler(project, userInput)
             val llmResult = StringBuilder()
             runBlocking {
                 LlmProvider.provider(project)?.stream(context.finalPrompt, "", false)?.collect {

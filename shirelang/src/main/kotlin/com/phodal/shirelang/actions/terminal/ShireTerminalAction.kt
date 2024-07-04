@@ -33,7 +33,6 @@ class ShireTerminalAction : DumbAwareAction() {
     private val OUTLINE_PROPERTY = "JComponent.outline"
     private val ERROR_VALUE = "error"
 
-
     private fun shireActionConfigs() =
         DynamicShireActionService.getInstance().getAction(ShireActionLocation.TERMINAL_MENU)
 
@@ -49,11 +48,6 @@ class ShireTerminalAction : DumbAwareAction() {
 
         TerminalLocationExecutor.provide(project)?.getComponent(e)?.let { component ->
             showInputBoxPopup(component, getPreferredPopupPoint(e)) { userInput ->
-                TerminalLocationExecutor.provide(project)?.buildBundler()?.let { handler ->
-                    handler.onChunk(userInput)
-                    handler.onFinish?.let { it1 -> it1(userInput) }
-                }
-
                 ShireRunFileAction.executeShireFile(project, config, null, userInput)
             }
         }
