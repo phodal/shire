@@ -29,9 +29,15 @@ import javax.swing.event.DocumentEvent
 private const val OUTLINE_PROPERTY = "JComponent.outline"
 private const val ERROR_VALUE = "error"
 
+class TerminalHandler(
+    val data: String,
+    val project: Project,
+    val chunk: (str: String) -> Any?,
+    val done: ((str: String) -> Any?)?,
+)
 
-class ShellCommandSuggestAction : DumbAwareAction() {
-    override fun actionPerformed(e: AnActionEvent) {
+object ShireTerminalAction {
+    fun actionPerformed(e: AnActionEvent) {
         val project = e.project ?: return
         val contextComponent = e.getData(PlatformCoreDataKeys.CONTEXT_COMPONENT) ?: return
 
@@ -54,7 +60,7 @@ class ShellCommandSuggestAction : DumbAwareAction() {
 
     private fun showInputBoxPopup(
         component: Component, popupPoint: RelativePoint?,
-        callback: (String) -> Unit
+        callback: (String) -> Unit,
     ) {
         val textField = JTextField().also {
             it.text = ShireCoreBundle.message("shell.command.suggestion.action.default.text")
@@ -114,13 +120,8 @@ class ShellCommandSuggestAction : DumbAwareAction() {
         })
     }
 
-    companion object {
-        fun executeAction(data: String, project: Project,
-                          chunk: (str: String) -> Unit?,
-                          done: ((str: String) -> Unit?)?
-        ) {
-            // doExecute
-        }
+    fun executeAction(params: TerminalHandler) {
+        // doExecute
     }
 }
 

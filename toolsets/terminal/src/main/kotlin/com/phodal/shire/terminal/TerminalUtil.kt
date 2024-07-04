@@ -1,6 +1,5 @@
 package com.phodal.shire.terminal
 
-import com.phodal.shire.terminal.ShellCommandSuggestAction.Companion.executeAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.DataProvider
 import com.intellij.openapi.application.runInEdt
@@ -10,6 +9,7 @@ import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.terminal.ui.TerminalWidget
 import com.intellij.ui.components.panels.Wrapper
 import com.intellij.ui.content.Content
+import com.phodal.shire.terminal.ShireTerminalAction.executeAction
 import org.jetbrains.plugins.terminal.TerminalToolWindowFactory
 import org.jetbrains.plugins.terminal.TerminalToolWindowManager
 import org.jetbrains.plugins.terminal.exp.TerminalPromptController
@@ -25,15 +25,19 @@ object TerminalUtil {
         }
 
         val sb = StringBuilder()
-        executeAction(data, project, { string ->
-            sb.append(string)
-            null
-        }, {
-            runInEdt {
-                CopyPasteManager.copyTextToClipboard(sb.toString())
-                controller.performPaste(e.dataContext)
-            }
-        })
+        executeAction(
+            TerminalHandler(
+                data, project,
+                chunk = { string ->
+                    sb.append(string)
+                },
+                done = {
+                    runInEdt {
+                        CopyPasteManager.copyTextToClipboard(sb.toString())
+                        controller.performPaste(e.dataContext)
+                    }
+                })
+        )
     }
 
     private fun lookupTerminalPromptControllerByView(findWidgetByContent: TerminalWidget): TerminalPromptController? {
@@ -48,9 +52,13 @@ object TerminalUtil {
 
     private fun trySendMsgInOld(project: Project, data: String, content: Content): Boolean {
         val widget = TerminalToolWindowManager.getWidgetByContent(content) ?: return true
-        executeAction(data, project, { string ->
-            widget.terminalStarter?.sendString(string, true)
-        }, {})
+        executeAction(
+            TerminalHandler(data, project,
+                chunk = { string ->
+                    widget.terminalStarter?.sendString(string, true)
+                },
+                done = {})
+        )
 
         return false
     }
