@@ -2,6 +2,7 @@ package com.phodal.shirecore.middleware
 
 import com.intellij.lang.Language
 import com.intellij.openapi.util.Key
+import com.intellij.openapi.util.TextRange
 import com.intellij.openapi.util.UserDataHolderBase
 import com.intellij.psi.PsiFile
 import com.phodal.shirecore.middleware.select.SelectedEntry
@@ -46,6 +47,11 @@ class PostCodeHandleContext(
      * The data to be passed to the post-processor
      */
     val pipeData: MutableMap<String, Any> = mutableMapOf(),
+
+    /**
+     * post text range
+     */
+    val modifiedTextRange: TextRange? = null
 ) {
     companion object {
         private val DATA_KEY: Key<PostCodeHandleContext> = Key.create(PostCodeHandleContext::class.java.name)

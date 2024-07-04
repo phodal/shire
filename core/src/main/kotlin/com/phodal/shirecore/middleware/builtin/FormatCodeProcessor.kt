@@ -9,7 +9,7 @@ import com.phodal.shirecore.middleware.PostCodeHandleContext
 import com.phodal.shirecore.middleware.PostProcessor
 
 class FormatCodeProcessor : PostProcessor {
-    override val processorName: String get() = BuiltinPostHandler.FormatCode.handleName
+    override val processorName: String = BuiltinPostHandler.FormatCode.handleName
 
     override fun isApplicable(context: PostCodeHandleContext): Boolean {
         return true
@@ -17,14 +17,12 @@ class FormatCodeProcessor : PostProcessor {
 
     override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?): Any {
         val file = context.targetFile ?: return ""
-
         val document = PsiDocumentManager.getInstance(project).getDocument(file) ?: return ""
 
-        val endOffset = document.textLength
+        if (context.modifiedTextRange != null) {
+            return CodeStyleManager.getInstance(project).reformatText(file, listOf(context.modifiedTextRange))
+        }
 
-        /// todo: change to modify range
-        val formattedText = CodeStyleManager.getInstance(project).reformatText(file, 0, endOffset)
-
-        return formattedText
+        return CodeStyleManager.getInstance(project).reformatText(file, 0, document.textLength)
     }
 }

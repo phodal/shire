@@ -34,6 +34,7 @@ class EditorInteractionProvider : LocationInteractionProvider {
 
                 if (task == null) {
                     ShirelangNotifications.error(context.project, "Failed to create code completion task.")
+                    postExecute.invoke("", null)
                     return
                 }
 
@@ -53,6 +54,7 @@ class EditorInteractionProvider : LocationInteractionProvider {
 
                 if (task == null) {
                     ShirelangNotifications.error(context.project, "Failed to create code completion task.")
+                    postExecute.invoke("", null)
                     return
                 }
 
@@ -73,6 +75,7 @@ class EditorInteractionProvider : LocationInteractionProvider {
 
                 if (task == null) {
                     ShirelangNotifications.error(context.project, "Failed to create code completion task.")
+                    postExecute.invoke("", null)
                     return
                 }
 
