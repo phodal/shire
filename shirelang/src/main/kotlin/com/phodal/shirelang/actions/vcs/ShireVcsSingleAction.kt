@@ -14,6 +14,7 @@ class ShireVcsSingleAction : DumbAwareAction() {
         DynamicShireActionService.getInstance().getAction(ShireActionLocation.COMMIT_MENU)
 
     override fun update(e: AnActionEvent) {
+        e.presentation.isVisible = shireActionConfigs().size == 1
         e.presentation.isEnabled = shireActionConfigs().size == 1
     }
 
