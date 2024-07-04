@@ -17,6 +17,15 @@ class ShireTemplateCompiler(
     private val input: String,
 ) {
     fun compile(): String {
+        val prompt = doExecuteCompile()
+        return cleanUp(prompt)
+    }
+
+    private fun cleanUp(prompt: String) =
+        prompt.trim()
+            .replace("\n\n", "\n")
+
+    private fun doExecuteCompile(): String {
         val currentEditor = VariableTemplateCompiler.defaultEditor(myProject)
         val currentElement = VariableTemplateCompiler.defaultElement(myProject, currentEditor)
 
@@ -28,7 +37,8 @@ class ShireTemplateCompiler(
             val templateCompiler = VariableTemplateCompiler(file.language, file)
 
             templateCompiler.set(additionalMap)
-            return templateCompiler.compile(input)
+            val finalPrompt = templateCompiler.compile(input)
+            return finalPrompt
         }
 
         return input
