@@ -252,7 +252,7 @@ class ShireCompileTest : BasePlatformTestCase() {
         val file = myFixture.configureByText("test.shire", code)
 
         val compile = ShireCompiler(project, file as ShireFile, myFixture.editor).compile()
-        val table = compile.symbolTable
+        val table = compile.variableTable
 
         val hole = compile.config!!
 

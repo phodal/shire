@@ -3,8 +3,9 @@ package com.phodal.shirelang.compiler
 import com.intellij.openapi.project.Project
 import com.phodal.shirelang.compile.VariableTemplateCompiler
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
-import com.phodal.shirelang.compiler.variable.CompositeVariableResolver
-import com.phodal.shirelang.compiler.variable._base.VariableResolverContext
+import com.phodal.shirelang.compiler.variable.VariableTable
+import com.phodal.shirelang.compiler.variable.resolver.CompositeVariableResolver
+import com.phodal.shirelang.compiler.variable.base.VariableResolverContext
 
 /**
  * The `ShireTemplateCompiler` class is responsible for compiling templates in a Kotlin project.
@@ -13,7 +14,7 @@ import com.phodal.shirelang.compiler.variable._base.VariableResolverContext
 class ShireTemplateCompiler(
     private val myProject: Project,
     private val hole: HobbitHole?,
-    private val symbolTable: SymbolTable,
+    private val variableTable: VariableTable,
     private val input: String,
 ) {
     fun compile(): String {
@@ -30,7 +31,7 @@ class ShireTemplateCompiler(
         val currentElement = VariableTemplateCompiler.defaultElement(myProject, currentEditor)
 
         if (currentElement != null && currentEditor != null) {
-            val context = VariableResolverContext(myProject, currentEditor, hole, symbolTable, null)
+            val context = VariableResolverContext(myProject, currentEditor, hole, variableTable, null)
             val additionalMap: Map<String, Any> = CompositeVariableResolver(context).resolve()
 
             val file = currentElement.containingFile

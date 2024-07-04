@@ -1,9 +1,9 @@
-package com.phodal.shirelang.compiler.variable
+package com.phodal.shirelang.compiler.variable.resolver
 
 import com.intellij.psi.PsiElement
 import com.phodal.shirecore.middleware.select.SelectElementStrategy
-import com.phodal.shirelang.compiler.variable._base.VariableResolver
-import com.phodal.shirelang.compiler.variable._base.VariableResolverContext
+import com.phodal.shirelang.compiler.variable.base.VariableResolver
+import com.phodal.shirelang.compiler.variable.base.VariableResolverContext
 
 class CompositeVariableResolver(
    private val context: VariableResolverContext

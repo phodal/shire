@@ -15,6 +15,7 @@ import com.phodal.shirecore.agent.CustomAgent
 import com.phodal.shirelang.compile.VariableTemplateCompiler
 import com.phodal.shirelang.compiler.error.SHIRE_ERROR
 import com.phodal.shirelang.compiler.exec.*
+import com.phodal.shirelang.compiler.variable.VariableTable
 import com.phodal.shirelang.completion.dataprovider.BuiltinCommand
 import com.phodal.shirelang.completion.dataprovider.CustomCommand
 import com.phodal.shirelang.parser.CodeBlockElement
@@ -44,7 +45,7 @@ class ShireCompiler(
     private val result = ShireCompiledResult()
     private val output: StringBuilder = StringBuilder()
 
-    private val symbolTable = SymbolTable()
+    private val variableTable = VariableTable()
 
     companion object {
         const val FLOW_FALG = "[flow]:"
@@ -112,7 +113,7 @@ class ShireCompiler(
         }
 
         result.shireOutput = output.toString()
-        result.symbolTable = symbolTable
+        result.variableTable = variableTable
 
         CACHED_COMPILE_RESULT[file.name] = result
         return result
@@ -194,7 +195,7 @@ class ShireCompiler(
                     0
                 }
 
-                symbolTable.addVariable(variableId ?: "", SymbolTable.VariableType.String, lineNo)
+                variableTable.addVariable(variableId ?: "", VariableTable.VariableType.String, lineNo)
                 output.append(used.text)
             }
 

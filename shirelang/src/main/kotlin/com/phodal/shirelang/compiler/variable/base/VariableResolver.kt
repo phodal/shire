@@ -1,4 +1,4 @@
-package com.phodal.shirelang.compiler.variable._base
+package com.phodal.shirelang.compiler.variable.base
 
 /**
  * The `VariableResolver` interface is designed to provide a mechanism for resolving variables.

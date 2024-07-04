@@ -1,6 +1,6 @@
-package com.phodal.shirelang.compiler
+package com.phodal.shirelang.compiler.variable
 
-class SymbolTable {
+class VariableTable {
     private val table: MutableMap<String, VariableInfo> = mutableMapOf()
 
     fun addVariable(name: String, varType: VariableType, lineDeclared: Int, scope: VariableScope = VariableScope.BuiltIn) {

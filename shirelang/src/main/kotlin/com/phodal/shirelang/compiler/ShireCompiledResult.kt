@@ -2,6 +2,7 @@ package com.phodal.shirelang.compiler
 
 import com.phodal.shirecore.agent.CustomAgent
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
+import com.phodal.shirelang.compiler.variable.VariableTable
 import com.phodal.shirelang.psi.ShireFile
 
 data class ShireCompiledResult(
@@ -43,5 +44,5 @@ data class ShireCompiledResult(
     /**
      * Symbol table for all variables
      */
-    var symbolTable: SymbolTable = SymbolTable(),
+    var variableTable: VariableTable = VariableTable(),
 )

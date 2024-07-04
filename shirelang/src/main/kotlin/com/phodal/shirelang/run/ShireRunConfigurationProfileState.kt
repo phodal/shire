@@ -72,7 +72,7 @@ open class ShireRunConfigurationProfileState(
         val compiler = ShireCompiler(myProject, file, ActionLocationEditor.defaultEditor(myProject))
         val compileResult = compiler.compile()
 
-        val symbolTable = compileResult.symbolTable
+        val symbolTable = compileResult.variableTable
 
         myProject.getService(ShireConversationService::class.java)
             .createConversation(configuration.getScriptPath(), compileResult)

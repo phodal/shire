@@ -1,8 +1,8 @@
-package com.phodal.shirelang.compiler.variable
+package com.phodal.shirelang.compiler.variable.resolver
 
 import com.phodal.shirelang.compiler.hobbit.execute.PatternActionProcessor
-import com.phodal.shirelang.compiler.variable._base.VariableResolver
-import com.phodal.shirelang.compiler.variable._base.VariableResolverContext
+import com.phodal.shirelang.compiler.variable.base.VariableResolver
+import com.phodal.shirelang.compiler.variable.base.VariableResolverContext
 
 class UserCustomVariableResolver(
     private val context: VariableResolverContext
