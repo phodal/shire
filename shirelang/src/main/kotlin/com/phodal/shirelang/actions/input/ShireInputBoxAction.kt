@@ -11,8 +11,11 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.IdeFocusManager
 import com.intellij.psi.PsiElement
+import com.phodal.shirecore.action.ShireActionLocation
 import com.phodal.shirecore.interaction.dto.CodeCompletionRequest
+import com.phodal.shirecore.interaction.task.ChatCompletionTask
 import com.phodal.shirecore.interaction.task.CodeCompletionTask
+import com.phodal.shirelang.actions.dynamic.DynamicShireActionService
 import com.phodal.shirelang.actions.input.inlay.CustomInputBox
 import com.phodal.shirelang.actions.input.inlay.CustomInputBox.Companion.CUSTOM_INPUT_CANCEL_ACTION
 import com.phodal.shirelang.actions.input.inlay.CustomInputBox.Companion.CUSTOM_INPUT_SUBMIT_ACTION
@@ -21,6 +24,15 @@ import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
 
 class ShireInputBoxAction : DumbAwareAction() {
+    override fun getActionUpdateThread() = ActionUpdateThread.EDT
+
+//    private fun shireActionConfigs() =
+//        DynamicShireActionService.getInstance().getAction(ShireActionLocation.INPUT_BOX)
+//
+//    override fun update(e: AnActionEvent) {
+//        e.presentation.isEnabled = shireActionConfigs().size == 1
+//    }
+
     override fun actionPerformed(e: AnActionEvent) {
         val dataContext = e.dataContext
         val editor = dataContext.getData(CommonDataKeys.EDITOR) ?: return
@@ -58,7 +70,7 @@ class ShireInputBoxAction : DumbAwareAction() {
                         })
                 } ?: return
 
-                val task = CodeCompletionTask(request)
+                val task = ChatCompletionTask(request)
                 ProgressManager.getInstance()
                     .runProcessWithProgressAsynchronously(task, BackgroundableProcessIndicator(task))
 

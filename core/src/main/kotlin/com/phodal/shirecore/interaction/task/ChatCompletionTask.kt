@@ -20,9 +20,9 @@ import kotlinx.coroutines.launch
 import java.awt.event.KeyEvent
 import javax.swing.KeyStroke
 
-open class BasicChatCompletionTask(private val request: CodeCompletionRequest) :
+open class ChatCompletionTask(private val request: CodeCompletionRequest) :
     Task.Backgroundable(request.project, ShireCoreBundle.message("intentions.chat.code.complete.name")) {
-    private val logger = logger<BasicChatCompletionTask>()
+    private val logger = logger<ChatCompletionTask>()
 
     private var isCanceled: Boolean = false
 
