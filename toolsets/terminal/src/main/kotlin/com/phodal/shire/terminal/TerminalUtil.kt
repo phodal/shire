@@ -10,6 +10,7 @@ import com.intellij.terminal.ui.TerminalWidget
 import com.intellij.ui.components.panels.Wrapper
 import com.intellij.ui.content.Content
 import com.phodal.shire.terminal.ShireTerminalAction.executeAction
+import com.phodal.shirecore.toolchain.terminal.TerminalHandler
 import org.jetbrains.plugins.terminal.TerminalToolWindowFactory
 import org.jetbrains.plugins.terminal.TerminalToolWindowManager
 import org.jetbrains.plugins.terminal.exp.TerminalPromptController
@@ -28,10 +29,10 @@ object TerminalUtil {
         executeAction(
             TerminalHandler(
                 data, project,
-                chunk = { string ->
+                onChunk = { string ->
                     sb.append(string)
                 },
-                done = {
+                onDone = {
                     runInEdt {
                         CopyPasteManager.copyTextToClipboard(sb.toString())
                         controller.performPaste(e.dataContext)
@@ -54,10 +55,10 @@ object TerminalUtil {
         val widget = TerminalToolWindowManager.getWidgetByContent(content) ?: return true
         executeAction(
             TerminalHandler(data, project,
-                chunk = { string ->
+                onChunk = { string ->
                     widget.terminalStarter?.sendString(string, true)
                 },
-                done = {})
+                onDone = {})
         )
 
         return false

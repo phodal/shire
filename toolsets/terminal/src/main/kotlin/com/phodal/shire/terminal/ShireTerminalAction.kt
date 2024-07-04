@@ -4,8 +4,6 @@ package com.phodal.shire.terminal
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.AnActionHolder
 import com.intellij.openapi.actionSystem.PlatformCoreDataKeys
-import com.intellij.openapi.project.DumbAwareAction
-import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.Balloon
 import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.ui.popup.JBPopupListener
@@ -18,6 +16,7 @@ import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.SwingHelper
 import com.intellij.util.ui.UIUtil
 import com.phodal.shirecore.ShireCoreBundle
+import com.phodal.shirecore.toolchain.terminal.TerminalHandler
 import java.awt.Component
 import java.awt.Font
 import java.awt.Point
@@ -28,13 +27,6 @@ import javax.swing.event.DocumentEvent
 
 private const val OUTLINE_PROPERTY = "JComponent.outline"
 private const val ERROR_VALUE = "error"
-
-class TerminalHandler(
-    val data: String,
-    val project: Project,
-    val chunk: (str: String) -> Any?,
-    val done: ((str: String) -> Any?)?,
-)
 
 object ShireTerminalAction {
     fun actionPerformed(e: AnActionEvent) {
@@ -58,10 +50,7 @@ object ShireTerminalAction {
         return null
     }
 
-    private fun showInputBoxPopup(
-        component: Component, popupPoint: RelativePoint?,
-        callback: (String) -> Unit,
-    ) {
+    private fun showInputBoxPopup(component: Component, popupPoint: RelativePoint?, callback: (String) -> Unit) {
         val textField = JTextField().also {
             it.text = ShireCoreBundle.message("shell.command.suggestion.action.default.text")
             it.selectAll()
