@@ -1,4 +1,4 @@
-package com.phodal.shirelang.run.runner
+package com.phodal.shirelang.run.executor
 
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.application.ApplicationManager
