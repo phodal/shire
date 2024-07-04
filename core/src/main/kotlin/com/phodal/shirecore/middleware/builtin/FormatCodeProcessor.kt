@@ -27,7 +27,7 @@ class FormatCodeProcessor : PostProcessor {
             WriteCommandAction.runWriteCommandAction(project) {
                 val codeStyleManager = CodeStyleManager.getInstance(project)
                 if (context.modifiedTextRange != null) {
-                    codeStyleManager.reformatText(file, listOf(context.modifiedTextRange), true)
+                    codeStyleManager.reformatText(file, listOf(context.modifiedTextRange))
                 } else if (context.genPsiElement != null) {
                     codeStyleManager.reformat(context.genPsiElement!!)
                 } else {

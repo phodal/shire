@@ -7,7 +7,11 @@ class ShireProcessHandler(private val myExecutionName: String) : BuildProcessHan
     override fun detachIsDefault(): Boolean = false
     override fun destroyProcessImpl() = Unit
     override fun detachProcessImpl() {
-        notifyProcessTerminated(0)
+        try {
+            notifyProcessDetached()
+        } finally {
+            notifyProcessTerminated(0)
+        }
     }
     fun exitWithError() = notifyProcessTerminated(-1)
 
