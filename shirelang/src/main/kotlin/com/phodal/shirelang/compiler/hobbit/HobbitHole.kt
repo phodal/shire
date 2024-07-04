@@ -3,6 +3,7 @@ package com.phodal.shirelang.compiler.hobbit
 import com.intellij.codeInsight.intention.IntentionAction
 import com.intellij.execution.ui.ConsoleView
 import com.intellij.execution.ui.ConsoleViewContentType
+import com.intellij.openapi.actionSystem.KeyboardShortcut
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.DumbAwareAction
@@ -87,6 +88,8 @@ open class HobbitHole(
      */
     val afterStreaming: TaskRoutes? = null,
 
+    val shortcut: KeyboardShortcut? = null,
+
     /**
      * The rest of the data.
      */
@@ -136,6 +139,7 @@ open class HobbitHole(
         private const val FILENAME_RULES = "filenameRules"
         private const val VARIABLES = "variables"
         const val WHEN = "when"
+        const val SHORTCUT = "shortcut"
 
         fun from(file: ShireFile): HobbitHole? {
             return FrontmatterParser.parse(file)
@@ -153,6 +157,7 @@ open class HobbitHole(
 
                 INTERACTION to "The output of the action can be a file, a string, etc.",
                 ACTION_LOCATION to "The location of the action, can [ShireActionLocation]",
+                SHORTCUT to "The shortcut for the action",
 
                 FILENAME_RULES to "Custom prompt based on the file name",
                 STRATEGY_SELECTION to "The strategy to select the element to apply the action",
@@ -169,6 +174,10 @@ open class HobbitHole(
             val description = frontMatterMap[DESCRIPTION]?.value as? String ?: ""
             val interaction = frontMatterMap[INTERACTION]?.value as? String ?: ""
             val actionLocation = frontMatterMap[ACTION_LOCATION]?.value as? String ?: ShireActionLocation.default()
+
+            val shortcut = (frontMatterMap[SHORTCUT]?.value as? String)?.let {
+                KeyboardShortcut.fromString(it)
+            }
 
             val data = mutableMapOf<String, FrontMatterType>()
             frontMatterMap.forEach { (key, value) ->
@@ -214,7 +223,8 @@ open class HobbitHole(
                 when_ = whenCondition,
                 ruleBasedFilter = filenameRules,
                 onStreamingEnd = endProcessors,
-                afterStreaming = afterStreaming
+                afterStreaming = afterStreaming,
+                shortcut = shortcut,
             )
         }
 

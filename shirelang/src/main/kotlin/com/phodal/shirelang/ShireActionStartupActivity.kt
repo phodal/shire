@@ -17,7 +17,6 @@ import com.phodal.shirelang.actions.dynamic.DynamicShireActionConfig
 import com.phodal.shirelang.actions.dynamic.DynamicShireActionService
 import com.phodal.shirelang.compiler.parser.FrontmatterParser
 import com.phodal.shirelang.psi.ShireFile
-import javax.swing.KeyStroke
 
 
 class ShireActionStartupActivity : ProjectActivity {
@@ -39,17 +38,26 @@ class ShireActionStartupActivity : ProjectActivity {
         }
     }
 
-    fun setKeymapShortcut(actionId: String, keyCode: Int, modifiers: Int) {
+    /**
+     * Sets a keymap shortcut for a specified action ID.
+     *
+     * This method takes in the action ID of the desired action and a keyboard string representing the shortcut keys to be set.
+     * It retrieves the action manager and keymap manager instances, then adds the specified keyboard shortcut to the active keymap.
+     *
+     * @param actionId The ID of the action for which the shortcut is being set.
+     * @param keyboardString A string representing the keyboard shortcut keys (e.g. "ctrl shift A").
+     */
+    fun setKeymapShortcut(actionId: String, keyboardString: String) {
         val actionManager: ActionManager = ActionManager.getInstance()
-        val action: AnAction = actionManager.getAction(actionId) ?: return
+        val findAction: AnAction = actionManager.getAction(actionId) ?: return
 
         val keymapManager = KeymapManager.getInstance()
         val activeKeymap = keymapManager.activeKeymap
 
         if (activeKeymap is KeymapImpl) {
-            val newShortcut = KeyboardShortcut(KeyStroke.getKeyStroke(keyCode, modifiers), null)
+            val keyboardShortcut = KeyboardShortcut.fromString(keyboardString)
             activeKeymap.removeAllActionShortcuts(actionId)
-            activeKeymap.addShortcut(actionId, newShortcut)
+            activeKeymap.addShortcut(actionId, keyboardShortcut)
         }
     }
 
