@@ -79,12 +79,14 @@ class ShireRunner(
 
     fun executeLlmTask(runData: ShireRunnerContext) {
         val agent = runData.compileResult.executeAgent
+        val hobbitHole = runData.hole
+
         val shireLlmExecutorContext = ShireLlmExecutorContext(
             configuration = configuration,
             processHandler = processHandler,
             console = console,
             myProject = project,
-            hole = runData.hole,
+            hole = hobbitHole,
             prompt = runData.finalPrompt,
             editor = runData.editor,
         )
@@ -107,7 +109,7 @@ class ShireRunner(
             }
 
             val context = PostCodeHandleContext(
-                selectedEntry = runData.hole?.pickupElement(project, runData.editor),
+                selectedEntry = hobbitHole?.pickupElement(project, runData.editor),
                 currentLanguage = currentFile?.language,
                 currentFile = currentFile,
                 genText = response,
@@ -115,8 +117,8 @@ class ShireRunner(
                 editor = runData.editor,
             )
 
-            runData.hole?.executeStreamingEndProcessor(project, console, context)
-            runData.hole?.executeAfterStreamingProcessor(project, console, context)
+            hobbitHole?.executeStreamingEndProcessor(project, console, context)
+            hobbitHole?.executeAfterStreamingProcessor(project, console, context)
         }
     }
 
