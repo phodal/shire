@@ -38,18 +38,16 @@ class ShireProgramRunner : GenericProgramRunner<RunnerSettings>(), Disposable {
                     val consoleView = (environment.state as? ShireRunConfigurationProfileState)?.console
                     environment.project.getService(ShireProcessProcessor::class.java)
                         .process(string, event, scriptPath, consoleView)
-
-                    ApplicationManager.getApplication().invokeAndWait {
-                        val showRunContent = showRunContent(
-                            shireState.execute(environment.executor, this@ShireProgramRunner),
-                            environment
-                        )
-                        result.set(showRunContent)
-                    }
                 }
             })
 
             isSubscribed = true
+        }
+
+
+        ApplicationManager.getApplication().invokeAndWait {
+            val showRunContent = showRunContent(shireState.execute(environment.executor, this), environment)
+            result.set(showRunContent)
         }
 
         return result.get()
