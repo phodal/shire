@@ -19,11 +19,7 @@ class VariableTemplateCompiler(
     private val log = logger<VariableTemplateCompiler>()
     private val variableMap: MutableMap<String, Any> = mutableMapOf()
 
-    fun set(key: String, value: String) {
-        variableMap[key] = value
-    }
-
-    fun set(map: Map<String, Any>) {
+    fun putAll(map: Map<String, Any>) {
         variableMap.putAll(map)
     }
 

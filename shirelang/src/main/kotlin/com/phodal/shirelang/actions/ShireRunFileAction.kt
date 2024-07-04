@@ -59,6 +59,7 @@ class ShireRunFileAction : DumbAwareAction() {
             project: Project,
             config: DynamicShireActionConfig,
             runSettings: RunnerAndConfigurationSettings?,
+            userInput: String? = null,
         ) {
             val settings = try {
                 runSettings ?: RunManager.getInstance(project)
@@ -71,6 +72,9 @@ class ShireRunFileAction : DumbAwareAction() {
             val runConfiguration = settings.configuration as ShireConfiguration
 
             runConfiguration.setScriptPath(config.shireFile.virtualFile.path)
+            if (userInput != null) {
+                runConfiguration.setUserInput(userInput)
+            }
 
             val executorInstance = DefaultRunExecutor.getRunExecutorInstance()
             val executionEnvironment = ExecutionEnvironmentBuilder

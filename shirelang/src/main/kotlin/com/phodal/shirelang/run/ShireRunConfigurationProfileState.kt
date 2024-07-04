@@ -26,6 +26,7 @@ import com.phodal.shirecore.provider.context.ActionLocationEditor
 import com.phodal.shirelang.compiler.ShireCompiler
 import com.phodal.shirelang.compiler.ShireTemplateCompiler
 import com.phodal.shirelang.compiler.SHIRE_ERROR
+import com.phodal.shirelang.compiler.variable.VariableTable
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.flow.ShireConversationService
 import com.phodal.shirelang.run.runner.CustomRemoteAgentRunner
@@ -75,18 +76,24 @@ open class ShireRunConfigurationProfileState(
         val compiler = ShireCompiler(myProject, shireFile, ActionLocationEditor.defaultEditor(myProject))
         val compileResult = compiler.compile()
 
-        val symbolTable = compileResult.variableTable
+        val variableTable = compileResult.variableTable
 
         myProject.getService(ShireConversationService::class.java)
             .createConversation(configuration.getScriptPath(), compileResult)
 
         val input = compileResult.shireOutput
-
         val hobbitHole = compileResult.config
-
         val locationEditor = ActionLocationEditor.provide(myProject, hobbitHole?.actionLocation)
 
-        val promptText = ShireTemplateCompiler(myProject, hobbitHole, symbolTable, input).compile()
+
+        val templateCompiler = ShireTemplateCompiler(myProject, hobbitHole, variableTable, input)
+
+        if (configuration.getUserInput().isNotEmpty()) {
+//            variableTable.addVariable("input", VariableTable.VariableType.String)
+            templateCompiler.putCustomVariable("input", configuration.getUserInput())
+        }
+
+        val promptText = templateCompiler.compile()
         logCompiled(console!!, promptText)
 
         // check prompt text had content or just new line with whitespace

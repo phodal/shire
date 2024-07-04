@@ -34,11 +34,8 @@ open class InlayPanel<T : JComponent?>(var component: T) : JPanel() {
                 super.paintComponent(g)
                 val create: Graphics2D? = g.create() as Graphics2D?
                 try {
-                    create!!.paint2DLine(
-                        JBPoint(0, 0),
-                        JBPoint(0, height),
-                        LinePainter2D.StrokeType.INSIDE,
-                        3.0,
+                    create!!.paint2DLine(JBPoint(0, 0), JBPoint(0, height),
+                        LinePainter2D.StrokeType.INSIDE, 3.0,
                         JBColor(Color(0, 100, 89, 100), Color(0, 0, 0, 90))
                     )
 
