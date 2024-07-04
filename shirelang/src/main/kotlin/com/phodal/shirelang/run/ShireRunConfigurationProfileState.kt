@@ -16,6 +16,7 @@ import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.runReadAction
+import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Key
 import com.intellij.psi.PsiFile
@@ -26,7 +27,8 @@ import com.phodal.shirecore.provider.context.ActionLocationEditor
 import com.phodal.shirelang.compiler.ShireCompiler
 import com.phodal.shirelang.compiler.ShireTemplateCompiler
 import com.phodal.shirelang.compiler.SHIRE_ERROR
-import com.phodal.shirelang.compiler.variable.VariableTable
+import com.phodal.shirelang.compiler.ShireCompiledResult
+import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.flow.ShireConversationService
 import com.phodal.shirelang.run.runner.CustomRemoteAgentRunner
@@ -73,58 +75,38 @@ open class ShireRunConfigurationProfileState(
             return DefaultExecutionResult(console, processHandler)
         }
 
-        val compiler = ShireCompiler(myProject, shireFile, ActionLocationEditor.defaultEditor(myProject))
-        val compileResult = compiler.compile()
+        val runData = doCompile(shireFile)
 
-        val variableTable = compileResult.variableTable
-
-        myProject.getService(ShireConversationService::class.java)
-            .createConversation(configuration.getScriptPath(), compileResult)
-
-        val input = compileResult.shireOutput
-        val hobbitHole = compileResult.config
-        val locationEditor = ActionLocationEditor.provide(myProject, hobbitHole?.actionLocation)
-
-
-        val templateCompiler = ShireTemplateCompiler(myProject, hobbitHole, variableTable, input)
-
-        if (configuration.getUserInput().isNotEmpty()) {
-//            variableTable.addVariable("input", VariableTable.VariableType.String)
-            templateCompiler.putCustomVariable("input", configuration.getUserInput())
-        }
-
-        val promptText = templateCompiler.compile()
-        logCompiled(console!!, promptText)
-
-        // check prompt text had content or just new line with whitespace
-        val promptTextTrim = promptText.trim()
-        if (promptTextTrim.isEmpty()) {
+        if (runData.finalPrompt.isEmpty()) {
             console!!.print("No content to run", ConsoleViewContentType.ERROR_OUTPUT)
             processHandler.destroyProcess()
             return DefaultExecutionResult(console, processHandler)
         }
 
-        if (promptText.contains(SHIRE_ERROR)) {
+        if (runData.finalPrompt.contains(SHIRE_ERROR)) {
             processHandler.exitWithError()
             return DefaultExecutionResult(console, processHandler)
         }
 
-        val agent = compileResult.executeAgent
+        myProject.getService(ShireConversationService::class.java)
+            .createConversation(configuration.getScriptPath(), runData.compileResult)
+
+        val agent = runData.compileResult.executeAgent
         val shireRunnerContext = ShireRunnerContext(
             configuration = configuration,
             processHandler = processHandler,
             console = console!!,
             myProject = myProject,
-            hole = hobbitHole,
-            prompt = promptText,
-            editor = locationEditor,
+            hole = runData.hole,
+            prompt = runData.finalPrompt,
+            editor = runData.editor,
         )
         val shireRunner: ShireRunner = when {
             agent != null -> {
                 CustomRemoteAgentRunner(shireRunnerContext, agent)
             }
             else -> {
-                val isLocalMode = compileResult.isLocalCommand
+                val isLocalMode = runData.compileResult.isLocalCommand
                 ShireDefaultRunner(shireRunnerContext, isLocalMode)
             }
         }
@@ -132,27 +114,58 @@ open class ShireRunConfigurationProfileState(
         shireRunner.prepareTask()
         shireRunner.execute { response, textRange ->
             var currentFile: PsiFile? = null
-            locationEditor?.virtualFile?.also {
+            runData.editor?.virtualFile?.also {
                 currentFile = runReadAction { PsiManager.getInstance(myProject).findFile(it) }
             }
 
             val context = PostCodeHandleContext(
-                selectedEntry = hobbitHole?.pickupElement(myProject, locationEditor),
+                selectedEntry = runData.hole?.pickupElement(myProject, runData.editor),
                 currentLanguage = currentFile?.language,
                 currentFile = currentFile,
                 genText = response,
                 modifiedTextRange = textRange,
-                editor = locationEditor,
+                editor = runData.editor,
             )
 
-            hobbitHole?.executeStreamingEndProcessor(myProject, console, context)
-            hobbitHole?.executeAfterStreamingProcessor(myProject, console, context)
+            runData.hole?.executeStreamingEndProcessor(myProject, console, context)
+            runData.hole?.executeAfterStreamingProcessor(myProject, console, context)
         }
 
         return DefaultExecutionResult(console, processHandler)
     }
 
-    private fun logCompiled(console: ConsoleViewWrapperBase, promptText: String) {
+    data class ShireRunListenerData(
+        val hole: HobbitHole?,
+        val editor: Editor?,
+        val compileResult: ShireCompiledResult,
+        val finalPrompt: String = ""
+    )
+
+    fun doCompile(shireFile: ShireFile) : ShireRunListenerData {
+        val compiler = ShireCompiler(myProject, shireFile, ActionLocationEditor.defaultEditor(myProject))
+        val compileResult = compiler.compile()
+
+        val variableTable = compileResult.variableTable
+
+        val input = compileResult.shireOutput
+        val hobbitHole = compileResult.config
+        val locationEditor = ActionLocationEditor.provide(myProject, hobbitHole?.actionLocation)
+
+        val templateCompiler = ShireTemplateCompiler(myProject, hobbitHole, variableTable, input)
+        if (configuration.getUserInput().isNotEmpty()) {
+            templateCompiler.putCustomVariable("input", configuration.getUserInput())
+        }
+
+        val promptText = templateCompiler.compile()
+        printCompiledOutput(console!!, promptText)
+
+        // check prompt text had content or just new line with whitespace
+        val promptTextTrim = promptText.trim()
+
+        return ShireRunListenerData(hobbitHole, locationEditor, compileResult, promptTextTrim)
+    }
+
+    private fun printCompiledOutput(console: ConsoleViewWrapperBase, promptText: String) {
         console.print("Shire Script: ${configuration.getScriptPath()}\n", ConsoleViewContentType.SYSTEM_OUTPUT)
         console.print("Shire Script Compile output:\n", ConsoleViewContentType.SYSTEM_OUTPUT)
         promptText.split("\n").forEach {
