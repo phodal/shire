@@ -18,7 +18,7 @@ class SaveFileProcessor : PostProcessor {
     }
 
     override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?): String {
-        val language = context.targetLanguage ?: PlainTextLanguage.INSTANCE
+        val language = context.genTargetLanguage ?: PlainTextLanguage.INSTANCE
         val ext = language?.associatedFileType?.defaultExtension ?: "txt"
 
         val outputFile = runWriteAction {

@@ -31,7 +31,7 @@ class RunCodeProcessor : PostProcessor {
             }
 
             is String -> {
-                val ext = context.targetLanguage?.associatedFileType?.defaultExtension ?: "txt"
+                val ext = context.genTargetLanguage?.associatedFileType?.defaultExtension ?: "txt"
                 PsiFileFactory.getInstance(project).createFileFromText("temp.$ext", code).let { psiFile ->
                     val file = psiFile.virtualFile
 

@@ -43,7 +43,7 @@ class ParseCommentProcessor : PostProcessor {
 
     override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?): String {
         val defaultComment: String = getDocFromOutput(context)
-        val currentFile = context.targetFile ?: return defaultComment
+        val currentFile = context.currentFile ?: return defaultComment
 
         val comment = PsiElementDataBuilder.provide(currentFile.language)
             ?.parseComment(project, defaultComment) ?: return defaultComment

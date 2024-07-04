@@ -26,12 +26,12 @@ class PostCodeHandleContext(
     /**
      * Convert code to file
      */
-    var targetFile: PsiFile? = null,
+    var genTargetFile: PsiFile? = null,
 
     /**
      * Target Language
      */
-    var targetLanguage: Language? = null,
+    var genTargetLanguage: Language? = null,
 
     /**
      * The generated text to be handled

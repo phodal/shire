@@ -1,6 +1,9 @@
 package com.phodal.shirecore.middleware.builtin
 
 import com.intellij.execution.ui.ConsoleView
+import com.intellij.openapi.application.invokeLater
+import com.intellij.openapi.application.runInEdt
+import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.codeStyle.CodeStyleManager
@@ -16,13 +19,20 @@ class FormatCodeProcessor : PostProcessor {
     }
 
     override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?): Any {
-        val file = context.targetFile ?: return ""
+        val file = context.currentFile ?: return ""
         val document = PsiDocumentManager.getInstance(project).getDocument(file) ?: return ""
 
-        if (context.modifiedTextRange != null) {
-            return CodeStyleManager.getInstance(project).reformatText(file, listOf(context.modifiedTextRange))
+        invokeLater {
+            runWriteAction {
+                val codeStyleManager = CodeStyleManager.getInstance(project)
+                if (context.modifiedTextRange != null) {
+                    codeStyleManager.reformatText(file, listOf(context.modifiedTextRange))
+                } else {
+                    codeStyleManager.reformatText(file, 0, document.textLength)
+                }
+            }
         }
 
-        return CodeStyleManager.getInstance(project).reformatText(file, 0, document.textLength)
+        return context.genText ?: ""
     }
 }

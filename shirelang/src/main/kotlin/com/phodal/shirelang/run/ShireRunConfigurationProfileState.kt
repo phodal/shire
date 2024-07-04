@@ -15,8 +15,11 @@ import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Key
+import com.intellij.psi.PsiFile
+import com.intellij.psi.PsiManager
 import com.intellij.ui.components.panels.NonOpaquePanel
 import com.phodal.shirecore.middleware.PostCodeHandleContext
 import com.phodal.shirecore.provider.context.ActionLocationEditor
@@ -62,14 +65,14 @@ open class ShireRunConfigurationProfileState(
 
         console!!.attachToProcess(processHandler)
 
-        val file: ShireFile? = ShireFile.lookup(myProject, configuration.getScriptPath())
-        if (file == null) {
+        val shireFile: ShireFile? = ShireFile.lookup(myProject, configuration.getScriptPath())
+        if (shireFile == null) {
             console!!.print("File not found: ${configuration.getScriptPath()}", ConsoleViewContentType.ERROR_OUTPUT)
             processHandler.destroyProcess()
             return DefaultExecutionResult(console, processHandler)
         }
 
-        val compiler = ShireCompiler(myProject, file, ActionLocationEditor.defaultEditor(myProject))
+        val compiler = ShireCompiler(myProject, shireFile, ActionLocationEditor.defaultEditor(myProject))
         val compileResult = compiler.compile()
 
         val symbolTable = compileResult.variableTable
@@ -121,10 +124,15 @@ open class ShireRunConfigurationProfileState(
 
         shireRunner.prepareTask()
         shireRunner.execute { response, textRange ->
+            var currentFile: PsiFile? = null
+            locationEditor?.virtualFile?.also {
+                currentFile = runReadAction { PsiManager.getInstance(myProject).findFile(it) }
+            }
+
             val context = PostCodeHandleContext(
                 selectedEntry = hobbitHole?.pickupElement(myProject, locationEditor),
-                currentLanguage = file.language,
-                currentFile = file,
+                currentLanguage = currentFile?.language,
+                currentFile = currentFile,
                 genText = response,
                 modifiedTextRange = textRange
             )
