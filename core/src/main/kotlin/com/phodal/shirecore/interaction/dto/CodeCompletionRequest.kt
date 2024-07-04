@@ -8,6 +8,7 @@ import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
+import com.phodal.shirecore.interaction.PostFunction
 
 class CodeCompletionRequest(
     val project: Project,
@@ -21,7 +22,7 @@ class CodeCompletionRequest(
     val editor: Editor,
     val suffixText: String,
     val isReplacement: Boolean = false,
-    val postExecute: ((String) -> Unit)?,
+    val postExecute: PostFunction,
     val isInsertBefore: Boolean,
     val userPrompt: String,
 ) : Disposable {
@@ -33,7 +34,7 @@ class CodeCompletionRequest(
             prefix: String? = null,
             suffix: String? = null,
             isReplacement: Boolean = false,
-            postExecute: (String) -> Unit,
+            postExecute: PostFunction,
             isInsertBefore: Boolean,
             userPrompt: String,
         ): CodeCompletionRequest? {

@@ -1,5 +1,7 @@
 package com.phodal.shirecore.interaction.task
 
+import com.intellij.openapi.util.TextRange
+
 import com.intellij.openapi.actionSystem.CustomShortcutSet
 import com.intellij.openapi.actionSystem.KeyboardShortcut
 import com.intellij.openapi.application.invokeLater
@@ -43,7 +45,9 @@ open class BasicChatCompletionTask(private val request: CodeCompletionRequest) :
 
         val editor = request.editor
         val project = request.project
+
         var currentOffset = request.startOffset
+        val modifyStart = request.startOffset
 
         indicator.isIndeterminate = false
         indicator.fraction = 0.5
@@ -73,6 +77,8 @@ open class BasicChatCompletionTask(private val request: CodeCompletionRequest) :
                 }
             }
 
+            val modifyEnd = currentOffset
+
             if (request.isReplacement) {
                 val parsedContent = Code.parse(suggestion.toString()).text
                 InsertUtil.replaceText(project, editor, parsedContent)
@@ -81,7 +87,9 @@ open class BasicChatCompletionTask(private val request: CodeCompletionRequest) :
             indicator.fraction = 0.8
             logger.info("Suggestion: $suggestion")
 
-            request.postExecute?.invoke(suggestion.toString())
+            val textRange: TextRange = TextRange(modifyStart, modifyEnd)
+
+            request.postExecute.invoke(suggestion.toString(), textRange)
             indicator.fraction = 1.0
         }
     }

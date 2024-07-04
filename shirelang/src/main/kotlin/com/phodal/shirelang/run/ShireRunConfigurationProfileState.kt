@@ -120,7 +120,7 @@ open class ShireRunConfigurationProfileState(
         }
 
         shireRunner.prepareTask()
-        shireRunner.execute {response ->
+        shireRunner.execute { response, textRange ->
             val context = PostCodeHandleContext(
                 selectedEntry = hobbitHole?.pickupElement(myProject, locationEditor),
                 currentLanguage = file.language,

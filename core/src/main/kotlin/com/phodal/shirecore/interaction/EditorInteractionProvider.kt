@@ -23,7 +23,7 @@ class EditorInteractionProvider : LocationInteractionProvider {
         return true
     }
 
-    override fun execute(context: LocationInteractionContext, postExecute: (String) -> Unit) {
+    override fun execute(context: LocationInteractionContext, postExecute: PostFunction) {
         val targetFile = context.editor?.virtualFile
 
         when (context.interactionType) {
@@ -93,7 +93,7 @@ class EditorInteractionProvider : LocationInteractionProvider {
                         }
                     }
 
-                    postExecute.invoke(suggestion.toString())
+                    postExecute.invoke(suggestion.toString(), null)
                 }
             }
         }
@@ -103,7 +103,7 @@ class EditorInteractionProvider : LocationInteractionProvider {
         context: LocationInteractionContext,
         userPrompt: String,
         isReplacement: Boolean,
-        postExecute: (String) -> Unit,
+        postExecute: PostFunction,
         isInsertBefore: Boolean,
     ): BasicChatCompletionTask? {
         if (context.editor == null) {

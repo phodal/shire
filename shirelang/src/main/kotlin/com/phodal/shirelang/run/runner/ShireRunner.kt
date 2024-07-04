@@ -4,6 +4,7 @@ import com.intellij.execution.process.ProcessHandler
 import com.intellij.execution.ui.ConsoleView
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
+import com.phodal.shirecore.interaction.PostFunction
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.run.ShireConfiguration
 
@@ -16,8 +17,6 @@ data class ShireRunnerContext(
     val prompt: String,
     val editor: Editor?,
 )
-
-typealias PostFunction = (response: String?) -> Unit
 
 abstract class ShireRunner(open val context: ShireRunnerContext) {
     abstract fun execute(postFunction: PostFunction)

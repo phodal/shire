@@ -12,6 +12,7 @@ import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
 import com.phodal.shirecore.ShireCoreBundle
+import com.phodal.shirecore.interaction.PostFunction
 import com.phodal.shirecore.llm.ChatMessage
 import com.phodal.shirecore.llm.ChatRole
 import com.phodal.shirecore.llm.LlmProvider
@@ -27,7 +28,7 @@ open class FileGenerateTask(
     val fileName: String?,
     private val codeOnly: Boolean = false,
     private val taskName: String = ShireCoreBundle.message("intentions.request.background.process.title"),
-    val postExecute: ((String) -> Unit)?
+    val postExecute: PostFunction
 ) :
     Task.Backgroundable(project, taskName) {
     private val projectRoot = project.guessProjectDir()!!
@@ -36,7 +37,7 @@ open class FileGenerateTask(
         val stream = LlmProvider.provider(project)?.stream(prompt, "", false)
         if (stream == null) {
             logger<FileGenerateTask>().error("Failed to create stream")
-            postExecute?.invoke("")
+            postExecute?.invoke("", null)
             return
         }
 
@@ -58,7 +59,7 @@ open class FileGenerateTask(
         val file = project.guessProjectDir()?.toNioPath()?.resolve(inferFileName)?.toFile()
         if (file == null) {
             logger<FileGenerateTask>().error("Failed to create file")
-            postExecute?.invoke(result)
+            postExecute?.invoke(result, null)
             return
         }
         if (!file.exists()) {
@@ -74,7 +75,7 @@ open class FileGenerateTask(
             refreshAndOpenInEditor(Path(projectRoot.path), projectRoot)
         }
 
-        postExecute?.invoke(result)
+        postExecute.invoke(result, null)
     }
 
     private fun refreshAndOpenInEditor(file: Path, parentDir: VirtualFile) {

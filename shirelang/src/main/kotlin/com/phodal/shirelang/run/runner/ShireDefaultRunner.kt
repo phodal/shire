@@ -5,6 +5,7 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
 import com.phodal.shirecore.action.ShireActionLocation
 import com.phodal.shirecore.agent.InteractionType
+import com.phodal.shirecore.interaction.PostFunction
 import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.provider.ide.LocationInteractionContext
 import com.phodal.shirecore.provider.ide.LocationInteractionProvider
@@ -36,8 +37,8 @@ class ShireDefaultRunner(
             if (context.hole?.interaction != null) {
                 val interactionProvider = LocationInteractionProvider.provide(interactionContext)
                 if (interactionProvider != null) {
-                    interactionProvider.execute(interactionContext) {
-                        postFunction(it)
+                    interactionProvider.execute(interactionContext) { response, textRange ->
+                        postFunction(response, textRange)
                         try {
                             context.processHandler.detachProcess()
                         } catch (e: Exception) {
@@ -67,7 +68,7 @@ class ShireDefaultRunner(
                 context.myProject.getService(ShireConversationService::class.java)
                     .refreshLlmResponseCache(context.configuration.getScriptPath(), response)
 
-                postFunction(response)
+                postFunction(response, null)
                 context.processHandler.detachProcess()
             }
         }, ModalityState.NON_MODAL)

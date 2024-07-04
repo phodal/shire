@@ -1,6 +1,7 @@
 package com.phodal.shirecore.provider.ide
 
 import com.intellij.openapi.extensions.ExtensionPointName
+import com.phodal.shirecore.interaction.PostFunction
 
 /**
  * Interface for managing interactions in different IDE locations.
@@ -12,7 +13,7 @@ import com.intellij.openapi.extensions.ExtensionPointName
 interface LocationInteractionProvider {
     fun isApplicable(context: LocationInteractionContext): Boolean
 
-    fun execute(context: LocationInteractionContext, postExecute: (String) -> Unit)
+    fun execute(context: LocationInteractionContext, postExecute: PostFunction)
 
     companion object {
         private val EP_NAME: ExtensionPointName<LocationInteractionProvider> =
