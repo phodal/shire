@@ -124,7 +124,7 @@
                         dynamic="true"/>
 
         <extensionPoint qualifiedName="com.phodal.shireShireActionExecutor"
-                        interface="com.phodal.shirecore.provider.action.CustomShireActionExecutor"
+                        interface="com.phodal.shirecore.provider.action.CustomActionLocationExecutor"
                         dynamic="true"/>
     </extensionPoints>
 
