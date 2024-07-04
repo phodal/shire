@@ -54,7 +54,7 @@ class ShireTerminalAction : DumbAwareAction() {
                     handler.onFinish?.let { it1 -> it1(userInput) }
                 }
 
-                ShireRunFileAction.executeShireFile(project, config, null)
+                ShireRunFileAction.executeShireFile(project, config, null, userInput)
             }
         }
     }

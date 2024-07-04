@@ -93,11 +93,6 @@ class ShireRunner(
             templateCompiler.putCustomVariable("input", userInput)
         }
 
-        val terminalInput = terminalLocationExecutor?.getUserInput()
-        if (terminalInput != null) {
-            templateCompiler.putCustomVariable("input", terminalInput)
-        }
-
         val promptTextTrim = templateCompiler.compile().trim()
         printCompiledOutput(console, promptTextTrim, configuration)
 

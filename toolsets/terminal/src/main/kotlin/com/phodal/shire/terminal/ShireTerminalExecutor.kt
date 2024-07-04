@@ -14,9 +14,4 @@ class ShireTerminalExecutor : TerminalLocationExecutor {
     override fun buildBundler(): TerminalHandler? {
         TODO("Not yet implemented")
     }
-
-    override fun getUserInput(): String? {
-        TODO("Not yet implemented")
-    }
-
 }
