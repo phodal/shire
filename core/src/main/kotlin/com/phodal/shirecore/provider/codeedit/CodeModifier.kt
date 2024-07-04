@@ -4,6 +4,7 @@ import com.intellij.lang.Language
 import com.intellij.lang.LanguageExtension
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.psi.PsiElement
 
 /**
  * The `CodeModifier` interface provides methods for modifying code in a given project.
@@ -21,7 +22,7 @@ interface CodeModifier {
     /**
      * According to the source file, project, and code, it will insert the code in a smart way.
      */
-    fun smartInsert(sourceFile: VirtualFile, project: Project, code: String): Boolean
+    fun smartInsert(sourceFile: VirtualFile, project: Project, code: String): PsiElement?
 
     /**
      * Inserts the provided test code into the specified source file in the given project.
@@ -31,7 +32,7 @@ interface CodeModifier {
      * @param code The test code to be inserted into the source file.
      * @return True if the test code was successfully inserted, false otherwise.
      */
-    fun insertTestCode(sourceFile: VirtualFile, project: Project, code: String): Boolean
+    fun insertTestCode(sourceFile: VirtualFile, project: Project, code: String): PsiElement?
     /**
      * Inserts a method into the specified source file in the given project.
      *
@@ -40,7 +41,7 @@ interface CodeModifier {
      * @param code The code of the method to be inserted.
      * @return `true` if the method was successfully inserted, `false` otherwise.
      */
-    fun insertMethod(sourceFile: VirtualFile, project: Project, code: String): Boolean
+    fun insertMethod(sourceFile: VirtualFile, project: Project, code: String): PsiElement?
     /**
      * Inserts a class into the specified source file in the given project.
      *
@@ -49,7 +50,7 @@ interface CodeModifier {
      * @param code The code representing the class to be inserted.
      * @return True if the class was successfully inserted, false otherwise.
      */
-    fun insertClass(sourceFile: VirtualFile, project: Project, code: String): Boolean
+    fun insertClass(sourceFile: VirtualFile, project: Project, code: String): PsiElement?
 
     companion object {
         private val languageExtension: LanguageExtension<CodeModifier> =

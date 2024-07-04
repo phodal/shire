@@ -38,7 +38,7 @@ class PostCodeHandleContext(
     /**
      * The element to be handled, which will be load from current editor when parse code
      */
-    val genPsiElement: PsiElement? = null,
+    var genPsiElement: PsiElement? = null,
 
     /**
      * The generated text to be handled

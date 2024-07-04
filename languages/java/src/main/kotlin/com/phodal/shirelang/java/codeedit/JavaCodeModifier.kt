@@ -18,7 +18,7 @@ open class JavaCodeModifier : CodeModifier {
 
     override fun isApplicable(language: Language) = language is JavaLanguage
 
-    override fun smartInsert(sourceFile: VirtualFile, project: Project, code: String): Boolean {
+    override fun smartInsert(sourceFile: VirtualFile, project: Project, code: String): PsiElement? {
         // check sourceFile is tested file
         val isTestFile = sourceFile.name.endsWith("Test.java")
         if (!isTestFile) {
@@ -50,7 +50,7 @@ open class JavaCodeModifier : CodeModifier {
      * @param code The test code to be inserted into the source file.
      * @return Boolean value indicating whether the test code was successfully inserted.
      */
-    override fun insertTestCode(sourceFile: VirtualFile, project: Project, code: String): Boolean {
+    override fun insertTestCode(sourceFile: VirtualFile, project: Project, code: String): PsiElement? {
         val trimCode = code.trim().removeSurrounding("```").removePrefix("java").trim()
 
         val isFullTestCode =
@@ -59,7 +59,7 @@ open class JavaCodeModifier : CodeModifier {
         val existTestFileClasses = runReadAction { lookupFile(project, sourceFile).classes }
         val alreadyExtTestFile = existTestFileClasses.isNotEmpty()
 
-        when {
+        return when {
             alreadyExtTestFile -> return insertToExistClass(existTestFileClasses, project, trimCode)
             isFullTestCode -> return insertClass(sourceFile, project, trimCode)
             trimCode.contains("@Test") -> insertMethod(sourceFile, project, trimCode)
@@ -68,14 +68,13 @@ open class JavaCodeModifier : CodeModifier {
                 insertMethod(sourceFile, project, trimCode)
             }
         }
-        return true
     }
 
     private fun insertToExistClass(
         testFileClasses: Array<out PsiClass>,
         project: Project,
         trimCode: String,
-    ): Boolean {
+    ): PsiElement? {
         // todo: check to naming testFile, but since Java only has One Class under file
         val lastClass = testFileClasses.last()
         val classEndOffset = runReadAction { lastClass.textRange.endOffset }
@@ -99,19 +98,19 @@ open class JavaCodeModifier : CodeModifier {
                     lastClass.add(it)
                 }
             }
+
+            return lastClass
         } catch (e: Throwable) {
             WriteCommandAction.runWriteCommandAction(project) {
                 val document = PsiDocumentManager.getInstance(project).getDocument(lastClass.containingFile)
                 document?.insertString(classEndOffset - 1, "\n    $newCode")
             }
 
-            return false
+            return lastClass
         }
-
-        return true
     }
 
-    override fun insertMethod(sourceFile: VirtualFile, project: Project, code: String): Boolean {
+    override fun insertMethod(sourceFile: VirtualFile, project: Project, code: String): PsiElement? {
         val rootElement = runReadAction {
             val psiJavaFile = lookupFile(project, sourceFile)
             val psiClass = psiJavaFile.classes.firstOrNull()
@@ -121,7 +120,7 @@ open class JavaCodeModifier : CodeModifier {
             }
 
             return@runReadAction psiClass
-        } ?: return false
+        } ?: return null
 
         val newTestMethod = ReadAction.compute<PsiMethod, Throwable> {
             val psiElementFactory = PsiElementFactory.getInstance(project)
@@ -151,16 +150,16 @@ open class JavaCodeModifier : CodeModifier {
 
         project.guessProjectDir()?.refresh(true, true)
 
-        return true
+        return newTestMethod
     }
 
-    override fun insertClass(sourceFile: VirtualFile, project: Project, code: String): Boolean {
-        return WriteCommandAction.runWriteCommandAction<Boolean>(project) {
+    override fun insertClass(sourceFile: VirtualFile, project: Project, code: String): PsiElement? {
+        return WriteCommandAction.runWriteCommandAction<PsiElement?>(project) {
             val psiFile = lookupFile(project, sourceFile)
             val document = psiFile.viewProvider.document!!
             document.insertString(document.textLength, code)
 
-            true
+            psiFile.classes.firstOrNull()
         }
     }
 }

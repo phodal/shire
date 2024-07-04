@@ -27,7 +27,7 @@ class InsertCodeProcessor : PostProcessor {
             return ""
         }
 
-        codeModifier.smartInsert(context.currentFile!!.virtualFile!!, project, context.genText ?: "")
+        context.genPsiElement = codeModifier.smartInsert(context.currentFile!!.virtualFile!!, project, context.genText ?: "")
         return ""
     }
 }

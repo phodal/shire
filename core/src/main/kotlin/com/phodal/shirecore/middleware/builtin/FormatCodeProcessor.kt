@@ -28,11 +28,11 @@ class FormatCodeProcessor : PostProcessor {
                 val codeStyleManager = CodeStyleManager.getInstance(project)
                 if (context.modifiedTextRange != null) {
                     codeStyleManager.reformatText(file, listOf(context.modifiedTextRange), true)
+                } else if (context.genPsiElement != null) {
+                    codeStyleManager.reformat(context.genPsiElement!!)
                 } else {
                     codeStyleManager.reformatText(file, 0, document.textLength)
                 }
-
-//                CodeStyleManager.getInstance(project).reformat(newTestMethod)
             }
         }
 
