@@ -1,5 +1,6 @@
 package com.phodal.shirelang.java.impl
 
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.NlsSafe
 import com.intellij.psi.*
@@ -11,8 +12,6 @@ import com.phodal.shirecore.provider.psi.PsiElementDataBuilder
 import com.phodal.shirelang.java.util.JavaContextCollection
 
 open class JavaPsiElementDataBuilder : PsiElementDataBuilder {
-    private val s = "RequestMapping"
-
     /**
      * Returns the base route of a given Kotlin language method.
      *
@@ -97,7 +96,24 @@ open class JavaPsiElementDataBuilder : PsiElementDataBuilder {
     }
 
     override fun lookupElement(project: Project, canonicalName: String): ClassStructure? {
-        val psiClass: PsiClass = JavaPsiFacade.getInstance(project).findClass(canonicalName, GlobalSearchScope.projectScope(project)) ?: return null
+        val psiFacade = JavaPsiFacade.getInstance(project)
+
+        val psiClass: PsiClass = psiFacade.findClass(canonicalName, GlobalSearchScope.projectScope(project))
+                ?: return null
+
         return ClassStructureProvider.from(psiClass, false)
+    }
+
+    override fun parseComment(project: Project, code: String): String? {
+        val psiElementFactory = JavaPsiFacade.getInstance(project).elementFactory
+
+        try {
+            val docComment = psiElementFactory.createDocCommentFromText(code)
+
+            return docComment.text
+        } catch (e: Exception) {
+            logger<JavaPsiElementDataBuilder>().warn("Failed to parse comment: $code", e)
+        }
+        return code
     }
 }

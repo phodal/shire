@@ -43,11 +43,13 @@ interface PsiElementDataBuilder {
 
     fun lookupElement(project: Project, canonicalName: String): ClassStructure? = null
 
+    fun parseComment(project: Project, code: String): String?
+
     companion object {
         private val languageExtension: LanguageExtension<PsiElementDataBuilder> =
             LanguageExtension("com.phodal.shirePsiElementDataBuilder")
 
-        fun forLanguage(language: Language): PsiElementDataBuilder? {
+        fun provide(language: Language): PsiElementDataBuilder? {
             return languageExtension.forLanguage(language)
         }
     }

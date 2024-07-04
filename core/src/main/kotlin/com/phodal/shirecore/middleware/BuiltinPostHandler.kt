@@ -55,6 +55,11 @@ enum class BuiltinPostHandler(var handleName: String) {
     /**
      * Format code
      */
-    FormatCode("formatCode")
+    FormatCode("formatCode"),
+
+    /**
+     * Parse comment to the comment block
+     */
+    ParseComment("parseComment"),
     ;
 }
