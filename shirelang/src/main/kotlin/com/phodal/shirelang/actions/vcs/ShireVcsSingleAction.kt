@@ -1,5 +1,6 @@
 package com.phodal.shirelang.actions.vcs
 
+import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.DumbAwareAction
 import com.phodal.shirecore.action.ShireActionLocation
@@ -7,6 +8,8 @@ import com.phodal.shirelang.actions.ShireRunFileAction
 import com.phodal.shirelang.actions.dynamic.DynamicShireActionService
 
 class ShireVcsSingleAction : DumbAwareAction() {
+    override fun getActionUpdateThread() = ActionUpdateThread.EDT
+
     private fun shireActionConfigs() =
         DynamicShireActionService.getInstance().getAction(ShireActionLocation.COMMIT_MENU)
 
