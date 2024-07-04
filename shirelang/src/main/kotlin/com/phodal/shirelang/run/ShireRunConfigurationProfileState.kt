@@ -75,7 +75,7 @@ open class ShireRunConfigurationProfileState(
             return DefaultExecutionResult(console, processHandler)
         }
 
-        val runData = doCompile(shireFile)
+        val runData = compileAndExecute(shireFile, myProject, console, configuration, configuration.getUserInput())
 
         if (runData.finalPrompt.isEmpty()) {
             console!!.print("No content to run", ConsoleViewContentType.ERROR_OUTPUT)
@@ -105,6 +105,7 @@ open class ShireRunConfigurationProfileState(
             agent != null -> {
                 CustomRemoteAgentRunner(shireRunnerContext, agent)
             }
+
             else -> {
                 val isLocalMode = runData.compileResult.isLocalCommand
                 ShireDefaultRunner(shireRunnerContext, isLocalMode)
@@ -134,59 +135,71 @@ open class ShireRunConfigurationProfileState(
         return DefaultExecutionResult(console, processHandler)
     }
 
-    data class ShireRunListenerData(
-        val hole: HobbitHole?,
-        val editor: Editor?,
-        val compileResult: ShireCompiledResult,
-        val finalPrompt: String = ""
-    )
-
-    fun doCompile(shireFile: ShireFile) : ShireRunListenerData {
-        val compiler = ShireCompiler(myProject, shireFile, ActionLocationEditor.defaultEditor(myProject))
-        val compileResult = compiler.compile()
-
-        val variableTable = compileResult.variableTable
-
-        val input = compileResult.shireOutput
-        val hobbitHole = compileResult.config
-        val locationEditor = ActionLocationEditor.provide(myProject, hobbitHole?.actionLocation)
-
-        val templateCompiler = ShireTemplateCompiler(myProject, hobbitHole, variableTable, input)
-        if (configuration.getUserInput().isNotEmpty()) {
-            templateCompiler.putCustomVariable("input", configuration.getUserInput())
-        }
-
-        val promptText = templateCompiler.compile()
-        printCompiledOutput(console!!, promptText)
-
-        // check prompt text had content or just new line with whitespace
-        val promptTextTrim = promptText.trim()
-
-        return ShireRunListenerData(hobbitHole, locationEditor, compileResult, promptTextTrim)
-    }
-
-    private fun printCompiledOutput(console: ConsoleViewWrapperBase, promptText: String) {
-        console.print("Shire Script: ${configuration.getScriptPath()}\n", ConsoleViewContentType.SYSTEM_OUTPUT)
-        console.print("Shire Script Compile output:\n", ConsoleViewContentType.SYSTEM_OUTPUT)
-        promptText.split("\n").forEach {
-            when {
-                it.contains(SHIRE_ERROR) -> {
-                    console.print(it, ConsoleViewContentType.LOG_ERROR_OUTPUT)
-                }
-
-                else -> {
-                    console.print(it, ConsoleViewContentType.USER_INPUT)
-                }
-            }
-            console.print("\n", ConsoleViewContentType.NORMAL_OUTPUT)
-        }
-
-        console.print("\n--------------------\n", ConsoleViewContentType.NORMAL_OUTPUT)
-    }
-
     override fun dispose() {
         console?.dispose()
         executionConsole?.dispose()
+    }
+
+    companion object {
+        data class ShireRunListenerData(
+            val hole: HobbitHole?,
+            val editor: Editor?,
+            val compileResult: ShireCompiledResult,
+            val finalPrompt: String = "",
+        )
+
+        fun printCompiledOutput(
+            console: ConsoleViewWrapperBase,
+            promptText: String,
+            shireConfiguration: ShireConfiguration,
+        ) {
+            console.print("Shire Script: ${shireConfiguration.getScriptPath()}\n", ConsoleViewContentType.SYSTEM_OUTPUT)
+            console.print("Shire Script Compile output:\n", ConsoleViewContentType.SYSTEM_OUTPUT)
+            promptText.split("\n").forEach {
+                when {
+                    it.contains(SHIRE_ERROR) -> {
+                        console.print(it, ConsoleViewContentType.LOG_ERROR_OUTPUT)
+                    }
+
+                    else -> {
+                        console.print(it, ConsoleViewContentType.USER_INPUT)
+                    }
+                }
+                console.print("\n", ConsoleViewContentType.NORMAL_OUTPUT)
+            }
+
+            console.print("\n--------------------\n", ConsoleViewContentType.NORMAL_OUTPUT)
+        }
+
+        fun compileAndExecute(
+            shireFile: ShireFile,
+            project: Project,
+            consoleView: ShireConsoleView?,
+            shireConfiguration: ShireConfiguration,
+            userInput: String,
+        ): ShireRunListenerData {
+            val compiler = ShireCompiler(project, shireFile, ActionLocationEditor.defaultEditor(project))
+            val compileResult = compiler.compile()
+
+            val variableTable = compileResult.variableTable
+
+            val input = compileResult.shireOutput
+            val hobbitHole = compileResult.config
+            val locationEditor = ActionLocationEditor.provide(project, hobbitHole?.actionLocation)
+
+            val templateCompiler = ShireTemplateCompiler(project, hobbitHole, variableTable, input)
+            if (userInput.isNotEmpty()) {
+                templateCompiler.putCustomVariable("input", userInput)
+            }
+
+            val promptText = templateCompiler.compile()
+            printCompiledOutput(consoleView!!, promptText, shireConfiguration)
+
+            // check prompt text had content or just new line with whitespace
+            val promptTextTrim = promptText.trim()
+
+            return ShireRunListenerData(hobbitHole, locationEditor, compileResult, promptTextTrim)
+        }
     }
 }
 
