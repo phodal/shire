@@ -34,7 +34,11 @@ open class FileGenerateTask(
 
     override fun run(indicator: ProgressIndicator) {
         val stream = LlmProvider.provider(project)?.stream(prompt, "", false)
-            ?: return
+        if (stream == null) {
+            logger<FileGenerateTask>().error("Failed to create stream")
+            postExecute?.invoke("")
+            return
+        }
 
         var result = ""
         runBlocking {
@@ -54,6 +58,7 @@ open class FileGenerateTask(
         val file = project.guessProjectDir()?.toNioPath()?.resolve(inferFileName)?.toFile()
         if (file == null) {
             logger<FileGenerateTask>().error("Failed to create file")
+            postExecute?.invoke(result)
             return
         }
         if (!file.exists()) {

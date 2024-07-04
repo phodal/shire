@@ -16,7 +16,7 @@ class ShireDefaultRunner(
     override val context: ShireRunnerContext,
     private val isLocalMode: Boolean,
 ) : ShireRunner(context) {
-    override fun execute(postFunction: (response: String) -> Unit) {
+    override fun execute(postFunction: PostFunction) {
         ApplicationManager.getApplication().invokeLater({
             if (isLocalMode) {
                 context.console.print(ShireBundle.message("shire.run.local.mode"), ConsoleViewContentType.SYSTEM_OUTPUT)

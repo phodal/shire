@@ -15,7 +15,7 @@ class CustomRemoteAgentRunner(
     override val context: ShireRunnerContext,
     private val agent: CustomAgent,
 ) : ShireRunner(context) {
-    override fun execute(postFunction: (response: String) -> Unit) {
+    override fun execute(postFunction: PostFunction) {
         ApplicationManager.getApplication().invokeLater {
             val stringFlow: Flow<String>? = CustomAgentExecutor(project = context.myProject).execute(context.prompt, agent)
 

@@ -17,8 +17,10 @@ data class ShireRunnerContext(
     val editor: Editor?,
 )
 
+typealias PostFunction = (response: String?) -> Unit
+
 abstract class ShireRunner(open val context: ShireRunnerContext) {
-    abstract fun execute(postFunction: (response: String) -> Unit)
+    abstract fun execute(postFunction: PostFunction)
     fun prepareTask() {
 
     }
