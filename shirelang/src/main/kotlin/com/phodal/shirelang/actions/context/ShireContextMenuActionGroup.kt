@@ -3,7 +3,7 @@ package com.phodal.shirelang.actions.context
 import com.intellij.openapi.actionSystem.ActionGroup
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.phodal.shirecore.action.ShireActionLocation
+import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirelang.actions.base.ShireContextMenuAction
 import com.phodal.shirelang.actions.dynamic.DynamicShireActionConfig
 import com.phodal.shirelang.actions.dynamic.DynamicShireActionService

@@ -9,7 +9,7 @@ import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.IdeFocusManager
-import com.phodal.shirecore.action.ShireActionLocation
+import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirelang.actions.ShireRunFileAction.Companion.executeShireFile
 import com.phodal.shirelang.actions.dynamic.DynamicShireActionConfig
 import com.phodal.shirelang.actions.dynamic.DynamicShireActionService

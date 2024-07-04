@@ -1,4 +1,4 @@
-package com.phodal.shirecore.interaction
+package com.phodal.shirecore.config.interaction
 
 import com.intellij.openapi.util.TextRange
 

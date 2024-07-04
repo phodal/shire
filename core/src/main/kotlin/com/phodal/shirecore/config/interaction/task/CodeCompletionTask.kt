@@ -1,4 +1,4 @@
-package com.phodal.shirecore.interaction.task
+package com.phodal.shirecore.config.interaction.task
 
 
 import com.intellij.openapi.application.invokeLater
@@ -14,7 +14,7 @@ import com.phodal.shirecore.ShireCoreBundle
 import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.markdown.Code
-import com.phodal.shirecore.interaction.dto.CodeCompletionRequest
+import com.phodal.shirecore.config.interaction.dto.CodeCompletionRequest
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.cancellable

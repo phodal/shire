@@ -5,7 +5,7 @@ import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.project.Project
 import com.intellij.serviceContainer.LazyExtensionInstance
 import com.intellij.util.xmlb.annotations.Attribute
-import com.phodal.shirecore.buildsystem.BuildSystemContext
+import com.phodal.shirecore.toolchain.buildsystem.BuildSystemContext
 
 /**
  * The `BuildSystemProvider` interface represents a provider for build system information.

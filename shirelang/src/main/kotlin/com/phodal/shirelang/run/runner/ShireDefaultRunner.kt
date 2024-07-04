@@ -3,9 +3,9 @@ package com.phodal.shirelang.run.runner
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
-import com.phodal.shirecore.action.ShireActionLocation
-import com.phodal.shirecore.agent.InteractionType
-import com.phodal.shirecore.interaction.PostFunction
+import com.phodal.shirecore.config.ShireActionLocation
+import com.phodal.shirecore.config.InteractionType
+import com.phodal.shirecore.config.interaction.PostFunction
 import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.provider.ide.LocationInteractionContext
 import com.phodal.shirecore.provider.ide.LocationInteractionProvider

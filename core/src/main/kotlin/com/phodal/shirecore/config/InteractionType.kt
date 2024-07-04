@@ -1,4 +1,4 @@
-package com.phodal.shirecore.agent
+package com.phodal.shirecore.config
 
 enum class InteractionType(val description: String) {
     AppendCursor("Append content at the current cursor position"),

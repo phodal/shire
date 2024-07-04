@@ -1,4 +1,4 @@
-package com.phodal.shirecore.interaction.dto
+package com.phodal.shirecore.config.interaction.dto
 
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.editor.Editor
@@ -8,7 +8,7 @@ import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
-import com.phodal.shirecore.interaction.PostFunction
+import com.phodal.shirecore.config.interaction.PostFunction
 
 class CodeCompletionRequest(
     val project: Project,

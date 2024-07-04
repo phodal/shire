@@ -7,7 +7,7 @@ import com.phodal.shirecore.agent.CustomAgent
 import com.phodal.shirelang.ShireBundle
 import com.phodal.shirelang.run.flow.ShireConversationService
 import com.phodal.shirecore.ShireCoroutineScope
-import com.phodal.shirecore.interaction.PostFunction
+import com.phodal.shirecore.config.interaction.PostFunction
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking

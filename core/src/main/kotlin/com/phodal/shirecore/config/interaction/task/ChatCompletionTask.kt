@@ -1,4 +1,4 @@
-package com.phodal.shirecore.interaction.task
+package com.phodal.shirecore.config.interaction.task
 
 import com.intellij.openapi.util.TextRange
 
@@ -11,7 +11,7 @@ import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.DumbAwareAction
 import com.phodal.shirecore.ShireCoreBundle
 import com.phodal.shirecore.ShireCoroutineScope
-import com.phodal.shirecore.interaction.dto.CodeCompletionRequest
+import com.phodal.shirecore.config.interaction.dto.CodeCompletionRequest
 import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.markdown.Code
 import kotlinx.coroutines.cancel

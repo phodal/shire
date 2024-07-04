@@ -8,7 +8,7 @@ import com.intellij.psi.PsiFile
 import com.intellij.serviceContainer.LazyExtensionInstance
 import com.intellij.util.xmlb.annotations.Attribute
 import com.phodal.shirecore.provider.shire.FileRunService
-import com.phodal.shirecore.unittest.AutoTestingPromptContext
+import com.phodal.shirecore.toolchain.unittest.AutoTestingPromptContext
 
 /**
  * The `WriteTestService` class is an abstract class that provides a base implementation for writing tests in different programming languages.

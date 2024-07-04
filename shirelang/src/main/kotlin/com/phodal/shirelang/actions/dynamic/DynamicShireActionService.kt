@@ -7,7 +7,7 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.keymap.KeymapManager
 import com.intellij.openapi.keymap.impl.KeymapImpl
-import com.phodal.shirecore.action.ShireActionLocation
+import com.phodal.shirecore.config.ShireActionLocation
 
 @Service(Service.Level.APP)
 class DynamicShireActionService {

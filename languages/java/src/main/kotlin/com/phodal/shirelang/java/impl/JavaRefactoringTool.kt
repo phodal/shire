@@ -10,7 +10,7 @@ import com.intellij.psi.*
 import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.ProjectScope
 import com.phodal.shirecore.provider.shire.RefactoringTool
-import com.phodal.shirecore.refactoring.RefactorInstElement
+import com.phodal.shirecore.toolchain.refactoring.RefactorInstElement
 
 class JavaRefactoringTool : RefactoringTool {
     private val project = ProjectManager.getInstance().openProjects.firstOrNull()

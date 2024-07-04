@@ -1,4 +1,4 @@
-package com.phodal.shirecore.action
+package com.phodal.shirecore.config
 
 enum class ShireActionLocation(val location: String, val description: String) {
     CONTEXT_MENU("ContextMenu", "Show in Context Menu by Right Click"),

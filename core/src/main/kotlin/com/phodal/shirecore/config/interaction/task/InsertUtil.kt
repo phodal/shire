@@ -1,4 +1,4 @@
-package com.phodal.shirecore.interaction.task
+package com.phodal.shirecore.config.interaction.task
 
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.command.WriteCommandAction

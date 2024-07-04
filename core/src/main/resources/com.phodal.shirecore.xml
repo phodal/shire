@@ -125,7 +125,7 @@
     </extensionPoints>
 
     <extensions defaultExtensionNs="JavaScript.JsonSchema">
-        <ProviderFactory implementation="com.phodal.shirecore.schema.ShireCustomAgentSchemaProviderFactory"/>
+        <ProviderFactory implementation="com.phodal.shirecore.agent.schema.ShireCustomAgentSchemaProviderFactory"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.phodal">
@@ -146,6 +146,6 @@
         <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.OpenFileProcessor"/>
 
         <!--   LocationInteractionProvider-->
-        <shireLocationInteraction implementation="com.phodal.shirecore.interaction.EditorInteractionProvider"/>
+        <shireLocationInteraction implementation="com.phodal.shirecore.config.interaction.EditorInteractionProvider"/>
     </extensions>
 </idea-plugin>

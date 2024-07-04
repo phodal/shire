@@ -1,7 +1,7 @@
 package com.phodal.shirelang.java.toolchain
 
 import com.intellij.openapi.project.Project
-import com.phodal.shirecore.toolset.TechStack
+import com.phodal.shirecore.toolchain.TechStack
 import com.phodal.shirelang.java.archmeta.LibraryDescriptor
 import com.phodal.shirelang.java.archmeta.SpringLibrary
 

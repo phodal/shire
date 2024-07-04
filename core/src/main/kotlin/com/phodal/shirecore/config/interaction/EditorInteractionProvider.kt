@@ -1,4 +1,4 @@
-package com.phodal.shirecore.interaction
+package com.phodal.shirecore.config.interaction
 
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.application.invokeLater
@@ -7,10 +7,10 @@ import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator
 import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.ShirelangNotifications
-import com.phodal.shirecore.agent.InteractionType
-import com.phodal.shirecore.interaction.dto.CodeCompletionRequest
-import com.phodal.shirecore.interaction.task.ChatCompletionTask
-import com.phodal.shirecore.interaction.task.FileGenerateTask
+import com.phodal.shirecore.config.InteractionType
+import com.phodal.shirecore.config.interaction.dto.CodeCompletionRequest
+import com.phodal.shirecore.config.interaction.task.ChatCompletionTask
+import com.phodal.shirecore.config.interaction.task.FileGenerateTask
 import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.provider.ide.LocationInteractionContext
 import com.phodal.shirecore.provider.ide.LocationInteractionProvider

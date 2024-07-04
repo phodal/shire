@@ -1,7 +1,7 @@
 package com.phodal.shirecore.provider.ide
 
 import com.intellij.openapi.extensions.ExtensionPointName
-import com.phodal.shirecore.interaction.PostFunction
+import com.phodal.shirecore.config.interaction.PostFunction
 
 /**
  * Interface for managing interactions in different IDE locations.

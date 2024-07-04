@@ -1,7 +1,6 @@
 package com.phodal.shirelang.documentation
 
 import com.intellij.lang.documentation.AbstractDocumentationProvider
-import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.editor.Editor
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile

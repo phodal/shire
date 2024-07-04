@@ -6,7 +6,7 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vcs.VcsDataKeys
 import com.intellij.openapi.vcs.ui.CommitMessage
-import com.phodal.shirecore.action.ShireActionLocation
+import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirecore.provider.context.ActionLocationEditor
 
 class GitActionLocationEditor : ActionLocationEditor {

@@ -1,4 +1,4 @@
-package com.phodal.shirecore.interaction.task
+package com.phodal.shirecore.config.interaction.task
 
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.fileEditor.FileEditorManager
@@ -12,7 +12,7 @@ import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
 import com.phodal.shirecore.ShireCoreBundle
-import com.phodal.shirecore.interaction.PostFunction
+import com.phodal.shirecore.config.interaction.PostFunction
 import com.phodal.shirecore.llm.ChatMessage
 import com.phodal.shirecore.llm.ChatRole
 import com.phodal.shirecore.llm.LlmProvider

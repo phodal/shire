@@ -5,7 +5,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
-import com.phodal.shirecore.action.ShireActionLocation
+import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirecore.middleware.PostCodeHandleContext
 import com.phodal.shirelang.ShireBundle
 import com.phodal.shirelang.actions.ShireRunFileAction

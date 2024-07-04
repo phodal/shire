@@ -1,4 +1,4 @@
-package com.phodal.shirecore.buildsystem
+package com.phodal.shirecore.toolchain.buildsystem
 
 import com.phodal.shirecore.context.template.TemplateContext
 

@@ -4,7 +4,7 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
-import com.phodal.shirecore.action.ShireActionLocation
+import com.phodal.shirecore.config.ShireActionLocation
 
 interface ActionLocationEditor {
     fun isApplicable(hole: ShireActionLocation): Boolean

@@ -1,4 +1,4 @@
-package com.phodal.shirecore.schema
+package com.phodal.shirecore.agent.schema
 
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VfsUtil

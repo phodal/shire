@@ -6,8 +6,8 @@ import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.ProcessingContext
-import com.phodal.shirecore.action.ShireActionLocation
-import com.phodal.shirecore.agent.InteractionType
+import com.phodal.shirecore.config.ShireActionLocation
+import com.phodal.shirecore.config.InteractionType
 import com.phodal.shirecore.middleware.PostProcessor
 import com.phodal.shirecore.middleware.select.SelectElementStrategy
 import com.phodal.shirelang.ShireIcons
