@@ -9,4 +9,5 @@ data class ShireRunnerContext(
     val editor: Editor?,
     val compileResult: ShireCompiledResult,
     val finalPrompt: String = "",
+    val hasError: Boolean,
 )

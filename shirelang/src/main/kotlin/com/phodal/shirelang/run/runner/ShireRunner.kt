@@ -9,6 +9,7 @@ import com.intellij.psi.PsiManager
 import com.phodal.shirecore.middleware.PostCodeHandleContext
 import com.phodal.shirecore.provider.context.ActionLocationEditor
 import com.phodal.shirelang.compiler.SHIRE_ERROR
+import com.phodal.shirelang.compiler.ShireCompiledResult
 import com.phodal.shirelang.compiler.ShireCompiler
 import com.phodal.shirelang.compiler.ShireTemplateCompiler
 import com.phodal.shirelang.psi.ShireFile
@@ -19,73 +20,69 @@ import com.phodal.shirelang.run.executor.CustomRemoteAgentLlmExecutor
 import com.phodal.shirelang.run.executor.ShireDefaultLlmExecutor
 import com.phodal.shirelang.run.executor.ShireLlmExecutor
 import com.phodal.shirelang.run.executor.ShireLlmExecutorContext
+import com.phodal.shirelang.run.flow.ShireConversationService
 
-object ShireRunner {
-    fun printCompiledOutput(
-        console: ConsoleViewWrapperBase,
-        promptText: String,
-        shireConfiguration: ShireConfiguration,
-    ) {
-        console.print("Shire Script: ${shireConfiguration.getScriptPath()}\n", ConsoleViewContentType.SYSTEM_OUTPUT)
-        console.print("Shire Script Compile output:\n", ConsoleViewContentType.SYSTEM_OUTPUT)
-        promptText.split("\n").forEach {
-            when {
-                it.contains(SHIRE_ERROR) -> {
-                    console.print(it, ConsoleViewContentType.LOG_ERROR_OUTPUT)
-                }
-
-                else -> {
-                    console.print(it, ConsoleViewContentType.USER_INPUT)
-                }
-            }
-            console.print("\n", ConsoleViewContentType.NORMAL_OUTPUT)
-        }
-
-        console.print("\n--------------------\n", ConsoleViewContentType.NORMAL_OUTPUT)
-    }
-
-    fun compileFinalPrompt(
-        shireFile: ShireFile,
-        project: Project,
-        consoleView: ShireConsoleView?,
-        shireConfiguration: ShireConfiguration,
-        userInput: String,
-    ): ShireRunnerContext {
+class ShireRunner(
+    private val shireFile: ShireFile,
+    private val project: Project,
+    private val console: ShireConsoleView,
+    private val configuration: ShireConfiguration,
+    private val userInput: String,
+    private val processHandler: ShireProcessHandler
+) {
+    fun execute() {
         val compiler = ShireCompiler(project, shireFile, ActionLocationEditor.defaultEditor(project))
         val compileResult = compiler.compile()
 
-        val variableTable = compileResult.variableTable
+        val runnerContext = processTemplateCompile(compileResult)
+        if (runnerContext.hasError) return
 
-        val input = compileResult.shireOutput
+        project.getService(ShireConversationService::class.java)
+            .createConversation(configuration.getScriptPath(), runnerContext.compileResult)
+
+        executeLlmTask(runnerContext)
+    }
+
+    private fun processTemplateCompile(compileResult: ShireCompiledResult): ShireRunnerContext {
         val hobbitHole = compileResult.config
-        val locationEditor = ActionLocationEditor.provide(project, hobbitHole?.actionLocation)
 
-        val templateCompiler = ShireTemplateCompiler(project, hobbitHole, variableTable, input)
+        val templateCompiler =
+            ShireTemplateCompiler(project, hobbitHole, compileResult.variableTable, compileResult.shireOutput)
         if (userInput.isNotEmpty()) {
             templateCompiler.putCustomVariable("input", userInput)
         }
 
-        val promptText = templateCompiler.compile()
-        printCompiledOutput(consoleView!!, promptText, shireConfiguration)
+        val promptTextTrim = templateCompiler.compile().trim()
+        printCompiledOutput(console, promptTextTrim, configuration)
 
-        // check prompt text had content or just new line with whitespace
-        val promptTextTrim = promptText.trim()
+        var hasError = false
 
-        return ShireRunnerContext(hobbitHole, locationEditor, compileResult, promptTextTrim)
+        if (promptTextTrim.isEmpty()) {
+            console.print("No content to run", ConsoleViewContentType.ERROR_OUTPUT)
+            processHandler.destroyProcess()
+            hasError = true
+        }
+
+        if (promptTextTrim.contains(SHIRE_ERROR)) {
+            processHandler.exitWithError()
+            hasError = true
+        }
+
+        return ShireRunnerContext(
+            hobbitHole,
+            editor = ActionLocationEditor.provide(project, hobbitHole?.actionLocation),
+            compileResult,
+            promptTextTrim,
+            hasError
+        )
     }
 
-    fun normalExecute(
-        runData: ShireRunnerContext,
-        processHandler: ShireProcessHandler,
-        project: Project,
-        console: ShireConsoleView?,
-        configuration: ShireConfiguration,
-    ) {
+    fun executeLlmTask(runData: ShireRunnerContext) {
         val agent = runData.compileResult.executeAgent
         val shireLlmExecutorContext = ShireLlmExecutorContext(
             configuration = configuration,
             processHandler = processHandler,
-            console = console!!,
+            console = console,
             myProject = project,
             hole = runData.hole,
             prompt = runData.finalPrompt,
@@ -121,5 +118,28 @@ object ShireRunner {
             runData.hole?.executeStreamingEndProcessor(project, console, context)
             runData.hole?.executeAfterStreamingProcessor(project, console, context)
         }
+    }
+
+    private fun printCompiledOutput(
+        console: ConsoleViewWrapperBase,
+        promptText: String,
+        shireConfiguration: ShireConfiguration,
+    ) {
+        console.print("Shire Script: ${shireConfiguration.getScriptPath()}\n", ConsoleViewContentType.SYSTEM_OUTPUT)
+        console.print("Shire Script Compile output:\n", ConsoleViewContentType.SYSTEM_OUTPUT)
+        promptText.split("\n").forEach {
+            when {
+                it.contains(SHIRE_ERROR) -> {
+                    console.print(it, ConsoleViewContentType.LOG_ERROR_OUTPUT)
+                }
+
+                else -> {
+                    console.print(it, ConsoleViewContentType.USER_INPUT)
+                }
+            }
+            console.print("\n", ConsoleViewContentType.NORMAL_OUTPUT)
+        }
+
+        console.print("\n--------------------\n", ConsoleViewContentType.NORMAL_OUTPUT)
     }
 }
