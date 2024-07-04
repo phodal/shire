@@ -31,6 +31,8 @@ class FormatCodeProcessor : PostProcessor {
                 } else {
                     codeStyleManager.reformatText(file, 0, document.textLength)
                 }
+
+//                CodeStyleManager.getInstance(project).reformat(newTestMethod)
             }
         }
 

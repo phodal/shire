@@ -20,6 +20,7 @@ class ParseCodeProcessor : PostProcessor {
     override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?): String {
         val code = Code.parse(context.genText ?: "")
         val codeText = code.text
+
         context.genTargetLanguage = code.language
         context.pipeData["output"] = codeText
         context.pipeData["code"] = codeText

@@ -5,6 +5,7 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.util.Key
 import com.intellij.openapi.util.TextRange
 import com.intellij.openapi.util.UserDataHolderBase
+import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.phodal.shirecore.middleware.select.SelectedEntry
 
@@ -33,6 +34,11 @@ class PostCodeHandleContext(
      * Target Language
      */
     var genTargetLanguage: Language? = null,
+
+    /**
+     * The element to be handled, which will be load from current editor when parse code
+     */
+    val genPsiElement: PsiElement? = null,
 
     /**
      * The generated text to be handled
