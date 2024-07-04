@@ -5,5 +5,6 @@
     </dependencies>
 
     <extensions defaultExtensionNs="com.phodal">
+        <shireTerminalExecutor implementation="com.phodal.shire.terminal.ShireTerminalExecutor"/>
     </extensions>
 </idea-plugin>
