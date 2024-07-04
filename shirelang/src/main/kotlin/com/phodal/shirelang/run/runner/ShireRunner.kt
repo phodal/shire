@@ -55,7 +55,7 @@ class ShireRunner(
 
         if (runnerContext.hole?.actionLocation == ShireActionLocation.TERMINAL_MENU) {
             executeTerminalTask(runnerContext) { response, textRange ->
-                executePostFunction(runnerContext, runnerContext.hole, null, null)
+                executePostFunction(runnerContext, runnerContext.hole, response, textRange)
             }
         } else {
             executeLlmTask(runnerContext)
@@ -65,6 +65,12 @@ class ShireRunner(
     private fun executeTerminalTask(context: ShireRunnerContext, postFunction: PostFunction) {
         CoroutineScope(Dispatchers.Main).launch {
             val handler = terminalLocationExecutor?.bundler(project, userInput)
+            if (handler == null) {
+                console.print("Terminal not found", ConsoleViewContentType.ERROR_OUTPUT)
+                processHandler.destroyProcess()
+                return@launch
+            }
+
             val llmResult = StringBuilder()
             runBlocking {
                 LlmProvider.provider(project)?.stream(context.finalPrompt, "", false)?.collect {

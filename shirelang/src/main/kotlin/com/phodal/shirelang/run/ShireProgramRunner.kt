@@ -32,22 +32,24 @@ class ShireProgramRunner : GenericProgramRunner<RunnerSettings>(), Disposable {
 
         val result = AtomicReference<RunContentDescriptor>()
 
-        if(!isSubscribed) {
+        if (!isSubscribed) {
             connection.subscribe(ShireRunListener.TOPIC, object : ShireRunListener {
                 override fun runFinish(string: String, event: ProcessEvent, scriptPath: String) {
                     val consoleView = (environment.state as? ShireRunConfigurationProfileState)?.console
                     environment.project.getService(ShireProcessProcessor::class.java)
                         .process(string, event, scriptPath, consoleView)
 
+                    ApplicationManager.getApplication().invokeAndWait {
+                        val showRunContent = showRunContent(
+                            shireState.execute(environment.executor, this@ShireProgramRunner),
+                            environment
+                        )
+                        result.set(showRunContent)
+                    }
                 }
             })
 
             isSubscribed = true
-        }
-
-        ApplicationManager.getApplication().invokeAndWait {
-            val showRunContent = showRunContent(shireState.execute(environment.executor, this), environment)
-            result.set(showRunContent)
         }
 
         return result.get()
