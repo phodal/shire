@@ -20,11 +20,16 @@ interface ActionLocationEditor {
                 return defaultEditor(project)
             }
 
-            return EP_NAME.extensionList.filter {
+            val locationEditors = EP_NAME.extensionList.filter {
                 it.isApplicable(location)
-            }.map {
-                it.resolve(project, location)
-            }.first() ?: defaultEditor(project)
+            }
+
+
+            if (locationEditors.isNotEmpty()) {
+                return locationEditors.first().resolve(project, location)
+            }
+
+            return defaultEditor(project)
         }
 
         fun defaultEditor(project: Project) =
