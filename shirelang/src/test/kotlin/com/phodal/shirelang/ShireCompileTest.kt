@@ -3,7 +3,7 @@ package com.phodal.shirelang
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.phodal.shirecore.action.ShireActionLocation
 import com.phodal.shirecore.agent.InteractionType
-import com.phodal.shirelang.compiler.FrontmatterParser
+import com.phodal.shirelang.compiler.parser.FrontmatterParser
 import com.phodal.shirelang.compiler.ShireCompiler
 import com.phodal.shirelang.compiler.hobbit.ast.LogicalExpression
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc

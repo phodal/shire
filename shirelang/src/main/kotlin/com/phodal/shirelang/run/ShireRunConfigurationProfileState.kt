@@ -22,7 +22,7 @@ import com.phodal.shirecore.middleware.PostCodeHandleContext
 import com.phodal.shirecore.provider.context.ActionLocationEditor
 import com.phodal.shirelang.compiler.ShireCompiler
 import com.phodal.shirelang.compiler.ShireTemplateCompiler
-import com.phodal.shirelang.compiler.error.SHIRE_ERROR
+import com.phodal.shirelang.compiler.SHIRE_ERROR
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.flow.ShireConversationService
 import com.phodal.shirelang.run.runner.CustomRemoteAgentRunner

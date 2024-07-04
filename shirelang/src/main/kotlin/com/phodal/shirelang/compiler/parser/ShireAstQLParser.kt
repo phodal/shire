@@ -1,4 +1,4 @@
-package com.phodal.shirelang.compiler
+package com.phodal.shirelang.compiler.parser
 
 import com.phodal.shirelang.compiler.hobbit.ast.*
 import com.phodal.shirelang.psi.ShireFromClause

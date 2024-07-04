@@ -1,7 +1,6 @@
-package com.phodal.shirelang.compiler
+package com.phodal.shirelang.compiler.exec
 
 import com.phodal.shirecore.agenttool.browse.BrowseTool
-import com.phodal.shirelang.compiler.exec.ShireCommand
 import com.intellij.openapi.application.runInEdt
 import com.intellij.openapi.project.Project
 

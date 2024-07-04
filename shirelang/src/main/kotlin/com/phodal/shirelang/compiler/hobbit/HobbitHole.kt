@@ -14,8 +14,8 @@ import com.phodal.shirecore.middleware.PostProcessor
 import com.phodal.shirecore.middleware.PostProcessorNode
 import com.phodal.shirecore.middleware.select.SelectElementStrategy
 import com.phodal.shirecore.middleware.select.SelectedEntry
-import com.phodal.shirelang.compiler.FrontmatterParser
-import com.phodal.shirelang.compiler.hobbit._base.Smials
+import com.phodal.shirelang.compiler.parser.FrontmatterParser
+import com.phodal.shirelang.compiler.hobbit.base.Smials
 import com.phodal.shirelang.compiler.hobbit.ast.FrontMatterType
 import com.phodal.shirelang.compiler.hobbit.ast.PatternAction
 import com.phodal.shirelang.compiler.hobbit.ast.RuleBasedPatternAction

@@ -13,8 +13,8 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.elementType
 import com.phodal.shirecore.agent.CustomAgent
 import com.phodal.shirelang.compile.VariableTemplateCompiler
-import com.phodal.shirelang.compiler.error.SHIRE_ERROR
 import com.phodal.shirelang.compiler.exec.*
+import com.phodal.shirelang.compiler.parser.FrontmatterParser
 import com.phodal.shirelang.compiler.variable.VariableTable
 import com.phodal.shirelang.completion.dataprovider.BuiltinCommand
 import com.phodal.shirelang.completion.dataprovider.CustomCommand

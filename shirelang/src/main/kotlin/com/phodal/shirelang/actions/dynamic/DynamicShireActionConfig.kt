@@ -1,7 +1,7 @@
 package com.phodal.shirelang.actions.dynamic
 
 import com.intellij.openapi.editor.Editor
-import com.phodal.shirelang.compiler.FrontmatterParser
+import com.phodal.shirelang.compiler.parser.FrontmatterParser
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.psi.ShireFile
 

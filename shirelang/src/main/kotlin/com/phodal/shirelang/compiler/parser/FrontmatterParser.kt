@@ -1,4 +1,4 @@
-package com.phodal.shirelang.compiler
+package com.phodal.shirelang.compiler.parser
 
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.diagnostic.logger
@@ -319,7 +319,7 @@ object FrontmatterParser {
                 val expressionList = expr.expressionList
                 val hasParentheses = expressionList?.prevSibling?.text == "("
 
-                val methodCall = this.buildMethodCall(expr.refExpr, expressionList?.children, hasParentheses)
+                val methodCall = buildMethodCall(expr.refExpr, expressionList?.children, hasParentheses)
                 FrontMatterType.EXPRESSION(methodCall)
             }
 
@@ -456,7 +456,7 @@ object FrontmatterParser {
             }
 
             ShireTypes.NEWLINE -> {
-                return this.parseFrontMatterValue(element.firstChild.nextSibling)
+                return parseFrontMatterValue(element.firstChild.nextSibling)
             }
 
             ShireTypes.LBRACKET,

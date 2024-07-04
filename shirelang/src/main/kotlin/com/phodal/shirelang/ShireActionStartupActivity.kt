@@ -10,7 +10,7 @@ import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.GlobalSearchScope
 import com.phodal.shirelang.actions.dynamic.DynamicShireActionConfig
 import com.phodal.shirelang.actions.dynamic.DynamicShireActionService
-import com.phodal.shirelang.compiler.FrontmatterParser
+import com.phodal.shirelang.compiler.parser.FrontmatterParser
 import com.phodal.shirelang.psi.ShireFile
 
 class ShireActionStartupActivity : ProjectActivity {
