@@ -30,7 +30,7 @@ class ShireLifecycleTest : BasePlatformTestCase() {
         assertEquals(funcNode[0].funName, "verifyCode")
         assertEquals(funcNode[1].funName, "runCode")
 
-        val handleContext = PostCodeHandleContext(currentLanguage = ShireLanguage.INSTANCE)
+        val handleContext = PostCodeHandleContext(currentLanguage = ShireLanguage.INSTANCE, editor = null)
         PostProcessor.execute(project, funcNode, handleContext, null)
     }
 
@@ -90,7 +90,8 @@ class ShireLifecycleTest : BasePlatformTestCase() {
            """.trimIndent()
         val handleContext = PostCodeHandleContext(
             currentLanguage = ShireLanguage.INSTANCE,
-            genText = genJson
+            genText = genJson,
+            editor = null
         )
 
         val matchedCase = hole.afterStreaming?.execute(myFixture.project, handleContext, hole)

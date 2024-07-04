@@ -61,5 +61,7 @@ enum class BuiltinPostHandler(var handleName: String) {
      * Parse comment to the comment block
      */
     ParseComment("parseComment"),
+
+    InsertNewline("insertNewline"),
     ;
 }

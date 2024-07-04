@@ -1,6 +1,7 @@
 package com.phodal.shirecore.middleware
 
 import com.intellij.lang.Language
+import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.util.Key
 import com.intellij.openapi.util.TextRange
 import com.intellij.openapi.util.UserDataHolderBase
@@ -51,7 +52,12 @@ class PostCodeHandleContext(
     /**
      * post text range
      */
-    val modifiedTextRange: TextRange? = null
+    val modifiedTextRange: TextRange? = null,
+
+    /**
+     * current editor for modify
+     */
+    val editor: Editor?
 ) {
     companion object {
         private val DATA_KEY: Key<PostCodeHandleContext> = Key.create(PostCodeHandleContext::class.java.name)
@@ -61,6 +67,7 @@ class PostCodeHandleContext(
                 selectedEntry = selectedEntry,
                 currentFile = currentFile,
                 currentLanguage = currentFile?.language,
+                editor = null,
             )
         }
 

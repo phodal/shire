@@ -134,7 +134,8 @@ open class ShireRunConfigurationProfileState(
                 currentLanguage = currentFile?.language,
                 currentFile = currentFile,
                 genText = response,
-                modifiedTextRange = textRange
+                modifiedTextRange = textRange,
+                editor = locationEditor,
             )
 
             hobbitHole?.executeStreamingEndProcessor(myProject, console, context)
