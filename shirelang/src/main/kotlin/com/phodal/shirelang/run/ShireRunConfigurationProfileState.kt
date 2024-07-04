@@ -31,10 +31,10 @@ import com.phodal.shirelang.compiler.ShireCompiledResult
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.flow.ShireConversationService
-import com.phodal.shirelang.run.runner.CustomRemoteAgentRunner
-import com.phodal.shirelang.run.runner.ShireDefaultRunner
-import com.phodal.shirelang.run.runner.ShireRunner
-import com.phodal.shirelang.run.runner.ShireRunnerContext
+import com.phodal.shirelang.run.runner.CustomRemoteAgentLlmRunner
+import com.phodal.shirelang.run.runner.ShireDefaultLlmRunner
+import com.phodal.shirelang.run.runner.ShireLlmRunner
+import com.phodal.shirelang.run.runner.ShireLlmRunnerContext
 import java.awt.BorderLayout
 import javax.swing.JComponent
 
@@ -91,46 +91,7 @@ open class ShireRunConfigurationProfileState(
         myProject.getService(ShireConversationService::class.java)
             .createConversation(configuration.getScriptPath(), runData.compileResult)
 
-        val agent = runData.compileResult.executeAgent
-        val shireRunnerContext = ShireRunnerContext(
-            configuration = configuration,
-            processHandler = processHandler,
-            console = console!!,
-            myProject = myProject,
-            hole = runData.hole,
-            prompt = runData.finalPrompt,
-            editor = runData.editor,
-        )
-        val shireRunner: ShireRunner = when {
-            agent != null -> {
-                CustomRemoteAgentRunner(shireRunnerContext, agent)
-            }
-
-            else -> {
-                val isLocalMode = runData.compileResult.isLocalCommand
-                ShireDefaultRunner(shireRunnerContext, isLocalMode)
-            }
-        }
-
-        shireRunner.prepareTask()
-        shireRunner.execute { response, textRange ->
-            var currentFile: PsiFile? = null
-            runData.editor?.virtualFile?.also {
-                currentFile = runReadAction { PsiManager.getInstance(myProject).findFile(it) }
-            }
-
-            val context = PostCodeHandleContext(
-                selectedEntry = runData.hole?.pickupElement(myProject, runData.editor),
-                currentLanguage = currentFile?.language,
-                currentFile = currentFile,
-                genText = response,
-                modifiedTextRange = textRange,
-                editor = runData.editor,
-            )
-
-            runData.hole?.executeStreamingEndProcessor(myProject, console, context)
-            runData.hole?.executeAfterStreamingProcessor(myProject, console, context)
-        }
+        normalExecute(runData, processHandler, myProject, console, configuration)
 
         return DefaultExecutionResult(console, processHandler)
     }
@@ -199,6 +160,56 @@ open class ShireRunConfigurationProfileState(
             val promptTextTrim = promptText.trim()
 
             return ShireRunListenerData(hobbitHole, locationEditor, compileResult, promptTextTrim)
+        }
+
+    }
+
+    fun normalExecute(
+        runData: ShireRunListenerData,
+        processHandler: ShireProcessHandler,
+        project: Project,
+        console: ShireConsoleView?,
+        configuration: ShireConfiguration,
+    ) {
+        val agent = runData.compileResult.executeAgent
+        val shireLlmRunnerContext = ShireLlmRunnerContext(
+            configuration = configuration,
+            processHandler = processHandler,
+            console = console!!,
+            myProject = project,
+            hole = runData.hole,
+            prompt = runData.finalPrompt,
+            editor = runData.editor,
+        )
+        val shireLlmRunner: ShireLlmRunner = when {
+            agent != null -> {
+                CustomRemoteAgentLlmRunner(shireLlmRunnerContext, agent)
+            }
+
+            else -> {
+                val isLocalMode = runData.compileResult.isLocalCommand
+                ShireDefaultLlmRunner(shireLlmRunnerContext, isLocalMode)
+            }
+        }
+
+        shireLlmRunner.prepareTask()
+        shireLlmRunner.execute { response, textRange ->
+            var currentFile: PsiFile? = null
+            runData.editor?.virtualFile?.also {
+                currentFile = runReadAction { PsiManager.getInstance(project).findFile(it) }
+            }
+
+            val context = PostCodeHandleContext(
+                selectedEntry = runData.hole?.pickupElement(project, runData.editor),
+                currentLanguage = currentFile?.language,
+                currentFile = currentFile,
+                genText = response,
+                modifiedTextRange = textRange,
+                editor = runData.editor,
+            )
+
+            runData.hole?.executeStreamingEndProcessor(project, console, context)
+            runData.hole?.executeAfterStreamingProcessor(project, console, context)
         }
     }
 }

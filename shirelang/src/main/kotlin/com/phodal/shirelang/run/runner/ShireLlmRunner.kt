@@ -8,7 +8,7 @@ import com.phodal.shirecore.config.interaction.PostFunction
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.run.ShireConfiguration
 
-data class ShireRunnerContext(
+data class ShireLlmRunnerContext(
     val configuration: ShireConfiguration,
     val processHandler: ProcessHandler,
     val console: ConsoleView,
@@ -18,7 +18,7 @@ data class ShireRunnerContext(
     val editor: Editor?,
 )
 
-abstract class ShireRunner(open val context: ShireRunnerContext) {
+abstract class ShireLlmRunner(open val context: ShireLlmRunnerContext) {
     abstract fun execute(postFunction: PostFunction)
     fun prepareTask() {
 

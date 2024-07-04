@@ -13,10 +13,10 @@ import com.phodal.shirelang.ShireBundle
 import com.phodal.shirelang.run.flow.ShireConversationService
 import kotlinx.coroutines.*
 
-class ShireDefaultRunner(
-    override val context: ShireRunnerContext,
+class ShireDefaultLlmRunner(
+    override val context: ShireLlmRunnerContext,
     private val isLocalMode: Boolean,
-) : ShireRunner(context) {
+) : ShireLlmRunner(context) {
     override fun execute(postFunction: PostFunction) {
         ApplicationManager.getApplication().invokeLater({
             if (isLocalMode) {
