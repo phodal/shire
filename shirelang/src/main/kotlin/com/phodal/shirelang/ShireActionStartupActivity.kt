@@ -38,29 +38,6 @@ class ShireActionStartupActivity : ProjectActivity {
         }
     }
 
-    /**
-     * Sets a keymap shortcut for a specified action ID.
-     *
-     * This method takes in the action ID of the desired action and a keyboard string representing the shortcut keys to be set.
-     * It retrieves the action manager and keymap manager instances, then adds the specified keyboard shortcut to the active keymap.
-     *
-     * @param actionId The ID of the action for which the shortcut is being set.
-     * @param keyboardString A string representing the keyboard shortcut keys (e.g. "ctrl shift A").
-     */
-    fun setKeymapShortcut(actionId: String, keyboardString: String) {
-        val actionManager: ActionManager = ActionManager.getInstance()
-        val findAction: AnAction = actionManager.getAction(actionId) ?: return
-
-        val keymapManager = KeymapManager.getInstance()
-        val activeKeymap = keymapManager.activeKeymap
-
-        if (activeKeymap is KeymapImpl) {
-            val keyboardShortcut = KeyboardShortcut.fromString(keyboardString)
-            activeKeymap.removeAllActionShortcuts(actionId)
-            activeKeymap.addShortcut(actionId, keyboardShortcut)
-        }
-    }
-
     companion object {
         fun obtainShireFiles(project: Project): List<ShireFile> {
             ApplicationManager.getApplication().assertReadAccessAllowed()
