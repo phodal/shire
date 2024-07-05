@@ -50,7 +50,9 @@ class ShireActionStartupActivity : ProjectActivity {
         val toolsMenu = actionManager.getAction("TerminalToolwindowActionGroup") as? DefaultActionGroup
 
         val action = actionManager.getAction("ShireTerminalAction")
-        toolsMenu?.add(action)
+        if (toolsMenu != null) {
+            toolsMenu.add(action)
+        }
     }
 
     companion object {
