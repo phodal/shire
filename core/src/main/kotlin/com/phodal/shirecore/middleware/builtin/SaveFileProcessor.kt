@@ -29,24 +29,27 @@ class SaveFileProcessor : PostProcessor, Disposable {
 
         Disposer.register(this, disposableFlag)
 
+        val fileName = if (args.isNotEmpty()) {
+            args[0].toString()
+        } else {
+            "${System.currentTimeMillis()}.$ext"
+        }
+
         ApplicationManager.getApplication().invokeAndWait {
             WriteAction.compute<VirtualFile, Throwable> {
                 val outputDir = project.guessProjectDir()?.findChild(SHIRE_TEMP_OUTPUT)
                     ?: project.guessProjectDir()?.createChildDirectory(this, SHIRE_TEMP_OUTPUT)
 
-                val outputFile = outputDir?.createChildData(this, "${System.currentTimeMillis()}.$ext")
+                val outputFile = outputDir?.createChildData(this, fileName)
                     ?: throw IllegalStateException("Failed to save file")
 
                 val content = context.pipeData["output"] as String?
-                outputFile?.setBinaryContent(content?.toByteArray() ?: ByteArray(0))
-
+                outputFile.setBinaryContent(content?.toByteArray() ?: ByteArray(0))
                 context.pipeData["output"] = outputFile
 
-                // refresh index
                 project.guessProjectDir()?.refresh(true, true)
 
                 console?.print("Saved to ${outputFile.canonicalPath}\n", ConsoleViewContentType.SYSTEM_OUTPUT)
-
                 outputFile
             }
         }
