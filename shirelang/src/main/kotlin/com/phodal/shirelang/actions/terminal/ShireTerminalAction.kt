@@ -39,6 +39,8 @@ class ShireTerminalAction : DumbAwareAction() {
     override fun update(e: AnActionEvent) {
         e.presentation.isVisible = shireActionConfigs().size == 1
         e.presentation.isEnabled = shireActionConfigs().size == 1
+
+        e.presentation.text = shireActionConfigs().first().hole?.description ?: ""
     }
 
     override fun actionPerformed(e: AnActionEvent) {

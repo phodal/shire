@@ -99,6 +99,7 @@
         <action id="ShireCommitMessage"
                 class="com.phodal.shirelang.actions.vcs.ShireVcsSingleAction"
                 icon="com.phodal.shirelang.ShireIcons.DEFAULT"
+                text="Commit Message Action"
                 description="Shire VCS Action">
 
             <add-to-group group-id="Vcs.MessageActionGroup"/>
@@ -115,6 +116,7 @@
         <action id="ShireTerminalAction"
                 class="com.phodal.shirelang.actions.terminal.ShireTerminalAction"
                 description="You can custom any assistant as you want!"
+                text="Terminal Action"
                 icon="com.phodal.shirelang.ShireIcons.DEFAULT"
         >
 

@@ -28,6 +28,8 @@ class ShireInputBoxAction : DumbAwareAction() {
 
     override fun update(e: AnActionEvent) {
         e.presentation.isEnabled = shireActionConfigs().isNotEmpty()
+
+        e.presentation.text = shireActionConfigs().first().hole?.description ?: ""
     }
 
     override fun actionPerformed(e: AnActionEvent) {

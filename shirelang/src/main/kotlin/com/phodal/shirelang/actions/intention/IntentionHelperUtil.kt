@@ -33,7 +33,7 @@ class ShireIntentionAction(private val hobbitHole: HobbitHole?, val file: PsiFil
     IntentionAction {
     override fun startInWriteAction(): Boolean = false
     override fun getFamilyName(): String = ShireBundle.message("shire.intention")
-    override fun getText(): String = ShireBundle.message("shire.intention")
+    override fun getText(): String = hobbitHole?.description ?: ShireBundle.message("shire.intention")
 
     override fun isAvailable(project: Project, editor: Editor, file: PsiFile): Boolean {
         val conditions = hobbitHole?.when_ ?: return true
