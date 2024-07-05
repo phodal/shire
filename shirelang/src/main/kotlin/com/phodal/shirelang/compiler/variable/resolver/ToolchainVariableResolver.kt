@@ -25,7 +25,7 @@ class ToolchainVariableResolver(
                 if (provider != null) {
                     result[it.key] = try {
                         val resolvedValue = provider.resolve(variable, context.myProject, context.editor, context.element)
-                        (resolvedValue as VcsToolchainVariable).value ?: ""
+                        (resolvedValue as? VcsToolchainVariable)?.value ?: ""
                     } catch (e: Exception) {
                         logger<CompositeVariableResolver>().error("Failed to resolve variable: ${it.key}", e)
                         ""

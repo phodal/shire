@@ -7,8 +7,8 @@ import kotlin.reflect.full.declaredFunctions
 import kotlin.reflect.full.functions
 
 interface ToolchainVariable {
-    val variableName: String;
-    var value: Any?;
+    val variableName: String
+    var value: Any?
     val description: String
 
     companion object {
