@@ -1,7 +1,6 @@
 package com.phodal.shirecore.middleware.builtin
 
 import com.intellij.execution.ui.ConsoleView
-import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.middleware.BuiltinPostHandler
@@ -18,7 +17,7 @@ class InsertNewlineProcessor : PostProcessor {
         return true
     }
 
-    override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?): Any {
+    override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?, args: List<Any>): Any {
         val editor = context.editor ?: return ""
 
         CoroutineScope(workerThread).launch {

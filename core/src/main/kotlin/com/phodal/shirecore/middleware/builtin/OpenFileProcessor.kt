@@ -14,7 +14,7 @@ class OpenFileProcessor : PostProcessor {
 
     override fun isApplicable(context: PostCodeHandleContext): Boolean = true
 
-    override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?): String {
+    override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?, args: List<Any>): String {
         val file = context.pipeData["output"]
         if (file !is VirtualFile) {
             console?.print("No file to open\n", com.intellij.execution.ui.ConsoleViewContentType.ERROR_OUTPUT)

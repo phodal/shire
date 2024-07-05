@@ -20,7 +20,7 @@ class RunCodeProcessor : PostProcessor {
         return true
     }
 
-    override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?): String {
+    override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?, args: List<Any>): String {
         when (val code = context.pipeData["output"]) {
             is VirtualFile -> {
                 LocalFileSystem.getInstance().refreshAndFindFileByPath(code.path)

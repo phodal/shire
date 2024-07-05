@@ -5,15 +5,11 @@ import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.WriteAction
-import com.intellij.openapi.application.runWriteAction
-import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.fileTypes.PlainTextLanguage
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.vcs.log.runInEdt
-import com.intellij.vcs.log.runInEdtAsync
 import com.phodal.shirecore.SHIRE_TEMP_OUTPUT
 import com.phodal.shirecore.middleware.BuiltinPostHandler
 import com.phodal.shirecore.middleware.PostCodeHandleContext
@@ -27,7 +23,7 @@ class SaveFileProcessor : PostProcessor, Disposable {
         return true
     }
 
-    override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?): String {
+    override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?, args: List<Any>): String {
         val language = context.genTargetLanguage ?: PlainTextLanguage.INSTANCE
         val ext = context.genTargetExtension ?: language?.associatedFileType?.defaultExtension ?: "txt"
 

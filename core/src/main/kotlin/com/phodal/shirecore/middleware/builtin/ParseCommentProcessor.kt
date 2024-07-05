@@ -41,7 +41,7 @@ class ParseCommentProcessor : PostProcessor {
     private fun getDocFromOutput(context: PostCodeHandleContext) =
         preHandleDoc(context.pipeData["output"] as String? ?: context.genText ?: "")
 
-    override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?): String {
+    override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?, args: List<Any>): String {
         val defaultComment: String = getDocFromOutput(context)
         val currentFile = context.currentFile ?: return defaultComment
 

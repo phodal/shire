@@ -35,7 +35,7 @@ interface PostProcessor {
      * @param genText the generated text to be used in the execution
      * @return a string result of the execution
      */
-    fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?): Any
+    fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?, args: List<Any>): Any
 
     /**
      * Clean up tasks, like metric for time, etc.
@@ -58,12 +58,12 @@ interface PostProcessor {
             return EP_NAME.extensionList.map { it.processorName }
         }
 
-        fun execute(project: Project, funcNode: List<PostProcessorNode>, handleContext: PostCodeHandleContext, console: ConsoleView?) {
-            funcNode.forEach {
-                val handler = handler(it.funName)
+        fun execute(project: Project, funcNodes: List<PostProcessorNode>, handleContext: PostCodeHandleContext, console: ConsoleView?) {
+            funcNodes.forEach { funNode ->
+                val handler = handler(funNode.funName)
                 if (handler != null) {
                     handler.setup(handleContext)
-                    handler.execute(project, handleContext, console)
+                    handler.execute(project, handleContext, console, funNode.args)
                     handler.finish(handleContext)
                 }
             }

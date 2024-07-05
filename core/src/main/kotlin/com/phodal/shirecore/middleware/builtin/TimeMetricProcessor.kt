@@ -20,7 +20,7 @@ class TimeMetricProcessor : PostProcessor {
         return startTime.toString()
     }
 
-    override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?): String {
+    override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?, args: List<Any>): String {
         val endTime = System.currentTimeMillis()
         return (endTime - startTime!!).toString()
     }

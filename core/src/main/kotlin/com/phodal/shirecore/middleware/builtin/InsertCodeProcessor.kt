@@ -14,7 +14,7 @@ class InsertCodeProcessor : PostProcessor {
         return true
     }
 
-    override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?): String {
+    override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?, args: List<Any>): String {
         if (context.currentLanguage == null || context.currentFile == null) {
             console?.print("No found current language\n", com.intellij.execution.ui.ConsoleViewContentType.ERROR_OUTPUT)
             return ""

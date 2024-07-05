@@ -26,7 +26,7 @@ class VerifyCodeProcessor : PostProcessor {
         return true
     }
 
-    override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?): String {
+    override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?, args: List<Any>): String {
         val code = context.pipeData["output"]
         if (code !is VirtualFile) {
             console?.print("No code to verify\n", ConsoleViewContentType.ERROR_OUTPUT)

@@ -19,7 +19,7 @@ class FormatCodeProcessor : PostProcessor {
         return true
     }
 
-    override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?): Any {
+    override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?, args: List<Any>): Any {
         val file = context.currentFile ?: return ""
         val document = PsiDocumentManager.getInstance(project).getDocument(file) ?: return ""
 

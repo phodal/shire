@@ -1,12 +1,10 @@
 package com.phodal.shirelang.compiler.hobbit
 
-import com.intellij.codeInsight.intention.IntentionAction
 import com.intellij.execution.ui.ConsoleView
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.actionSystem.KeyboardShortcut
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.editor.Editor
-import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirecore.config.InteractionType
@@ -123,7 +121,7 @@ open class HobbitHole(
                 return@forEach
             }
 
-            postProcessor.execute(project, context, console)
+            postProcessor.execute(project, context, console, funcNode.args)
         }
     }
 
