@@ -1,7 +1,6 @@
-package com.phodal.shirelang.compiler.variable.resolver
+package com.phodal.shirecore.provider.variable.model
 
 import com.intellij.openapi.application.ApplicationInfo
-import com.phodal.shirecore.provider.variable.model.ToolchainVariable
 import java.util.*
 
 enum class SystemInfoVariable(

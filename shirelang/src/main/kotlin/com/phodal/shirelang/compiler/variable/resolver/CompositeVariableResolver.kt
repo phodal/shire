@@ -2,7 +2,6 @@ package com.phodal.shirelang.compiler.variable.resolver
 
 import com.intellij.psi.PsiElement
 import com.phodal.shirecore.middleware.select.SelectElementStrategy
-import com.phodal.shirecore.provider.variable.ToolchainVariableProvider
 import com.phodal.shirelang.compiler.variable.base.VariableResolver
 import com.phodal.shirelang.compiler.variable.base.VariableResolverContext
 
@@ -19,7 +18,8 @@ class CompositeVariableResolver(
             /**
              * Include ToolchainVariableProvider and PsiContextVariableProvider
              */
-            BuiltinVariableResolver(context),
+            PsiContextVariableResolver(context),
+            ToolchainVariableResolver(context),
             ContextVariableResolver(context),
             SystemInfoVariableResolver(context),
             UserCustomVariableResolver(context),

@@ -1,5 +1,6 @@
 package com.phodal.shirelang.compiler.variable.resolver
 
+import com.phodal.shirecore.provider.variable.model.SystemInfoVariable
 import com.phodal.shirelang.compiler.variable.base.VariableResolver
 import com.phodal.shirelang.compiler.variable.base.VariableResolverContext
 
