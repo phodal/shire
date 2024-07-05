@@ -2,6 +2,7 @@ package com.phodal.shirecore.middleware.builtin
 
 import com.intellij.execution.ui.ConsoleView
 import com.intellij.execution.ui.ConsoleViewContentType.*
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
@@ -32,17 +33,14 @@ class RunCodeProcessor : PostProcessor {
 
             is String -> {
                 val ext = context.genTargetLanguage?.associatedFileType?.defaultExtension ?: "txt"
-                PsiFileFactory.getInstance(project).createFileFromText("temp.$ext", code).let { psiFile ->
-                    val file = psiFile.virtualFile
-
-                    if (file == null) {
-                        console?.print("Failed to create file for run\n", ERROR_OUTPUT)
-                        return ""
+                ApplicationManager.getApplication().invokeAndWait {
+                    PsiFileFactory.getInstance(project).createFileFromText("temp.$ext", code).let { psiFile ->
+                        if (psiFile.virtualFile == null) {
+                            console?.print("Failed to create file for run\n", ERROR_OUTPUT)
+                        } else {
+                            doExecute(console, project, psiFile.virtualFile, psiFile)
+                        }
                     }
-
-                    doExecute(console, project, file, psiFile)
-
-                    return ""
                 }
             }
         }
