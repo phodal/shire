@@ -10,6 +10,9 @@ import com.phodal.shirecore.provider.variable.model.VcsToolchainVariable
 import com.phodal.shirelang.compiler.variable.base.VariableResolver
 import com.phodal.shirelang.compiler.variable.base.VariableResolverContext
 
+/**
+ * Include ToolchainVariableProvider and PsiContextVariableProvider
+ */
 class BuiltinVariableResolver(
     private val context: VariableResolverContext,
 ) : VariableResolver {

@@ -16,15 +16,14 @@ class CompositeVariableResolver(
 
     override fun resolve(): Map<String, Any> {
         val resolverList = listOf(
+            /**
+             * Include ToolchainVariableProvider and PsiContextVariableProvider
+             */
             BuiltinVariableResolver(context),
             ContextVariableResolver(context),
             SystemInfoVariableResolver(context),
             UserCustomVariableResolver(context),
         )
-
-//        ToolchainVariableProvider.all().forEach {
-//            it.isResolvable()
-//        }
 
         return resolverList.fold(mutableMapOf()) { acc, resolver ->
             acc.putAll(resolver.resolve())
