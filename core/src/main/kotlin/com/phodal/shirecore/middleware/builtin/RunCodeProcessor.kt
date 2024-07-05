@@ -35,6 +35,11 @@ class RunCodeProcessor : PostProcessor {
                 PsiFileFactory.getInstance(project).createFileFromText("temp.$ext", code).let { psiFile ->
                     val file = psiFile.virtualFile
 
+                    if (file == null) {
+                        console?.print("Failed to create file for run\n", ERROR_OUTPUT)
+                        return ""
+                    }
+
                     doExecute(console, project, file, psiFile)
 
                     return ""
