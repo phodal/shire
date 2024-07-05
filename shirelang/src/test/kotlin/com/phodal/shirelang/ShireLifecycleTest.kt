@@ -11,7 +11,7 @@ class ShireLifecycleTest : BasePlatformTestCase() {
     fun testShouldHandleWhenStreamingEnd() {
         val code = """
             ---
-            onStreamingEnd:  { verifyCode | runCode }
+            onStreamingEnd:  { parseCode | saveFile("api.py") | verifyCode | runCode }
             ---
             
             ${'$'}allController
@@ -26,9 +26,15 @@ class ShireLifecycleTest : BasePlatformTestCase() {
 
         val funcNode = hole.onStreamingEnd
 
-        assertEquals(funcNode.size, 2)
-        assertEquals(funcNode[0].funName, "verifyCode")
-        assertEquals(funcNode[1].funName, "runCode")
+        assertEquals(funcNode.size, 4)
+        assertEquals(funcNode[0].funName, "parseCode")
+        assertEquals(funcNode[0].args.size, 0)
+
+        assertEquals(funcNode[1].funName, "saveFile")
+        assertEquals(funcNode[1].args[0], "api.py")
+
+        assertEquals(funcNode[2].funName, "verifyCode")
+        assertEquals(funcNode[3].funName, "runCode")
 
         val handleContext = PostCodeHandleContext(currentLanguage = ShireLanguage.INSTANCE, editor = null)
         PostProcessor.execute(project, funcNode, handleContext, null)

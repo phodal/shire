@@ -16,6 +16,7 @@ import com.phodal.shirecore.middleware.select.SelectedEntry
 import com.phodal.shirelang.compiler.parser.FrontmatterParser
 import com.phodal.shirelang.compiler.hobbit.base.Smials
 import com.phodal.shirelang.compiler.hobbit.ast.FrontMatterType
+import com.phodal.shirelang.compiler.hobbit.ast.MethodCall
 import com.phodal.shirelang.compiler.hobbit.ast.PatternAction
 import com.phodal.shirelang.compiler.hobbit.ast.RuleBasedPatternAction
 import com.phodal.shirelang.compiler.hobbit.ast.TaskRoutes
@@ -260,8 +261,8 @@ open class HobbitHole(
                     item.toValue().forEach { matterType ->
                         when (matterType) {
                             is FrontMatterType.EXPRESSION -> {
-                                val handleName = toFuncName(matterType)
-                                endProcessors.add(PostProcessorNode(handleName, emptyList()))
+                                val processorNode = toPostProcessorNode(matterType)
+                                endProcessors.add(processorNode)
                             }
 
                             else -> {}
@@ -280,8 +281,19 @@ open class HobbitHole(
             return endProcessors
         }
 
-        private fun toFuncName(expression: FrontMatterType.EXPRESSION): String {
-            return expression.display()
+        private fun toPostProcessorNode(expression: FrontMatterType.EXPRESSION): PostProcessorNode {
+            return when (val child = expression.value) {
+                is MethodCall -> {
+                    val handleName = child.objectName.display()
+                    val args: List<String> = child.arguments?.map { it.toString() } ?: emptyList()
+                    return PostProcessorNode(handleName, args)
+                }
+
+                else -> {
+                    val handleName = expression.display()
+                    PostProcessorNode(handleName, emptyList())
+                }
+            }
         }
     }
 }
