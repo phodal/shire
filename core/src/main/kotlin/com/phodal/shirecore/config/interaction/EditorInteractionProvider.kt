@@ -84,11 +84,11 @@ class EditorInteractionProvider : LocationInteractionProvider {
             }
 
             InteractionType.RunPanel -> {
-                val flow: Flow<String> = LlmProvider.provider(context.project)!!.stream(context.prompt, "", false)
+                val flow: Flow<String>? = LlmProvider.provider(context.project)?.stream(context.prompt, "", false)
                 ShireCoroutineScope.scope(context.project).launch {
                     val suggestion = StringBuilder()
 
-                    flow.cancellable().collect { char ->
+                    flow?.cancellable()?.collect { char ->
                         suggestion.append(char)
 
                         invokeLater {
