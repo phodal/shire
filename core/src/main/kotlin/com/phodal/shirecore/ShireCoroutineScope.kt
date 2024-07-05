@@ -10,7 +10,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.asCoroutineDispatcher
 
 
-val workerThread = AppExecutorUtil.getAppExecutorService().asCoroutineDispatcher()
+public val workerThread = AppExecutorUtil.getAppExecutorService().asCoroutineDispatcher()
 
 
 @Service(Service.Level.PROJECT)

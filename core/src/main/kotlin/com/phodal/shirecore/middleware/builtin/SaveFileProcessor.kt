@@ -22,19 +22,16 @@ class SaveFileProcessor : PostProcessor {
         val language = context.genTargetLanguage ?: PlainTextLanguage.INSTANCE
         val ext = language?.associatedFileType?.defaultExtension ?: "txt"
 
-        val outputFile = runWriteAction {
-            val outputDir = project.guessProjectDir()?.findChild(SHIRE_TEMP_OUTPUT)
-                ?: project.guessProjectDir()?.createChildDirectory(this, SHIRE_TEMP_OUTPUT)
+        val outputDir = project.guessProjectDir()?.findChild(SHIRE_TEMP_OUTPUT)
+            ?: project.guessProjectDir()?.createChildDirectory(this, SHIRE_TEMP_OUTPUT)
 
-            val outputFile = outputDir?.createChildData(this, "${System.currentTimeMillis()}.$ext")
-            val content = context.pipeData["output"] as String?
-            outputFile?.setBinaryContent(content?.toByteArray() ?: ByteArray(0))
+        val outputFile = outputDir?.createChildData(this, "${System.currentTimeMillis()}.$ext")
+            ?: throw IllegalStateException("Failed to save file")
 
-            outputFile
-        } ?: throw IllegalStateException("Failed to save file")
+        val content = context.pipeData["output"] as String?
+        outputFile.setBinaryContent(content?.toByteArray() ?: ByteArray(0))
 
         context.pipeData["output"] = outputFile
-
         // refresh index
         project.guessProjectDir()?.refresh(true, true)
 

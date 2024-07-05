@@ -12,6 +12,7 @@ import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.middleware.PostCodeHandleContext
 import com.phodal.shirecore.provider.action.TerminalLocationExecutor
 import com.phodal.shirecore.provider.context.ActionLocationEditor
+import com.phodal.shirecore.workerThread
 import com.phodal.shirelang.ShireBundle
 import com.phodal.shirelang.compiler.SHIRE_ERROR
 import com.phodal.shirelang.compiler.ShireParsedResult
@@ -176,8 +177,10 @@ class ShireRunner(
         PostCodeHandleContext.putData(context)
 
         try {
-            hobbitHole?.executeStreamingEndProcessor(project, console, context)
-            hobbitHole?.executeAfterStreamingProcessor(project, console, context)
+            CoroutineScope(workerThread).launch {
+                hobbitHole?.executeStreamingEndProcessor(project, console, context)
+                hobbitHole?.executeAfterStreamingProcessor(project, console, context)
+            }
         } catch (e: Exception) {
             console.print(e.message ?: "Error", ConsoleViewContentType.ERROR_OUTPUT)
         } finally {
