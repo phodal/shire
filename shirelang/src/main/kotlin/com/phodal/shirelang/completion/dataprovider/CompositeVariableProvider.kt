@@ -3,6 +3,7 @@ package com.phodal.shirelang.completion.dataprovider
 import com.phodal.shirecore.provider.variable.model.PsiContextVariable
 import com.phodal.shirecore.provider.variable.model.ToolchainVariable
 import com.phodal.shirecore.provider.variable.model.VcsToolchainVariable
+import com.phodal.shirelang.compiler.variable.resolver.SystemInfoVariable
 
 data class VariableDisplay(
     val name: String,
@@ -28,6 +29,10 @@ object CompositeVariableProvider {
 
         ToolchainVariable.all().forEach {
             results.add(VariableDisplay(it.variableName, it.description, 70.0))
+        }
+
+        SystemInfoVariable.all().forEach {
+            results.add(VariableDisplay(it.variableName, it.description, 60.0))
         }
 
         return results
