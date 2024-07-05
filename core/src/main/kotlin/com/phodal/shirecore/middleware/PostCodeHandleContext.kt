@@ -35,6 +35,8 @@ class PostCodeHandleContext(
      */
     var genTargetLanguage: Language? = null,
 
+    var genTargetExtension: String? = null,
+
     /**
      * The element to be handled, which will be load from current editor when parse code
      */

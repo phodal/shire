@@ -62,7 +62,7 @@ class ShireProcessProcessor(val project: Project) {
         conversationService.refreshIdeOutput(scriptPath, output)
 
         val code = Code.parse(conversationService.getLlmResponse(scriptPath))
-        if (code.language == ShireLanguage.INSTANCE) {
+        if (code.ideaLanguage == ShireLanguage.INSTANCE) {
             runInEdt {
                 executeTask(ShireFile.fromString(project, code.text), consoleView)
             }

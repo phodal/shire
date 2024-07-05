@@ -13,8 +13,6 @@ import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
 import com.phodal.shirecore.ShireCoreBundle
 import com.phodal.shirecore.config.interaction.PostFunction
-import com.phodal.shirecore.llm.ChatMessage
-import com.phodal.shirecore.llm.ChatRole
 import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.markdown.Code
 import kotlinx.coroutines.flow.cancellable
@@ -49,7 +47,7 @@ open class FileGenerateTask(
         }
 
         val inferFileName = if (fileName == null) {
-            val language = Code.parse(result).language
+            val language = Code.parse(result).ideaLanguage
             val timestamp = System.currentTimeMillis()
             "output-" + timestamp + if (language == PlainTextLanguage.INSTANCE) ".txt" else ".$language"
         } else {

@@ -2,10 +2,13 @@ package com.phodal.shirecore.middleware.builtin
 
 import com.intellij.execution.ui.ConsoleView
 import com.intellij.execution.ui.ConsoleViewContentType
+import com.intellij.openapi.application.WriteAction
 import com.intellij.openapi.application.runWriteAction
+import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.fileTypes.PlainTextLanguage
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
+import com.intellij.openapi.vfs.VirtualFile
 import com.phodal.shirecore.SHIRE_TEMP_OUTPUT
 import com.phodal.shirecore.middleware.BuiltinPostHandler
 import com.phodal.shirecore.middleware.PostCodeHandleContext
@@ -20,18 +23,21 @@ class SaveFileProcessor : PostProcessor {
 
     override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?): String {
         val language = context.genTargetLanguage ?: PlainTextLanguage.INSTANCE
-        val ext = language?.associatedFileType?.defaultExtension ?: "txt"
+        val ext = context.genTargetExtension ?: language?.associatedFileType?.defaultExtension ?: "txt"
 
-        val outputDir = project.guessProjectDir()?.findChild(SHIRE_TEMP_OUTPUT)
-            ?: project.guessProjectDir()?.createChildDirectory(this, SHIRE_TEMP_OUTPUT)
+        val outputFile = WriteAction.compute<VirtualFile, Throwable>{
+            val outputDir = project.guessProjectDir()?.findChild(SHIRE_TEMP_OUTPUT)
+                ?: project.guessProjectDir()?.createChildDirectory(this, SHIRE_TEMP_OUTPUT)
 
-        val outputFile = outputDir?.createChildData(this, "${System.currentTimeMillis()}.$ext")
-            ?: throw IllegalStateException("Failed to save file")
+            val outputFile = outputDir?.createChildData(this, "${System.currentTimeMillis()}.$ext")
+            val content = context.pipeData["output"] as String?
+            outputFile?.setBinaryContent(content?.toByteArray() ?: ByteArray(0))
 
-        val content = context.pipeData["output"] as String?
-        outputFile.setBinaryContent(content?.toByteArray() ?: ByteArray(0))
+            outputFile
+        } ?: throw IllegalStateException("Failed to save file")
 
         context.pipeData["output"] = outputFile
+
         // refresh index
         project.guessProjectDir()?.refresh(true, true)
 

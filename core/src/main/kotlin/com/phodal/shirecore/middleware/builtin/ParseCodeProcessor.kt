@@ -21,7 +21,9 @@ class ParseCodeProcessor : PostProcessor {
         val code = Code.parse(context.genText ?: "")
         val codeText = code.text
 
-        context.genTargetLanguage = code.language
+        context.genTargetLanguage = code.ideaLanguage
+        context.genTargetExtension = code.extension
+
         context.pipeData["output"] = codeText
         context.pipeData["code"] = codeText
 
