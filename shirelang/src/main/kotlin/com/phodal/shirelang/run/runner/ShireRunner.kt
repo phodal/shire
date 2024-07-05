@@ -70,7 +70,7 @@ class ShireRunner(
             runBlocking {
                 LlmProvider.provider(project)?.stream(context.finalPrompt, "", false)?.collect {
                     llmResult.append(it)
-                    handler?.onChunk?.invoke(it)
+                    handler.onChunk.invoke(it)
                 } ?: console.print(
                     ShireBundle.message("shire.llm.notfound"),
                     ConsoleViewContentType.ERROR_OUTPUT
@@ -78,7 +78,7 @@ class ShireRunner(
             }
 
             val response = llmResult.toString()
-            handler?.onFinish?.invoke(response)
+            handler.onFinish?.invoke(response)
 
             postFunction(response, null)
             processHandler.detachProcess()
@@ -172,6 +172,8 @@ class ShireRunner(
             editor = runData.editor,
             lastTaskOutput = response,
         )
+
+        PostCodeHandleContext.putData(context)
 
         hobbitHole?.executeStreamingEndProcessor(project, console, context)
         hobbitHole?.executeAfterStreamingProcessor(project, console, context)

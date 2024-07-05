@@ -69,6 +69,7 @@ class PostCodeHandleContext(
 ) {
     companion object {
         private val DATA_KEY: Key<PostCodeHandleContext> = Key.create(PostCodeHandleContext::class.java.name)
+        private val userDataHolderBase = UserDataHolderBase()
 
         fun create(currentFile: PsiFile?,  selectedEntry: SelectedEntry?): PostCodeHandleContext {
             return PostCodeHandleContext(
@@ -80,11 +81,11 @@ class PostCodeHandleContext(
         }
 
         fun putData(context: PostCodeHandleContext) {
-            UserDataHolderBase().putUserData(DATA_KEY, context)
+            userDataHolderBase.putUserData(DATA_KEY, context)
         }
 
         fun getData(): PostCodeHandleContext? {
-            return UserDataHolderBase().getUserData(DATA_KEY)
+            return userDataHolderBase.getUserData(DATA_KEY)
         }
     }
 }
