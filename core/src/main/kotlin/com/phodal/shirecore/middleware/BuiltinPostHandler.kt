@@ -41,6 +41,10 @@ enum class BuiltinPostHandler(var handleName: String) {
      */
     InferCodeLocation("InferCodeLocation"),
 
+    /**
+     * Save file to the disk
+     */
+    SaveFile("saveFile"),
 
     /**
      * Open file in the editor

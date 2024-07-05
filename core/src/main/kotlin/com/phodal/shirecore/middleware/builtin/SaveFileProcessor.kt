@@ -7,11 +7,12 @@ import com.intellij.openapi.fileTypes.PlainTextLanguage
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
 import com.phodal.shirecore.SHIRE_TEMP_OUTPUT
+import com.phodal.shirecore.middleware.BuiltinPostHandler
 import com.phodal.shirecore.middleware.PostCodeHandleContext
 import com.phodal.shirecore.middleware.PostProcessor
 
 class SaveFileProcessor : PostProcessor {
-    override val processorName: String get() = "saveFile"
+    override val processorName: String = BuiltinPostHandler.SaveFile.handleName
 
     override fun isApplicable(context: PostCodeHandleContext): Boolean {
         return true
