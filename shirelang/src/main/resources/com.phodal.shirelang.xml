@@ -112,14 +112,13 @@
             <keyboard-shortcut keymap="$default" first-keystroke="control BACK_SLASH"/>
         </action>
 
-<!--        <action id="ShireTerminalAction"-->
-<!--                class="com.phodal.shirelang.actions.terminal.ShireTerminalAction"-->
-<!--                description="You can custom any assistant as you want!"-->
-<!--                icon="com.phodal.shirelang.ShireIcons.DEFAULT"-->
-<!--        >-->
+        <action id="ShireTerminalAction"
+                class="com.phodal.shirelang.actions.terminal.ShireTerminalAction"
+                description="You can custom any assistant as you want!"
+                icon="com.phodal.shirelang.ShireIcons.DEFAULT"
+        >
 
-<!--            <add-to-group group-id="TerminalToolwindowActionGroup" anchor="last"/>-->
-<!--        </action>-->
+        </action>
 
         <!-- Shire Intentions Action Group -->
         <group id="ShireIntentionsActionGroup" class="com.phodal.shirelang.actions.intention.ShireIntentionsActionGroup"
