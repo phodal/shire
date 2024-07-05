@@ -16,26 +16,28 @@ import com.intellij.vcs.log.impl.VcsProjectLog
 import com.intellij.vcs.log.visible.filters.VcsLogFilterObject
 import com.phodal.shirecore.provider.variable.model.VcsToolchainVariable
 import com.phodal.shirecore.provider.variable.ToolchainVariableProvider
+import com.phodal.shirecore.provider.variable.model.ToolchainVariable
 import com.phodal.shirelang.git.VcsPrompting
 
 
 class GitToolchainVariableProvider : ToolchainVariableProvider {
     private val logger = logger<GitToolchainVariableProvider>()
 
-    override fun isResolvable(variable: VcsToolchainVariable, psiElement: PsiElement?): Boolean {
+    override fun isResolvable(variable: ToolchainVariable, psiElement: PsiElement?): Boolean {
         return when (variable) {
             VcsToolchainVariable.CurrentChanges -> true
             VcsToolchainVariable.HistoryCommitMessages -> true
             VcsToolchainVariable.CurrentBranch -> true
+            else -> false
         }
     }
 
     override fun resolve(
-        variable: VcsToolchainVariable,
+        variable: ToolchainVariable,
         project: Project,
         editor: Editor,
         psiElement: PsiElement?,
-    ): VcsToolchainVariable {
+    ): ToolchainVariable {
         when (variable) {
             VcsToolchainVariable.CurrentChanges -> {
                 val dataContext = DataManager.getInstance().dataContextFromFocus.result

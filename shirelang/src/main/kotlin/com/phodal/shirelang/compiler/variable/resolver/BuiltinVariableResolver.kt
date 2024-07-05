@@ -5,6 +5,7 @@ import com.intellij.psi.PsiManager
 import com.phodal.shirecore.provider.variable.*
 import com.phodal.shirecore.provider.variable.impl.DefaultPsiContextVariableProvider
 import com.phodal.shirecore.provider.variable.model.PsiContextVariable
+import com.phodal.shirecore.provider.variable.model.ToolchainVariable
 import com.phodal.shirecore.provider.variable.model.VcsToolchainVariable
 import com.phodal.shirelang.compiler.variable.base.VariableResolver
 import com.phodal.shirelang.compiler.variable.base.VariableResolverContext
@@ -38,12 +39,12 @@ class BuiltinVariableResolver(
                 return@forEach
             }
 
-            val vcsToolchainVariable = VcsToolchainVariable.from(it.key)
-            if (vcsToolchainVariable != null) {
-                val provider = ToolchainVariableProvider.provide(vcsToolchainVariable, context.element)
+            val variable = ToolchainVariable.from(it.key)
+            if (variable != null) {
+                val provider = ToolchainVariableProvider.provide(variable, context.element)
                 if (provider != null) {
                     result[it.key] = try {
-                        val resolvedValue = provider.resolve(vcsToolchainVariable, context.myProject, context.editor, context.element)
+                        val resolvedValue = provider.resolve(variable, context.myProject, context.editor, context.element)
                         (resolvedValue as VcsToolchainVariable).value ?: ""
                     } catch (e: Exception) {
                         logger<CompositeVariableResolver>().error("Failed to resolve variable: ${it.key}", e)

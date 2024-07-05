@@ -3,16 +3,14 @@ package com.phodal.shirecore.provider.variable.model
 /**
  * Enum representing variables used in the generation of code structures.
  */
-enum class VcsToolchainVariable(
+enum class TerminalVariable(
     override val variableName: String,
     override var value: Any? = null,
     override val description: String = "",
 ) : ToolchainVariable {
-    CurrentChanges("currentChanges", description = "The code changes in the current working directory"),
+    SHELL_PATH("shellPath", "/bin/bash", "The path to the shell executable"),
 
-    CurrentBranch("currentBranch", description = "The name of the current branch"),
-
-    HistoryCommitMessages("historyCommitMessages", description = "The commit messages in the history"),
+    PWD("pwd", null, "The current working directory"),
     ;
 
     companion object {
@@ -22,9 +20,8 @@ enum class VcsToolchainVariable(
          * @param variableName the variable name to search for
          * @return the PsiVariable with the given variable name
          */
-        fun from(variableName: String): VcsToolchainVariable? {
+        fun from(variableName: String): TerminalVariable? {
             return values().firstOrNull { it.variableName == variableName }
         }
     }
 }
-
