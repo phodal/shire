@@ -47,10 +47,10 @@ class ShireActionStartupActivity : ProjectActivity {
      */
     private fun attachTerminalAction() {
         val actionManager = ActionManager.getInstance()
-        val toolsMenu = actionManager.getAction("TerminalToolwindowActionGroup") as? DefaultActionGroup
+        val toolsMenu = actionManager.getAction("TerminalToolwindowActionGroup") as? DefaultActionGroup ?: return
 
         val action = actionManager.getAction("ShireTerminalAction")
-        if (toolsMenu != null) {
+        if (!toolsMenu.containsAction(action)) {
             toolsMenu.add(action)
         }
     }
