@@ -3,7 +3,7 @@ package com.phodal.shirecore.provider.variable.model
 /**
  * Enum representing variables used in the generation of code structures.
  */
-enum class TerminalVariable(
+enum class TerminalToolchainVariable(
     override val variableName: String,
     override var value: Any? = null,
     override val description: String = "",
@@ -20,7 +20,7 @@ enum class TerminalVariable(
          * @param variableName the variable name to search for
          * @return the PsiVariable with the given variable name
          */
-        fun from(variableName: String): TerminalVariable? {
+        fun from(variableName: String): TerminalToolchainVariable? {
             return values().firstOrNull { it.variableName == variableName }
         }
     }
