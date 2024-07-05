@@ -1,9 +1,10 @@
-package com.phodal.shirelang.completion.dataprovider
+package com.phodal.shirelang.compiler.variable
 
 import com.phodal.shirecore.provider.variable.model.PsiContextVariable
 import com.phodal.shirecore.provider.variable.model.ToolchainVariable
 import com.phodal.shirecore.provider.variable.model.VcsToolchainVariable
 import com.phodal.shirelang.compiler.variable.resolver.SystemInfoVariable
+import com.phodal.shirelang.compiler.variable.value.ContextVariable
 
 data class VariableDisplay(
     val name: String,

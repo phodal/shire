@@ -10,7 +10,7 @@ import com.phodal.shirecore.agent.CustomAgent
 import com.phodal.shirecore.markdown.convertMarkdownToHtml
 import com.phodal.shirelang.ShireLanguage
 import com.phodal.shirelang.completion.dataprovider.BuiltinCommand
-import com.phodal.shirelang.completion.dataprovider.CompositeVariableProvider
+import com.phodal.shirelang.compiler.variable.CompositeVariableProvider
 
 class ShireDocumentationProvider : AbstractDocumentationProvider() {
     override fun generateDoc(element: PsiElement?, originalElement: PsiElement?): String? {

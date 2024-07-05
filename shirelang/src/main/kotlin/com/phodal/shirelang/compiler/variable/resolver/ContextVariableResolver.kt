@@ -3,8 +3,8 @@ package com.phodal.shirelang.compiler.variable.resolver
 import com.intellij.psi.PsiNameIdentifierOwner
 import com.phodal.shirelang.compiler.variable.base.VariableResolver
 import com.phodal.shirelang.compiler.variable.base.VariableResolverContext
-import com.phodal.shirelang.completion.dataprovider.ContextVariable
-import com.phodal.shirelang.completion.dataprovider.ContextVariable.*
+import com.phodal.shirelang.compiler.variable.value.ContextVariable
+import com.phodal.shirelang.compiler.variable.value.ContextVariable.*
 
 class ContextVariableResolver(
     private val context: VariableResolverContext
