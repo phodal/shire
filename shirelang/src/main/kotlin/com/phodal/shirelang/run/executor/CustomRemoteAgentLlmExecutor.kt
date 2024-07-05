@@ -23,6 +23,7 @@ class CustomRemoteAgentLlmExecutor(
             if (stringFlow == null) {
                 context.console.print(ShireBundle.message("shire.llm.notfound"), ConsoleViewContentType.ERROR_OUTPUT)
                 context.processHandler.detachProcess()
+                postFunction(null, null)
                 return@invokeLater
             }
 

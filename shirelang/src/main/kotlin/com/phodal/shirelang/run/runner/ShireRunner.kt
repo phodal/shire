@@ -172,6 +172,8 @@ class ShireRunner(
 
         hobbitHole?.executeStreamingEndProcessor(project, console, context)
         hobbitHole?.executeAfterStreamingProcessor(project, console, context)
+
+        processHandler.detachProcess()
     }
 
     private fun printCompiledOutput(
