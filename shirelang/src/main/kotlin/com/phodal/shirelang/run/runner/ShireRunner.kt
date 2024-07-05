@@ -156,9 +156,8 @@ class ShireRunner(
         response: String?,
         textRange: TextRange?,
     ) {
-        var currentFile: PsiFile? = null
-        runData.editor?.virtualFile?.also {
-            currentFile = runReadAction { PsiManager.getInstance(project).findFile(it) }
+        val currentFile = runData.editor?.virtualFile?.let {
+            runReadAction { PsiManager.getInstance(project).findFile(it) }
         }
 
         val context = PostCodeHandleContext(
