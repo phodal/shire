@@ -7,7 +7,7 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.util.elementType
 import com.phodal.shirelang.psi.ShireTypes
 import com.phodal.shirecore.agent.CustomAgent
-import com.phodal.shirecore.markdown.convertMarkdownToHtml
+import com.phodal.shirecore.markdown.MarkdownUtil
 import com.phodal.shirelang.ShireLanguage
 import com.phodal.shirelang.completion.dataprovider.BuiltinCommand
 import com.phodal.shirelang.compiler.variable.CompositeVariableProvider
@@ -51,7 +51,7 @@ class ShireDocumentationProvider : AbstractDocumentationProvider() {
             }
         } ?: return null
 
-        return convertMarkdownToHtml(markdownDoc)
+        return MarkdownUtil.toHtml(markdownDoc)
     }
 
     override fun getCustomDocumentationElement(

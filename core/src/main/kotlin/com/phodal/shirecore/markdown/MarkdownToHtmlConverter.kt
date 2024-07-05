@@ -9,8 +9,10 @@ import org.intellij.markdown.parser.MarkdownParser
 // https://github.com/JetBrains/markdown/issues/72
 private val embeddedHtmlType = IElementType("ROOT")
 
-fun convertMarkdownToHtml(markdownText: String): String {
-  val flavour = GFMFlavourDescriptor()
-  val parsedTree = MarkdownParser(flavour).parse(embeddedHtmlType, markdownText)
-  return HtmlGenerator(markdownText, parsedTree, flavour).generateHtml()
+object MarkdownUtil {
+  fun toHtml(markdownText: String): String {
+    val flavour = GFMFlavourDescriptor()
+    val parsedTree = MarkdownParser(flavour).parse(embeddedHtmlType, markdownText)
+    return HtmlGenerator(markdownText, parsedTree, flavour).generateHtml()
+  }
 }
