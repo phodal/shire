@@ -175,10 +175,14 @@ class ShireRunner(
 
         PostCodeHandleContext.putData(context)
 
-        hobbitHole?.executeStreamingEndProcessor(project, console, context)
-        hobbitHole?.executeAfterStreamingProcessor(project, console, context)
-
-        processHandler.detachProcess()
+        try {
+            hobbitHole?.executeStreamingEndProcessor(project, console, context)
+            hobbitHole?.executeAfterStreamingProcessor(project, console, context)
+        } catch (e: Exception) {
+            console.print(e.message ?: "Error", ConsoleViewContentType.ERROR_OUTPUT)
+        } finally {
+            processHandler.detachProcess()
+        }
     }
 
     private fun printCompiledOutput(
