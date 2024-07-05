@@ -48,10 +48,12 @@ class ShireProgramRunner : GenericProgramRunner<RunnerSettings>(), Disposable {
             isSubscribed = true
         }
 
-
         ApplicationManager.getApplication().invokeAndWait {
             executeResult = shireState.execute(environment.executor, this)
-            result.set(showRunContent(executeResult, environment))
+
+            if (shireState.isShowRunContent) {
+                result.set(showRunContent(executeResult, environment))
+            }
         }
 
         return result.get()

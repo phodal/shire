@@ -18,6 +18,9 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Key
 import com.intellij.ui.components.panels.NonOpaquePanel
+import com.phodal.shirecore.config.ShireActionLocation
+import com.phodal.shirecore.provider.context.ActionLocationEditor
+import com.phodal.shirelang.compiler.ShireSyntaxAnalyzer
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.runner.ShireRunner
 import java.awt.BorderLayout
@@ -34,6 +37,8 @@ open class ShireRunConfigurationProfileState(
 ) : RunProfileState, Disposable {
     private var executionConsole: ConsoleViewImpl? = null
     var console: ShireConsoleView? = null
+
+    var isShowRunContent = true
 
     override fun execute(executor: Executor?, runner: ProgramRunner<*>): ExecutionResult {
         executionConsole = ConsoleViewImpl(myProject, true)
@@ -60,9 +65,18 @@ open class ShireRunConfigurationProfileState(
             return DefaultExecutionResult(console, processHandler)
         }
 
-        ShireRunner(
+        val shireRunner = ShireRunner(
             shireFile, myProject, console!!, configuration, configuration.getUserInput(), processHandler
-        ).execute()
+        )
+        val syntaxAnalyzer = ShireSyntaxAnalyzer(myProject, shireFile, ActionLocationEditor.defaultEditor(myProject))
+        val parsedResult = syntaxAnalyzer.parse()
+
+        val location = parsedResult.config?.actionLocation
+        if (location == ShireActionLocation.TERMINAL_MENU || location == ShireActionLocation.COMMIT_MENU) {
+            isShowRunContent = false
+        }
+
+        shireRunner.execute(parsedResult)
 
         return DefaultExecutionResult(console, processHandler)
     }

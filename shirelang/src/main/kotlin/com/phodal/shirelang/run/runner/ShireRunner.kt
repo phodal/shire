@@ -16,7 +16,6 @@ import com.phodal.shirecore.provider.context.ActionLocationEditor
 import com.phodal.shirelang.ShireBundle
 import com.phodal.shirelang.compiler.SHIRE_ERROR
 import com.phodal.shirelang.compiler.ShireParsedResult
-import com.phodal.shirelang.compiler.ShireSyntaxAnalyzer
 import com.phodal.shirelang.compiler.ShireTemplateCompiler
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.psi.ShireFile
@@ -43,10 +42,7 @@ class ShireRunner(
 ) {
     private val terminalLocationExecutor = TerminalLocationExecutor.provide(project)
 
-    fun execute() {
-        val syntaxAnalyzer = ShireSyntaxAnalyzer(project, shireFile, ActionLocationEditor.defaultEditor(project))
-        val parsedResult = syntaxAnalyzer.parse()
-
+    fun execute(parsedResult: ShireParsedResult) {
         val runnerContext = processTemplateCompile(parsedResult)
         if (runnerContext.hasError) return
 
