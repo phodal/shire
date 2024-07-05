@@ -3,6 +3,7 @@ package com.phodal.shirecore.middleware.builtin
 import com.intellij.execution.ui.ConsoleView
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.Disposable
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.WriteAction
 import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.command.WriteCommandAction
@@ -11,6 +12,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.vcs.log.runInEdt
 import com.intellij.vcs.log.runInEdtAsync
 import com.phodal.shirecore.SHIRE_TEMP_OUTPUT
 import com.phodal.shirecore.middleware.BuiltinPostHandler
@@ -31,7 +33,7 @@ class SaveFileProcessor : PostProcessor, Disposable {
 
         Disposer.register(this, disposableFlag)
 
-        runInEdtAsync(disposable = disposableFlag) {
+        ApplicationManager.getApplication().invokeAndWait {
             WriteAction.compute<VirtualFile, Throwable> {
                 val outputDir = project.guessProjectDir()?.findChild(SHIRE_TEMP_OUTPUT)
                     ?: project.guessProjectDir()?.createChildDirectory(this, SHIRE_TEMP_OUTPUT)
