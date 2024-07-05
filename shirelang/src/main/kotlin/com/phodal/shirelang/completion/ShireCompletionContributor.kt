@@ -34,6 +34,8 @@ class ShireCompletionContributor : CompletionContributor() {
         extend(CompletionType.BASIC, hobbitHoleKey(), HobbitHoleKeyCompletion())
         extend(CompletionType.BASIC, hobbitHolePattern(), HobbitHoleValueCompletion())
 
+        extend(CompletionType.BASIC, identifierAfter(ShireTypes.PIPE), PostProcessorCompletion())
+
         extend(CompletionType.BASIC, whenConditionPattern(), WhenConditionCompletionProvider())
         extend(CompletionType.BASIC, whenConditionFuncPattern(), WhenConditionFunctionCompletionProvider())
 
