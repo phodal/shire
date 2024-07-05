@@ -5,7 +5,6 @@ import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
-import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirecore.config.interaction.PostFunction
@@ -95,6 +94,10 @@ class ShireRunner(
             templateCompiler.putCustomVariable("input", userInput)
         }
 
+        PostCodeHandleContext.getData()?.lastTaskOutput?.let {
+            templateCompiler.putCustomVariable("output", it)
+        }
+
         val promptTextTrim = templateCompiler.compile().trim()
         printCompiledOutput(console, promptTextTrim, configuration)
 
@@ -167,6 +170,7 @@ class ShireRunner(
             genText = response,
             modifiedTextRange = textRange,
             editor = runData.editor,
+            lastTaskOutput = response,
         )
 
         hobbitHole?.executeStreamingEndProcessor(project, console, context)

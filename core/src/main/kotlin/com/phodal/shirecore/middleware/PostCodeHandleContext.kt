@@ -63,7 +63,9 @@ class PostCodeHandleContext(
     /**
      * current editor for modify
      */
-    val editor: Editor?
+    val editor: Editor?,
+
+    val lastTaskOutput: String? = null,
 ) {
     companion object {
         private val DATA_KEY: Key<PostCodeHandleContext> = Key.create(PostCodeHandleContext::class.java.name)
@@ -79,6 +81,10 @@ class PostCodeHandleContext(
 
         fun putData(context: PostCodeHandleContext) {
             UserDataHolderBase().putUserData(DATA_KEY, context)
+        }
+
+        fun getData(): PostCodeHandleContext? {
+            return UserDataHolderBase().getUserData(DATA_KEY)
         }
     }
 }
