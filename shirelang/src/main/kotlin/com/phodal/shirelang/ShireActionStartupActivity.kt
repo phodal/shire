@@ -10,8 +10,8 @@ import com.intellij.openapi.startup.ProjectActivity
 import com.intellij.psi.PsiManager
 import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.GlobalSearchScope
-import com.phodal.shirelang.actions.dynamic.DynamicShireActionConfig
-import com.phodal.shirelang.actions.dynamic.DynamicShireActionService
+import com.phodal.shirelang.actions.base.DynamicShireActionConfig
+import com.phodal.shirelang.actions.base.DynamicShireActionService
 import com.phodal.shirelang.compiler.parser.FrontmatterParser
 import com.phodal.shirelang.psi.ShireFile
 

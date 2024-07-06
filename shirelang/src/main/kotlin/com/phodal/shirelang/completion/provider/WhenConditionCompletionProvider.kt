@@ -7,7 +7,7 @@ import com.intellij.codeInsight.completion.PrioritizedLookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.util.ProcessingContext
 import com.phodal.shirelang.ShireIcons
-import com.phodal.shirelang.actions.validator.PsiVariables
+import com.phodal.shirecore.provider.variable.model.ConditionPsiVariable
 import com.phodal.shirelang.compiler.hobbit.ast.ExpressionBuiltInMethod
 
 class WhenConditionCompletionProvider : CompletionProvider<CompletionParameters>() {
@@ -16,12 +16,13 @@ class WhenConditionCompletionProvider : CompletionProvider<CompletionParameters>
         context: ProcessingContext,
         result: CompletionResultSet,
     ) {
-        PsiVariables.completionProvider().forEach {
+        ConditionPsiVariable.values().forEach {
             val withTypeText =
                 PrioritizedLookupElement.withPriority(
-                    LookupElementBuilder.create(it.key)
+                    LookupElementBuilder
+                        .create(it.name)
                         .withIcon(ShireIcons.DEFAULT)
-                        .withTypeText(it.value, true),
+                        .withTypeText(it.description, true),
                     199.0
                 )
 

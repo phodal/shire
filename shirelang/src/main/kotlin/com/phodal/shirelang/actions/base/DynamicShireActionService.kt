@@ -1,4 +1,4 @@
-package com.phodal.shirelang.actions.dynamic
+package com.phodal.shirelang.actions.base
 
 import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.AnAction

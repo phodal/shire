@@ -19,7 +19,7 @@ import com.phodal.shirecore.ShireCoreBundle
 import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirecore.provider.action.TerminalLocationExecutor
 import com.phodal.shirelang.actions.ShireRunFileAction
-import com.phodal.shirelang.actions.dynamic.DynamicShireActionService
+import com.phodal.shirelang.actions.base.DynamicShireActionService
 import java.awt.Component
 import java.awt.Font
 import java.awt.Point

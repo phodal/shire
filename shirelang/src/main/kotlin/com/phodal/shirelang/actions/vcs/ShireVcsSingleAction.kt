@@ -5,7 +5,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.DumbAwareAction
 import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirelang.actions.ShireRunFileAction
-import com.phodal.shirelang.actions.dynamic.DynamicShireActionService
+import com.phodal.shirelang.actions.base.DynamicShireActionService
 
 class ShireVcsSingleAction : DumbAwareAction() {
     override fun getActionUpdateThread() = ActionUpdateThread.EDT

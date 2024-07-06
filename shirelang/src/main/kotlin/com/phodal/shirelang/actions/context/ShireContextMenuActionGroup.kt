@@ -5,8 +5,7 @@ import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.phodal.shirecore.config.ShireActionLocation
-import com.phodal.shirelang.actions.base.ShireContextMenuAction
-import com.phodal.shirelang.actions.dynamic.DynamicShireActionService
+import com.phodal.shirelang.actions.base.DynamicShireActionService
 
 class ShireContextMenuActionGroup : ActionGroup() {
     override fun getActionUpdateThread(): ActionUpdateThread {

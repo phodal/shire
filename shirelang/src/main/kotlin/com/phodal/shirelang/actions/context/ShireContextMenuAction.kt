@@ -1,4 +1,4 @@
-package com.phodal.shirelang.actions.base
+package com.phodal.shirelang.actions.context
 
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -6,8 +6,9 @@ import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.project.DumbAwareAction
 import com.phodal.shirelang.ShireIcons
 import com.phodal.shirelang.actions.ShireRunFileAction
-import com.phodal.shirelang.actions.dynamic.DynamicShireActionConfig
+import com.phodal.shirelang.actions.base.DynamicShireActionConfig
 import com.phodal.shirelang.actions.validator.WhenConditionValidator
+import kotlin.let
 
 class ShireContextMenuAction(private val config: DynamicShireActionConfig) :
     DumbAwareAction(config.name, config.hole?.description, ShireIcons.DEFAULT) {

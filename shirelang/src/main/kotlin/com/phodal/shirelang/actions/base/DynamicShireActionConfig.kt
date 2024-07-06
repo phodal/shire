@@ -1,4 +1,4 @@
-package com.phodal.shirelang.actions.dynamic
+package com.phodal.shirelang.actions.base
 
 import com.intellij.openapi.editor.Editor
 import com.phodal.shirelang.compiler.parser.FrontmatterParser

@@ -5,7 +5,11 @@ package com.phodal.shirecore.provider.variable.model
  *
  * @property variableName the name of the context variable
  */
-enum class PsiContextVariable(val variableName: String, val description: String?) {
+enum class PsiContextVariable(
+    override val variableName: String,
+    override val description: String,
+    override var value: Any? = null,
+) : Variable {
     /**
      * Represents the PsiNameIdentifierOwner of the current class, used to retrieve the class name.
      */
@@ -38,12 +42,18 @@ enum class PsiContextVariable(val variableName: String, val description: String?
     /**
      * Flag indicating whether the code structure is being generated in a new file.
      */
-    IS_NEED_CREATE_FILE("isNeedCreateFile", "Flag indicating whether the code structure is being generated in a new file"),
+    IS_NEED_CREATE_FILE(
+        "isNeedCreateFile",
+        "Flag indicating whether the code structure is being generated in a new file"
+    ),
 
     /**
      * The name of the target test file where the code structure will be generated.
      */
-    TARGET_TEST_FILE_NAME("targetTestFileName", "The name of the target test file where the code structure will be generated"),
+    TARGET_TEST_FILE_NAME(
+        "targetTestFileName",
+        "The name of the target test file where the code structure will be generated"
+    ),
 
     /**
      * underTestMethod

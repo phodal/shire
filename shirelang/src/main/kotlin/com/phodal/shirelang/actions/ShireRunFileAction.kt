@@ -17,7 +17,7 @@ import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
 import com.phodal.shirelang.ShireActionStartupActivity
-import com.phodal.shirelang.actions.dynamic.DynamicShireActionConfig
+import com.phodal.shirelang.actions.base.DynamicShireActionConfig
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.ShireConfiguration
 import com.phodal.shirelang.run.ShireConfigurationType

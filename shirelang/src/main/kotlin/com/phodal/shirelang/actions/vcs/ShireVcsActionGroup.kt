@@ -8,8 +8,8 @@ import com.intellij.openapi.project.DumbAwareAction
 import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirelang.ShireIcons
 import com.phodal.shirelang.actions.ShireRunFileAction
-import com.phodal.shirelang.actions.dynamic.DynamicShireActionConfig
-import com.phodal.shirelang.actions.dynamic.DynamicShireActionService
+import com.phodal.shirelang.actions.base.DynamicShireActionConfig
+import com.phodal.shirelang.actions.base.DynamicShireActionService
 
 class ShireVcsActionGroup : ActionGroup() {
     override fun getActionUpdateThread() = ActionUpdateThread.BGT

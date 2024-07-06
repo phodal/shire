@@ -11,8 +11,8 @@ import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.IdeFocusManager
 import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirelang.actions.ShireRunFileAction.Companion.executeShireFile
-import com.phodal.shirelang.actions.dynamic.DynamicShireActionConfig
-import com.phodal.shirelang.actions.dynamic.DynamicShireActionService
+import com.phodal.shirelang.actions.base.DynamicShireActionConfig
+import com.phodal.shirelang.actions.base.DynamicShireActionService
 import com.phodal.shirelang.actions.input.inlay.CustomInputBox
 import com.phodal.shirelang.actions.input.inlay.CustomInputBox.Companion.CUSTOM_INPUT_CANCEL_ACTION
 import com.phodal.shirelang.actions.input.inlay.CustomInputBox.Companion.CUSTOM_INPUT_SUBMIT_ACTION

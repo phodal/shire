@@ -6,11 +6,7 @@ import kotlin.reflect.full.companionObjectInstance
 import kotlin.reflect.full.declaredFunctions
 import kotlin.reflect.full.functions
 
-interface ToolchainVariable {
-    val variableName: String
-    var value: Any?
-    val description: String
-
+interface ToolchainVariable : Variable {
     companion object {
         private val subclasses: Set<KClass<out ToolchainVariable>> by lazy {
             val reflections = Reflections("com.phodal.shirecore.provider.variable.model")
