@@ -18,37 +18,31 @@ import javax.swing.JComponent
 import javax.swing.JPanel
 
 open class InlayPanel<T : JComponent?>(var component: T) : JPanel() {
-    val panel: JPanel
-    var inlay: Inlay<*>? = null
-
-    private val visibleAreaListener: VisibleAreaListener
-
-    init {
-        panel = object : JPanel() {
-            init {
-                setOpaque(false)
-                setBorder(JBUI.Borders.empty())
-            }
-
-            override fun paintComponent(g: Graphics) {
-                super.paintComponent(g)
-                val create: Graphics2D? = g.create() as Graphics2D?
-                try {
-                    create!!.paint2DLine(JBPoint(0, 0), JBPoint(0, height),
-                        LinePainter2D.StrokeType.INSIDE, 3.0,
-                        JBColor(Color(0, 100, 89, 100), Color(0, 0, 0, 90))
-                    )
-
-                    create.dispose()
-                } catch (th: Throwable) {
-                    create!!.dispose()
-                    throw th
-                }
-            }
+    val panel: JPanel = object : JPanel() {
+        init {
+            setOpaque(false)
+            setBorder(JBUI.Borders.empty())
         }
 
-        visibleAreaListener = VisibleAreaListener { invalidate() }
+        override fun paintComponent(g: Graphics) {
+            super.paintComponent(g)
+            val create: Graphics2D? = g.create() as Graphics2D?
+            try {
+                create!!.paint2DLine(JBPoint(0, 0), JBPoint(0, height),
+                    LinePainter2D.StrokeType.INSIDE, 3.0,
+                    JBColor(Color(0, 100, 89, 100), Color(0, 0, 0, 90))
+                )
+
+                create.dispose()
+            } catch (th: Throwable) {
+                create!!.dispose()
+                throw th
+            }
+        }
     }
+
+    var inlay: Inlay<*>? = null
+    private val visibleAreaListener: VisibleAreaListener = VisibleAreaListener { invalidate() }
 
     protected open fun setupPane(inlay: Inlay<*>) {
         this.inlay = inlay

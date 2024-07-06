@@ -24,7 +24,7 @@ class ShireContextMenuAction(private val config: DynamicShireActionConfig) :
             e.presentation.isEnabled = it
             e.presentation.isVisible = it
 
-            e.presentation.text = config.hole.description ?: ""
+            e.presentation.text = config.hole.description
         }
     }
 

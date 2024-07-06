@@ -37,7 +37,6 @@ class ShireInputBoxAction : DumbAwareAction() {
         val editor = dataContext.getData(CommonDataKeys.EDITOR) ?: return
         val offset = editor.caretModel.offset
         val project = dataContext.getData(CommonDataKeys.PROJECT) ?: return
-        val element = e.getData(CommonDataKeys.PSI_ELEMENT)
 
         val instance = DynamicShireActionService.getInstance()
         val config = shireActionConfigs().first()

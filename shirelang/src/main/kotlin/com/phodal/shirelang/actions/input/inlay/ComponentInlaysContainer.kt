@@ -84,7 +84,7 @@ internal class ComponentInlaysContainer(val editor: Editor) : JComponent() {
                 }
                 component.remove(inlay.renderer.component)
 
-                if (component.getInlays().size == 0) {
+                if (component.getInlays().isEmpty()) {
                     editor.contentComponent.removeComponentListener(component.editorResizeListener)
                     editor.contentComponent.remove(inlay.renderer.component)
                 }
