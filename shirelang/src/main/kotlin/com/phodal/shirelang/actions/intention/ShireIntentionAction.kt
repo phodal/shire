@@ -11,16 +11,7 @@ import com.phodal.shirelang.actions.ShireRunFileAction
 import com.phodal.shirelang.actions.base.DynamicShireActionService
 import com.phodal.shirelang.actions.validator.WhenConditionValidator
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
-
-object IntentionHelperUtil {
-    fun getAiAssistantIntentions(file: PsiFile, event: AnActionEvent?): List<IntentionAction> {
-        val shireActionConfigs = DynamicShireActionService.getInstance().getAction(ShireActionLocation.INTENTION_MENU)
-
-        return shireActionConfigs.map { actionConfig ->
-            ShireIntentionAction(actionConfig.hole, file, event)
-        }
-    }
-}
+import kotlin.collections.firstOrNull
 
 class ShireIntentionAction(private val hobbitHole: HobbitHole?, val file: PsiFile, private val event: AnActionEvent?) :
     IntentionAction {

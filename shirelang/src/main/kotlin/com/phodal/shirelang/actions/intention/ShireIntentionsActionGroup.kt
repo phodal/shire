@@ -17,7 +17,7 @@ class ShireIntentionsActionGroup : ActionGroup("Shire Intention", true), DumbAwa
         val editor: Editor = e.getData(CommonDataKeys.EDITOR) ?: return emptyArray()
         val file: PsiFile = e.getData(CommonDataKeys.PSI_FILE) ?: return emptyArray()
 
-        val intentions: List<IntentionAction> = IntentionHelperUtil.getAiAssistantIntentions(file, e)
+        val intentions: List<IntentionAction> = ShireIntentionHelper.getAiAssistantIntentions(file, e)
 
         return intentions.map { action ->
             DumbAwareAction.create(action.text) {

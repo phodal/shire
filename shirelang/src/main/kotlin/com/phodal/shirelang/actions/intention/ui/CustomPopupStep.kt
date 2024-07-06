@@ -22,7 +22,7 @@ class CustomPopupStep(
 
     override fun onChosen(selectedValue: IntentionAction?, finalChoice: Boolean): PopupStep<*>? {
         return doFinalStep {
-            selectedValue!!.invoke(project, editor, psiFile)
+            selectedValue?.invoke(project, editor, psiFile)
         }
     }
 }
