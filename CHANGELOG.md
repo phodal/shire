@@ -1,6 +1,69 @@
-# [](https://github.com/phodal/shire/compare/v0.0.8...v) (2024-07-01)
+# [](https://github.com/phodal/shire/compare/v0.3.0...v) (2024-07-06)
 
 ## [Unreleased]
+
+## [0.3.0] - 2024-07-06
+
+### Bug Fixes
+
+- **compiler:** handle null defaultTask in TaskRoutes.kt ([10cfc67](https://github.com/phodal/shire/commit/10cfc67464c249822a1abdc400bbadd32726537b))
+- **completion:** update HobbitHoleValueCompletion to display action location with descriptions. ([71153b4](https://github.com/phodal/shire/commit/71153b4a8aed7d8c617b1ec37cd39762a04ca1cf))
+- **config:** handle nullable Flow<String> in EditorInteractionProvider ([6086166](https://github.com/phodal/shire/commit/6086166d6e95bf7c1d24e13fba5e6587ed74d349))
+- **core:** ensure thread safety in BaseCodeGenTask.kt ([4479e8a](https://github.com/phodal/shire/commit/4479e8aef4356f49ac6bb2ee7c5674415e3c6359))
+- **run:** handle line markers for leaf elements only ([62f09f6](https://github.com/phodal/shire/commit/62f09f6399e03b5e14500b268341e99ad5ab80f1))
+- **runner:** detach process handler in ShireRunner ([041c356](https://github.com/phodal/shire/commit/041c35682330af2257c80b8bb63377b0f5b72317))
+- **shirelang:** check for null before adding action to toolsMenu ([289f578](https://github.com/phodal/shire/commit/289f57876eecea204acdabde87dec7016b5d4857))
+- **shirelang:** update line marker provider to support front matter entries ([2e843a9](https://github.com/phodal/shire/commit/2e843a913b19fb201190212f5d35244064495274))
+
+### Features
+
+- **actions:** add method to set keymap shortcut ([f99686a](https://github.com/phodal/shire/commit/f99686a6017f9a50a506aa31a77f6902ff96adae))
+- **code-completion:** refactor code completion task and add InsertUtil [#29](https://github.com/phodal/shire/issues/29) ([b02987e](https://github.com/phodal/shire/commit/b02987edb180f8dc4db36a607651d512fc3b6d1e))
+- **compiler:** add CaseMatch functionality in PatternActionFunc [#29](https://github.com/phodal/shire/issues/29) ([0521198](https://github.com/phodal/shire/commit/05211984004d3e0b96e77c76a6a252e168eafd87))
+- **compiler:** add save file functionality ([c6bbde6](https://github.com/phodal/shire/commit/c6bbde6e87f9aa065e7daa9832f6bacec1197878))
+- **compiler:** add support for WHEN condition and VARIABLES ([593abd5](https://github.com/phodal/shire/commit/593abd56c897d527891ae0e365f177aad0809b18))
+- **completion:** add PostProcessor completion provider ([4968586](https://github.com/phodal/shire/commit/49685869b416679d0c050d06d2bfa523e3266c6d))
+- **completion:** add PSI context variables to VariableCompletionProvider [#29](https://github.com/phodal/shire/issues/29) ([564b0fe](https://github.com/phodal/shire/commit/564b0fe36aa318bb852b08a5e000edc05d315be5))
+- **completion:** add QueryStatementCompletion provider ([696a306](https://github.com/phodal/shire/commit/696a3069f8e4302f94fdfed4c5b0d87e56511580))
+- **core:** add code completion task and related changes [#29](https://github.com/phodal/shire/issues/29) ([34eb6fe](https://github.com/phodal/shire/commit/34eb6fec9f5d70b99068870382f7fe8f1cc7154c))
+- **core:** add GitActionLocationEditor for commit menu ([48db3c4](https://github.com/phodal/shire/commit/48db3c4e1325ab93201fcde518cd4924cc58f2f8))
+- **core:** add postExecute callback to code execution tasks [#29](https://github.com/phodal/shire/issues/29) ([af6567b](https://github.com/phodal/shire/commit/af6567bfdf418643d44af590ce1a266b422b8a92))
+- **core:** add postExecute invocation and update interactionType in ShireDefaultRunner [#29](https://github.com/phodal/shire/issues/29) ([8bc4b8b](https://github.com/phodal/shire/commit/8bc4b8bf2b9ee1397286b1769db504b953e72c29))
+- **core:** add reflection support for ToolchainVariable ([72ec463](https://github.com/phodal/shire/commit/72ec463441f50c0a65adc174c65e8a7fcdc86700))
+- **docs:** add agent examples and documentation provider ([8d7aafe](https://github.com/phodal/shire/commit/8d7aafeb9107503fa3797700a214db19b37939de))
+- **docs:** add examples for code comments, refactoring, CLI copilot, and commit message generation ([1e07f68](https://github.com/phodal/shire/commit/1e07f689fc50d0eaa4eff7c72339765d6b646dff))
+- **EditorInteractionProvider:** enhance task creation and error handling [#29](https://github.com/phodal/shire/issues/29) ([e0f34a3](https://github.com/phodal/shire/commit/e0f34a381cc19847330881966d02956f891786f8))
+- **git:** add commit message UI retrieval improvement in ShireVcsSingleAction ([a8f11de](https://github.com/phodal/shire/commit/a8f11de61dcc51fa55a128f05140a8e83223b73d))
+- **input:** add custom input box action ([8ec40a4](https://github.com/phodal/shire/commit/8ec40a41517b17f5644268a9eb2ea885233377c6))
+- **interaction:** add support for running code in Run panel ([7c4e8d5](https://github.com/phodal/shire/commit/7c4e8d5f4f798e73b01fa91a473afb66c3e1ec5c))
+- **interaction:** improve code completion and generation tasks [#29](https://github.com/phodal/shire/issues/29) ([957e75d](https://github.com/phodal/shire/commit/957e75dbef245538472313595882c872093c1309))
+- **interaction:** refactor code generation tasks and add BaseCodeGenTask [#29](https://github.com/phodal/shire/issues/29) ([0f84b3b](https://github.com/phodal/shire/commit/0f84b3bd80af33b07c5831ad5441b9df1ee9a7a8))
+- **java:** add class structure representation and data builder [#29](https://github.com/phodal/shire/issues/29) ([90f2364](https://github.com/phodal/shire/commit/90f2364ffbbb45f73a6e09e801461080d8a9010a))
+- **java:** add method caller and called method lookup [#29](https://github.com/phodal/shire/issues/29) ([6b46c00](https://github.com/phodal/shire/commit/6b46c001b5f0a209b8cfd65418205c5206698852))
+- **java:** add methods to retrieve containing class and method ([b4c26ea](https://github.com/phodal/shire/commit/b4c26eaf868a1dfb9845d377b330b933d97eda61))
+- **keyboard:** add support for setting keymap shortcuts ([4eda080](https://github.com/phodal/shire/commit/4eda0800f6b168c315b1ce72231a66508ef625ef))
+- **lints:** add duplicate agent inspection ([7947d3c](https://github.com/phodal/shire/commit/7947d3cd92329d9e81a241682646dfdb566e0002))
+- **logging:** improve error handling and logging in ShireActionStartupActivity ([e661e16](https://github.com/phodal/shire/commit/e661e161f51a7837cbdb88387bbc3b7533eb306e))
+- **middleware:** add InsertNewlineProcessor ([73cebef](https://github.com/phodal/shire/commit/73cebef93bff5e71558938e8d6153f906276a895))
+- **middleware:** add ParseCommentProcessor ([aafb938](https://github.com/phodal/shire/commit/aafb9386c5e9e55a54577c531cd770c83a557f5f))
+- **provider:** add terminal location executor ([99c93a0](https://github.com/phodal/shire/commit/99c93a0da396940ddd1f2fe1c186474d609fbcce))
+- **runner:** add support for user input in Shire configuration ([6ffebd6](https://github.com/phodal/shire/commit/6ffebd6a2fd0ab5004dde65526b2eb11de395dd1))
+- **runner:** refactor ShireRunner to improve terminal task execution and error handling ([b236ad2](https://github.com/phodal/shire/commit/b236ad2f5c7b238c26e7e021d17991aaf312bc0f))
+- **shirelang:** add icon support and improve line marker provider [#29](https://github.com/phodal/shire/issues/29) ([f12c199](https://github.com/phodal/shire/commit/f12c19900f307ff84e057b304564e0b5d37e5454))
+- **shirelang:** add ShirePsiExprLineMarkerProvider for line marker support [#29](https://github.com/phodal/shire/issues/29) ([1a5c3ca](https://github.com/phodal/shire/commit/1a5c3ca56752179586baf390c85a4f21f2c4bd07))
+- **shirelang:** refactor and improve pattern action processing [#29](https://github.com/phodal/shire/issues/29) ([57689a2](https://github.com/phodal/shire/commit/57689a2ae0e8c803bbeb6e646e95f39ec095a8e9))
+- **shirelang:** update line marker provider for ShirePsiExpr ([6448aa1](https://github.com/phodal/shire/commit/6448aa154ccc9a6e02213cf664dc7d6aa84aa05d))
+- **shirelang:** update line marker provider to support front matter entries ([1d4bb4b](https://github.com/phodal/shire/commit/1d4bb4b4c9403b88ede31b2ca38b92e1ce4d8fef))
+- **terminal:** add input box popup for terminal action ([03dce26](https://github.com/phodal/shire/commit/03dce2625011eea61cd3b2b5e0860527a904229f))
+- **terminal:** add shell command suggestion action ([958340c](https://github.com/phodal/shire/commit/958340c89a7dcc8e6e1eef190d31f409356be83c))
+- **terminal:** add ShireTerminalAction for custom assistants ([01023de](https://github.com/phodal/shire/commit/01023de953d69115760d0b6c29a085f344a2f067))
+- **terminal:** add TerminalToolchainVariableProvider ([8b13dc3](https://github.com/phodal/shire/commit/8b13dc39d88636f34196e7807c700d94f957feb3))
+- **variable:** add BuiltinVariable and resolver ([f88af49](https://github.com/phodal/shire/commit/f88af49fe0bc197eb9d1443c0addafb1d7157667))
+- **variable:** add SystemInfoVariable and resolver ([c1a54eb](https://github.com/phodal/shire/commit/c1a54eb4cdc1f06cbb0b47d7ce58e639d56404bd))
+- **VariableCompletionProvider:** add icon to variable lookup elements [#29](https://github.com/phodal/shire/issues/29) ([7ae12c5](https://github.com/phodal/shire/commit/7ae12c5f071c1ec494f7410f482a4375a1eba01b))
+- **variables:** add code smell detection and test data generation [#29](https://github.com/phodal/shire/issues/29) ([3763184](https://github.com/phodal/shire/commit/3763184da20ade0d3df8a9916730855438502f41))
+- **variables:** add support for similar code search ([5fe7f8f](https://github.com/phodal/shire/commit/5fe7f8f2db96727312d56101e77abff9726e9138))
+- **vcs): add Shirefeat VCS single(vcs:** action ([e982cec](https://github.com/phodal/shire/commit/e982cecd524b786fd0c30d12770587286082e3f4))
 
 ## [0.0.8](https://github.com/phodal/shire/compare/v0.0.7...v[0.0.8]) (2024-07-01)
 
@@ -256,7 +319,8 @@
 - **shell:** add shell language support plugin file ([bdc1c90](https://github.com/phodal/shire/commit/bdc1c90f10d7c2c4fb8f7157db343dd756c11352))
 - **shire:** add Shire context action group and location support ([e3df86d](https://github.com/phodal/shire/commit/e3df86d16d0c9985fec787a8e76ce553be9a9a45))
 
-[Unreleased]: https://github.com/phodal/shire/compare/v0.0.8...HEAD
+[Unreleased]: https://github.com/phodal/shire/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/phodal/shire/compare/v0.0.8...v0.3.0
 [0.0.8]: https://github.com/phodal/shire/compare/v0.0.7...v0.0.8
 [0.0.7]: https://github.com/phodal/shire/compare/v0.0.6...v0.0.7
 [0.0.6]: https://github.com/phodal/shire/compare/v0.0.4...v0.0.6
