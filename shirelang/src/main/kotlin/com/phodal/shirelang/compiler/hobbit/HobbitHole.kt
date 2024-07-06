@@ -4,6 +4,7 @@ import com.intellij.execution.ui.ConsoleView
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.actionSystem.KeyboardShortcut
 import com.intellij.openapi.application.runReadAction
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.config.ShireActionLocation
@@ -35,7 +36,7 @@ open class HobbitHole(
     /**
      * Tips for the action.
      */
-    val description: String,
+    val description: String?,
     /**
      * The output of the action can be a file, a string, etc.
      */
@@ -213,6 +214,7 @@ open class HobbitHole(
                 try {
                     TaskRoutes.from(it)
                 } catch (e: Exception) {
+                    logger<HobbitHole>().warn("Error to parse after streaming: $e")
                     null
                 }
             }
