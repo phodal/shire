@@ -23,7 +23,7 @@ class PostCodeHandleContext(
     /**
      * The language of the code to be handled, which will parse from the GenText when parse code
      */
-    var currentLanguage: Language?,
+    var currentLanguage: Language? = null,
 
     /**
      * Convert code to file
@@ -65,7 +65,7 @@ class PostCodeHandleContext(
     /**
      * current editor for modify
      */
-    val editor: Editor?,
+    val editor: Editor? = null,
 
     val lastTaskOutput: String? = null,
 ) {

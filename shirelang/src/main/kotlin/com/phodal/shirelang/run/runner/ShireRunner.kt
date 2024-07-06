@@ -2,7 +2,10 @@ package com.phodal.shirelang.run.runner
 
 import com.intellij.execution.console.ConsoleViewWrapperBase
 import com.intellij.execution.ui.ConsoleViewContentType
+import com.intellij.ide.DataManager
+import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.application.runReadAction
+import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiManager
@@ -43,6 +46,8 @@ class ShireRunner(
     private val terminalLocationExecutor = TerminalLocationExecutor.provide(project)
 
     fun execute(parsedResult: ShireParsedResult) {
+        prepareExecute(parsedResult)
+
         val runnerContext = processTemplateCompile(parsedResult)
         if (runnerContext.hasError) return
 
@@ -50,15 +55,17 @@ class ShireRunner(
             .createConversation(configuration.getScriptPath(), runnerContext.compileResult)
 
         if (runnerContext.hole?.actionLocation == ShireActionLocation.TERMINAL_MENU) {
-            executeTerminalTask(runnerContext) { response, textRange ->
+            executeTerminalUiTask(runnerContext) { response, textRange ->
                 executePostFunction(runnerContext, runnerContext.hole, response, textRange)
             }
         } else {
-            executeLlmTask(runnerContext)
+            executeNormalUiTask(runnerContext) { response, textRange ->
+                executePostFunction(runnerContext, runnerContext.hole, response, textRange)
+            }
         }
     }
 
-    private fun executeTerminalTask(context: ShireRunnerContext, postFunction: PostFunction) {
+    private fun executeTerminalUiTask(context: ShireRunnerContext, postFunction: PostFunction) {
         CoroutineScope(Dispatchers.Main).launch {
             val handler = terminalLocationExecutor?.bundler(project, userInput)
             if (handler == null) {
@@ -124,7 +131,7 @@ class ShireRunner(
         )
     }
 
-    fun executeLlmTask(runData: ShireRunnerContext) {
+    fun executeNormalUiTask(runData: ShireRunnerContext, postFunction: PostFunction) {
         val agent = runData.compileResult.executeAgent
         val hobbitHole = runData.hole
 
@@ -148,29 +155,26 @@ class ShireRunner(
             }
         }
 
-        shireLlmExecutor.prepareTask()
-        shireLlmExecutor.execute { response, textRange ->
-            executePostFunction(runData, hobbitHole, response, textRange)
-        }
+        shireLlmExecutor.execute(postFunction)
     }
 
     private fun executePostFunction(
-        runData: ShireRunnerContext,
+        runnerContext: ShireRunnerContext,
         hobbitHole: HobbitHole?,
         response: String?,
         textRange: TextRange?,
     ) {
-        val currentFile = runData.editor?.virtualFile?.let {
+        val currentFile = runnerContext.editor?.virtualFile?.let {
             runReadAction { PsiManager.getInstance(project).findFile(it) }
         }
 
         val context = PostCodeHandleContext(
-            selectedEntry = hobbitHole?.pickupElement(project, runData.editor),
+            selectedEntry = hobbitHole?.pickupElement(project, runnerContext.editor),
             currentLanguage = currentFile?.language,
             currentFile = currentFile,
             genText = response,
             modifiedTextRange = textRange,
-            editor = runData.editor,
+            editor = runnerContext.editor,
             lastTaskOutput = response,
         )
 
@@ -209,5 +213,22 @@ class ShireRunner(
         }
 
         console.print("\n--------------------\n", ConsoleViewContentType.NORMAL_OUTPUT)
+    }
+
+    fun prepareExecute(parsedResult: ShireParsedResult) {
+        val hobbitHole = parsedResult.config
+        val editor = FileEditorManager.getInstance(project).selectedTextEditor
+        val pickupElement = hobbitHole?.pickupElement(project, editor)
+        val file = DataManager.getInstance().getDataContext().getData(CommonDataKeys.PSI_FILE)
+
+        val context = PostCodeHandleContext.getData() ?: PostCodeHandleContext(
+            selectedEntry = pickupElement,
+            currentLanguage = file?.language,
+            currentFile = file,
+            editor = editor,
+        )
+        PostCodeHandleContext.putData(context)
+        hobbitHole?.setupStreamingEndProcessor(project, context)
+
     }
 }

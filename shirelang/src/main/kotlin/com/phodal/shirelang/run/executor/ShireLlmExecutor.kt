@@ -20,7 +20,4 @@ data class ShireLlmExecutorContext(
 
 abstract class ShireLlmExecutor(open val context: ShireLlmExecutorContext) {
     abstract fun execute(postFunction: PostFunction)
-    fun prepareTask() {
-
-    }
 }

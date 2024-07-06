@@ -9,18 +9,12 @@ import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirecore.middleware.PostCodeHandleContext
 import com.phodal.shirelang.ShireBundle
 import com.phodal.shirelang.actions.ShireRunFileAction
-import com.phodal.shirelang.actions.dynamic.DynamicShireActionConfig
 import com.phodal.shirelang.actions.dynamic.DynamicShireActionService
 import com.phodal.shirelang.actions.validator.WhenConditionValidator
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 
 object IntentionHelperUtil {
-    fun getAiAssistantIntentions(
-        project: Project,
-        editor: Editor?,
-        file: PsiFile,
-        event: AnActionEvent?,
-    ): List<IntentionAction> {
+    fun getAiAssistantIntentions(file: PsiFile, event: AnActionEvent?): List<IntentionAction> {
         val shireActionConfigs = DynamicShireActionService.getInstance().getAction(ShireActionLocation.INTENTION_MENU)
 
         return shireActionConfigs.map { actionConfig ->
@@ -31,7 +25,7 @@ object IntentionHelperUtil {
 
 class ShireIntentionAction(private val hobbitHole: HobbitHole?, val file: PsiFile, private val event: AnActionEvent?) :
     IntentionAction {
-    override fun startInWriteAction(): Boolean = false
+    override fun startInWriteAction(): Boolean = true
     override fun getFamilyName(): String = ShireBundle.message("shire.intention")
     override fun getText(): String = hobbitHole?.description ?: ShireBundle.message("shire.intention")
 
@@ -41,17 +35,10 @@ class ShireIntentionAction(private val hobbitHole: HobbitHole?, val file: PsiFil
     }
 
     override fun invoke(project: Project, editor: Editor?, file: PsiFile?) {
-        val pickupElement = hobbitHole?.pickupElement(project, editor)
-        val context = PostCodeHandleContext.create(file, pickupElement)
+        val config = DynamicShireActionService.getInstance()
+            .getAction(ShireActionLocation.INTENTION_MENU)
+            .firstOrNull { it.hole == hobbitHole } ?: return
 
-        hobbitHole?.setupStreamingEndProcessor(project, context)
-
-        PostCodeHandleContext.putData(context)
-
-        val configs: List<DynamicShireActionConfig> =
-            DynamicShireActionService.getInstance().getAction(ShireActionLocation.INTENTION_MENU)
-
-        val config = configs.firstOrNull { it.hole == hobbitHole } ?: return
         ShireRunFileAction.executeShireFile(project, config, null)
     }
 

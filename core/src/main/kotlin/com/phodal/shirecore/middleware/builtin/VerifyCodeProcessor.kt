@@ -26,7 +26,12 @@ class VerifyCodeProcessor : PostProcessor {
         return true
     }
 
-    override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?, args: List<Any>): String {
+    override fun execute(
+        project: Project,
+        context: PostCodeHandleContext,
+        console: ConsoleView?,
+        args: List<Any>,
+    ): String {
         val code = context.pipeData["output"]
         if (code !is VirtualFile) {
             console?.print("No code to verify\n", ConsoleViewContentType.ERROR_OUTPUT)
@@ -40,7 +45,7 @@ class VerifyCodeProcessor : PostProcessor {
         }
 
         var errors: List<String> = listOf()
-        collectSyntaxError<PsiFile>(psiFile.virtualFile, project) {
+        collectSyntaxError(psiFile.virtualFile, project) {
             errors = it
         }
 
@@ -60,14 +65,12 @@ class VerifyCodeProcessor : PostProcessor {
      * @param project the Project in which the file is located
      * @param runAction the action to run with the list of syntax errors (optional)
      */
-    private fun <T : PsiFile> collectSyntaxError(
+    private fun collectSyntaxError(
         outputFile: VirtualFile,
         project: Project,
         runAction: ((errors: List<String>) -> Unit)?,
     ) {
-        val sourceFile = runReadAction {
-            PsiManager.getInstance(project).findFile(outputFile) as? T
-        } ?: return
+        val sourceFile = runReadAction { PsiManager.getInstance(project).findFile(outputFile) } ?: return
 
         collectSyntaxError(sourceFile, runAction, outputFile, project)
     }
