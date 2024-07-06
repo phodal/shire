@@ -32,6 +32,16 @@ Shire Data Architecture:
 
 Documentation: [Shire AI Coding Agent Language](https://shire.phodal.com/)
 
+## Demo Video
+
+Youtube:
+
+[![Shire AI Coding Agent Language](https://img.youtube.com/vi/z1ijWOL1rFY/0.jpg)](https://www.youtube.com/watch?v=z1ijWOL1rFY)
+
+Bilibili
+
+[![Shire AI Coding Agent Language](https://img.youtube.com/vi/z1ijWOL1rFY/0.jpg)](https://www.bilibili.com/video/BV1Lf421q7S7/)
+
 ## LICENSE
 
 This code is distributed under the MPL 2.0 license. See `LICENSE` in this directory.
