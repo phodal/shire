@@ -29,7 +29,7 @@ class ShireInputBoxAction : DumbAwareAction() {
     override fun update(e: AnActionEvent) {
         e.presentation.isEnabled = shireActionConfigs().isNotEmpty()
 
-        e.presentation.text = shireActionConfigs().first().hole?.description ?: ""
+        e.presentation.text = shireActionConfigs().firstOrNull()?.hole?.description ?: ""
     }
 
     override fun actionPerformed(e: AnActionEvent) {
@@ -39,7 +39,8 @@ class ShireInputBoxAction : DumbAwareAction() {
         val project = dataContext.getData(CommonDataKeys.PROJECT) ?: return
 
         val instance = DynamicShireActionService.getInstance()
-        val config = shireActionConfigs().first()
+        val config = shireActionConfigs().firstOrNull() ?: return
+
         if (config.hole?.shortcut != null) {
             instance.bindShortcutToAction(this, config.hole.shortcut)
         }

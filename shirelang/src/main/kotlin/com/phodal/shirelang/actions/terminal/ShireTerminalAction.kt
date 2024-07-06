@@ -40,13 +40,13 @@ class ShireTerminalAction : DumbAwareAction() {
         e.presentation.isVisible = shireActionConfigs().size == 1
         e.presentation.isEnabled = shireActionConfigs().size == 1
 
-        e.presentation.text = shireActionConfigs().first().hole?.description ?: ""
+        e.presentation.text = shireActionConfigs().firstOrNull()?.hole?.description ?: ""
     }
 
     override fun actionPerformed(e: AnActionEvent) {
         val project = e.project ?: return
 
-        val config = shireActionConfigs().first()
+        val config = shireActionConfigs().firstOrNull() ?: return
 
         TerminalLocationExecutor.provide(project)?.getComponent(e)?.let { component ->
             showInputBoxPopup(component, getPreferredPopupPoint(e)) { userInput ->
