@@ -6,7 +6,6 @@ import com.intellij.openapi.actionSystem.KeyboardShortcut
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.keymap.KeymapManager
-import com.intellij.openapi.keymap.impl.KeymapImpl
 import com.phodal.shirecore.config.ShireActionLocation
 
 @Service(Service.Level.APP)
@@ -17,9 +16,7 @@ class DynamicShireActionService {
         actionCache[key] = action
     }
 
-    fun getAllActions(): List<DynamicShireActionConfig> {
-        return actionCache.values.toList()
-    }
+    fun getAllActions(): List<DynamicShireActionConfig> = actionCache.values.toList()
 
     fun getAction(location: ShireActionLocation): List<DynamicShireActionConfig> {
         return actionCache.values.filter {
@@ -37,16 +34,12 @@ class DynamicShireActionService {
      * @param keyboardShortcut A string representing the keyboard shortcut keys (e.g. "ctrl shift A").
      */
     fun bindShortcutToAction(action: AnAction, keyboardShortcut: KeyboardShortcut) {
-        val actionManager: ActionManager = ActionManager.getInstance()
-        val actionId = actionManager.getId(action) ?: return
+        val actionId = ActionManager.getInstance().getId(action) ?: return
 
-        val keymapManager = KeymapManager.getInstance()
-        val activeKeymap = keymapManager.activeKeymap
+        val activeKeymap = KeymapManager.getInstance().activeKeymap
 
-        if (activeKeymap is KeymapImpl) {
-            activeKeymap.removeAllActionShortcuts(actionId)
-            activeKeymap.addShortcut(actionId, keyboardShortcut)
-        }
+        activeKeymap.removeAllActionShortcuts(actionId)
+        activeKeymap.addShortcut(actionId, keyboardShortcut)
     }
 
     companion object {

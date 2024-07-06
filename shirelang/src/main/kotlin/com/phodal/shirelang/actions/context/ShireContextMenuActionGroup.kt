@@ -6,7 +6,6 @@ import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirelang.actions.base.ShireContextMenuAction
-import com.phodal.shirelang.actions.dynamic.DynamicShireActionConfig
 import com.phodal.shirelang.actions.dynamic.DynamicShireActionService
 
 class ShireContextMenuActionGroup : ActionGroup() {
@@ -19,19 +18,14 @@ class ShireContextMenuActionGroup : ActionGroup() {
     }
 
     override fun getChildren(e: AnActionEvent?): Array<AnAction> {
-        return getActionsByType(e, ShireActionLocation.CONTEXT_MENU)
-    }
-
-    private fun getActionsByType(e: AnActionEvent?, shireActionLocation: ShireActionLocation): Array<AnAction> {
         val actionService = DynamicShireActionService.getInstance()
 
-        val configs: List<DynamicShireActionConfig> =
-            actionService.getAction(shireActionLocation)
-        return configs.map { actionConfig ->
+        return actionService.getAction(ShireActionLocation.CONTEXT_MENU).map { actionConfig ->
             val menuAction = ShireContextMenuAction(actionConfig)
             if (actionConfig.hole?.shortcut != null) {
                 actionService.bindShortcutToAction(menuAction, actionConfig.hole.shortcut)
             }
+
             menuAction
         }.toTypedArray()
     }
