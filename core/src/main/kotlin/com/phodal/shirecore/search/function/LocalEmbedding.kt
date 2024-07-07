@@ -1,6 +1,7 @@
 package com.phodal.shirecore.search.function
 
 import ai.djl.huggingface.tokenizers.HuggingFaceTokenizer
+import ai.grazie.emb.FloatTextEmbedding
 import ai.onnxruntime.OnnxTensor
 import ai.onnxruntime.OrtEnvironment
 import ai.onnxruntime.OrtSession
@@ -12,6 +13,7 @@ import kotlin.collections.toLongArray
 import kotlin.ranges.until
 import kotlin.to
 import kotlinx.coroutines.*
+import kotlin.math.sqrt
 
 class LocalEmbedding(
     private val tokenizer: HuggingFaceTokenizer,
@@ -72,7 +74,6 @@ class LocalEmbedding(
         return meanArray
     }
 
-
     companion object {
         /**
          * Create a new instance of [LocalEmbedding] with default model.
@@ -106,4 +107,18 @@ class LocalEmbedding(
             }
         }
     }
+}
+
+
+fun FloatArray.normalized(): FloatArray {
+    val norm = sqrt(this * this)
+    return this.map { it / norm }.toFloatArray()
+}
+
+private operator fun FloatArray.times(floats: FloatArray): Float {
+    var sum = 0f
+    for (i in this.indices) {
+        sum += this[i] * floats[i]
+    }
+    return sum
 }
