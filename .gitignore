@@ -4,4 +4,3 @@
 build
 .kotlin/
 .shire-output
-core/src/main/resources/model

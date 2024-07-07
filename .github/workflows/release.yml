@@ -23,6 +23,7 @@ jobs:
       - name: Fetch Sources
         uses: actions/checkout@v4
         with:
+          submodules: 'true'
           ref: ${{ github.event.release.tag_name }}
 
       # Set up Java environment for the next steps
