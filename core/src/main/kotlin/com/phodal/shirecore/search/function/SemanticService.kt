@@ -96,6 +96,11 @@ class SemanticService {
             }
 
             parser.parse(inputStream).mapIndexed { index, document ->
+                // filter document.text.length < 0
+                if (document.text.isBlank()) {
+                    return@mapIndexed null
+                }
+
                 IndexEntry(
                     index = index,
                     count = document.text.length,
@@ -103,7 +108,7 @@ class SemanticService {
                     file = file,
                     embedding = null
                 )
-            }
+            }.filterNotNull()
         }.flatten()
     }
 
