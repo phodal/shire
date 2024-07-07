@@ -115,6 +115,16 @@ project(":core") {
     dependencies {
         implementation("org.reflections:reflections:0.10.2")
         implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
+
+
+        // chocolate factory
+        // follow: https://onnxruntime.ai/docs/get-started/with-java.html
+        implementation("com.microsoft.onnxruntime:onnxruntime:1.18.0")
+        implementation("ai.djl.huggingface:tokenizers:0.28.0")
+
+        implementation("cc.unitmesh:cocoa-core:1.0.0")
+        implementation("cc.unitmesh:document:1.0.0")
+        implementation("cc.unitmesh:local-embedding:1.0.0")
     }
 }
 
