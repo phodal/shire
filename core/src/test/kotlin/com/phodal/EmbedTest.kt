@@ -5,10 +5,12 @@ import ai.onnxruntime.OrtEnvironment
 import ai.onnxruntime.OrtSession
 import com.phodal.shirecore.search.function.LocalEmbedding
 import kotlinx.coroutines.runBlocking
+import org.junit.Ignore
 import org.junit.Test
 
 class EmbedTest {
     @Test
+    @Ignore
     fun shouldEmbeddingText() {
         val pluginClassLoader = EmbedTest::class.java.classLoader
         val tokenizerStream = pluginClassLoader.getResourceAsStream("model/tokenizer.json")

@@ -1,7 +1,6 @@
 package com.phodal.shirecore.search.function
 
 import ai.djl.huggingface.tokenizers.HuggingFaceTokenizer
-import ai.grazie.emb.FloatTextEmbedding
 import ai.onnxruntime.OnnxTensor
 import ai.onnxruntime.OrtEnvironment
 import ai.onnxruntime.OrtSession
