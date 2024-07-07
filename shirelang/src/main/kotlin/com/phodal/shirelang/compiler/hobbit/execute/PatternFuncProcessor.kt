@@ -170,9 +170,11 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             }
 
             is PatternActionFunc.Splitting -> {
-                // call document chunking
                 val result: List<String> = listOf()
-                SemanticService.getInstance().chunking(action.path)
+                runBlocking {
+                    SemanticService.getInstance().chunking(resolvePaths(action.paths, input))
+                }
+
                 result
             }
         }
@@ -204,16 +206,27 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
     }
 
     fun cat(action: PatternActionFunc.Cat, input: Any): String {
+        val absolutePaths: List<VirtualFile> = resolvePaths(action.paths, input)
+
+        return absolutePaths.joinToString("\n") { it.readText() }
+    }
+
+    /**
+     * @param userPaths The paths provided by the user in the script: `cat("file1.txt", "file2.txt")`.
+     * @param patterMatchPaths The paths provided by the pattern match: `/.*.txt/ { cat } `.
+     */
+    private fun resolvePaths(userPaths: Array<out String>, patterMatchPaths: Any): List<VirtualFile> {
         val baseDir = myProject.guessProjectDir()!!
-        var paths = action.paths
-        if (action.paths.isEmpty()) {
-            paths = input as Array<String>
+        var paths = userPaths
+        if (userPaths.isEmpty()) {
+            paths = patterMatchPaths as Array<String>
         }
+
         val absolutePaths: List<VirtualFile> = paths.mapNotNull {
             baseDir.findFile(it) ?: LocalFileSystem.getInstance().findFileByIoFile(File(it))
         }
 
-        return absolutePaths.joinToString("\n") { it.readText() }
+        return absolutePaths
     }
 
 }

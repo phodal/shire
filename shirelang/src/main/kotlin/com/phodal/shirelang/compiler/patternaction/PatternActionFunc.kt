@@ -124,7 +124,10 @@ sealed class PatternActionFunc(open val funcName: String) {
      */
     class CaseMatch(val keyValue: List<CaseKeyValue>) : PatternActionFunc("switch")
 
-    class Splitting(val path: String) : PatternActionFunc("splitting")
+    /**
+     * Splitting
+     */
+    class Splitting(vararg val paths: String) : PatternActionFunc("splitting")
 
     /**
      * Embedding text
