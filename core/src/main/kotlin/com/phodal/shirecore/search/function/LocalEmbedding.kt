@@ -25,7 +25,7 @@ class LocalEmbedding(
 
     @RequiresBackgroundThread
     suspend fun embed(input: String): FloatArray {
-        return withContext<FloatArray>(embeddingContext) {
+        return withContext(embeddingContext) {
             embedInternal(input)
         }
     }
