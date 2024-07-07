@@ -7,9 +7,8 @@ import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.findFile
 import com.intellij.openapi.vfs.readText
-import com.intellij.platform.ml.embeddings.models.LocalEmbeddingNetwork
 import com.phodal.shirecore.ShirelangNotifications
-import com.phodal.shirecore.search.function.EmbeddingFunc
+import com.phodal.shirecore.search.function.EmbeddingService
 import com.phodal.shirelang.actions.ShireRunFileAction
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.ast.FrontMatterType
@@ -161,7 +160,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             }
 
             is PatternActionFunc.Embedding -> {
-                EmbeddingFunc.getInstance().embed(action.text)
+                EmbeddingService.getInstance().embedText(action.text)
             }
         }
     }

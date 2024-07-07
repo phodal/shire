@@ -15,3 +15,8 @@ variables:
 ---
 Write unit test for following ${context.language} code.
 ```
+
+- splitting, splitting the file
+- embedding, embedding full path of the file
+- indexing, indexing the file
+- relevant, searching for a specific string in the file
