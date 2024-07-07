@@ -2,7 +2,6 @@
 package com.phodal.shirecore.search.embedding
 
 import com.intellij.concurrency.ConcurrentCollectionFactory
-import com.intellij.platform.ml.embeddings.search.utils.LockedSequenceWrapper
 import com.intellij.util.containers.CollectionFactory
 import java.nio.file.Path
 import java.util.concurrent.locks.ReentrantReadWriteLock
