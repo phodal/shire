@@ -11,7 +11,7 @@ name: "AutoTest"
 description: "AutoTest"
 interaction: AppendCursor
 variables:
-  "*.docx": /.*/build\.gradle\.kts/ { embed | embedSearch("hello") }
+  "*.docx": /.*/build\.gradle\.kts/ { embedding | embeddingSearch("hello") }
 ---
 Write unit test for following ${context.language} code.
 ```

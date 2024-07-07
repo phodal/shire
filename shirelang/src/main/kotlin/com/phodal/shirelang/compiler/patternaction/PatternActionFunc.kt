@@ -126,6 +126,11 @@ sealed class PatternActionFunc(open val funcName: String) {
     class CaseMatch(val keyValue: List<CaseKeyValue>) : PatternActionFunc("switch")
 
     /**
+     * Embedding text
+     */
+    class Embedding(val text: String) : PatternActionFunc("embedding")
+
+    /**
      * User Custom Functions
      */
     class UserCustom(override val funcName: String, val args: List<String>) : PatternActionFunc(funcName) {

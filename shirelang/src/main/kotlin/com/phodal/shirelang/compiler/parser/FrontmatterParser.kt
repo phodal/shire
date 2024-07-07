@@ -578,6 +578,10 @@ object FrontmatterParser {
                 PatternActionFunc.Notify(args[0])
             }
 
+            "embedding" -> {
+                PatternActionFunc.Embedding(args[0])
+            }
+
             null -> {
                 logger.warn("parsePatternAction, Unknown pattern action: ${expr.funcCall}")
                 return null
