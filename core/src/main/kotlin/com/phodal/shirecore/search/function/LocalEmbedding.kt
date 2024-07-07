@@ -83,7 +83,7 @@ class LocalEmbedding(
         fun create(): LocalEmbedding? {
             val currentThread = Thread.currentThread()
             val originalClassLoader = currentThread.contextClassLoader
-            val pluginClassLoader = LocalEmbedding.Companion::class.java.classLoader
+            val pluginClassLoader = Companion::class.java.classLoader
 
             return try {
                 currentThread.setContextClassLoader(pluginClassLoader);
