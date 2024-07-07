@@ -3,7 +3,6 @@ package com.phodal.shirelang.compiler.patternaction
 import com.phodal.shirelang.compiler.hobbit.ast.CaseKeyValue
 import com.phodal.shirelang.compiler.hobbit.ast.Statement
 import com.phodal.shirelang.compiler.hobbit.ast.VariableElement
-import com.phodal.shirelang.compiler.patternaction.PatternActionFunc.*
 
 /**
  * The `PatternActionFunc` is a sealed class in Kotlin that represents a variety of pattern action functions.
@@ -124,6 +123,8 @@ sealed class PatternActionFunc(open val funcName: String) {
      * Case Match
      */
     class CaseMatch(val keyValue: List<CaseKeyValue>) : PatternActionFunc("switch")
+
+    class Splitting(val path: String) : PatternActionFunc("splitting")
 
     /**
      * Embedding text

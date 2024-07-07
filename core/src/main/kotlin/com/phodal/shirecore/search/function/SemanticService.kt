@@ -14,7 +14,7 @@ data class IndexEntry(
 )
 
 @Service(Service.Level.APP)
-class EmbeddingService() {
+class SemanticService() {
     val index = InMemoryEmbeddingSearchIndex(
         File(PathManager.getSystemPath())
             .resolve("shire-semantic-search")
@@ -23,12 +23,16 @@ class EmbeddingService() {
 
     private val embedding: LocalEmbedding = LocalEmbedding.create() ?: throw IllegalStateException("Can't create embedding")
 
-    fun embedText(chunk: String): FloatArray {
+    suspend fun embedText(chunk: String): FloatArray {
         return embedding.embed(chunk)
     }
 
     companion object {
-        fun getInstance(): EmbeddingService =
-            ApplicationManager.getApplication().getService(EmbeddingService::class.java)
+        fun getInstance(): SemanticService =
+            ApplicationManager.getApplication().getService(SemanticService::class.java)
+    }
+
+    fun chunking(path: String) {
+
     }
 }

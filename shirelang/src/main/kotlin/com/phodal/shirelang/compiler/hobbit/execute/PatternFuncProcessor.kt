@@ -8,12 +8,13 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.findFile
 import com.intellij.openapi.vfs.readText
 import com.phodal.shirecore.ShirelangNotifications
-import com.phodal.shirecore.search.function.EmbeddingService
+import com.phodal.shirecore.search.function.SemanticService
 import com.phodal.shirelang.actions.ShireRunFileAction
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.ast.FrontMatterType
 import com.phodal.shirelang.compiler.hobbit.ast.Statement
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
+import kotlinx.coroutines.runBlocking
 import java.io.File
 
 open class PatternFuncProcessor(open val myProject: Project, open val hole: HobbitHole) {
@@ -160,7 +161,19 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             }
 
             is PatternActionFunc.Embedding -> {
-                EmbeddingService.getInstance().embedText(action.text)
+                val result: FloatArray
+                runBlocking {
+                    result = SemanticService.getInstance().embedText(action.text)
+                }
+
+                result
+            }
+
+            is PatternActionFunc.Splitting -> {
+                // call document chunking
+                val result: List<String> = listOf()
+                SemanticService.getInstance().chunking(action.path)
+                result
             }
         }
     }

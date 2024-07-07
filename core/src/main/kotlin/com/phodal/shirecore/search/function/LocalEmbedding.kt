@@ -5,19 +5,30 @@ import ai.onnxruntime.OnnxTensor
 import ai.onnxruntime.OrtEnvironment
 import ai.onnxruntime.OrtSession
 import ai.onnxruntime.OrtUtil
-import java.nio.file.Paths
+import com.intellij.util.concurrency.annotations.RequiresBackgroundThread
 import kotlin.collections.indices
 import kotlin.collections.slice
 import kotlin.collections.toLongArray
 import kotlin.ranges.until
 import kotlin.to
+import kotlinx.coroutines.*
 
 class LocalEmbedding(
     private val tokenizer: HuggingFaceTokenizer,
     private val session: OrtSession,
     private val env: OrtEnvironment,
 ) {
-    fun embed(input: String): FloatArray {
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val embeddingContext = Dispatchers.Default.limitedParallelism(1)
+
+    @RequiresBackgroundThread
+    suspend fun embed(input: String): FloatArray {
+        return withContext<FloatArray>(embeddingContext) {
+            embedInternal(input)
+        }
+    }
+
+    fun embedInternal(input: String): FloatArray {
         val tokenized = tokenizer.encode(input, true, true)
 
         var inputIds = tokenized.ids
