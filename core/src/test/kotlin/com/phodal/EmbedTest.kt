@@ -7,7 +7,7 @@ import org.junit.Test
 class EmbedTest {
     @Test
     fun shouldEmbeddingText() {
-        val semantic = LocalEmbedding.create(this.javaClass.classLoader)
+        val semantic = LocalEmbedding.create()
         val output = runBlocking {
             semantic!!.embed("item")
         }
