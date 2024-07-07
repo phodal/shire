@@ -7,7 +7,7 @@ class EmbedTest {
     @Test
     fun shouldEmbeddingText() {
         val semantic = LocalEmbedding.create()
-        val output = semantic.embed("item")
+        val output = semantic!!.embed("item")
         println(output)
     }
 }

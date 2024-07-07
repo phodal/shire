@@ -21,7 +21,7 @@ class EmbeddingService() {
             .resolve("pattern-func").toPath()
     )
 
-    private val embedding: LocalEmbedding = LocalEmbedding.create()
+    private val embedding: LocalEmbedding = LocalEmbedding.create() ?: throw IllegalStateException("Can't create embedding")
 
     fun embedText(chunk: String): FloatArray {
         return embedding.embed(chunk)
