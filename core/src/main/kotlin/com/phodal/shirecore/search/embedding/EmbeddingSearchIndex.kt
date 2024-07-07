@@ -42,7 +42,7 @@ internal fun Map<String, FloatArray>.findClosest(
         .filter { (_, similarity) -> if (similarityThreshold != null) similarity > similarityThreshold else true }
         .sortedByDescending { (_, similarity) -> similarity }
         .take(topK)
-        .map { (id, similarity) -> ScoredText(id, similarity.toDouble()) }
+        .map { (id, similarity) -> ScoredText(id, similarity) }
         .toList()
 }
 
@@ -52,7 +52,7 @@ internal fun Sequence<Pair<String, FloatArray>>.streamFindClose(
 ): Sequence<ScoredText> {
     return map { (id, embedding) -> id to queryEmbedding.times(embedding) }
         .filter { similarityThreshold == null || it.second > similarityThreshold }
-        .map { (id, similarity) -> ScoredText(id, similarity.toDouble()) }
+        .map { (id, similarity) -> ScoredText(id, similarity) }
 }
 
 fun FloatArray.times(doubles: FloatArray): Double {
