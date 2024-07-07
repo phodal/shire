@@ -582,6 +582,10 @@ object FrontmatterParser {
                 PatternActionFunc.Embedding(args[0])
             }
 
+            "splitting" -> {
+                PatternActionFunc.Splitting(args.toTypedArray())
+            }
+
             null -> {
                 logger.warn("parsePatternAction, Unknown pattern action: ${expr.funcCall}")
                 return null

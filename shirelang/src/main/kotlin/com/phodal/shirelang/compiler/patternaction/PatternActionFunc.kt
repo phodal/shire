@@ -127,7 +127,7 @@ sealed class PatternActionFunc(open val funcName: String) {
     /**
      * Splitting
      */
-    class Splitting(vararg val paths: String) : PatternActionFunc("splitting")
+    class Splitting(val paths: Array<String>) : PatternActionFunc("splitting")
 
     /**
      * Embedding text

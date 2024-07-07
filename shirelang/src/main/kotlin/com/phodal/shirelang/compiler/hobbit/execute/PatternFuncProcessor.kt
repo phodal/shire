@@ -217,8 +217,8 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
      */
     private fun resolvePaths(userPaths: Array<out String>, patterMatchPaths: Any): List<VirtualFile> {
         val baseDir = myProject.guessProjectDir()!!
-        var paths = userPaths
-        if (userPaths.isEmpty()) {
+        var paths: Array<out String> = userPaths ?: arrayOf()
+        if (userPaths == null || userPaths.isNullOrEmpty()) {
             paths = patterMatchPaths as Array<String>
         }
 
