@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Code Refactoring
+title: Semantic Search
 parent: Shire Examples
 nav_order: 8
 ---
