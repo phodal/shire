@@ -8,6 +8,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.findFile
 import com.intellij.openapi.vfs.readText
 import com.phodal.shirecore.ShirelangNotifications
+import com.phodal.shirecore.search.function.IndexEntry
 import com.phodal.shirecore.search.function.SemanticService
 import com.phodal.shirelang.actions.ShireRunFileAction
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
@@ -170,8 +171,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             }
 
             is PatternActionFunc.Splitting -> {
-                val result: List<String> = listOf()
-                runBlocking {
+                val result: List<IndexEntry> = runBlocking {
                     SemanticService.getInstance().splitting(resolvePaths(action.paths, input))
                 }
 
@@ -217,8 +217,8 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
      */
     private fun resolvePaths(userPaths: Array<out String>, patterMatchPaths: Any): List<VirtualFile> {
         val baseDir = myProject.guessProjectDir()!!
-        var paths: Array<out String> = userPaths ?: arrayOf()
-        if (userPaths == null || userPaths.isNullOrEmpty()) {
+        var paths = userPaths
+        if (userPaths.isEmpty()) {
             paths = patterMatchPaths as Array<String>
         }
 

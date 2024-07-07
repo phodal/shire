@@ -19,7 +19,8 @@ data class IndexEntry(
     var index: Int,
     var count: Int,
     var chunk: String,
-    val embedding: FloatArray,
+    val file: VirtualFile? = null,
+    val embedding: FloatArray? = null
 )
 
 @Service(Service.Level.APP)
@@ -44,7 +45,7 @@ class SemanticService {
             ApplicationManager.getApplication().getService(SemanticService::class.java)
     }
 
-    fun splitting(path: List<VirtualFile>): List<List<Document>> {
+    fun splitting(path: List<VirtualFile>): List<IndexEntry> {
         return path.map { file ->
             val inputStream = file.inputStream
             val extension = file.extension ?: return@map emptyList()
@@ -66,8 +67,16 @@ class SemanticService {
                 }
             }
 
-            parser.parse(inputStream)
-        }
+            parser.parse(inputStream).mapIndexed { index, document ->
+                IndexEntry(
+                    index = index,
+                    count = document.text.length,
+                    chunk = document.text,
+                    file = file,
+                    embedding = null
+                )
+            }
+        }.flatten()
     }
 }
 
