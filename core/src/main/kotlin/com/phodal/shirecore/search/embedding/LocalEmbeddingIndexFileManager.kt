@@ -50,14 +50,14 @@ class LocalEmbeddingIndexFileManager(root: Path, private val dimensions: Int = D
     /** Provides reading access to the embedding vector at the specified index
      *  without reading the whole file into memory
      */
-    operator fun get(index: Int): DoubleArray = lock.read {
+    operator fun get(index: Int): FloatArray = lock.read {
         RandomAccessFile(embeddingsPath.toFile(), "r").use { input ->
             input.seek(getIndexOffset(index))
             val buffer = ByteArray(EMBEDDING_ELEMENT_SIZE)
 
-            DoubleArray(dimensions) {
+            FloatArray(dimensions) {
                 input.read(buffer)
-                ByteBuffer.wrap(buffer).getDouble()
+                ByteBuffer.wrap(buffer).getFloat()
             }
         }
     }
@@ -65,12 +65,12 @@ class LocalEmbeddingIndexFileManager(root: Path, private val dimensions: Int = D
     /** Provides writing access to embedding vector at the specified index
      *  without writing the other vectors
      */
-    operator fun set(index: Int, embedding: DoubleArray) = lock.write {
+    operator fun set(index: Int, embedding: FloatArray) = lock.write {
         RandomAccessFile(embeddingsPath.toFile(), "rw").use { output ->
             output.seek(getIndexOffset(index))
             val buffer = ByteBuffer.allocate(EMBEDDING_ELEMENT_SIZE)
             embedding.forEach {
-                output.write(buffer.putDouble(0, it).array())
+                output.write(buffer.putFloat(0, it).array())
             }
         }
     }
@@ -85,21 +85,21 @@ class LocalEmbeddingIndexFileManager(root: Path, private val dimensions: Int = D
             if (file.length() - embeddingSizeInBytes != getIndexOffset(index)) {
                 file.seek(file.length() - embeddingSizeInBytes)
                 val array = ByteArray(EMBEDDING_ELEMENT_SIZE)
-                val embedding = DoubleArray(dimensions) {
+                val embedding = FloatArray(dimensions) {
                     file.read(array)
-                    ByteBuffer.wrap(array).getDouble()
+                    ByteBuffer.wrap(array).getFloat()
                 }
                 file.seek(getIndexOffset(index))
                 val buffer = ByteBuffer.allocate(EMBEDDING_ELEMENT_SIZE)
                 embedding.forEach {
-                    file.write(buffer.putDouble(0, it).array())
+                    file.write(buffer.putFloat(0, it).array())
                 }
             }
             file.setLength(file.length() - embeddingSizeInBytes)
         }
     }
 
-    suspend fun loadIndex(): Pair<List<String>, List<DoubleArray>>? = coroutineScope {
+    suspend fun loadIndex(): Pair<List<String>, List<FloatArray>>? = coroutineScope {
         ensureActive()
         lock.read {
             ensureActive()
@@ -114,9 +114,9 @@ class LocalEmbeddingIndexFileManager(root: Path, private val dimensions: Int = D
             embeddingsPath.inputStream().buffered().use { input ->
                 ids to ids.map {
                     ensureActive()
-                    DoubleArray(dimensions) {
+                    FloatArray(dimensions) {
                         input.read(buffer)
-                        ByteBuffer.wrap(buffer).getDouble()
+                        ByteBuffer.wrap(buffer).getFloat()
                     }
                 }
             }
@@ -131,7 +131,7 @@ class LocalEmbeddingIndexFileManager(root: Path, private val dimensions: Int = D
         }
     }
 
-    suspend fun saveIndex(ids: List<String>, embeddings: List<DoubleArray>) = coroutineScope {
+    suspend fun saveIndex(ids: List<String>, embeddings: List<FloatArray>) = coroutineScope {
         ensureActive()
         lock.write {
             ensureActive()
@@ -146,7 +146,7 @@ class LocalEmbeddingIndexFileManager(root: Path, private val dimensions: Int = D
                     embeddings.forEach { embedding ->
                         ensureActive()
                         embedding.forEach {
-                            output.write(buffer.putDouble(0, it).array())
+                            output.write(buffer.putFloat(0, it).array())
                         }
                     }
                 }

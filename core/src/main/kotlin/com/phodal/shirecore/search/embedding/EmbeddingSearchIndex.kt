@@ -20,21 +20,23 @@ interface EmbeddingSearchIndex {
     fun onIndexingStart()
     fun onIndexingFinish()
 
-    suspend fun addEntries(values: Iterable<Pair<String, DoubleArray>>, shouldCount: Boolean = false)
+    suspend fun addEntries(values: Iterable<Pair<String, FloatArray>>, shouldCount: Boolean = false)
 
     suspend fun saveToDisk()
     suspend fun loadFromDisk()
 
-    fun findClosest(searchEmbedding: DoubleArray, topK: Int, similarityThreshold: Double? = null): List<ScoredText>
-    fun streamFindClose(searchEmbedding: DoubleArray, similarityThreshold: Double? = null): Sequence<ScoredText>
+    fun findClosest(searchEmbedding: FloatArray, topK: Int, similarityThreshold: Double? = null): List<ScoredText>
+    fun streamFindClose(searchEmbedding: FloatArray, similarityThreshold: Double? = null): Sequence<ScoredText>
 
     fun estimateMemoryUsage(): Long
     fun estimateLimitByMemory(memory: Long): Int
     fun checkCanAddEntry(): Boolean
 }
 
-internal fun Map<String, DoubleArray>.findClosest(searchEmbedding: DoubleArray,
-                                                         topK: Int, similarityThreshold: Double?): List<ScoredText> {
+internal fun Map<String, FloatArray>.findClosest(
+    searchEmbedding: FloatArray,
+    topK: Int, similarityThreshold: Double?,
+): List<ScoredText> {
     return asSequence()
         .map { it.key to searchEmbedding.times(it.value) }
         .filter { (_, similarity) -> if (similarityThreshold != null) similarity > similarityThreshold else true }
@@ -44,14 +46,16 @@ internal fun Map<String, DoubleArray>.findClosest(searchEmbedding: DoubleArray,
         .toList()
 }
 
-internal fun Sequence<Pair<String, DoubleArray>>.streamFindClose(queryEmbedding: DoubleArray,
-                                                                        similarityThreshold: Double?): Sequence<ScoredText> {
+internal fun Sequence<Pair<String, FloatArray>>.streamFindClose(
+    queryEmbedding: FloatArray,
+    similarityThreshold: Double?,
+): Sequence<ScoredText> {
     return map { (id, embedding) -> id to queryEmbedding.times(embedding) }
         .filter { similarityThreshold == null || it.second > similarityThreshold }
         .map { (id, similarity) -> ScoredText(id, similarity.toDouble()) }
 }
 
-fun DoubleArray.times(doubles: DoubleArray): Double {
+fun FloatArray.times(doubles: FloatArray): Double {
     require(size == doubles.size) { "Arrays must have the same size" }
 
     var result = 0.0

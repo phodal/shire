@@ -1,7 +1,5 @@
 package com.phodal.shirecore.search.function
 
-import cc.unitmesh.cf.Embedding
-import cc.unitmesh.cf.LocalEmbedding
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.PathManager
 import com.intellij.openapi.components.Service
@@ -11,7 +9,8 @@ import java.io.File
 data class IndexEntry(
     var index: Int,
     var count: Int,
-    val embedding: Embedding,
+    var chunk: String,
+    val embedding: FloatArray,
 )
 
 @Service(Service.Level.APP)
@@ -24,7 +23,7 @@ class EmbeddingService() {
 
     private val embedding: LocalEmbedding = LocalEmbedding.create()
 
-    fun embedText(chunk: String): List<Double> {
+    fun embedText(chunk: String): FloatArray {
         return embedding.embed(chunk)
     }
 

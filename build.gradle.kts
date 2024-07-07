@@ -124,7 +124,7 @@ project(":core") {
 
         implementation("cc.unitmesh:cocoa-core:1.0.0")
         implementation("cc.unitmesh:document:1.0.0")
-        implementation("cc.unitmesh:local-embedding:1.0.0")
+//        implementation("cc.unitmesh:local-embedding:1.0.0")
     }
 }
 

@@ -1,6 +1,6 @@
 package com.phodal
 
-import cc.unitmesh.cf.LocalEmbedding
+import com.phodal.shirecore.search.function.LocalEmbedding
 import org.junit.Test
 
 class EmbedTest {

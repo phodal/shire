@@ -27,7 +27,7 @@ import kotlin.to
  * Can be persisted to disk.
  */
 class InMemoryEmbeddingSearchIndex(root: Path, limit: Int? = null) : EmbeddingSearchIndex {
-    private var idToEmbedding: MutableMap<String, DoubleArray> = CollectionFactory.createSmallMemoryFootprintMap()
+    private var idToEmbedding: MutableMap<String, FloatArray> = CollectionFactory.createSmallMemoryFootprintMap()
     private val uncheckedIds: MutableSet<String> = ConcurrentCollectionFactory.createConcurrentSet()
     private val lock = ReentrantReadWriteLock()
 
@@ -64,7 +64,7 @@ class InMemoryEmbeddingSearchIndex(root: Path, limit: Int? = null) : EmbeddingSe
         uncheckedIds.clear()
     }
 
-    override suspend fun addEntries(values: Iterable<Pair<String, DoubleArray>>,
+    override suspend fun addEntries(values: Iterable<Pair<String, FloatArray>>,
                                     shouldCount: Boolean) = lock.write {
         if (limit != null) {
             val list = values.toList()
@@ -82,11 +82,11 @@ class InMemoryEmbeddingSearchIndex(root: Path, limit: Int? = null) : EmbeddingSe
         idToEmbedding = (ids zip embeddings).toMap().toMutableMap()
     }
 
-    override fun findClosest(searchEmbedding: DoubleArray, topK: Int, similarityThreshold: Double?): List<ScoredText> = lock.read {
+    override fun findClosest(searchEmbedding: FloatArray, topK: Int, similarityThreshold: Double?): List<ScoredText> = lock.read {
         return idToEmbedding.findClosest(searchEmbedding, topK, similarityThreshold)
     }
 
-    override fun streamFindClose(searchEmbedding: DoubleArray, similarityThreshold: Double?): Sequence<ScoredText> {
+    override fun streamFindClose(searchEmbedding: FloatArray, similarityThreshold: Double?): Sequence<ScoredText> {
         return LockedSequenceWrapper(lock::readLock) {
             this.idToEmbedding // manually use the receiver here to make sure the property is not captured by reference
                 .asSequence()
