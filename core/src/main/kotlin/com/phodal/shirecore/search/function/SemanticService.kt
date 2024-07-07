@@ -1,6 +1,5 @@
 package com.phodal.shirecore.search.function
 
-import cc.unitmesh.rag.document.Document
 import cc.unitmesh.document.parser.MdDocumentParser
 import cc.unitmesh.document.parser.MsOfficeDocumentParser
 import cc.unitmesh.document.parser.PdfDocumentParser
@@ -20,7 +19,7 @@ data class IndexEntry(
     var count: Int,
     var chunk: String,
     val file: VirtualFile? = null,
-    val embedding: FloatArray? = null
+    var embedding: FloatArray? = null,
 )
 
 @Service(Service.Level.APP)
@@ -36,13 +35,42 @@ class SemanticService {
     private val embedding: LocalEmbedding =
         LocalEmbedding.create() ?: throw IllegalStateException("Can't create embedding")
 
-    suspend fun embedding(chunk: String): FloatArray {
+    suspend fun embed(chunk: String): FloatArray {
         return embedding.embed(chunk)
     }
 
-    companion object {
-        fun getInstance(): SemanticService =
-            ApplicationManager.getApplication().getService(SemanticService::class.java)
+    suspend fun embedList(chunk: Array<out String>): List<IndexEntry> {
+        return chunk.mapIndexed { index, text ->
+            IndexEntry(
+                index = index,
+                count = text.length,
+                chunk = text,
+                file = null,
+                embedding = embed(text)
+            )
+        }
+    }
+
+    suspend fun embedding(chunks: List<IndexEntry>): List<IndexEntry> {
+        return chunks.map { entry ->
+            entry.embedding ?: run {
+                val embedding = embed(entry.chunk)
+                entry.embedding = embedding
+                entry
+            }
+
+            entry
+        }
+    }
+
+    suspend fun searching(embedChunks: List<IndexEntry>, input: String): List<String> {
+        val inputEmbedding = embed(input)
+        val pairs = embedChunks.map { it.chunk to it.embedding!! }
+        index.addEntries(pairs, true)
+
+        return index.findClosest(inputEmbedding, 10).map {
+            "Similarity: ${it.similarity}, Text: ${it.text}"
+        }
     }
 
     fun splitting(path: List<VirtualFile>): List<IndexEntry> {
@@ -77,6 +105,11 @@ class SemanticService {
                 )
             }
         }.flatten()
+    }
+
+    companion object {
+        fun getInstance(): SemanticService =
+            ApplicationManager.getApplication().getService(SemanticService::class.java)
     }
 }
 

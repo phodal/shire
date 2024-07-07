@@ -155,16 +155,25 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             is PatternActionFunc.CaseMatch -> {
                 val actions = evaluateCase(action, input) ?: return ""
                 FunctionStatementProcessor(myProject, hole)
-                    .execute(actions.value as Statement, mutableMapOf(
-                        "output" to parseInput(input),
-                    ))
+                    .execute(
+                        actions.value as Statement, mutableMapOf(
+                            "output" to parseInput(input),
+                        )
+                    )
                     .toString()
             }
 
             is PatternActionFunc.Embedding -> {
-                val result: FloatArray
-                runBlocking {
-                    result = SemanticService.getInstance().embedding(action.text)
+                val result: List<IndexEntry> = runBlocking {
+                    if (lastResult is List<*>) {
+                        if (lastResult.isNotEmpty() && lastResult.first() is IndexEntry) {
+                            return@runBlocking SemanticService.getInstance().embedding(lastResult as List<IndexEntry>)
+                        } else {
+                            return@runBlocking SemanticService.getInstance().embedList(action.entries)
+                        }
+                    }
+
+                    return@runBlocking emptyList()
                 }
 
                 result
@@ -177,10 +186,18 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
 
                 result
             }
+
+            is PatternActionFunc.Searching -> {
+                val result: List<String> = runBlocking {
+                    SemanticService.getInstance().searching(lastResult as List<IndexEntry>, action.text)
+                }
+
+                result
+            }
         }
     }
 
-    private fun evaluateCase(action: PatternActionFunc.CaseMatch, input: Any, ): FrontMatterType.EXPRESSION? {
+    private fun evaluateCase(action: PatternActionFunc.CaseMatch, input: Any): FrontMatterType.EXPRESSION? {
         var fitCondition = action.keyValue.firstOrNull { it.key.toValue() == parseInput(input) }
         if (fitCondition == null) {
             fitCondition = action.keyValue.firstOrNull { it.key.toValue() == "default" }

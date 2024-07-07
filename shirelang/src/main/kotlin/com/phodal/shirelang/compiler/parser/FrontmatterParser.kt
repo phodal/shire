@@ -579,11 +579,15 @@ object FrontmatterParser {
             }
 
             "embedding" -> {
-                PatternActionFunc.Embedding(args[0])
+                PatternActionFunc.Embedding(args.toTypedArray())
             }
 
             "splitting" -> {
                 PatternActionFunc.Splitting(args.toTypedArray())
+            }
+
+            "searching" -> {
+                PatternActionFunc.Searching(args[0])
             }
 
             null -> {

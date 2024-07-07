@@ -1,5 +1,6 @@
 package com.phodal.shirelang.compiler.patternaction
 
+import com.phodal.shirecore.search.function.IndexEntry
 import com.phodal.shirelang.compiler.hobbit.ast.CaseKeyValue
 import com.phodal.shirelang.compiler.hobbit.ast.Statement
 import com.phodal.shirelang.compiler.hobbit.ast.VariableElement
@@ -132,7 +133,12 @@ sealed class PatternActionFunc(open val funcName: String) {
     /**
      * Embedding text
      */
-    class Embedding(val text: String) : PatternActionFunc("embedding")
+    class Embedding( val entries: Array<String>) : PatternActionFunc("embedding")
+
+    /**
+     * searching text
+     */
+    class Searching(val text: String) : PatternActionFunc("searching")
 
     /**
      * User Custom Functions
