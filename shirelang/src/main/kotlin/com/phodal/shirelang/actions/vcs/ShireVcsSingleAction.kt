@@ -17,7 +17,7 @@ class ShireVcsSingleAction : DumbAwareAction() {
         e.presentation.isVisible = shireActionConfigs().size == 1
         e.presentation.isEnabled = shireActionConfigs().size == 1
 
-        e.presentation.text = shireActionConfigs().firstOrNull()?.hole?.description ?: ""
+        e.presentation.text = shireActionConfigs().firstOrNull()?.hole?.name ?: "<Placeholder>"
     }
 
     override fun actionPerformed(e: AnActionEvent) {
