@@ -35,7 +35,7 @@ class SemanticService {
     private val embedding: LocalEmbedding =
         LocalEmbedding.create() ?: throw IllegalStateException("Can't create embedding")
 
-    suspend fun embedText(chunk: String): FloatArray {
+    suspend fun embedding(chunk: String): FloatArray {
         return embedding.embed(chunk)
     }
 
@@ -44,9 +44,8 @@ class SemanticService {
             ApplicationManager.getApplication().getService(SemanticService::class.java)
     }
 
-    fun chunking(path: List<VirtualFile>): List<List<Document>> {
+    fun splitting(path: List<VirtualFile>): List<List<Document>> {
         return path.map { file ->
-
             val inputStream = file.inputStream
             val extension = file.extension ?: return@map emptyList()
             val parser = when (val documentType = DocumentType.of(extension)) {

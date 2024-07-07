@@ -163,7 +163,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             is PatternActionFunc.Embedding -> {
                 val result: FloatArray
                 runBlocking {
-                    result = SemanticService.getInstance().embedText(action.text)
+                    result = SemanticService.getInstance().embedding(action.text)
                 }
 
                 result
@@ -172,7 +172,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             is PatternActionFunc.Splitting -> {
                 val result: List<String> = listOf()
                 runBlocking {
-                    SemanticService.getInstance().chunking(resolvePaths(action.paths, input))
+                    SemanticService.getInstance().splitting(resolvePaths(action.paths, input))
                 }
 
                 result
