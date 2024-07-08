@@ -5,16 +5,19 @@ import cc.unitmesh.document.parser.MsOfficeDocumentParser
 import cc.unitmesh.document.parser.PdfDocumentParser
 import cc.unitmesh.document.parser.TextDocumentParser
 import cc.unitmesh.rag.document.DocumentType
+import com.intellij.openapi.application.PathManager
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
 import com.intellij.openapi.util.io.FileUtilRt
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.vfs.toNioPathOrNull
 import com.phodal.shirecore.search.embedding.DiskSynchronizedEmbeddingSearchIndex
 import com.phodal.shirecore.search.embedding.EmbeddingSearchIndex
 import com.phodal.shirecore.search.embedding.InMemoryEmbeddingSearchIndex
 import kotlinx.coroutines.*
+import java.io.File
 import java.nio.file.Path
 
 @Service(Service.Level.PROJECT)
@@ -130,13 +133,15 @@ class SemanticService(val project: Project) {
     }
 
     private fun cacheDir(): Path {
-//        File(PathManager.getSystemPath())
-//            .resolve("shire-semantic-search")
-//            .resolve("pattern-func").toPath()
-        return project.guessProjectDir()!!.toNioPath()
-            .resolve(".shire-cache")
-            .resolve("semantic")
+        return project.guessProjectDir()
+            ?.toNioPathOrNull()
+            ?.resolve(".shire-cache")
+            ?.resolve("semantic") ?: systemPath()
     }
+
+    private fun systemPath(): Path = File(PathManager.getSystemPath())
+        .resolve("shire-cache")
+        .resolve("semantic").toPath()
 }
 
 fun VirtualFile.canBeAdded(): Boolean {
