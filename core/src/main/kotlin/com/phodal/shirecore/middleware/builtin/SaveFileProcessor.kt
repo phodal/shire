@@ -17,21 +17,16 @@ import com.phodal.shirecore.middleware.PostProcessor
 
 class SaveFileProcessor : PostProcessor, Disposable {
     override val processorName: String = BuiltinPostHandler.SaveFile.handleName
-    private val disposableFlag = Disposer.newCheckedDisposable()
 
-    override fun isApplicable(context: PostCodeHandleContext): Boolean {
-        return true
-    }
+    override fun isApplicable(context: PostCodeHandleContext): Boolean = true
 
     override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?, args: List<Any>): String {
-        val language = context.genTargetLanguage ?: PlainTextLanguage.INSTANCE
-        val ext = context.genTargetExtension ?: language?.associatedFileType?.defaultExtension ?: "txt"
-
-        Disposer.register(this, disposableFlag)
-
         val fileName = if (args.isNotEmpty()) {
             args[0].toString()
         } else {
+            val language = context.genTargetLanguage ?: PlainTextLanguage.INSTANCE
+            val ext = context.genTargetExtension ?: language?.associatedFileType?.defaultExtension ?: "txt"
+
             "${System.currentTimeMillis()}.$ext"
         }
 
