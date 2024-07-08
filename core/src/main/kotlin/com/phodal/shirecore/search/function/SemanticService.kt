@@ -11,6 +11,7 @@ import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.io.FileUtilRt
 import com.intellij.openapi.vfs.VirtualFile
+import com.phodal.shirecore.search.embedding.DiskSynchronizedEmbeddingSearchIndex
 import com.phodal.shirecore.search.embedding.EmbeddingSearchIndex
 import com.phodal.shirecore.search.embedding.InMemoryEmbeddingSearchIndex
 import kotlinx.coroutines.*
@@ -18,7 +19,7 @@ import java.io.File
 
 @Service(Service.Level.PROJECT)
 class SemanticService(val project: Project) {
-    val index: EmbeddingSearchIndex = InMemoryEmbeddingSearchIndex(
+    var index: EmbeddingSearchIndex = InMemoryEmbeddingSearchIndex(
         File(PathManager.getSystemPath())
             .resolve("shire-semantic-search")
             .resolve("pattern-func").toPath()
@@ -50,22 +51,23 @@ class SemanticService(val project: Project) {
     }
 
     suspend fun embedding(chunks: List<IndexEntry>): List<IndexEntry> {
-        return chunks.map { entry ->
+        val indexEntries = chunks.map { entry ->
             entry.embedding ?: run {
                 val embedding = embed(entry.chunk)
                 entry.embedding = embedding
                 entry
             }
 
+            index.addEntries(listOf(entry.chunk to entry.embedding!!))
             entry
         }
+
+        index.saveToDisk()
+        return indexEntries
     }
 
     suspend fun searching(embedChunks: List<IndexEntry>, input: String): List<String> {
         val inputEmbedding = embed(input)
-        val pairs = embedChunks.map { it.chunk to it.embedding!! }
-        index.addEntries(pairs, true)
-
         return index.findClosest(inputEmbedding, 10).map {
             "Similarity: ${it.similarity}, Text: ${it.text}"
         }
@@ -111,10 +113,28 @@ class SemanticService(val project: Project) {
             }.flatten()
         }
 
-    fun configCache(text: String): Any {
+    suspend fun configCache(text: String): Any {
+        val type = SemanticStorageType.fromString(text)
 
-        //
-        return ""
+        return when (type) {
+            SemanticStorageType.MEMORY -> {
+                index.loadFromDisk()
+            }
+
+            SemanticStorageType.DISK -> {
+                if (index is DiskSynchronizedEmbeddingSearchIndex) {
+                    index.loadFromDisk()
+                } else {
+                    index = DiskSynchronizedEmbeddingSearchIndex(
+                        File(PathManager.getSystemPath())
+                            .resolve("shire-semantic-search")
+                            .resolve("pattern-func").toPath()
+                    )
+
+                    index.loadFromDisk()
+                }
+            }
+        }
     }
 }
 
