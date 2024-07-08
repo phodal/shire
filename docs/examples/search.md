@@ -41,7 +41,7 @@ name: "AutoTest"
 description: "AutoTest"
 interaction: AppendCursor
 variables:
-  "*.docx": /.*/build\.gradle\.kts/ { caching | splitting | embedding | searching("hello") }
+  "*.docx": /.*/build\.gradle\.kts/ { caching("disk") | splitting | embedding | searching("hello") }
 ---
 Write unit test for following ${context.language} code.
 ```

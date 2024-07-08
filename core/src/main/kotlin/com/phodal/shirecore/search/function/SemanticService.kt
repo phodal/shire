@@ -5,25 +5,21 @@ import cc.unitmesh.document.parser.MsOfficeDocumentParser
 import cc.unitmesh.document.parser.PdfDocumentParser
 import cc.unitmesh.document.parser.TextDocumentParser
 import cc.unitmesh.rag.document.DocumentType
-import com.intellij.openapi.application.PathManager
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.project.guessProjectDir
 import com.intellij.openapi.util.io.FileUtilRt
 import com.intellij.openapi.vfs.VirtualFile
 import com.phodal.shirecore.search.embedding.DiskSynchronizedEmbeddingSearchIndex
 import com.phodal.shirecore.search.embedding.EmbeddingSearchIndex
 import com.phodal.shirecore.search.embedding.InMemoryEmbeddingSearchIndex
 import kotlinx.coroutines.*
-import java.io.File
+import java.nio.file.Path
 
 @Service(Service.Level.PROJECT)
 class SemanticService(val project: Project) {
-    var index: EmbeddingSearchIndex = InMemoryEmbeddingSearchIndex(
-        File(PathManager.getSystemPath())
-            .resolve("shire-semantic-search")
-            .resolve("pattern-func").toPath()
-    )
+    var index: EmbeddingSearchIndex = InMemoryEmbeddingSearchIndex(cacheDir())
 
     private val logger = Logger.getInstance(SemanticService::class.java)
 
@@ -125,16 +121,21 @@ class SemanticService(val project: Project) {
                 if (index is DiskSynchronizedEmbeddingSearchIndex) {
                     index.loadFromDisk()
                 } else {
-                    index = DiskSynchronizedEmbeddingSearchIndex(
-                        File(PathManager.getSystemPath())
-                            .resolve("shire-semantic-search")
-                            .resolve("pattern-func").toPath()
-                    )
+                    index = DiskSynchronizedEmbeddingSearchIndex(cacheDir())
 
                     index.loadFromDisk()
                 }
             }
         }
+    }
+
+    private fun cacheDir(): Path {
+//        File(PathManager.getSystemPath())
+//            .resolve("shire-semantic-search")
+//            .resolve("pattern-func").toPath()
+        return project.guessProjectDir()!!.toNioPath()
+            .resolve(".shire-cache")
+            .resolve("semantic")
     }
 }
 
