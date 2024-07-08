@@ -9,9 +9,11 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.PathManager
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.io.FileUtilRt
 import com.intellij.openapi.vfs.VirtualFile
 import com.phodal.shirecore.search.embedding.InMemoryEmbeddingSearchIndex
+import kotlinx.coroutines.*
 import java.io.File
 
 data class IndexEntry(
@@ -22,8 +24,8 @@ data class IndexEntry(
     var embedding: FloatArray? = null,
 )
 
-@Service(Service.Level.APP)
-class SemanticService {
+@Service(Service.Level.PROJECT)
+class SemanticService(val project: Project) {
     val index = InMemoryEmbeddingSearchIndex(
         File(PathManager.getSystemPath())
             .resolve("shire-semantic-search")
@@ -32,11 +34,21 @@ class SemanticService {
 
     private val logger = Logger.getInstance(SemanticService::class.java)
 
-    private val embedding: LocalEmbedding =
-        LocalEmbedding.create() ?: throw IllegalStateException("Can't create embedding")
+//    private val  embedding: Deferred<LocalEmbedding>
+//        get() = coroutineScope {
+//            async(Dispatchers.IO) {
+//                LocalEmbedding.create() ?: throw IllegalStateException("Can't create embedding")
+//            }
+//        }
+    suspend fun embedding(): Deferred<LocalEmbedding>  = coroutineScope {
+        async(Dispatchers.IO) {
+            LocalEmbedding.create() ?: throw IllegalStateException("Can't create embedding")
+        }
+    }
 
     suspend fun embed(chunk: String): FloatArray {
-        return embedding.embed(chunk)
+        val embedding = embedding()
+        return embedding.await().embed(chunk)
     }
 
     suspend fun embedList(chunk: Array<out String>): List<IndexEntry> {
@@ -112,10 +124,10 @@ class SemanticService {
         }.flatten()
     }
 
-    companion object {
-        fun getInstance(): SemanticService =
-            ApplicationManager.getApplication().getService(SemanticService::class.java)
-    }
+//    companion object {
+//        fun getInstance(): SemanticService =
+//            ApplicationManager.getApplication().getService(SemanticService::class.java)
+//    }
 }
 
 fun VirtualFile.canBeAdded(): Boolean {
