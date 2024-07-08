@@ -5,28 +5,20 @@ import cc.unitmesh.document.parser.MsOfficeDocumentParser
 import cc.unitmesh.document.parser.PdfDocumentParser
 import cc.unitmesh.document.parser.TextDocumentParser
 import cc.unitmesh.rag.document.DocumentType
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.PathManager
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.io.FileUtilRt
 import com.intellij.openapi.vfs.VirtualFile
+import com.phodal.shirecore.search.embedding.EmbeddingSearchIndex
 import com.phodal.shirecore.search.embedding.InMemoryEmbeddingSearchIndex
 import kotlinx.coroutines.*
 import java.io.File
 
-data class IndexEntry(
-    var index: Int,
-    var count: Int,
-    var chunk: String,
-    val file: VirtualFile? = null,
-    var embedding: FloatArray? = null,
-)
-
 @Service(Service.Level.PROJECT)
 class SemanticService(val project: Project) {
-    val index = InMemoryEmbeddingSearchIndex(
+    val index: EmbeddingSearchIndex = InMemoryEmbeddingSearchIndex(
         File(PathManager.getSystemPath())
             .resolve("shire-semantic-search")
             .resolve("pattern-func").toPath()
@@ -120,7 +112,9 @@ class SemanticService(val project: Project) {
         }
 
     fun configCache(text: String): Any {
-        TODO("Not yet implemented")
+
+        //
+        return ""
     }
 }
 
