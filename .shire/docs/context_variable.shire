@@ -1,0 +1,20 @@
+---
+name: "Context Variable"
+description: "Here is a description of the action."
+interaction: RunPanel
+variables:
+  "sourceContent": /ContextVariable\.kt/ { cat }
+---
+
+根据如下的代码，编写对应的文档：
+
+$sourceContent
+
+你应该输出的格式是 markdown 表格，形式如下：
+
+| 变量名 | 描述 |
+| --- | --- |
+
+要求：
+
+1. 变量名应该取自 `variable` 字段，要求全小写。
