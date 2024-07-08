@@ -5,27 +5,21 @@ parent: Shire Language
 nav_order: 5
 ---
 
-使用方式：
+## ContextVariable
 
-```shire
-直接在代码中使用 $selection 即可。
-```
+| 变量名           | 描述                                    |
+|---------------|---------------------------------------|
+| selection     | User selection code/element's in text |
+| beforeCursor  | All the text before the cursor        |
+| afterCursor   | All the text after the cursor         |
+| fileName      | The name of the file                  |
+| filePath      | The path of the file                  |
+| methodName    | The name of the method                |
+| language      | The language of the current file      |
+| commentSymbol | The comment symbol of the language    |
+| all           | All the text                          |
 
-## Basic Context Variables
-
-| 变量名           | 类型                                                                |
-|---------------|-------------------------------------------------------------------|
-| selection     | User selection code/element's in text                             |
-| beforecursor  | All the text before the cursor                                    |
-| aftercursor   | All the text after the cursor                                     |
-| filename      | The name of the file                                              |
-| filepath      | The path of the file                                              |
-| methodname    | The name of the method                                            |
-| language      | The language of the current file, will use IntelliJ's language ID |
-| commentsymbol | The comment symbol of the language, for example, `//` in Java     |
-| all           | All the text                                                      |
-
-## PSI Context Variables
+## PsiContextVariable
 
 | 变量名                 | 描述                                                                          |
 |---------------------|-----------------------------------------------------------------------------|
@@ -44,3 +38,4 @@ nav_order: 5
 | methodCaller        | The method that initiates the current call                                  |
 | calledMethod        | The method that is being called by the current method                       |
 | similarCode         | Recently 20 files similar code based on the tf-idf search                   |
+

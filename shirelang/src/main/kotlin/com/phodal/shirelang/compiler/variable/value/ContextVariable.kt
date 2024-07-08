@@ -1,6 +1,6 @@
 package com.phodal.shirelang.compiler.variable.value
 
-enum class ContextVariable(val variable: String, val description: String) {
+enum class ContextVariable(val variableName: String, val description: String) {
     SELECTION("selection", "User selection code/element's in text"),
     BEFORE_CURSOR("beforeCursor", "All the text before the cursor"),
     AFTER_CURSOR("afterCursor", "All the text after the cursor"),

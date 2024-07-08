@@ -17,7 +17,7 @@ object CompositeVariableProvider {
         val results = mutableListOf<VariableDisplay>()
 
         ContextVariable.values().forEach {
-            results.add(VariableDisplay(it.variable, it.description, 99.0))
+            results.add(VariableDisplay(it.variableName, it.description, 99.0))
         }
 
         PsiContextVariable.values().forEach {

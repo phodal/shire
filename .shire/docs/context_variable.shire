@@ -1,20 +1,45 @@
 ---
 name: "Context Variable"
 description: "Here is a description of the action."
-interaction: RunPanel
+interaction:  RunPanel
 variables:
-  "sourceContent": /ContextVariable\.kt/ { cat }
+  "contextVariable": /ContextVariable\.kt/ { cat }
+  "psiContextVariable": /PsiContextVariable\.kt/ { cat }
+onStreamingEnd: { parseCode | saveFile("docs/shire/shire-context-variable.md")  }
 ---
 
-根据如下的代码，编写对应的文档：
+根据如下的信息，编写对应的 ContextVariable 相关信息的 markdown 文档。
 
-$sourceContent
+你所需要包含的 ContextVariable 信息如下：
 
-你应该输出的格式是 markdown 表格，形式如下：
+```
+$contextVariable
+```
 
-| 变量名 | 描述 |
-| --- | --- |
+你所需要包含的 PsiContextVariable 信息如下：
 
-要求：
+```
+$psiContextVariable
+```
 
-1. 变量名应该取自 `variable` 字段，要求全小写。
+要求 1. Variable 信息使用表格展示，表格的第一列是变量名，第二列是描述，表格的第一行是表头，表头的第一列是 `变量名`，第二列是 `描述`。
+要求 2. 变量名应该取自 `variableName` field，即采用 camelCase 命名法。
+要求 3. 你应该输出的格式是 markdown 格式，包含 front matter 和正文。
+
+返回示例格式如下：
+
+```markdown
+\-\-\-
+layout: default
+title: Shire Context Variable
+parent: Shire Language
+nav_order: 5
+\-\-\-
+
+## Context Variable
+
+
+## PsiContextVariable
+```
+
+请将内容放到上述的 markdown 模板中 。

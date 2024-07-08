@@ -17,7 +17,7 @@ class ContextVariableResolver(
         val caretModel = context.editor.caretModel
 
         all().associate {
-            it.variable to when (it) {
+            it.variableName to when (it) {
                 SELECTION -> context.editor.selectionModel.selectedText ?: ""
                 BEFORE_CURSOR -> file?.text?.substring(0, caretModel.offset) ?: ""
                 AFTER_CURSOR -> file?.text?.substring(caretModel.offset) ?: ""
