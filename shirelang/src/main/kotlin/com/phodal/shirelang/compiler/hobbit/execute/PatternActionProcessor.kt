@@ -3,6 +3,7 @@ package com.phodal.shirelang.compiler.hobbit.execute
 import com.intellij.openapi.project.Project
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.patternaction.PatternActionTransform
+import kotlinx.coroutines.runBlocking
 
 
 class PatternActionProcessor(override val myProject: Project, override val hole: HobbitHole) :
@@ -29,7 +30,9 @@ PatternFuncProcessor(myProject, hole) {
                 .toTypedArray()
         }
 
-        return this.execute(actionTransform, input)
+        return runBlocking {
+            execute(actionTransform, input)
+        }
     }
 
     /**
@@ -45,7 +48,7 @@ PatternFuncProcessor(myProject, hole) {
      * @param input The input on which the transformations are to be applied.
      * @return The result of applying the transformations to the input as a String.
      */
-    fun execute(transform: PatternActionTransform, input: Any): String {
+    suspend fun execute(transform: PatternActionTransform, input: Any): String {
         var result = input
         transform.patternActionFuncs.forEach { action ->
             result = patternFunctionExecute(action, result, input)

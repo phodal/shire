@@ -7,6 +7,7 @@ import com.nfeld.jsonpathkt.extension.read
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.ast.*
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
+import kotlinx.coroutines.runBlocking
 
 open class FunctionStatementProcessor(override val myProject: Project, override val hole: HobbitHole) :
     PatternFuncProcessor(myProject, hole) {
@@ -18,7 +19,9 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
             }
 
             is Processor -> {
-                execute(statement.processors, variableTable)
+                runBlocking {
+                    execute(statement.processors, variableTable)
+                }
             }
 
             is MethodCall -> {
@@ -69,7 +72,7 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
         return null
     }
 
-    fun execute(processors: List<PatternActionFunc>, variableTable: MutableMap<String, Any?>): Any? {
+    suspend fun execute(processors: List<PatternActionFunc>, variableTable: MutableMap<String, Any?>): Any? {
         val input: Any = variableTable["output"] ?: ""
         var result: Any = variableTable["output"] ?: ""
         processors.forEach { action ->

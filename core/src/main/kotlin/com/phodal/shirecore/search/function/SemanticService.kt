@@ -34,13 +34,13 @@ class SemanticService(val project: Project) {
 
     private val logger = Logger.getInstance(SemanticService::class.java)
 
-//    private val  embedding: Deferred<LocalEmbedding>
+    //    private val  embedding: Deferred<LocalEmbedding>
 //        get() = coroutineScope {
 //            async(Dispatchers.IO) {
 //                LocalEmbedding.create() ?: throw IllegalStateException("Can't create embedding")
 //            }
 //        }
-    suspend fun embedding(): Deferred<LocalEmbedding>  = coroutineScope {
+    suspend fun embedding(): Deferred<LocalEmbedding> = coroutineScope {
         async(Dispatchers.IO) {
             LocalEmbedding.create() ?: throw IllegalStateException("Can't create embedding")
         }
@@ -85,44 +85,45 @@ class SemanticService(val project: Project) {
         }
     }
 
-    fun splitting(path: List<VirtualFile>): List<IndexEntry> {
-        return path.map { file ->
-            val inputStream = file.inputStream
-            val extension = file.extension ?: return@map emptyList()
-            val parser = when (val documentType = DocumentType.of(extension)) {
-                DocumentType.TXT -> TextDocumentParser(documentType)
-                DocumentType.PDF -> PdfDocumentParser()
-                DocumentType.HTML -> TextDocumentParser(documentType)
-                DocumentType.DOC -> MsOfficeDocumentParser(documentType)
-                DocumentType.XLS -> MsOfficeDocumentParser(documentType)
-                DocumentType.PPT -> MsOfficeDocumentParser(documentType)
-                DocumentType.MD -> MdDocumentParser()
-                null -> {
-                    if (!file.canBeAdded()) {
-                        logger.warn("File ${file.path} can't be added to the index")
-                        return@map emptyList()
+    suspend fun splitting(path: List<VirtualFile>): List<IndexEntry> =
+        withContext(Dispatchers.IO) {
+            path.map { file ->
+                val inputStream = file.inputStream
+                val extension = file.extension ?: return@map emptyList()
+                val parser = when (val documentType = DocumentType.of(extension)) {
+                    DocumentType.TXT -> TextDocumentParser(documentType)
+                    DocumentType.PDF -> PdfDocumentParser()
+                    DocumentType.HTML -> TextDocumentParser(documentType)
+                    DocumentType.DOC -> MsOfficeDocumentParser(documentType)
+                    DocumentType.XLS -> MsOfficeDocumentParser(documentType)
+                    DocumentType.PPT -> MsOfficeDocumentParser(documentType)
+                    DocumentType.MD -> MdDocumentParser()
+                    null -> {
+                        if (!file.canBeAdded()) {
+                            logger.warn("File ${file.path} can't be added to the index")
+                            return@map emptyList()
+                        }
+
+                        TextDocumentParser(DocumentType.TXT)
+                    }
+                }
+
+                parser.parse(inputStream).mapIndexed { index, document ->
+                    // filter document.text.length < 0
+                    if (document.text.isBlank()) {
+                        return@mapIndexed null
                     }
 
-                    TextDocumentParser(DocumentType.TXT)
-                }
-            }
-
-            parser.parse(inputStream).mapIndexed { index, document ->
-                // filter document.text.length < 0
-                if (document.text.isBlank()) {
-                    return@mapIndexed null
-                }
-
-                IndexEntry(
-                    index = index,
-                    count = document.text.length,
-                    chunk = document.text,
-                    file = file,
-                    embedding = null
-                )
-            }.filterNotNull()
-        }.flatten()
-    }
+                    IndexEntry(
+                        index = index,
+                        count = document.text.length,
+                        chunk = document.text,
+                        file = file,
+                        embedding = null
+                    )
+                }.filterNotNull()
+            }.flatten()
+        }
 
 //    companion object {
 //        fun getInstance(): SemanticService =
