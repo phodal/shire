@@ -34,12 +34,6 @@ class SemanticService(val project: Project) {
 
     private val logger = Logger.getInstance(SemanticService::class.java)
 
-    //    private val  embedding: Deferred<LocalEmbedding>
-//        get() = coroutineScope {
-//            async(Dispatchers.IO) {
-//                LocalEmbedding.create() ?: throw IllegalStateException("Can't create embedding")
-//            }
-//        }
     suspend fun embedding(): Deferred<LocalEmbedding> = coroutineScope {
         async(Dispatchers.IO) {
             LocalEmbedding.create() ?: throw IllegalStateException("Can't create embedding")
@@ -125,10 +119,9 @@ class SemanticService(val project: Project) {
             }.flatten()
         }
 
-//    companion object {
-//        fun getInstance(): SemanticService =
-//            ApplicationManager.getApplication().getService(SemanticService::class.java)
-//    }
+    fun configCache(text: String): Any {
+        TODO("Not yet implemented")
+    }
 }
 
 fun VirtualFile.canBeAdded(): Boolean {

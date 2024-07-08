@@ -15,8 +15,6 @@ import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.ast.FrontMatterType
 import com.phodal.shirelang.compiler.hobbit.ast.Statement
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
-import com.phodal.shirelang.run.flow.ShireProcessProcessor
-import kotlinx.coroutines.runBlocking
 import java.io.File
 
 private val PatternFuncProcessor.semanticService: SemanticService?
@@ -189,6 +187,10 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
 
             is PatternActionFunc.Searching -> {
                 semanticService.searching(lastResult as List<IndexEntry>, action.text)
+            }
+
+            is PatternActionFunc.Caching -> {
+                semanticService.configCache(action.text)
             }
         }
     }

@@ -141,6 +141,11 @@ sealed class PatternActionFunc(open val funcName: String) {
     class Searching(val text: String) : PatternActionFunc("searching")
 
     /**
+     * Caching semantic
+     */
+    class Caching(val text: String) : PatternActionFunc("caching")
+
+    /**
      * User Custom Functions
      */
     class UserCustom(override val funcName: String, val args: List<String>) : PatternActionFunc(funcName) {

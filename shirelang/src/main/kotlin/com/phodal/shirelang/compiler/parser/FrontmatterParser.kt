@@ -590,6 +590,10 @@ object FrontmatterParser {
                 PatternActionFunc.Searching(args[0])
             }
 
+            "caching" -> {
+                PatternActionFunc.Caching(args[0])
+            }
+
             null -> {
                 logger.warn("parsePatternAction, Unknown pattern action: ${expr.funcCall}")
                 return null
