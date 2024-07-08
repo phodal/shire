@@ -7,7 +7,7 @@ import com.phodal.shirelang.compiler.variable.base.VariableResolverContext
 class UserCustomVariableResolver(
     private val context: VariableResolverContext
 ) : VariableResolver {
-    override fun resolve() : Map<String, String> {
+    override suspend fun resolve() : Map<String, String> {
         if (context.hole == null) {
             return emptyMap()
         }

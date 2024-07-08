@@ -4,6 +4,7 @@ import com.intellij.execution.console.ConsoleViewWrapperBase
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.ide.DataManager
 import com.intellij.openapi.actionSystem.CommonDataKeys
+import com.intellij.openapi.application.runInEdt
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
@@ -45,7 +46,7 @@ class ShireRunner(
 ) {
     private val terminalLocationExecutor = TerminalLocationExecutor.provide(project)
 
-    fun execute(parsedResult: ShireParsedResult) {
+    suspend fun execute(parsedResult: ShireParsedResult) {
         prepareExecute(parsedResult)
 
         val runnerContext = processTemplateCompile(parsedResult)
@@ -93,7 +94,7 @@ class ShireRunner(
         }
     }
 
-    private fun processTemplateCompile(compileResult: ShireParsedResult): ShireRunnerContext {
+    private suspend fun processTemplateCompile(compileResult: ShireParsedResult): ShireRunnerContext {
         val hobbitHole = compileResult.config
 
         val templateCompiler =

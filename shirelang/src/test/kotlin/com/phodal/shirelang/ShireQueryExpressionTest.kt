@@ -6,6 +6,7 @@ import com.phodal.shirelang.compiler.ShireSyntaxAnalyzer
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 import com.phodal.shirelang.compiler.hobbit.execute.PatternActionProcessor
 import com.phodal.shirelang.psi.ShireFile
+import kotlinx.coroutines.runBlocking
 
 class ShireQueryExpressionTest : BasePlatformTestCase() {
     fun testShouldGetFromExpression() {
@@ -47,8 +48,10 @@ class ShireQueryExpressionTest : BasePlatformTestCase() {
         assertEquals(whereDisplay, "clazz.text == \"HelloWorld.txt\"")
         assertEquals(selectDisplay, listOf("clazz.toString", "\"code\""))
 
-        val results = hole.variables.mapValues {
-            PatternActionProcessor(project, hole).execute(it.value)
+        val results = runBlocking {
+            hole.variables.mapValues {
+                PatternActionProcessor(project, hole).execute(it.value)
+            }
         }
 
         assertEquals(results["allController"], """

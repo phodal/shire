@@ -19,7 +19,7 @@ class ShireTemplateCompiler(
 ) {
     private val customVariables: MutableMap<String, String> = mutableMapOf()
 
-    fun compile(): String {
+    suspend fun compile(): String {
         val prompt = doExecuteCompile()
         return cleanUp(prompt)
     }
@@ -28,7 +28,7 @@ class ShireTemplateCompiler(
         prompt.trim()
             .replace("\n\n", "\n")
 
-    private fun doExecuteCompile(): String {
+    private suspend fun doExecuteCompile(): String {
         val currentEditor = VariableTemplateCompiler.defaultEditor(myProject)
         val currentElement = VariableTemplateCompiler.defaultElement(myProject, currentEditor)
 

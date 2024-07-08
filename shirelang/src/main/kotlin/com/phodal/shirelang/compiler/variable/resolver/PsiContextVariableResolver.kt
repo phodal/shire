@@ -25,7 +25,7 @@ class PsiContextVariableResolver(
         }
     }
 
-    override fun resolve(): Map<String, Any> {
+    override suspend fun resolve(): Map<String, Any> {
         val result = mutableMapOf<String, Any>()
         context.variableTable.getAllVariables().forEach {
             val psiContextVariable = PsiContextVariable.from(it.key)

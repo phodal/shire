@@ -10,7 +10,7 @@ import com.phodal.shirelang.compiler.variable.base.VariableResolverContext
 class SystemInfoVariableResolver(
     private val context: VariableResolverContext,
 ) : VariableResolver {
-    override fun resolve(): Map<String, Any> {
+    override suspend fun resolve(): Map<String, Any> {
         val result = mutableMapOf<String, Any>()
         SystemInfoVariable.all().forEach {
             result[it.variableName] = it.value!!

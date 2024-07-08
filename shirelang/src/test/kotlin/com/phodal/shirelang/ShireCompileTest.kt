@@ -10,6 +10,7 @@ import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 import com.phodal.shirelang.compiler.hobbit.execute.PatternActionProcessor
 import com.phodal.shirelang.psi.ShireFile
 import junit.framework.TestCase
+import kotlinx.coroutines.runBlocking
 
 class ShireCompileTest : BasePlatformTestCase() {
     fun testNormalString() {
@@ -259,8 +260,10 @@ class ShireCompileTest : BasePlatformTestCase() {
         assertEquals(1, table.getAllVariables().size)
         assertEquals(11, table.getVariable("fileName").lineDeclared)
 
-        val results = hole.variables.mapValues {
-            PatternActionProcessor(project, hole).execute(it.value)
+        val results = runBlocking {
+            hole.variables.mapValues {
+                PatternActionProcessor(project, hole).execute(it.value)
+            }
         }
 
         assertEquals("demo", results["var1"])
@@ -289,8 +292,10 @@ class ShireCompileTest : BasePlatformTestCase() {
         val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
         val hole = compile.config!!
 
-        val results = hole.variables.mapValues {
-            PatternActionProcessor(project, hole).execute(it.value)
+        val results = runBlocking {
+            hole.variables.mapValues {
+                PatternActionProcessor(project, hole).execute(it.value)
+            }
         }
 
         assertEquals(
@@ -324,8 +329,10 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         TestCase.assertEquals(1, hole.variables.size)
 
-        val results = hole.variables.mapValues {
-            PatternActionProcessor(project, hole).execute(it.value)
+        val results = runBlocking {
+            hole.variables.mapValues {
+                PatternActionProcessor(project, hole).execute(it.value)
+            }
         }
 
         assertEquals("/src/test.shire", results["var1"])

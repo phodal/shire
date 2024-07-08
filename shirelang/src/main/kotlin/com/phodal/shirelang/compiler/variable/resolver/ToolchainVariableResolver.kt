@@ -16,7 +16,7 @@ import com.phodal.shirelang.compiler.variable.base.VariableResolverContext
 class ToolchainVariableResolver(
     private val context: VariableResolverContext,
 ) : VariableResolver {
-    override fun resolve(): Map<String, Any> {
+    override suspend fun resolve(): Map<String, Any> {
         val result = mutableMapOf<String, Any>()
         context.variableTable.getAllVariables().forEach {
             val variable = ToolchainVariable.from(it.key)

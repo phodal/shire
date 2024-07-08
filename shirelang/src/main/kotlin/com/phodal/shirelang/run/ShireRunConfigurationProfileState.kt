@@ -18,11 +18,13 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Key
 import com.intellij.ui.components.panels.NonOpaquePanel
+import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirecore.provider.context.ActionLocationEditor
 import com.phodal.shirelang.compiler.ShireSyntaxAnalyzer
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.runner.ShireRunner
+import kotlinx.coroutines.launch
 import java.awt.BorderLayout
 import javax.swing.JComponent
 
@@ -76,7 +78,9 @@ open class ShireRunConfigurationProfileState(
             isShowRunContent = false
         }
 
-        shireRunner.execute(parsedResult)
+        ShireCoroutineScope.scope(myProject).launch {
+            shireRunner.execute(parsedResult)
+        }
 
         return DefaultExecutionResult(console, processHandler)
     }

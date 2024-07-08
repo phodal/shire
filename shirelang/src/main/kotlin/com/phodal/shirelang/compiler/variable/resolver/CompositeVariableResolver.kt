@@ -13,7 +13,7 @@ class CompositeVariableResolver(
         context.element = element
     }
 
-    override fun resolve(): Map<String, Any> {
+    override suspend fun resolve(): Map<String, Any> {
         val resolverList = listOf(
             /**
              * Include ToolchainVariableProvider and PsiContextVariableProvider
