@@ -1,7 +1,6 @@
 package com.phodal.shirelang.git.provider
 
 import com.intellij.ide.DataManager
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
@@ -14,12 +13,12 @@ import com.intellij.vcs.commit.CommitWorkflowUi
 import com.intellij.vcs.log.VcsLogFilterCollection
 import com.intellij.vcs.log.VcsLogProvider
 import com.intellij.vcs.log.impl.VcsProjectLog
-import com.intellij.vcs.log.runInEdtAsync
 import com.intellij.vcs.log.visible.filters.VcsLogFilterObject
-import com.phodal.shirecore.provider.variable.model.VcsToolchainVariable
 import com.phodal.shirecore.provider.variable.ToolchainVariableProvider
 import com.phodal.shirecore.provider.variable.model.ToolchainVariable
+import com.phodal.shirecore.provider.variable.model.VcsToolchainVariable
 import com.phodal.shirelang.git.VcsPrompting
+import java.awt.EventQueue.invokeAndWait
 
 
 class GitToolchainVariableProvider : ToolchainVariableProvider {
@@ -48,13 +47,17 @@ class GitToolchainVariableProvider : ToolchainVariableProvider {
                     logger.warn("Cannot get commit workflow UI.")
                     return variable
                 }
-                val changes = getDiff(commitWorkflowUi)
+                var changes: List<Change>? = null
+                invokeAndWait {
+                    changes = getDiff(commitWorkflowUi)
+                }
+
                 if (changes == null) {
                     logger.warn("Cannot get changes.")
                     return variable
                 }
 
-                val diffContext = project.getService(VcsPrompting::class.java).prepareContext(changes)
+                val diffContext = project.getService(VcsPrompting::class.java).prepareContext(changes!!)
 
                 if (diffContext.isEmpty() || diffContext == "\n") {
                     logger.warn("Diff context is empty or cannot get enough useful context.")
@@ -139,11 +142,7 @@ class GitToolchainVariableProvider : ToolchainVariableProvider {
     }
 
     private fun getDiff(commitWorkflowUi: CommitWorkflowUi): List<Change>? {
-        var changes = emptyList<Change>()
-        ApplicationManager.getApplication().invokeAndWait {
-            changes = commitWorkflowUi.getIncludedChanges()
-        }
-
+        val changes = commitWorkflowUi.getIncludedChanges()
         val unversionedFiles = commitWorkflowUi.getIncludedUnversionedFiles()
 
         val unversionedFileChanges = unversionedFiles.map {
