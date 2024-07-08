@@ -81,6 +81,7 @@ open class ShireRunConfigurationProfileState(
             isShowRunContent = false
         }
 
+        console!!.print("Prepare for running ${configuration.name}...\n", ConsoleViewContentType.NORMAL_OUTPUT)
         CoroutineScope(workerThread).launch {
             shireRunner.execute(parsedResult)
         }
