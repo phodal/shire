@@ -1,6 +1,7 @@
 package com.phodal.shirelang.git.provider
 
 import com.intellij.ide.DataManager
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
@@ -13,6 +14,7 @@ import com.intellij.vcs.commit.CommitWorkflowUi
 import com.intellij.vcs.log.VcsLogFilterCollection
 import com.intellij.vcs.log.VcsLogProvider
 import com.intellij.vcs.log.impl.VcsProjectLog
+import com.intellij.vcs.log.runInEdtAsync
 import com.intellij.vcs.log.visible.filters.VcsLogFilterObject
 import com.phodal.shirecore.provider.variable.model.VcsToolchainVariable
 import com.phodal.shirecore.provider.variable.ToolchainVariableProvider
@@ -137,7 +139,11 @@ class GitToolchainVariableProvider : ToolchainVariableProvider {
     }
 
     private fun getDiff(commitWorkflowUi: CommitWorkflowUi): List<Change>? {
-        val changes = commitWorkflowUi.getIncludedChanges()
+        var changes = emptyList<Change>()
+        ApplicationManager.getApplication().invokeAndWait {
+            changes = commitWorkflowUi.getIncludedChanges()
+        }
+
         val unversionedFiles = commitWorkflowUi.getIncludedUnversionedFiles()
 
         val unversionedFileChanges = unversionedFiles.map {
