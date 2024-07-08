@@ -1,5 +1,6 @@
 package com.phodal.shirelang.compiler
 
+import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.project.Project
 import com.phodal.shirelang.compile.VariableTemplateCompiler
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
@@ -36,7 +37,7 @@ class ShireTemplateCompiler(
             val context = VariableResolverContext(myProject, currentEditor, hole, variableTable, null)
             val additionalMap: Map<String, Any> = CompositeVariableResolver(context).resolve()
 
-            val file = currentElement.containingFile
+            val file = runReadAction { currentElement.containingFile }
             val templateCompiler = VariableTemplateCompiler(file.language, file)
 
             templateCompiler.putAll(additionalMap)

@@ -1,6 +1,7 @@
 package com.phodal.shirelang.compile
 
 import com.intellij.lang.Language
+import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.fileEditor.FileEditorManager
@@ -61,18 +62,19 @@ class VariableTemplateCompiler(
          * @param currentEditor the current editor where the caret position is located
          * @return the PsiElement at the current caret position, or null if not found
          */
-        fun defaultElement(myProject: Project, currentEditor: Editor?): PsiElement? {
-            return currentEditor?.caretModel?.currentCaret?.offset?.let {
-                val psiFile = currentEditor.let { editor ->
-                    val psiFile = editor.virtualFile?.let { file ->
-                        PsiManager.getInstance(myProject).findFile(file)
-                    }
+        fun defaultElement(myProject: Project, currentEditor: Editor?): PsiElement? =
+            ReadAction.compute<PsiElement?, Throwable> {
+                currentEditor?.caretModel?.currentCaret?.offset?.let {
+                    val psiFile = currentEditor.let { editor ->
+                        val psiFile = editor.virtualFile?.let { file ->
+                            PsiManager.getInstance(myProject).findFile(file)
+                        }
 
-                    psiFile
-                } ?: return@let null
+                        psiFile
+                    } ?: return@let null
 
-                psiFile.findElementAt(it) ?: return@let psiFile
+                    psiFile.findElementAt(it) ?: return@let psiFile
+                }
             }
-        }
     }
 }

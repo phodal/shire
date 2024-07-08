@@ -4,11 +4,13 @@ import com.intellij.execution.console.ConsoleViewWrapperBase
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.ide.DataManager
 import com.intellij.openapi.actionSystem.CommonDataKeys
+import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.application.runInEdt
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
+import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirecore.config.interaction.PostFunction
@@ -220,7 +222,9 @@ class ShireRunner(
         val hobbitHole = parsedResult.config
         val editor = FileEditorManager.getInstance(project).selectedTextEditor
         val pickupElement = hobbitHole?.pickupElement(project, editor)
-        val file = DataManager.getInstance().getDataContext().getData(CommonDataKeys.PSI_FILE)
+        val file = runReadAction {
+            editor?.let { PsiManager.getInstance(project).findFile(it.virtualFile) }
+        }
 
         val context = PostCodeHandleContext.getData() ?: PostCodeHandleContext(
             selectedEntry = pickupElement,

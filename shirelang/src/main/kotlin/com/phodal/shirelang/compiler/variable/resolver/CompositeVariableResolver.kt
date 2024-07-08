@@ -1,5 +1,6 @@
 package com.phodal.shirelang.compiler.variable.resolver
 
+import com.intellij.openapi.application.ReadAction
 import com.intellij.psi.PsiElement
 import com.phodal.shirecore.middleware.select.SelectElementStrategy
 import com.phodal.shirelang.compiler.variable.base.VariableResolver
@@ -9,7 +10,10 @@ class CompositeVariableResolver(
    private val context: VariableResolverContext
 ) : VariableResolver {
     init {
-        val element: PsiElement? = SelectElementStrategy.resolvePsiElement(context.myProject, context.editor)
+        val element: PsiElement? = ReadAction.compute<PsiElement?, Throwable>{
+            SelectElementStrategy.resolvePsiElement(context.myProject, context.editor)
+        }
+
         context.element = element
     }
 

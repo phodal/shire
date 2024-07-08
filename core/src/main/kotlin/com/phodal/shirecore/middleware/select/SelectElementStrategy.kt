@@ -1,13 +1,11 @@
 package com.phodal.shirecore.middleware.select
 
 import com.intellij.openapi.application.runInEdt
-import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.NlsSafe
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
-import com.intellij.psi.util.PsiUtilBase
 
 sealed class SelectedEntry(open val element: Any) {
     class Text(override val element: String) : SelectedEntry(element)
