@@ -18,8 +18,6 @@ import com.phodal.shirelang.psi.ShireTypes
 class CodeBlockElement(node: ASTNode) : ASTWrapperPsiElement(node), PsiLanguageInjectionHost,
     InjectionBackgroundSuppressor {
 
-    private val isShireLanguage: Boolean = false
-
     override fun isValidHost(): Boolean {
         return isAbleToAcceptInjections(this)
     }
