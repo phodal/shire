@@ -25,15 +25,9 @@ IDE 不仅仅是一个文本编辑器或编程环境，而是一个能够理解�
 示例：
 
 ```shire
----
-variables:
-  "var2": /.*.java/ { cat | grep("error.log") | sort | cat }
-   "extContext": /build\.gradle\.kts/ { cat | grep("org.springframework.boot:spring-boot-starter-jdbc") | print("This project use Spring Framework")}
----
+解释如下代码片段。
 
-解释如下代码
-
-相关上下文： $extContext
+项目相关的技术栈上下文： $frameworkContext
 
 $selection
 ```    
@@ -42,7 +36,34 @@ $selection
 操作，IDE 可以根据条件过滤和处理代码文件，同时通过 PSI 查询语言进行高级的代码结构分析和提取。这样的能力不仅提升了开发者的效率，还使得
 AI 能够更智能地参与到代码开发和分析过程中。
 
-## DSL 即通信语言协议
+## 语言即接口抽象
+
+> 语言接口是一种使用自然语言作为领域特定语言（DSL）或与系统进行交互的接口。它通过解析、处理和分析自然语言，以指导系统的设计、开发和执行。
+> 它的设计目的是提高开发效率、准确性和用户体验，使开发人员能够使用自然语言描述系统需求、执行任务并获取系统生成的结果。
+
+在 Shire 中，我们引入了一种语言接口设计原则，将抽象部分自然语言作为领域特定语言（DSL）或与系统进行交互的接口。这种设计原则包括以下几个方面：
+
+- **领域特定语言（DSL）**。DSL 是一种专门用于解决特定领域问题的语言，它通过简单、直观的语法和语义，使得开发人员能够更容易地描述和执行特定任务。
+  在 Shire 中，我们引入了一种类似于 YAML 的HobbitHole，用于描述数据处理流程和 IDE 交互逻辑。通过这种
+  DSL，开发人员可以定义数据处理流程、交互逻辑和输出结果，
+- **自然语言即 LLM 接口**。对于 LLM 而言，自然语言是一种重要的接口，用于描述和执行代码生成任务。通过自然语言描述，开发人员可以定义代码生成模板、
+  变量和条件，以及执行代码生成任务。这种设计原则使得开发人员能够更直观、灵活地描述和执行代码生成任务，提高了代码生成的效率和准确性。
+
+示例：
+
+```shire
+---
+name: "AutoTest"
+description: "AutoTest"
+interaction: AppendCursor
+actionLocation: ContextMenu
+---
+Write unit test for following ${context.language} code.
+...
+```
+
+通过上述的配置，我们定义了一个名为 "AutoTest" 的 HobbitHole，用于生成自动化测试代码。通过这种 DSL + 自然语言的结合，我们可以定义基在 IDE 
+中的交互类型、操作位置和其他属性，进而实现代码生成任务的自动化和智能化。
 
 ## AFU：原子性作为抽象（Atomic Functional Units）
 
