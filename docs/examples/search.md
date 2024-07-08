@@ -25,3 +25,5 @@ Write unit test for following ${context.language} code.
   - embedding the input string
   - execute relevant search
   - return result
+- caching, caching the search result
+  - support for local, remote, or InMemory cache?
