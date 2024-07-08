@@ -17,6 +17,11 @@ Write unit test for following ${context.language} code.
 ```
 
 - splitting, splitting the file
+  - splitting by the file extension
+  - support format: `*.docx`, `*.md`, `*.txt`, `*.pdf`, `*.xlsx`, `*.pptx` or other text-based file
 - embedding, embedding full path of the file
-- indexing, indexing the file
-- relevant, searching for a specific string in the file
+  - embedding to InMemory: [InMemoryEmbeddingSearchIndex]
+- searching, searching for a specific string in the file, which will
+  - embedding the input string
+  - execute relevant search
+  - return result
