@@ -1,0 +1,28 @@
+---
+name: "Context Variable"
+description: "Here is a description of the action."
+interaction:  RunPanel
+variables:
+  "currentDoc": /on-streaming-done.md/ { cat }
+  "currentCode": /BuiltinPostHandler\.kt/ { cat }
+onStreamingEnd: { saveFile("docs/lifecycle/on-streaming-done.md")  }
+---
+
+根据如下当前的最新代码，更新现有的文档，请返回更新后的文档内容。
+
+最新的代码如下：
+
+$currentCode
+
+你需要更新的文档如下：
+
+$currentDoc
+
+要求：
+
+1. 使用表格展示内置的后处理器
+2. 粘贴必要的代码（如果有的话）
+
+请重新整理文档内容，使其符合最新的代码。
+
+
