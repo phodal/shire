@@ -1,6 +1,7 @@
 package com.phodal.shirelang.compiler.variable.resolver
 
 import com.intellij.openapi.application.ReadAction
+import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
@@ -36,7 +37,7 @@ class PsiContextVariableResolver(
             val psiContextVariable = PsiContextVariable.from(it.key)
             if (psiContextVariable != null) {
                 result[it.key] = try {
-                    ReadAction.compute<Any, Throwable> {
+                    runReadAction {
                         variableProvider.resolve(psiContextVariable, context.myProject, context.editor, context.element)
                     }
                 } catch (e: Exception) {

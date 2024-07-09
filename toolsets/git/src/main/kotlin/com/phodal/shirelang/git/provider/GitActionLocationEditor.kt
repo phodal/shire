@@ -10,13 +10,30 @@ import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirecore.provider.context.ActionLocationEditor
 
 class GitActionLocationEditor : ActionLocationEditor {
-    override fun isApplicable(hole: ShireActionLocation): Boolean = hole == ShireActionLocation.COMMIT_MENU
+    private var commitUi: CommitMessage? = null
+
+    override fun isApplicable(hole: ShireActionLocation): Boolean  {
+        val commitMessage = getCommitUi(hole)
+        if (commitMessage != null) {
+            commitUi = commitMessage
+        }
+
+        return hole == ShireActionLocation.COMMIT_MENU && commitMessage != null
+    }
 
     override fun resolve(project: Project, hole: ShireActionLocation): Editor? {
+        val commitMessageUi = commitUi ?: getCommitUi(hole) ?: return null
+        val editorField = commitMessageUi.editorField
+
+        editorField.text = ""
+        return editorField.editor
+    }
+
+    private fun getCommitUi(hole: ShireActionLocation): CommitMessage? {
         if (hole != ShireActionLocation.COMMIT_MENU) return null
 
         val dataContext = DataManager.getInstance().dataContextFromFocus.result
-        val commitWorkflowUi = dataContext.getData(VcsDataKeys.COMMIT_WORKFLOW_UI)
+        val commitWorkflowUi = dataContext?.getData(VcsDataKeys.COMMIT_WORKFLOW_UI)
 
         val commitMessageUi = commitWorkflowUi?.commitMessageUi as? CommitMessage
 
@@ -25,9 +42,6 @@ class GitActionLocationEditor : ActionLocationEditor {
             return null
         }
 
-        val editorField = commitMessageUi.editorField
-
-        editorField.text = ""
-        return editorField.editor
+        return commitWorkflowUi as CommitMessage
     }
 }
