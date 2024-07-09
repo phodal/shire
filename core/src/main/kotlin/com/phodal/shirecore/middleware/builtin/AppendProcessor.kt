@@ -19,7 +19,14 @@ class AppendProcessor : PostProcessor {
         console: ConsoleView?,
         args: List<Any>,
     ): Any {
-        context.genText += args.joinToString("")
+
+        context.genText += args.map {
+            if (it.toString().startsWith("$")) {
+                context.compiledVariables[it.toString().substring(1)] ?: ""
+            } else {
+                it
+            }
+        }.joinToString(" ")
 
         return context.genText ?: ""
     }

@@ -1,6 +1,7 @@
 package com.phodal.shirelang.compiler
 
 import com.intellij.openapi.application.runReadAction
+import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.phodal.shirelang.compile.VariableTemplateCompiler
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
@@ -40,8 +41,7 @@ class ShireTemplateCompiler(
         val currentElement = VariableTemplateCompiler.defaultElement(myProject, currentEditor)
 
         if (currentElement != null && currentEditor != null) {
-            val context = VariableResolverContext(myProject, currentEditor, hole, variableTable, null)
-            val additionalMap: Map<String, Any> = CompositeVariableResolver(context).resolve()
+            val additionalMap: Map<String, Any> = compileVariable(currentEditor)
 
             compiledVariables = additionalMap.mapValues { it.value.toString() }
 
@@ -56,5 +56,11 @@ class ShireTemplateCompiler(
         }
 
         return input
+    }
+
+    suspend fun compileVariable(editor: Editor): Map<String, Any> {
+        val context = VariableResolverContext(myProject, editor, hole, variableTable, null)
+        val additionalMap: Map<String, Any> = CompositeVariableResolver(context).resolve()
+        return additionalMap
     }
 }

@@ -3,6 +3,7 @@ package com.phodal.shirelang
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.phodal.shirecore.middleware.PostCodeHandleContext
 import com.phodal.shirelang.compiler.ShireSyntaxAnalyzer
+import com.phodal.shirelang.compiler.ShireTemplateCompiler
 import com.phodal.shirelang.compiler.hobbit.execute.PatternActionProcessor
 import com.phodal.shirelang.psi.ShireFile
 import kotlinx.coroutines.runBlocking
@@ -33,14 +34,27 @@ class ShirePatternPipelineTest : BasePlatformTestCase() {
         val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
         val hole = compile.config!!
 
-        val results = runBlocking {
+        val context = PostCodeHandleContext(
+            genText = "User prompt:\n\n",
+        )
+
+        runBlocking {
+            val compiledVariables =
+                ShireTemplateCompiler(project, hole, compile.variableTable, code).compileVariable(myFixture.editor)
+
+            context.compiledVariables = compiledVariables
+
             hole.variables.mapValues {
                 PatternActionProcessor(project, hole).execute(it.value)
             }
 
-
-            hole.setupStreamingEndProcessor(project, context = PostCodeHandleContext())
-            hole.executeStreamingEndProcessor(project, null, context = PostCodeHandleContext())
+            hole.setupStreamingEndProcessor(project, context = context)
+            hole.executeStreamingEndProcessor(project, null, context = context)
         }
+
+        assertEquals("User prompt:\n\n" +
+                "  \"var2\": /.*ple.shire/ { cat | grep(\"fileName\") | sort }\n" +
+                "Summary webpage: \$fileName\n" +
+                "when: \$fileName.matches(\"/.*.java/\")", context.genText)
     }
 }
