@@ -6,7 +6,7 @@ variables:
   "currentCode": /HobbitHole\.kt/ { cat }
   "testCode": /ShireCompileTest\.kt/ { cat }
   "actionLocation": /ShireActionLocation\.kt/ { cat }
-onStreamingEnd: { saveFile("docs/shire/shire-hobbit-hole.md") | tee($actionLocation) }
+onStreamingEnd: { append($actionLocation) | saveFile("docs/shire/shire-hobbit-hole.md") }
 ---
 
 我有一份用户手册写得不好，需要你从用户容易阅读的角度，重新写一份。
