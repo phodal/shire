@@ -42,7 +42,7 @@ class GitToolchainVariableProvider : ToolchainVariableProvider {
         when (variable) {
             VcsToolchainVariable.CurrentChanges -> {
                 val dataContext = DataManager.getInstance().dataContextFromFocus.result
-                val commitWorkflowUi = dataContext.getData(VcsDataKeys.COMMIT_WORKFLOW_UI)
+                val commitWorkflowUi = dataContext?.getData(VcsDataKeys.COMMIT_WORKFLOW_UI)
                 if (commitWorkflowUi !is CommitWorkflowUi) {
                     logger.warn("Cannot get commit workflow UI.")
                     return variable
