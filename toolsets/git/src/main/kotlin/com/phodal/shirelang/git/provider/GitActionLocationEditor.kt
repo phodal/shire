@@ -24,7 +24,10 @@ class GitActionLocationEditor : ActionLocationEditor {
     override fun resolve(project: Project, hole: ShireActionLocation): Editor? {
         val commitMessageUi = commitUi ?: getCommitUi(hole) ?: return null
         val editorField = commitMessageUi.editorField
+
+        @Suppress("UnstableApiUsage")
         invokeAndWaitIfNeeded { editorField.text = "" }
+
         return editorField.editor
     }
 
