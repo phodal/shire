@@ -24,12 +24,12 @@ object ShireAstQLParser {
     }
 
     private fun parseWhere(whereClause: ShireWhereClause): Statement? {
-        return FrontmatterParser.parseExpr(whereClause.expr)
+        return HobbitHoleParser.parseExpr(whereClause.expr)
     }
 
     private fun parseSelect(selectClause: ShireSelectClause): List<Statement> {
         return selectClause.exprList.mapNotNull {
-            FrontmatterParser.parseExpr(it)
+            HobbitHoleParser.parseExpr(it)
         }
     }
 }

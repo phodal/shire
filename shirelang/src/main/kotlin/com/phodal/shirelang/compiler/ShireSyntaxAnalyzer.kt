@@ -14,7 +14,7 @@ import com.intellij.psi.util.elementType
 import com.phodal.shirecore.agent.CustomAgent
 import com.phodal.shirelang.compile.VariableTemplateCompiler
 import com.phodal.shirelang.compiler.exec.*
-import com.phodal.shirelang.compiler.parser.FrontmatterParser
+import com.phodal.shirelang.compiler.parser.HobbitHoleParser
 import com.phodal.shirelang.compiler.variable.VariableTable
 import com.phodal.shirelang.completion.dataprovider.BuiltinCommand
 import com.phodal.shirelang.completion.dataprovider.CustomCommand
@@ -93,11 +93,11 @@ class ShireSyntaxAnalyzer(
                     val nextElement = PsiTreeUtil.findChildOfType(
                         psiElement.parent, ShireFrontMatterHeader::class.java
                     ) ?: continue
-                    result.config = FrontmatterParser.parse(nextElement)
+                    result.config = HobbitHoleParser.parse(nextElement)
                 }
 
                 ShireTypes.FRONT_MATTER_HEADER -> {
-                    result.config = FrontmatterParser.parse(psiElement as ShireFrontMatterHeader)
+                    result.config = HobbitHoleParser.parse(psiElement as ShireFrontMatterHeader)
                 }
 
                 WHITE_SPACE, DUMMY_BLOCK -> output.append(psiElement.text)

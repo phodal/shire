@@ -14,7 +14,7 @@ import com.phodal.shirecore.middleware.PostProcessor
 import com.phodal.shirecore.middleware.PostProcessorNode
 import com.phodal.shirecore.middleware.select.SelectElementStrategy
 import com.phodal.shirecore.middleware.select.SelectedEntry
-import com.phodal.shirelang.compiler.parser.FrontmatterParser
+import com.phodal.shirelang.compiler.parser.HobbitHoleParser
 import com.phodal.shirelang.compiler.hobbit.base.Smials
 import com.phodal.shirelang.compiler.hobbit.ast.FrontMatterType
 import com.phodal.shirelang.compiler.hobbit.ast.MethodCall
@@ -25,8 +25,21 @@ import com.phodal.shirelang.compiler.patternaction.PatternActionTransform
 import com.phodal.shirelang.psi.ShireFile
 
 /**
- * - Normal: the action is a normal action
- * - Flow: each action can be a task in a flow, which will build a DAG
+ * Hobbit Hole 用于定义 IDE 交互逻辑与用户数据的流处理。
+ * 示例
+ * ```shire
+ * ---
+ * name: "Summary"
+ * description: "Generate Summary"
+ * interaction: AppendCursor
+ * actionLocation: ContextMenu
+ * ---
+ * ```
+ *
+ * 完整示例如下：
+ * ```shire
+ *
+ * ```
  */
 open class HobbitHole(
     /**
@@ -150,7 +163,7 @@ open class HobbitHole(
         const val SHORTCUT = "shortcut"
 
         fun from(file: ShireFile): HobbitHole? {
-            return FrontmatterParser.parse(file)
+            return HobbitHoleParser.parse(file)
         }
 
         /**

@@ -12,7 +12,7 @@ import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.GlobalSearchScope
 import com.phodal.shirelang.actions.base.DynamicShireActionConfig
 import com.phodal.shirelang.actions.base.DynamicShireActionService
-import com.phodal.shirelang.compiler.parser.FrontmatterParser
+import com.phodal.shirelang.compiler.parser.HobbitHoleParser
 import com.phodal.shirelang.psi.ShireFile
 
 
@@ -27,7 +27,7 @@ class ShireActionStartupActivity : ProjectActivity {
         smartReadAction(project) {
             obtainShireFiles(project).forEach {
                 val shireConfig = try {
-                    FrontmatterParser.parse(it)
+                    HobbitHoleParser.parse(it)
                 } catch (e: Exception) {
                     logger.warn("parse shire config error for file: ${it.virtualFile.path}", e)
                     return@forEach

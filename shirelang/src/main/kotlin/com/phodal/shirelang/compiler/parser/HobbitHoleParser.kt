@@ -11,8 +11,8 @@ import com.phodal.shirelang.compiler.hobbit.ast.*
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 import com.phodal.shirelang.psi.*
 
-object FrontmatterParser {
-    private val logger = logger<FrontmatterParser>()
+object HobbitHoleParser {
+    private val logger = logger<HobbitHoleParser>()
 
     fun hasFrontMatter(file: ShireFile): Boolean {
         return PsiTreeUtil.getChildrenOfTypeAsList(file, ShireFrontMatterHeader::class.java).isNotEmpty()

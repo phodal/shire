@@ -3,7 +3,7 @@ package com.phodal.shirelang
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirecore.config.InteractionType
-import com.phodal.shirelang.compiler.parser.FrontmatterParser
+import com.phodal.shirelang.compiler.parser.HobbitHoleParser
 import com.phodal.shirelang.compiler.ShireSyntaxAnalyzer
 import com.phodal.shirelang.compiler.hobbit.ast.LogicalExpression
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
@@ -80,7 +80,7 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         val file = myFixture.configureByText("test.shire", code)
 
-        val isFrontMatterPresent = FrontmatterParser.hasFrontMatter(file as ShireFile)
+        val isFrontMatterPresent = HobbitHoleParser.hasFrontMatter(file as ShireFile)
         assertTrue(isFrontMatterPresent)
     }
 

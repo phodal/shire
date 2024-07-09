@@ -1,7 +1,7 @@
 package com.phodal.shirelang.actions.base
 
 import com.intellij.openapi.editor.Editor
-import com.phodal.shirelang.compiler.parser.FrontmatterParser
+import com.phodal.shirelang.compiler.parser.HobbitHoleParser
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.psi.ShireFile
 
@@ -13,7 +13,7 @@ data class DynamicShireActionConfig(
 ) {
     companion object {
         fun from(file: ShireFile): DynamicShireActionConfig {
-            val hole = FrontmatterParser.parse(file)
+            val hole = HobbitHoleParser.parse(file)
             return DynamicShireActionConfig(file.name, hole, file)
         }
     }

@@ -1,0 +1,19 @@
+---
+name: "Context Variable"
+description: "Here is a description of the action."
+interaction:  RunPanel
+variables:
+  "currentCode": /ShireCompileTest\.kt/ { cat }
+  "currentDoc": /shire-hobbit-hole.md/ { cat }
+---
+
+根据如下的代码用例，更新文档中的用例：
+
+代码用例如下：
+
+$currentCode
+
+现有文档如下：
+
+$currentDoc
+
