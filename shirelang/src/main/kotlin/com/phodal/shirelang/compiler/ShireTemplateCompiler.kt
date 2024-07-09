@@ -20,9 +20,15 @@ class ShireTemplateCompiler(
 ) {
     private val customVariables: MutableMap<String, String> = mutableMapOf()
 
+    var compiledVariables: Map<String, Any> = mapOf()
+
     suspend fun compile(): String {
         val prompt = doExecuteCompile()
         return cleanUp(prompt)
+    }
+
+    fun putCustomVariable(varName: String, varValue: String) {
+        customVariables[varName] = varValue
     }
 
     private fun cleanUp(prompt: String) =
@@ -37,6 +43,8 @@ class ShireTemplateCompiler(
             val context = VariableResolverContext(myProject, currentEditor, hole, variableTable, null)
             val additionalMap: Map<String, Any> = CompositeVariableResolver(context).resolve()
 
+            compiledVariables = additionalMap.mapValues { it.value.toString() }
+
             val file = runReadAction { currentElement.containingFile }
             val templateCompiler = VariableTemplateCompiler(file.language, file)
 
@@ -48,9 +56,5 @@ class ShireTemplateCompiler(
         }
 
         return input
-    }
-
-    fun putCustomVariable(varName: String, varValue: String) {
-        customVariables[varName] = varValue
     }
 }

@@ -41,6 +41,7 @@ class ShireRunner(
     private val userInput: String,
     private val processHandler: ShireProcessHandler
 ) {
+    private var compiledVariables: Map<String, Any> = mapOf()
     private val terminalLocationExecutor = TerminalLocationExecutor.provide(project)
 
     suspend fun execute(parsedResult: ShireParsedResult) {
@@ -100,11 +101,15 @@ class ShireRunner(
             templateCompiler.putCustomVariable("input", userInput)
         }
 
+        val promptTextTrim = templateCompiler.compile().trim()
+        val compiledVariables = templateCompiler.compiledVariables
+
         PostCodeHandleContext.getData()?.lastTaskOutput?.let {
             templateCompiler.putCustomVariable("output", it)
         }
 
-        val promptTextTrim = templateCompiler.compile().trim()
+        this.compiledVariables = compiledVariables
+
         printCompiledOutput(console, promptTextTrim, configuration)
 
         var hasError = false
@@ -174,6 +179,7 @@ class ShireRunner(
             modifiedTextRange = textRange,
             editor = runnerContext.editor,
             lastTaskOutput = response,
+            compiledVariables = compiledVariables,
         )
 
         PostCodeHandleContext.putData(context)
@@ -226,6 +232,7 @@ class ShireRunner(
             currentLanguage = file?.language,
             currentFile = file,
             editor = editor,
+            compiledVariables = compiledVariables,
         )
         PostCodeHandleContext.putData(context)
         hobbitHole?.setupStreamingEndProcessor(project, context)

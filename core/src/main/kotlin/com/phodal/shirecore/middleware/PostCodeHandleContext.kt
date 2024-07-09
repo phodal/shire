@@ -68,7 +68,10 @@ class PostCodeHandleContext(
     val editor: Editor? = null,
 
     val lastTaskOutput: String? = null,
+
+    var compiledVariables: Map<String, Any> = mapOf(),
 ) {
+
     companion object {
         private val DATA_KEY: Key<PostCodeHandleContext> = Key.create(PostCodeHandleContext::class.java.name)
         private val userDataHolderBase = UserDataHolderBase()
