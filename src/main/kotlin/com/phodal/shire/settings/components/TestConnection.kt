@@ -3,6 +3,7 @@ package com.phodal.shire.settings.components
 import com.intellij.openapi.project.Project
 import com.intellij.ui.dsl.builder.Align
 import com.intellij.ui.dsl.builder.Panel
+import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.llm.LlmProvider
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -15,7 +16,7 @@ fun Panel.testLLMConnection(project: Project?) {
             if (project == null) return@button
             result.text = ""
 
-            LlmCoroutineScope.scope(project).launch {
+            ShireCoroutineScope.scope(project).launch {
                 try {
                     val flowString: Flow<String> =
                         LlmProvider.provider(project)?.stream("hi", "", false)
