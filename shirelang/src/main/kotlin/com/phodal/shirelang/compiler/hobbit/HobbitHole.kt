@@ -26,6 +26,7 @@ import com.phodal.shirelang.psi.ShireFile
 
 /**
  * Hobbit Hole 用于定义 IDE 交互逻辑与用户数据的流处理。
+ *
  * 示例
  * ```shire
  * ---
@@ -36,37 +37,79 @@ import com.phodal.shirelang.psi.ShireFile
  * ---
  * ```
  *
- * 完整示例如下：
- * ```shire
- *
- * ```
  */
 open class HobbitHole(
     /**
-     * Display name of the action.
+     * Display name of the Shire command, will show in the IDE's UI base on [HobbitHole.interaction].
+     *
+     * For example: [ShireActionLocation.CONTEXT_MENU], will show in the context menu.
+     *
+     * ```shire
+     * ---
+     * name: "AutoTest"
+     * ---
+     * ```
      */
     val name: String,
     /**
-     * Tips for the action.
+     * Tooltips for the action, will show in Hover tips on the UI.
+     *
+     * ```shire
+     * ---
+     * description: "Generate Test"
+     * ---
+     * ```
      */
     val description: String?,
     /**
-     * The output of the action can be a file, a string, etc.
+     * The output of the action can be in editor with streaming text when use use [InteractionType.AppendCursorStream
+     *
+     * ```shire
+     * ---
+     * interaction: AppendCursor
+     * ---
+     * ```
      */
     val interaction: InteractionType,
     /**
-     * The location of the action, can [ShireActionLocation]
+     * The location of the action, should be one of [ShireActionLocation], the default is [ShireActionLocation.RUN_PANEL].
+     *
+     * ```shire
+     * ---
+     * actionLocation: ContextMenu
+     * ---
+     * ```
      */
     val actionLocation: ShireActionLocation,
     /**
      * The strategy to select the element to apply the action.
      * If not selected text, will according the element position to select the element block.
      * For example, if cursor in a function, select the function block.
+     *
+     * ```shire
+     * ---
+     * selectionStrategy: "Block"
+     * ---
      */
     val selectionStrategy: SelectElementStrategy? = null,
 
     /**
-     * The list of variables to apply for the action.
+     * The list of variables with PatternAction for build the variable.
+     *
+     * ```shire
+     * ---
+     * variables:
+     *   "name": "/[a-zA-Z]+/"
+     *   "var2": /.*.java/ { grep("error.log") | sort | print }
+     *   "testTemplate": /\(.*\).java/ {
+     *     case "$1" {
+     *       "Controller" { cat(".shire/templates/ControllerTest.java") }
+     *       "Service" { cat(".shire/templates/ServiceTest.java") }
+     *       default  { cat(".shire/templates/DefaultTest.java") }
+     *     }
+     *   }
+     *
+     * ---
      */
     val variables: MutableMap<String, PatternActionTransform> = mutableMapOf(),
 
@@ -74,12 +117,25 @@ open class HobbitHole(
      * This code snippet declares a variable 'when_' of type List<VariableCondition> and initializes it with an empty list.
      * 'when_' is a list that stores VariableCondition objects.
      *
-     * Which is used for: [IntentionAction.isAvailable], [DumbAwareAction.update] to check is show menu.
+     * Which is used for: [com.intellij.codeInsight.intention.IntentionAction.isAvailable], [com.intellij.openapi.project.DumbAwareAction.DumbAwareAction.update] to check is show menu.
+     *
+     * ```shire
+     * ---
+     * when: { $filePath.contains("src/main/java") && $fileName.contains(".java") }
+     * ---
+     * ```
      */
     val when_: FrontMatterType.EXPRESSION? = null,
 
     /**
      * The list of rule files to apply for the action.
+     *
+     * ```shire
+     * ---
+     * filenameRules:
+     *  "/.*.java/": "You should thinking in best Kotlin way."
+     * ---
+     * ```
      */
     val ruleBasedFilter: List<RuleBasedPatternAction> = emptyList(),
 
@@ -87,6 +143,12 @@ open class HobbitHole(
      * This property represents a list of post-middleware actions to be executed after the streaming process ends.
      * It allows for the definition of various operations such as logging, metrics collection, code verification,
      * execution of code, or parsing code, among others.
+     *
+     * ```shire
+     * ---
+     * onStreamingEnd: { parseCode | saveFile("docs/shire/shire-context-variable.md")  }
+     * ---
+     * ```
      */
     val onStreamingEnd: List<PostProcessorNode> = emptyList(),
 
@@ -98,9 +160,34 @@ open class HobbitHole(
 
     /**
      * The list of actions that this action depends on.
+     *
+     * ```shire
+     * ---
+     * afterStreaming: {
+     *     condition {
+     *       "variable-success" { $selection.length > 1 }
+     *       "jsonpath-success" { jsonpath("/bookstore/book[price>35]") }
+     *     }
+     *     case condition {
+     *       "variable-sucesss" { done }
+     *       "jsonpath-success" { task() }
+     *       default { task() }
+     *     }
+     *   }
+     * ---
+     * ```
      */
     val afterStreaming: TaskRoutes? = null,
 
+    /**
+     * The IDE shortcut for the action, which use the IntelliJ IDEA's shortcut format.
+     *
+     * ```shire
+     * ---
+     * shortcut: "meta pressed V"
+     * ---
+     * ```
+     */
     val shortcut: KeyboardShortcut? = null,
 
     /**
