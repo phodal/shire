@@ -128,6 +128,22 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                 cat(action, input)
             }
 
+            is PatternActionFunc.Tee -> {
+                when (lastResult) {
+                    is String -> {
+                        if (action.isAppend) {
+                            lastResult + action.content
+                        } else {
+                            lastResult + action.content
+                        }
+                    }
+
+                    else -> {
+                        lastResult
+                    }
+                }
+            }
+
             is PatternActionFunc.Print -> {
                 action.texts.joinToString("\n")
             }

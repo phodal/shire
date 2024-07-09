@@ -96,6 +96,11 @@ sealed class PatternActionFunc(open val funcName: String) {
     class Cat(vararg val paths: String) : PatternActionFunc("cat")
 
     /**
+     * Tee subclass for writing to one or more files.
+     */
+    class Tee(val content: String, var isAppend: Boolean = true) : PatternActionFunc("tee")
+
+    /**
      * Select subclass for selecting one or more elements.
      */
     class From(val variables: List<VariableElement>) : PatternActionFunc("from")

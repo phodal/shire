@@ -569,6 +569,10 @@ object HobbitHoleParser {
                 PatternActionFunc.Cat(*args.toTypedArray())
             }
 
+            "tee" -> {
+                PatternActionFunc.Tee(args[0])
+            }
+
             /// System APIs
             "execute" -> {
                 PatternActionFunc.ExecuteShire(args[0])
