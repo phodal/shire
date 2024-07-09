@@ -45,7 +45,7 @@ class PostCodeHandleContext(
     /**
      * The generated text to be handled
      */
-    val genText: String? = null,
+    var genText: String? = null,
 
     /**
      * Parse from the [com.phodal.shirelang.compiler.hobbit.HobbitHole]

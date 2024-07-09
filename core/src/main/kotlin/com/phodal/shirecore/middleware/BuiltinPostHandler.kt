@@ -67,5 +67,10 @@ enum class BuiltinPostHandler(var handleName: String) {
     ParseComment("parseComment"),
 
     InsertNewline("insertNewline"),
+
+    /**
+     * Append text to the file
+     */
+    Append("append"),
     ;
 }
