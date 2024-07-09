@@ -1,10 +1,8 @@
 package com.phodal.shirelang.git.provider
 
-import com.intellij.ide.DataManager
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.vcs.VcsDataKeys
 import com.intellij.openapi.vcs.changes.Change
 import com.intellij.openapi.vcs.changes.CurrentContentRevision
 import com.intellij.openapi.vfs.VirtualFile
@@ -41,10 +39,9 @@ class GitToolchainVariableProvider : ToolchainVariableProvider {
     ): ToolchainVariable {
         when (variable) {
             VcsToolchainVariable.CurrentChanges -> {
-                val dataContext = DataManager.getInstance().dataContextFromFocus.result
-                val commitWorkflowUi = dataContext?.getData(VcsDataKeys.COMMIT_WORKFLOW_UI)
+                val commitWorkflowUi = getCommitWorkflowUi()
                 if (commitWorkflowUi !is CommitWorkflowUi) {
-                    logger.warn("Cannot get commit workflow UI.")
+                    logger.error("Cannot get commit workflow UI.")
                     return variable
                 }
                 var changes: List<Change>? = null
@@ -155,4 +152,5 @@ class GitToolchainVariableProvider : ToolchainVariableProvider {
 
         return null
     }
+
 }
