@@ -130,17 +130,13 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
 
             is PatternActionFunc.Tee -> {
                 when (lastResult) {
-                    is String -> {
-                        if (action.isAppend) {
-                            lastResult + action.content
-                        } else {
-                            lastResult + action.content
-                        }
+                    is String -> if (action.isAppend) {
+                        lastResult + action.content
+                    } else {
+                        action.content
                     }
 
-                    else -> {
-                        lastResult
-                    }
+                    else -> action.content
                 }
             }
 
