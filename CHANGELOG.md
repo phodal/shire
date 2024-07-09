@@ -1,22 +1,20 @@
-# [](https://github.com/phodal/shire/compare/v0.4.1...v) (2024-07-07)
+# [](https://github.com/phodal/shire/compare/v0.4.2...v) (2024-07-09)
 
 ## [Unreleased]
 
-## [0.4.1] - 2024-07-07
+## [0.4.2](https://github.com/phodal/shire/compare/v0.4.1...v[0.4.2]) (2024-07-09)
 
 ### Bug Fixes
 
-- **search:** handle null LocalEmbedding creation ([c330903](https://github.com/phodal/shire/commit/c33090351b944c9e9a6dd13c84845ef66485787e))
+- **git:** handle null data context in GitToolchainVariableProvider ([69c48cd](https://github.com/phodal/shire/commit/69c48cd74e444cebdbeadae31bcf84b71c11a0ed))
 
 ### Features
 
-- **deps:** add chocolate factory and unitmesh dependencies ([df23f4e](https://github.com/phodal/shire/commit/df23f4e45e9a555bd65dbfd68dde347762eaad65))
-- **embedding:** add LockedSequenceWrapper and DiskSynchronizedEmbeddingSearchIndex [#37](https://github.com/phodal/shire/issues/37) ([1d58c89](https://github.com/phodal/shire/commit/1d58c894665fa49741736ce3e3b0a969f0c87f25))
-- **search:** add file and embedding to IndexEntry ([fbbe199](https://github.com/phodal/shire/commit/fbbe1991b190b2ee291fab5834554a202a9058a4)), closes [#37](https://github.com/phodal/shire/issues/37)
-- **search:** add float array normalization extension function ([e50955e](https://github.com/phodal/shire/commit/e50955e8921bed0fa13fcf7fb5060dd5af4cc039))
-- **search:** add text embedding functionality ([8da838b](https://github.com/phodal/shire/commit/8da838b02dd78baefb4bd58ef69cf02bc7241235))
+- **build:** add kotlinx-coroutines-core dependency ([836332b](https://github.com/phodal/shire/commit/836332bfdca2481f4762a331b7d82b207a4f374b))
+- **run:** add console message before running configuration ([a27e899](https://github.com/phodal/shire/commit/a27e8993cd2090293d42764fb9215a7955853c84))
+- **search:** add caching support to semantic search ([7ef7287](https://github.com/phodal/shire/commit/7ef7287ecd15b27726d456587942204ccb184005))
 
-## [0.3.0] - 2024-07-06
+## [0.4.1](https://github.com/phodal/shire/compare/v0.3.0...v[0.4.1]) (2024-07-07)
 
 ### Bug Fixes
 
@@ -333,9 +331,9 @@
 - **shell:** add shell language support plugin file ([bdc1c90](https://github.com/phodal/shire/commit/bdc1c90f10d7c2c4fb8f7157db343dd756c11352))
 - **shire:** add Shire context action group and location support ([e3df86d](https://github.com/phodal/shire/commit/e3df86d16d0c9985fec787a8e76ce553be9a9a45))
 
-[Unreleased]: https://github.com/phodal/shire/compare/v0.4.1...HEAD
-[0.4.1]: https://github.com/phodal/shire/compare/v0.3.0...v0.4.1
-[0.3.0]: https://github.com/phodal/shire/compare/v0.0.8...v0.3.0
+[Unreleased]: https://github.com/phodal/shire/compare/v0.4.2...HEAD
+[0.4.2]: https://github.com/phodal/shire/compare/v0.4.1...v0.4.2
+[0.4.1]: https://github.com/phodal/shire/compare/v0.0.8...v0.4.1
 [0.0.8]: https://github.com/phodal/shire/compare/v0.0.7...v0.0.8
 [0.0.7]: https://github.com/phodal/shire/compare/v0.0.6...v0.0.7
 [0.0.6]: https://github.com/phodal/shire/compare/v0.0.4...v0.0.6
