@@ -15,5 +15,9 @@ class RealWorldShireParsingTest : ParsingTestCase("realworld", "shire", ShirePar
     fun testLifeCycle() {
         doTest(true)
     }
+
+    fun testContentTee() {
+        doTest(true)
+    }
 }
 

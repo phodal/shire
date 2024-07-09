@@ -105,7 +105,7 @@ actionExpr ::= funcCall | caseBody
 funcCall ::= funcName ("(" pipelineArgs? ")")?
 funcName ::= IDENTIFIER
 pipelineArgs ::= (pipelineArg (COMMA pipelineArg)*)?
-pipelineArg ::= NUMBER | IDENTIFIER | QUOTE_STRING
+pipelineArg ::= NUMBER | IDENTIFIER | QUOTE_STRING | variableStart variableId
 
 caseBody ::= conditionFlag? CASE NEWLINE* ('condition' | QUOTE_STRING) blockStart casePatternAction* blockEnd
 casePatternAction ::= caseCondition blockStart actionBody blockEnd
