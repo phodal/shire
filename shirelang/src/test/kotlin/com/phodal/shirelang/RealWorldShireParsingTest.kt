@@ -19,5 +19,9 @@ class RealWorldShireParsingTest : ParsingTestCase("realworld", "shire", ShirePar
     fun testContentTee() {
         doTest(true)
     }
+
+    fun testWhenAfterStreaming() {
+        doTest(true)
+    }
 }
 

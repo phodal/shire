@@ -327,7 +327,19 @@ AFTER_STREAMING          =afterStreaming
   "}"                     { patternActionBraceLevel--; if (patternActionBraceLevel == 0) { isInsideFunctionBlock = false; } return CLOSE_BRACE; }
 
   {NUMBER}                { return NUMBER; }
-  {IDENTIFIER}            { if (isInsideFunctionBlock) { yypushback(yylength()); yybegin(EXPR_BLOCK); } else { return IDENTIFIER; } }
+  {IDENTIFIER}            {
+          if (isInsideFunctionBlock) {
+              yypushback(yylength()); yybegin(EXPR_BLOCK);
+          } else {
+              switch (yytext().toString().trim()) {
+                    case "when": return WHEN;
+                    case "onStreaming": return ON_STREAMING;
+                    case "onStreamingEnd": return ON_STREAMING_END;
+                    case "afterStreaming": return AFTER_STREAMING;
+                    default: return IDENTIFIER;
+                }
+          }
+      }
   {DATE}                  { return DATE; }
   {BOOLEAN}               { return BOOLEAN; }
   {QUOTE_STRING}          { return QUOTE_STRING; }
