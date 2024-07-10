@@ -15,7 +15,7 @@ include(
 //    "core-api",
     "shirelang",
 
-    "languages:java",
+    "languages:shire-java",
     "languages:shire-python",
 
     "toolsets:git",

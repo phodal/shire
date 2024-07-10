@@ -128,7 +128,7 @@ project(":core") {
     }
 }
 
-project(":languages:java") {
+project(":languages:shire-java") {
     intellij {
         version.set(prop("ideaVersion"))
         plugins.set(ideaPlugins)
@@ -250,7 +250,7 @@ project(":plugin") {
         implementation(project(":core"))
         implementation(project(":shirelang"))
 
-        implementation(project(":languages:java"))
+        implementation(project(":languages:shire-java"))
         implementation(project(":languages:shire-python"))
 
         implementation(project(":toolsets:git"))
