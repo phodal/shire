@@ -37,11 +37,12 @@ Write unit test for following ${context.language} code.
 
 ```shire
 ---
-name: "AutoTest"
-description: "AutoTest"
-interaction: AppendCursor
+name: "Search"
 variables:
-  "*.docx": /.*/build\.gradle\.kts/ { caching("disk") | splitting | embedding | searching("hello") }
+  "testTemplate": /.*.java/ { caching("disk") | splitting | embedding | searching("comment") }
 ---
-Write unit test for following ${context.language} code.
+
+根据如下的代码，回答用户的问题：博客创建的流程
+
+$testTemplate
 ```
