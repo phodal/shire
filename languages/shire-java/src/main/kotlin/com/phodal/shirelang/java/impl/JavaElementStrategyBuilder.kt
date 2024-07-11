@@ -18,7 +18,7 @@ class JavaElementStrategyBuilder : PsiElementStrategyBuilder {
     }
 
     override fun relativeElement(project: Project, givenElement: PsiElement, type: PsiComment): PsiElement? {
-        TODO("Not yet implemented")
+        return PsiTreeUtil.getParentOfType(givenElement, type::class.java)
     }
 
     override fun findNearestTarget(psiElement: PsiElement): PsiNameIdentifierOwner? {
@@ -31,6 +31,4 @@ class JavaElementStrategyBuilder : PsiElementStrategyBuilder {
 
         return closestIdentifierOwner
     }
-
-//    fun findSampleDocument()
 }
