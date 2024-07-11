@@ -1,12 +1,18 @@
 package com.phodal.shirelang.java.impl
 
+import com.intellij.ide.hierarchy.HierarchyBrowserBaseEx
 import com.intellij.lang.Language
 import com.intellij.openapi.diagnostic.logger
+import com.intellij.openapi.module.ModuleUtilCore
 import com.intellij.openapi.project.Project
 import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiElement
 import com.intellij.psi.search.GlobalSearchScope
+import com.intellij.psi.search.GlobalSearchScopesCore
+import com.intellij.psi.search.LocalSearchScope
+import com.intellij.psi.search.SearchScope
+import com.intellij.psi.search.scope.packageSet.NamedScopesHolder
 import com.intellij.psi.search.searches.AnnotatedElementsSearch
 import com.intellij.psi.search.searches.ClassInheritorsSearch
 import com.phodal.shirecore.provider.variable.PsiQLInterpreter
@@ -54,6 +60,7 @@ class JavaPsiQLInterpreter : PsiQLInterpreter {
                             element.extendsList?.referencedTypes?.map { it.resolve() } ?: emptyList<PsiClass>()
                         psiClasses
                     }
+
                     "implements" -> element.implementsList?.referencedTypes?.map { it.resolve() }
                         ?: emptyList<PsiClass>()
 
@@ -85,14 +92,14 @@ class JavaPsiQLInterpreter : PsiQLInterpreter {
             "subclassesOf" -> {
                 val facade = JavaPsiFacade.getInstance(project)
 
-                val psiClass = facade.findClass(firstArgument, GlobalSearchScope.allScope(project))
+                val psiClass = facade.findClass(firstArgument, GlobalSearchScope.projectScope(project))
                 if (psiClass == null) {
                     logger<JavaPsiQLInterpreter>().warn("Cannot find class: $firstArgument")
                     return ""
                 }
 
                 val map: List<PsiClass> =
-                    ClassInheritorsSearch.search(psiClass, GlobalSearchScope.allScope(project), true).map { it }
+                    ClassInheritorsSearch.search(psiClass, GlobalSearchScope.projectScope(project), true).map { it }
                 map
             }
 
@@ -106,11 +113,11 @@ class JavaPsiQLInterpreter : PsiQLInterpreter {
                     return ""
                 }
 
-                val annotatedElements =
-                    AnnotatedElementsSearch.searchPsiClasses(annotationClass, GlobalSearchScope.allScope(project))
-                        .findAll()
+                val classes = AnnotatedElementsSearch
+                    .searchPsiClasses(annotationClass, GlobalSearchScope.projectScope(project))
+                    .findAll()
 
-                annotatedElements.filterIsInstance<PsiClass>()
+                classes.toList()
             }
 
             "superclassOf" -> {
@@ -127,6 +134,26 @@ class JavaPsiQLInterpreter : PsiQLInterpreter {
                 logger<JavaPsiQLInterpreter>().error("Cannot find method: $methodName")
             }
         }
+    }
+
+    protected fun getSearchScope(myProject: Project, scopeType: String, thisClass: PsiElement?): SearchScope {
+        var searchScope: SearchScope = GlobalSearchScope.allScope(myProject)
+        if (HierarchyBrowserBaseEx.SCOPE_CLASS == scopeType) {
+            searchScope = LocalSearchScope(thisClass!!)
+        } else if (HierarchyBrowserBaseEx.SCOPE_MODULE == scopeType) {
+            val module = ModuleUtilCore.findModuleForPsiElement(thisClass!!)
+            searchScope = module?.getModuleScope(true) ?: LocalSearchScope(thisClass!!)
+        } else if (HierarchyBrowserBaseEx.SCOPE_PROJECT == scopeType) {
+            searchScope = GlobalSearchScopesCore.projectProductionScope(myProject)
+        } else if (HierarchyBrowserBaseEx.SCOPE_TEST == scopeType) {
+            searchScope = GlobalSearchScopesCore.projectTestScope(myProject)
+        } else {
+            val namedScope = NamedScopesHolder.getScope(myProject, scopeType)
+            if (namedScope != null) {
+                searchScope = GlobalSearchScopesCore.filterScope(myProject, namedScope)
+            }
+        }
+        return searchScope
     }
 
     private fun searchClass(project: Project, className: String): PsiClass? {
