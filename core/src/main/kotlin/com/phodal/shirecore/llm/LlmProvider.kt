@@ -69,7 +69,7 @@ interface LlmProvider {
         fun provider(project: Project): LlmProvider? {
             val providers = EP_NAME.extensions.filter { it.isApplicable(project) }
             return if (providers.isEmpty()) {
-                ShirelangNotifications.notify(project, "No LLM provider found")
+                ShirelangNotifications.info(project, "No LLM provider found")
                 null
             } else {
                 providers.first()

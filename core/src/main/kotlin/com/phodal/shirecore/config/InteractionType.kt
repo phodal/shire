@@ -7,12 +7,13 @@ enum class InteractionType(val description: String) {
     ReplaceSelection("Replace the currently selected content"),
     ReplaceCurrentFile("Replace the content of the current file"),
     InsertBeforeSelection("Insert content before the currently selected content"),
-    RunPanel("Show Result in Run panel which is the bottom of the IDE")
+    RunPanel("Show Result in Run panel which is the bottom of the IDE"),
+    PasteBoard("Copy the content to the clipboard")
     ;
 
     companion object {
         fun from(interaction: String): InteractionType {
-            return when (interaction) {
+            return when (interaction.lowercase()) {
                 "AppendCursor" -> AppendCursor
                 "AppendCursorStream" -> AppendCursorStream
                 "OutputFile" -> OutputFile
@@ -20,6 +21,7 @@ enum class InteractionType(val description: String) {
                 "ReplaceCurrentFile" -> ReplaceCurrentFile
                 "InsertBeforeSelection" -> InsertBeforeSelection
                 "RunPanel" -> RunPanel
+                "PasteBoard" -> PasteBoard
                 else -> RunPanel
             }
         }

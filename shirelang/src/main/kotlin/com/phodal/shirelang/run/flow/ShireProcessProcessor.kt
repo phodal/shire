@@ -96,7 +96,7 @@ class ShireProcessProcessor(val project: Project) {
         val shireCompiler = createCompiler(project, newScript)
         val result = shireCompiler.parse()
         if (result.shireOutput != "") {
-            ShirelangNotifications.notify(project, result.shireOutput)
+            ShirelangNotifications.info(project, result.shireOutput)
         }
 
         if (result.hasError) {
@@ -114,7 +114,7 @@ class ShireProcessProcessor(val project: Project) {
             val nextJob = result.nextJob!!
             val nextResult = createCompiler(project, nextJob).parse()
             if (nextResult.shireOutput != "") {
-                ShirelangNotifications.notify(project, nextResult.shireOutput)
+                ShirelangNotifications.info(project, nextResult.shireOutput)
             }
         }
     }

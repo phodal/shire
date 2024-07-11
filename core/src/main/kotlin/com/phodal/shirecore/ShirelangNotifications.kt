@@ -10,7 +10,7 @@ object ShirelangNotifications {
         return NotificationGroupManager.getInstance().getNotificationGroup("Shirelang.notification.group")
     }
 
-    fun notify(project: Project, msg: String) {
+    fun info(project: Project, msg: String) {
         group()?.createNotification(msg, NotificationType.INFORMATION)?.notify(project)
     }
 

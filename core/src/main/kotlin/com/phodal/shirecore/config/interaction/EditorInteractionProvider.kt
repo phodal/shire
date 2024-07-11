@@ -3,6 +3,7 @@ package com.phodal.shirecore.config.interaction
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.application.runReadAction
+import com.intellij.openapi.ide.CopyPasteManager
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator
 import com.phodal.shirecore.ShireCoroutineScope
@@ -95,6 +96,28 @@ class EditorInteractionProvider : LocationInteractionProvider {
                             context.console.print(char, ConsoleViewContentType.NORMAL_OUTPUT)
                         }
                     }
+
+                    postExecute.invoke(suggestion.toString(), null)
+                }
+            }
+
+            InteractionType.PasteBoard -> {
+                // first output into the console
+                val flow: Flow<String>? = LlmProvider.provider(context.project)?.stream(context.prompt, "", false)
+                ShireCoroutineScope.scope(context.project).launch {
+                    val suggestion = StringBuilder()
+
+                    flow?.cancellable()?.collect { char ->
+                        suggestion.append(char)
+
+                        invokeLater {
+                            context.console.print(char, ConsoleViewContentType.NORMAL_OUTPUT)
+                        }
+                    }
+
+                    // copy to clipboard
+                    CopyPasteManager.copyTextToClipboard(suggestion.toString())
+                    ShirelangNotifications.info(context.project, "Copied to clipboard.")
 
                     postExecute.invoke(suggestion.toString(), null)
                 }

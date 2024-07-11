@@ -145,7 +145,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             }
 
             is PatternActionFunc.Notify -> {
-                ShirelangNotifications.notify(myProject, action.message)
+                ShirelangNotifications.info(myProject, action.message)
             }
 
             is PatternActionFunc.From,
