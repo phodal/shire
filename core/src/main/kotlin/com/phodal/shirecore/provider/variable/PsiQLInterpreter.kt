@@ -9,6 +9,8 @@ import com.intellij.psi.PsiElement
  * For [com.phodal.shirelang.compiler.hobbit.execute.PsiQueryStatementProcessor]
  */
 interface PsiQLInterpreter {
+    fun supportsMethod(language: Language, methodName: String): List<String>
+
     /**
      * clazz.getName() or clazz.extensions
      */

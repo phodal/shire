@@ -1,5 +1,6 @@
 package com.phodal.shirelang.java.impl
 
+import com.intellij.lang.Language
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.psi.JavaPsiFacade
@@ -11,7 +12,29 @@ import com.intellij.psi.search.searches.ClassInheritorsSearch
 import com.phodal.shirecore.provider.variable.PsiQLInterpreter
 
 
+enum class JavaPsiQLInterpreterMethod(val methodName: String, val description: String) {
+    GET_NAME("getName", "Get class name"),
+    NAME("name", "Get class name"),
+    EXTENDS("extends", "Get class extends"),
+    IMPLEMENTS("implements", "Get class implements"),
+    METHOD_CODE_BY_NAME("methodCodeByName", "Get method code by name"),
+    FIELD_CODE_BY_NAME("fieldCodeByName", "Get field code by name"),
+
+    SUBCLASSES_OF("subclassesOf", "Get subclasses of class"),
+    ANNOTATED_OF("annotatedOf", "Get annotated classes"),
+    SUPERCLASS_OF("superclassOf", "Get superclass of class"),
+    IMPLEMENTS_OF("implementsOf", "Get implemented interfaces of class"),
+}
+
 class JavaPsiQLInterpreter : PsiQLInterpreter {
+    override fun supportsMethod(language: Language, methodName: String): List<String> {
+        if (language.id != "JAVA") {
+            return emptyList()
+        }
+
+        return JavaPsiQLInterpreterMethod.values().map { it.methodName }
+    }
+
     /**
      * clazz.getName() or clazz.extensions
      */
@@ -28,7 +51,6 @@ class JavaPsiQLInterpreter : PsiQLInterpreter {
                     "name" -> element.name!!
                     "extends" -> element.extendsList?.referencedTypes?.map { it.name } ?: emptyList<String>()
                     "implements" -> element.implementsList?.referencedTypes?.map { it.name } ?: emptyList<String>()
-                    "parentOf" -> element.superClass?.name ?: ""
                     "methodCodeByName" -> {
                         val method = element.methods.firstOrNull { it.name == arguments.first() } ?: return ""
                         method.body?.text ?: ""
