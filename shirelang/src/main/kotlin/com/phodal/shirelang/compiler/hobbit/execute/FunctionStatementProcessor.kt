@@ -217,7 +217,7 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
 
                     is MethodCall -> {
                         when (val output = invokeMethodOrField(statement, element)) {
-                            is List<*> -> {
+                            is Collection<*> -> {
                                 output.forEach {
                                     if (it is T) {
                                         result.add(it)
