@@ -45,7 +45,7 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
             when (objName) {
                 "jsonpath" -> {
                     val output = (variableTable["output"] ?: "").toString()
-                    val arg: String = when(firstArg) {
+                    val arg: String = when (firstArg) {
                         is FrontMatterType.STRING -> (methodArgs[0] as FrontMatterType.STRING).value.toString()
                         else -> firstArg.toString()
                     }
@@ -58,6 +58,7 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
 
                     return json
                 }
+
                 "print" -> {
                     val value = firstArg
                     println(value)
@@ -146,7 +147,7 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
         }
     }
 
-    fun <T : Any> processStatement(
+    inline fun <reified T : Any> processStatement(
         statement: Statement,
         variableElementsMap: Map<String, List<T>>,
     ): List<T> {
@@ -210,6 +211,22 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
 
                             else -> {
                                 logger<FunctionStatementProcessor>().warn("unknown operator: $operator")
+                            }
+                        }
+                    }
+
+                    is MethodCall -> {
+                        when (val output = invokeMethodOrField(statement, element)) {
+                            is List<*> -> {
+                                output.forEach {
+                                    if (it is T) {
+                                        result.add(it)
+                                    }
+                                }
+                            }
+
+                            is T -> {
+                                result.add(output)
                             }
                         }
                     }

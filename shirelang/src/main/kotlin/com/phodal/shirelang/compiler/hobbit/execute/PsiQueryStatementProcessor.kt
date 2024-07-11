@@ -1,5 +1,6 @@
 package com.phodal.shirelang.compiler.hobbit.execute
 
+import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
@@ -19,7 +20,7 @@ class PsiQueryStatementProcessor(override val myProject: Project, hole: HobbitHo
             transform.patternActionFuncs.find { it is PatternActionFunc.Select } as PatternActionFunc.Select
         val whereStmt = transform.patternActionFuncs.find { it is PatternActionFunc.Where } as PatternActionFunc.Where
 
-        val variableElementsMap: Map<String, List<PsiElement>> = buildVariables(fromStmt)
+        val variableElementsMap: Map<String, List<PsiElement>> = runReadAction { buildVariables(fromStmt) }
         val handledElements = processStatement(whereStmt.statement, variableElementsMap)
         val selectElements = processSelect(selectStmt, handledElements)
 
@@ -62,7 +63,10 @@ class PsiQueryStatementProcessor(override val myProject: Project, hole: HobbitHo
                 }.isNotEmpty()
 
                 if (hasPqlInterpreter) {
-                    return psiQLInterpreter.resolveCall(element, methodName, methodArgs ?: emptyList())
+                    return runReadAction {
+
+                        psiQLInterpreter.resolveCall(element, methodName, methodCall.parameters() ?: emptyList())
+                    }
                 }
             }
         }

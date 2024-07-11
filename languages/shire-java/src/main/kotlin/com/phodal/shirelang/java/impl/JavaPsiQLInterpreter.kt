@@ -49,16 +49,20 @@ class JavaPsiQLInterpreter : PsiQLInterpreter {
                 when (methodName) {
                     "getName" -> element.name!!
                     "name" -> element.name!!
-                    "extends" -> element.extendsList?.referencedTypes?.map { it.name } ?: emptyList<String>()
-                    "implements" -> element.implementsList?.referencedTypes?.map { it.name } ?: emptyList<String>()
+                    "extends" -> {
+                        val psiClasses =
+                            element.extendsList?.referencedTypes?.map { it.resolve() } ?: emptyList<PsiClass>()
+                        psiClasses
+                    }
+                    "implements" -> element.implementsList?.referencedTypes?.map { it.resolve() }
+                        ?: emptyList<PsiClass>()
+
                     "methodCodeByName" -> {
-                        val method = element.methods.firstOrNull { it.name == arguments.first() } ?: return ""
-                        method.body?.text ?: ""
+                        element.methods.firstOrNull { it.name == arguments.first() } ?: return ""
                     }
 
                     "fieldCodeByName" -> {
-                        val field = element.fields.firstOrNull { it.name == arguments.first() } ?: return ""
-                        field.text
+                        element.fields.firstOrNull { it.name == arguments.first() } ?: return ""
                     }
 
                     else -> ""
@@ -95,7 +99,12 @@ class JavaPsiQLInterpreter : PsiQLInterpreter {
             "annotatedOf" -> {
                 val facade = JavaPsiFacade.getInstance(project)
                 val annotationClass =
-                    facade.findClass(firstArgument, GlobalSearchScope.allScope(project)) ?: return emptyList<String>()
+                    facade.findClass(firstArgument, GlobalSearchScope.allScope(project))
+
+                if (annotationClass == null) {
+                    logger<JavaPsiQLInterpreter>().warn("Cannot find annotation class: $firstArgument")
+                    return ""
+                }
 
                 val annotatedElements =
                     AnnotatedElementsSearch.searchPsiClasses(annotationClass, GlobalSearchScope.allScope(project))
@@ -114,7 +123,9 @@ class JavaPsiQLInterpreter : PsiQLInterpreter {
                 psiClass.implementsList?.referencedTypes ?: emptyList<String>()
             }
 
-            else -> ""
+            else -> {
+                logger<JavaPsiQLInterpreter>().error("Cannot find method: $methodName")
+            }
         }
     }
 

@@ -272,17 +272,19 @@ data class MethodCall(
             else -> null
         } ?: throw IllegalArgumentException("Variable not found: ${objectName.value}")
 
-        val parameters: List<Any>? = this.arguments?.map {
-            when (it) {
-                is FrontMatterType.STRING -> it.display().removeSurrounding("\"")
-                is FrontMatterType.NUMBER -> it.value
-                is FrontMatterType.DATE -> it.value
-                is FrontMatterType -> it.display()
-                else -> it.toString()
-            }
-        }
+        val parameters: List<Any>? = parameters()
 
         return evaluateExpression(methodName, parameters, value)
+    }
+
+    fun parameters() = this.arguments?.map {
+        when (it) {
+            is FrontMatterType.STRING -> it.display().removeSurrounding("\"")
+            is FrontMatterType.NUMBER -> it.value
+            is FrontMatterType.DATE -> it.value
+            is FrontMatterType -> it.display()
+            else -> it.toString()
+        }
     }
 
     fun evaluateExpression(methodNode: FrontMatterType, parameters: List<Any>?, value: String): Comparable<*> {
