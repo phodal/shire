@@ -265,19 +265,13 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
 
     open fun <T : Any> invokeMethodOrField(methodCall: MethodCall, element: T): Any? {
         val objName = methodCall.objectName.display()
-
-       // handle for string call directly
-        if (element is Map<*, *>) {
-            val variable = element[objName] as? String
-            if (variable != null) {
-                return methodCall.evaluateExpression(
-                    methodCall.methodName,
-                    listOf(),
-                    variable
-                )
+        when (element) {
+            is Map<*, *> -> {
+                val variable = element[objName] as? String ?: return null
+                return methodCall.evaluateExpression(methodCall.methodName, listOf(), variable)
             }
-        }
 
-        return null
+            else -> return null
+        }
     }
 }
