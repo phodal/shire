@@ -1,9 +1,17 @@
 ---
 layout: default
-title: Shire Context Variable
+title: Shire Builtin Variable
 parent: Shire Language
-nav_order: 5
+nav_order: 3
 ---
+
+在 Shire 中，我们提供了一些内置变量，以便用户可以更方便地使用。
+
+当前支持的内置变量有：
+
+- [ContextVariable](#contextvariable) 用于提供当前文件的上下文信息。
+- [PsiContextVariable](#psicontextvariable) 用于提供当前 AST/PSI 语法树的上下文信息。
+- [Toolchain Variable](#toolchain-variable) 用于提供项目的工具链信息。
 
 ## ContextVariable
 
@@ -39,3 +47,19 @@ nav_order: 5
 | calledMethod        | The method that is being called by the current method                       |
 | similarCode         | Recently 20 files similar code based on the tf-idf search                   |
 
+## Toolchain Variable
+
+工具链变量提供诸如语言、框架和其他工具等数据作为变量。这个数据可以在 Shire 变量和模板中使用。
+
+支持的工具链：
+
+- Git
+- 依赖：Maven, Gradle （待支持）
+
+## Git
+
+Git 工具链提供以下变量：
+
+- `currentChanges`，当前分支的当前更改。
+- `currentBranch`，当前分支的名称。
+- `historyCommitMessages`，当前提交的提交消息。
