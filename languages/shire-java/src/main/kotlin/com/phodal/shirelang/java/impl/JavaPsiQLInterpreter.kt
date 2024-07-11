@@ -1,11 +1,15 @@
 package com.phodal.shirelang.java.impl
 
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiElement
 import com.intellij.psi.search.GlobalSearchScope
+import com.intellij.psi.search.searches.AnnotatedElementsSearch
+import com.intellij.psi.search.searches.ClassInheritorsSearch
 import com.phodal.shirecore.provider.variable.PsiQLInterpreter
+
 
 class JavaPsiQLInterpreter : PsiQLInterpreter {
     /**
@@ -21,9 +25,20 @@ class JavaPsiQLInterpreter : PsiQLInterpreter {
             is PsiClass -> {
                 when (methodName) {
                     "getName" -> element.name!!
+                    "name" -> element.name!!
                     "extends" -> element.extendsList?.referencedTypes?.map { it.name } ?: emptyList<String>()
                     "implements" -> element.implementsList?.referencedTypes?.map { it.name } ?: emptyList<String>()
                     "parentOf" -> element.superClass?.name ?: ""
+                    "methodCodeByName" -> {
+                        val method = element.methods.firstOrNull { it.name == arguments.first() } ?: return ""
+                        method.body?.text ?: ""
+                    }
+
+                    "fieldCodeByName" -> {
+                        val field = element.fields.firstOrNull { it.name == arguments.first() } ?: return ""
+                        field.text
+                    }
+
                     else -> ""
                 }
             }
@@ -37,23 +52,40 @@ class JavaPsiQLInterpreter : PsiQLInterpreter {
         val firstArgument = arguments.firstOrNull() ?: return ""
 
         return when (methodName) {
-            "parentOf" -> {
-                val psiClass = searchClass(project, firstArgument)
-                psiClass?.superClass?.name ?: ""
+            "subclassesOf" -> {
+                val facade = JavaPsiFacade.getInstance(project)
+
+                val psiClass = facade.findClass(firstArgument, GlobalSearchScope.allScope(project))
+                if (psiClass == null) {
+                    logger<JavaPsiQLInterpreter>().warn("Cannot find class: $firstArgument")
+                    return ""
+                }
+
+                val map: List<PsiClass> =
+                    ClassInheritorsSearch.search(psiClass, GlobalSearchScope.allScope(project), true).map { it }
+                map
             }
 
-            "extendsOf" -> {
-                val scope = GlobalSearchScope.allScope(project)
-                val psiFacade = JavaPsiFacade.getInstance(project)
-                val superClass = psiFacade.findClass(firstArgument, scope) ?: return emptyList<String>()
+            "annotatedOf" -> {
+                val facade = JavaPsiFacade.getInstance(project)
+                val annotationClass =
+                    facade.findClass(firstArgument, GlobalSearchScope.allScope(project)) ?: return emptyList<String>()
 
-                val classes = psiFacade.findClasses(superClass.qualifiedName!!, scope)
-                classes.filter { it.isInheritor(superClass, true) }.map { it.name }
+                val annotatedElements =
+                    AnnotatedElementsSearch.searchPsiClasses(annotationClass, GlobalSearchScope.allScope(project))
+                        .findAll()
+
+                annotatedElements.filterIsInstance<PsiClass>()
+            }
+
+            "superclassOf" -> {
+                val psiClass = searchClass(project, firstArgument) ?: return ""
+                psiClass.superClass ?: ""
             }
 
             "implementsOf" -> {
                 val psiClass = searchClass(project, firstArgument) ?: return emptyList<String>()
-                psiClass.implementsList?.referencedTypes?.map { it.name } ?: emptyList<String>()
+                psiClass.implementsList?.referencedTypes ?: emptyList<String>()
             }
 
             else -> ""
