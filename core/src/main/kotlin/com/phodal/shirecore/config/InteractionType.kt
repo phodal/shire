@@ -14,14 +14,14 @@ enum class InteractionType(val description: String) {
     companion object {
         fun from(interaction: String): InteractionType {
             return when (interaction.lowercase()) {
-                "AppendCursor" -> AppendCursor
-                "AppendCursorStream" -> AppendCursorStream
-                "OutputFile" -> OutputFile
-                "ReplaceSelection" -> ReplaceSelection
-                "ReplaceCurrentFile" -> ReplaceCurrentFile
-                "InsertBeforeSelection" -> InsertBeforeSelection
-                "RunPanel" -> RunPanel
-                "PasteBoard" -> PasteBoard
+                AppendCursor.name.lowercase() -> AppendCursor
+                AppendCursorStream.name.lowercase() -> AppendCursorStream
+                OutputFile.name.lowercase() -> OutputFile
+                ReplaceSelection.name.lowercase() -> ReplaceSelection
+                ReplaceCurrentFile.name.lowercase() -> ReplaceCurrentFile
+                InsertBeforeSelection.name.lowercase() -> InsertBeforeSelection
+                RunPanel.name.lowercase() -> RunPanel
+                PasteBoard.name.lowercase() -> PasteBoard
                 else -> RunPanel
             }
         }
