@@ -13,6 +13,8 @@ pre {
 .hljs {
   color: #000000; /* 普通文本 */
   line-height: 1.5;
+
+  white-space: preserve;
 }
 
 span.hljs-meta, span.hljs-variable {
