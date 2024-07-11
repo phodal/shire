@@ -44,6 +44,33 @@ variables:
 ---
 ```
 
+## Todos
+
+## Java
+
+### Java `Where` Function (TODO)
+
+- qualifiedName
+- implements
+- extends
+- annotation
+- methods
+- fields
+
+Query by types
+
+- extendOf
+- implementOf
+- annotationOf
+- callOf
+
+### Text Function
+
+- regexpMatch
+- similarSearch
+- embeddingSearch
+- tf-idf
+
 ## Reference
 
 ### CodeQL
@@ -109,66 +136,4 @@ where expr.getLeftOperand().getType().hasName("int") and
     exists(LoopStmt l | l.getCondition().getAChildExpr*() = expr) and
     not expr.getAnOperand().isCompileTimeConstant()
 select expr
-```
-
-### TreeSitter
-
-TreeSitter Query Language Reference: https://tree-sitter.github.io/tree-sitter/using-parsers#query-syntax
-
-```tree-sitter
-(query
-  (function_definition
-    name: (identifier) @function-name))
-```
-
-### XPath
-
-XPath Query Language Reference: https://www.w3schools.com/xml/xpath_intro.asp
-
-```xpath
-//bookstore/book[price>35]
-```
-
-### JSON Path
-
-JSON Path Query Language Reference: https://goessner.net/articles/JsonPath/
-
-```jsonpath
-$.store.book[*].author
-```
-
-## Example Query Expression
-
-Example AST query expression which will support use our AST node and S-Expression to query the AST tree.
-
-A ChatGPT generate for example:
-
-```kotlin
-val query = """
-    (MethodDeclaration
-        (Modifier public)
-        (Type void)
-        (Identifier main)
-        (ParameterList
-            (Parameter
-                (Type String)
-                (Identifier args)
-            )
-        )
-        (Block
-            (Statement
-                (ExpressionStatement
-                    (MethodCall
-                        (Identifier println)
-                        (Arguments
-                            (Expression
-                                (Literal "Hello, World!")
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-""".trimIndent()
 ```

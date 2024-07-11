@@ -15,3 +15,4 @@ Shire 语法由三部分组成：
   - Variable：用于定义过程变量。
 - Template：用于定义 LLM 模板。
   - Shire Template：用于定义代码生成模板。
+- Life Cycle：用于定义生命周期。
