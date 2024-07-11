@@ -52,11 +52,17 @@
                   implements="com.phodal.shirecore.provider.context.LanguageToolchainProvider"/>
         </extensionPoint>
 
-        <!-- Toolchain Provider -->
         <extensionPoint qualifiedName="com.phodal.shirePsiVariableProvider"
                         beanClass="com.intellij.lang.LanguageExtensionPoint" dynamic="true">
             <with attribute="implementationClass"
                   implements="com.phodal.shirecore.provider.variable.PsiContextVariableProvider"/>
+        </extensionPoint>
+
+        <!-- PSI Query Expression -->
+        <extensionPoint qualifiedName="com.phodal.shirePsiQLMethodCallInterpreter"
+                        beanClass="com.intellij.lang.LanguageExtensionPoint" dynamic="true">
+            <with attribute="implementationClass"
+                  implements="com.phodal.shirecore.provider.variable.PsiQLMethodCallInterpreter"/>
         </extensionPoint>
 
         <!-- Code Editor -->
