@@ -14,12 +14,12 @@ interface PsiQLInterpreter {
     /**
      * clazz.getName() or clazz.extensions
      */
-    fun resolveCall(element: PsiElement, methodName: String, arguments: List<String>): Any
+    fun resolveCall(element: PsiElement, methodName: String, arguments: List<Any>): Any
 
     /**
      * parentOf or childOf or anyOf ?
      */
-    fun resolveOfTypedCall(project: Project, methodName: String, arguments: List<String>): Any
+    fun resolveOfTypedCall(project: Project, methodName: String, arguments: List<Any>): Any
 
     companion object {
         private val languageExtension: LanguageExtension<PsiQLInterpreter> =

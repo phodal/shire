@@ -38,7 +38,7 @@ class JavaPsiQLInterpreter : PsiQLInterpreter {
     /**
      * clazz.getName() or clazz.extensions
      */
-    override fun resolveCall(element: PsiElement, methodName: String, arguments: List<String>): Any {
+    override fun resolveCall(element: PsiElement, methodName: String, arguments: List<Any>): Any {
         // is of method
         if (methodName.endsWith("Of")) {
             return this.resolveOfTypedCall(element.project, methodName, arguments)
@@ -69,9 +69,13 @@ class JavaPsiQLInterpreter : PsiQLInterpreter {
         }
     }
 
-    override fun resolveOfTypedCall(project: Project, methodName: String, arguments: List<String>): Any {
+    override fun resolveOfTypedCall(project: Project, methodName: String, arguments: List<Any>): Any {
         // get first argument for infer type
-        val firstArgument = arguments.firstOrNull() ?: return ""
+        val firstArgument = arguments.firstOrNull().toString()
+        if (firstArgument.isBlank()) {
+            logger<JavaPsiQLInterpreter>().warn("Cannot find first argument")
+            return ""
+        }
 
         return when (methodName) {
             "subclassesOf" -> {

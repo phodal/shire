@@ -4,6 +4,7 @@ import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.phodal.shirecore.provider.shire.ShireSymbolProvider
+import com.phodal.shirecore.provider.variable.PsiQLInterpreter
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.ast.*
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
@@ -54,6 +55,17 @@ class PsiQueryStatementProcessor(override val myProject: Project, hole: HobbitHo
     override fun <T : Any> invokeMethodOrField(methodCall: MethodCall, element: T): Any? {
         val methodName = methodCall.methodName.display()
         val methodArgs = methodCall.arguments
+        if(element is PsiElement) {
+            PsiQLInterpreter.provide(element.language)?.let { psiQLInterpreter ->
+                val hasPqlInterpreter = psiQLInterpreter.supportsMethod(element.language, methodName).filter {
+                    it == methodName
+                }.isNotEmpty()
+
+                if (hasPqlInterpreter) {
+                    return psiQLInterpreter.resolveCall(element, methodName, methodArgs ?: emptyList())
+                }
+            }
+        }
 
         val isField = methodArgs == null
 
