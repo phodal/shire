@@ -59,10 +59,10 @@
         </extensionPoint>
 
         <!-- PSI Query Expression -->
-        <extensionPoint qualifiedName="com.phodal.shirePsiQLMethodCallInterpreter"
+        <extensionPoint qualifiedName="com.phodal.shirePsiQLInterpreter"
                         beanClass="com.intellij.lang.LanguageExtensionPoint" dynamic="true">
             <with attribute="implementationClass"
-                  implements="com.phodal.shirecore.provider.variable.PsiQLMethodCallInterpreter"/>
+                  implements="com.phodal.shirecore.provider.variable.PsiQLInterpreter"/>
         </extensionPoint>
 
         <!-- Code Editor -->

@@ -42,5 +42,8 @@
 
         <shirePsiElementDataBuilder language="JAVA"
                                     implementationClass="com.phodal.shirelang.java.impl.JavaPsiElementDataBuilder"/>
+
+        <shirePsiQLInterpreter language="JAVA"
+                               implementationClass="com.phodal.shirelang.java.impl.JavaPsiQLInterpreter"/>
     </extensions>
 </idea-plugin>
