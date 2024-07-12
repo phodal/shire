@@ -138,21 +138,29 @@ class JavaPsiQLInterpreter : PsiQLInterpreter {
 
     protected fun getSearchScope(myProject: Project, scopeType: String, thisClass: PsiElement?): SearchScope {
         var searchScope: SearchScope = GlobalSearchScope.allScope(myProject)
-        if (HierarchyBrowserBaseEx.SCOPE_CLASS == scopeType) {
-            searchScope = LocalSearchScope(thisClass!!)
-        } else if (HierarchyBrowserBaseEx.SCOPE_MODULE == scopeType) {
-            val module = ModuleUtilCore.findModuleForPsiElement(thisClass!!)
-            searchScope = module?.getModuleScope(true) ?: LocalSearchScope(thisClass!!)
-        } else if (HierarchyBrowserBaseEx.SCOPE_PROJECT == scopeType) {
-            searchScope = GlobalSearchScopesCore.projectProductionScope(myProject)
-        } else if (HierarchyBrowserBaseEx.SCOPE_TEST == scopeType) {
-            searchScope = GlobalSearchScopesCore.projectTestScope(myProject)
-        } else {
-            val namedScope = NamedScopesHolder.getScope(myProject, scopeType)
-            if (namedScope != null) {
-                searchScope = GlobalSearchScopesCore.filterScope(myProject, namedScope)
+
+        when {
+            HierarchyBrowserBaseEx.SCOPE_CLASS == scopeType -> {
+                searchScope = LocalSearchScope(thisClass!!)
+            }
+            HierarchyBrowserBaseEx.SCOPE_MODULE == scopeType -> {
+                val module = ModuleUtilCore.findModuleForPsiElement(thisClass!!)
+                searchScope = module?.getModuleScope(true) ?: LocalSearchScope(thisClass!!)
+            }
+            HierarchyBrowserBaseEx.SCOPE_PROJECT == scopeType -> {
+                searchScope = GlobalSearchScopesCore.projectProductionScope(myProject)
+            }
+            HierarchyBrowserBaseEx.SCOPE_TEST == scopeType -> {
+                searchScope = GlobalSearchScopesCore.projectTestScope(myProject)
+            }
+            else -> {
+                val namedScope = NamedScopesHolder.getScope(myProject, scopeType)
+                if (namedScope != null) {
+                    searchScope = GlobalSearchScopesCore.filterScope(myProject, namedScope)
+                }
             }
         }
+
         return searchScope
     }
 
