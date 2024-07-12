@@ -8,8 +8,26 @@ import com.intellij.testFramework.fixtures.BasePlatformTestCase
 class JavaPsiQLInterpreterTest: BasePlatformTestCase() {
 
     fun testShouldSuccessGetClassName() {
+        val runnableCode = """
+            public class Runnable {
+                public String getName() {
+                    return "Runnable";
+                }
+            }
+        """.trimIndent()
+        myFixture.addFileToProject("Runnable.java", runnableCode)
+
+        val shireObjectCode = """
+            public class ShireObject {
+                public String getName() {
+                    return "ShireObject";
+                }
+            }
+        """.trimIndent()
+        myFixture.addFileToProject("ShireObject.java", shireObjectCode)
+
         val javaClassCode = """
-            public class TestClass extends Object implements Runnable {
+            public class TestClass extends ShireObject implements Runnable {
                 public String getName() {
                     return "TestClass";
                 }
@@ -21,13 +39,13 @@ class JavaPsiQLInterpreterTest: BasePlatformTestCase() {
 
         val interpreter = JavaPsiQLInterpreter()
         val result = interpreter.resolveCall(psiClass, "getName", emptyList())
-        val extendsClassName = interpreter.resolveCall(psiClass, "extends", emptyList())
+        val extendsClasses = interpreter.resolveCall(psiClass, "extends", emptyList())
         // implements
-        val implementsClassName = interpreter.resolveCall(psiClass, "implements", emptyList())
+        val implementsClass = interpreter.resolveCall(psiClass, "implements", emptyList())
 
         assertEquals("TestClass", result)
-        assertEquals(listOf("Object"), extendsClassName)
-        assertEquals(listOf("Runnable"), implementsClassName)
+        assertEquals("ShireObject", (extendsClasses as List<PsiClass>).first().name)
+        assertEquals("Runnable", (implementsClass as List<PsiClass>).first().name)
     }
 
     fun testShouldResolveParentOf() {
