@@ -3,6 +3,7 @@ package com.phodal.shirelang.run.executor
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
+import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirecore.config.InteractionType
 import com.phodal.shirecore.config.interaction.PostFunction
@@ -49,7 +50,7 @@ class ShireDefaultLlmExecutor(
                 }
             }
 
-            CoroutineScope(Dispatchers.Main).launch {
+            ShireCoroutineScope.scope(context.myProject).launch {
                 val llmResult = StringBuilder()
                 runBlocking {
                     LlmProvider.provider(context.myProject)?.stream(context.prompt, "", false)?.collect {
