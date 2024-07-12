@@ -18,7 +18,7 @@ import com.intellij.psi.search.searches.ClassInheritorsSearch
 import com.phodal.shirecore.provider.variable.PsiQLInterpreter
 
 
-enum class JavaPsiQLInterpreterMethod(val methodName: String, val description: String) {
+enum class JavaPqlMethod(val methodName: String, val description: String) {
     GET_NAME("getName", "Get class name"),
     NAME("name", "Get class name"),
     EXTENDS("extends", "Get class extends"),
@@ -38,7 +38,7 @@ class JavaPsiQLInterpreter : PsiQLInterpreter {
             return emptyList()
         }
 
-        return JavaPsiQLInterpreterMethod.values().map { it.methodName }
+        return JavaPqlMethod.values().map { it.methodName }
     }
 
     /**
@@ -53,22 +53,22 @@ class JavaPsiQLInterpreter : PsiQLInterpreter {
         return when (element) {
             is PsiClass -> {
                 when (methodName) {
-                    "getName" -> element.name!!
-                    "name" -> element.name!!
-                    "extends" -> {
+                    JavaPqlMethod.GET_NAME.methodName -> element.name!!
+                    JavaPqlMethod.NAME.methodName -> element.name!!
+                    JavaPqlMethod.EXTENDS.methodName -> {
                         val psiClasses =
                             element.extendsList?.referencedTypes?.map { it.resolve() } ?: emptyList<PsiClass>()
                         psiClasses
                     }
 
-                    "implements" -> element.implementsList?.referencedTypes?.map { it.resolve() }
+                    JavaPqlMethod.IMPLEMENTS.methodName -> element.implementsList?.referencedTypes?.map { it.resolve() }
                         ?: emptyList<PsiClass>()
 
-                    "methodCodeByName" -> {
+                    JavaPqlMethod.METHOD_CODE_BY_NAME.methodName -> {
                         element.methods.firstOrNull { it.name == arguments.first() } ?: return ""
                     }
 
-                    "fieldCodeByName" -> {
+                    JavaPqlMethod.FIELD_CODE_BY_NAME.methodName -> {
                         element.fields.firstOrNull { it.name == arguments.first() } ?: return ""
                     }
 
@@ -89,7 +89,7 @@ class JavaPsiQLInterpreter : PsiQLInterpreter {
         }
 
         return when (methodName) {
-            "subclassesOf" -> {
+            JavaPqlMethod.SUBCLASSES_OF.methodName -> {
                 val facade = JavaPsiFacade.getInstance(project)
 
                 val psiClass = facade.findClass(firstArgument, GlobalSearchScope.projectScope(project))
@@ -103,7 +103,7 @@ class JavaPsiQLInterpreter : PsiQLInterpreter {
                 map
             }
 
-            "annotatedOf" -> {
+            JavaPqlMethod.ANNOTATED_OF.methodName -> {
                 val facade = JavaPsiFacade.getInstance(project)
                 val annotationClass =
                     facade.findClass(firstArgument, GlobalSearchScope.allScope(project))
@@ -120,12 +120,12 @@ class JavaPsiQLInterpreter : PsiQLInterpreter {
                 classes.toList()
             }
 
-            "superclassOf" -> {
+            JavaPqlMethod.SUPERCLASS_OF.methodName -> {
                 val psiClass = searchClass(project, firstArgument) ?: return ""
                 psiClass.superClass ?: ""
             }
 
-            "implementsOf" -> {
+            JavaPqlMethod.IMPLEMENTS_OF.methodName -> {
                 val psiClass = searchClass(project, firstArgument) ?: return emptyList<String>()
                 psiClass.implementsList?.referencedTypes ?: emptyList<String>()
             }
