@@ -1,20 +1,12 @@
 package com.phodal.shirelang.java.impl
 
-import com.intellij.ide.hierarchy.HierarchyBrowserBaseEx
 import com.intellij.lang.Language
 import com.intellij.openapi.diagnostic.logger
-import com.intellij.openapi.module.ModuleUtilCore
 import com.intellij.openapi.project.Project
 import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiField
-import com.intellij.psi.PsiMethod
 import com.intellij.psi.search.GlobalSearchScope
-import com.intellij.psi.search.GlobalSearchScopesCore
-import com.intellij.psi.search.LocalSearchScope
-import com.intellij.psi.search.SearchScope
-import com.intellij.psi.search.scope.packageSet.NamedScopesHolder
 import com.intellij.psi.search.searches.AnnotatedElementsSearch
 import com.intellij.psi.search.searches.ClassInheritorsSearch
 import com.phodal.shirecore.provider.variable.PsiQLInterpreter
@@ -39,26 +31,26 @@ class JavaPsiQLInterpreter : PsiQLInterpreter {
 
         return when (element) {
             is PsiClass -> {
+                val primaryArgument = arguments.first()
+
                 when (methodName) {
                     JvmPsiPqlMethod.GET_NAME.methodName -> element.name!!
                     JvmPsiPqlMethod.NAME.methodName -> element.name!!
                     JvmPsiPqlMethod.EXTENDS.methodName -> element
-                        .extendsList?.referencedTypes
-                        ?.map { it.resolve() }
+                        .extendsList?.referencedTypes?.map { it.resolve() }
                         ?: emptyList<PsiClass>()
 
                     JvmPsiPqlMethod.IMPLEMENTS.methodName -> element
-                        .implementsList?.referencedTypes
-                        ?.map { it.resolve() }
+                        .implementsList?.referencedTypes?.map { it.resolve() }
                         ?: emptyList<PsiClass>()
 
                     JvmPsiPqlMethod.METHOD_CODE_BY_NAME.methodName -> element
-                        .methods.filter { it.name == arguments.first() }
-                        ?: return emptyList<PsiMethod>()
+                        .methods
+                        .filter { it.name == primaryArgument }
 
                     JvmPsiPqlMethod.FIELD_CODE_BY_NAME.methodName -> element
-                        .fields.filter { it.name == arguments.first() }
-                        ?: return emptyList<PsiField>()
+                        .fields
+                        .filter { it.name == primaryArgument }
 
                     else -> ""
                 }
@@ -122,38 +114,6 @@ class JavaPsiQLInterpreter : PsiQLInterpreter {
                 logger<JavaPsiQLInterpreter>().error("Cannot find method: $methodName")
             }
         }
-    }
-
-    protected fun getSearchScope(myProject: Project, scopeType: String, thisClass: PsiElement?): SearchScope {
-        var searchScope: SearchScope = GlobalSearchScope.allScope(myProject)
-
-        when {
-            HierarchyBrowserBaseEx.SCOPE_CLASS == scopeType -> {
-                searchScope = LocalSearchScope(thisClass!!)
-            }
-
-            HierarchyBrowserBaseEx.SCOPE_MODULE == scopeType -> {
-                val module = ModuleUtilCore.findModuleForPsiElement(thisClass!!)
-                searchScope = module?.getModuleScope(true) ?: LocalSearchScope(thisClass!!)
-            }
-
-            HierarchyBrowserBaseEx.SCOPE_PROJECT == scopeType -> {
-                searchScope = GlobalSearchScopesCore.projectProductionScope(myProject)
-            }
-
-            HierarchyBrowserBaseEx.SCOPE_TEST == scopeType -> {
-                searchScope = GlobalSearchScopesCore.projectTestScope(myProject)
-            }
-
-            else -> {
-                val namedScope = NamedScopesHolder.getScope(myProject, scopeType)
-                if (namedScope != null) {
-                    searchScope = GlobalSearchScopesCore.filterScope(myProject, namedScope)
-                }
-            }
-        }
-
-        return searchScope
     }
 
     private fun searchClass(project: Project, className: String): PsiClass? {
