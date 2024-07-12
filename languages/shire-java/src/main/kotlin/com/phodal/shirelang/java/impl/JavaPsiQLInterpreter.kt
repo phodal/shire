@@ -31,7 +31,6 @@ class JavaPsiQLInterpreter : PsiQLInterpreter {
 
         return when (element) {
             is PsiClass -> {
-                val primaryArgument = arguments.first()
 
                 when (methodName) {
                     JvmPsiPqlMethod.GET_NAME.methodName -> element.name!!
@@ -46,11 +45,11 @@ class JavaPsiQLInterpreter : PsiQLInterpreter {
 
                     JvmPsiPqlMethod.METHOD_CODE_BY_NAME.methodName -> element
                         .methods
-                        .filter { it.name == primaryArgument }
+                        .filter { it.name == arguments.first() }
 
                     JvmPsiPqlMethod.FIELD_CODE_BY_NAME.methodName -> element
                         .fields
-                        .filter { it.name == primaryArgument }
+                        .filter { it.name == arguments.first() }
 
                     else -> ""
                 }
