@@ -8,6 +8,8 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiField
+import com.intellij.psi.PsiMethod
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.search.GlobalSearchScopesCore
 import com.intellij.psi.search.LocalSearchScope
@@ -40,22 +42,23 @@ class JavaPsiQLInterpreter : PsiQLInterpreter {
                 when (methodName) {
                     JvmPsiPqlMethod.GET_NAME.methodName -> element.name!!
                     JvmPsiPqlMethod.NAME.methodName -> element.name!!
-                    JvmPsiPqlMethod.EXTENDS.methodName -> {
-                        val psiClasses =
-                            element.extendsList?.referencedTypes?.map { it.resolve() } ?: emptyList<PsiClass>()
-                        psiClasses
-                    }
-
-                    JvmPsiPqlMethod.IMPLEMENTS.methodName -> element.implementsList?.referencedTypes?.map { it.resolve() }
+                    JvmPsiPqlMethod.EXTENDS.methodName -> element
+                        .extendsList?.referencedTypes
+                        ?.map { it.resolve() }
                         ?: emptyList<PsiClass>()
 
-                    JvmPsiPqlMethod.METHOD_CODE_BY_NAME.methodName -> {
-                        element.methods.firstOrNull { it.name == arguments.first() } ?: return ""
-                    }
+                    JvmPsiPqlMethod.IMPLEMENTS.methodName -> element
+                        .implementsList?.referencedTypes
+                        ?.map { it.resolve() }
+                        ?: emptyList<PsiClass>()
 
-                    JvmPsiPqlMethod.FIELD_CODE_BY_NAME.methodName -> {
-                        element.fields.firstOrNull { it.name == arguments.first() } ?: return ""
-                    }
+                    JvmPsiPqlMethod.METHOD_CODE_BY_NAME.methodName -> element
+                        .methods.filter { it.name == arguments.first() }
+                        ?: return emptyList<PsiMethod>()
+
+                    JvmPsiPqlMethod.FIELD_CODE_BY_NAME.methodName -> element
+                        .fields.filter { it.name == arguments.first() }
+                        ?: return emptyList<PsiField>()
 
                     else -> ""
                 }
@@ -128,16 +131,20 @@ class JavaPsiQLInterpreter : PsiQLInterpreter {
             HierarchyBrowserBaseEx.SCOPE_CLASS == scopeType -> {
                 searchScope = LocalSearchScope(thisClass!!)
             }
+
             HierarchyBrowserBaseEx.SCOPE_MODULE == scopeType -> {
                 val module = ModuleUtilCore.findModuleForPsiElement(thisClass!!)
                 searchScope = module?.getModuleScope(true) ?: LocalSearchScope(thisClass!!)
             }
+
             HierarchyBrowserBaseEx.SCOPE_PROJECT == scopeType -> {
                 searchScope = GlobalSearchScopesCore.projectProductionScope(myProject)
             }
+
             HierarchyBrowserBaseEx.SCOPE_TEST == scopeType -> {
                 searchScope = GlobalSearchScopesCore.projectTestScope(myProject)
             }
+
             else -> {
                 val namedScope = NamedScopesHolder.getScope(myProject, scopeType)
                 if (namedScope != null) {
