@@ -17,6 +17,10 @@
 Shire offers a straightforward AI Coding Agent Language
 that enables communication between an LLM and control IDE for automated programming.
 
+[Quick Start →](https://shire.phodal.com/)
+
+[Shire Book: AI for software-engineering](https://aise.phodal.com/)
+
 > The concept of Shire originated from [AutoDev](https://github.com/unit-mesh/auto-dev), a subproject
 > of [UnitMesh](https://unitmesh.cc/). In AutoDev, we designed an AI-driven IDE for developers that includes DevIns, the
 > precursor to Shire. DevIns aims to enable users to create AI agents tailored to their own IDEs, allowing them to build
