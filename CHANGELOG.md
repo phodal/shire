@@ -1,6 +1,22 @@
-# [](https://github.com/phodal/shire/compare/v0.4.2...v) (2024-07-09)
+# [](https://github.com/phodal/shire/compare/v0.4.3...v) (2024-07-14)
 
 ## [Unreleased]
+
+## [0.4.3](https://github.com/phodal/shire/compare/v0.4.2...v[0.4.3]) (2024-07-14)
+
+### Bug Fixes
+
+- **actions:** handle null hole in context menu actions ([4a04f35](https://github.com/phodal/shire/commit/4a04f356b16689514bdc4af10df30b8d136b8b6a))
+
+### Features
+
+- **compiler:** add Tee class for writing to files [#36](https://github.com/phodal/shire/issues/36) ([153cc93](https://github.com/phodal/shire/commit/153cc93097f162e96b2f37aa1011f3caf6178886))
+- **interaction:** add PasteBoard interaction type ([33afb37](https://github.com/phodal/shire/commit/33afb37775288360865cb3e47b6a943bee1895bd))
+- **middleware:** add append functionality and AppendProcessor [#36](https://github.com/phodal/shire/issues/36) ([7413368](https://github.com/phodal/shire/commit/74133686a19869e25ff84a5c0392c081c9df787d))
+- **middleware:** expose and update compiledVariables across components [#36](https://github.com/phodal/shire/issues/36) ([c83ffbe](https://github.com/phodal/shire/commit/c83ffbe27659d96139ee3b7165aa6982495c1187))
+- **provider:** add method support for JavaPsiQLInterpreter ([ad83803](https://github.com/phodal/shire/commit/ad838038fefac63ad64c4e24351e34db50319f89))
+- **provider:** add PsiQLMethodCallInterpreter interface ([c9b6606](https://github.com/phodal/shire/commit/c9b6606d127d0a4e4f6df2d1c0229569272f5e25))
+- **shirelang:** extend pipelineArg syntax and add contentTee test [#36](https://github.com/phodal/shire/issues/36) ([42031b7](https://github.com/phodal/shire/commit/42031b7065886b9e399b07497e5157c2d2cd5652))
 
 ## [0.4.2](https://github.com/phodal/shire/compare/v0.4.1...v[0.4.2]) (2024-07-09)
 
@@ -331,7 +347,8 @@
 - **shell:** add shell language support plugin file ([bdc1c90](https://github.com/phodal/shire/commit/bdc1c90f10d7c2c4fb8f7157db343dd756c11352))
 - **shire:** add Shire context action group and location support ([e3df86d](https://github.com/phodal/shire/commit/e3df86d16d0c9985fec787a8e76ce553be9a9a45))
 
-[Unreleased]: https://github.com/phodal/shire/compare/v0.4.2...HEAD
+[Unreleased]: https://github.com/phodal/shire/compare/v0.4.3...HEAD
+[0.4.3]: https://github.com/phodal/shire/compare/v0.4.2...v0.4.3
 [0.4.2]: https://github.com/phodal/shire/compare/v0.4.1...v0.4.2
 [0.4.1]: https://github.com/phodal/shire/compare/v0.0.8...v0.4.1
 [0.0.8]: https://github.com/phodal/shire/compare/v0.0.7...v0.0.8
