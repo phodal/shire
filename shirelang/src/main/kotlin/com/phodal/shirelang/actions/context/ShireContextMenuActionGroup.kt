@@ -19,9 +19,13 @@ class ShireContextMenuActionGroup : ActionGroup() {
     override fun getChildren(e: AnActionEvent?): Array<AnAction> {
         val actionService = DynamicShireActionService.getInstance()
 
-        return actionService.getAction(ShireActionLocation.CONTEXT_MENU).map { actionConfig ->
+        return actionService.getAction(ShireActionLocation.CONTEXT_MENU).mapNotNull { actionConfig ->
+            if (actionConfig.hole == null) {
+                return@mapNotNull null
+            }
+
             val menuAction = ShireContextMenuAction(actionConfig)
-            if (actionConfig.hole?.shortcut != null) {
+            if (actionConfig.hole.shortcut != null) {
                 actionService.bindShortcutToAction(menuAction, actionConfig.hole.shortcut)
             }
 
