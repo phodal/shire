@@ -2,6 +2,9 @@ package com.phodal.shirecore.search.algorithm
 
 import kotlin.math.log10
 
+/**
+ * notes: Generate by ChatGPT-4O not verified by Human
+ */
 class BM25Similarity : Similarity {
     private val k1 = 1.5
     private val b = 0.75
@@ -12,16 +15,16 @@ class BM25Similarity : Similarity {
         val idfMap = computeIDF(chunks, docCount)
 
         // Tokenize the query
-        val queryTerms = tokenize(query)
+        val queryTerms = tokenize(query).groupBy { it }.mapValues { it.value.size }
 
         return chunks.map { doc ->
             val docLength = doc.size
-            queryTerms.map { term ->
+            queryTerms.map { (term, queryTermFreq) ->
                 val tf = doc.count { it == term }.toDouble()
                 val idf = idfMap[term] ?: 0.0
                 val numerator = tf * (k1 + 1)
                 val denominator = tf + k1 * (1 - b + b * (docLength / avgDocLength))
-                idf * (numerator / denominator)
+                idf * (numerator / denominator) * queryTermFreq
             }
         }
     }
