@@ -1,5 +1,11 @@
 package com.phodal.shirecore.search.algorithm
 
-interface Similarity {
+import com.phodal.shirecore.search.tokenizer.StopwordsBasedTokenizer
 
+interface Similarity {
+    fun tokenize(input: String): Set<String> {
+        return StopwordsBasedTokenizer.instance().tokenize(input)
+    }
+
+    fun computeInputSimilarity(query: String, chunks: List<List<String>>): List<List<Double>>
 }

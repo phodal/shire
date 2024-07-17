@@ -23,7 +23,7 @@ class SimilarChunksSearch(private var snippetLength: Int = 60, private var maxRe
         val mostRecentFilesRelativePaths = mostRecentFiles.mapNotNull { relativePathTo(it, element) }
 
         val chunks = extractChunks(element, mostRecentFiles)
-        val jaccardSimilarities = tokenLevelJaccardSimilarity(element.text, chunks)
+        val jaccardSimilarities = computeInputSimilarity(element.text, chunks)
 
         val similarChunks: List<Pair<String, String>> =
             jaccardSimilarities.mapIndexedNotNull { fileIndex, jaccardList ->
