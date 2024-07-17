@@ -2,7 +2,7 @@ package com.phodal.shirecore.search.algorithm
 
 import com.phodal.shirecore.search.tokenizer.StopwordsBasedTokenizer
 
-open class JaccardSimilarity {
+open class JaccardSimilarity : Similarity {
     /**
      * The `tokenLevelJaccardSimilarity` method calculates the Jaccard similarity between a query string and an array of string
      * arrays (chunks). The Jaccard similarity is a measure of the similarity between two sets and is defined as the size of
