@@ -1,5 +1,5 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
-package com.phodal.shirecore.search.embedding
+package com.phodal.shirecore.search.indices
 
 import com.intellij.concurrency.ConcurrentCollectionFactory
 import com.intellij.util.containers.CollectionFactory
@@ -22,7 +22,7 @@ import kotlin.sequences.map
 import kotlin.to
 
 /**
- * Concurrent [com.phodal.shirecore.search.embedding.EmbeddingSearchIndex] that stores all embeddings in the memory and allows
+ * Concurrent [com.phodal.shirecore.search.indices.EmbeddingSearchIndex] that stores all embeddings in the memory and allows
  * simultaneous read operations from multiple consumers.
  * Can be persisted to disk.
  */

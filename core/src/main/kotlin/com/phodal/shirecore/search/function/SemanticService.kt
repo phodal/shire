@@ -13,9 +13,9 @@ import com.intellij.openapi.project.guessProjectDir
 import com.intellij.openapi.util.io.FileUtilRt
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.toNioPathOrNull
-import com.phodal.shirecore.search.embedding.DiskSynchronizedEmbeddingSearchIndex
-import com.phodal.shirecore.search.embedding.EmbeddingSearchIndex
-import com.phodal.shirecore.search.embedding.InMemoryEmbeddingSearchIndex
+import com.phodal.shirecore.search.indices.DiskSynchronizedEmbeddingSearchIndex
+import com.phodal.shirecore.search.indices.EmbeddingSearchIndex
+import com.phodal.shirecore.search.indices.InMemoryEmbeddingSearchIndex
 import kotlinx.coroutines.*
 import java.io.File
 import java.nio.file.Path
