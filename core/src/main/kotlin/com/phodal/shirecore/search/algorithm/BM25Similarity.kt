@@ -3,7 +3,16 @@ package com.phodal.shirecore.search.algorithm
 import kotlin.math.log10
 
 /**
- * notes: Generate by ChatGPT-4O not verified by Human
+ * BM25Similarity is a class that computes the similarity between a given query and a list of documents (chunks).
+ * It uses the BM25 algorithm, which is a probabilistic information retrieval model.
+ * The BM25 algorithm considers term frequency, inverse document frequency, and document length to compute relevance scores.
+ *
+ * @property k1 The term frequency saturation parameter.
+ * @property b The document length normalization parameter.
+ *
+ * The class contains two main functions:
+ * 1. computeInputSimilarity: Computes the BM25 similarity scores between the query and each document.
+ * 2. computeIDF: Computes the inverse document frequency (IDF) for each term in the corpus.
  */
 class BM25Similarity : Similarity {
     private val k1 = 1.5
