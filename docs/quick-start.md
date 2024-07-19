@@ -53,6 +53,13 @@ ${context.frameworkContext}
 /file:src/main/kotlin/com/phodal/blog/controller/UserController.kt
 ```
 
-## LICENSE
+## Config LLM
 
-This code is distributed under the MPL 2.0 license. See `LICENSE` in this directory.
+当前我们只支持 OpenAI API 风格的 SAAS 服务，你需要在 `Settings` -> `Tools` -> `Shire` 中配置你的 API Token 和 Model。
+
+### GLM 示例
+
+- LLM API Host: https://open.bigmodel.cn/api/paas/v4/chat/completions
+- ModelName: glm-4
+- Engine Token: xxxx
+
