@@ -2,12 +2,13 @@ package com.phodal.shire.custom
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.intellij.openapi.diagnostic.logger
-import com.intellij.openapi.project.Project
 import com.nfeld.jsonpathkt.JsonPath
 import com.nfeld.jsonpathkt.extension.read
 import com.phodal.shire.custom.sse.JSONBodyResponseCallback
 import com.phodal.shire.custom.sse.ResponseBodyCallback
+import com.phodal.shirecore.llm.ChatMessage
 import com.phodal.shirecore.llm.ChatRole
+import com.phodal.shirecore.llm.CustomRequest
 import com.theokanning.openai.completion.chat.ChatCompletionResult
 import com.theokanning.openai.service.SSE
 import io.reactivex.BackpressureStrategy
@@ -36,27 +37,29 @@ import org.jetbrains.annotations.VisibleForTesting
  *
  * @constructor Creates an instance of `CustomSSEProcessor`.
  */
-open class CustomSSEHandler(private val project: Project) {
+open class CustomSSEHandler {
     open var hasSuccessRequest: Boolean = false
     private var parseFailedResponses: MutableList<String> = mutableListOf()
+
     open val requestFormat: String = ""
     open val responseFormat: String = ""
+
     private val logger = logger<CustomSSEHandler>()
 
-    fun streamJson(call: Call, messages: MutableList<Message>): Flow<String> = callbackFlow {
+    fun streamJson(call: Call, messages: MutableList<ChatMessage>): Flow<String> = callbackFlow {
         call.enqueue(JSONBodyResponseCallback(responseFormat) {
             withContext(Dispatchers.IO) {
                 send(it)
             }
 
-            messages += Message(ChatRole.Assistant.roleName(), it)
+            messages += ChatMessage(ChatRole.Assistant, it)
             close()
         })
         awaitClose()
     }
 
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
-    fun streamSSE(call: Call, messages: MutableList<Message>): Flow<String> {
+    fun streamSSE(call: Call, messages: MutableList<ChatMessage>): Flow<String> {
         val sseFlowable = Flowable
             .create({ emitter: FlowableEmitter<SSE> ->
                 call.enqueue(ResponseBodyCallback(emitter, true))
@@ -114,7 +117,7 @@ open class CustomSSEHandler(private val project: Project) {
                         send(errorMsg)
                     }
 
-                    messages += Message(ChatRole.Assistant.roleName(), output)
+                    messages += ChatMessage(ChatRole.Assistant, output)
                     close()
                 }
                 awaitClose()
@@ -134,12 +137,6 @@ open class CustomSSEHandler(private val project: Project) {
         }
     }
 }
-
-@Serializable
-data class Message(val role: String, val content: String)
-
-@Serializable
-data class CustomRequest(val messages: List<Message>)
 
 @VisibleForTesting
 fun Request.Builder.appendCustomHeaders(customRequestHeader: String): Request.Builder = apply {

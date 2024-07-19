@@ -13,17 +13,13 @@ import javax.swing.JTextField
 
 class ShireSettingUi : ConfigurableUi<ShireSettingsState> {
     private var panel: JPanel? = null
-    private var apiHost: JTextField = JTextField().also {
-    }
-    private var modelName: JTextField = JTextField().also {
-    }
-
-    private var engineToken: JTextField = JBPasswordField().also {
-    }
+    private var apiHost: JTextField = JTextField()
+    private var modelName: JTextField = JTextField()
+    private var engineToken: JTextField = JBPasswordField()
 
     init {
         this.panel = panel {
-            row("API Host:") {
+            row("LLM API Host:") {
                 cell(apiHost)
                     .applyToComponent { minimumSize = JBDimension(200, 1) }
                     .align(AlignX.FILL)

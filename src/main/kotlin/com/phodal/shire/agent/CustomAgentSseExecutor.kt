@@ -3,13 +3,14 @@ package com.phodal.shire.agent
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
-import com.phodal.shire.custom.CustomRequest
 import com.phodal.shire.custom.CustomSSEHandler
-import com.phodal.shire.custom.Message
 import com.phodal.shire.custom.updateCustomFormat
 import com.phodal.shirecore.agent.AuthType
 import com.phodal.shirecore.agent.CustomAgent
 import com.phodal.shirecore.agent.CustomAgentResponseAction
+import com.phodal.shirecore.llm.ChatMessage
+import com.phodal.shirecore.llm.ChatRole
+import com.phodal.shirecore.llm.CustomRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -20,21 +21,21 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.util.concurrent.TimeUnit
 
 @Service(Service.Level.PROJECT)
-class CustomAgentExecutor(val project: Project) : CustomSSEHandler(project) {
+class CustomAgentSseExecutor(val project: Project) : CustomSSEHandler() {
     private var client = OkHttpClient()
-    private val logger = logger<CustomAgentExecutor>()
-    private val messages: MutableList<Message> = mutableListOf()
+    private val logger = logger<CustomAgentSseExecutor>()
+    private val messages: MutableList<ChatMessage> = mutableListOf()
 
     override var requestFormat: String = ""
     override var responseFormat: String = ""
 
-    fun execute(promptText: String, agent: CustomAgent): Flow<String>? {
-        messages.add(Message("user", promptText))
+    fun execute(promptText: String, agent: CustomAgent): Flow<String> {
+        messages.add(ChatMessage(ChatRole.User, promptText))
 
         this.requestFormat = agent.connector?.requestFormat ?: this.requestFormat
         this.responseFormat = agent.connector?.responseFormat ?: this.responseFormat
 
-        val customRequest = CustomRequest(listOf(Message("user", promptText)))
+        val customRequest = CustomRequest(listOf(ChatMessage(ChatRole.User, promptText)))
         val request = if (requestFormat.isNotEmpty()) {
             customRequest.updateCustomFormat(requestFormat)
         } else {
