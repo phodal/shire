@@ -21,8 +21,8 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.jackson.JacksonConverterFactory
 import java.time.Duration
 
-class OpenAIProvider : LlmProvider {
-    private val logger: Logger = logger<OpenAIProvider>()
+class OpenAILikeProvider : LlmProvider {
+    private val logger: Logger = logger<OpenAILikeProvider>()
     private val timeout = Duration.ofSeconds(defaultTimeout)
     private val modelName: String
         get() = ShireSettingsState.getInstance().modelName
