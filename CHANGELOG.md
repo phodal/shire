@@ -1,6 +1,14 @@
-# [](https://github.com/phodal/shire/compare/v0.4.3...v) (2024-07-14)
+# [](https://github.com/phodal/shire/compare/v0.4.5...v) (2024-07-19)
 
 ## [Unreleased]
+
+## [0.4.5](https://github.com/phodal/shire/compare/v0.4.3...v[0.4.5]) (2024-07-19)
+
+### Features
+
+- **core:** implement equals and hashCode for IndexEntry ([2543805](https://github.com/phodal/shire/commit/25438059ca7ee50a2c47fba29a7e0cc8ef8ed677))
+- **search:** add interface for similarity algorithms ([27c65c1](https://github.com/phodal/shire/commit/27c65c1c0dd85c7c91ddcfd72ba90470c03136f8))
+- **search:** implement BM25 similarity algorithm and refactor SimilarChunkSearcher ([ef32475](https://github.com/phodal/shire/commit/ef3247552446f1218bd6a0ea30857cb952160933))
 
 ## [0.4.3](https://github.com/phodal/shire/compare/v0.4.2...v[0.4.3]) (2024-07-14)
 
@@ -347,7 +355,8 @@
 - **shell:** add shell language support plugin file ([bdc1c90](https://github.com/phodal/shire/commit/bdc1c90f10d7c2c4fb8f7157db343dd756c11352))
 - **shire:** add Shire context action group and location support ([e3df86d](https://github.com/phodal/shire/commit/e3df86d16d0c9985fec787a8e76ce553be9a9a45))
 
-[Unreleased]: https://github.com/phodal/shire/compare/v0.4.3...HEAD
+[Unreleased]: https://github.com/phodal/shire/compare/v0.4.5...HEAD
+[0.4.5]: https://github.com/phodal/shire/compare/v0.4.3...v0.4.5
 [0.4.3]: https://github.com/phodal/shire/compare/v0.4.2...v0.4.3
 [0.4.2]: https://github.com/phodal/shire/compare/v0.4.1...v0.4.2
 [0.4.1]: https://github.com/phodal/shire/compare/v0.0.8...v0.4.1
