@@ -29,7 +29,7 @@ class OpenAILikeProvider : CustomSSEHandler(), LlmProvider {
     private val url: String get() {
         val apiHost = ShireSettingsState.getInstance().apiHost
         if (apiHost.isEmpty()) {
-            return "https://api.openai.com/v1/"
+            return "https://api.openai.com/v1/chat/completions"
         }
 
         return apiHost
@@ -38,6 +38,9 @@ class OpenAILikeProvider : CustomSSEHandler(), LlmProvider {
     private val messages: MutableList<ChatMessage> = ArrayList()
     private var historyMessageLength: Int = 0
     private var client = OkHttpClient()
+
+    override val requestFormat: String get() = "{ \"customFields\": {\"model\": $modelName, \"stream\": true} }"
+    override val responseFormat: String get() = "\$.choices[0].delta.content"
 
     override fun isApplicable(project: Project): Boolean {
         return key.isNotEmpty() && modelName.isNotEmpty()

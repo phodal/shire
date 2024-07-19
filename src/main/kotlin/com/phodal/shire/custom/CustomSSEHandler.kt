@@ -42,7 +42,7 @@ open class CustomSSEHandler {
     private var parseFailedResponses: MutableList<String> = mutableListOf()
 
     open val requestFormat: String = ""
-    open val responseFormat: String = ""
+    open val responseFormat: String = "\$.choices[0].delta.content"
 
     private val logger = logger<CustomSSEHandler>()
 

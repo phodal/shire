@@ -16,4 +16,4 @@ enum class ChatRole {
 data class ChatMessage(val role: ChatRole, val content: String)
 
 @Serializable
-data class CustomRequest(val chatMessages: List<ChatMessage>)
+data class CustomRequest(val messages: List<ChatMessage>)
