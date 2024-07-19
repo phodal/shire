@@ -19,7 +19,6 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.*
 import okhttp3.Call
@@ -52,7 +51,7 @@ open class CustomSSEHandler {
                 send(it)
             }
 
-            messages += ChatMessage(ChatRole.Assistant, it)
+            messages += ChatMessage(ChatRole.assistant, it)
             close()
         })
         awaitClose()
@@ -117,7 +116,7 @@ open class CustomSSEHandler {
                         send(errorMsg)
                     }
 
-                    messages += ChatMessage(ChatRole.Assistant, output)
+                    messages += ChatMessage(ChatRole.assistant, output)
                     close()
                 }
                 awaitClose()

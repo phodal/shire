@@ -39,7 +39,7 @@ class OpenAILikeProvider : CustomSSEHandler(), LlmProvider {
     private var historyMessageLength: Int = 0
     private var client = OkHttpClient()
 
-    override val requestFormat: String get() = "{ \"customFields\": {\"model\": $modelName, \"stream\": true} }"
+    override val requestFormat: String get() = "{ \"customFields\": {\"model\": \"$modelName\", \"stream\": true} }"
     override val responseFormat: String get() = "\$.choices[0].delta.content"
 
     override fun isApplicable(project: Project): Boolean {
@@ -52,7 +52,7 @@ class OpenAILikeProvider : CustomSSEHandler(), LlmProvider {
     }
 
     override fun text(promptText: String): String {
-        messages += ChatMessage(ChatRole.User, promptText)
+        messages += ChatMessage(ChatRole.user, promptText)
         val customRequest = CustomRequest(messages)
         val requestContent = Json.encodeToString<CustomRequest>(customRequest)
 
@@ -87,7 +87,7 @@ class OpenAILikeProvider : CustomSSEHandler(), LlmProvider {
             clearMessage()
         }
 
-        messages += ChatMessage(ChatRole.User, promptText)
+        messages += ChatMessage(ChatRole.user, promptText)
 
         val customRequest = CustomRequest(messages)
         val requestContent = customRequest.updateCustomFormat(requestFormat)

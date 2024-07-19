@@ -3,13 +3,9 @@ package com.phodal.shirecore.llm
 import kotlinx.serialization.Serializable
 
 enum class ChatRole {
-    System,
-    Assistant,
-    User;
-
-    fun roleName(): String {
-        return this.name.lowercase()
-    }
+    system,
+    assistant,
+    user;
 }
 
 @Serializable

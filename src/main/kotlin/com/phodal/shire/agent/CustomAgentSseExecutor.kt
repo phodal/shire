@@ -30,12 +30,12 @@ class CustomAgentSseExecutor(val project: Project) : CustomSSEHandler() {
     override var responseFormat: String = ""
 
     fun execute(promptText: String, agent: CustomAgent): Flow<String> {
-        messages.add(ChatMessage(ChatRole.User, promptText))
+        messages.add(ChatMessage(ChatRole.user, promptText))
 
         this.requestFormat = agent.connector?.requestFormat ?: this.requestFormat
         this.responseFormat = agent.connector?.responseFormat ?: this.responseFormat
 
-        val customRequest = CustomRequest(listOf(ChatMessage(ChatRole.User, promptText)))
+        val customRequest = CustomRequest(listOf(ChatMessage(ChatRole.user, promptText)))
         val request = if (requestFormat.isNotEmpty()) {
             customRequest.updateCustomFormat(requestFormat)
         } else {
