@@ -22,9 +22,6 @@
 package com.phodal.shire.custom.sse
 
 import com.intellij.openapi.diagnostic.logger
-import com.theokanning.openai.service.OpenAiService
-import com.theokanning.openai.service.SSE
-import com.theokanning.openai.service.SSEFormatException
 import io.reactivex.FlowableEmitter
 import okhttp3.Call
 import okhttp3.Callback
@@ -131,9 +128,5 @@ class ResponseBodyCallback(private val emitter: FlowableEmitter<SSE>, private va
 
     override fun onFailure(call: Call, e: IOException) {
         emitter.onError(e)
-    }
-
-    companion object {
-        private val mapper = OpenAiService.defaultObjectMapper()
     }
 }

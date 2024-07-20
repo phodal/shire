@@ -4,13 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.intellij.openapi.diagnostic.logger
 import com.nfeld.jsonpathkt.JsonPath
 import com.nfeld.jsonpathkt.extension.read
+import com.phodal.shire.custom.sse.ChatCompletionResult
 import com.phodal.shire.custom.sse.JSONBodyResponseCallback
 import com.phodal.shire.custom.sse.ResponseBodyCallback
+import com.phodal.shire.custom.sse.SSE
 import com.phodal.shirecore.llm.ChatMessage
 import com.phodal.shirecore.llm.ChatRole
 import com.phodal.shirecore.llm.CustomRequest
-import com.theokanning.openai.completion.chat.ChatCompletionResult
-import com.theokanning.openai.service.SSE
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.FlowableEmitter
