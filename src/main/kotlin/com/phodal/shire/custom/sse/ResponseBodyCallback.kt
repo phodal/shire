@@ -22,7 +22,7 @@
 package com.phodal.shire.custom.sse
 
 import com.intellij.openapi.diagnostic.logger
-import io.reactivex.FlowableEmitter
+import io.reactivex.rxjava3.core.FlowableEmitter
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
@@ -78,8 +78,8 @@ class ResponseBodyCallback(private val emitter: FlowableEmitter<SSE>, private va
                         val eventName = line!!.substring(6).trim { it <= ' ' }
                         if (eventName == "ping") {
                             // skip ping event and data
-                            emitter.onNext(sse)
-                            emitter.onNext(sse)
+                            emitter.onNext(sse!!)
+                            emitter.onNext(sse!!)
                         }
 
                         null
