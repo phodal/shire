@@ -26,13 +26,8 @@ class OpenAILikeProvider : CustomSSEHandler(), LlmProvider {
 
     private val modelName: String get() = ShireSettingsState.getInstance().modelName
     private val key: String get() = ShireSettingsState.getInstance().apiToken
-    private val url: String get() {
-        val apiHost = ShireSettingsState.getInstance().apiHost
-        if (apiHost.isEmpty()) {
-            return "https://api.openai.com/v1/chat/completions"
-        }
-
-        return apiHost
+    private val url: String get() = ShireSettingsState.getInstance().apiHost.ifEmpty {
+        "https://api.openai.com/v1/chat/completions"
     }
 
     private val messages: MutableList<ChatMessage> = ArrayList()
