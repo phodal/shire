@@ -95,7 +95,7 @@ open class CustomSSEHandler {
                                     ObjectMapper().readValue(sse!!.data, ChatCompletionResult::class.java)
 
                                 val completion = result.choices[0].message
-                                if (completion != null && completion.content != null) {
+                                if (completion?.content != null) {
                                     output += completion.content
                                     trySend(completion.content)
                                 }

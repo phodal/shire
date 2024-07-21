@@ -79,7 +79,7 @@ class ResponseBodyCallback(private val emitter: FlowableEmitter<SSE>, private va
                         if (eventName == "ping") {
                             // skip ping event and data
                             emitter.onNext(sse!!)
-                            emitter.onNext(sse!!)
+                            emitter.onNext(sse)
                         }
 
                         null

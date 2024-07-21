@@ -13,7 +13,7 @@ data class ChatFunctionCall(
 data class ChatMessage(
     val role: String,
     @JsonInclude
-    val content: String,
+    val content: String? = null,
     val name: String? = null,
     @JsonProperty("function_call")
     val functionCall: ChatFunctionCall? = null,

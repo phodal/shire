@@ -2,7 +2,7 @@ package com.phodal.shirelang.run.executor
 
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.application.ApplicationManager
-import com.phodal.shire.agent.CustomAgentSseExecutor
+import com.phodal.shire.custom.CustomAgentSSEExecutor
 import com.phodal.shirecore.agent.CustomAgent
 import com.phodal.shirelang.ShireBundle
 import com.phodal.shirelang.run.flow.ShireConversationService
@@ -18,7 +18,7 @@ class CustomRemoteAgentLlmExecutor(
 ) : ShireLlmExecutor(context) {
     override fun execute(postFunction: PostFunction) {
         ApplicationManager.getApplication().invokeLater {
-            val stringFlow: Flow<String>? = CustomAgentSseExecutor(project = context.myProject).execute(context.prompt, agent)
+            val stringFlow: Flow<String>? = CustomAgentSSEExecutor(project = context.myProject).execute(context.prompt, agent)
 
             if (stringFlow == null) {
                 context.console.print(ShireBundle.message("shire.llm.notfound"), ConsoleViewContentType.ERROR_OUTPUT)
