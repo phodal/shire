@@ -1,9 +1,12 @@
 package com.phodal.shirecore.provider.impl
 
+import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.NlsSafe
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiFile
+import com.intellij.psi.PsiManager
 import com.phodal.shirecore.provider.variable.PsiContextVariableProvider
 import com.phodal.shirecore.provider.variable.model.PsiContextVariable
 import org.intellij.markdown.IElementType
@@ -19,9 +22,11 @@ private val embeddedHtmlType = IElementType("ROOT")
 
 class MarkdownPsiContextVariableProvider : PsiContextVariableProvider {
     override fun resolve(variable: PsiContextVariable, project: Project, editor: Editor, psiElement: PsiElement?): Any {
-        if (psiElement?.language?.id?.lowercase() != "markdown") return ""
+        val psiFile = ReadAction.compute<PsiFile?, Throwable> {
+            PsiManager.getInstance(project).findFile(editor.virtualFile)
+        }
 
-        val markdownText = psiElement.text
+        val markdownText = psiFile?.text ?: return ""
 
         return when (variable) {
             PsiContextVariable.STRUCTURE -> {
