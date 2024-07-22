@@ -39,7 +39,7 @@ class ShireRunner(
     private val console: ShireConsoleView,
     private val configuration: ShireConfiguration,
     private val userInput: String,
-    private val processHandler: ShireProcessHandler
+    private val processHandler: ShireProcessHandler,
 ) {
     private var compiledVariables: Map<String, Any> = mapOf()
     private val terminalLocationExecutor = TerminalLocationExecutor.provide(project)
@@ -192,7 +192,11 @@ class ShireRunner(
         } catch (e: Exception) {
             console.print(e.message ?: "Error", ConsoleViewContentType.ERROR_OUTPUT)
         } finally {
-            processHandler.detachProcess()
+            try {
+                processHandler.detachProcess()
+            } catch (e: Exception) {
+                // ignored
+            }
         }
     }
 
