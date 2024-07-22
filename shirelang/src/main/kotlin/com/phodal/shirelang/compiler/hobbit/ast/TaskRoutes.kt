@@ -95,40 +95,49 @@ data class TaskRoutes(
                     it.value is ConditionCase
                 }
                 .map { caseExpr ->
-                    val conditionCase = caseExpr.value as ConditionCase
-                    val conditions: List<Condition> = conditionCase.conditions.map {
-                        val caseKeyValue = it.value as CaseKeyValue
-
-                        Condition(caseKeyValue.key.display(), caseKeyValue.value as FrontMatterType.EXPRESSION)
-                    }
-
-                    var defaultTask: Task? = null
-
-                    val cases: List<Case> = conditionCase.cases.map {
-                        val caseKeyValue = it.value as CaseKeyValue
-                        val caseKey = caseKeyValue.key.display()
-
-                        val case = Case(
-                            caseKey,
-                            Task.CustomTask(caseKeyValue.value as FrontMatterType.EXPRESSION)
-                        )
-
-                        if (caseKey == "default") {
-                            defaultTask = Task.Default(caseKeyValue.value as FrontMatterType.EXPRESSION)
-                        }
-
-
-                        case
-                    }
-
-                    TaskRoutes(
-                        conditions = conditions,
-                        cases = cases,
-                        defaultTask = defaultTask
-                    )
+                    transformConditionCasesToRoutes(caseExpr.value as ConditionCase)
                 }
 
             return taskRoutes.firstOrNull()
+        }
+
+        /**
+         * Transforms a given [ConditionCase] into a [TaskRoutes] object which contains a structured set of conditions and corresponding tasks.
+         *
+         * @param conditionCase The [ConditionCase] object to transform. This object contains conditions and cases that determine routing logic.
+         * @return A [TaskRoutes] object that encapsulates the transformed conditions and cases, along with a default task if specified.
+         */
+        fun transformConditionCasesToRoutes(conditionCase: ConditionCase): TaskRoutes {
+            val conditions: List<Condition> = conditionCase.conditions.map {
+                val caseKeyValue = it.value as CaseKeyValue
+
+                Condition(caseKeyValue.key.display(), caseKeyValue.value as FrontMatterType.EXPRESSION)
+            }
+
+            var defaultTask: Task? = null
+
+            val cases: List<Case> = conditionCase.cases.map {
+                val caseKeyValue = it.value as CaseKeyValue
+                val caseKey = caseKeyValue.key.display()
+
+                val case = Case(
+                    caseKey,
+                    Task.CustomTask(caseKeyValue.value as FrontMatterType.EXPRESSION)
+                )
+
+                if (caseKey == "default") {
+                    defaultTask = Task.Default(caseKeyValue.value as FrontMatterType.EXPRESSION)
+                }
+
+
+                case
+            }
+
+            return TaskRoutes(
+                conditions = conditions,
+                cases = cases,
+                defaultTask = defaultTask
+            )
         }
     }
 }
