@@ -102,6 +102,6 @@ class ShirePatternPipelineTest : BasePlatformTestCase() {
             hole.executeAfterStreamingProcessor(project, null, context = context)
         }
 
-        assertEquals("\$output", context.lastTaskOutput)
+        assertEquals("User prompt:\n\n", context.lastTaskOutput)
     }
 }

@@ -77,7 +77,7 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
         val input: Any = variableTable["output"] ?: ""
         var result: Any = variableTable["output"] ?: ""
         processors.forEach { action ->
-            result = patternFunctionExecute(action, result, input)
+            result = patternFunctionExecute(action, result, input, variableTable)
         }
 
         return result.toString()

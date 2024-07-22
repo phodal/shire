@@ -31,7 +31,12 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
      *
      * @return The return type is `Any`. The actual return type depends on the type of `PatternActionFunc`. For example, if `PatternActionFunc` is `Prompt`, it returns a `String`. If `PatternActionFunc` is `Grep`, it returns a `String` joined by "\n" from an `Array` or `String` that contains the specified patterns. If `PatternActionFunc` is `Sed`, it returns a `String` joined by "\n" from an `Array` or `String` where the specified pattern has been replaced. If `PatternActionFunc` is `Sort`, it returns a sorted `String` joined by "\n" from an `Array` or `String`. If `PatternActionFunc` is `Uniq`, it returns a `String` joined by "\n" from an `Array` or `String` with distinct elements. If `PatternActionFunc` is `Head`, it returns a `String` joined by "\n" from the first 'n' elements of an `Array` or `String`. If `PatternActionFunc` is `Tail`, it returns a `String` joined by "\n" from the last 'n' elements of an `Array` or `String`. If `PatternActionFunc` is `Cat`, it executes the `executeCatFunc` function. If `PatternActionFunc` is `Print`, it returns a `String` joined by "\n" from the `texts` property of `Print`. If `PatternActionFunc` is `Xargs`, it returns the `variables` property of `Xargs`. If `PatternActionFunc` is `UserCustom`, it logs an error message. If `PatternActionFunc` is of an unknown type, it logs an error message and returns an empty `String`.
      */
-    open suspend fun patternFunctionExecute(action: PatternActionFunc, lastResult: Any, input: Any): Any {
+    open suspend fun patternFunctionExecute(
+        action: PatternActionFunc,
+        lastResult: Any,
+        input: Any,
+        variableTable: MutableMap<String, Any?> = mutableMapOf()
+    ): Any {
         val semanticService = myProject.getService(SemanticService::class.java)
 
         return when (action) {
@@ -130,14 +135,11 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
 
             is PatternActionFunc.Print -> {
                 action.texts.map {
-                    // load from variable table
-//                    if (it.startsWith("\$")) {
-//                        val variable = it.substring(1)
-//                        hole.variables[variable]?.toString() ?: ""
-//                    } else {
-//                        it
-//                    }
-                    it
+                    if (it.startsWith("\$")) {
+                        variableTable[it.substring(1)] ?: it
+                    } else {
+                        it
+                    }
                 }.joinToString("\n")
             }
 
