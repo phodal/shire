@@ -91,11 +91,15 @@ data class TaskRoutes(
         fun from(expression: FrontMatterType.ARRAY): TaskRoutes? {
             val arrays = expression.value as List<FrontMatterType>
             val taskRoutes = arrays.filterIsInstance<FrontMatterType.EXPRESSION>()
-                .filter {
-                    it.value is ConditionCase
-                }
-                .map { caseExpr ->
-                    transformConditionCasesToRoutes(caseExpr.value as ConditionCase)
+                .mapNotNull { caseExpr ->
+                    when (val value = caseExpr.value) {
+                        is ConditionCase -> {
+                            transformConditionCasesToRoutes(value)
+                        }
+                        else -> {
+                            null
+                        }
+                    }
                 }
 
             return taskRoutes.firstOrNull()
