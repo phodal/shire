@@ -302,8 +302,20 @@ AFTER_STREAMING          =afterStreaming
   "case"                 { return CASE; }
   "default"              { return DEFAULT; }
 
-  {NUMBER}               { return NUMBER; }
-  {IDENTIFIER}           { return IDENTIFIER; }
+  {IDENTIFIER}            {
+          if (isInsideFunctionBlock) {
+              yypushback(yylength()); yybegin(EXPR_BLOCK);
+          } else {
+              switch (yytext().toString().trim()) {
+                  case "when": return WHEN;
+                  case "onStreaming": return ON_STREAMING;
+                  case "onStreamingEnd": return ON_STREAMING_END;
+                  case "afterStreaming": return AFTER_STREAMING;
+                  default: return IDENTIFIER;
+              }
+          }
+      }
+
   {QUOTE_STRING}         { return QUOTE_STRING; }
   {PATTERN_EXPR}         { return PATTERN_EXPR; }
   "=>"                   { return ARROW; }
@@ -332,14 +344,15 @@ AFTER_STREAMING          =afterStreaming
               yypushback(yylength()); yybegin(EXPR_BLOCK);
           } else {
               switch (yytext().toString().trim()) {
-                    case "when": return WHEN;
-                    case "onStreaming": return ON_STREAMING;
-                    case "onStreamingEnd": return ON_STREAMING_END;
-                    case "afterStreaming": return AFTER_STREAMING;
-                    default: return IDENTIFIER;
-                }
+                  case "when": return WHEN;
+                  case "onStreaming": return ON_STREAMING;
+                  case "onStreamingEnd": return ON_STREAMING_END;
+                  case "afterStreaming": return AFTER_STREAMING;
+                  default: return IDENTIFIER;
+              }
           }
       }
+
   {DATE}                  { return DATE; }
   {BOOLEAN}               { return BOOLEAN; }
   {QUOTE_STRING}          { return QUOTE_STRING; }
