@@ -1,0 +1,10 @@
+<idea-plugin package="com.phodal.shire" xmlns:xi="http://www.w3.org/2001/XInclude">
+    <id>com.phodal.shire</id>
+
+    <xi:include href="/META-INF/com.phodal.shirecore.xml" xpointer="xpointer(/idea-plugin/*)"/>
+    <!--suppress PluginXmlValidity -->
+
+    <extensions defaultExtensionNs="com.phodal">
+        <shireSymbolProvider implementation="com.phodal.shirelang.impl.DefaultShireSymbolProvider" />
+    </extensions>
+</idea-plugin>

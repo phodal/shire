@@ -1,5 +1,5 @@
-<idea-plugin package="cc.unitmesh" xmlns:xi="http://www.w3.org/2001/XInclude">
-    <id>cc.unitmesh.devti</id>
+<idea-plugin package="com.phodal" xmlns:xi="http://www.w3.org/2001/XInclude">
+    <id>com.phodal.shire</id>
 
     <xi:include href="/META-INF/shire-main.xml" xpointer="xpointer(/idea-plugin/*)"/>
     <!--suppress PluginXmlValidity -->

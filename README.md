@@ -50,7 +50,7 @@ Bilibili
 
 感谢智谱 AI 赞助的 GLM 4 Air 资源包。[【加入Z计划，和智谱AI一起创业】（点击跳转👇）](https://zhipu-ai.feishu.cn/share/base/form/shrcntPu1mUMhoapEseCJpmUUuf)
 
-<a href="https://zhipu-ai.feishu.cn/share/base/form/shrcntPu1mUMhoapEseCJpmUUuf">
+<a href="https://zhipu-ai.feishu.cn/share/base/form/shrcntPu1mUMhoapEseCJpmUUuf" target="_blank">
     <img src="https://aise.phodal.com/images/zhipu-z-plan.svg" width="256px" height="auto"  alt="logo" />
 </a>
 
