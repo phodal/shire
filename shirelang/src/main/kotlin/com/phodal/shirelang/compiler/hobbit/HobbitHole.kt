@@ -231,8 +231,10 @@ open class HobbitHole(
         myProject: Project,
         console: ConsoleView?,
         context: PostCodeHandleContext,
-    ) {
-        afterStreaming?.execute(myProject, context, this)
+    ): Any? {
+        val result = afterStreaming?.execute(myProject, context, this)
+        context.lastTaskOutput = result as? String
+        return result
     }
 
     companion object {

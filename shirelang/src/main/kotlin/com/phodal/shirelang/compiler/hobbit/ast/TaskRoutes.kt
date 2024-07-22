@@ -1,9 +1,11 @@
 package com.phodal.shirelang.compiler.hobbit.ast
 
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.middleware.PostCodeHandleContext
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.execute.FunctionStatementProcessor
+import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 
 
 data class TaskRoutesContext(
@@ -40,7 +42,7 @@ data class TaskRoutes(
         myProject: Project,
         context: PostCodeHandleContext,
         hobbitHole: HobbitHole,
-    ): List<Case> {
+    ): Any? {
         val conditionResult = mutableMapOf<String, Any?>()
         val variableTable = mutableMapOf<String, Any?>()
 
@@ -71,20 +73,22 @@ data class TaskRoutes(
             }
         }
 
+        var result: Any? = null
         if (matchedCase.isEmpty()) {
-            ((defaultTask as? Task.Default)?.expression?.value as? Statement)?.let {
+            val result = ((defaultTask as? Task.Default)?.expression?.value as? Statement)?.let {
                 processor.execute(it, variableTable)
             }
 
-            return emptyList()
+            logger<TaskRoutes>().info("no matched case, execute default task: $result")
+            return result
         }
 
         matchedCase.forEach {
             val statement = (it.valueExpression as Task.CustomTask).expression?.value as Statement
-            processor.execute(statement, variableTable)
+            result = processor.execute(statement, variableTable)
         }
 
-        return matchedCase
+        return result
     }
 
     companion object {
@@ -111,7 +115,7 @@ data class TaskRoutes(
          * @param conditionCase The [ConditionCase] object to transform. This object contains conditions and cases that determine routing logic.
          * @return A [TaskRoutes] object that encapsulates the transformed conditions and cases, along with a default task if specified.
          */
-        fun transformConditionCasesToRoutes(conditionCase: ConditionCase): TaskRoutes {
+        private fun transformConditionCasesToRoutes(conditionCase: ConditionCase): TaskRoutes {
             val conditions: List<Condition> = conditionCase.conditions.map {
                 val caseKeyValue = it.value as CaseKeyValue
 

@@ -100,10 +100,7 @@ class ShireLifecycleTest : BasePlatformTestCase() {
             editor = null
         )
 
-        val matchedCase = hole.afterStreaming?.execute(myFixture.project, handleContext, hole)
-        assertEquals(matchedCase?.size, 2)
-
-        assertEquals(matchedCase?.get(0)?.caseKey, "\"success\"")
-        assertEquals(matchedCase?.get(1)?.caseKey, "\"json-result\"")
+        val result = hole.afterStreaming?.execute(myFixture.project, handleContext, hole)
+        TestCase.assertEquals(result, "File not found")
     }
 }

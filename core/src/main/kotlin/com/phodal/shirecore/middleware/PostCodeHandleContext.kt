@@ -67,7 +67,7 @@ class PostCodeHandleContext(
      */
     val editor: Editor? = null,
 
-    val lastTaskOutput: String? = null,
+    var lastTaskOutput: String? = null,
 
     var compiledVariables: Map<String, Any> = mapOf(),
 ) {
