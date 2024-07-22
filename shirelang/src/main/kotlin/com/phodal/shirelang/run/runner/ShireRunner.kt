@@ -188,14 +188,18 @@ class ShireRunner(
             CoroutineScope(workerThread).launch {
                 hobbitHole?.executeStreamingEndProcessor(project, console, context)
                 hobbitHole?.executeAfterStreamingProcessor(project, console, context)
+
+                processHandler.detachProcess()
             }
         } catch (e: Exception) {
             console.print(e.message ?: "Error", ConsoleViewContentType.ERROR_OUTPUT)
-        } finally {
+
             try {
                 processHandler.detachProcess()
+
             } catch (e: Exception) {
                 // ignored
+                console.print(e.message ?: "Error", ConsoleViewContentType.ERROR_OUTPUT)
             }
         }
     }
