@@ -238,7 +238,11 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
         }
 
         val absolutePaths: List<VirtualFile> = paths.mapNotNull {
-            baseDir.findFile(it) ?: LocalFileSystem.getInstance().findFileByIoFile(File(it))
+            baseDir.findFile(it) ?: try {
+                LocalFileSystem.getInstance().findFileByIoFile(File(it))
+            } catch (e: Exception) {
+                null
+            }
         }
 
         return absolutePaths
