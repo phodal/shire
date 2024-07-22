@@ -46,6 +46,14 @@ Bilibili
 
 [![Shire AI Coding Agent Language](https://img.youtube.com/vi/z1ijWOL1rFY/0.jpg)](https://www.bilibili.com/video/BV1Lf421q7S7/)
 
+## Thanks
+
+感谢智谱 AI 赞助的 GLM 4 Air 资源包。[【加入Z计划，和智谱AI一起创业】（点击跳转👇）](https://zhipu-ai.feishu.cn/share/base/form/shrcntPu1mUMhoapEseCJpmUUuf)
+
+<a href="https://zhipu-ai.feishu.cn/share/base/form/shrcntPu1mUMhoapEseCJpmUUuf">
+    <img src="https://aise.phodal.com/images/zhipu-z-plan.svg" width="256px" height="auto"  alt="logo" />
+</a>
+
 ## LICENSE
 
 This code is distributed under the MPL 2.0 license. See `LICENSE` in this directory.
