@@ -158,5 +158,10 @@
 
         <!--   LocationInteractionProvider-->
         <shireLocationInteraction implementation="com.phodal.shirecore.config.interaction.EditorInteractionProvider"/>
+
+        <!-- Markdown Impl -->
+        <shirePsiVariableProvider
+                language="Markdown"
+                implementationClass="com.phodal.shirecore.provider.impl.MarkdownPsiContextVariableProvider"/>
     </extensions>
 </idea-plugin>

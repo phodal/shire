@@ -74,7 +74,9 @@ enum class PsiContextVariable(
 
     CALLED_METHOD("calledMethod", "The method that is being called by the current method"),
 
-    SIMILAR_CODE("similarCode", "Recently 20 files similar code based on the tf-idf search")
+    SIMILAR_CODE("similarCode", "Recently 20 files similar code based on the tf-idf search"),
+
+    STRUCTURE("structure", "The structure of the current class, for programming language will be in UML format.")
     ;
 
     companion object {

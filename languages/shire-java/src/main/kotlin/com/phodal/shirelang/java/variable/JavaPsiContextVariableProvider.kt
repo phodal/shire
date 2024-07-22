@@ -10,6 +10,7 @@ import com.phodal.shirecore.provider.variable.impl.CodeSmellBuilder
 import com.phodal.shirecore.provider.variable.model.PsiContextVariable
 import com.phodal.shirecore.provider.variable.PsiContextVariableProvider
 import com.phodal.shirecore.search.SimilarChunksSearch
+import com.phodal.shirelang.java.codemodel.JavaClassStructureProvider
 import com.phodal.shirelang.java.util.JavaTestHelper
 import com.phodal.shirelang.java.util.getContainingClass
 import com.phodal.shirelang.java.variable.provider.JavaRelatedClassesProvider
@@ -70,6 +71,11 @@ class JavaPsiContextVariableProvider : PsiContextVariableProvider {
             }
 
             PsiContextVariable.SIMILAR_CODE -> return SimilarChunksSearch.createQuery(psiElement) ?: ""
+            PsiContextVariable.STRUCTURE -> {
+                clazz?.let {
+                    JavaClassStructureProvider().build(it, true)?.toString() ?: ""
+                } ?: ""
+            }
         }
     }
 }
