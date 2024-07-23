@@ -38,11 +38,7 @@ data class TaskRoutes(
      */
     val defaultTask: Task? = null,
 ) {
-    fun execute(
-        myProject: Project,
-        context: PostCodeHandleContext,
-        hobbitHole: HobbitHole,
-    ): Any? {
+    fun execute(myProject: Project, context: PostCodeHandleContext, hobbitHole: HobbitHole): Any? {
         val conditionResult = mutableMapOf<String, Any?>()
         val variableTable = mutableMapOf<String, Any?>()
 
