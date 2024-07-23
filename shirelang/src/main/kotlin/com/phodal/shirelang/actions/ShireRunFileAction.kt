@@ -104,7 +104,12 @@ class ShireRunFileAction : DumbAwareAction() {
                 ShireActionStartupActivity.obtainShireFiles(myProject).find {
                     it.name == fileName
                 }
-            } ?: return "File not found"
+            }
+
+            if (file == null) {
+                logger<ShireRunFileAction>().error("File $fileName not found")
+                return "File $fileName not found"
+            }
 
             ApplicationManager.getApplication().invokeLater({
                 val config = DynamicShireActionConfig.from(file)
