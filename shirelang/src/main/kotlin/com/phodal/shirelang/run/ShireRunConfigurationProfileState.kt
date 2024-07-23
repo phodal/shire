@@ -72,9 +72,7 @@ open class ShireRunConfigurationProfileState(
         }
 
         val shireRunner = ShireRunner(
-            shireFile, myProject, console!!, configuration, configuration.getUserInput(),
-            configuration.getLastOutput(),
-            processHandler
+            shireFile, myProject, console!!, configuration, configuration.getVariables(), processHandler
         )
 
         val syntaxAnalyzer = ShireSyntaxAnalyzer(myProject, shireFile, ActionLocationEditor.defaultEditor(myProject))

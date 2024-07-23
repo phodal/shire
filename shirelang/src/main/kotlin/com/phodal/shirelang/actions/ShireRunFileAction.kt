@@ -42,7 +42,7 @@ class ShireRunFileAction : DumbAwareAction() {
         val config = DynamicShireActionConfig.from(file)
 
         val existingConfiguration = createRunConfig(e)
-        executeShireFile(project, config, existingConfiguration, lastOutput = "")
+        executeShireFile(project, config, existingConfiguration)
     }
 
     companion object {
@@ -59,8 +59,7 @@ class ShireRunFileAction : DumbAwareAction() {
             project: Project,
             config: DynamicShireActionConfig,
             runSettings: RunnerAndConfigurationSettings?,
-            userInput: String? = null,
-            lastOutput: String = "",
+            variables: Map<String, String> = mapOf(),
         ) {
             val settings = try {
                 runSettings ?: RunManager.getInstance(project)
@@ -73,11 +72,8 @@ class ShireRunFileAction : DumbAwareAction() {
             val runConfiguration = settings.configuration as ShireConfiguration
 
             runConfiguration.setScriptPath(config.shireFile.virtualFile.path)
-            if (userInput != null) {
-                runConfiguration.setUserInput(userInput)
-            }
-            if (lastOutput.isNotEmpty()) {
-                runConfiguration.setLastOutput(lastOutput)
+            if (variables.isNotEmpty()) {
+                runConfiguration.setVariables(variables)
             }
 
             val executorInstance = DefaultRunExecutor.getRunExecutorInstance()
@@ -99,7 +95,10 @@ class ShireRunFileAction : DumbAwareAction() {
             variableNames: Array<String>,
             variableTable: MutableMap<String, Any?>,
         ): Any {
-            val lastOutput = variableTable["output"].toString()
+            val variables: MutableMap<String, String> = mutableMapOf()
+            for (i in variableNames.indices) {
+                variables[variableNames[i]] = variableTable[variableNames[i]].toString() ?: ""
+            }
 
             val file = runReadAction {
                 ShireActionStartupActivity.obtainShireFiles(myProject).find {
@@ -109,7 +108,7 @@ class ShireRunFileAction : DumbAwareAction() {
 
             ApplicationManager.getApplication().invokeLater({
                 val config = DynamicShireActionConfig.from(file)
-                executeShireFile(myProject, config, null, lastOutput = lastOutput)
+                executeShireFile(myProject, config, null, variables)
             }, ModalityState.NON_MODAL)
 
             return ""

@@ -17,11 +17,9 @@ class ShireConfiguration(project: Project, factory: ConfigurationFactory, name: 
 
     private var myScriptPath = ""
     private val SCRIPT_PATH_TAG: String = "SCRIPT_PATH"
-    private var userInput = ""
-    private val USER_INPUT_TAG: String = "USER_INPUT"
 
-    private var lastOutput = ""
-    private val LAST_OUTPUT_TAG: String = "OUTPUT"
+    private var varMap: Map<String, String> = mutableMapOf()
+    private val VAR_MAP_TAG: String = "VAR_MAP"
 
     override fun getState(executor: Executor, environment: ExecutionEnvironment): RunProfileState {
         return ShireRunConfigurationProfileState(project, this)
@@ -36,13 +34,19 @@ class ShireConfiguration(project: Project, factory: ConfigurationFactory, name: 
     override fun writeExternal(element: Element) {
         super.writeExternal(element)
         element.writeString(SCRIPT_PATH_TAG, myScriptPath)
-        element.writeString(USER_INPUT_TAG, userInput)
+        element.writeString(VAR_MAP_TAG, varMap.toString())
     }
 
     override fun readExternal(element: Element) {
         super.readExternal(element)
         myScriptPath = element.readString(SCRIPT_PATH_TAG) ?: ""
-        userInput = element.readString(USER_INPUT_TAG) ?: ""
+        val varMapString = element.readString(VAR_MAP_TAG) ?: ""
+        varMap = varMapString
+            .removePrefix("{")
+            .removeSuffix("}")
+            .split(", ")
+            .map { it.split("=") }.associate { it[0] to it[1] }
+            .toMutableMap()
     }
 
     override fun getConfigurationEditor(): SettingsEditor<out RunConfiguration> = ShireSettingsEditor(project)
@@ -51,12 +55,6 @@ class ShireConfiguration(project: Project, factory: ConfigurationFactory, name: 
 
     fun setScriptPath(scriptPath: String) {
         myScriptPath = scriptPath.trim { it <= ' ' }
-    }
-
-    fun getUserInput(): String = userInput
-
-    fun setUserInput(userInput: String) {
-        this.userInput = userInput
     }
 
     private fun Element.writeString(name: String, value: String) {
@@ -71,9 +69,9 @@ class ShireConfiguration(project: Project, factory: ConfigurationFactory, name: 
             .find { it.name == "option" && it.getAttributeValue("name") == name }
             ?.getAttributeValue("value")
 
-    fun getLastOutput(): String = lastOutput
+    fun getVariables(): Map<String, String> = varMap
 
-    fun setLastOutput(lastOutput: String) {
-        this.lastOutput = lastOutput
+    fun setVariables(variables: Map<String, String>) {
+        varMap = variables
     }
 }

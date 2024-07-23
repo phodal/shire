@@ -38,8 +38,7 @@ class ShireRunner(
     private val project: Project,
     private val console: ShireConsoleView,
     private val configuration: ShireConfiguration,
-    private val userInput: String,
-    private val lastOutput: String,
+    private val variableMap: Map<String, String>,
     private val processHandler: ShireProcessHandler,
 ) {
     private var compiledVariables: Map<String, Any> = mapOf()
@@ -67,7 +66,7 @@ class ShireRunner(
 
     private fun executeTerminalUiTask(context: ShireRunnerContext, postFunction: PostFunction) {
         CoroutineScope(Dispatchers.Main).launch {
-            val handler = terminalLocationExecutor?.bundler(project, userInput)
+            val handler = terminalLocationExecutor?.bundler(project, variableMap["input"] ?: "",)
             if (handler == null) {
                 console.print("Terminal not found", ConsoleViewContentType.ERROR_OUTPUT)
                 processHandler.destroyProcess()
@@ -98,11 +97,9 @@ class ShireRunner(
 
         val templateCompiler =
             ShireTemplateCompiler(project, hobbitHole, compileResult.variableTable, compileResult.shireOutput)
-        if (userInput.isNotEmpty()) {
-            templateCompiler.putCustomVariable("input", userInput)
-        }
-        if (lastOutput.isNotEmpty()) {
-            templateCompiler.putCustomVariable("output", lastOutput)
+
+        variableMap.forEach { (key, value) ->
+            templateCompiler.putCustomVariable(key, value)
         }
 
         val promptTextTrim = templateCompiler.compile().trim()

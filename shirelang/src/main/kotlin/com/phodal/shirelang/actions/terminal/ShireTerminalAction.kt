@@ -50,7 +50,9 @@ class ShireTerminalAction : DumbAwareAction() {
 
         TerminalLocationExecutor.provide(project)?.getComponent(e)?.let { component ->
             showInputBoxPopup(component, getPreferredPopupPoint(e)) { userInput ->
-                ShireRunFileAction.executeShireFile(project, config, null, userInput)
+                ShireRunFileAction.executeShireFile(project, config, null,
+                    variables = mapOf("input" to userInput)
+                )
             }
         }
     }

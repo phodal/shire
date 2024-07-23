@@ -60,7 +60,7 @@ class ShireInputBoxAction : DumbAwareAction() {
         component.actionMap.put(CUSTOM_INPUT_SUBMIT_ACTION, object : AbstractAction() {
             override fun actionPerformed(e: ActionEvent?) {
                 val inputText = component.getText()
-                executeShireFile(project, config, null, userInput = inputText)
+                executeShireFile(project, config, null, variables = mutableMapOf("input" to inputText))
                 Disposer.dispose(inlay.inlay!!)
             }
         })
