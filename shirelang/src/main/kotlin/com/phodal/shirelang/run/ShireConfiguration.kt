@@ -40,13 +40,7 @@ class ShireConfiguration(project: Project, factory: ConfigurationFactory, name: 
     override fun readExternal(element: Element) {
         super.readExternal(element)
         myScriptPath = element.readString(SCRIPT_PATH_TAG) ?: ""
-        val varMapString = element.readString(VAR_MAP_TAG) ?: ""
-        varMap = varMapString
-            .removePrefix("{")
-            .removeSuffix("}")
-            .split(", ")
-            .map { it.split("=") }.associate { it[0] to it[1] }
-            .toMutableMap()
+        varMap = mapStringToMap(element.readString(VAR_MAP_TAG) ?: "")
     }
 
     override fun getConfigurationEditor(): SettingsEditor<out RunConfiguration> = ShireSettingsEditor(project)
@@ -73,5 +67,16 @@ class ShireConfiguration(project: Project, factory: ConfigurationFactory, name: 
 
     fun setVariables(variables: Map<String, String>) {
         varMap = variables
+    }
+
+    companion object {
+        fun mapStringToMap(varMapString: String) = varMapString
+            .removePrefix("{")
+            .removeSuffix("}")
+            .split(", ")
+            .map { it.split("=") }
+            .filter { it.size >= 2 }
+            .associate { it[0] to it[1] }
+            .toMutableMap()
     }
 }
