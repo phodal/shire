@@ -60,7 +60,7 @@ class ShireRunFileAction : DumbAwareAction() {
             config: DynamicShireActionConfig,
             runSettings: RunnerAndConfigurationSettings?,
             userInput: String? = null,
-            lastOutput: String = ""
+            lastOutput: String = "",
         ) {
             val settings = try {
                 runSettings ?: RunManager.getInstance(project)
@@ -93,7 +93,12 @@ class ShireRunFileAction : DumbAwareAction() {
             ExecutionManager.getInstance(project).restartRunProfile(executionEnvironment)
         }
 
-        fun runFile(myProject: Project, fileName: String, variableTable: MutableMap<String, Any?>): Any {
+        fun runFile(
+            myProject: Project,
+            fileName: String,
+            variableNames: Array<String>,
+            variableTable: MutableMap<String, Any?>,
+        ): Any {
             val lastOutput = variableTable["output"].toString()
 
             val file = runReadAction {

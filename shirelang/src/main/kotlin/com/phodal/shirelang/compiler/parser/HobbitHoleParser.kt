@@ -571,7 +571,10 @@ object HobbitHoleParser {
 
             /// System APIs
             "execute" -> {
-                PatternActionFunc.ExecuteShire(args[0])
+                val first = args.firstOrNull() ?: ""
+                val rest = args.drop(1).toTypedArray()
+
+                PatternActionFunc.ExecuteShire(first, rest)
             }
 
             "notify" -> {
