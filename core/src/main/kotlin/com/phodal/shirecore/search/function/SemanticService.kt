@@ -70,9 +70,7 @@ class SemanticService(val project: Project) {
     suspend fun searching(input: String): List<String> {
         val inputEmbedding = embed(input)
 
-        return index.findClosest(inputEmbedding, 10).map {
-            "Similarity: ${it.similarity}, Text: ${it.text}"
-        }
+        return index.findClosest(inputEmbedding, 10).map(ScoredText::text)
     }
 
     suspend fun splitting(path: List<VirtualFile>): List<IndexEntry> =
