@@ -60,7 +60,7 @@ open class HobbitHole(
      * ---
      * ```
      */
-    val description: String?,
+    val description: String? = null,
     /**
      * The output of the action can be in editor with streaming text when use use [InteractionType.AppendCursorStream
      *
@@ -70,7 +70,7 @@ open class HobbitHole(
      * ---
      * ```
      */
-    val interaction: InteractionType,
+    val interaction: InteractionType = InteractionType.RunPanel,
     /**
      * The location of the action, should be one of [ShireActionLocation], the default is [ShireActionLocation.RUN_PANEL].
      *
@@ -80,7 +80,7 @@ open class HobbitHole(
      * ---
      * ```
      */
-    val actionLocation: ShireActionLocation,
+    val actionLocation: ShireActionLocation = ShireActionLocation.RUN_PANEL,
     /**
      * The strategy to select the element to apply the action.
      * If not selected text, will according the element position to select the element block.

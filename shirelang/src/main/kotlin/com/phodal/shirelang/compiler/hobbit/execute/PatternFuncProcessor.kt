@@ -152,7 +152,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             }
 
             is PatternActionFunc.ExecuteShire -> {
-                ShireRunFileAction.runFile(myProject, action.string)
+                ShireRunFileAction.runFile(myProject, action.string, variableTable)
             }
 
             is PatternActionFunc.Notify -> {

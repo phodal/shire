@@ -18,6 +18,9 @@ import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
 import com.phodal.shirelang.ShireActionStartupActivity
 import com.phodal.shirelang.actions.base.DynamicShireActionConfig
+import com.phodal.shirelang.compiler.hobbit.HobbitHole
+import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
+import com.phodal.shirelang.compiler.patternaction.PatternActionTransform
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.ShireConfiguration
 import com.phodal.shirelang.run.ShireConfigurationType
@@ -89,7 +92,9 @@ class ShireRunFileAction : DumbAwareAction() {
             ExecutionManager.getInstance(project).restartRunProfile(executionEnvironment)
         }
 
-        fun runFile(myProject: Project, fileName: String): Any {
+        fun runFile(myProject: Project, fileName: String, variableTable: MutableMap<String, Any?>): Any {
+            val lastOutput = variableTable["output"].toString()
+
             val file = runReadAction {
                 ShireActionStartupActivity.obtainShireFiles(myProject).find {
                     it.name == fileName
@@ -97,7 +102,17 @@ class ShireRunFileAction : DumbAwareAction() {
             } ?: return "File not found"
 
             ApplicationManager.getApplication().invokeLater({
-                val config = DynamicShireActionConfig.from(file)
+                var config = DynamicShireActionConfig.from(file)
+                if (lastOutput.isNotEmpty()) {
+                    val hole = config.hole ?: HobbitHole(config.name)
+                    hole.variables["output"] = PatternActionTransform(
+                        variable = "output",
+                        pattern = "",
+                        patternActionFuncs = listOf(PatternActionFunc.Prompt(lastOutput))
+                    )
+
+                    config = config.copy(hole = hole)
+                }
                 executeShireFile(myProject, config, null)
             }, ModalityState.NON_MODAL)
 
