@@ -9,19 +9,54 @@ import com.phodal.shirelang.compiler.hobbit.ast.*
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 import kotlinx.coroutines.runBlocking
 
+/**
+ * The `FunctionStatementProcessor` class is responsible for processing function statements within a project context.
+ * It extends the `PatternFuncProcessor` class, which is part of a larger framework likely dealing with pattern matching and processing within a domain-specific language or a scripting environment.
+ *
+ * This class operates on statements that can be comparisons, processor invocations, or method calls, and it manages a variable table to keep track of variable values during execution.
+ *
+ * @property myProject The project in which the processing occurs, extending the functionality of the base class `PatternFuncProcessor`.
+ * @property hole The hobbit hole, which seems to be a metaphorical representation of a context or a scope, also extending the base class functionality.
+ *
+ * ### Methods:
+ *
+ * - `execute(statement: Statement, variableTable: MutableMap<String, Any?>): Any?`
+ *   Executes the provided statement within the given variable table context. It supports different types of statements and processes them accordingly using a `runBlocking` coroutine scope to handle asynchronous operations.
+ *
+ * - `invokeLocalMethodCall(statement: MethodCall, variableTable: MutableMap<String, Any?>): Any?`
+ *   Invokes a local method call represented by the given `MethodCall` object, extracting the object name, method name, and arguments. It handles special method calls like "jsonpath" and "print".
+ *
+ * - `execute(processors: List<PatternActionFunc>, variableTable: MutableMap<String, Any?>): Any?`
+ *   Suspends the coroutine to execute a list of processors with the provided input and variable table, applying each processor sequentially to the result.
+ *
+ * - `executeComparison(statement: Comparison, value: Any): Boolean`
+ *   Executes a comparison operation based on the given comparison statement and value, returning a boolean result.
+ *
+ * - `processStatement(statement: Statement, variableElementsMap: Map<String, List<T>>): List<T>`
+ *   Processes a statement against a map of variable names to lists of elements, filtering the elements based on the statement's criteria.
+ *
+ * - `evaluate(type: FrontMatterType, element: T): Any?`
+ *   Evaluates a front matter type against an element, handling various types like arrays, expressions, booleans, dates, identifiers, numbers, and strings.
+ *
+ * - `evalExpression(type: FrontMatterType, element: T): Any?`
+ *   Evaluates an expression front matter type by invoking the appropriate method or field on the given element.
+ *
+ * - `invokeMethodOrField(methodCall: MethodCall, element: T): Any?`
+ *   Invokes a method or field on an element based on the provided method call, which is used to interact with the properties or methods of the element.
+ *
+ * This class uses the Kotlin `runBlocking` coroutine scope to handle asynchronous operations and may throw an `IllegalArgumentException` for unknown types during evaluation.
+ */
 open class FunctionStatementProcessor(override val myProject: Project, override val hole: HobbitHole) :
     PatternFuncProcessor(myProject, hole) {
-    fun execute(statement: Statement, variableTable: MutableMap<String, Any?>): Any? {
-        return when (statement) {
+    fun execute(statement: Statement, variableTable: MutableMap<String, Any?>): Any? = runBlocking {
+        return@runBlocking when (statement) {
             is Comparison -> {
                 val result = executeComparison(statement, variableTable)
                 result
             }
 
             is Processor -> {
-                runBlocking {
-                    execute(statement.processors, variableTable)
-                }
+                execute(statement.processors, variableTable)
             }
 
             is MethodCall -> {
@@ -76,8 +111,10 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
     suspend fun execute(processors: List<PatternActionFunc>, variableTable: MutableMap<String, Any?>): Any? {
         val input: Any = variableTable["output"] ?: ""
         var result: Any = variableTable["output"] ?: ""
+
         processors.forEach { action ->
             result = patternFunctionExecute(action, result, input, variableTable)
+            variableTable["output"] = result
         }
 
         return result.toString()
