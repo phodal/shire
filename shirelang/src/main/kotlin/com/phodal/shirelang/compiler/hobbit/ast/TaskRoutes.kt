@@ -40,8 +40,8 @@ data class TaskRoutes(
 ) {
     fun execute(myProject: Project, context: PostCodeHandleContext, hobbitHole: HobbitHole): Any? {
         val conditionResult = mutableMapOf<String, Any?>()
-        val variableTable = mutableMapOf<String, Any?>()
-
+        /// todo: get processor variable table
+        val variableTable = context.compiledVariables.toMutableMap()
         variableTable["output"] = context.genText
 
         val processor = FunctionStatementProcessor(myProject, hobbitHole)

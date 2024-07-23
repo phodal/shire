@@ -89,7 +89,7 @@ class ShireRunFileAction : DumbAwareAction() {
             ExecutionManager.getInstance(project).restartRunProfile(executionEnvironment)
         }
 
-        fun runFile(
+        fun executeFile(
             myProject: Project,
             fileName: String,
             variableNames: Array<String>,

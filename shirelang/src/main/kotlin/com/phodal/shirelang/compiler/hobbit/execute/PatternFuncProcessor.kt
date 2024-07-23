@@ -152,7 +152,16 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             }
 
             is PatternActionFunc.ExecuteShire -> {
-                ShireRunFileAction.runFile(myProject, action.filename, action.variableNames, variableTable)
+                // remove $ for all variableName
+                val variables: Array<String> = action.variableNames.map {
+                    if (it.startsWith("\$")) {
+                        it.substring(1)
+                    } else {
+                        it
+                    }
+                }.toTypedArray()
+
+                ShireRunFileAction.executeFile(myProject, action.filename, variables, variableTable)
             }
 
             is PatternActionFunc.Notify -> {

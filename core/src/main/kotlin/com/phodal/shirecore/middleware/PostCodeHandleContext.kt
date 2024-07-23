@@ -69,7 +69,7 @@ class PostCodeHandleContext(
 
     var lastTaskOutput: String? = null,
 
-    var compiledVariables: Map<String, Any> = mapOf(),
+    var compiledVariables: Map<String, Any?> = mapOf(),
 ) {
 
     companion object {

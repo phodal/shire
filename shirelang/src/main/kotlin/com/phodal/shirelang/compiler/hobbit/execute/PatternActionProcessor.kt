@@ -7,6 +7,8 @@ import com.phodal.shirelang.compiler.patternaction.PatternActionTransform
 
 class PatternActionProcessor(override val myProject: Project, override val hole: HobbitHole) :
 PatternFuncProcessor(myProject, hole) {
+    val variableMap: MutableMap<String, Any?> = mutableMapOf()
+
     /**
      * We should execute the variable function with the given key and pipeline functions.
      *
@@ -48,9 +50,10 @@ PatternFuncProcessor(myProject, hole) {
     suspend fun execute(transform: PatternActionTransform, input: Any): String {
         var result = input
         transform.patternActionFuncs.forEach { action ->
-            result = patternFunctionExecute(action, result, input)
+            result = patternFunctionExecute(action, result, input, variableMap)
         }
 
+        variableMap[transform.variable] = result
         return result.toString()
     }
 }
