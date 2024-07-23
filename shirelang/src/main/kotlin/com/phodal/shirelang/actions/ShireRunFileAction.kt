@@ -107,8 +107,7 @@ class ShireRunFileAction : DumbAwareAction() {
             }
 
             if (file == null) {
-                logger<ShireRunFileAction>().error("File $fileName not found")
-                return "File $fileName not found"
+                throw RuntimeException("File $fileName not found")
             }
 
             ApplicationManager.getApplication().invokeLater({

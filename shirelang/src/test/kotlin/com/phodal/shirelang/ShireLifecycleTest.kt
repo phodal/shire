@@ -100,7 +100,8 @@ class ShireLifecycleTest : BasePlatformTestCase() {
             editor = null
         )
 
-        val result = hole.afterStreaming?.execute(myFixture.project, handleContext, hole)
-        TestCase.assertEquals(result, "File not found")
+        assertThrows(RuntimeException::class.java) {
+            hole.afterStreaming?.execute(myFixture.project, handleContext, hole)
+        }
     }
 }
