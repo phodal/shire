@@ -39,6 +39,7 @@ class ShireRunner(
     private val console: ShireConsoleView,
     private val configuration: ShireConfiguration,
     private val userInput: String,
+    private val lastOutput: String,
     private val processHandler: ShireProcessHandler,
 ) {
     private var compiledVariables: Map<String, Any> = mapOf()
@@ -99,6 +100,9 @@ class ShireRunner(
             ShireTemplateCompiler(project, hobbitHole, compileResult.variableTable, compileResult.shireOutput)
         if (userInput.isNotEmpty()) {
             templateCompiler.putCustomVariable("input", userInput)
+        }
+        if (lastOutput.isNotEmpty()) {
+            templateCompiler.putCustomVariable("output", lastOutput)
         }
 
         val promptTextTrim = templateCompiler.compile().trim()

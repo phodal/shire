@@ -37,6 +37,10 @@ class ShireContextMenuAction(private val config: DynamicShireActionConfig) :
 
     override fun actionPerformed(e: AnActionEvent) {
         val project = e.project ?: return
-        ShireRunFileAction.executeShireFile(project, config, ShireRunFileAction.createRunConfig(e))
+        ShireRunFileAction.executeShireFile(
+            project,
+            config,
+            ShireRunFileAction.createRunConfig(e)
+        )
     }
 }

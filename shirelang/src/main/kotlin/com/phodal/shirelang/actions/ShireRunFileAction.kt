@@ -18,9 +18,6 @@ import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
 import com.phodal.shirelang.ShireActionStartupActivity
 import com.phodal.shirelang.actions.base.DynamicShireActionConfig
-import com.phodal.shirelang.compiler.hobbit.HobbitHole
-import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
-import com.phodal.shirelang.compiler.patternaction.PatternActionTransform
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.ShireConfiguration
 import com.phodal.shirelang.run.ShireConfigurationType
@@ -45,7 +42,7 @@ class ShireRunFileAction : DumbAwareAction() {
         val config = DynamicShireActionConfig.from(file)
 
         val existingConfiguration = createRunConfig(e)
-        executeShireFile(project, config, existingConfiguration)
+        executeShireFile(project, config, existingConfiguration, lastOutput = "")
     }
 
     companion object {
@@ -63,6 +60,7 @@ class ShireRunFileAction : DumbAwareAction() {
             config: DynamicShireActionConfig,
             runSettings: RunnerAndConfigurationSettings?,
             userInput: String? = null,
+            lastOutput: String = ""
         ) {
             val settings = try {
                 runSettings ?: RunManager.getInstance(project)
@@ -77,6 +75,9 @@ class ShireRunFileAction : DumbAwareAction() {
             runConfiguration.setScriptPath(config.shireFile.virtualFile.path)
             if (userInput != null) {
                 runConfiguration.setUserInput(userInput)
+            }
+            if (lastOutput.isNotEmpty()) {
+                runConfiguration.setLastOutput(lastOutput)
             }
 
             val executorInstance = DefaultRunExecutor.getRunExecutorInstance()
@@ -102,18 +103,8 @@ class ShireRunFileAction : DumbAwareAction() {
             } ?: return "File not found"
 
             ApplicationManager.getApplication().invokeLater({
-                var config = DynamicShireActionConfig.from(file)
-                if (lastOutput.isNotEmpty()) {
-                    val hole = config.hole ?: HobbitHole(config.name)
-                    hole.variables["output"] = PatternActionTransform(
-                        variable = "output",
-                        pattern = "",
-                        patternActionFuncs = listOf(PatternActionFunc.Prompt(lastOutput))
-                    )
-
-                    config = config.copy(hole = hole)
-                }
-                executeShireFile(myProject, config, null)
+                val config = DynamicShireActionConfig.from(file)
+                executeShireFile(myProject, config, null, lastOutput = lastOutput)
             }, ModalityState.NON_MODAL)
 
             return ""

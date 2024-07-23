@@ -20,6 +20,9 @@ class ShireConfiguration(project: Project, factory: ConfigurationFactory, name: 
     private var userInput = ""
     private val USER_INPUT_TAG: String = "USER_INPUT"
 
+    private var lastOutput = ""
+    private val LAST_OUTPUT_TAG: String = "OUTPUT"
+
     override fun getState(executor: Executor, environment: ExecutionEnvironment): RunProfileState {
         return ShireRunConfigurationProfileState(project, this)
     }
@@ -67,4 +70,10 @@ class ShireConfiguration(project: Project, factory: ConfigurationFactory, name: 
         children
             .find { it.name == "option" && it.getAttributeValue("name") == name }
             ?.getAttributeValue("value")
+
+    fun getLastOutput(): String = lastOutput
+
+    fun setLastOutput(lastOutput: String) {
+        this.lastOutput = lastOutput
+    }
 }
