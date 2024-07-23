@@ -3,7 +3,7 @@ package com.phodal.shirecore.search.indices
 
 import com.phodal.shirecore.search.function.ScoredText
 import kotlin.collections.asSequence
-import kotlin.collections.indices
+import kotlin.math.sqrt
 import kotlin.sequences.filter
 import kotlin.sequences.map
 import kotlin.sequences.sortedByDescending
@@ -39,11 +39,13 @@ internal fun Map<String, FloatArray>.findClosest(
     topK: Int, similarityThreshold: Double?,
 ): List<ScoredText> {
     return asSequence()
-        .map { it.key to searchEmbedding.times(it.value) }
+        .map {
+            it.key to searchEmbedding.times(it.value)
+        }
         .filter { (_, similarity) -> if (similarityThreshold != null) similarity > similarityThreshold else true }
         .sortedByDescending { (_, similarity) -> similarity }
         .take(topK)
-        .map { (id, similarity) -> ScoredText(id, similarity) }
+        .map { (id, similarity) -> ScoredText(id, similarity.toDouble()) }
         .toList()
 }
 
@@ -53,15 +55,25 @@ internal fun Sequence<Pair<String, FloatArray>>.streamFindClose(
 ): Sequence<ScoredText> {
     return map { (id, embedding) -> id to queryEmbedding.times(embedding) }
         .filter { similarityThreshold == null || it.second > similarityThreshold }
-        .map { (id, similarity) -> ScoredText(id, similarity) }
+        .map { (id, similarity) -> ScoredText(id, similarity.toDouble()) }
 }
 
-fun FloatArray.times(doubles: FloatArray): Double {
-    require(size == doubles.size) { "Arrays must have the same size" }
-
-    var result = 0.0
-    for (i in indices) {
-        result += this[i] * doubles[i]
+fun FloatArray.times(other: FloatArray): Float {
+    require(this.size == other.size) {
+        "Embeddings must have the same size, but got ${this.size} and ${other.size}"
     }
-    return result
+    return this.zip(other).map { (a, b) -> a * b }.sum()
+}
+
+fun FloatArray.normalized(): FloatArray {
+    val norm = sqrt(this.times(this))
+    val normalizedValues = this.map { it / norm }
+    return normalizedValues.toFloatArray()
+}
+
+fun FloatArray.cosine(other: FloatArray): Float {
+    require(this.size == other.size) { "Embeddings must have the same size" }
+    val dot = this.times(other)
+    val norm = sqrt(this.times(this)) * sqrt(other.times(other))
+    return dot / norm
 }

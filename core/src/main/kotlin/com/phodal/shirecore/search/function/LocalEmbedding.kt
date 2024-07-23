@@ -107,17 +107,3 @@ class LocalEmbedding(
         }
     }
 }
-
-
-fun FloatArray.normalized(): FloatArray {
-    val norm = sqrt(this * this)
-    return this.map { it / norm }.toFloatArray()
-}
-
-private operator fun FloatArray.times(floats: FloatArray): Float {
-    var sum = 0f
-    for (i in this.indices) {
-        sum += this[i] * floats[i]
-    }
-    return sum
-}

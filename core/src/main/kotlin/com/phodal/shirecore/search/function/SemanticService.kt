@@ -16,6 +16,7 @@ import com.intellij.openapi.vfs.toNioPathOrNull
 import com.phodal.shirecore.search.indices.DiskSynchronizedEmbeddingSearchIndex
 import com.phodal.shirecore.search.indices.EmbeddingSearchIndex
 import com.phodal.shirecore.search.indices.InMemoryEmbeddingSearchIndex
+import com.phodal.shirecore.search.indices.normalized
 import kotlinx.coroutines.*
 import java.io.File
 import java.nio.file.Path
@@ -34,7 +35,7 @@ class SemanticService(val project: Project) {
 
     suspend fun embed(chunk: String): FloatArray {
         val embedding = embedding()
-        return embedding.await().embed(chunk)
+        return embedding.await().embed(chunk).normalized()
     }
 
     suspend fun embedList(chunk: Array<out String>): List<IndexEntry> {
@@ -50,19 +51,20 @@ class SemanticService(val project: Project) {
     }
 
     suspend fun embedding(chunks: List<IndexEntry>): List<IndexEntry> {
-        val indexEntries = chunks.map { entry ->
+        val ids = chunks.map { it.chunk }
+        val embeddings = chunks.mapNotNull { entry ->
             entry.embedding ?: run {
-                val embedding = embed(entry.chunk)
-                entry.embedding = embedding
+                entry.embedding = embed(entry.chunk)
                 entry
             }
 
-            index.addEntries(listOf(entry.chunk to entry.embedding!!))
-            entry
+            entry.embedding
         }
 
+        index.addEntries(ids zip embeddings)
+
         index.saveToDisk()
-        return indexEntries
+        return chunks
     }
 
     suspend fun searching(input: String): List<String> {

@@ -1,5 +1,6 @@
 package com.phodal.shirecore.search.function
 
+import com.phodal.shirecore.search.indices.normalized
 import org.junit.Assert.assertArrayEquals
 import org.junit.Test
 
