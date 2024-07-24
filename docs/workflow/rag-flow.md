@@ -66,9 +66,7 @@ If there isn't enough information to answer the question, suggest where the user
 
 code:
 
-```$lang
 $output
-```
 
 User's Question: $input
 ```
