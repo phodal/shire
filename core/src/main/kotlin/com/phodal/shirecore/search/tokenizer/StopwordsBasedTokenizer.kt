@@ -2,24 +2,6 @@ package com.phodal.shirecore.search.tokenizer
 
 import com.phodal.shirecore.search.tokenizer.TermSplitter.splitTerms
 
-//const CHINESE_STOP_WORDS = [
-//	'的', '地', '得', '和', '跟',
-//	'与', '及', '向', '并', '等',
-//	'更', '已', '含', '做', '我',
-//	'你', '他', '她', '们', '某',
-//	'该', '各', '每', '这', '那',
-//	'哪', '什', '么', '谁', '年',
-//	'月', '日', '时', '分', '秒',
-//	'几', '多', '来', '在', '就',
-//	'又', '很', '呢', '吧', '吗',
-//	'了', '嘛', '哇', '儿', '哼',
-//	'啊', '嗯', '是', '着', '都',
-//	'不', '说', '也', '看', '把',
-//	'还', '个', '有', '小', '到',
-//	'一', '为', '中', '于', '对',
-//	'会', '之', '第', '此', '或',
-//	'共', '按', '请'
-//];
 val CHINESE_STOP_WORDS = listOf(
     "的", "地", "得", "和", "跟",
     "与", "及", "向", "并", "等",
@@ -38,10 +20,6 @@ val CHINESE_STOP_WORDS = listOf(
     "会", "之", "第", "此", "或",
     "共", "按", "请"
 )
-
-interface CodeTokenizer {
-    fun tokenize(input: String): Set<String>
-}
 
 class StopwordsBasedTokenizer private constructor() : CodeTokenizer {
     companion object {
