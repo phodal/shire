@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Remote AI Agent
+title: Shire RAG Workflow
 parent: Workflow
 nav_order: 3
 ---
