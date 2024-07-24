@@ -18,7 +18,9 @@ nav_order: 2
 ---
 name: "Search"
 variables:
-  "testTemplate": /.*.kt/ { splitting | embedding | searching("hello") }
+  "testTemplate": /.*.java/ { splitting | embedding }
+  "lang": "java"
+  "input": "博客创建流程"
 afterStreaming: {
     case condition {
       default { searching($output) | execute("search.shire") }
@@ -55,7 +57,7 @@ Where is calculating the average of a list of numbers?
 - jisuan, pingjunshu, pingjun // keywords can be user's language
 
 ```user```
-User: 博客创建流程
+User: $input
 
 Response:
 ```
@@ -69,7 +71,7 @@ If there isn't enough information to answer the question, suggest where the user
 
 code:
 
-```$language
+```$lang
 $output
 ```
 
