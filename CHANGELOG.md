@@ -1,6 +1,30 @@
-# [](https://github.com/phodal/shire/compare/v0.4.5...v) (2024-07-19)
+# [](https://github.com/phodal/shire/compare/v0.4.6...v) (2024-07-24)
 
 ## [Unreleased]
+
+## [0.4.6](https://github.com/phodal/shire/compare/v0.4.5...v[0.4.6]) (2024-07-24)
+
+### Bug Fixes
+
+- **compiler:** handle exceptions when finding files ([e85eb79](https://github.com/phodal/shire/commit/e85eb79923442db4a519c62fa78242862cd16d76))
+
+### Features
+
+- **compiler:** add support for preserving last output in function execution ([73739f5](https://github.com/phodal/shire/commit/73739f5bf2bd1ab4c1fa2b71979690cfd53fd64f))
+- **compiler:** enhance afterStreaming execution flow ([c2b7227](https://github.com/phodal/shire/commit/c2b7227abe7f129cbad9f553c2f759928709ba77))
+- **core:** add MarkdownPsiContextVariableProvider ([5418957](https://github.com/phodal/shire/commit/5418957719f848ac0e28aac345c8b0a2e95c3dd4))
+- **core:** allow null values in compiledVariables and refactor file execution ([20eed68](https://github.com/phodal/shire/commit/20eed683f0d265bcbbef2e710afe0784f320134b))
+- **core:** enhance MarkdownPsiContextVariableProvider for file context ([33b97da](https://github.com/phodal/shire/commit/33b97da7fbb7db91ae34c397f8caf1165266f819))
+- **core:** enhance MarkdownPsiContextVariableProvider for HTML conversion ([451e61d](https://github.com/phodal/shire/commit/451e61d73e370601437af95c12ce6364e8efa094))
+- **custom:** add custom SSE handling ([5735a58](https://github.com/phodal/shire/commit/5735a589b4f7e45b3a750dfc736135b578eb0e08))
+- **docs:** update response routing for Java and dynamic input ([0bd650d](https://github.com/phodal/shire/commit/0bd650dc75d39a4a966d8873551cd33b29c8ef11))
+- **runner:** enhance Shire runner to handle last output ([4e2804b](https://github.com/phodal/shire/commit/4e2804b6501a7086c3e0437e1bff6e9fcaa6f309))
+- **searching:** add similarity threshold to search function ([dd8cd73](https://github.com/phodal/shire/commit/dd8cd73c9c9466f14551650a685fb2d5f0538f03))
+- **search:** normalize embeddings and update search methods ([ad907ec](https://github.com/phodal/shire/commit/ad907ec2b27c822d3c8b07467f550618133a6ebc))
+- **Shirelang:** enhance HobbitHole and ShireRunFileAction for dynamic interaction ([18f3679](https://github.com/phodal/shire/commit/18f3679711dea6dcc1588a1d921dc9339ad03279))
+- **shirelang:** improve file not found error logging ([043488e](https://github.com/phodal/shire/commit/043488e6c1a81066d2dda95bcc661d932af7fff1))
+- **ShireRunner:** enhance error handling for detachProcess ([d221082](https://github.com/phodal/shire/commit/d22108282ac9e2fedba2442986708b70b19b35cd))
+- **testing:** add new test case for afterStreamingOnly functionality ([a91be0d](https://github.com/phodal/shire/commit/a91be0d2532bc7540ac3bdfefbcdfc707513622c))
 
 ## [0.4.5](https://github.com/phodal/shire/compare/v0.4.3...v[0.4.5]) (2024-07-19)
 
@@ -355,7 +379,8 @@
 - **shell:** add shell language support plugin file ([bdc1c90](https://github.com/phodal/shire/commit/bdc1c90f10d7c2c4fb8f7157db343dd756c11352))
 - **shire:** add Shire context action group and location support ([e3df86d](https://github.com/phodal/shire/commit/e3df86d16d0c9985fec787a8e76ce553be9a9a45))
 
-[Unreleased]: https://github.com/phodal/shire/compare/v0.4.5...HEAD
+[Unreleased]: https://github.com/phodal/shire/compare/v0.4.6...HEAD
+[0.4.6]: https://github.com/phodal/shire/compare/v0.4.5...v0.4.6
 [0.4.5]: https://github.com/phodal/shire/compare/v0.4.3...v0.4.5
 [0.4.3]: https://github.com/phodal/shire/compare/v0.4.2...v0.4.3
 [0.4.2]: https://github.com/phodal/shire/compare/v0.4.1...v0.4.2
