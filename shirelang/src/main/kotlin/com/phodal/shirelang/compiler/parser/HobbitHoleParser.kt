@@ -590,7 +590,7 @@ object HobbitHoleParser {
             }
 
             "searching" -> {
-                PatternActionFunc.Searching(args[0])
+                PatternActionFunc.Searching(args[0], args.getOrNull(1)?.toDouble() ?: 0.5)
             }
 
             "caching" -> {

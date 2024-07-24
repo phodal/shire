@@ -206,7 +206,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             }
 
             is PatternActionFunc.Searching -> {
-                semanticService.searching(action.text)
+                semanticService.searching(action.text, action.threshold)
             }
 
             is PatternActionFunc.Caching -> {

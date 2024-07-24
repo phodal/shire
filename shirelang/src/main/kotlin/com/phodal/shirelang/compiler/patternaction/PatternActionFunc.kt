@@ -137,7 +137,7 @@ sealed class PatternActionFunc(open val funcName: String) {
     /**
      * searching text
      */
-    class Searching(val text: String) : PatternActionFunc("searching")
+    class Searching(val text: String, val threshold: Double = 0.5) : PatternActionFunc("searching")
 
     /**
      * Caching semantic
