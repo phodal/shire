@@ -27,14 +27,14 @@ open class RegexpTokenizer(opts: RegexTokenizerOptions? = null) : Tokenizer {
         }
     }
 
-    override fun tokenize(s: String): List<String> {
+    override fun tokenize(input: String): List<String> {
         val results: List<String>
 
         if (_gaps == true) {
-            results = s.split(whitespacePattern)
+            results = input.split(whitespacePattern)
             return if (discardEmpty) without(results, "", " ") else results
         } else {
-            results = whitespacePattern.findAll(s).map { it.value }.toList()
+            results = whitespacePattern.findAll(input).map { it.value }.toList()
             return results.ifEmpty { emptyList() }
         }
     }

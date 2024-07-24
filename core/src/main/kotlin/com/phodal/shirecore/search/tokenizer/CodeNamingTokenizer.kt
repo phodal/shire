@@ -11,8 +11,8 @@ class CodeNamingTokenizer(opts: RegexTokenizerOptions? = null) : RegexpTokenizer
         )
     }
 
-    override fun tokenize(s: String): List<String> {
-        val results = whitespacePattern.split(s)
+    override fun tokenize(input: String): List<String> {
+        val results = whitespacePattern.split(input)
         return if (discardEmpty) {
             without(results, "", " ").map { it.lowercase() }
         } else {
