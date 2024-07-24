@@ -11,7 +11,7 @@ import com.intellij.psi.search.searches.ClassInheritorsSearch
 import com.intellij.psi.search.searches.MethodReferencesSearch
 import com.intellij.psi.search.searches.ReferencesSearch
 import com.intellij.psi.util.*
-import com.phodal.shirecore.search.CodeNamingTokenizer
+import com.phodal.shirecore.search.tokenizer.CodeNamingTokenizer
 import com.phodal.shirecore.search.TfIdf
 import java.util.function.Consumer
 

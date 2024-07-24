@@ -21,7 +21,9 @@ THE SOFTWARE.
 */
 package com.phodal.shirecore.search
 
+import com.phodal.shirecore.search.tokenizer.RegexpTokenizer
 import com.phodal.shirecore.search.tokenizer.Tokenizer
+import com.phodal.shirecore.search.tokenizer.WordTokenizer
 import kotlin.math.ln
 
 var ourStopwords = listOf(
@@ -45,77 +47,6 @@ var ourStopwords = listOf(
 
 typealias DocumentType = Any
 typealias TfIdfCallback = (index: Int, measure: Double, key: Any?) -> Unit
-
-interface RegexTokenizerOptions {
-    val pattern: Regex?
-    val discardEmpty: Boolean
-    val gaps: Boolean?
-}
-
-open class RegexpTokenizer(opts: RegexTokenizerOptions? = null) : Tokenizer {
-    var whitespacePattern = Regex("\\s+")
-    var discardEmpty: Boolean = true
-    private var _gaps: Boolean? = null
-
-    init {
-        val options = opts ?: object : RegexTokenizerOptions {
-            override val pattern: Regex? = null
-            override val discardEmpty: Boolean = true
-            override val gaps: Boolean? = null
-        }
-
-        whitespacePattern = options.pattern ?: whitespacePattern
-        discardEmpty = options.discardEmpty
-        _gaps = options.gaps
-
-        if (_gaps == null) {
-            _gaps = true
-        }
-    }
-
-    override fun tokenize(s: String): List<String> {
-        val results: List<String>
-
-        if (_gaps == true) {
-            results = s.split(whitespacePattern)
-            return if (discardEmpty) without(results, "", " ") else results
-        } else {
-            results = whitespacePattern.findAll(s).map { it.value }.toList()
-            return results.ifEmpty { emptyList() }
-        }
-    }
-
-    fun without(arr: List<String>, vararg values: String): List<String> {
-        return arr.filter { it !in values }
-    }
-}
-
-class WordTokenizer(options: RegexTokenizerOptions? = null) : RegexpTokenizer(options) {
-    init {
-        whitespacePattern = Regex("[^A-Za-zА-Яа-я0-9_]+")
-    }
-}
-
-class CodeNamingTokenizer(opts: RegexTokenizerOptions? = null) : RegexpTokenizer(opts) {
-    init {
-        whitespacePattern = Regex(
-            "(?<=[a-z])(?=[A-Z])|" +       // camelCase 分词
-                    "(?<=[A-Z])(?=[A-Z][a-z])|" +  // PascalCase 分词
-                    "(?<=[A-Za-z])(?=[0-9])|" +    // 字母和数字分词
-                    "(?<=[0-9])(?=[A-Za-z])|" +    // 数字和字母分词
-                    "_+"                           // under_score 分词
-        )
-    }
-
-    override fun tokenize(s: String): List<String> {
-        val results = whitespacePattern.split(s)
-        return if (discardEmpty) {
-            without(results, "", " ").map { it.lowercase() }
-        } else {
-            results.map { it.lowercase() }
-        }
-    }
-}
 
 class TfIdf<K, V> {
     private val documents: MutableList<DocumentType> = mutableListOf()
