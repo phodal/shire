@@ -19,6 +19,8 @@ object InsertUtil {
         startOffset: Int,
         withReformat: Boolean,
     ) {
+        if (startOffset < 0 || startOffset > document.textLength) return
+
         document.insertString(startOffset, content)
         PsiDocumentManager.getInstance(project).commitDocument(document)
 
