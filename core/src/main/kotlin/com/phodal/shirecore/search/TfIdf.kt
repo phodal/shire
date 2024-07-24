@@ -21,6 +21,7 @@ THE SOFTWARE.
 */
 package com.phodal.shirecore.search
 
+import com.phodal.shirecore.search.tokenizer.Tokenizer
 import kotlin.math.ln
 
 var ourStopwords = listOf(
@@ -45,27 +46,13 @@ var ourStopwords = listOf(
 typealias DocumentType = Any
 typealias TfIdfCallback = (index: Int, measure: Double, key: Any?) -> Unit
 
-open class Tokenizer {
-    open fun trim(array: MutableList<String>): List<String> {
-        while (array.last() == "") {
-            array.removeAt(array.lastIndex)
-        }
-
-        while (array.first() == "") {
-            array.removeAt(0)
-        }
-
-        return array
-    }
-}
-
 interface RegexTokenizerOptions {
     val pattern: Regex?
     val discardEmpty: Boolean
     val gaps: Boolean?
 }
 
-open class RegexpTokenizer(opts: RegexTokenizerOptions? = null) : Tokenizer() {
+open class RegexpTokenizer(opts: RegexTokenizerOptions? = null) : Tokenizer {
     var whitespacePattern = Regex("\\s+")
     var discardEmpty: Boolean = true
     private var _gaps: Boolean? = null
@@ -86,7 +73,7 @@ open class RegexpTokenizer(opts: RegexTokenizerOptions? = null) : Tokenizer() {
         }
     }
 
-    open fun tokenize(s: String): List<String> {
+    override fun tokenize(s: String): List<String> {
         val results: List<String>
 
         if (_gaps == true) {

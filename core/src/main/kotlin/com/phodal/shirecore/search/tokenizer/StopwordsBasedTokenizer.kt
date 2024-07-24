@@ -21,7 +21,7 @@ val CHINESE_STOP_WORDS = listOf(
     "共", "按", "请"
 )
 
-class StopwordsBasedTokenizer private constructor() : CodeTokenizer {
+class StopwordsBasedTokenizer private constructor() : Tokenizer {
     companion object {
         private var instance_: StopwordsBasedTokenizer? = null
 
@@ -51,7 +51,7 @@ class StopwordsBasedTokenizer private constructor() : CodeTokenizer {
         *chineseStopWords.toTypedArray()
     )
 
-    override fun tokenize(input: String): Set<String> {
-        return splitTerms(input).toList().filter { !stopWordsSet.contains(it) }.toSet()
+    override fun tokenize(input: String): List<String> {
+        return splitTerms(input).toList().filter { !stopWordsSet.contains(it) }
     }
 }
