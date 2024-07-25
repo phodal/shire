@@ -44,36 +44,75 @@ variables:
 ---
 ```
 
-## Todos
+## Java Language
 
-## Java
+Support `where` method
 
-### Java `Where` Function (TODO)
+```kotlin
+enum class JvmPsiPqlMethod(val methodName: String, val description: String) {
+    GET_NAME("getName", "Get class name"),
+    NAME("name", "Get class name"),
+    EXTENDS("extends", "Get class extends"),
+    IMPLEMENTS("implements", "Get class implements"),
+    METHOD_CODE_BY_NAME("methodCodeByName", "Get method code by name"),
+    FIELD_CODE_BY_NAME("fieldCodeByName", "Get field code by name"),
 
-- qualifiedName
-- implements
-- extends
-- annotation
-- methods
-- fields
+    SUBCLASSES_OF("subclassesOf", "Get subclasses of class"),
+    ANNOTATED_OF("annotatedOf", "Get annotated classes"),
+    SUPERCLASS_OF("superclassOf", "Get superclass of class"),
+    IMPLEMENTS_OF("implementsOf", "Get implemented interfaces of class"),
+}
+```
 
-Query by types
+## Git Toolchain
 
-- extendOf
-- implementOf
-- annotationOf
-- callOf
 
-### Text Function
+
+
+```kotlin
+
+```
+
+
+## Common Functions  
+
+### Text Function (Todos)
 
 - regexpMatch
 - similarSearch
 - embeddingSearch
 - tf-idf
 
-## Reference
+## Resource
 
-### CodeQL
+### GitQL
+
+GQL: [https://github.com/AmrDeveloper/GQL](https://github.com/AmrDeveloper/GQL)
+
+```sql
+SELECT author_name, COUNT(author_name) AS commit_num FROM commits GROUP BY author_name, author_email ORDER BY commit_num DESC LIMIT 10
+SELECT commit_count FROM branches WHERE commit_count BETWEEN 0 .. 10
+
+SELECT * FROM refs WHERE type = "branch"
+SELECT * FROM refs ORDER BY type
+
+SELECT * FROM commits
+SELECT author_name, author_email FROM commits
+SELECT author_name, author_email FROM commits ORDER BY author_name DESC, author_email ASC
+SELECT author_name, author_email FROM commits WHERE name LIKE "%gmail%" ORDER BY author_name
+SELECT * FROM commits WHERE LOWER(name) = "amrdeveloper"
+SELECT author_name FROM commits GROUP By author_name
+SELECT author_name FROM commits GROUP By author_name having author_name = "AmrDeveloper"
+
+SELECT * FROM branches
+SELECT * FROM branches WHERE is_head = true
+SELECT name, LEN(name) FROM branches
+
+SELECT * FROM tags
+SELECT * FROM tags OFFSET 1 LIMIT 1
+```
+
+### GitHub CodeQL
 
 QL Language Reference: https://codeql.github.com/docs/ql-language-reference/queries/
 
