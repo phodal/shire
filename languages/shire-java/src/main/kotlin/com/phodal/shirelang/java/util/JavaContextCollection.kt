@@ -48,12 +48,9 @@ object JavaContextCollection {
             return psiStructureCache[clazz]!!
         }
 
-        if (isJavaBuiltin(qualifiedName) == true || isPopularFramework(qualifiedName) == true) {
-            return null
-        }
+        if (isJavaBuiltin(qualifiedName) == true || isPopularFramework(qualifiedName)) return null
 
-        val fields = clazz.fields
-        val children = fields.mapNotNull { field ->
+        val classStructures = clazz.fields.mapNotNull { field ->
             // if current field same to parent class, skip it
             if (field.type == clazz) return@mapNotNull null
             if (field.type is PsiTypeParameter) return@mapNotNull null
@@ -97,7 +94,7 @@ object JavaContextCollection {
             simpleClassStructure
         }
 
-        val simpleClassStructure = SimpleClassStructure(clazz.name ?: "", clazz.name ?: "", children)
+        val simpleClassStructure = SimpleClassStructure(clazz.name ?: "", clazz.name ?: "", classStructures)
         psiStructureCache[clazz] = simpleClassStructure
         return simpleClassStructure
     }
