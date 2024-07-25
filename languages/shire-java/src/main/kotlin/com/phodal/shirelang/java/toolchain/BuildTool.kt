@@ -18,7 +18,7 @@ interface BuildTool {
 
     fun collectTasks(project: Project): List<TextCompletionInfo>
 
-    fun configureRun(project: Project, virtualFile: VirtualFile, taskName: String): LocatableConfigurationBase<*>?
+    fun configureRun(project: Project, taskName: String, virtualFile: VirtualFile?): LocatableConfigurationBase<*>?
 }
 
 data class CommonLibraryData(val groupId: String?, val artifactId: String?, val version: String?)

@@ -37,9 +37,11 @@ class MavenBuildTool() : BuildTool {
 
     override fun configureRun(
         project: Project,
-        virtualFile: VirtualFile,
         taskName: String,
+        virtualFile: VirtualFile?,
     ): LocatableConfigurationBase<*>? {
+        if (virtualFile == null) return null
+
         val projectsManager = MavenProjectsManager.getInstance(project);
 
         val mavenProject: MavenProject = projectsManager.findProject(virtualFile) ?: return null

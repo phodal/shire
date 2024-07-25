@@ -11,7 +11,7 @@ import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.util.SmartList
 import com.phodal.shirecore.provider.shire.ProjectRunService
 import com.phodal.shirecore.runner.ConfigurationRunner
-import com.phodal.shirelang.java.toolchain.GradleTasksUtil
+import com.phodal.shirelang.java.toolchain.GradleBuildTool
 import icons.GradleIcons
 
 class JavaRunProjectService : ProjectRunService, ConfigurationRunner {
@@ -20,7 +20,7 @@ class JavaRunProjectService : ProjectRunService, ConfigurationRunner {
     }
 
     override fun run(project: Project, taskName: String) {
-        val runConfiguration = GradleTasksUtil.configureGradleRun(project, taskName)
+        val runConfiguration = GradleBuildTool().configureRun(project, taskName, null)
         executeRunConfigurations(project, runConfiguration)
     }
 
@@ -30,7 +30,7 @@ class JavaRunProjectService : ProjectRunService, ConfigurationRunner {
         result: CompletionResultSet,
     ): List<LookupElement> {
         val lookupElements: MutableList<LookupElement> = SmartList()
-        GradleTasksUtil.collectGradleTasksData(project).filter {
+        GradleBuildTool.collectGradleTasksData(project).filter {
             !it.isTest && !it.isJvmTest
         }.forEach {
             val element = LookupElementBuilder.create(it.getFqnTaskName())
@@ -44,6 +44,6 @@ class JavaRunProjectService : ProjectRunService, ConfigurationRunner {
     }
 
     override fun tasks(project: Project): List<String> {
-        return GradleTasksUtil.collectGradleTasksData(project).map { it.getFqnTaskName() }
+        return GradleBuildTool.collectGradleTasksData(project).map { it.getFqnTaskName() }
     }
 }

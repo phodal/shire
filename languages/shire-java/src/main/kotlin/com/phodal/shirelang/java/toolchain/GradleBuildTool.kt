@@ -1,12 +1,20 @@
 package com.phodal.shirelang.java.toolchain
 
+import com.intellij.execution.RunManager
 import com.intellij.execution.configurations.LocatableConfigurationBase
 import com.intellij.openapi.externalSystem.model.project.LibraryData
 import com.intellij.openapi.externalSystem.service.project.ProjectDataManager
 import com.intellij.openapi.externalSystem.service.ui.completion.TextCompletionInfo
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.project.guessProjectDir
+import com.intellij.openapi.util.NlsSafe
 import com.intellij.openapi.vfs.VirtualFile
+import com.phodal.shirelang.java.impl.JAVA_TASK_COMPLETION_COMPARATOR
+import org.jetbrains.plugins.gradle.service.execution.GradleExternalTaskConfigurationType
+import org.jetbrains.plugins.gradle.service.execution.GradleRunConfiguration
+import org.jetbrains.plugins.gradle.service.project.GradleTasksIndices
 import org.jetbrains.plugins.gradle.util.GradleConstants
+import org.jetbrains.plugins.gradle.util.GradleTaskData
 
 class GradleBuildTool: BuildTool {
     override fun prepareLibraryData(project: Project): List<CommonLibraryData>? {
@@ -21,22 +29,50 @@ class GradleBuildTool: BuildTool {
             it.data as LibraryData
         }
 
-        // to SimpleLibraryData
-
         return libraryDataList?.map {
             CommonLibraryData(it.groupId, it.artifactId, it.version)
         }
     }
 
     override fun collectTasks(project: Project): List<TextCompletionInfo> {
-        TODO("Not yet implemented")
+        val indices = GradleTasksIndices.getInstance(project)
+        val tasks = indices.findTasks(project.guessProjectDir()!!.path)
+            .filterNot { it.isInherited }
+            .groupBy { it.name }
+            .map { TextCompletionInfo(it.key, it.value.first().description) }
+            .sortedWith(
+                Comparator.comparing<TextCompletionInfo?, @NlsSafe String?>(
+                    { it.text },
+                    JAVA_TASK_COMPLETION_COMPARATOR
+                )
+            )
+        return tasks
     }
 
     override fun configureRun(
         project: Project,
-        virtualFile: VirtualFile,
         taskName: String,
-    ): LocatableConfigurationBase<*>? {
-        TODO("Not yet implemented")
+        virtualFile: VirtualFile?,
+    ): LocatableConfigurationBase<*> {
+        val runManager = RunManager.getInstance(project)
+        val configuration = runManager.createConfiguration(
+            taskName,
+            GradleExternalTaskConfigurationType::class.java
+        )
+        val runConfiguration = configuration.configuration as GradleRunConfiguration
+        runConfiguration.isDebugServerProcess = false
+        runConfiguration.settings.externalProjectPath = project.guessProjectDir()?.path
+        runConfiguration.rawCommandLine = taskName
+        runManager.addConfiguration(configuration)
+        runManager.selectedConfiguration = configuration
+        return runConfiguration
+    }
+
+    companion object {
+        fun collectGradleTasksData(project: Project): List<GradleTaskData> {
+            val indices = GradleTasksIndices.getInstance(project)
+            val tasks = indices.findTasks(project.guessProjectDir()!!.path)
+            return tasks
+        }
     }
 }
