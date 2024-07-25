@@ -72,5 +72,7 @@ enum class BuiltinPostHandler(var handleName: String) {
      * Append text to the file
      */
     Append("append"),
+
+    UpdateEditorText("updateEditorText"),
     ;
 }

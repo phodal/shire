@@ -150,6 +150,7 @@
 
         <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.AppendProcessor"/>
         <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.InsertNewlineProcessor"/>
+        <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.UpdateEditorTextProcessor"/>
 
         <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.ParseCommentProcessor"/>
 
