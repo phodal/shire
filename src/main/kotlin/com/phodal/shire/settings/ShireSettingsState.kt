@@ -10,6 +10,7 @@ import com.intellij.util.xmlb.XmlSerializerUtil
 @Service(Service.Level.APP)
 @State(name = "com.phodal.shire.settings.ShireSettingsState", storages = [Storage("ShireSettings.xml")])
 class ShireSettingsState : PersistentStateComponent<ShireSettingsState> {
+    var temperature: Float = 0.0f
     var apiHost = ""
     var modelName = ""
     var apiToken = ""
