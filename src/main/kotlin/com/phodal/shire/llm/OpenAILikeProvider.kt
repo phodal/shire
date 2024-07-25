@@ -30,11 +30,13 @@ class OpenAILikeProvider : CustomSSEHandler(), LlmProvider {
         "https://api.openai.com/v1/chat/completions"
     }
 
+    private val temperature: Float get() = ShireSettingsState.getInstance().temperature
+
     private val messages: MutableList<ChatMessage> = ArrayList()
     private var historyMessageLength: Int = 0
     private var client = OkHttpClient()
 
-    override val requestFormat: String get() = "{ \"customFields\": {\"model\": \"$modelName\", \"stream\": true} }"
+    override val requestFormat: String get() = """{ "customFields": {"model": "$modelName", "temperature": $temperature, "stream": true} }"""
     override val responseFormat: String get() = "\$.choices[0].delta.content"
 
     override fun isApplicable(project: Project): Boolean {
