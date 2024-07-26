@@ -10,9 +10,7 @@ import com.phodal.shirecore.middleware.PostProcessor
 class InsertCodeProcessor : PostProcessor {
     override val processorName: String = BuiltinPostHandler.InsertCode.handleName
 
-    override fun isApplicable(context: PostCodeHandleContext): Boolean {
-        return true
-    }
+    override fun isApplicable(context: PostCodeHandleContext): Boolean = true
 
     override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?, args: List<Any>): String {
         if (context.currentLanguage == null || context.currentFile == null) {

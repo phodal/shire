@@ -15,9 +15,7 @@ import kotlinx.coroutines.launch
 class FormatCodeProcessor : PostProcessor {
     override val processorName: String = BuiltinPostHandler.FormatCode.handleName
 
-    override fun isApplicable(context: PostCodeHandleContext): Boolean {
-        return true
-    }
+    override fun isApplicable(context: PostCodeHandleContext): Boolean = true
 
     override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?, args: List<Any>): Any {
         val file = context.currentFile ?: return ""

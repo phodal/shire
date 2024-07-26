@@ -13,9 +13,7 @@ import kotlinx.coroutines.launch
 class InsertNewlineProcessor : PostProcessor {
     override val processorName: String = BuiltinPostHandler.InsertNewline.handleName
 
-    override fun isApplicable(context: PostCodeHandleContext): Boolean {
-        return true
-    }
+    override fun isApplicable(context: PostCodeHandleContext): Boolean = true
 
     override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?, args: List<Any>): Any {
         val editor = context.editor ?: return ""

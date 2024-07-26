@@ -22,9 +22,7 @@ import com.phodal.shirecore.middleware.PostProcessor
 class VerifyCodeProcessor : PostProcessor {
     override val processorName: String = BuiltinPostHandler.VerifyCode.handleName
 
-    override fun isApplicable(context: PostCodeHandleContext): Boolean {
-        return true
-    }
+    override fun isApplicable(context: PostCodeHandleContext): Boolean = true
 
     override fun execute(
         project: Project,

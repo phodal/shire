@@ -9,9 +9,7 @@ import com.phodal.shirecore.middleware.PostProcessor
 class AppendProcessor : PostProcessor {
     override val processorName: String = BuiltinPostHandler.Append.handleName
 
-    override fun isApplicable(context: PostCodeHandleContext): Boolean {
-        return true
-    }
+    override fun isApplicable(context: PostCodeHandleContext): Boolean = true
 
     override fun execute(
         project: Project,

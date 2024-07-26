@@ -17,9 +17,7 @@ import com.phodal.shirecore.provider.shire.FileRunService
 class RunCodeProcessor : PostProcessor {
     override val processorName: String = BuiltinPostHandler.RunCode.handleName
 
-    override fun isApplicable(context: PostCodeHandleContext): Boolean {
-        return true
-    }
+    override fun isApplicable(context: PostCodeHandleContext): Boolean = true
 
     override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?, args: List<Any>): String {
         when (val code = context.pipeData["output"]) {

@@ -11,9 +11,7 @@ class TimeMetricProcessor : PostProcessor {
 
     override val processorName: String = BuiltinPostHandler.TimeMetric.handleName
 
-    override fun isApplicable(context: PostCodeHandleContext): Boolean {
-        return true
-    }
+    override fun isApplicable(context: PostCodeHandleContext): Boolean = true
 
     override fun setup(context: PostCodeHandleContext): String {
         startTime = System.currentTimeMillis()

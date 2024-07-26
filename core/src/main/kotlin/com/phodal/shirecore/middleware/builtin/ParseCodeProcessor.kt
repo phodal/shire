@@ -10,9 +10,7 @@ import com.phodal.shirecore.middleware.PostProcessor
 class ParseCodeProcessor : PostProcessor {
     override val processorName: String = BuiltinPostHandler.ParseCode.handleName
 
-    override fun isApplicable(context: PostCodeHandleContext): Boolean {
-        return true
-    }
+    override fun isApplicable(context: PostCodeHandleContext): Boolean = true
 
     /**
      * Todo: support parse [PostCodeHandleContext.currentParams] for language in parse
