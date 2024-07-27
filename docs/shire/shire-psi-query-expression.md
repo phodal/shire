@@ -66,13 +66,38 @@ enum class JvmPsiPqlMethod(val methodName: String, val description: String) {
 
 ## Git Toolchain
 
+Sample for #41
 
-
-
-```kotlin
-
+```shire
+---
+variables:
+  "allController": {
+    from {
+        GitCommit commit
+    }
+    where {
+        commit.authorName == "AmrDeveloper"
+    }
+    select {
+        commit.authorName, commit.authorEmail, commit.commitMessage
+    }
+  }
+---
 ```
 
+Model design for #41
+
+- GitCommit
+  - Usage: support for git commit query
+  - Field: author, authorEmail, committer, committerEmail, hash, date, message, fullMessage
+- FileCommit
+  - Usage: support for file in history
+  - Field: commit, file, status, path
+- Branch
+  - Usage: support for branch query
+  - Field: name, commitCount
+
+Ref design: https://github.com/AmrDeveloper/GQL
 
 ## Common Functions  
 
