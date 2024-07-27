@@ -20,6 +20,7 @@ PatternFuncProcessor(myProject, hole) {
         }
 
         if (actionTransform.isQueryStatement) {
+            // Maybe Toolchain QueryStatement
             return PsiQueryStatementProcessor(myProject, hole).execute(actionTransform)
         }
 
