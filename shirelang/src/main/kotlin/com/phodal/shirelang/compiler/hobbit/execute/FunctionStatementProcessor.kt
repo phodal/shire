@@ -1,12 +1,15 @@
 package com.phodal.shirelang.compiler.hobbit.execute
 
+import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
+import com.intellij.psi.PsiElement
 import com.nfeld.jsonpathkt.JsonPath
 import com.nfeld.jsonpathkt.extension.read
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.ast.*
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
+import com.phodal.shirelang.compiler.patternaction.PatternActionTransform
 import kotlinx.coroutines.runBlocking
 
 /**
@@ -24,6 +27,31 @@ import kotlinx.coroutines.runBlocking
  */
 open class FunctionStatementProcessor(override val myProject: Project, override val hole: HobbitHole) :
     PatternFuncProcessor(myProject, hole) {
+    fun execute(expression: Statement, variables: Map<String, List<PsiElement>>): List<PsiElement> {
+        return processStatement(expression, variables)
+    }
+
+    fun execute(transform: PatternActionTransform): String {
+        val fromStmt = transform.patternActionFuncs.find { it is PatternActionFunc.From } as PatternActionFunc.From
+        val selectStmt =
+            transform.patternActionFuncs.find { it is PatternActionFunc.Select } as PatternActionFunc.Select
+        val whereStmt = transform.patternActionFuncs.find { it is PatternActionFunc.Where } as PatternActionFunc.Where
+
+        val variableElementsMap: Map<String, List<PsiElement>> = runReadAction { buildVariables(fromStmt) }
+        val handledElements = processStatement(whereStmt.statement, variableElementsMap)
+        val selectElements = processSelect(selectStmt, handledElements)
+
+        return selectElements.joinToString("\n")
+    }
+
+    open fun processSelect(selectStmt: PatternActionFunc.Select, handledElements: List<PsiElement>): List<String> {
+        return emptyList()
+    }
+
+    open fun buildVariables(fromStmt: PatternActionFunc.From): Map<String, List<PsiElement>> {
+        return emptyMap()
+    }
+
     fun execute(statement: Statement, variableTable: MutableMap<String, Any?>): Any? = runBlocking {
         return@runBlocking when (statement) {
             is Comparison -> {
