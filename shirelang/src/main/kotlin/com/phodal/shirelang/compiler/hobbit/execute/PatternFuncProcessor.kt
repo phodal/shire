@@ -17,9 +17,6 @@ import com.phodal.shirelang.compiler.hobbit.ast.Statement
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 import java.io.File
 
-private val PatternFuncProcessor.semanticService: SemanticService?
-    get() = myProject.getService(SemanticService::class.java)
-
 open class PatternFuncProcessor(open val myProject: Project, open val hole: HobbitHole) {
     /**
      * This function `patternFunctionExecute` is used to execute a specific action based on the type of `PatternActionFunc` provided.
