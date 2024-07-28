@@ -5,15 +5,6 @@ import com.intellij.openapi.project.Project
 import com.phodal.shirecore.middleware.PostCodeHandleContext
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.execute.FunctionStatementProcessor
-import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
-
-
-data class TaskRoutesContext(
-    /**
-     * the LLM output
-     */
-    val output: String,
-)
 
 data class Condition(
     val conditionKey: String,
