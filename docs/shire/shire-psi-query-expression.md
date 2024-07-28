@@ -71,12 +71,12 @@ Sample for #41
 ```shire
 ---
 variables:
-  "allController": {
+  "changes": {
     from {
-        GitCommit commit
+        GitCommit commit, Date date
     }
     where {
-        commit.authorName == "AmrDeveloper"
+        commit.authorName == "Phodal" and date.between("2021-01-01", "2021-12-31")
     }
     select {
         commit.authorName, commit.authorEmail, commit.commitMessage
