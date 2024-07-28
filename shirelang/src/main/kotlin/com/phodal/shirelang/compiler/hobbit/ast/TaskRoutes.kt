@@ -105,8 +105,7 @@ data class TaskRoutes(
         private fun transformConditionCasesToRoutes(conditionCase: ConditionCase): TaskRoutes {
             val conditions: List<Condition> = conditionCase.conditions.map {
                 val caseKeyValue = it.value as CaseKeyValue
-
-                Condition(caseKeyValue.key.display(), caseKeyValue.value as FrontMatterType.EXPRESSION)
+                Condition(caseKeyValue.key.display(), caseKeyValue.value)
             }
 
             var defaultTask: Task? = null
@@ -114,18 +113,11 @@ data class TaskRoutes(
             val cases: List<Case> = conditionCase.cases.map {
                 val caseKeyValue = it.value as CaseKeyValue
                 val caseKey = caseKeyValue.key.display()
-
-                val case = Case(
-                    caseKey,
-                    Task.CustomTask(caseKeyValue.value as FrontMatterType.EXPRESSION)
-                )
-
                 if (caseKey == "default") {
-                    defaultTask = Task.Default(caseKeyValue.value as FrontMatterType.EXPRESSION)
+                    defaultTask = Task.Default(caseKeyValue.value)
                 }
 
-
-                case
+                Case(caseKey, Task.CustomTask(caseKeyValue.value))
             }
 
             return TaskRoutes(
