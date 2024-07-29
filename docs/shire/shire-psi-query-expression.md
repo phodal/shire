@@ -92,7 +92,7 @@ Model design for #41
   - Field: author, authorEmail, committer, committerEmail, hash, date, message, fullMessage
 - FileCommit
   - Usage: support for file in history
-  - Field: commit, file, status, path
+  - Field: commit, filename, status, path
 - Branch
   - Usage: support for branch query
   - Field: name, commitCount

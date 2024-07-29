@@ -1,8 +1,6 @@
 package com.phodal.shirelang.compiler.hobbit.execute
 
 import com.intellij.openapi.project.Project
-import com.intellij.psi.PsiElement
-import com.phodal.shirecore.provider.shire.ShireSymbolProvider
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.ast.VariableElement
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
@@ -19,6 +17,20 @@ data class ShireVcsCommit(
     val date: String,
     val message: String,
     val fullMessage: String
+)
+
+data class ShireFileCommit(
+    val filename: String,
+    val path: String,
+    val status: String,
+    val count: Int,
+    val commits: List<ShireVcsCommit>
+)
+
+data class ShireFileBranch(
+    val name: String,
+    val count: Int,
+    val commits: List<ShireVcsCommit>
 )
 
 class VcsStatementProcessor(override val myProject: Project, hole: HobbitHole) :
