@@ -4,21 +4,21 @@ import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.vcs.ShireVcsCommit
 
-enum class ShirePqlDataType {
+enum class ShireQLDataType {
     VCS_COMMIT,
     VCS_BRANCH,
     VCS_FILE_COMMIT,
     VCS_FILE_BRANCH
 }
 
-interface ShireQueryStatementDataProvider {
+interface ShireQLDataProvider {
     fun lookupElementByName(myProject: Project, variableType: String): List<ShireVcsCommit>?
 
     companion object {
-        private val EP_NAME: ExtensionPointName<ShireQueryStatementDataProvider> =
-            ExtensionPointName("com.phodal.shireStatementDataProvider")
+        private val EP_NAME: ExtensionPointName<ShireQLDataProvider> =
+            ExtensionPointName("com.phodal.shireQLDataProvider")
 
-        fun all(): List<ShireQueryStatementDataProvider> {
+        fun all(): List<ShireQLDataProvider> {
             return EP_NAME.extensionList
         }
     }

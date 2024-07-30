@@ -19,8 +19,8 @@
                         interface="com.phodal.shirecore.provider.shire.ShireSymbolProvider"
                         dynamic="true"/>
 
-        <extensionPoint qualifiedName="com.phodal.shireStatementDataProvider"
-                        interface="com.phodal.shirecore.provider.shire.ShireQueryStatementDataProvider"
+        <extensionPoint qualifiedName="com.phodal.shireQLDataProvider"
+                        interface="com.phodal.shirecore.provider.shire.ShireQLDataProvider"
                         dynamic="true"/>
 
         <extensionPoint qualifiedName="com.phodal.shireAgentTool"

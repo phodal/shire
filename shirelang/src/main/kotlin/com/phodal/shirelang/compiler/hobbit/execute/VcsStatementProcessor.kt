@@ -1,7 +1,7 @@
 package com.phodal.shirelang.compiler.hobbit.execute
 
 import com.intellij.openapi.project.Project
-import com.phodal.shirecore.provider.shire.ShireQueryStatementDataProvider
+import com.phodal.shirecore.provider.shire.ShireQLDataProvider
 import com.phodal.shirecore.vcs.ShireVcsCommit
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.ast.VariableElement
@@ -17,7 +17,7 @@ class VcsStatementProcessor(override val myProject: Project, hole: HobbitHole) :
     }
 
     private fun lookupVcsCommit(it: VariableElement): List<ShireVcsCommit> {
-        val elements: List<ShireVcsCommit> = ShireQueryStatementDataProvider.all().flatMap { provider ->
+        val elements: List<ShireVcsCommit> = ShireQLDataProvider.all().flatMap { provider ->
             provider.lookupElementByName(myProject, it.variableType) ?: emptyList()
         }
 
