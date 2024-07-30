@@ -5,5 +5,7 @@
         <shireToolchainVariableProvider implementation="com.phodal.shirelang.git.provider.GitToolchainVariableProvider"/>
 
         <shireActionLocationEditor implementation="com.phodal.shirelang.git.provider.GitActionLocationEditor"/>
+
+        <shireQLDataProvider implementation="com.phodal.shirelang.git.provider.GitQLDataProvider"/>
     </extensions>
 </idea-plugin>

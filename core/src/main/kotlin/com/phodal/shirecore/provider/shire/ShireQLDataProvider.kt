@@ -12,7 +12,7 @@ enum class ShireQLDataType(val dataKey: String) {
 }
 
 interface ShireQLDataProvider {
-    fun lookupGitData(myProject: Project, dataTypes: List<ShireQLDataType>): Map<ShireQLDataType, Any>
+    fun lookupGitData(myProject: Project, dataTypes: List<ShireQLDataType>): Map<ShireQLDataType, Any?>
 
     fun lookup(myProject: Project, variableType: String): List<ShireVcsCommit>? {
         return null
