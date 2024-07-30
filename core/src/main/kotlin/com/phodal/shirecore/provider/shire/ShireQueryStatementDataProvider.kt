@@ -4,7 +4,7 @@ import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.vcs.ShireVcsCommit
 
-enum class QueryStatementDataType {
+enum class ShirePqlDataType {
     VCS_COMMIT,
     VCS_BRANCH,
     VCS_FILE_COMMIT,
