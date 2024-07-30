@@ -1,8 +1,13 @@
 package com.phodal.shirecore.vcs
 
-/**
- * author, authorEmail, committer, committerEmail, hash, date, message, fullMessage
- */
+sealed class GitEntity
+
+// Base class for models containing commits
+sealed class CommitModel(
+    open val count: Int,
+    open val commits: List<ShireVcsCommit>
+) : GitEntity()
+
 data class ShireVcsCommit(
     val hash: String,
     val authorName: String,
@@ -13,19 +18,18 @@ data class ShireVcsCommit(
     val committerDate: Long,
     val message: String,
     val fullMessage: String
-)
+) : GitEntity()
 
 data class ShireFileCommit(
     val filename: String,
     val path: String,
     val status: String,
-    val count: Int,
-    val commits: List<ShireVcsCommit>
-)
+    override val count: Int,
+    override val commits: List<ShireVcsCommit>
+) : CommitModel(count, commits)
 
 data class ShireFileBranch(
     val name: String,
-    val count: Int,
-    val commits: List<ShireVcsCommit>
-)
-
+    override val count: Int,
+    override val commits: List<ShireVcsCommit>
+) : CommitModel(count, commits)

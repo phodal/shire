@@ -10,6 +10,7 @@ import com.intellij.openapi.project.Project
 import com.phodal.shirecore.ShireCoreBundle
 import com.phodal.shirecore.provider.shire.ShireQLDataProvider
 import com.phodal.shirecore.provider.shire.ShireQLDataType
+import com.phodal.shirecore.vcs.GitEntity
 import com.phodal.shirecore.vcs.ShireVcsCommit
 import git4idea.GitCommit
 import git4idea.history.GitHistoryUtils
@@ -18,10 +19,8 @@ import kotlinx.coroutines.future.await
 import java.util.concurrent.CompletableFuture
 
 class GitQLDataProvider : ShireQLDataProvider {
-    override fun lookupGitData(myProject: Project, dataTypes: List<ShireQLDataType>): Map<ShireQLDataType, Any?> {
-        val result = mutableMapOf<ShireQLDataType, Any?>()
-        val dataContext = DataManager.getInstance().getDataContextFromFocus().result
-
+    override fun lookupGitData(myProject: Project, dataTypes: List<ShireQLDataType>): Map<ShireQLDataType, List<GitEntity>?> {
+        val result = mutableMapOf<ShireQLDataType, List<GitEntity>?>()
         dataTypes.forEach {
             when (it) {
                 ShireQLDataType.GIT_COMMIT -> {
@@ -40,7 +39,7 @@ class GitQLDataProvider : ShireQLDataProvider {
         return result
     }
 
-    private fun buildCommits(myProject: Project): List<ShireVcsCommit> {
+    private fun buildCommits(myProject: Project): List<GitEntity> {
         val repository = GitRepositoryManager.getInstance(myProject).repositories.firstOrNull() ?: return emptyList()
         val branchName = repository.currentBranchName
 

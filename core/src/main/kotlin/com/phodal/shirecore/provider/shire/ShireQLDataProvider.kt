@@ -2,6 +2,7 @@ package com.phodal.shirecore.provider.shire
 
 import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.project.Project
+import com.phodal.shirecore.vcs.GitEntity
 import com.phodal.shirecore.vcs.ShireVcsCommit
 
 enum class ShireQLDataType(val dataKey: String) {
@@ -12,7 +13,7 @@ enum class ShireQLDataType(val dataKey: String) {
 }
 
 interface ShireQLDataProvider {
-    fun lookupGitData(myProject: Project, dataTypes: List<ShireQLDataType>): Map<ShireQLDataType, Any?>
+    fun lookupGitData(myProject: Project, dataTypes: List<ShireQLDataType>): Map<ShireQLDataType, List<GitEntity>?>
 
     fun lookup(myProject: Project, variableType: String): List<ShireVcsCommit>? {
         return null
