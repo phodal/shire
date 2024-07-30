@@ -18,7 +18,7 @@ class VcsStatementProcessor(override val myProject: Project, hole: HobbitHole) :
 
     private fun lookupVcsCommit(it: VariableElement): List<ShireVcsCommit> {
         val elements: List<ShireVcsCommit> = ShireQLDataProvider.all().flatMap { provider ->
-            provider.lookupElementByName(myProject, it.variableType) ?: emptyList()
+            provider.lookupVcsCommit(myProject, it.variableType) ?: emptyList()
         }
 
         return elements
