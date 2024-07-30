@@ -4,12 +4,13 @@ package com.phodal.shirecore.vcs
  * author, authorEmail, committer, committerEmail, hash, date, message, fullMessage
  */
 data class ShireVcsCommit(
+    val hash: String,
     val authorName: String,
     val authorEmail: String,
+    val authorDate: Long,
     val committerName: String,
     val committerEmail: String,
-    val hash: String,
-    val date: String,
+    val committerDate: Long,
     val message: String,
     val fullMessage: String
 )
