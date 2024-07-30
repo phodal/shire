@@ -10,15 +10,15 @@ import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 class VcsStatementProcessor(override val myProject: Project, hole: HobbitHole) :
     FunctionStatementProcessor(myProject, hole) {
 
-    fun variables(fromStmt: PatternActionFunc.From): Map<String, List<ShireVcsCommit>> {
+    fun variables(fromStmt: PatternActionFunc.From): Map<String, List<Any>> {
         return fromStmt.variables.associate {
             it.value to lookupVcsCommit(it)
         }
     }
 
-    private fun lookupVcsCommit(it: VariableElement): List<ShireVcsCommit> {
+    private fun lookupVcsCommit(it: VariableElement): List<Any> {
         val elements: List<ShireVcsCommit> = ShireQLDataProvider.all().flatMap { provider ->
-            provider.lookupVcsCommit(myProject, it.variableType) ?: emptyList()
+            provider.lookup(myProject, it.variableType) ?: emptyList()
         }
 
         return elements
