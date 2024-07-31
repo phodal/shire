@@ -104,4 +104,49 @@ class ShirePatternPipelineTest : BasePlatformTestCase() {
 
         assertEquals("User prompt:\n\n", context.lastTaskOutput)
     }
+
+    fun testShouldUseSedReplaceContentInVariables() {
+        @Language("Shire")
+        val code = """
+            ---
+            name: Summary
+            description: "Generate Summary"
+            interaction: AppendCursor
+            variables:
+              "openai": "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"
+              "var2": /.*ple.shire/ { cat | grep("openai") | sed("(?i)\b(sk-[a-zA-Z0-9]{20}T3BlbkFJ[a-zA-Z0-9]{20})(?:['|\"|\n|\r|\s|\x60|;]|${'$'})", "sk-***") }
+            ---
+            
+            Summary webpage: ${'$'}var2
+        """.trimIndent()
+
+        val file = myFixture.addFileToProject("sample.shire", code)
+
+        myFixture.openFileInEditor(file.virtualFile)
+
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
+        val hole = compile.config!!
+
+        val context = PostCodeHandleContext(
+            genText = "User prompt:\n\n",
+        )
+
+        runBlocking {
+            val compiledVariables =
+                ShireTemplateCompiler(project, hole, compile.variableTable, code).compileVariable(myFixture.editor)
+
+            context.compiledVariables = compiledVariables
+
+            hole.variables.mapValues {
+                PatternActionProcessor(project, hole).execute(it.value)
+            }
+
+            hole.setupStreamingEndProcessor(project, context = context)
+            hole.executeAfterStreamingProcessor(project, null, context = context)
+        }
+
+        assertEquals("  \"openai\": \"sk-***\n" +
+                "  \"var2\": /.*ple.shire/ { cat | grep(\"openai\") | sed(\"(?i)\\b(sk-[a-zA-Z0-9]{20}T3BlbkFJ[a-zA-Z0-9]{20})(?:['|\\\"|\\n|\\r|\\s|\\x60|;]|\$)\", \"sk-***\") }", context.compiledVariables["var2"]
+        )
+    }
 }
