@@ -1,6 +1,22 @@
-# [](https://github.com/phodal/shire/compare/v0.4.6...v) (2024-07-24)
+# [](https://github.com/phodal/shire/compare/v0.4.7...v) (2024-07-31)
 
 ## [Unreleased]
+
+## [0.4.7](https://github.com/phodal/shire/compare/v0.4.6...v[0.4.7]) (2024-07-30)
+
+### Bug Fixes
+
+- **core:** enhance InsertUtil to validate offset range ([022d8e2](https://github.com/phodal/shire/commit/022d8e249da9b5aaa7e7166cc69de2269ff05e34))
+
+### Features
+
+- **core:** add UpdateEditorTextProcessor ([1d8b566](https://github.com/phodal/shire/commit/1d8b566e2b2b0da7ba98f88fecb9ec8be89214c2))
+- **docs:** update lifecycle documentation and examples ([9ca64fe](https://github.com/phodal/shire/commit/9ca64fee7870c5b9365541e4d4a67391758fd83f))
+- **git-provider:** implement lookupGitData and ShireVcsCommit updates [#41](https://github.com/phodal/shire/issues/41) ([2d56eaf](https://github.com/phodal/shire/commit/2d56eafbdbd15c6824da891366529da3e6282d49))
+- **llm:** enhance OpenAILikeProvider to include temperature setting ([cbb6f1d](https://github.com/phodal/shire/commit/cbb6f1d15041520c19f8f2ffde54b8ae7aa1bbeb))
+- **provider:** add GitQLDataProvider and update ShireQLDataProvider interface [#41](https://github.com/phodal/shire/issues/41) ([5af617e](https://github.com/phodal/shire/commit/5af617e2ebbabd0908c0ef9d9c82eead4886a8f7))
+- **settings:** add temperature setting and UI component ([264211f](https://github.com/phodal/shire/commit/264211f5937a0d42f10d90a8dfee92aae29035ac))
+- **shirelang:** add VcsStatementProcessor for commit info handling [#41](https://github.com/phodal/shire/issues/41) ([c71fe57](https://github.com/phodal/shire/commit/c71fe57d5dcf73a37298139a2ac1dee34b4f5c91))
 
 ## [0.4.6](https://github.com/phodal/shire/compare/v0.4.5...v[0.4.6]) (2024-07-24)
 
@@ -379,7 +395,8 @@
 - **shell:** add shell language support plugin file ([bdc1c90](https://github.com/phodal/shire/commit/bdc1c90f10d7c2c4fb8f7157db343dd756c11352))
 - **shire:** add Shire context action group and location support ([e3df86d](https://github.com/phodal/shire/commit/e3df86d16d0c9985fec787a8e76ce553be9a9a45))
 
-[Unreleased]: https://github.com/phodal/shire/compare/v0.4.6...HEAD
+[Unreleased]: https://github.com/phodal/shire/compare/v0.4.7...HEAD
+[0.4.7]: https://github.com/phodal/shire/compare/v0.4.6...v0.4.7
 [0.4.6]: https://github.com/phodal/shire/compare/v0.4.5...v0.4.6
 [0.4.5]: https://github.com/phodal/shire/compare/v0.4.3...v0.4.5
 [0.4.3]: https://github.com/phodal/shire/compare/v0.4.2...v0.4.3
