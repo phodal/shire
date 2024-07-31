@@ -7,3 +7,6 @@ interface GuardScanner {
     fun scan(prompt: String): ScanResult
 }
 
+interface LocalGuardScanner : GuardScanner {
+
+}
