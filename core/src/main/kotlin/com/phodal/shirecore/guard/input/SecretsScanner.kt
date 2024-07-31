@@ -7,6 +7,9 @@ import com.phodal.shirecore.guard.secret.JWTBase64Detector
 import com.phodal.shirecore.guard.secret.OpenAIApiKeyDetector
 import com.phodal.shirecore.guard.secret.RegexBasedDetector
 
+/**
+ * Todo load from `shireCustomGuardingRules.yaml`
+ */
 class SecretsScanner : LocalGuardScanner {
     private val detectors: List<RegexBasedDetector> = listOf(
         GitHubTokenCustomDetector(),
