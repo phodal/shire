@@ -7,3 +7,8 @@ parent: AI 数据安全保护
 
 使用 Pipeline 函数保护数据
 
+```shire
+---
+
+---
+```

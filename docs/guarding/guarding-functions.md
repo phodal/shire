@@ -1,6 +1,6 @@
 ---
 layout: default
-title: AI 数据安全保护函数保护
+title: AI 数据安全保护函数
 nav_order: 2
 parent: AI 数据安全保护
 ---
