@@ -2,7 +2,7 @@
 layout: default
 title: onStreamingDone
 parent: Lifecycle
-nav_order: 3
+nav_order: 5
 ---
 
 `onStreamingDone` 即在 Streaming 完成后通过一系列的后处理器对生成的内容进行处理。

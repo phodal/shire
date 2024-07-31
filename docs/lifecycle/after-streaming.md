@@ -2,7 +2,7 @@
 layout: default
 title: afterStreaming
 parent: Lifecycle
-nav_order: 4
+nav_order: 6
 ---
 
 `afterStreaming` 会在执行完 `onStreamingEnd` 后执行，用于下一步的处理，因此也叫 `TaskRoutes`。 `TaskRoutes`
