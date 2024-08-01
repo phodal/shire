@@ -44,7 +44,8 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             is PatternActionFunc.Grep -> {
                 when (lastResult) {
                     is Array<*> -> {
-                        (lastResult as Array<String>).filter { line -> action.patterns.any { line.contains(it) } }
+                        (lastResult as Array<String>)
+                            .filter { line -> action.patterns.any { line.contains(it) } }
                             .joinToString("\n")
                     }
 

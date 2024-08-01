@@ -9,19 +9,6 @@ import com.phodal.shirelang.compiler.hobbit.ast.VariableElement
  * Each subclass represents a different function, and each has a unique set of properties relevant to its function.
  *
  * @property funcName The name of the function.
- *
- * @constructor Creates an instance of PatternActionFunc with a function name.
- *
- * @see Prompt
- * @see Grep
- * @see Sed
- * @see Sort
- * @see Uniq
- * @see Head
- * @see Tail
- * @see Xargs
- * @see Print
- * @see Cat
  */
 sealed class PatternActionFunc(open val funcName: String) {
     /**
