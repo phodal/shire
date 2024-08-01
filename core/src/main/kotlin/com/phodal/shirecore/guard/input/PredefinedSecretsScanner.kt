@@ -1,16 +1,15 @@
 package com.phodal.shirecore.guard.input
 
-import com.phodal.shirecore.guard.LocalGuardScanner
+import com.intellij.openapi.components.Service
+import com.phodal.shirecore.guard.LocalScanner
 import com.phodal.shirecore.guard.ScanResult
 import com.phodal.shirecore.guard.secret.GitHubTokenCustomDetector
 import com.phodal.shirecore.guard.secret.JWTBase64Detector
 import com.phodal.shirecore.guard.secret.OpenAIApiKeyDetector
 import com.phodal.shirecore.guard.secret.RegexBasedDetector
 
-/**
- * Todo load from `shireCustomGuardingRules.yaml`
- */
-class SecretsScanner : LocalGuardScanner {
+@Service(Service.Level.PROJECT)
+class PredefinedSecretsScanner : LocalScanner {
     private val detectors: List<RegexBasedDetector> = listOf(
         GitHubTokenCustomDetector(),
         JWTBase64Detector(),
