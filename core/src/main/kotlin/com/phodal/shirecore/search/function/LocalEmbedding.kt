@@ -12,7 +12,6 @@ import kotlin.collections.toLongArray
 import kotlin.ranges.until
 import kotlin.to
 import kotlinx.coroutines.*
-import kotlin.math.sqrt
 
 class LocalEmbedding(
     private val tokenizer: HuggingFaceTokenizer,
@@ -25,21 +24,21 @@ class LocalEmbedding(
     @RequiresBackgroundThread
     suspend fun embed(input: String): FloatArray {
         return withContext(embeddingContext) {
-            embedInternal(input)
+            embedInternal(input, 512)
         }
     }
 
-    fun embedInternal(input: String): FloatArray {
+    fun embedInternal(input: String, dimensions: Int = 512): FloatArray {
         val tokenized = tokenizer.encode(input, true, true)
 
         var inputIds = tokenized.ids
         var attentionMask = tokenized.attentionMask
         var typeIds = tokenized.typeIds
 
-        if (tokenized.ids.size >= 512) {
-            inputIds = inputIds.slice(0..510).toLongArray()
-            attentionMask = attentionMask.slice(0..510).toLongArray()
-            typeIds = typeIds.slice(0..510).toLongArray()
+        if (tokenized.ids.size >= dimensions) {
+            inputIds = inputIds.slice(0..dimensions).toLongArray()
+            attentionMask = attentionMask.slice(0..dimensions).toLongArray()
+            typeIds = typeIds.slice(0..dimensions).toLongArray()
         }
 
         val tensorInput = OrtUtil.reshape(inputIds, longArrayOf(1, inputIds.size.toLong()))
