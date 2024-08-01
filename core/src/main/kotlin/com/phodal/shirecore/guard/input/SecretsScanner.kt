@@ -26,7 +26,7 @@ class SecretsScanner : LocalGuardScanner {
                 if (matcher.find()) {
                     return ScanResult(
                         isPassed = false,
-                        message = "Detected ${detector.secretType} in the input."
+                        message = "Detected ${detector.description} in the input."
                     )
                 }
             }

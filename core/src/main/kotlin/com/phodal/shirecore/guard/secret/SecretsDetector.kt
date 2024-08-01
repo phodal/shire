@@ -3,12 +3,12 @@ package com.phodal.shirecore.guard.secret
 import java.util.regex.Pattern
 
 sealed class RegexBasedDetector {
-    abstract val secretType: String
+    abstract val description: String
     abstract val denylist: List<Pattern>
 }
 
 class GitHubTokenCustomDetector : RegexBasedDetector() {
-    override val secretType: String = "GitHub Token"
+    override val description: String = "GitHub Token"
 
     override val denylist: List<Pattern> = listOf(
         // GitHub App/Personal Access/OAuth Access/Refresh Token
@@ -20,7 +20,7 @@ class GitHubTokenCustomDetector : RegexBasedDetector() {
 }
 
 class JWTBase64Detector : RegexBasedDetector() {
-    override val secretType: String = "Base64-encoded JSON Web Token"
+    override val description: String = "Base64-encoded JSON Web Token"
 
     override val denylist: List<Pattern> = listOf(
         Pattern.compile("[A-Za-z0-9-_]+\\.[A-Za-z0-9-_]+\\.[A-Za-z0-9-_]+")
@@ -28,11 +28,9 @@ class JWTBase64Detector : RegexBasedDetector() {
 }
 
 class OpenAIApiKeyDetector : RegexBasedDetector() {
-    override val secretType: String = "OpenAI API Key"
+    override val description: String = "OpenAI API Key"
 
     override val denylist: List<Pattern> = listOf(
-        Pattern.compile(
-            """(?i)\b(sk-[a-zA-Z0-9]{20}T3BlbkFJ[a-zA-Z0-9]{20})(?:['|\"|\n|\r|\s|\x60|;]|$)"""
-        )
+        Pattern.compile("""(?i)\b(sk-[a-zA-Z0-9]{20}T3BlbkFJ[a-zA-Z0-9]{20})(?:['|\"|\n|\r|\s|\x60|;]|$)""")
     )
 }
