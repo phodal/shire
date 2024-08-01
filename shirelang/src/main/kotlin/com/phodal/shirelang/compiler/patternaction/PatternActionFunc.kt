@@ -43,6 +43,8 @@ sealed class PatternActionFunc(open val funcName: String) {
      *
      * @property pattern The pattern to search for.
      * @property replacements The string to replace matches with.
+     *
+     * For example, `sed("foo", "bar")` would replace all instances of "foo" with "bar".
      */
     class Sed(val pattern: String, val replacements: String, val isRegex: Boolean = true) : PatternActionFunc("sed")
 
