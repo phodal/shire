@@ -17,10 +17,8 @@ class PredefinedSecretsScanner : LocalScanner {
     )
 
     override fun scan(prompt: String): ScanResult {
-        // 遍历所有的检测器
         for (detector in detectors) {
             for (pattern in detector.denylist) {
-                // 检查输入是否匹配检测器中的任何一个正则表达式模式
                 val matcher = pattern.matcher(prompt)
                 if (matcher.find()) {
                     return ScanResult(
@@ -30,7 +28,7 @@ class PredefinedSecretsScanner : LocalScanner {
                 }
             }
         }
-        // 如果没有检测到任何匹配，返回通过结果
+
         return ScanResult(isPassed = true)
     }
 }

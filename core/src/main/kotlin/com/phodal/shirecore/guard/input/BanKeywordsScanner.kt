@@ -6,7 +6,7 @@ import com.phodal.shirecore.guard.Replacer
 import com.phodal.shirecore.guard.ScanResult
 
 @Service(Service.Level.PROJECT)
-class PatternScanner : LocalScanner, Replacer {
+class BanKeywordsScanner : LocalScanner, Replacer {
     /**
      * Todo load from `shireCustomGuardingRules.yaml`
      */

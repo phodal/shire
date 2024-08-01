@@ -1,9 +1,5 @@
 package com.phodal.shirecore.guard
 
-import kotlinx.serialization.*
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.encodeToString
-
 /**
  * GuardScanner is an interface for scanning user input for security vulnerabilities.
  */
@@ -11,13 +7,12 @@ interface GuardScanner {
     fun scan(prompt: String): ScanResult
 }
 
-interface LocalScanner : GuardScanner {
-
+interface Replacer {
+    fun replace(prompt: String): String
 }
 
-/**
- * A class representing an abstract PII entity recognizer.
- */
+interface LocalScanner : GuardScanner
+
 abstract class EntityRecognizer {
     abstract fun load()
 
