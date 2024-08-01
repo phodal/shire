@@ -1,9 +1,9 @@
 ---
 layout: default
-title: AI 数据安全保护
+title: Data Privacy
 nav_order: 6
 has_children: true
-permalink: /guarding
+permalink: /data-privacy
 ---
 
 Shire 在 AI 数据安全上提供了一些保护机制，用于对 AI 模型的输入、输出数据进行保护。
