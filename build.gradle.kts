@@ -113,6 +113,7 @@ project(":core") {
     }
 
     dependencies {
+        implementation("com.charleskorn.kaml:kaml:0.61.0")
         implementation("org.reflections:reflections:0.10.2")
         implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
 

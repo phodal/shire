@@ -10,6 +10,9 @@ import com.phodal.shirecore.guard.secret.RegexBasedDetector
 
 @Service(Service.Level.PROJECT)
 class PredefinedSecretsScanner : LocalScanner {
+    /**
+     * Load from resources
+     */
     private val detectors: List<RegexBasedDetector> = listOf(
         GitHubTokenCustomDetector(),
         JWTBase64Detector(),
