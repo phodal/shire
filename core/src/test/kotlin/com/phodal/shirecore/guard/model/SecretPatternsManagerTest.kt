@@ -13,7 +13,7 @@ class SecretPatternsManagerTest {
     @Test
     fun `should add a new pattern to the list of patterns`() {
         // Given
-        val newPattern = SecretPatternDetail("Email", "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}", "medium")
+        val newPattern = SecretPattern("Email", "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}", "medium")
         secretPatternsManager = SecretPatternsManager()
 
         // When
@@ -27,7 +27,7 @@ class SecretPatternsManagerTest {
     @Test
     fun `should remove a pattern from the list of patterns`() {
         // Given
-        val patternToRemove = SecretPatternDetail("Credit Card", "[0-9]{4} [0-9]{4} [0-9]{4} [0-9]{4}", "high")
+        val patternToRemove = SecretPattern("Credit Card", "[0-9]{4} [0-9]{4} [0-9]{4} [0-9]{4}", "high")
         secretPatternsManager = SecretPatternsManager()
 
         // When

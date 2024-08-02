@@ -2,22 +2,24 @@ package com.phodal.shirecore.guard.model
 
 import com.charleskorn.kaml.Yaml
 import com.intellij.openapi.components.Service
+import com.phodal.shirecore.guard.LocalScanner
+import com.phodal.shirecore.guard.ScanResult
 import java.net.URL
 
 @Service(Service.Level.APP)
-class SecretPatternsManager {
+class SecretPatternsManager: LocalScanner {
     private val defaultPiiSecrets = "/secrets/default.shireSecretPattern.yml"
-    private var patterns: List<SecretPatternDetail>
+    private var patterns: List<SecretPattern>
 
     init {
         patterns = initPatterns()
     }
 
-    fun getPatterns(): List<SecretPatternDetail> {
+    fun getPatterns(): List<SecretPattern> {
         return patterns
     }
 
-    private fun initPatterns(): List<SecretPatternDetail> {
+    private fun initPatterns(): List<SecretPattern> {
         val file: URL = javaClass.getResource(defaultPiiSecrets)!!
         val content = file.readText()
 
@@ -27,11 +29,11 @@ class SecretPatternsManager {
         }
     }
 
-    fun addPattern(pattern: SecretPatternDetail) {
+    fun addPattern(pattern: SecretPattern) {
         patterns = patterns + pattern
     }
 
-    fun removePattern(pattern: SecretPatternDetail) {
+    fun removePattern(pattern: SecretPattern) {
         patterns = patterns - pattern
     }
 
@@ -42,5 +44,16 @@ class SecretPatternsManager {
         }
 
         return newText
+    }
+
+    override fun scan(prompt: String): ScanResult {
+        val result = ScanResult()
+        patterns.forEach {
+            if (it.matches(prompt)) {
+                result.isPassed = false
+            }
+        }
+
+        return result
     }
 }

@@ -2,11 +2,11 @@ package com.phodal.shirecore.guard.input
 
 import com.intellij.openapi.components.Service
 import com.phodal.shirecore.guard.LocalScanner
-import com.phodal.shirecore.guard.Replacer
+import com.phodal.shirecore.guard.Masker
 import com.phodal.shirecore.guard.ScanResult
 
 @Service(Service.Level.PROJECT)
-class BanKeywordsScanner : LocalScanner, Replacer {
+class BanKeywordsScanner : LocalScanner, Masker {
     /**
      * Todo load from `shireCustomGuardingRules.yaml`
      */
@@ -14,7 +14,7 @@ class BanKeywordsScanner : LocalScanner, Replacer {
         TODO("Not yet implemented")
     }
 
-    override fun replace(prompt: String): String {
+    override fun mask(prompt: String): String {
         TODO("Not yet implemented")
     }
 }

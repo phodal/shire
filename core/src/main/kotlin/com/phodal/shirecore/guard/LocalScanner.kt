@@ -7,8 +7,8 @@ interface GuardScanner {
     fun scan(prompt: String): ScanResult
 }
 
-interface Replacer {
-    fun replace(prompt: String): String
+interface Masker {
+    fun mask(prompt: String): String
 }
 
 interface LocalScanner : GuardScanner

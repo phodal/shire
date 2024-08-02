@@ -11,11 +11,11 @@ data class SecretPatterns(
 
 @Serializable
 data class SecretPatternItem(
-    val pattern: SecretPatternDetail,
+    val pattern: SecretPattern,
 )
 
 @Serializable
-class SecretPatternDetail(
+class SecretPattern(
     val name: String,
     val regex: String,
     val confidence: String,
@@ -24,7 +24,7 @@ class SecretPatternDetail(
     private val regexPattern: Regex? = try {
         Regex(regex)
     } catch (e: Exception) {
-        logger<SecretPatternDetail>().error("Invalid regex pattern: $regex, name: $name")
+        logger<SecretPattern>().error("Invalid regex pattern: $regex, name: $name")
         null
     }
 
