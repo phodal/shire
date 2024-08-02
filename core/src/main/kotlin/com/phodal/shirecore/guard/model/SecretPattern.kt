@@ -21,11 +21,11 @@ class SecretPatternDetail(
     val regex: String,
     val confidence: String,
 ) {
-//    @Contextual
-//    private val regexPattern: Regex? = try {
-//        Regex(regex)
-//    } catch (e: Exception) {
-//        logger<SecretPatternDetail>().error("Invalid regex pattern: $regex")
-//        null
-//    }
+    @Contextual
+    private val regexPattern: Regex? = try {
+        Regex(regex)
+    } catch (e: Exception) {
+        logger<SecretPatternDetail>().error("Invalid regex pattern: $regex, name: $name")
+        null
+    }
 }
