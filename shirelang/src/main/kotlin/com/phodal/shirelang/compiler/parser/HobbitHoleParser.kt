@@ -597,6 +597,11 @@ object HobbitHoleParser {
                 PatternActionFunc.Caching(args[0])
             }
 
+            "redact" -> {
+                val first = args.firstOrNull() ?: "default"
+                PatternActionFunc.Redact(first)
+            }
+
             null -> {
                 logger.warn("parsePatternAction, Unknown pattern action: ${expr.funcCall}")
                 return null

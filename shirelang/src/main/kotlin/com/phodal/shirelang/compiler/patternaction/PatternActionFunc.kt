@@ -134,6 +134,13 @@ sealed class PatternActionFunc(open val funcName: String) {
     class Caching(val text: String) : PatternActionFunc("caching")
 
     /**
+     * The Redact class is designed for handling sensitive data by applying a specified redaction strategy.
+     *
+     * @param strategy The redaction strategy to be used. This string defines how the sensitive data will be handled or obscured.
+     */
+    class Redact(val strategy: String) : PatternActionFunc("redact")
+
+    /**
      * User Custom Functions
      */
     class UserCustom(override val funcName: String, val args: List<String>) : PatternActionFunc(funcName) {

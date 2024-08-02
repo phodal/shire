@@ -10,11 +10,32 @@ parent: Data Privacy
 - NER 命名实体识别 (Named-entity recognition) Scanner
 - Pattern/Regex Scanner
 
-## ShireGuarding.yaml (TBD)
+## `redact` function
 
-todos:
+在 redact 函数中, 我们使用 [db/pii-stable.yml](https://github.com/mazen160/secrets-patterns-db/blob/master/db/pii-stable.yml) 
+作为敏感数据的配置文件, 用于对数据进行脱敏处理。
+
+普通变量使用示例：
+
+```shire
+---
+variables:
+  "phoneNumber": "086-1234567890"
+  "var2": /.*ple.shire/ { cat | redact }
+---
+```    
+
+RAG 场景示例：
+
+```shire
+
+```
+
+## 自定义 `.shireSecretPattern.yaml`（TBD）
 
 - refs: https://github.com/mazen160/secrets-patterns-db/blob/master/datasets/high-confidence.yml
+
+Todos:
 
 ```yaml
 keywords: data protection, data security, data masking, data anonymization, data encryption, data obfuscation, data redaction, data tokenization, data privacy, data protection, data security, data masking, data anonymization, data encryption, data obfuscation, data redaction, data tokenization, data privacy
