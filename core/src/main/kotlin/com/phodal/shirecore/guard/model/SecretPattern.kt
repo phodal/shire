@@ -7,19 +7,19 @@ import org.joni.Regex;
 
 @Serializable
 data class SecretPatterns(
-    val patterns: List<SecretPatternItem>
+    val patterns: List<SecretPatternItem>,
 )
 
 @Serializable
 data class SecretPatternItem(
-    val pattern: SecretPatternDetail
+    val pattern: SecretPatternDetail,
 )
 
 @Serializable
 class SecretPatternDetail(
     val name: String,
     val regex: String,
-    val confidence: String
+    val confidence: String,
 ) {
 //    @Contextual
 //    private val regexPattern: Regex? = try {
