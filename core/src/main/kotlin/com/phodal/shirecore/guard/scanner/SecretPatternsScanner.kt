@@ -13,7 +13,7 @@ import com.phodal.shirecore.guard.model.SecretPatterns
 import java.net.URL
 
 @Service(Service.Level.PROJECT)
-class SecretPatternsScanner(val project: Project): LocalScanner {
+class SecretPatternsScanner(val project: Project) : LocalScanner {
     private val defaultPiiSecrets = "/secrets/default.shireSecretPattern.yml"
     private var patterns: List<SecretPattern>
 
@@ -36,26 +36,20 @@ class SecretPatternsScanner(val project: Project): LocalScanner {
     }
 
     private fun loadFromProject(project: Project): List<SecretPattern> {
-        val configFiles =
-            FilenameIndex.getAllFilesByExt(project, SECRET_PATTERN_EXTENSION)
-
-        if (configFiles.isEmpty()) return emptyList()
-
-        val patterns = configFiles.map {
-            val content = it.inputStream.reader().readText()
-            try {
-                Yaml.default.decodeFromString(SecretPatterns.serializer(), content)
-            } catch (e: Exception) {
-                logger<SecretPatternsScanner>().error("Failed to load custom agent configuration", e)
-                null
+        return FilenameIndex.getAllFilesByExt(project, SECRET_PATTERN_EXTENSION)
+            .mapNotNull {
+                val content = it.inputStream.reader().readText()
+                try {
+                    Yaml.default.decodeFromString(SecretPatterns.serializer(), content)
+                } catch (e: Exception) {
+                    logger<SecretPatternsScanner>().error("Failed to load custom agent configuration", e)
+                    null
+                }
+            }.flatMap { secretPatterns ->
+                secretPatterns.patterns.map {
+                    it.pattern
+                }
             }
-        }.filterNotNull().flatMap { secretPatterns ->
-            secretPatterns.patterns.map {
-                it.pattern
-            }
-        }
-
-        return patterns
     }
 
     fun addPattern(pattern: SecretPattern) {
