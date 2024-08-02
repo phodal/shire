@@ -1,6 +1,5 @@
 package com.phodal.shirecore.guard.scanner
 
-import com.charleskorn.kaml.Yaml
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
@@ -10,6 +9,7 @@ import com.phodal.shirecore.guard.base.LocalScanner
 import com.phodal.shirecore.guard.base.ScanResult
 import com.phodal.shirecore.guard.model.SecretPattern
 import com.phodal.shirecore.guard.model.SecretPatterns
+import org.yaml.snakeyaml.Yaml
 import java.net.URL
 
 @Service(Service.Level.PROJECT)
@@ -29,7 +29,7 @@ class SecretPatternsScanner(val project: Project) : LocalScanner {
         val file: URL = javaClass.getResource(defaultPiiSecrets)!!
         val content = file.readText()
 
-        val patterns = Yaml.default.decodeFromString(SecretPatterns.serializer(), content)
+        val patterns = Yaml().loadAs(content, SecretPatterns::class.java)
         return patterns.patterns.map {
             it.pattern
         }
@@ -40,7 +40,8 @@ class SecretPatternsScanner(val project: Project) : LocalScanner {
             .mapNotNull {
                 val content = it.inputStream.reader().readText()
                 try {
-                    Yaml.default.decodeFromString(SecretPatterns.serializer(), content)
+                    val loadAs: SecretPatterns = Yaml().loadAs(content, SecretPatterns::class.java)
+                    loadAs
                 } catch (e: Exception) {
                     logger<SecretPatternsScanner>().error("Failed to load custom agent configuration", e)
                     null

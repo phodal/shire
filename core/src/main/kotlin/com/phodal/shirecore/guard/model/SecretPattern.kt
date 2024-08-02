@@ -1,28 +1,30 @@
 package com.phodal.shirecore.guard.model
 
 import com.intellij.openapi.diagnostic.logger
-import kotlinx.serialization.Contextual
-import kotlinx.serialization.Serializable
+import java.util.regex.Matcher
 
-@Serializable
-class SecretPattern(
-    val name: String,
-    val regex: String,
-    val confidence: String,
+data class SecretPattern(
+    var name: String = "",
+    var regex: String = "",
+    var confidence: String = "",
 ) {
-    @Contextual
-    private val regexPattern: Regex? = try {
-        Regex(regex)
-    } catch (e: Exception) {
-        logger<SecretPattern>().error("Invalid regex pattern: $regex, name: $name")
-        null
-    }
+    private val regexPattern: Regex?
+        get() = try {
+            Regex(regex)
+        } catch (e: Exception) {
+            logger<SecretPattern>().error("Invalid regex pattern: $regex, name: $name")
+            null
+        }
 
     fun matches(text: String): Boolean {
         return regexPattern?.containsMatchIn(text) ?: false
     }
 
     fun mask(text: String): String {
+        if (regexPattern?.pattern.isNullOrBlank()) {
+            return text
+        }
+
         return regexPattern?.replace(text, "****") ?: text
     }
 }

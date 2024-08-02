@@ -1,21 +1,16 @@
 package com.phodal.shirecore.guard.model
 
-import kotlinx.serialization.Serializable
-
-@Serializable
 data class SecretPatterns(
-    val patterns: List<SecretPatternItem>,
-    val keywords: List<String> = emptyList(),
-    val models: List<Model> = emptyList()
+    var patterns: List<SecretPatternItem> = emptyList(),
+    var keywords: List<String> = emptyList(),
+    var models: List<Model> = emptyList(),
 )
 
-@Serializable
 data class SecretPatternItem(
-    val pattern: SecretPattern,
+    var pattern: SecretPattern = SecretPattern(),
 )
 
-@Serializable
 data class Model(
-    val name: String,
-    val location: String
+    var name: String = "",
+    var location: String = "",
 )
