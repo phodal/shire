@@ -4,7 +4,7 @@ import com.charleskorn.kaml.Yaml
 import java.net.URL
 
 class SecretPatternsManager {
-    private val defaultPiiSecrets = "/secrets/shireSecretsPattern.default.yml"
+    private val defaultPiiSecrets = "/secrets/default.shireSecretPattern.yml"
     private var patterns: List<SecretPatternDetail> = initPatterns()
 
     private fun initPatterns(): List<SecretPatternDetail> {

@@ -6,6 +6,6 @@ import com.jetbrains.jsonSchema.extension.JsonSchemaProviderFactory
 
 class ShireCustomAgentSchemaProviderFactory : JsonSchemaProviderFactory  {
     override fun getProviders(project: Project): MutableList<JsonSchemaFileProvider> {
-        return mutableListOf(CustomAgentSchemaFileProvider(project))
+        return mutableListOf(SecretPatternSchemaFileProvider(project))
     }
 }
