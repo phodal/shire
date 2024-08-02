@@ -3,7 +3,6 @@ package com.phodal.shirecore.guard.model
 import com.intellij.openapi.diagnostic.logger
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
-import org.joni.Regex;
 
 @Serializable
 data class SecretPatterns(
@@ -27,5 +26,13 @@ class SecretPatternDetail(
     } catch (e: Exception) {
         logger<SecretPatternDetail>().error("Invalid regex pattern: $regex, name: $name")
         null
+    }
+
+    fun matches(text: String): Boolean {
+        return regexPattern?.containsMatchIn(text) ?: false
+    }
+
+    fun mask(text: String): String {
+        return regexPattern?.replace(text, "****") ?: text
     }
 }
