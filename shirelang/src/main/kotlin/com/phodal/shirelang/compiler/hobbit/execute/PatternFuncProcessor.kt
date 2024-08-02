@@ -213,7 +213,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             }
 
             is PatternActionFunc.Redact -> {
-                RedactProcessor.redact(lastResult)
+                RedactProcessor.redact(myProject, lastResult)
             }
         }
     }
