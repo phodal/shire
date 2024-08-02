@@ -1,6 +1,25 @@
-# [](https://github.com/phodal/shire/compare/v0.4.7...v) (2024-07-31)
+# [](https://github.com/phodal/shire/compare/v0.4.8...v) (2024-08-02)
 
 ## [Unreleased]
+
+## [0.4.8](https://github.com/phodal/shire/compare/v0.4.7...v[0.4.8]) (2024-08-02)
+
+### Bug Fixes
+
+- **guard:** improve regex pattern validation and update UK phone pattern [#47](https://github.com/phodal/shire/issues/47) ([bcc7e16](https://github.com/phodal/shire/commit/bcc7e162ad328445c707d4df8a0041ac23d391ad))
+
+### Features
+
+- **core:** add GuardScanner interface and ScanResult data class [#47](https://github.com/phodal/shire/issues/47) ([b32b7d8](https://github.com/phodal/shire/commit/b32b7d8e53dd52129ea2a2280fe4682bba3591b8))
+- **guard:** add matching and masking functions, remove Joni dependency [#47](https://github.com/phodal/shire/issues/47) ([6a12233](https://github.com/phodal/shire/commit/6a12233170625ed147694167b8c71690649f0266))
+- **scanner:** refactor scanner classes and update documentation [#47](https://github.com/phodal/shire/issues/47) ([a223428](https://github.com/phodal/shire/commit/a223428131c757fdf1bf2cde8a0877895020d13c))
+- **schema-provider:** add CustomAgentSchemaFileProvider to factory list [#47](https://github.com/phodal/shire/issues/47) ([c8999e5](https://github.com/phodal/shire/commit/c8999e59d6ea9fac58a59e2864680d89ec163253))
+- **search:** add dimensions parameter to embedInternal function ([494a8b5](https://github.com/phodal/shire/commit/494a8b56f27d8e0f90338457e3276321fac724dc))
+- **secrets-detection:** rename secretType to description and add LocalModelBasedScanner [#47](https://github.com/phodal/shire/issues/47) ([091bacd](https://github.com/phodal/shire/commit/091bacdaea7fe70542b1016840670998e2649d38))
+- **secrets-guard:** implement regex-based secret detection [#47](https://github.com/phodal/shire/issues/47) ([1eb2517](https://github.com/phodal/shire/commit/1eb2517e69f2b46066d41e13fc07539eb021ddb2))
+- **secrets:** implement regex patterns for PII detection ([a718ac7](https://github.com/phodal/shire/commit/a718ac7c248c7de043f7c2b7c641ed162b7bd7a4))
+- **security:** implement BanKeywordsScanner and Replacer interface [#47](https://github.com/phodal/shire/issues/47) ([47f2b69](https://github.com/phodal/shire/commit/47f2b697b857c39d76d85f1338b7128288fb4b99))
+- **shirelang:** implement redact function for data masking [#47](https://github.com/phodal/shire/issues/47) ([ed28585](https://github.com/phodal/shire/commit/ed285856f36e443687fc8bc75f3a70084d75723f))
 
 ## [0.4.7](https://github.com/phodal/shire/compare/v0.4.6...v[0.4.7]) (2024-07-30)
 
@@ -395,7 +414,8 @@
 - **shell:** add shell language support plugin file ([bdc1c90](https://github.com/phodal/shire/commit/bdc1c90f10d7c2c4fb8f7157db343dd756c11352))
 - **shire:** add Shire context action group and location support ([e3df86d](https://github.com/phodal/shire/commit/e3df86d16d0c9985fec787a8e76ce553be9a9a45))
 
-[Unreleased]: https://github.com/phodal/shire/compare/v0.4.7...HEAD
+[Unreleased]: https://github.com/phodal/shire/compare/v0.4.8...HEAD
+[0.4.8]: https://github.com/phodal/shire/compare/v0.4.7...v0.4.8
 [0.4.7]: https://github.com/phodal/shire/compare/v0.4.6...v0.4.7
 [0.4.6]: https://github.com/phodal/shire/compare/v0.4.5...v0.4.6
 [0.4.5]: https://github.com/phodal/shire/compare/v0.4.3...v0.4.5
