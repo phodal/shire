@@ -2,19 +2,23 @@ package com.phodal.shirecore.guard.scanner
 
 import com.charleskorn.kaml.Yaml
 import com.intellij.openapi.components.Service
+import com.intellij.openapi.diagnostic.logger
+import com.intellij.openapi.project.Project
+import com.intellij.psi.search.FilenameIndex
+import com.phodal.shirecore.agent.schema.SECRET_PATTERN_EXTENSION
 import com.phodal.shirecore.guard.base.LocalScanner
 import com.phodal.shirecore.guard.base.ScanResult
 import com.phodal.shirecore.guard.model.SecretPattern
 import com.phodal.shirecore.guard.model.SecretPatterns
 import java.net.URL
 
-@Service(Service.Level.APP)
-class SecretPatternsScanner: LocalScanner {
+@Service(Service.Level.PROJECT)
+class SecretPatternsScanner(val project: Project): LocalScanner {
     private val defaultPiiSecrets = "/secrets/default.shireSecretPattern.yml"
     private var patterns: List<SecretPattern>
 
     init {
-        patterns = initPatterns()
+        patterns = initPatterns() + loadFromProject(project)
     }
 
     fun getPatterns(): List<SecretPattern> {
@@ -29,6 +33,29 @@ class SecretPatternsScanner: LocalScanner {
         return patterns.patterns.map {
             it.pattern
         }
+    }
+
+    private fun loadFromProject(project: Project): List<SecretPattern> {
+        val configFiles =
+            FilenameIndex.getAllFilesByExt(project, SECRET_PATTERN_EXTENSION)
+
+        if (configFiles.isEmpty()) return emptyList()
+
+        val patterns = configFiles.map {
+            val content = it.inputStream.reader().readText()
+            try {
+                Yaml.default.decodeFromString(SecretPatterns.serializer(), content)
+            } catch (e: Exception) {
+                logger<SecretPatternsScanner>().error("Failed to load custom agent configuration", e)
+                null
+            }
+        }.filterNotNull().flatMap { secretPatterns ->
+            secretPatterns.patterns.map {
+                it.pattern
+            }
+        }
+
+        return patterns
     }
 
     fun addPattern(pattern: SecretPattern) {

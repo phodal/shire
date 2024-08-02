@@ -9,11 +9,11 @@ import com.phodal.shirecore.ShireCoreBundle
 import org.jetbrains.annotations.NonNls
 
 @NonNls
-internal const val SecretPatternExtension = "shireSecretPattern.yml"
+internal const val SECRET_PATTERN_EXTENSION = "shireSecretPattern.yml"
 
 class SecretPatternSchemaFileProvider(project: Project) : JsonSchemaFileProvider {
     @NonNls
-    private val DOT_EXTENSION = ".$SecretPatternExtension"
+    private val DOT_EXTENSION = ".$SECRET_PATTERN_EXTENSION"
 
     @NonNls
     private val SCHEMA = "/schemas/shireSecretPattern.schema.json"
