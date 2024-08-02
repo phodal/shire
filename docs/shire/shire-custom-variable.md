@@ -113,6 +113,7 @@ variables:
 | embedding | 嵌入文本        | `entries`: 要嵌入的文本条目                                                | `embedding("entry1", "entry2")`             |
 | searching | 搜索文本        | `text`: 要搜索的文本                                                     | `searching("pattern")`                      |
 | caching   | 缓存语义        | `text`: 要缓存的文本                                                     | `caching("data")`                           |
+| redact    | 屏蔽敏感数据      |                                                                    | `redact()`                                  |
 
 ```kotlin
 sealed class PatternActionFunc(open val funcName: String) {
