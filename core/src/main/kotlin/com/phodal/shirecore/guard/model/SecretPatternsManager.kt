@@ -1,16 +1,15 @@
 package com.phodal.shirecore.guard.model
 
 import com.charleskorn.kaml.Yaml
-import com.intellij.openapi.vfs.VfsUtil
-import com.intellij.openapi.vfs.VirtualFile
+import java.net.URL
 
 class SecretPatternsManager {
     private val defaultPiiSecrets = "/secrets/pii-stable.yml"
     private var patterns: List<SecretPatternDetail> = initPatterns()
 
     private fun initPatterns(): List<SecretPatternDetail> {
-        val file: VirtualFile = VfsUtil.findFileByURL(javaClass.getResource(defaultPiiSecrets)!!)!!
-        val content = file.inputStream.reader().readText()
+        val file: URL = javaClass.getResource(defaultPiiSecrets)!!
+        val content = file.readText()
 
         val patterns = Yaml.default.decodeFromString(SecretPatterns.serializer(), content)
         return patterns.patterns.map {
@@ -32,7 +31,7 @@ class SecretPatternsManager {
 
     fun evaluateSecrets(text: String): List<SecretPatternDetail> {
         return patterns.filter {
-            text.contains(it.regex.toRegex())
+            text.contains(it.regex)
         }
     }
 }

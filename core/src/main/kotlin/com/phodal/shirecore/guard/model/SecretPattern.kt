@@ -3,6 +3,7 @@ package com.phodal.shirecore.guard.model
 import com.intellij.openapi.diagnostic.logger
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
+import org.joni.Regex;
 
 @Serializable
 data class SecretPatterns(
