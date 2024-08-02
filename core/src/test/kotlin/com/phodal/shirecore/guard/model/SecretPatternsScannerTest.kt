@@ -1,24 +1,25 @@
 package com.phodal.shirecore.guard.model
 
+import com.phodal.shirecore.guard.scanner.SecretPatternsScanner
 import junit.framework.TestCase.*
 import org.junit.Test
 
 /**
  * Unit tests for the SecretPatternsManager class.
  */
-class SecretPatternsManagerTest {
+class SecretPatternsScannerTest {
 
-    private lateinit var secretPatternsManager: SecretPatternsManager
+    private lateinit var secretPatterns: SecretPatternsScanner
 
     @Test
     fun `should add a new pattern to the list of patterns`() {
         // Given
         val newPattern = SecretPattern("Email", "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}", "medium")
-        secretPatternsManager = SecretPatternsManager()
+        secretPatterns = SecretPatternsScanner()
 
         // When
-        secretPatternsManager.addPattern(newPattern)
-        val updatedPatterns = secretPatternsManager.getPatterns()
+        secretPatterns.addPattern(newPattern)
+        val updatedPatterns = secretPatterns.getPatterns()
 
         // Then
         assertTrue(updatedPatterns.contains(newPattern))
@@ -28,11 +29,11 @@ class SecretPatternsManagerTest {
     fun `should remove a pattern from the list of patterns`() {
         // Given
         val patternToRemove = SecretPattern("Credit Card", "[0-9]{4} [0-9]{4} [0-9]{4} [0-9]{4}", "high")
-        secretPatternsManager = SecretPatternsManager()
+        secretPatterns = SecretPatternsScanner()
 
         // When
-        secretPatternsManager.removePattern(patternToRemove)
-        val remainingPatterns = secretPatternsManager.getPatterns()
+        secretPatterns.removePattern(patternToRemove)
+        val remainingPatterns = secretPatterns.getPatterns()
 
         // Then
         assertFalse(remainingPatterns.contains(patternToRemove))
@@ -42,10 +43,10 @@ class SecretPatternsManagerTest {
     fun `should find patterns that match the text`() {
         // Given
         val testText = "My email is example@example.com and my phone number is 123-456-7890."
-        secretPatternsManager = SecretPatternsManager()
+        secretPatterns = SecretPatternsScanner()
 
         // When
-        val output = secretPatternsManager.mask(testText)
+        val output = secretPatterns.mask(testText)
 
         // Then
         assertEquals("My email is **** and my phone number is ****.", output)

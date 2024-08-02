@@ -5,16 +5,6 @@ import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class SecretPatterns(
-    val patterns: List<SecretPatternItem>,
-)
-
-@Serializable
-data class SecretPatternItem(
-    val pattern: SecretPattern,
-)
-
-@Serializable
 class SecretPattern(
     val name: String,
     val regex: String,

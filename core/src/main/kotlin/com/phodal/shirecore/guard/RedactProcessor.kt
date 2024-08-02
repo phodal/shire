@@ -1,11 +1,11 @@
 package com.phodal.shirecore.guard
 
-import com.phodal.shirecore.guard.model.SecretPatternsManager
+import com.phodal.shirecore.guard.scanner.SecretPatternsScanner
 
 object RedactProcessor {
     fun redact(lastResult: Any): Any {
         if (lastResult is String) {
-            return SecretPatternsManager().mask(lastResult)
+            return SecretPatternsScanner().mask(lastResult)
         }
 
         return lastResult

@@ -1,13 +1,15 @@
-package com.phodal.shirecore.guard.model
+package com.phodal.shirecore.guard.scanner
 
 import com.charleskorn.kaml.Yaml
 import com.intellij.openapi.components.Service
-import com.phodal.shirecore.guard.LocalScanner
-import com.phodal.shirecore.guard.ScanResult
+import com.phodal.shirecore.guard.base.LocalScanner
+import com.phodal.shirecore.guard.base.ScanResult
+import com.phodal.shirecore.guard.model.SecretPattern
+import com.phodal.shirecore.guard.model.SecretPatterns
 import java.net.URL
 
 @Service(Service.Level.APP)
-class SecretPatternsManager: LocalScanner {
+class SecretPatternsScanner: LocalScanner {
     private val defaultPiiSecrets = "/secrets/default.shireSecretPattern.yml"
     private var patterns: List<SecretPattern>
 
