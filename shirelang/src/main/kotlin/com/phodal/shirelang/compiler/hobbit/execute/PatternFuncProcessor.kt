@@ -8,7 +8,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.findFile
 import com.intellij.openapi.vfs.readText
 import com.phodal.shirecore.ShirelangNotifications
-import com.phodal.shirecore.guard.GuardingProcessor
+import com.phodal.shirecore.guard.RedactProcessor
 import com.phodal.shirecore.search.function.IndexEntry
 import com.phodal.shirecore.search.function.SemanticService
 import com.phodal.shirelang.actions.ShireRunFileAction
@@ -213,7 +213,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             }
 
             is PatternActionFunc.Redact -> {
-                GuardingProcessor.redact(lastResult)
+                RedactProcessor.redact(lastResult)
             }
         }
     }

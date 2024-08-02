@@ -1,4 +1,6 @@
-package com.phodal.shirecore.guard
+package com.phodal.shirecore.guard.nlp
+
+import com.phodal.shirecore.guard.LocalScanner
 
 /**
  * Use local AI Model to scan the input, Only support for ONNX model + HF Tokenizer
