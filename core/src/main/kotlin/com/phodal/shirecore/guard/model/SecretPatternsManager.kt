@@ -29,9 +29,12 @@ class SecretPatternsManager {
         patterns = patterns - pattern
     }
 
-    fun evaluateSecrets(text: String): List<SecretPatternDetail> {
-        return patterns.filter {
-            text.contains(it.regex)
+    fun mask(text: String): String {
+        var newText = text
+        patterns.forEach {
+            newText = it.mask(newText)
         }
+
+        return newText
     }
 }
