@@ -4,7 +4,7 @@ import com.intellij.openapi.components.Service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.phodal.shirecore.llm.LlmProvider
-import com.phodal.shirecore.search.function.ScoredEntry
+import com.phodal.shirecore.search.function.ScoredText
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.flow.cancellable
 
@@ -53,8 +53,8 @@ fun RERANK_PROMPT(query: String, documentId: String, document: String): String {
 class LLMReranker(val project: Project) : Reranker {
     override val name = "llmReranker"
 
-    private suspend fun scoreChunk(chunk: ScoredEntry, query: String): Double {
-        val prompt = RERANK_PROMPT(query, getBasename(chunk.file), chunk.chunk)
+    private suspend fun scoreChunk(chunk: ScoredText, query: String): Double {
+        val prompt = RERANK_PROMPT(query, getBasename(chunk.file), chunk.text)
 
         val stream = LlmProvider.provider(project)?.stream(prompt, "", false)!!
         var completion: String = ""
@@ -88,9 +88,9 @@ class LLMReranker(val project: Project) : Reranker {
         return file?.path?.substringAfterLast("/") ?: "unknown"
     }
 
-    override suspend fun rerank(query: String, chunks: List<ScoredEntry>): List<ScoredEntry> {
+    override suspend fun rerank(query: String, chunks: List<ScoredText>): List<ScoredText> {
         return chunks.map { chunk ->
-            chunk.copy(score = scoreChunk(chunk, query))
-        }.filter { it.score > 0.5 }
+            chunk.copy(similarity = scoreChunk(chunk, query))
+        }.filter { it.similarity > 0.5 }
     }
 }

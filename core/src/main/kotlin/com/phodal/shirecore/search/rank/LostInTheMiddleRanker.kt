@@ -1,13 +1,13 @@
 package com.phodal.shirecore.search.rank
 
-import com.phodal.shirecore.search.function.ScoredEntry
+import com.phodal.shirecore.search.function.ScoredText
 
 class LostInTheMiddleRanker() : Reranker {
     override val name = "lostInTheMiddleRanker"
 
-    override suspend fun rerank(query: String, chunks: List<ScoredEntry>): List<ScoredEntry> {
-        val sortedChunks = chunks.sortedBy { it.score }
-        val result = mutableListOf<ScoredEntry>()
+    override suspend fun rerank(query: String, chunks: List<ScoredText>): List<ScoredText> {
+        val sortedChunks = chunks.sortedBy { it.similarity }
+        val result = mutableListOf<ScoredText>()
 
         for (i in sortedChunks.indices) {
             if (i % 2 == 0) {
