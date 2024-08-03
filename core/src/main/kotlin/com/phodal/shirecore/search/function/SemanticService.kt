@@ -14,6 +14,7 @@ import com.intellij.openapi.util.io.FileUtilRt
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.toNioPathOrNull
 import com.phodal.shirecore.search.indices.DiskSynchronizedEmbeddingSearchIndex
+import com.phodal.shirecore.search.indices.DiskSynchronizedEmbeddingSearchIndex.IndexEntry
 import com.phodal.shirecore.search.indices.EmbeddingSearchIndex
 import com.phodal.shirecore.search.indices.InMemoryEmbeddingSearchIndex
 import com.phodal.shirecore.search.indices.normalized
@@ -25,6 +26,8 @@ import java.nio.file.Path
 @Service(Service.Level.PROJECT)
 class SemanticService(val project: Project) {
     private var lastQuery: String = ""
+    private var lastSearchChunks: List<ScoredEntry> = emptyList()
+
     private var index: EmbeddingSearchIndex = InMemoryEmbeddingSearchIndex(cacheDir())
     private val logger = Logger.getInstance(SemanticService::class.java)
 
@@ -68,14 +71,23 @@ class SemanticService(val project: Project) {
         return chunks
     }
 
-    suspend fun searching(input: String, threshold: Double = 0.5): List<ScoredText> {
+    suspend fun searching(input: String, threshold: Double = 0.5): List<ScoredEntry> {
         lastQuery = input
         val inputEmbedding = embed(input)
-        return index.findClosest(inputEmbedding, 10).filter { it.similarity > threshold }
+        return index.findClosest(inputEmbedding, 10).filter { it.similarity > threshold }.mapIndexed { index, it ->
+            ScoredEntry(
+                index = index,
+                count = 0,
+                chunk = it.text,
+                file = null,
+                embedding = null,
+                score = it.similarity
+            )
+        }
     }
 
-    suspend fun reranking(type: String): List<ScoredText> {
-        return listOf()
+    suspend fun reranking(type: String): List<ScoredEntry> {
+        return Reranker.create(type, project).rerank(lastQuery, lastSearchChunks)
     }
 
     suspend fun splitting(path: List<VirtualFile>): List<ScoredEntry> =
