@@ -8,6 +8,7 @@ data class IndexEntry(
     var chunk: String,
     val file: VirtualFile? = null,
     var embedding: FloatArray? = null,
+    val score: Double = 0.0
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -23,6 +24,7 @@ data class IndexEntry(
             if (other.embedding == null) return false
             if (!embedding.contentEquals(other.embedding)) return false
         } else if (other.embedding != null) return false
+        if (score != other.score) return false
 
         return true
     }
@@ -33,6 +35,7 @@ data class IndexEntry(
         result = 31 * result + chunk.hashCode()
         result = 31 * result + (file?.hashCode() ?: 0)
         result = 31 * result + (embedding?.contentHashCode() ?: 0)
+        result = 31 * result + score.hashCode()
         return result
     }
 }

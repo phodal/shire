@@ -88,7 +88,9 @@ class LLMReranker(val project: Project) : Reranker {
         return file?.path?.substringAfterLast("/") ?: "unknown"
     }
 
-    override suspend fun rerank(query: String, chunks: List<IndexEntry>): List<Double> {
-        return chunks.map { chunk -> scoreChunk(chunk, query) }
+    override suspend fun rerank(query: String, chunks: List<IndexEntry>): List<IndexEntry> {
+        return chunks.map { chunk ->
+            chunk.copy(score = scoreChunk(chunk, query))
+        }.filter { it.score > 0.5 }
     }
 }
