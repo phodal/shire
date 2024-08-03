@@ -113,13 +113,6 @@ project(":core") {
     }
 
     dependencies {
-        // Java port of Oniguruma regexp library
-        // for Share regex pattern in different languages
-//        implementation("org.jruby.joni:joni:2.2.1")
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
-        implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
-
-
         implementation("com.charleskorn.kaml:kaml:0.61.0")
         implementation("org.reflections:reflections:0.10.2")
 
@@ -130,7 +123,6 @@ project(":core") {
 
         implementation("cc.unitmesh:cocoa-core:1.0.0")
         implementation("cc.unitmesh:document:1.0.0")
-//        implementation("cc.unitmesh:local-embedding:1.0.0")
     }
 }
 
