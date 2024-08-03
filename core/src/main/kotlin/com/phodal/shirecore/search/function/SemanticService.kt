@@ -17,14 +17,15 @@ import com.phodal.shirecore.search.indices.DiskSynchronizedEmbeddingSearchIndex
 import com.phodal.shirecore.search.indices.EmbeddingSearchIndex
 import com.phodal.shirecore.search.indices.InMemoryEmbeddingSearchIndex
 import com.phodal.shirecore.search.indices.normalized
+import com.phodal.shirecore.search.rank.Reranker
 import kotlinx.coroutines.*
 import java.io.File
 import java.nio.file.Path
 
 @Service(Service.Level.PROJECT)
 class SemanticService(val project: Project) {
-    var index: EmbeddingSearchIndex = InMemoryEmbeddingSearchIndex(cacheDir())
-
+    private var lastQuery: String = ""
+    private var index: EmbeddingSearchIndex = InMemoryEmbeddingSearchIndex(cacheDir())
     private val logger = Logger.getInstance(SemanticService::class.java)
 
     suspend fun embedding(): Deferred<LocalEmbedding> = coroutineScope {
@@ -38,9 +39,9 @@ class SemanticService(val project: Project) {
         return embedding.await().embed(chunk).normalized()
     }
 
-    suspend fun embedList(chunk: Array<out String>): List<IndexEntry> {
+    suspend fun embedList(chunk: Array<out String>): List<ScoredEntry> {
         return chunk.mapIndexed { index, text ->
-            IndexEntry(
+            ScoredEntry(
                 index = index,
                 count = text.length,
                 chunk = text,
@@ -50,7 +51,7 @@ class SemanticService(val project: Project) {
         }
     }
 
-    suspend fun embedding(chunks: List<IndexEntry>): List<IndexEntry> {
+    suspend fun embedding(chunks: List<ScoredEntry>): List<ScoredEntry> {
         val ids = chunks.map { it.chunk }
         val embeddings = chunks.mapNotNull { entry ->
             entry.embedding ?: run {
@@ -67,17 +68,17 @@ class SemanticService(val project: Project) {
         return chunks
     }
 
-    suspend fun searching(input: String, threshold: Double = 0.5): List<String> {
+    suspend fun searching(input: String, threshold: Double = 0.5): List<ScoredText> {
+        lastQuery = input
         val inputEmbedding = embed(input)
-
-        return index.findClosest(inputEmbedding, 10)
-            .filter { it.similarity > threshold }
-            .map {
-            "Similarity: ${it.similarity}, Text: ${it.text}"
-        }
+        return index.findClosest(inputEmbedding, 10).filter { it.similarity > threshold }
     }
 
-    suspend fun splitting(path: List<VirtualFile>): List<IndexEntry> =
+    suspend fun reranking(type: String): List<ScoredText> {
+        return listOf()
+    }
+
+    suspend fun splitting(path: List<VirtualFile>): List<ScoredEntry> =
         withContext(Dispatchers.IO) {
             path.map { file ->
                 val inputStream = file.inputStream
@@ -106,7 +107,7 @@ class SemanticService(val project: Project) {
                         return@mapIndexed null
                     }
 
-                    IndexEntry(
+                    ScoredEntry(
                         index = index,
                         count = document.text.length,
                         chunk = document.text,

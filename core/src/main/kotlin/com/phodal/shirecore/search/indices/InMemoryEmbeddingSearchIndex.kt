@@ -3,6 +3,7 @@ package com.phodal.shirecore.search.indices
 
 import com.intellij.concurrency.ConcurrentCollectionFactory
 import com.intellij.util.containers.CollectionFactory
+import com.phodal.shirecore.search.function.ScoredEntry
 import com.phodal.shirecore.search.function.ScoredText
 import java.nio.file.Path
 import java.util.concurrent.locks.ReentrantReadWriteLock

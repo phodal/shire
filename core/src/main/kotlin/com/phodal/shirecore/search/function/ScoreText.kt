@@ -1,3 +1,7 @@
 package com.phodal.shirecore.search.function
 
-data class ScoredText(val text: String, val similarity: Double)
+open class ScoredText(val text: String, val similarity: Double) {
+    override fun toString(): String {
+        return "Similarity: ${similarity}, Text: $text"
+    }
+}

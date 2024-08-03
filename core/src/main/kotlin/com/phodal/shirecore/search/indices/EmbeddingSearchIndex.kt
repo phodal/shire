@@ -1,6 +1,7 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package com.phodal.shirecore.search.indices
 
+import com.phodal.shirecore.search.function.ScoredEntry
 import com.phodal.shirecore.search.function.ScoredText
 import kotlin.collections.asSequence
 import kotlin.math.sqrt

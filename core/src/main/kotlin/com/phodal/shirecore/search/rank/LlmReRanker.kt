@@ -4,7 +4,7 @@ import com.intellij.openapi.components.Service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.phodal.shirecore.llm.LlmProvider
-import com.phodal.shirecore.search.function.IndexEntry
+import com.phodal.shirecore.search.function.ScoredEntry
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.flow.cancellable
 
@@ -53,7 +53,7 @@ fun RERANK_PROMPT(query: String, documentId: String, document: String): String {
 class LLMReranker(val project: Project) : Reranker {
     override val name = "llmReranker"
 
-    private suspend fun scoreChunk(chunk: IndexEntry, query: String): Double {
+    private suspend fun scoreChunk(chunk: ScoredEntry, query: String): Double {
         val prompt = RERANK_PROMPT(query, getBasename(chunk.file), chunk.chunk)
 
         val stream = LlmProvider.provider(project)?.stream(prompt, "", false)!!
@@ -88,7 +88,7 @@ class LLMReranker(val project: Project) : Reranker {
         return file?.path?.substringAfterLast("/") ?: "unknown"
     }
 
-    override suspend fun rerank(query: String, chunks: List<IndexEntry>): List<IndexEntry> {
+    override suspend fun rerank(query: String, chunks: List<ScoredEntry>): List<ScoredEntry> {
         return chunks.map { chunk ->
             chunk.copy(score = scoreChunk(chunk, query))
         }.filter { it.score > 0.5 }

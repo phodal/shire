@@ -593,6 +593,11 @@ object HobbitHoleParser {
                 PatternActionFunc.Searching(args[0], args.getOrNull(1)?.toDouble() ?: 0.5)
             }
 
+            "reranking" -> {
+                val first = args.firstOrNull() ?: "default"
+                PatternActionFunc.Reranking(args[0])
+            }
+
             "caching" -> {
                 PatternActionFunc.Caching(args[0])
             }

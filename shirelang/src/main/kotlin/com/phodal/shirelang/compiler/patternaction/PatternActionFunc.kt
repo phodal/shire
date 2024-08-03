@@ -134,6 +134,11 @@ sealed class PatternActionFunc(open val funcName: String) {
     class Caching(val text: String) : PatternActionFunc("caching")
 
     /**
+     * Reranking the result
+     */
+    class Reranking(val type: String) : PatternActionFunc("reranking")
+
+    /**
      * The Redact class is designed for handling sensitive data by applying a specified redaction strategy.
      *
      * @param strategy The redaction strategy to be used. This string defines how the sensitive data will be handled or obscured.
