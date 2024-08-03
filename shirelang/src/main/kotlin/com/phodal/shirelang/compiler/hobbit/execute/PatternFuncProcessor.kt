@@ -9,7 +9,7 @@ import com.intellij.openapi.vfs.findFile
 import com.intellij.openapi.vfs.readText
 import com.phodal.shirecore.ShirelangNotifications
 import com.phodal.shirecore.guard.RedactProcessor
-import com.phodal.shirecore.search.function.ScoredEntry
+import com.phodal.shirecore.search.function.ScoredText
 import com.phodal.shirecore.search.function.SemanticService
 import com.phodal.shirelang.actions.ShireRunFileAction
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
@@ -187,10 +187,10 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             }
 
             is PatternActionFunc.Embedding -> {
-                var result: List<ScoredEntry> = mutableListOf()
+                var result: List<ScoredText> = mutableListOf()
                 if (lastResult is List<*>) {
-                    if (lastResult.isNotEmpty() && lastResult.first() is ScoredEntry) {
-                        result = semanticService.embedding(lastResult as List<ScoredEntry>)
+                    if (lastResult.isNotEmpty() && lastResult.first() is ScoredText) {
+                        result = semanticService.embedding(lastResult as List<ScoredText>)
                     } else {
                         result = semanticService.embedList(action.entries)
                     }
