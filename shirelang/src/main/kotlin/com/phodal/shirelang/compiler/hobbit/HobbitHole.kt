@@ -19,7 +19,6 @@ import com.phodal.shirelang.compiler.hobbit.base.Smials
 import com.phodal.shirelang.compiler.hobbit.ast.FrontMatterType
 import com.phodal.shirelang.compiler.hobbit.ast.MethodCall
 import com.phodal.shirelang.compiler.hobbit.ast.PatternAction
-import com.phodal.shirelang.compiler.hobbit.ast.RuleBasedPatternAction
 import com.phodal.shirelang.compiler.hobbit.ast.TaskRoutes
 import com.phodal.shirelang.compiler.patternaction.PatternActionTransform
 import com.phodal.shirelang.psi.ShireFile
@@ -128,18 +127,6 @@ open class HobbitHole(
     val when_: FrontMatterType.EXPRESSION? = null,
 
     /**
-     * The list of rule files to apply for the action.
-     *
-     * ```shire
-     * ---
-     * filenameRules:
-     *  "/.*.java/": "You should thinking in best Kotlin way."
-     * ---
-     * ```
-     */
-    val ruleBasedFilter: List<RuleBasedPatternAction> = emptyList(),
-
-    /**
      * This property represents a list of post-middleware actions to be executed after the streaming process ends.
      * It allows for the definition of various operations such as logging, metrics collection, code verification,
      * execution of code, or parsing code, among others.
@@ -246,7 +233,6 @@ open class HobbitHole(
         const val AFTER_STREAMING = "afterStreaming"
         const val ON_STREAMING = "onStreaming"
         private const val DESCRIPTION = "description"
-        private const val FILENAME_RULES = "filenameRules"
         private const val VARIABLES = "variables"
         const val WHEN = "when"
         const val SHORTCUT = "shortcut"
@@ -269,7 +255,6 @@ open class HobbitHole(
                 ACTION_LOCATION to "The location of the action, can [ShireActionLocation]",
                 SHORTCUT to "The shortcut for the action",
 
-                FILENAME_RULES to "Custom prompt based on the file name",
                 STRATEGY_SELECTION to "The strategy to select the element to apply the action",
                 VARIABLES to "The list of variables to apply for the action",
 
@@ -304,10 +289,6 @@ open class HobbitHole(
                 buildStreamingEndProcessors(it)
             } ?: mutableListOf()
 
-            val filenameRules = (frontMatterMap[FILENAME_RULES] as? FrontMatterType.OBJECT)?.let {
-                buildFilenameRules(it.toValue())
-            } ?: mutableListOf()
-
             val variables = (frontMatterMap[VARIABLES] as? FrontMatterType.OBJECT)?.let {
                 buildVariableTransformations(it.toValue())
             } ?: mutableMapOf()
@@ -332,20 +313,10 @@ open class HobbitHole(
                 variables = variables,
                 userData = data,
                 when_ = whenCondition,
-                ruleBasedFilter = filenameRules,
                 onStreamingEnd = endProcessors,
                 afterStreaming = afterStreaming,
                 shortcut = shortcut,
             )
-        }
-
-        private fun buildFilenameRules(obj: Map<String, FrontMatterType>): List<RuleBasedPatternAction> {
-            return obj.mapNotNull { (key, value) ->
-                val text = key.removeSurrounding("\"")
-                PatternAction.from(value)?.let {
-                    RuleBasedPatternAction(text, it.patternFuncs)
-                }
-            }
         }
 
         private fun buildVariableTransformations(variableObject: Map<String, FrontMatterType>): MutableMap<String, PatternActionTransform> {

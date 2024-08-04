@@ -84,30 +84,6 @@ class ShireCompileTest : BasePlatformTestCase() {
         assertTrue(isFrontMatterPresent)
     }
 
-    fun testShouldHandleForObject() {
-        val code = """
-            ---
-            name: Summary
-            description: "Generate Summary"
-            interaction: AppendCursor
-            data: ["a", "b"]
-            filenameRules: 
-              "/**.java/": "You should thinking in best Kotlin way."
-            ---
-            
-            Summary webpage:
-        """.trimIndent()
-
-        val file = myFixture.configureByText("test.shire", code)
-
-        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
-        assertEquals("\n\nSummary webpage:", compile.shireOutput)
-        val filenameRules = compile.config!!.ruleBasedFilter
-
-        assertEquals(1, filenameRules.size)
-        assertEquals("/**.java/", filenameRules[0].pattern)
-    }
-
     fun testShouldHandleForPatternAction() {
         val code = """
             ---

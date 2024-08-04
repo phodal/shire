@@ -11,34 +11,6 @@ import java.util.regex.Pattern
 
 object PatternSearcher {
     private val cache: MutableMap<String, List<VirtualFile>> = mutableMapOf()
-
-    /**
-     * This function is used to find files in a given project that match a list of regular expressions.
-     *
-     * @param project The project in which to search for files. This is an instance of the Project class.
-     * @param regexes A list of regular expressions. The function will return files that match any of these regular expressions.
-     *
-     * The function uses a cache to improve performance. If the result for a particular regular expression is already in the cache,
-     * the function will use the cached result instead of searching the project again.
-     *
-     * @return A map where the keys are the regular expressions and the values are lists of files that match the corresponding regular expression.
-     * If a regular expression does not match any file in the project, the function will return an empty list for that regular expression.
-     */
-    fun findFilesByMultipleRegex(project: Project, regexes: List<String>): Map<String, List<VirtualFile>> {
-        val result: MutableMap<String, List<VirtualFile>> = mutableMapOf()
-
-        for (regex in regexes) {
-            if (cache.containsKey(regex)) {
-                result[regex] = cache[regex]!!
-                continue
-            }
-
-            result[regex] = findFilesByRegex(project, regex)
-        }
-
-        return result
-    }
-
     /**
      * This function is used to find files in a given project that match a specified regular expression.
      *

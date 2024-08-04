@@ -4,8 +4,6 @@ description: "Convert Java to Kotlin file"
 interaction: AppendCursor
 actionLocation: ContextMenu
 onStreamingEnd:  { verifyCode | runCode }
-filenameRules:
-  "/**.java/": "You should thinking in best Kotlin way."
 ---
 
 Convert follow $language code to Kotlin
