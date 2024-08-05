@@ -71,15 +71,15 @@ Sample for #41
 ```shire
 ---
 variables:
-  "changes": {
+  "phodalCommits": {
     from {
-        GitCommit commit, Date date
+        GitCommit commit
     }
     where {
-        commit.authorName == "Phodal" and date.between("2021-01-01", "2021-12-31")
+        commit.authorName == "Phodal Huang"
     }
     select {
-        commit.authorName, commit.authorEmail, commit.commitMessage
+        commit.authorName, commit.authorEmail, commit.message
     }
   }
 ---
