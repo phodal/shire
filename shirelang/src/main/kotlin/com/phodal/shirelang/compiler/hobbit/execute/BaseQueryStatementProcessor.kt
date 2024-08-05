@@ -2,7 +2,9 @@ package com.phodal.shirelang.compiler.hobbit.execute
 
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
+import com.phodal.shirecore.provider.shire.ShireQLDataProvider
 import com.phodal.shirecore.provider.shire.ShireSymbolProvider
+import com.phodal.shirecore.vcs.ShireVcsCommit
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.ast.MethodCall
 import com.phodal.shirelang.compiler.hobbit.ast.Statement
@@ -15,7 +17,17 @@ open class BaseQueryStatementProcessor(override val myProject: Project, hole: Ho
 
     override fun buildVariables(fromStmt: PatternActionFunc.From): Map<String, List<PsiElement>> {
         return fromStmt.variables.associate {
-            it.value to lookupElement(it)
+            when {
+                it.value.startsWith("Psi") -> {
+                    it.value to lookupElement(it)
+                }
+                it.value.startsWith("Git") -> {
+                    it.value to lookupVcsCommit(it)
+                }
+                else -> {
+                    it.value to emptyList()
+                }
+            }
         }
     }
 
@@ -39,6 +51,16 @@ open class BaseQueryStatementProcessor(override val myProject: Project, hole: Ho
 
         cache[it.variableType] = elements
         return elements
+    }
+
+
+    private fun lookupVcsCommit(it: VariableElement): List<PsiElement> {
+        val elements: List<ShireVcsCommit> = ShireQLDataProvider.all().flatMap { provider ->
+            provider.lookup(myProject, it.variableType) ?: emptyList()
+        }
+
+//        return elements
+        return emptyList()
     }
 
     private fun processSelectStatement(statement: Statement, handledElements: List<PsiElement>): List<String> {

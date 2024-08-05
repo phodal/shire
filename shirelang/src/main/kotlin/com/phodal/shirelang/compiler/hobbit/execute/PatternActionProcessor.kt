@@ -2,6 +2,7 @@ package com.phodal.shirelang.compiler.hobbit.execute
 
 import com.intellij.openapi.project.Project
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
+import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 import com.phodal.shirelang.compiler.patternaction.PatternActionTransform
 
 
@@ -21,7 +22,14 @@ PatternFuncProcessor(myProject, hole) {
 
         if (actionTransform.isQueryStatement) {
             // Maybe Toolchain QueryStatement
-            // val fromStmt = transform.patternActionFuncs.find { it is PatternActionFunc.From } as PatternActionFunc.From
+            // TODO: handle by variable types?
+//            val from = actionTransform.patternActionFuncs.find { it is PatternActionFunc.From } as PatternActionFunc.From
+//            from.variables.forEach {
+//                if (it.variableType.contains("Commit")) {
+//                    return VcsStatementProcessor(myProject, hole).variables(from).toString()
+//                }
+//            }
+
             return PsiQueryStatementProcessor(myProject, hole).execute(actionTransform)
         }
 
