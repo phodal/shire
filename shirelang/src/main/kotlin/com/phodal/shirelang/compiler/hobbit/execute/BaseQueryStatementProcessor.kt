@@ -25,7 +25,7 @@ open class BaseQueryStatementProcessor(override val myProject: Project, hole: Ho
                     it.value to lookupVcsCommit(it)
                 }
                 else -> {
-                    it.value to emptyList()
+                    it.value to lookupElement(it)
                 }
             }
         }
