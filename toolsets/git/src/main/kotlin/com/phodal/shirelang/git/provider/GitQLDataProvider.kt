@@ -1,11 +1,9 @@
 package com.phodal.shirelang.git.provider
 
-import com.intellij.ide.DataManager
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator
-import com.intellij.openapi.progress.runBlockingCancellable
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.ShireCoreBundle
 import com.phodal.shirecore.provider.shire.ShireQLDataProvider
@@ -16,6 +14,7 @@ import git4idea.GitCommit
 import git4idea.history.GitHistoryUtils
 import git4idea.repo.GitRepositoryManager
 import kotlinx.coroutines.future.await
+import kotlinx.coroutines.runBlocking
 import java.util.concurrent.CompletableFuture
 
 class GitQLDataProvider : ShireQLDataProvider {
@@ -65,7 +64,7 @@ class GitQLDataProvider : ShireQLDataProvider {
             .runProcessWithProgressAsynchronously(task, BackgroundableProcessIndicator(task))
 
         val results: MutableList<ShireVcsCommit> = mutableListOf()
-        runBlockingCancellable {
+        runBlocking {
             future.await().forEach {
                 val commit = ShireVcsCommit(
                     it.id.asString(),

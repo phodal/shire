@@ -1,4 +1,9 @@
 <idea-plugin package="com.phodal.shirelang.git">
+    <!--suppress PluginXmlValidity -->
+    <dependencies>
+        <plugin id="Git4Idea"/>
+    </dependencies>
+
     <extensions defaultExtensionNs="com.phodal">
         <shireRevisionProvider implementation="com.phodal.shirelang.git.provider.GitRevisionProvider"/>
 
