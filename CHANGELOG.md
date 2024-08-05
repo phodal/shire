@@ -1,6 +1,25 @@
-# [](https://github.com/phodal/shire/compare/v0.4.8...v) (2024-08-02)
+# [](https://github.com/phodal/shire/compare/v0.5.0...v) (2024-08-05)
 
 ## [Unreleased]
+
+## [0.5.0](https://github.com/phodal/shire/compare/v0.4.8...v[0.5.0]) (2024-08-05)
+
+### Bug Fixes
+
+- add lost files ([e6f524d](https://github.com/phodal/shire/commit/e6f524dbf661b128270591bf92fe6a24795a9ae6))
+
+### Features
+
+- **compiler:** enhance query processor to lookup elements [#41](https://github.com/phodal/shire/issues/41) ([dbcdc6b](https://github.com/phodal/shire/commit/dbcdc6b89a8ab913245b2eed8858197c447bd96b))
+- **git-plugin:** add Git4Idea plugin dependency [#41](https://github.com/phodal/shire/issues/41) ([f59cc83](https://github.com/phodal/shire/commit/f59cc83a6cb449f7de4f70d8e5cbe01a2064299e))
+- **search:** add LLM reranker and reranker interface [#46](https://github.com/phodal/shire/issues/46) ([6a7b599](https://github.com/phodal/shire/commit/6a7b599be6ed44ac3e540865d3af6d995bebcf1d))
+- **search:** add new ranking algorithm and update reranking methods [#46](https://github.com/phodal/shire/issues/46) ([b0b92b5](https://github.com/phodal/shire/commit/b0b92b555118543f5a10bd7187788b0db6e4de5a))
+- **search:** enhance search functionality in SemanticService [#46](https://github.com/phodal/shire/issues/46) ([995331c](https://github.com/phodal/shire/commit/995331c76efafc9bf1deb5224c61044951a576c6))
+- **search:** replace IndexEntry with ScoredEntry and add reranking functionality [#46](https://github.com/phodal/shire/issues/46) ([6a84387](https://github.com/phodal/shire/commit/6a843872b0e185028ae7f92f5aa0226efd3bd92b))
+
+### Reverts
+
+- Revert "refactor(core): update SecretPattern and SecretPatterns classes #47" ([1e1d556](https://github.com/phodal/shire/commit/1e1d5560303bd59dae2b73567c03b853041c33a7)), closes [#47](https://github.com/phodal/shire/issues/47)
 
 ## [0.4.8](https://github.com/phodal/shire/compare/v0.4.7...v[0.4.8]) (2024-08-02)
 
@@ -414,7 +433,8 @@
 - **shell:** add shell language support plugin file ([bdc1c90](https://github.com/phodal/shire/commit/bdc1c90f10d7c2c4fb8f7157db343dd756c11352))
 - **shire:** add Shire context action group and location support ([e3df86d](https://github.com/phodal/shire/commit/e3df86d16d0c9985fec787a8e76ce553be9a9a45))
 
-[Unreleased]: https://github.com/phodal/shire/compare/v0.4.8...HEAD
+[Unreleased]: https://github.com/phodal/shire/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/phodal/shire/compare/v0.4.8...v0.5.0
 [0.4.8]: https://github.com/phodal/shire/compare/v0.4.7...v0.4.8
 [0.4.7]: https://github.com/phodal/shire/compare/v0.4.6...v0.4.7
 [0.4.6]: https://github.com/phodal/shire/compare/v0.4.5...v0.4.6
