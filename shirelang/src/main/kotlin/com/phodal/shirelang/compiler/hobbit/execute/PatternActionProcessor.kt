@@ -21,15 +21,6 @@ PatternFuncProcessor(myProject, hole) {
         }
 
         if (actionTransform.isQueryStatement) {
-            // Maybe Toolchain QueryStatement
-            // TODO: handle by variable types?
-//            val from = actionTransform.patternActionFuncs.find { it is PatternActionFunc.From } as PatternActionFunc.From
-//            from.variables.forEach {
-//                if (it.variableType.contains("Commit")) {
-//                    return VcsStatementProcessor(myProject, hole).variables(from).toString()
-//                }
-//            }
-
             return PsiQueryStatementProcessor(myProject, hole).execute(actionTransform)
         }
 

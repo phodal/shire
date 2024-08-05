@@ -16,7 +16,15 @@ interface ShireQLDataProvider {
     fun lookupGitData(myProject: Project, dataTypes: List<ShireQLDataType>): Map<ShireQLDataType, List<GitEntity>?>
 
     fun lookup(myProject: Project, variableType: String): List<ShireVcsCommit>? {
-        return null
+        return when (variableType) {
+            ShireQLDataType.GIT_COMMIT.dataKey -> {
+                lookupGitData(myProject, listOf(ShireQLDataType.GIT_COMMIT))[ShireQLDataType.GIT_COMMIT] as List<ShireVcsCommit>?
+            }
+
+            else -> {
+                null
+            }
+        }
     }
 
     companion object {

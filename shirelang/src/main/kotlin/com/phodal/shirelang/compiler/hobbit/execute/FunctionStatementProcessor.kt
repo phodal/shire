@@ -37,18 +37,18 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
             transform.patternActionFuncs.find { it is PatternActionFunc.Select } as PatternActionFunc.Select
         val whereStmt = transform.patternActionFuncs.find { it is PatternActionFunc.Where } as PatternActionFunc.Where
 
-        val variableElementsMap: Map<String, List<PsiElement>> = runReadAction { buildVariables(fromStmt) }
+        val variableElementsMap: Map<String, List<Any>> = runReadAction { buildVariables(fromStmt) }
         val handledElements = processStatement(whereStmt.statement, variableElementsMap)
         val selectElements = processSelect(selectStmt, handledElements)
 
         return selectElements.joinToString("\n")
     }
 
-    open fun processSelect(selectStmt: PatternActionFunc.Select, handledElements: List<PsiElement>): List<String> {
+    open fun processSelect(selectStmt: PatternActionFunc.Select, handledElements: List<Any>): List<String> {
         return emptyList()
     }
 
-    open fun buildVariables(fromStmt: PatternActionFunc.From): Map<String, List<PsiElement>> {
+    open fun buildVariables(fromStmt: PatternActionFunc.From): Map<String, List<Any>> {
         return emptyMap()
     }
 

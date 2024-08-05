@@ -15,13 +15,13 @@ import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 open class BaseQueryStatementProcessor(override val myProject: Project, hole: HobbitHole) :
     FunctionStatementProcessor(myProject, hole) {
 
-    override fun buildVariables(fromStmt: PatternActionFunc.From): Map<String, List<PsiElement>> {
+    override fun buildVariables(fromStmt: PatternActionFunc.From): Map<String, List<Any>> {
         return fromStmt.variables.associate {
             when {
-                it.value.startsWith("Psi") -> {
+                it.variableType.startsWith("Psi") -> {
                     it.value to lookupElement(it)
                 }
-                it.value.startsWith("Git") -> {
+                it.variableType.startsWith("Git") -> {
                     it.value to lookupVcsCommit(it)
                 }
                 else -> {
@@ -31,7 +31,7 @@ open class BaseQueryStatementProcessor(override val myProject: Project, hole: Ho
         }
     }
 
-    override fun processSelect(selectStmt: PatternActionFunc.Select, handledElements: List<PsiElement>): List<String> {
+    override fun processSelect(selectStmt: PatternActionFunc.Select, handledElements: List<Any>): List<String> {
         return selectStmt.statements.flatMap {
             processSelectStatement(it, handledElements)
         }
@@ -54,26 +54,43 @@ open class BaseQueryStatementProcessor(override val myProject: Project, hole: Ho
     }
 
 
-    private fun lookupVcsCommit(it: VariableElement): List<PsiElement> {
+    private fun lookupVcsCommit(it: VariableElement): List<ShireVcsCommit> {
         val elements: List<ShireVcsCommit> = ShireQLDataProvider.all().flatMap { provider ->
             provider.lookup(myProject, it.variableType) ?: emptyList()
         }
 
-//        return elements
-        return emptyList()
+        return elements
     }
 
-    private fun processSelectStatement(statement: Statement, handledElements: List<PsiElement>): List<String> {
+    private fun processSelectStatement(statement: Statement, handledElements: List<Any>): List<String> {
         val result = mutableListOf<String>()
         handledElements.forEach { element ->
-            when (statement) {
-                is Value -> {
-                    result.add(statement.display())
+            when (element) {
+                is PsiElement -> {
+                    when (statement) {
+                        is Value -> {
+                            result.add(statement.display())
+                        }
+
+                        is MethodCall -> {
+                            invokeMethodOrField(statement, element)?.let {
+                                result.add(it.toString())
+                            }
+                        }
+                    }
                 }
 
-                is MethodCall -> {
-                    invokeMethodOrField(statement, element)?.let {
-                        result.add(it.toString())
+                is ShireVcsCommit -> {
+                    when (statement) {
+                        is Value -> {
+                            result.add(statement.display())
+                        }
+
+                        is MethodCall -> {
+                            invokeMethodOrField(statement, element)?.let {
+                                result.add(it.toString())
+                            }
+                        }
                     }
                 }
             }
