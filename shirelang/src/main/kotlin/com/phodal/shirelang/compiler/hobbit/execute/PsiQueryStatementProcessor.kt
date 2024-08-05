@@ -11,7 +11,7 @@ import java.lang.reflect.Method
 import java.util.*
 
 class PsiQueryStatementProcessor(override val myProject: Project, hole: HobbitHole) :
-    QueryStatementProcessor(myProject, hole) {
+    BaseQueryStatementProcessor(myProject, hole) {
 
     override fun <T : Any> invokeMethodOrField(methodCall: MethodCall, element: T): Any? {
         val methodName = methodCall.methodName.display()

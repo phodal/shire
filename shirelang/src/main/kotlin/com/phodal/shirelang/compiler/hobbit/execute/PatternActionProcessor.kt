@@ -21,6 +21,7 @@ PatternFuncProcessor(myProject, hole) {
 
         if (actionTransform.isQueryStatement) {
             // Maybe Toolchain QueryStatement
+            // val fromStmt = transform.patternActionFuncs.find { it is PatternActionFunc.From } as PatternActionFunc.From
             return PsiQueryStatementProcessor(myProject, hole).execute(actionTransform)
         }
 

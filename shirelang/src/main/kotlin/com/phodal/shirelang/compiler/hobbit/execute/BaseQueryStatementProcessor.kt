@@ -10,7 +10,7 @@ import com.phodal.shirelang.compiler.hobbit.ast.Value
 import com.phodal.shirelang.compiler.hobbit.ast.VariableElement
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 
-open class QueryStatementProcessor(override val myProject: Project, hole: HobbitHole) :
+open class BaseQueryStatementProcessor(override val myProject: Project, hole: HobbitHole) :
     FunctionStatementProcessor(myProject, hole) {
 
     override fun buildVariables(fromStmt: PatternActionFunc.From): Map<String, List<PsiElement>> {
