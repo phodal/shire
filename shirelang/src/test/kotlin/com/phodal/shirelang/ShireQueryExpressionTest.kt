@@ -22,7 +22,6 @@ class ShireQueryExpressionTest : BasePlatformTestCase() {
                 where {
                     clazz.text == "HelloWorld.txt"
                 }
-            
                 select {
                     clazz.toString(), "code"
                 }
@@ -43,7 +42,6 @@ class ShireQueryExpressionTest : BasePlatformTestCase() {
         val patternActionFuncs = hole.variables.first().value.patternActionFuncs
         val whereDisplay = (patternActionFuncs[1] as PatternActionFunc.Where).statement.display()
         val selectDisplay = (patternActionFuncs[2] as PatternActionFunc.Select).statements.map { it.display() }
-
 
         assertEquals(whereDisplay, "clazz.text == \"HelloWorld.txt\"")
         assertEquals(selectDisplay, listOf("clazz.toString", "\"code\""))

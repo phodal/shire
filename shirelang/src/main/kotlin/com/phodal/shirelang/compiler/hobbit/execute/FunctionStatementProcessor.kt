@@ -239,6 +239,7 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
     private fun processStatement(
         statement: Statement,
         variableElementsMap: Map<String, List<Any>>,
+        /// todo: change to Mutable<Element, MutableMap<FrontMatterType, Any?>> for save value for project
         typeValued: MutableMap<FrontMatterType, Any?>,
     ): List<Any> {
         val result = mutableListOf<Any>()
@@ -250,8 +251,10 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
                         val operator = statement.operator
                         /// for commit.authorDate <= date.now()
                         /// if we use element (Date) for commit.authorDate, will be null, should use element (ShireGitCommit)
-                        val left = typeValued[statement.left]
-                        val right = typeValued[statement.right]
+//                        val left = typeValued[statement.left]
+//                        val right = typeValued[statement.right]
+                        val left = evaluate(statement.left, element)
+                        val right = evaluate(statement.right, element)
 
                         if (left == null) {
                             logger<FunctionStatementProcessor>().warn("left is null: ${statement.left.display()}")
