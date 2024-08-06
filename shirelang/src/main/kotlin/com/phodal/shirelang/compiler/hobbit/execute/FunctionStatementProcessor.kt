@@ -320,9 +320,13 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
                             }
                         }
                     }
+//
+//                    is LogicalExpression -> {
+//                        processLogic(statement, variableElementsMap, result)
+//                    }
 
                     else -> {
-                        logger<FunctionStatementProcessor>().warn("unknown statement: $statement")
+                        logger<FunctionStatementProcessor>().warn("unknown statement: ${statement.display()}")
                     }
                 }
             }
@@ -330,6 +334,7 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
 
         return result
     }
+
 
     fun <T : Any> evaluate(type: FrontMatterType, element: T): Any? {
         return when (type) {
