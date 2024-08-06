@@ -5,9 +5,7 @@ nav_order: 1
 parent: Data Privacy
 ---
 
-使用 Pipeline 函数保护数据
-
-### Sed
+### 使用 Sed 函数保护数据
 
 Basic Sed Example
 
@@ -32,28 +30,15 @@ variables:
 Summary webpage: $var2
 ```
 
-### Pattern Sample
+## 相关资源
 
-- OpenAI: `(?i)\b(sk-[a-zA-Z0-9]{20}T3BlbkFJ[a-zA-Z0-9]{20})(?:['|\"|\n|\r|\s|\x60|;]|$)`
-- GitHub: `ghp_[0-9a-zA-Z]{36}`
+### [Secrets Patterns DB](https://github.com/mazen160/secrets-patterns-db)
 
-Normal: https://github.com/mazen160/secrets-patterns-db/blob/master/datasets/git-leaks.yaml
+Secrets Patterns DB 包含了用于检测秘密、API 密钥、密码、令牌等的正则表达式模式的最大开源数据库。
 
-```yaml
-patterns:
-  - pattern:
-      name: Env Var
-      regex: "(?i)(apikey|secret|key|api|password|pass|pw|host)=[0-9a-zA-Z-_.{}]{4,120}"
-      confidence: high
-  - pattern:
-      name: Generic Credential
-      regex: "(?i)(dbpasswd|dbuser|dbname|dbhost|api_key|apikey|secret|key|api|password|user|guid|hostname|pw|auth)(.{0,20})?['|\"]([0-9a-zA-Z-_\\/+!{}/=]{4,120})['|\"]"
-      confidence: high
-```
+示例：[db/pii-stable.yml](https://github.com/mazen160/secrets-patterns-db/blob/master/db/pii-stable.yml)
 
-### PII Sample
-
-[db/pii-stable.yml](https://github.com/mazen160/secrets-patterns-db/blob/master/db/pii-stable.yml)
+部分内容如下：
 
 ```yaml
 patterns:
@@ -74,10 +59,4 @@ patterns:
       regex: ([a-z0-9!#$%&'*+\/=?^_`{|.}~-]+@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)
       confidence: high
 ```
-
-### Resources
-
-[Secrets Patterns Database](https://github.com/mazen160/secrets-patterns-db) The largest open-source database for
-detecting secrets, API keys, passwords, tokens, and more. Use secrets-patterns-db to feed your secret scanning engine
-with regex patterns for identifying secrets.
 

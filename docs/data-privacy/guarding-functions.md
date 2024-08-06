@@ -10,7 +10,7 @@ parent: Data Privacy
 - NER 命名实体识别 (Named-entity recognition) Scanner
 - Pattern/Regex Scanner
 
-## `redact` function
+## `redact` 函数
 
 在 redact 函数中, 我们使用 [db/pii-stable.yml](https://github.com/mazen160/secrets-patterns-db/blob/master/db/pii-stable.yml) 
 作为敏感数据的配置文件, 用于对数据进行脱敏处理。
@@ -25,30 +25,19 @@ variables:
 ---
 ```    
 
-RAG 场景示例：
+## 使用自定义 `.shireSecretPattern.yaml`
 
-```shire
+在 Shire 中支持与 [Secrets Patterns DB](https://github.com/mazen160/secrets-patterns-db) 相似的配置文件，用于对数据进行脱敏处理。
+你可以在项目中新建一个 `.shireSecretPattern.yaml`结尾的文件，用于定义自定义的敏感数据规则，如：`Phodal.shireSecretPattern.yaml`。
 
-```
-
-## 自定义 `.shireSecretPattern.yaml`（TBD）
-
-- refs: https://github.com/mazen160/secrets-patterns-db/blob/master/datasets/high-confidence.yml
-
-Todos:
+在该文件中，你可以定义一些敏感数据的规则，如：
 
 ```yaml
-keywords: data protection, data security, data masking, data anonymization, data encryption, data obfuscation, data redaction, data tokenization, data privacy, data protection, data security, data masking, data anonymization, data encryption, data obfuscation, data redaction, data tokenization, data privacy
 patterns:
   - pattern:
       name: Slack Token
       regex: "(xox[pborsa]-[0-9]{12}-[0-9]{12}-[0-9]{12}-[a-z0-9]{32})"
       confidence: high
-models:
-  - name: MaliciousURLs
-    location: ~/models/maliciousURLs
-  - name: BanCode 
-    location: ~/models/semanticCode
-  - name: Gibberish # 检测乱码
-    location: ~/models/gibberish
 ```
+
+随后，Shire 将会在处理数据时，自动对匹配到的数据进行脱敏处理。

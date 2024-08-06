@@ -1,6 +1,6 @@
 ---
 layout: default
-title: BeforeStreaming
+title: beforeStreaming
 parent: Lifecycle
 nav_order: 4
 ---
