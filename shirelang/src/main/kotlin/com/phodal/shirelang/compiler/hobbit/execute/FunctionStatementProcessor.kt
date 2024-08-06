@@ -377,21 +377,58 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
             elements.forEach { element ->
                 when (statement) {
                     is Comparison -> {
-                        val left = evaluate(statement.left, element)
-                        if (left != null) {
-                            typeValued[statement.left] = left
-                        } else {
-                            val right = evaluate(statement.right, element)
-                            if (right != null) {
-                                typeValued[statement.right] = right
+                        evaluateComparison(element, typeValued, statement.left, statement.right)
+                    }
+                    is LogicalExpression -> {
+                        val left = evaluateVariableTypes(variableElementsMap, statement.left)
+                        val right = evaluateVariableTypes(variableElementsMap, statement.right)
+
+                        when (statement.operator) {
+                            OperatorType.And -> {
+                                if (left.isNotEmpty() && right.isNotEmpty()) {
+                                    typeValued.putAll(left)
+                                    typeValued.putAll(right)
+                                }
+                            }
+
+                            OperatorType.Or -> {
+                                if (left.isNotEmpty() || right.isNotEmpty()) {
+                                    typeValued.putAll(left)
+                                    typeValued.putAll(right)
+                                }
+                            }
+
+                            else -> {
+                                logger<FunctionStatementProcessor>().warn("unknown operator: ${statement.operator}")
                             }
                         }
+                    }
+
+                    else -> {
+                        logger<FunctionStatementProcessor>().warn("unknown statement: ${statement.display()}")
                     }
                 }
             }
         }
 
         return typeValued
+    }
+
+    private fun evaluateComparison(
+        element: Any,
+        typeValued: MutableMap<FrontMatterType, Any?>,
+        leftStmt: FrontMatterType,
+        rightStmt: FrontMatterType,
+    ) {
+        val left = evaluate(leftStmt, element)
+        if (left != null) {
+            typeValued[leftStmt] = left
+        } else {
+            val right = evaluate(rightStmt, element)
+            if (right != null) {
+                typeValued[rightStmt] = right
+            }
+        }
     }
 
 
