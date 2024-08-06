@@ -29,10 +29,6 @@ import kotlinx.coroutines.runBlocking
  */
 open class FunctionStatementProcessor(override val myProject: Project, override val hole: HobbitHole) :
     PatternFuncProcessor(myProject, hole) {
-    inline fun <reified T : Any> execute(expression: Statement, variables: Map<String, List<T>>): List<T> {
-        return processStatement(expression, variables)
-    }
-
     open fun execute(transform: PatternActionTransform): String {
         val fromStmt = transform.patternActionFuncs.find { it is PatternActionFunc.From } as PatternActionFunc.From
         val selectStmt =
