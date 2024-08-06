@@ -62,33 +62,22 @@ class JavaSymbolProvider : ShireSymbolProvider {
         val psiManager = PsiManager.getInstance(project)
 
         return when (name) {
-            "PsiFile" -> {
-                virtualFiles.mapNotNull(psiManager::findFile).toList()
-            }
+            "PsiFile" -> virtualFiles.mapNotNull(psiManager::findFile).toList()
+            "PsiPackage" -> virtualFiles.mapNotNull { psiManager.findFile(it) }
+                .flatMap { PsiTreeUtil.getChildrenOfTypeAsList(it, PsiPackageStatement::class.java) }
+                .toList()
 
-            "PsiPackage" -> {
-                virtualFiles.mapNotNull { psiManager.findFile(it) }
-                    .flatMap { PsiTreeUtil.getChildrenOfTypeAsList(it, PsiPackageStatement::class.java) }
-                    .toList()
-            }
+            "PsiClass" -> virtualFiles.mapNotNull { psiManager.findFile(it) as PsiJavaFile }
+                .flatMap { it.classes.toList() }
+                .toList()
 
-            "PsiClass" -> {
-                virtualFiles.mapNotNull { psiManager.findFile(it) as PsiJavaFile }
-                    .flatMap { it.classes.toList() }
-                    .toList()
-            }
+            "PsiMethod" -> virtualFiles.mapNotNull { psiManager.findFile(it) as PsiJavaFile }
+                .flatMap { it.classes.toList() }
+                .flatMap { it.methods.toList() }
 
-            "PsiMethod" -> {
-                virtualFiles.mapNotNull { psiManager.findFile(it) as PsiJavaFile }
-                    .flatMap { it.classes.toList() }
-                    .flatMap { it.methods.toList() }
-            }
-
-            "PsiField" -> {
-                virtualFiles.mapNotNull { psiManager.findFile(it) as PsiJavaFile }
-                    .flatMap { it.classes.toList() }
-                    .flatMap { it.fields.toList() }
-            }
+            "PsiField" -> virtualFiles.mapNotNull { psiManager.findFile(it) as PsiJavaFile }
+                .flatMap { it.classes.toList() }
+                .flatMap { it.fields.toList() }
 
             else -> {
                 null
