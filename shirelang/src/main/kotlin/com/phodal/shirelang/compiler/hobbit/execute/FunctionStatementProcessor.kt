@@ -233,11 +233,11 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
         }
     }
 
-    inline fun <reified T : Any> processStatement(
+    fun processStatement(
         statement: Statement,
-        variableElementsMap: Map<String, List<T>>,
-    ): List<T> {
-        val result = mutableListOf<T>()
+        variableElementsMap: Map<String, List<Any>>,
+    ): List<Any> {
+        val result = mutableListOf<Any>()
         variableElementsMap.forEach { (variableName, elements) ->
             elements.forEach { element ->
                 when (statement) {
@@ -305,13 +305,13 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
                         when (val output = invokeMethodOrField(statement, element)) {
                             is Collection<*> -> {
                                 output.forEach {
-                                    if (it is T) {
+                                    if (it is Any) {
                                         result.add(it)
                                     }
                                 }
                             }
 
-                            is T -> {
+                            is Any -> {
                                 result.add(output)
                             }
                         }
