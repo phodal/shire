@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Pipeline 函数保护数据
+title: Pipeline 函数
 nav_order: 1
 parent: Data Privacy
 ---

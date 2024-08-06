@@ -1,13 +1,13 @@
 ---
 layout: default
-title: Shire PSI Query Expression
+title: Shire Query Language
 parent: Shire Language
 nav_order: 5
 ---
 
-Shire PSI 查询语言是一种查询语言，允许你查询当前文件的 AST（抽象语法树）。它在 Shire 中用于定义当前文件的上下文以及可以在当前文件上执行的操作。
+Shire 查询语言是一种查询语言，允许你查询当前文件的 AST（抽象语法树）、Git、依赖信息等。它在 Shire 中用于定义当前文件的上下文以及可以在当前文件上执行的操作。
 
-## Design
+## ShireQL 基本语法 
 
 Design
 
@@ -25,7 +25,7 @@ variables
 ---
 ```
 
-For example:
+示例:
 
 ```shire
 ---
@@ -44,9 +44,9 @@ variables:
 ---
 ```
 
-## Java Language
+## ShireQL 查询抽象语法树
 
-Support `where` method
+### Java 语言示例
 
 ```kotlin
 enum class JvmPsiPqlMethod(val methodName: String, val description: String) {
@@ -64,9 +64,11 @@ enum class JvmPsiPqlMethod(val methodName: String, val description: String) {
 }
 ```
 
-## Git Toolchain
+## ShireQL 查询版本管理 
 
-Sample for #41
+### Git 示例
+
+详细见 [#41](https://github.com/phodal/shire/issues/41)
 
 ```shire
 ---
@@ -115,16 +117,19 @@ Model design for #41
 
 Ref design: https://github.com/AmrDeveloper/GQL
 
-## Common Functions  
+## 通用函数  
 
-### Text Function (Todos)
+### 常用函数
 
-- regexpMatch
+- date 函数
+
+### NLP 函数 (待定)
+
 - similarSearch
 - embeddingSearch
 - tf-idf
 
-## Resource
+## 其它相关资源
 
 ### GitQL
 
