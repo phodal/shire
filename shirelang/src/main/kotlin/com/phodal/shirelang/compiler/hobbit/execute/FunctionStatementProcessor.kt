@@ -39,7 +39,9 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
             ShireQLVariableBuilder(myProject, hole).buildVariables(fromStmt)
         }
 
-        val handledElements = processStatement(whereStmt.statement, variableElementsMap)
+        val valuedType = evaluateVariableTypes(variableElementsMap, whereStmt.statement)
+
+        val handledElements = processStatement(whereStmt.statement, variableElementsMap, valuedType)
         val selectElements = processSelect(selectStmt, handledElements)
 
         return selectElements.joinToString("\n")
@@ -91,8 +93,7 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
     fun execute(statement: Statement, variableTable: MutableMap<String, Any?>): Any? = runBlocking {
         return@runBlocking when (statement) {
             is Comparison -> {
-                val result = executeComparison(statement, variableTable)
-                result
+                executeComparison(statement, variableTable)
             }
 
             is Processor -> {
@@ -235,31 +236,12 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
     }
 
     /// todo: fix this for multiple variables
-    fun processStatement(
+    private fun processStatement(
         statement: Statement,
         variableElementsMap: Map<String, List<Any>>,
+        typeValued: MutableMap<FrontMatterType, Any?>,
     ): List<Any> {
         val result = mutableListOf<Any>()
-
-        /// a dirty implementation for multiple variables
-        val typeValued: MutableMap<FrontMatterType, Any?> = mutableMapOf()
-        variableElementsMap.forEach { (variableName, elements) ->
-            elements.forEach { element ->
-                when(statement) {
-                    is Comparison -> {
-                        val left = evaluate(statement.left, element)
-                        if (left != null) {
-                            typeValued[statement.left] = left
-                        } else {
-                            val right = evaluate(statement.right, element)
-                            if (right != null) {
-                                typeValued[statement.right] = right
-                            }
-                        }
-                    }
-                }
-            }
-        }
 
         variableElementsMap.forEach { (variableName, elements) ->
             elements.forEach { element ->
@@ -353,8 +335,8 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
                     }
 
                     is LogicalExpression -> {
-                        val left = processStatement(statement.left, variableElementsMap)
-                        val right = processStatement(statement.right, variableElementsMap)
+                        val left = processStatement(statement.left, variableElementsMap, typeValued)
+                        val right = processStatement(statement.right, variableElementsMap, typeValued)
 
                         when (statement.operator) {
                             OperatorType.And -> {
@@ -383,6 +365,33 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
         }
 
         return result
+    }
+
+    /// a dirty implementation for multiple variables
+    private fun evaluateVariableTypes(
+        variableElementsMap: Map<String, List<Any>>,
+        statement: Statement,
+    ): MutableMap<FrontMatterType, Any?> {
+        val typeValued: MutableMap<FrontMatterType, Any?> = mutableMapOf()
+        variableElementsMap.forEach { (variableName, elements) ->
+            elements.forEach { element ->
+                when (statement) {
+                    is Comparison -> {
+                        val left = evaluate(statement.left, element)
+                        if (left != null) {
+                            typeValued[statement.left] = left
+                        } else {
+                            val right = evaluate(statement.right, element)
+                            if (right != null) {
+                                typeValued[statement.right] = right
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return typeValued
     }
 
 
