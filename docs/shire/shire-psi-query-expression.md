@@ -85,6 +85,22 @@ variables:
 ---
 ```
 
+Model:
+
+```
+data class ShireGitCommit(
+    val hash: String,
+    val authorName: String,
+    val authorEmail: String,
+    val authorDate: Long,
+    val committerName: String,
+    val committerEmail: String,
+    val committerDate: Long,
+    val message: String,
+    val fullMessage: String
+) : GitEntity()
+```
+
 Model design for #41
 
 - GitCommit

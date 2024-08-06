@@ -3,7 +3,7 @@ package com.phodal.shirecore.provider.shire
 import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.vcs.GitEntity
-import com.phodal.shirecore.vcs.ShireVcsCommit
+import com.phodal.shirecore.vcs.ShireGitCommit
 
 enum class ShireQLDataType(val dataKey: String) {
     GIT_COMMIT("GitCommit"),
@@ -15,10 +15,10 @@ enum class ShireQLDataType(val dataKey: String) {
 interface ShireQLDataProvider {
     fun lookupGitData(myProject: Project, dataTypes: List<ShireQLDataType>): Map<ShireQLDataType, List<GitEntity>?>
 
-    fun lookup(myProject: Project, variableType: String): List<ShireVcsCommit>? {
+    fun lookup(myProject: Project, variableType: String): List<ShireGitCommit>? {
         return when (variableType) {
             ShireQLDataType.GIT_COMMIT.dataKey -> {
-                return lookupGitData(myProject, listOf(ShireQLDataType.GIT_COMMIT))[ShireQLDataType.GIT_COMMIT] as List<ShireVcsCommit>?
+                return lookupGitData(myProject, listOf(ShireQLDataType.GIT_COMMIT))[ShireQLDataType.GIT_COMMIT] as List<ShireGitCommit>?
             }
 
             else -> {

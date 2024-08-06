@@ -4,7 +4,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.phodal.shirecore.provider.shire.ShireQLDataProvider
 import com.phodal.shirecore.provider.shire.ShireSymbolProvider
-import com.phodal.shirecore.vcs.ShireVcsCommit
+import com.phodal.shirecore.vcs.ShireGitCommit
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.ast.VariableElement
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
@@ -63,8 +63,8 @@ class ShireQLVariableBuilder(val myProject: Project, hole: HobbitHole) {
     }
 
 
-    private fun lookupVcsCommit(it: VariableElement): List<ShireVcsCommit> {
-        val elements: List<ShireVcsCommit> = ShireQLDataProvider.all().flatMap { provider ->
+    private fun lookupVcsCommit(it: VariableElement): List<ShireGitCommit> {
+        val elements: List<ShireGitCommit> = ShireQLDataProvider.all().flatMap { provider ->
             provider.lookup(myProject, it.variableType) ?: emptyList()
         }
 

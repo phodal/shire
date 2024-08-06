@@ -9,7 +9,7 @@ import com.phodal.shirecore.ShireCoreBundle
 import com.phodal.shirecore.provider.shire.ShireQLDataProvider
 import com.phodal.shirecore.provider.shire.ShireQLDataType
 import com.phodal.shirecore.vcs.GitEntity
-import com.phodal.shirecore.vcs.ShireVcsCommit
+import com.phodal.shirecore.vcs.ShireGitCommit
 import git4idea.GitCommit
 import git4idea.history.GitHistoryUtils
 import git4idea.repo.GitRepositoryManager
@@ -63,10 +63,10 @@ class GitQLDataProvider : ShireQLDataProvider {
         ProgressManager.getInstance()
             .runProcessWithProgressAsynchronously(task, BackgroundableProcessIndicator(task))
 
-        val results: MutableList<ShireVcsCommit> = mutableListOf()
+        val results: MutableList<ShireGitCommit> = mutableListOf()
         runBlocking {
             future.await().forEach {
-                val commit = ShireVcsCommit(
+                val commit = ShireGitCommit(
                     it.id.asString(),
                     it.author.name,
                     it.author.email,

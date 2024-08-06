@@ -5,10 +5,10 @@ sealed class GitEntity
 // Base class for models containing commits
 sealed class CommitModel(
     open val count: Int,
-    open val commits: List<ShireVcsCommit>
+    open val commits: List<ShireGitCommit>
 ) : GitEntity()
 
-data class ShireVcsCommit(
+data class ShireGitCommit(
     val hash: String,
     val authorName: String,
     val authorEmail: String,
@@ -25,11 +25,11 @@ data class ShireFileCommit(
     val path: String,
     val status: String,
     override val count: Int,
-    override val commits: List<ShireVcsCommit>
+    override val commits: List<ShireGitCommit>
 ) : CommitModel(count, commits)
 
 data class ShireFileBranch(
     val name: String,
     override val count: Int,
-    override val commits: List<ShireVcsCommit>
+    override val commits: List<ShireGitCommit>
 ) : CommitModel(count, commits)

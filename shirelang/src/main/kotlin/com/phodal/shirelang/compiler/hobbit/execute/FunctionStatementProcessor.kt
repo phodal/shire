@@ -6,7 +6,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.nfeld.jsonpathkt.JsonPath
 import com.nfeld.jsonpathkt.extension.read
-import com.phodal.shirecore.vcs.ShireVcsCommit
+import com.phodal.shirecore.vcs.ShireGitCommit
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.ast.*
 import com.phodal.shirelang.compiler.hobbit.execute.model.ShireQLVariableBuilder
@@ -72,7 +72,7 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
                     }
                 }
 
-                is ShireVcsCommit -> {
+                is ShireGitCommit -> {
                     when (statement) {
                         is Value -> {
                             result.add(statement.display())
