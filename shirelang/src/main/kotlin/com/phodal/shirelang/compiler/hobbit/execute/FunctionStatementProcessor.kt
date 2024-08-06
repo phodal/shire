@@ -6,8 +6,10 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.nfeld.jsonpathkt.JsonPath
 import com.nfeld.jsonpathkt.extension.read
+import com.phodal.shirecore.vcs.ShireVcsCommit
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.ast.*
+import com.phodal.shirelang.compiler.hobbit.execute.model.FromVariableBuilder
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 import com.phodal.shirelang.compiler.patternaction.PatternActionTransform
 import kotlinx.coroutines.runBlocking
@@ -37,19 +39,56 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
             transform.patternActionFuncs.find { it is PatternActionFunc.Select } as PatternActionFunc.Select
         val whereStmt = transform.patternActionFuncs.find { it is PatternActionFunc.Where } as PatternActionFunc.Where
 
-        val variableElementsMap: Map<String, List<Any>> = runReadAction { buildVariables(fromStmt) }
+        val variableElementsMap: Map<String, List<Any>> = runReadAction {
+            FromVariableBuilder(myProject, hole).buildVariables(fromStmt)
+        }
         val handledElements = processStatement(whereStmt.statement, variableElementsMap)
         val selectElements = processSelect(selectStmt, handledElements)
 
         return selectElements.joinToString("\n")
     }
 
-    open fun processSelect(selectStmt: PatternActionFunc.Select, handledElements: List<Any>): List<String> {
-        return emptyList()
+    fun processSelect(selectStmt: PatternActionFunc.Select, handledElements: List<Any>): List<String> {
+        return selectStmt.statements.flatMap {
+            processSelectStatement(it, handledElements)
+        }
     }
 
-    open fun buildVariables(fromStmt: PatternActionFunc.From): Map<String, List<Any>> {
-        return emptyMap()
+    private fun processSelectStatement(statement: Statement, handledElements: List<Any>): List<String> {
+        val result = mutableListOf<String>()
+        handledElements.forEach { element ->
+            when (element) {
+                is PsiElement -> {
+                    when (statement) {
+                        is Value -> {
+                            result.add(statement.display())
+                        }
+
+                        is MethodCall -> {
+                            invokeMethodOrField(statement, element)?.let {
+                                result.add(it.toString())
+                            }
+                        }
+                    }
+                }
+
+                is ShireVcsCommit -> {
+                    when (statement) {
+                        is Value -> {
+                            result.add(statement.display())
+                        }
+
+                        is MethodCall -> {
+                            invokeMethodOrField(statement, element)?.let {
+                                result.add(it.toString())
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return result
     }
 
     fun execute(statement: Statement, variableTable: MutableMap<String, Any?>): Any? = runBlocking {

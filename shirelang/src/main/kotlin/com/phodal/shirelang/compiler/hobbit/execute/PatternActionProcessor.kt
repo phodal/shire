@@ -2,7 +2,7 @@ package com.phodal.shirelang.compiler.hobbit.execute
 
 import com.intellij.openapi.project.Project
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
-import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
+import com.phodal.shirelang.compiler.hobbit.execute.searcher.PatternSearcher
 import com.phodal.shirelang.compiler.patternaction.PatternActionTransform
 
 
