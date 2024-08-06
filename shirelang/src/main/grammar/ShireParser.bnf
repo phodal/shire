@@ -55,6 +55,7 @@
 
     WHEN                 = "when"
     ON_STREAMING         = "onStreaming"
+    BEFORE_STREAMING     = "beforeStreaming"
     ON_STREAMING_END     = "onStreamingEnd"
     AFTER_STREAMING      = "afterStreaming"
 
@@ -85,7 +86,7 @@ frontMatterEntry ::=
     lifecycleId COLON (functionStatement | conditionExpr) NEWLINE?
     | frontMatterKey COLON (frontMatterValue | patternAction | functionStatement) NEWLINE?
 
-lifecycleId ::= "when" | "onStreaming" | "onStreamingEnd" | "afterStreaming"
+lifecycleId ::= "when" | "onStreaming" | "beforeStreaming" | "onStreamingEnd" | "afterStreaming"
 
 frontMatterKey ::= frontMatterId | QUOTE_STRING | pattern
 frontMatterValue ::= IDENTIFIER | NUMBER | QUOTE_STRING | DATE | BOOLEAN | frontMatterArray | (NEWLINE objectKeyValue)

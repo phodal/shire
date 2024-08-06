@@ -1,12 +1,16 @@
 ---
 layout: default
-title: beforeStreaming
+title: beforeStreaming (Reserved)
 parent: Lifecycle
 nav_order: 4
 ---
 
 `beforeStreaming` 即在 Streaming 开始前对生成的内容进行处理。
 
-场景：
+示例（TBD）：
 
-- Guard API
+```shire
+---
+beforeStreaming: { redact }
+---
+```

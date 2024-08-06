@@ -102,6 +102,7 @@ END                      =end
 AND                      =and
 
 ON_STREAMING             =onStreaming
+BEFORE_STREAMING         =beforeStreaming
 ON_STREAMING_END         =onStreamingEnd
 AFTER_STREAMING          =afterStreaming
 
@@ -231,6 +232,7 @@ AFTER_STREAMING          =afterStreaming
 <FRONT_MATTER_BLOCK> {
   {WHEN}                  { return WHEN; }
   {ON_STREAMING}          { return ON_STREAMING; }
+  {BEFORE_STREAMING}      { return BEFORE_STREAMING; }
   {ON_STREAMING_END}      { return ON_STREAMING_END; }
   {AFTER_STREAMING}       { return AFTER_STREAMING; }
 
@@ -309,6 +311,7 @@ AFTER_STREAMING          =afterStreaming
               switch (yytext().toString().trim()) {
                   case "when": return WHEN;
                   case "onStreaming": return ON_STREAMING;
+                  case "beforeStreaming": return BEFORE_STREAMING;
                   case "onStreamingEnd": return ON_STREAMING_END;
                   case "afterStreaming": return AFTER_STREAMING;
                   default: return IDENTIFIER;
@@ -346,6 +349,7 @@ AFTER_STREAMING          =afterStreaming
               switch (yytext().toString().trim()) {
                   case "when": return WHEN;
                   case "onStreaming": return ON_STREAMING;
+                  case "beforeStreaming": return BEFORE_STREAMING;
                   case "onStreamingEnd": return ON_STREAMING_END;
                   case "afterStreaming": return AFTER_STREAMING;
                   default: return IDENTIFIER;

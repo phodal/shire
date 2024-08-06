@@ -1,6 +1,6 @@
 ---
 layout: default
-title: onStreaming (Reserved)
+title: onStreaming (TBC)
 parent: Lifecycle
 nav_order: 3
 ---
@@ -10,3 +10,10 @@ nav_order: 3
 
 TODO: add some check for the keywords if it's `BanWord` will be a warning.?
 
+示例（TBD）：
+
+```shire
+---
+onStreaming: { redact }
+---
+```
