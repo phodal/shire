@@ -21,7 +21,7 @@ PatternFuncProcessor(myProject, hole) {
         }
 
         if (actionTransform.isQueryStatement) {
-            return PsiQueryStatementProcessor(myProject, hole).execute(actionTransform)
+            return ShireQLProcessor(myProject, hole).execute(actionTransform)
         }
 
         var input: Any = ""

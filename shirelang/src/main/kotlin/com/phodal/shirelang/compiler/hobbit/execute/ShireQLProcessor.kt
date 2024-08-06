@@ -10,7 +10,7 @@ import com.phodal.shirelang.compiler.hobbit.ast.MethodCall
 import java.lang.reflect.Method
 import java.util.*
 
-class PsiQueryStatementProcessor(override val myProject: Project, hole: HobbitHole) :
+class ShireQLProcessor(override val myProject: Project, hole: HobbitHole) :
     FunctionStatementProcessor(myProject, hole) {
 
     override fun <T : Any> invokeMethodOrField(methodCall: MethodCall, element: T): Any? {
@@ -84,7 +84,7 @@ class PsiQueryStatementProcessor(override val myProject: Project, hole: HobbitHo
         val supportMethodNames: List<String> = allMethods.map { it.name }
         val supportFieldNames: List<String> = element.javaClass.fields.map { it.name }
 
-        logger<PsiQueryStatementProcessor>().error(
+        logger<ShireQLProcessor>().error(
             """
                 method or field not found: $methodName
                 supported methods: $supportMethodNames

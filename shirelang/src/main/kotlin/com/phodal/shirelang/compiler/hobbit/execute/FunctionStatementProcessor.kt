@@ -9,7 +9,7 @@ import com.nfeld.jsonpathkt.extension.read
 import com.phodal.shirecore.vcs.ShireVcsCommit
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.ast.*
-import com.phodal.shirelang.compiler.hobbit.execute.model.FromVariableBuilder
+import com.phodal.shirelang.compiler.hobbit.execute.model.ShireQLVariableBuilder
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 import com.phodal.shirelang.compiler.patternaction.PatternActionTransform
 import kotlinx.coroutines.runBlocking
@@ -40,7 +40,7 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
         val whereStmt = transform.patternActionFuncs.find { it is PatternActionFunc.Where } as PatternActionFunc.Where
 
         val variableElementsMap: Map<String, List<Any>> = runReadAction {
-            FromVariableBuilder(myProject, hole).buildVariables(fromStmt)
+            ShireQLVariableBuilder(myProject, hole).buildVariables(fromStmt)
         }
         val handledElements = processStatement(whereStmt.statement, variableElementsMap)
         val selectElements = processSelect(selectStmt, handledElements)

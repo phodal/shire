@@ -9,7 +9,24 @@ import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.ast.VariableElement
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 
-class FromVariableBuilder(val myProject: Project, hole: HobbitHole) {
+enum class ShireQLFromType(val typeName: String) {
+    // PSI Query
+    PsiFile("PsiFile"),
+    PsiPackage("PsiPackage"),
+    PsiClass("PsiClass"),
+    PsiMethod("PsiMethod"),
+    PsiField("PsiField"),
+
+    // GitQuery
+    GitCommit("GitCommit"),
+    GitBranch("GitBranch"),
+
+    // Others
+    Date("Date"),
+}
+
+
+class ShireQLVariableBuilder(val myProject: Project, hole: HobbitHole) {
     fun buildVariables(fromStmt: PatternActionFunc.From): Map<String, List<Any>> {
         return fromStmt.variables.associate {
             when {
@@ -18,6 +35,9 @@ class FromVariableBuilder(val myProject: Project, hole: HobbitHole) {
                 }
                 it.variableType.startsWith("Git") -> {
                     it.value to lookupVcsCommit(it)
+                }
+                it.variableType == ShireQLFromType.Date.typeName -> {
+                    it.value to emptyList()
                 }
                 else -> {
                     it.value to lookupElement(it)
