@@ -1,8 +1,8 @@
 ---
 layout: default
-title: When
-parent: Lifecycle
-nav_order: 1
+title: Condition Visible
+parent: Shire Language
+nav_order: 6
 ---
 
 Activate Menu 是一类 `Condition Visible` 用于定义一个条件，当条件为真时，将显示对应的 Action。
