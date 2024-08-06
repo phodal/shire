@@ -77,8 +77,8 @@ class ShireQLVariableBuilder(val myProject: Project, hole: HobbitHole) {
 }
 
 class ShireDate: ShireQLElement {
-    fun now(): String {
-        return System.currentTimeMillis().toString()
+    fun now(): Long {
+        return System.currentTimeMillis()
     }
 }
 

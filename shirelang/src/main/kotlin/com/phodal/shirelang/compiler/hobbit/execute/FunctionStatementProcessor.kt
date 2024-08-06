@@ -234,18 +234,42 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
         }
     }
 
+    /// todo: fix this for multiple variables
     fun processStatement(
         statement: Statement,
         variableElementsMap: Map<String, List<Any>>,
     ): List<Any> {
         val result = mutableListOf<Any>()
+
+        /// a dirty implementation for multiple variables
+        val typeValued: MutableMap<FrontMatterType, Any?> = mutableMapOf()
+        variableElementsMap.forEach { (variableName, elements) ->
+            elements.forEach { element ->
+                when(statement) {
+                    is Comparison -> {
+                        val left = evaluate(statement.left, element)
+                        if (left != null) {
+                            typeValued[statement.left] = left
+                        } else {
+                            val right = evaluate(statement.right, element)
+                            if (right != null) {
+                                typeValued[statement.right] = right
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         variableElementsMap.forEach { (variableName, elements) ->
             elements.forEach { element ->
                 when (statement) {
                     is Comparison -> {
                         val operator = statement.operator
-                        val left = evaluate(statement.left, element)
-                        val right = evaluate(statement.right, element)
+                        /// for commit.authorDate <= date.now()
+                        /// if we use element (Date) for commit.authorDate, will be null, should use element (ShireGitCommit)
+                        val left = typeValued[statement.left]
+                        val right = typeValued[statement.right]
 
                         if (left == null) {
                             logger<FunctionStatementProcessor>().warn("left is null: ${statement.left.display()}")
