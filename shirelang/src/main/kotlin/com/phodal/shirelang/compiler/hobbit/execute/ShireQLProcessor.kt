@@ -15,6 +15,8 @@ class ShireQLProcessor(override val myProject: Project, hole: HobbitHole) :
 
     override fun <T : Any> invokeMethodOrField(methodCall: MethodCall, element: T): Any? {
         val methodName = methodCall.methodName.display()
+        val objectName = methodCall.objectName.display()
+
         val methodArgs = methodCall.arguments
         if (element is PsiElement) {
             PsiQLInterpreter.provide(element.language)?.let { psiQLInterpreter ->
@@ -73,23 +75,24 @@ class ShireQLProcessor(override val myProject: Project, hole: HobbitHole) :
         }
 
         // if not found, show error log
-        return showErrorLog(allMethods, element, methodName)
+        return showErrorLog(allMethods, element, methodName, objectName)
     }
 
     private fun <T : Any> showErrorLog(
         allMethods: Array<out Method>,
         element: T,
         methodName: String,
+        objectName: String,
     ): Nothing? {
         val supportMethodNames: List<String> = allMethods.map { it.name }
         val supportFieldNames: List<String> = element.javaClass.fields.map { it.name }
 
         logger<ShireQLProcessor>().error(
             """
-                method or field not found: $methodName
-                supported methods: $supportMethodNames
-                supported fields: $supportFieldNames
-                """.trimIndent()
+            method or field not found: $objectName.$methodName
+            supported methods: $supportMethodNames
+            supported fields: $supportFieldNames
+            """.trimIndent()
         )
         return null
     }
