@@ -37,7 +37,7 @@ class ShireQLVariableBuilder(val myProject: Project, hole: HobbitHole) {
                     it.value to lookupVcsCommit(it)
                 }
                 it.variableType == ShireQLFromType.Date.typeName -> {
-                    it.value to emptyList()
+                    it.value to createDateFunc(it)
                 }
                 else -> {
                     it.value to lookupElement(it)
@@ -70,4 +70,18 @@ class ShireQLVariableBuilder(val myProject: Project, hole: HobbitHole) {
 
         return elements
     }
+
+    private fun createDateFunc(it: VariableElement): List<ShireDate> {
+        return listOf(ShireDate())
+    }
+}
+
+class ShireDate: ShireQLElement {
+    fun now(): String {
+        return System.currentTimeMillis().toString()
+    }
+}
+
+interface ShireQLElement {
+
 }

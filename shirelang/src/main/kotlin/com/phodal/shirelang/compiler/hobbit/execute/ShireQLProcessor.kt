@@ -20,13 +20,12 @@ class ShireQLProcessor(override val myProject: Project, hole: HobbitHole) :
         val methodArgs = methodCall.arguments
         if (element is PsiElement) {
             PsiQLInterpreter.provide(element.language)?.let { psiQLInterpreter ->
-                val hasPqlInterpreter = psiQLInterpreter.supportsMethod(element.language, methodName).filter {
+                val hasPqlInterpreter = psiQLInterpreter.supportsMethod(element.language, methodName).any {
                     it == methodName
-                }.isNotEmpty()
+                }
 
                 if (hasPqlInterpreter) {
                     return runReadAction {
-
                         psiQLInterpreter.resolveCall(element, methodName, methodCall.parameters() ?: emptyList())
                     }
                 }

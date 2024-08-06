@@ -38,6 +38,7 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
         val variableElementsMap: Map<String, List<Any>> = runReadAction {
             ShireQLVariableBuilder(myProject, hole).buildVariables(fromStmt)
         }
+
         val handledElements = processStatement(whereStmt.statement, variableElementsMap)
         val selectElements = processSelect(selectStmt, handledElements)
 
