@@ -117,6 +117,27 @@ Model design for #41
 
 Ref design: https://github.com/AmrDeveloper/GQL
 
+## ShireQL 查询制品信息
+
+### Maven 示例
+
+```shire
+---
+variables:
+  "mavenDependencies": {
+    from {
+        Dependency dependency
+    }
+    where {
+        dependency.groupId == "org.springframework.boot" and dependency.artifactId == "spring-boot-starter-web"
+    }
+    select {
+        dependency.groupId, dependency.artifactId, dependency.version
+    }
+  }
+---
+```
+
 ## 通用函数  
 
 ### 常用函数
@@ -222,3 +243,30 @@ where expr.getLeftOperand().getType().hasName("int") and
     not expr.getAnOperand().isCompileTimeConstant()
 select expr
 ```
+
+
+### SourceGraph CodeSearch
+
+https://sourcegraph.com/docs/code-search/queries
+
+```query
+repo:^github\.com/sourcegraph/sourcegraph$ type:diff select:commit.diff.removed TODO
+
+type:diff after:"1 week ago" \.subscribe\( lang:typescript
+
+repo:github\.com/sourcegraph/sourcegraph$ (test AND http AND NewRequest) lang:go
+
+```
+
+Date function
+
+```bash
+before:"last thursday"
+before:"november 1 2019"
+
+after:"6 weeks ago"
+after:"november 1 2019"
+
+repo:vscode@*refs/heads/:^refs/heads/master type:diff task 
+```
+
