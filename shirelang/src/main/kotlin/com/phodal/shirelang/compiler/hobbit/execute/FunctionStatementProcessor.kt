@@ -246,6 +246,16 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
                         val left = evaluate(statement.left, element)
                         val right = evaluate(statement.right, element)
 
+                        if (left == null) {
+                            logger<FunctionStatementProcessor>().warn("left is null: ${statement.left.display()}")
+                            return@forEach
+                        }
+
+                        if (right == null) {
+                            logger<FunctionStatementProcessor>().warn("right is null: ${statement.right.display()}")
+                            return@forEach
+                        }
+
                         when (operator.type) {
                             OperatorType.Equal -> {
                                 if (left != null && left == right) {
@@ -316,10 +326,29 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
                             }
                         }
                     }
-//
-//                    is LogicalExpression -> {
-//                        processLogic(statement, variableElementsMap, result)
-//                    }
+
+                    is LogicalExpression -> {
+                        val left = processStatement(statement.left, variableElementsMap)
+                        val right = processStatement(statement.right, variableElementsMap)
+
+                        when (statement.operator) {
+                            OperatorType.And -> {
+                                if (left.isNotEmpty() && right.isNotEmpty()) {
+                                    result.add(element)
+                                }
+                            }
+
+                            OperatorType.Or -> {
+                                if (left.isNotEmpty() || right.isNotEmpty()) {
+                                    result.add(element)
+                                }
+                            }
+
+                            else -> {
+                                logger<FunctionStatementProcessor>().warn("unknown operator: ${statement.operator}")
+                            }
+                        }
+                    }
 
                     else -> {
                         logger<FunctionStatementProcessor>().warn("unknown statement: ${statement.display()}")
