@@ -111,7 +111,7 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
         }
     }
 
-    fun invokeLocalMethodCall(statement: MethodCall, variableTable: MutableMap<String, Any?>): Any? {
+    private fun invokeLocalMethodCall(statement: MethodCall, variableTable: MutableMap<String, Any?>): Any? {
         val objName = statement.objectName.display()
         val methodName = statement.methodName.display()
         val methodArgs = statement.arguments

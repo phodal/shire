@@ -172,17 +172,12 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             is PatternActionFunc.Where,
             -> {
                 logger<PatternActionProcessor>().error("Unknown pattern processor type: ${action.funcName}")
-                // do nothing
             }
 
             is PatternActionFunc.CaseMatch -> {
                 val actions = evaluateCase(action, input) ?: return ""
                 FunctionStatementProcessor(myProject, hole)
-                    .execute(
-                        actions.value as Statement, mutableMapOf(
-                            "output" to parseInput(input),
-                        )
-                    )
+                    .execute(actions.value as Statement, mutableMapOf("output" to parseInput(input)))
                     .toString()
             }
 
