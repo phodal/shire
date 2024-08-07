@@ -194,6 +194,7 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
                     left as Comparable<Any> >= right as Comparable<Any>
                 }
             }
+
             OperatorType.GreaterThan -> {
                 if (left == null || right == null) {
                     false
@@ -201,6 +202,7 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
                     left as Comparable<Any> > right as Comparable<Any>
                 }
             }
+
             OperatorType.LessEqual -> {
                 if (left == null || right == null) {
                     false
@@ -208,6 +210,7 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
                     left as Comparable<Any> <= right as Comparable<Any>
                 }
             }
+
             OperatorType.LessThan -> {
                 if (left == null || right == null) {
                     false
@@ -215,6 +218,7 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
                     left as Comparable<Any> < right as Comparable<Any>
                 }
             }
+
             else -> {
                 logger<FunctionStatementProcessor>().warn("unknown operator: $operator")
                 false
@@ -236,8 +240,8 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
                         val operator = statement.operator
                         /// for commit.authorDate <= date.now()
                         /// if we use element (Date) for commit.authorDate, will be null, should use element (ShireGitCommit)
-                        val left = valuedType.getValue(element, statement.left)
-                        val right = valuedType.getValue(element, statement.right)
+                        val left = valuedType.getValue(element, statement.left) ?: evaluate(statement.right, element)
+                        val right = valuedType.getValue(element, statement.right) ?: evaluate(statement.right, element)
 
                         if (left == null) {
                             logger<FunctionStatementProcessor>().warn("left is null: ${statement.left.display()}")
@@ -259,21 +263,25 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
                                     result.add(element)
                                 }
                             }
+
                             OperatorType.GreaterThan -> {
                                 if (left as Comparable<Any> > right as Comparable<Any>) {
                                     result.add(element)
                                 }
                             }
+
                             OperatorType.LessEqual -> {
                                 if (left as Comparable<Any> <= right as Comparable<Any>) {
                                     result.add(element)
                                 }
                             }
+
                             OperatorType.LessThan -> {
                                 if (left as Comparable<Any> < right as Comparable<Any>) {
                                     result.add(element)
                                 }
                             }
+
                             else -> {
                                 logger<FunctionStatementProcessor>().warn("unknown operator: $operator")
                             }
@@ -341,6 +349,7 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
                     is Comparison -> {
                         evaluateComparison(element, typeValued, statement.left, statement.right)
                     }
+
                     is LogicalExpression -> {
                         val left = evalValueByElementStmt(variableElementsMap, statement.left)
                         val right = evalValueByElementStmt(variableElementsMap, statement.right)
@@ -443,6 +452,7 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
             is FrontMatterType.EXPRESSION -> {
                 evalExpression(type, element)
             }
+
             is FrontMatterType.BOOLEAN,
             is FrontMatterType.DATE,
             is FrontMatterType.IDENTIFIER,
@@ -450,9 +460,11 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
             -> {
                 type.value
             }
+
             is FrontMatterType.NUMBER -> {
                 (type.value as Int).toLong()
             }
+
             else -> {
                 throw IllegalArgumentException("unknown type: $type")
             }
