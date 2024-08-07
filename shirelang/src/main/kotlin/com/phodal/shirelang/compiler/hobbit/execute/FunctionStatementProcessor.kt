@@ -9,6 +9,7 @@ import com.nfeld.jsonpathkt.extension.read
 import com.phodal.shirecore.vcs.ShireGitCommit
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.ast.*
+import com.phodal.shirelang.compiler.hobbit.execute.schema.ShireDate
 import com.phodal.shirelang.compiler.hobbit.execute.schema.ShireQLSchema
 import com.phodal.shirelang.compiler.hobbit.execute.variable.ShireQLVariableBuilder
 import com.phodal.shirelang.compiler.hobbit.execute.variable.VariableContainerManager
@@ -85,6 +86,28 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
                             }
                         }
                     }
+                }
+
+                is ShireDate -> {
+                    when (statement) {
+                        is Value -> {
+                            invokeMethod(element, null)?.let {
+                                result.add(it.toString())
+                            }
+                        }
+
+                        is MethodCall -> {
+                            val methodName = statement.methodName.display()
+                            val args = statement.arguments
+                            invokeMethod(element, methodName, args)?.let {
+                                result.add(it.toString())
+                            }
+                        }
+                    }
+                }
+
+                else -> {
+                    logger<FunctionStatementProcessor>().warn("unknown element: $element")
                 }
             }
         }
@@ -493,5 +516,17 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
 
             else -> return null
         }
+    }
+
+    open fun invokeMethod(element: ShireDate, methodName: String?, args: List<Any>? = null): Any? {
+        val allMethods = element.javaClass.methods
+        val method = allMethods.find {
+            it.name == methodName
+        }
+        if (method != null) {
+            return method.invoke(element)
+        }
+
+        return element.toString()
     }
 }

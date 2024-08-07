@@ -6,12 +6,15 @@ import com.phodal.shirelang.compiler.ShireSyntaxAnalyzer
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 import com.phodal.shirelang.compiler.hobbit.execute.PatternActionProcessor
 import com.phodal.shirelang.psi.ShireFile
+import junit.framework.TestCase
 import kotlinx.coroutines.runBlocking
+import org.intellij.lang.annotations.Language
 
 class ShireQueryExpressionTest : BasePlatformTestCase() {
     fun testShouldGetFromExpression() {
         val sampleText = """HelloWorld.txt""".trimIndent()
 
+        @Language("Shire")
         val code = """
             ---
             variables:
@@ -34,8 +37,6 @@ class ShireQueryExpressionTest : BasePlatformTestCase() {
         myFixture.addFileToProject("HelloWorld.txt", sampleText)
         val file = myFixture.addFileToProject("sample.shire", code)
 
-        myFixture.openFileInEditor(file.virtualFile)
-
         val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
         val hole = compile.config!!
 
@@ -56,5 +57,43 @@ class ShireQueryExpressionTest : BasePlatformTestCase() {
             PsiFile(plain text):HelloWorld.txt
             "code"
             """.trimIndent())
+    }
+
+    fun testShouldTestForDayNow() {
+        @Language("Shire")
+        val code = """
+            ---
+            variables:
+              "dayNow": {
+                from {
+                    Date date
+                }
+                where {
+                    date.dayOfWeek() != 8
+                }
+                select {
+                    date.toString()
+                }
+              }
+            ---
+            
+            ${'$'}dayNow
+        """.trimIndent()
+
+        val file = myFixture.addFileToProject("sample.shire", code)
+
+        myFixture.openFileInEditor(file.virtualFile)
+
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
+        val hole = compile.config!!
+
+        val results = runBlocking {
+            hole.variables.mapValues {
+                PatternActionProcessor(project, hole).execute(it.value)
+            }
+        }
+
+        val nowDate = results["dayNow"]
+        TestCase.assertTrue(nowDate!!.startsWith("ShireDate(date="))
     }
 }
