@@ -14,7 +14,6 @@ import com.intellij.openapi.util.io.FileUtilRt
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.toNioPathOrNull
 import com.phodal.shirecore.search.indices.DiskSynchronizedEmbeddingSearchIndex
-import com.phodal.shirecore.search.indices.DiskSynchronizedEmbeddingSearchIndex.IndexEntry
 import com.phodal.shirecore.search.indices.EmbeddingSearchIndex
 import com.phodal.shirecore.search.indices.InMemoryEmbeddingSearchIndex
 import com.phodal.shirecore.search.indices.normalized
