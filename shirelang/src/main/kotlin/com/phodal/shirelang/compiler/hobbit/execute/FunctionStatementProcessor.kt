@@ -10,6 +10,8 @@ import com.phodal.shirecore.vcs.ShireGitCommit
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.ast.*
 import com.phodal.shirelang.compiler.hobbit.execute.variable.ShireQLVariableBuilder
+import com.phodal.shirelang.compiler.hobbit.execute.variable.VariableContainerManager
+import com.phodal.shirelang.compiler.hobbit.execute.variable.VariableEvaluator
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 import com.phodal.shirelang.compiler.patternaction.PatternActionTransform
 import kotlinx.coroutines.runBlocking
@@ -41,7 +43,7 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
 
         val valuedType = evaluateVariableTypes(variableElementsMap, whereStmt.statement)
 
-        val handledElements = processStatement(whereStmt.statement, variableElementsMap, valuedType)
+        val handledElements = processStatement(whereStmt.statement, variableElementsMap)
         val selectElements = processSelect(selectStmt, handledElements)
 
         return selectElements.joinToString("\n")
@@ -240,7 +242,6 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
         statement: Statement,
         variableElementsMap: Map<String, List<Any>>,
         /// todo: change to Mutable<Element, MutableMap<FrontMatterType, Any?>> for save value for project
-        typeValued: MutableMap<FrontMatterType, Any?>,
     ): List<Any> {
         val result = mutableListOf<Any>()
 
@@ -338,8 +339,8 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
                     }
 
                     is LogicalExpression -> {
-                        val left = processStatement(statement.left, variableElementsMap, typeValued)
-                        val right = processStatement(statement.right, variableElementsMap, typeValued)
+                        val left = processStatement(statement.left, variableElementsMap)
+                        val right = processStatement(statement.right, variableElementsMap)
 
                         when (statement.operator) {
                             OperatorType.And -> {
@@ -374,8 +375,8 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
     private fun evaluateVariableTypes(
         variableElementsMap: Map<String, List<Any>>,
         statement: Statement,
-    ): MutableMap<FrontMatterType, Any?> {
-        val typeValued: MutableMap<FrontMatterType, Any?> = mutableMapOf()
+    ): VariableContainerManager {
+        val typeValued = VariableContainerManager()
         variableElementsMap.forEach { (variableName, elements) ->
             elements.forEach { element ->
                 when (statement) {
@@ -389,15 +390,39 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
                         when (statement.operator) {
                             OperatorType.And -> {
                                 if (left.isNotEmpty() && right.isNotEmpty()) {
-                                    typeValued.putAll(left)
-                                    typeValued.putAll(right)
+                                    left.variables.forEach { evaluatorEntry ->
+                                        evaluatorEntry.value.valued.forEach { (key, value) ->
+                                            if (value != null) {
+                                                typeValued.putValue(element, key, value)
+                                            }
+                                        }
+                                    }
+                                    right.variables.forEach { evaluatorEntry ->
+                                        evaluatorEntry.value.valued.forEach { (key, value) ->
+                                            if (value != null) {
+                                                typeValued.putValue(element, key, value)
+                                            }
+                                        }
+                                    }
                                 }
                             }
 
                             OperatorType.Or -> {
                                 if (left.isNotEmpty() || right.isNotEmpty()) {
-                                    typeValued.putAll(left)
-                                    typeValued.putAll(right)
+                                    left.variables.forEach { evaluatorEntry ->
+                                        evaluatorEntry.value.valued.forEach { (key, value) ->
+                                            if (value != null) {
+                                                typeValued.putValue(element, key, value)
+                                            }
+                                        }
+                                    }
+                                    right.variables.forEach { evaluatorEntry ->
+                                        evaluatorEntry.value.valued.forEach { (key, value) ->
+                                            if (value != null) {
+                                                typeValued.putValue(element, key, value)
+                                            }
+                                        }
+                                    }
                                 }
                             }
 
@@ -419,17 +444,17 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
 
     private fun evaluateComparison(
         element: Any,
-        typeValued: MutableMap<FrontMatterType, Any?>,
+        typeValued: VariableContainerManager,
         leftStmt: FrontMatterType,
         rightStmt: FrontMatterType,
     ) {
         val left = evaluate(leftStmt, element)
         if (left != null) {
-            typeValued[leftStmt] = left
+            typeValued.putValue(element, leftStmt, left)
         } else {
             val right = evaluate(rightStmt, element)
             if (right != null) {
-                typeValued[rightStmt] = right
+                typeValued.putValue(element, rightStmt, right)
             }
         }
     }
