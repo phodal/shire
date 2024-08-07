@@ -267,54 +267,30 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
                         }
 
                         when (operator.type) {
-                            OperatorType.Equal -> {
-                                if (left == right) {
-                                    result.add(element)
-                                }
-                            }
-
-                            OperatorType.And -> {
-                                if (left == right) {
-                                    result.add(element)
-                                }
-                            }
-
+                            OperatorType.Equal -> if (left == right) result.add(element)
+                            OperatorType.And -> if (left == right) result.add(element)
+                            OperatorType.NotEqual -> if (left != right) result.add(element)
+                            OperatorType.Or -> if (left == true || right == true) result.add(element)
                             OperatorType.GreaterEqual -> {
                                 if (left as Comparable<Any> >= right as Comparable<Any>) {
                                     result.add(element)
                                 }
                             }
-
                             OperatorType.GreaterThan -> {
                                 if (left as Comparable<Any> > right as Comparable<Any>) {
                                     result.add(element)
                                 }
                             }
-
                             OperatorType.LessEqual -> {
                                 if (left as Comparable<Any> <= right as Comparable<Any>) {
                                     result.add(element)
                                 }
                             }
-
                             OperatorType.LessThan -> {
                                 if (left as Comparable<Any> < right as Comparable<Any>) {
                                     result.add(element)
                                 }
                             }
-
-                            OperatorType.NotEqual -> {
-                                if (left != right) {
-                                    result.add(element)
-                                }
-                            }
-
-                            OperatorType.Or -> {
-                                if (left == true || right == true) {
-                                    result.add(element)
-                                }
-                            }
-
                             else -> {
                                 logger<FunctionStatementProcessor>().warn("unknown operator: $operator")
                             }
