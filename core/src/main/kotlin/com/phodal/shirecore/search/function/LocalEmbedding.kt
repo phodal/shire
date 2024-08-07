@@ -36,9 +36,9 @@ class LocalEmbedding(
         var typeIds = tokenized.typeIds
 
         if (tokenized.ids.size >= dimensions) {
-            inputIds = inputIds.slice(0..dimensions).toLongArray()
-            attentionMask = attentionMask.slice(0..dimensions).toLongArray()
-            typeIds = typeIds.slice(0..dimensions).toLongArray()
+            inputIds = inputIds.slice(0 until dimensions).toLongArray()
+            attentionMask = attentionMask.slice(0 until dimensions).toLongArray()
+            typeIds = typeIds.slice(0 until dimensions).toLongArray()
         }
 
         val tensorInput = OrtUtil.reshape(inputIds, longArrayOf(1, inputIds.size.toLong()))
