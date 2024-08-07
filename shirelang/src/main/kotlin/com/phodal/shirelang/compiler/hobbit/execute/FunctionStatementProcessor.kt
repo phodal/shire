@@ -9,6 +9,7 @@ import com.nfeld.jsonpathkt.extension.read
 import com.phodal.shirecore.vcs.ShireGitCommit
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.ast.*
+import com.phodal.shirelang.compiler.hobbit.execute.schema.ShireQLSchema
 import com.phodal.shirelang.compiler.hobbit.execute.variable.ShireQLVariableBuilder
 import com.phodal.shirelang.compiler.hobbit.execute.variable.VariableContainerManager
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
@@ -40,7 +41,7 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
             ShireQLVariableBuilder(myProject, hole).buildVariables(fromStmt)
         }
 
-        val valuedType = evaluateVariableTypes(variableElementsMap, whereStmt.statement)
+        val valuedType = evalValueByElementStmt(variableElementsMap, whereStmt.statement)
 
         val handledElements = processStatement(whereStmt.statement, variableElementsMap, valuedType)
         val selectElements = processSelect(selectStmt, handledElements)
@@ -329,7 +330,7 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
     }
 
     /// a dirty implementation for multiple variables
-    private fun evaluateVariableTypes(
+    private fun evalValueByElementStmt(
         variableElementsMap: Map<String, List<Any>>,
         statement: Statement,
     ): VariableContainerManager {
@@ -341,8 +342,8 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
                         evaluateComparison(element, typeValued, statement.left, statement.right)
                     }
                     is LogicalExpression -> {
-                        val left = evaluateVariableTypes(variableElementsMap, statement.left)
-                        val right = evaluateVariableTypes(variableElementsMap, statement.right)
+                        val left = evalValueByElementStmt(variableElementsMap, statement.left)
+                        val right = evalValueByElementStmt(variableElementsMap, statement.right)
 
                         when (statement.operator) {
                             OperatorType.And -> {
@@ -405,6 +406,20 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
         leftStmt: FrontMatterType,
         rightStmt: FrontMatterType,
     ) {
+        if (element is ShireQLSchema) {
+            val left = evaluate(leftStmt, element)
+            if (left != null) {
+                typeValued.putValue(element, leftStmt, left)
+            } else {
+                val right = evaluate(rightStmt, element)
+                if (right != null) {
+                    typeValued.putValue(element, rightStmt, right)
+                }
+            }
+
+            return
+        }
+
         val left = evaluate(leftStmt, element)
         if (left != null) {
             typeValued.putValue(element, leftStmt, left)
