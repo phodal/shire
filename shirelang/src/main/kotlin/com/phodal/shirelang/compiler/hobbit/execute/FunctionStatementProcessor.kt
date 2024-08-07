@@ -11,7 +11,6 @@ import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.ast.*
 import com.phodal.shirelang.compiler.hobbit.execute.variable.ShireQLVariableBuilder
 import com.phodal.shirelang.compiler.hobbit.execute.variable.VariableContainerManager
-import com.phodal.shirelang.compiler.hobbit.execute.variable.VariableEvaluator
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 import com.phodal.shirelang.compiler.patternaction.PatternActionTransform
 import kotlinx.coroutines.runBlocking
@@ -43,7 +42,7 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
 
         val valuedType = evaluateVariableTypes(variableElementsMap, whereStmt.statement)
 
-        val handledElements = processStatement(whereStmt.statement, variableElementsMap)
+        val handledElements = processStatement(whereStmt.statement, variableElementsMap, valuedType)
         val selectElements = processSelect(selectStmt, handledElements)
 
         return selectElements.joinToString("\n")
@@ -241,7 +240,7 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
     private fun processStatement(
         statement: Statement,
         variableElementsMap: Map<String, List<Any>>,
-        /// todo: change to Mutable<Element, MutableMap<FrontMatterType, Any?>> for save value for project
+        valuedType: VariableContainerManager,
     ): List<Any> {
         val result = mutableListOf<Any>()
 
@@ -252,10 +251,10 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
                         val operator = statement.operator
                         /// for commit.authorDate <= date.now()
                         /// if we use element (Date) for commit.authorDate, will be null, should use element (ShireGitCommit)
-//                        val left = typeValued[statement.left]
-//                        val right = typeValued[statement.right]
-                        val left = evaluate(statement.left, element)
-                        val right = evaluate(statement.right, element)
+                        val left = valuedType.getValue(element, statement.left)
+                        val right = valuedType.getValue(element, statement.right)
+//                        val left = evaluate(statement.left, element)
+//                        val right = evaluate(statement.right, element)
 
                         if (left == null) {
                             logger<FunctionStatementProcessor>().warn("left is null: ${statement.left.display()}")
@@ -269,13 +268,13 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
 
                         when (operator.type) {
                             OperatorType.Equal -> {
-                                if (left != null && left == right) {
+                                if (left == right) {
                                     result.add(element)
                                 }
                             }
 
                             OperatorType.And -> {
-                                if (left != null && left == right) {
+                                if (left == right) {
                                     result.add(element)
                                 }
                             }
@@ -305,7 +304,7 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
                             }
 
                             OperatorType.NotEqual -> {
-                                if (left != null && left != right) {
+                                if (left != right) {
                                     result.add(element)
                                 }
                             }
@@ -339,8 +338,8 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
                     }
 
                     is LogicalExpression -> {
-                        val left = processStatement(statement.left, variableElementsMap)
-                        val right = processStatement(statement.right, variableElementsMap)
+                        val left = processStatement(statement.left, variableElementsMap, valuedType)
+                        val right = processStatement(statement.right, variableElementsMap, valuedType)
 
                         when (statement.operator) {
                             OperatorType.And -> {
