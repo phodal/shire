@@ -9,7 +9,7 @@ import com.nfeld.jsonpathkt.extension.read
 import com.phodal.shirecore.vcs.ShireGitCommit
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.ast.*
-import com.phodal.shirelang.compiler.hobbit.execute.model.ShireQLVariableBuilder
+import com.phodal.shirelang.compiler.hobbit.execute.variable.ShireQLVariableBuilder
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 import com.phodal.shirelang.compiler.patternaction.PatternActionTransform
 import kotlinx.coroutines.runBlocking

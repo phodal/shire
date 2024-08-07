@@ -1,4 +1,4 @@
-package com.phodal.shirelang.compiler.hobbit.execute.model
+package com.phodal.shirelang.compiler.hobbit.execute.variable
 
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
@@ -7,23 +7,8 @@ import com.phodal.shirecore.provider.shire.ShireSymbolProvider
 import com.phodal.shirecore.vcs.ShireGitCommit
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.ast.VariableElement
+import com.phodal.shirelang.compiler.hobbit.execute.schema.ShireDate
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
-
-enum class ShireQLFromType(val typeName: String) {
-    // PSI Query
-    PsiFile("PsiFile"),
-    PsiPackage("PsiPackage"),
-    PsiClass("PsiClass"),
-    PsiMethod("PsiMethod"),
-    PsiField("PsiField"),
-
-    // GitQuery
-    GitCommit("GitCommit"),
-    GitBranch("GitBranch"),
-
-    // Others
-    Date("Date"),
-}
 
 
 class ShireQLVariableBuilder(val myProject: Project, hole: HobbitHole) {
@@ -74,14 +59,4 @@ class ShireQLVariableBuilder(val myProject: Project, hole: HobbitHole) {
     private fun createDateFunc(it: VariableElement): List<ShireDate> {
         return listOf(ShireDate())
     }
-}
-
-class ShireDate: ShireQLElement {
-    fun now(): Long {
-        return System.currentTimeMillis()
-    }
-}
-
-interface ShireQLElement {
-
 }
