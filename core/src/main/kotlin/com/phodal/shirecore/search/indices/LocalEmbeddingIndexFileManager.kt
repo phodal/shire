@@ -170,7 +170,7 @@ class LocalEmbeddingIndexFileManager(root: Path, private val dimensions: Int = D
     }
 
     companion object {
-        const val DEFAULT_DIMENSIONS = 128
+        const val DEFAULT_DIMENSIONS = 384
         const val EMBEDDING_ELEMENT_SIZE = 4
 
         private const val IDS_FILENAME = "ids.json"
