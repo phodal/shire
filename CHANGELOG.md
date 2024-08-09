@@ -1,8 +1,8 @@
-# [](https://github.com/phodal/shire/compare/v0.5.0...v) (2024-08-05)
+# [](https://github.com/phodal/shire/compare/v0.5.0...v) (2024-08-09)
 
 ## [Unreleased]
 
-## [0.5.0](https://github.com/phodal/shire/compare/v0.4.8...v[0.5.0]) (2024-08-05)
+## [0.5.1] - 2024-08-09
 
 ### Bug Fixes
 
@@ -433,8 +433,8 @@
 - **shell:** add shell language support plugin file ([bdc1c90](https://github.com/phodal/shire/commit/bdc1c90f10d7c2c4fb8f7157db343dd756c11352))
 - **shire:** add Shire context action group and location support ([e3df86d](https://github.com/phodal/shire/commit/e3df86d16d0c9985fec787a8e76ce553be9a9a45))
 
-[Unreleased]: https://github.com/phodal/shire/compare/v0.5.0...HEAD
-[0.5.0]: https://github.com/phodal/shire/compare/v0.4.8...v0.5.0
+[Unreleased]: https://github.com/phodal/shire/compare/v0.5.1...HEAD
+[0.5.1]: https://github.com/phodal/shire/compare/v0.4.8...v0.5.1
 [0.4.8]: https://github.com/phodal/shire/compare/v0.4.7...v0.4.8
 [0.4.7]: https://github.com/phodal/shire/compare/v0.4.6...v0.4.7
 [0.4.6]: https://github.com/phodal/shire/compare/v0.4.5...v0.4.6
