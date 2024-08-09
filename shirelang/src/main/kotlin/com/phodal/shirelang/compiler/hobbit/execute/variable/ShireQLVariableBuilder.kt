@@ -7,7 +7,7 @@ import com.phodal.shirecore.provider.shire.ShireSymbolProvider
 import com.phodal.shirecore.vcs.ShireGitCommit
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.ast.VariableElement
-import com.phodal.shirelang.compiler.hobbit.execute.schema.ShireDate
+import com.phodal.shirelang.compiler.hobbit.execute.schema.ShireDateSchema
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 
 
@@ -56,7 +56,7 @@ class ShireQLVariableBuilder(val myProject: Project, hole: HobbitHole) {
         return elements
     }
 
-    private fun createDateFunc(it: VariableElement): List<ShireDate> {
-        return listOf(ShireDate())
+    private fun createDateFunc(it: VariableElement): List<ShireDateSchema> {
+        return listOf(ShireDateSchema())
     }
 }
