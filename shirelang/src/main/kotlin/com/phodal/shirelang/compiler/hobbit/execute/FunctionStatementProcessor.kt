@@ -9,7 +9,7 @@ import com.nfeld.jsonpathkt.extension.read
 import com.phodal.shirecore.vcs.ShireGitCommit
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.ast.*
-import com.phodal.shirelang.compiler.hobbit.execute.schema.ShireDate
+import com.phodal.shirelang.compiler.hobbit.execute.schema.ShireDateSchema
 import com.phodal.shirelang.compiler.hobbit.execute.schema.ShireQLSchema
 import com.phodal.shirelang.compiler.hobbit.execute.variable.ShireQLVariableBuilder
 import com.phodal.shirelang.compiler.hobbit.execute.variable.VariableContainerManager
@@ -88,7 +88,7 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
                     }
                 }
 
-                is ShireDate -> {
+                is ShireDateSchema -> {
                     when (statement) {
                         is Value -> {
                             invokeMethod(element, null)?.let {
@@ -518,7 +518,7 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
         }
     }
 
-    open fun invokeMethod(element: ShireDate, methodName: String?, args: List<Any>? = null): Any? {
+    open fun invokeMethod(element: ShireDateSchema, methodName: String?, args: List<Any>? = null): Any? {
         val allMethods = element.javaClass.methods
         val method = allMethods.find {
             it.name == methodName
