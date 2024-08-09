@@ -9,7 +9,7 @@ import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirelang.ShireBundle
 import com.phodal.shirelang.actions.ShireRunFileAction
 import com.phodal.shirelang.actions.base.DynamicShireActionService
-import com.phodal.shirelang.actions.validator.WhenConditionValidator
+import com.phodal.shirelang.actions.base.validator.WhenConditionValidator
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import kotlin.collections.firstOrNull
 
