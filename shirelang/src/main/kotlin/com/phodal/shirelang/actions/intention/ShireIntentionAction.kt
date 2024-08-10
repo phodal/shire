@@ -31,5 +31,4 @@ class ShireIntentionAction(private val hobbitHole: HobbitHole?, val file: PsiFil
 
         ShireRunFileAction.executeShireFile(project, config, null)
     }
-
 }

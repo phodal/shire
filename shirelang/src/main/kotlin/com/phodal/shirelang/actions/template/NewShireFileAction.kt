@@ -12,7 +12,7 @@ import com.phodal.shirelang.ShireBundle
 import com.phodal.shirelang.ShireIcons
 
 class NewShireFileAction : CreateFileFromTemplateAction(
-    ShireBundle.message("shire.newFile"), "Creates new AutoDev customize", ShireIcons.DEFAULT
+    ShireBundle.message("shire.newFile"), "Creates New Shire Action", ShireIcons.DEFAULT
 ), DumbAware {
     override fun getDefaultTemplateProperty(): String = "DefaultShireTemplate"
 
