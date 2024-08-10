@@ -20,9 +20,7 @@ class ShireContextMenuActionGroup : ActionGroup() {
         val actionService = DynamicShireActionService.getInstance()
 
         return actionService.getAction(ShireActionLocation.CONTEXT_MENU).mapNotNull { actionConfig ->
-            if (actionConfig.hole == null) {
-                return@mapNotNull null
-            }
+            if (actionConfig.hole == null) return@mapNotNull null
 
             val menuAction = ShireContextMenuAction(actionConfig)
             if (actionConfig.hole.shortcut != null) {
