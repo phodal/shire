@@ -58,10 +58,8 @@ class ShireTerminalAction : DumbAwareAction() {
     }
 
     private fun getPreferredPopupPoint(e: AnActionEvent): RelativePoint? {
-        val inputEvent = e.inputEvent
-
-        if (inputEvent is MouseEvent) {
-            val comp = inputEvent.getComponent()
+        if (e.inputEvent is MouseEvent) {
+            val comp = e.inputEvent?.component
             if (comp is AnActionHolder) {
                 return RelativePoint(comp.parent, Point(comp.x + JBUI.scale(3), comp.y + comp.height + JBUI.scale(3)))
             }
