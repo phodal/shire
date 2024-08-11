@@ -74,8 +74,9 @@ class ShireTerminalAction : DumbAwareAction() {
             it.selectAll()
         }
 
-        val label = JBLabel()
-        label.font = UIUtil.getLabelFont().deriveFont(Font.BOLD)
+        val label = JBLabel().also {
+            it.font = UIUtil.getLabelFont().deriveFont(Font.BOLD)
+        }
 
         val panel = SwingHelper.newLeftAlignedVerticalPanel(label, Box.createVerticalStrut(JBUI.scale(2)), textField)
         panel.addFocusListener(object : FocusAdapter() {

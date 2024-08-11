@@ -70,7 +70,6 @@ class ShireRunFileAction : DumbAwareAction() {
             }
 
             val runConfiguration = settings.configuration as ShireConfiguration
-
             runConfiguration.setScriptPath(config.shireFile.virtualFile.path)
             if (variables.isNotEmpty()) {
                 runConfiguration.setVariables(variables)
