@@ -17,7 +17,7 @@ class VariableTemplateCompiler(
     val language: Language,
     val file: PsiFile,
 ) {
-    private val log = logger<VariableTemplateCompiler>()
+    private val logger = logger<VariableTemplateCompiler>()
     private val variableMap: MutableMap<String, Any> = mutableMapOf()
 
     fun putAll(map: Map<String, Any>) {
@@ -36,7 +36,7 @@ class VariableTemplateCompiler(
             context.put("context", variableMap)
             Velocity.evaluate(context, sw, "#" + this.javaClass.name, template)
         } catch (e: Exception) {
-            log.error("Failed to compile template: $template", e)
+            logger.error("Failed to compile template: $template", e)
             sw.write(template)
         }
 

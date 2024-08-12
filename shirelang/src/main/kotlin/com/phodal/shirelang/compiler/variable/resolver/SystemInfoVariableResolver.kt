@@ -11,11 +11,8 @@ class SystemInfoVariableResolver(
     private val context: VariableResolverContext,
 ) : VariableResolver {
     override suspend fun resolve(): Map<String, Any> {
-        val result = mutableMapOf<String, Any>()
-        SystemInfoVariable.all().forEach {
-            result[it.variableName] = it.value!!
+        return SystemInfoVariable.all().associate {
+            it.variableName to it.value!!
         }
-
-        return result
     }
 }

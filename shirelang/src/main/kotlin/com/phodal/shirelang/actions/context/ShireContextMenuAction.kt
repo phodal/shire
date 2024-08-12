@@ -17,9 +17,7 @@ class ShireContextMenuAction(private val config: DynamicShireActionConfig) :
         templatePresentation.text = config.name.ifBlank { "Unknown" }
     }
 
-    override fun getActionUpdateThread(): ActionUpdateThread {
-        return ActionUpdateThread.BGT
-    }
+    override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT
 
 
     override fun update(e: AnActionEvent) {

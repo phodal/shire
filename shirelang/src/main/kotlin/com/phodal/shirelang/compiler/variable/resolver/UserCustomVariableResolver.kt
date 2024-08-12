@@ -8,12 +8,8 @@ class UserCustomVariableResolver(
     private val context: VariableResolverContext
 ) : VariableResolver {
     override suspend fun resolve() : Map<String, String> {
-        if (context.hole == null) {
-            return emptyMap()
-        }
-
-        return context.hole.variables.mapValues {
+        return context.hole?.variables?.mapValues {
             PatternActionProcessor(context.myProject, context.hole).execute(it.value)
-        }
+        } ?: emptyMap()
     }
 }

@@ -10,11 +10,9 @@ class CompositeVariableResolver(
    private val context: VariableResolverContext
 ) : VariableResolver {
     init {
-        val element: PsiElement? = ReadAction.compute<PsiElement?, Throwable>{
+        context.element = ReadAction.compute<PsiElement?, Throwable> {
             SelectElementStrategy.resolvePsiElement(context.myProject, context.editor)
         }
-
-        context.element = element
     }
 
     override suspend fun resolve(): Map<String, Any> {
