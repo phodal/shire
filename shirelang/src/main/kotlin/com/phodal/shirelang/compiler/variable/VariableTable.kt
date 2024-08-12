@@ -45,21 +45,21 @@ class VariableTable {
     }
 
     fun getAllVariables(): Map<String, VariableInfo> = table.toMap()
-}
 
-data class VariableInfo(
-    val type: VariableType,
-    val scope: VariableScope,
-    val lineDeclared: Int
-)
+    data class VariableInfo(
+        val type: VariableType,
+        val scope: VariableScope,
+        val lineDeclared: Int
+    )
 
-enum class VariableType {
-    String,
-    Boolean,
-    Number,
-}
+    enum class VariableType {
+        String,
+        Boolean,
+        Number,
+    }
 
-enum class VariableScope {
-    BuiltIn,
-    UserDefined
+    enum class VariableScope {
+        BuiltIn,
+        UserDefined
+    }
 }
