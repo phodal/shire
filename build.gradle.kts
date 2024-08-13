@@ -269,6 +269,7 @@ project(":plugin") {
         implementation(project(":toolsets:git"))
         implementation(project(":toolsets:httpclient"))
         implementation(project(":toolsets:terminal"))
+        implementation(project(":toolsets:sonarqube"))
     }
 
     // Collects all jars produced by compilation of project modules and merges them into singe one.

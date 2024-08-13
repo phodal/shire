@@ -17,5 +17,8 @@
 
         <module name="com.phodal.shire.httpclient"/>
         <module name="com.phodal.shire.terminal"/>
+
+        <!-- experimental features -->
+        <module name="com.phodal.shire.sonarqube"/>
     </content>
 </idea-plugin>
