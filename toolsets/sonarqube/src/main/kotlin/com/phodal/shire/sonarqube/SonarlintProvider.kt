@@ -4,6 +4,7 @@ import com.intellij.ide.DataManager
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.actionSystem.ex.ActionUtil.invokeAction
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
@@ -36,10 +37,19 @@ object SonarlintProvider {
             return "Project path is same as file path"
         }
 
+        logger<SonarlintProvider>().info("Analysis file: ${file.path}")
         val future = CompletableFuture<AnalysisResult>()
         val callback: AnalysisCallback = object : AnalysisCallback {
-            override fun onSuccess(p0: AnalysisResult) {
-                future.complete(p0)
+            override fun onSuccess(analysisResult: AnalysisResult) {
+                val result = StringBuilder()
+                analysisResult.findings.issuesPerFile.forEach { (file, issues) ->
+                    result.append("File: $file\n")
+                    issues.forEach { issue ->
+                        result.append("  - ${issue.userSeverity}: ${issue.message}\n")
+                    }
+                }
+
+                future.complete(analysisResult)
             }
 
             override fun onError(p0: Throwable) {
@@ -57,6 +67,7 @@ object SonarlintProvider {
             }
         }
 
+        logger<SonarlintProvider>().info("Analysis file: ${file.path} finished")
         return future.get().toString()
     }
 

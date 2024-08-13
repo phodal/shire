@@ -14,7 +14,7 @@ class TerminalToolchainVariableProvider : ToolchainVariableProvider {
         return variable is TerminalToolchainVariable
     }
 
-    override fun resolve(variable: ToolchainVariable, project: Project, editor: Editor, psiElement: PsiElement?): Any {
+    override fun resolve(variable: ToolchainVariable, project: Project, editor: Editor, psiElement  : PsiElement?): Any {
         val options = TerminalProjectOptionsProvider.getInstance(project)
 
         return when (variable) {
