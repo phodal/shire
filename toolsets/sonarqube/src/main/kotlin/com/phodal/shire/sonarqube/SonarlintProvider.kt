@@ -38,7 +38,7 @@ object SonarlintProvider {
         }
 
         logger<SonarlintProvider>().info("Analysis file: ${file.path}")
-        val future = CompletableFuture<AnalysisResult>()
+        val future = CompletableFuture<String>()
         val callback: AnalysisCallback = object : AnalysisCallback {
             override fun onSuccess(analysisResult: AnalysisResult) {
                 val result = StringBuilder()
@@ -49,7 +49,7 @@ object SonarlintProvider {
                     }
                 }
 
-                future.complete(analysisResult)
+                future.complete(result.toString())
             }
 
             override fun onError(p0: Throwable) {
@@ -68,7 +68,7 @@ object SonarlintProvider {
         }
 
         logger<SonarlintProvider>().info("Analysis file: ${file.path} finished")
-        return future.get().toString()
+        return future.get()
     }
 
 
