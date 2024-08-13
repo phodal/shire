@@ -1,0 +1,9 @@
+<idea-plugin package="com.phodal.shire.sonarqube">
+    <!--suppress PluginXmlValidity -->
+    <dependencies>
+        <plugin id="org.sonarlint.idea"/>
+    </dependencies>
+
+    <extensions defaultExtensionNs="com.phodal">
+    </extensions>
+</idea-plugin>

@@ -183,6 +183,18 @@ project(":toolsets:terminal") {
     }
 }
 
+
+project(":toolsets:sonarqube") {
+    intellij {
+        version.set(prop("ideaVersion"))
+        plugins.set(ideaPlugins + prop("sonarPlugin"))
+    }
+
+    dependencies {
+        implementation(project(":core"))
+    }
+}
+
 project(":shirelang") {
     apply {
         plugin("org.jetbrains.grammarkit")
