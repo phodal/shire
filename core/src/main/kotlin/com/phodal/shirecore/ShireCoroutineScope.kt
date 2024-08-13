@@ -14,14 +14,16 @@ public val workerThread = AppExecutorUtil.getAppExecutorService().asCoroutineDis
 
 
 @Service(Service.Level.PROJECT)
-class ShireCoroutineScope(val coroutineScope: CoroutineScope = CoroutineScope(
-    SupervisorJob() + workerThread + coroutineExceptionHandler
-)) {
-    companion object {
-        val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
-            Logger.getInstance(ShireCoroutineScope::class.java).error(throwable)
-        }
+class ShireCoroutineScope {
+    val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        Logger.getInstance(ShireCoroutineScope::class.java).error(throwable)
+    }
 
+    val coroutineScope: CoroutineScope = CoroutineScope(
+        SupervisorJob() + workerThread + coroutineExceptionHandler
+    )
+
+    companion object {
         fun scope(project: Project): CoroutineScope =
             project.getService(ShireCoroutineScope::class.java).coroutineScope
     }

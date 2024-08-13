@@ -23,6 +23,6 @@ class SonarqubeVariableProvider : ToolchainVariableProvider {
                 SonarlintProvider.analysisFile(project, file)
             }
             else -> ""
-        } ?: ""
+        }
     }
 }
