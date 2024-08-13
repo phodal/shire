@@ -55,12 +55,19 @@ nav_order: 3
 支持的工具链：
 
 - Git
+- SonarQube
 - 依赖：Maven, Gradle （待支持）
 
-## Git
+### Git
 
 Git 工具链提供以下变量：
 
 - `currentChanges`，当前分支的当前更改。
 - `currentBranch`，当前分支的名称。
 - `historyCommitMessages`，当前提交的提交消息。
+
+### SonarQube
+
+SonarQube 工具链提供以下变量：
+
+- `sonarIssues`，SonarQube 中的问题列表。
