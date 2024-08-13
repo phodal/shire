@@ -4,25 +4,64 @@ import com.intellij.ide.DataManager
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.actionSystem.ex.ActionUtil.invokeAction
+import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.treeStructure.Tree
+import org.sonarlint.intellij.analysis.Analysis
+import org.sonarlint.intellij.analysis.AnalysisCallback
+import org.sonarlint.intellij.analysis.AnalysisResult
+import org.sonarlint.intellij.analysis.AnalysisSubmitter
 import org.sonarlint.intellij.cayc.CleanAsYouCodeService
 import org.sonarlint.intellij.common.util.SonarLintUtils
 import org.sonarlint.intellij.finding.issue.LiveIssue
+import org.sonarlint.intellij.tasks.startBackgroundableModalTask
+import org.sonarlint.intellij.trigger.TriggerType
 import org.sonarlint.intellij.ui.CurrentFilePanel
 import org.sonarlint.intellij.ui.tree.IssueTree
 import org.sonarlint.intellij.ui.tree.IssueTreeModelBuilder
 import org.sonarlint.intellij.util.SonarLintActions
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import java.util.Map
+import java.util.concurrent.CompletableFuture
 import java.util.function.Predicate
+import java.util.stream.Stream
 
 object SonarlintProvider {
     private val analyzeCurrentFileAction: AnAction = SonarLintActions.getInstance().analyzeCurrentFileAction()
 
-    fun getSonarlintVersion(project: Project, file: VirtualFile): String {
+    fun analysisFile(project: Project, file: VirtualFile): String {
+        val hasProject = Stream.of(file).anyMatch { f: VirtualFile -> f.path == project.basePath }
+        if (hasProject) {
+            return "Project path is same as file path"
+        }
+
+        val future = CompletableFuture<AnalysisResult>()
+        val callback: AnalysisCallback = object : AnalysisCallback {
+            override fun onSuccess(p0: AnalysisResult) {
+                future.complete(p0)
+            }
+
+            override fun onError(p0: Throwable) {
+                future.completeExceptionally(p0)
+            }
+
+        }
+
+        val analysis = Analysis(project, listOf(file), TriggerType.CURRENT_FILE_ACTION, callback)
+        startBackgroundableModalTask(
+            project, AnalysisSubmitter.ANALYSIS_TASK_TITLE
+        ) { indicator: ProgressIndicator? ->
+            if (indicator != null) {
+                analysis.run(indicator)
+            }
+        }
+
+        return future.get().toString()
+    }
+
+
+    fun getSonarResult(project: Project, file: VirtualFile): String {
         var treeBuilder: IssueTreeModelBuilder = IssueTreeModelBuilder(project)
         val model = treeBuilder.createModel(false)
         val tree: Tree = IssueTree(project, model)
@@ -42,8 +81,7 @@ object SonarlintProvider {
 
         val currentIssues: Collection<LiveIssue> = listOf()
 
-        if (SonarLintUtils.getService(CleanAsYouCodeService::class.java)
-                .shouldFocusOnNewCode(project)
+        if (SonarLintUtils.getService(CleanAsYouCodeService::class.java).shouldFocusOnNewCode(project)
         ) {
             val oldIssues: List<LiveIssue> =
                 currentIssues.stream().filter(Predicate.not<LiveIssue> { obj: LiveIssue -> obj.isOnNewCode() })
