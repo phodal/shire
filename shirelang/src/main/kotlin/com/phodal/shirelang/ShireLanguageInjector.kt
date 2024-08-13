@@ -14,10 +14,7 @@ import com.phodal.shirecore.markdown.Code.Companion.findLanguage
 
 class ShireLanguageInjector : LanguageInjector {
     override fun getLanguagesToInject(host: PsiLanguageInjectionHost, registrar: InjectedLanguagePlaces) {
-        // inject regex
         injectRegexLanguage(host, registrar)
-
-        // inject markdown highlight
         injectCodeBlockLanguage(host, registrar)
     }
 

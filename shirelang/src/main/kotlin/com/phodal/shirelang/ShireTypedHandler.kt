@@ -13,9 +13,7 @@ import com.phodal.shirelang.psi.ShireTypes
 
 class ShireTypedHandler : TypedHandlerDelegate() {
     override fun checkAutoPopup(charTyped: Char, project: Project, editor: Editor, file: PsiFile): Result {
-        if (file !is ShireFile) {
-            return Result.CONTINUE
-        }
+        if (file !is ShireFile) return Result.CONTINUE
 
         return when (charTyped) {
             '`' -> {
