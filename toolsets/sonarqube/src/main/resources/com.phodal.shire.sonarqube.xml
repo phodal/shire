@@ -7,4 +7,12 @@
     <extensions defaultExtensionNs="com.phodal">
         <shireToolchainVariableProvider implementation="com.phodal.shire.sonarqube.SonarqubeVariableProvider"/>
     </extensions>
+
+<!--    <actions>-->
+<!--        <action id="shire.SonarMenu"-->
+<!--                text="Shire Action" description="Shire context action group"-->
+<!--                class="com.phodal.shire.sonarqube.CustomSonarLintMenu">-->
+<!--            <add-to-group group-id="SonarLint.AnalyzeMenu"/>-->
+<!--        </action>-->
+<!--    </actions>-->
 </idea-plugin>
