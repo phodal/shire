@@ -2,7 +2,7 @@
 layout: default
 title: Shire Query Language
 parent: Shire Language
-nav_order: 5
+nav_order: 7
 ---
 
 Shire 查询语言是一种查询语言，允许你查询当前文件的 AST（抽象语法树）、Git、依赖信息等。它在 Shire 中用于定义当前文件的上下文以及可以在当前文件上执行的操作。

@@ -2,7 +2,7 @@
 layout: default
 title: Shire Custom Variable
 parent: Shire Language
-nav_order: 4
+nav_order: 5
 ---
 
 为了让用户更好地使用 Shire，我们提供了一些常规自定义变量，以便用户可以更方便地使用。
