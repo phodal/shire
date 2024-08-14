@@ -70,4 +70,5 @@ Git 工具链提供以下变量：
 
 SonarQube 工具链提供以下变量：
 
-- `sonarIssues`，SonarQube 中的问题列表。
+- `sonarIssues`，当前文件的 SonarQube 中的问题列表。
+- `sonarResults`，当前文件的 SonarQube 中的结果，含有问题的详细信息。

@@ -31,11 +31,9 @@ import java.util.stream.Stream
 object SonarlintProvider {
     private val analyzeCurrentFileAction: AnAction = SonarLintActions.getInstance().analyzeCurrentFileAction()
 
-    fun analysisFile(project: Project, file: VirtualFile): String {
+    fun analysisFile(project: Project, file: VirtualFile): String? {
         val hasProject = Stream.of(file).anyMatch { f: VirtualFile -> f.path == project.basePath }
-        if (hasProject) {
-            return "Project path is same as file path"
-        }
+        if (hasProject) return null
 
         logger<SonarlintProvider>().info("Analysis file: ${file.path}")
         val future = CompletableFuture<String>()
