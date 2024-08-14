@@ -405,7 +405,7 @@ project(":") {
         implementation(libs.okhttp)
         implementation(libs.okhttp.sse)
         // open ai deps
-        implementation("io.reactivex.rxjava3:rxjava:3.1.8")
+        implementation("io.reactivex.rxjava3:rxjava:3.1.9")
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.2")
         implementation("com.fasterxml.jackson.core:jackson-databind:2.17.2")
     }
