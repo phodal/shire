@@ -1,5 +1,6 @@
 package com.phodal.shire.sonarqube
 
+import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.project.Project
@@ -15,31 +16,35 @@ import java.util.stream.Stream
 
 object SonarlintProvider {
     fun analysisFile(project: Project, file: VirtualFile): String? {
-        return analysis(file, project) {
-            val result = StringBuilder()
-            it.findings.issuesPerFile.forEach { (file, issues) ->
-                result.append("File: $file\n")
-                issues.forEach { issue ->
-                    result.append("  - ${issue.userSeverity}: ${issue.message}\n")
+        return ReadAction.compute<String, Throwable> {
+            analysis(file, project) {
+                val result = StringBuilder()
+                it.findings.issuesPerFile.forEach { (file, issues) ->
+                    result.append("File: $file\n")
+                    issues.forEach { issue ->
+                        result.append("  - ${issue.userSeverity}: ${issue.message}\n")
+                    }
                 }
-            }
 
-            result.toString()
+                result.toString()
+            }
         }
     }
 
     fun analysisResults(project: Project, file: VirtualFile): String? {
-        return analysis(file, project) {
-            val result = StringBuilder()
-            it.findings.issuesPerFile.forEach { (file, issues) ->
-                result.append("File: $file\n")
-                issues.forEach { issue ->
-                    result.append("  - ${issue.userSeverity}, ${issue.validTextRange}: ${issue.message}\n")
-                    result.append("  - ${issue.quickFixes()}\n")
+        return ReadAction.compute<String, Throwable> {
+            analysis(file, project) {
+                val result = StringBuilder()
+                it.findings.issuesPerFile.forEach { (file, issues) ->
+                    result.append("File: $file\n")
+                    issues.forEach { issue ->
+                        result.append("  - ${issue.userSeverity}, ${issue.validTextRange}: ${issue.message}\n")
+                        result.append("  - ${issue.quickFixes()}\n")
+                    }
                 }
-            }
 
-            result.toString()
+                result.toString()
+            }
         }
     }
 
