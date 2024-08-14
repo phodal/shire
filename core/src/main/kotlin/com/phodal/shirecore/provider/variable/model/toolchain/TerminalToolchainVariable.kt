@@ -1,4 +1,6 @@
-package com.phodal.shirecore.provider.variable.model
+package com.phodal.shirecore.provider.variable.model.toolchain
+
+import com.phodal.shirecore.provider.variable.model.ToolchainVariable
 
 /**
  * Enum representing variables used in the generation of code structures.

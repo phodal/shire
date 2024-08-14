@@ -14,7 +14,7 @@ import com.intellij.vcs.log.impl.VcsProjectLog
 import com.intellij.vcs.log.visible.filters.VcsLogFilterObject
 import com.phodal.shirecore.provider.variable.ToolchainVariableProvider
 import com.phodal.shirecore.provider.variable.model.ToolchainVariable
-import com.phodal.shirecore.provider.variable.model.VcsToolchainVariable
+import com.phodal.shirecore.provider.variable.model.toolchain.VcsToolchainVariable
 import com.phodal.shirelang.git.VcsPrompting
 import java.awt.EventQueue.invokeAndWait
 

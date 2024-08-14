@@ -5,7 +5,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
 import com.intellij.psi.PsiElement
 import com.phodal.shirecore.provider.variable.ToolchainVariableProvider
-import com.phodal.shirecore.provider.variable.model.TerminalToolchainVariable
+import com.phodal.shirecore.provider.variable.model.toolchain.TerminalToolchainVariable
 import com.phodal.shirecore.provider.variable.model.ToolchainVariable
 import org.jetbrains.plugins.terminal.TerminalProjectOptionsProvider
 

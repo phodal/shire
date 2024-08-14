@@ -1,18 +1,16 @@
-package com.phodal.shirecore.provider.variable.model
+package com.phodal.shirecore.provider.variable.model.toolchain
+
+import com.phodal.shirecore.provider.variable.model.ToolchainVariable
 
 /**
  * Enum representing variables used in the generation of code structures.
  */
-enum class VcsToolchainVariable(
+enum class MavenToolchainVariable(
     override val variableName: String,
     override var value: Any? = null,
     override val description: String = "",
 ) : ToolchainVariable {
-    CurrentChanges("currentChanges", description = "The code changes in the current working directory"),
-
-    CurrentBranch("currentBranch", description = "The name of the current branch"),
-
-    HistoryCommitMessages("historyCommitMessages", description = "The commit messages in the history"),
+    MavenDependencies("mavenDependencies", description = "The dependencies of the project"),
     ;
 
     companion object {
@@ -22,7 +20,7 @@ enum class VcsToolchainVariable(
          * @param variableName the variable name to search for
          * @return the PsiVariable with the given variable name
          */
-        fun from(variableName: String): VcsToolchainVariable? {
+        fun from(variableName: String): MavenToolchainVariable? {
             return values().firstOrNull { it.variableName == variableName }
         }
     }

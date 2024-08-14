@@ -1,12 +1,8 @@
 package com.phodal.shirelang.compiler.variable.resolver
 
 import com.intellij.openapi.diagnostic.logger
-import com.intellij.psi.PsiManager
 import com.phodal.shirecore.provider.variable.*
-import com.phodal.shirecore.provider.variable.impl.DefaultPsiContextVariableProvider
-import com.phodal.shirecore.provider.variable.model.PsiContextVariable
 import com.phodal.shirecore.provider.variable.model.ToolchainVariable
-import com.phodal.shirecore.provider.variable.model.VcsToolchainVariable
 import com.phodal.shirelang.compiler.variable.base.VariableResolver
 import com.phodal.shirelang.compiler.variable.base.VariableResolverContext
 

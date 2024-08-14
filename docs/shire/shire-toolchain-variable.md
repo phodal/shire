@@ -13,9 +13,12 @@ nav_order: 4
 
 - Git
 - SonarQube
-- 依赖：Maven, Gradle （待支持）
+- Maven, Gradle（TODO）
 
 ## Git
+
+{: .label .label-red }
+Builtin plugin: Git4Idea
 
 Git 工具链提供以下变量：
 
@@ -25,7 +28,19 @@ Git 工具链提供以下变量：
 
 ## SonarQube
 
+{: .label .label-red }
+Require: [Sonarlint plugin](https://plugins.jetbrains.com/plugin/7973-sonarlint)
+
 SonarQube 工具链提供以下变量：
 
 - `sonarIssues`，当前文件的 SonarQube 中的问题列表。
 - `sonarResults`，当前文件的 SonarQube 中的结果，含有问题的详细信息。
+
+## Maven, Gradle (TODO)
+
+{: .label .label-red }
+Builtin plugin: Java
+
+Maven, Gradle 工具链提供以下变量：
+
+- `mavenDependencies`，当前文件的 Maven, Gradle 依赖列表。
