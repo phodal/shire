@@ -28,6 +28,21 @@ object SonarlintProvider {
         }
     }
 
+    fun analysisResults(project: Project, file: VirtualFile): String? {
+        return analysis(file, project) {
+            val result = StringBuilder()
+            it.findings.issuesPerFile.forEach { (file, issues) ->
+                result.append("File: $file\n")
+                issues.forEach { issue ->
+                    result.append("  - ${issue.userSeverity}, ${issue.validTextRange}: ${issue.message}\n")
+                    result.append("  - ${issue.quickFixes()}\n")
+                }
+            }
+
+            result.toString()
+        }
+    }
+
     private fun analysis(
         file: VirtualFile,
         project: Project,
@@ -58,19 +73,4 @@ object SonarlintProvider {
         return future.get()
     }
 
-
-    fun analysisResults(project: Project, file: VirtualFile): String? {
-        return analysis(file, project) {
-            val result = StringBuilder()
-            it.findings.issuesPerFile.forEach { (file, issues) ->
-                result.append("File: $file\n")
-                issues.forEach { issue ->
-                    result.append("  - ${issue.userSeverity}, ${issue.validTextRange}: ${issue.message}\n")
-                    result.append("  - ${issue.quickFixes()}\n")
-                }
-            }
-
-            result.toString()
-        }
-    }
 }
