@@ -16,8 +16,8 @@ import java.util.stream.Stream
 
 object SonarlintProvider {
     fun analysisFile(project: Project, file: VirtualFile): String? {
-        return ReadAction.compute<String, Throwable> {
-            analysis(file, project) {
+        return analysis(file, project) {
+            ReadAction.compute<String, Throwable> {
                 val result = StringBuilder()
                 it.findings.issuesPerFile.forEach { (file, issues) ->
                     result.append("File: $file\n")
@@ -32,8 +32,8 @@ object SonarlintProvider {
     }
 
     fun analysisResults(project: Project, file: VirtualFile): String? {
-        return ReadAction.compute<String, Throwable> {
-            analysis(file, project) {
+        return analysis(file, project) {
+            ReadAction.compute<String, Throwable> {
                 val result = StringBuilder()
                 it.findings.issuesPerFile.forEach { (file, issues) ->
                     result.append("File: $file\n")
@@ -77,5 +77,4 @@ object SonarlintProvider {
         logger<SonarlintProvider>().info("Analysis file: ${file.path} finished")
         return future.get()
     }
-
 }
