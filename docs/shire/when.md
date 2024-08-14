@@ -46,16 +46,26 @@ when: { $filePath.contains("src/main/java") && $fileName.contains(".java") }
 
 ### 支持的函数
 
-详细见：[com.phodal.shirelang.compiler.hobbit.MethodCall]
+详细见：[com.phodal.shirelang.compiler.hobbit.ast.ExpressionBuiltInMethod]
 
-- "length"     -> value.length
-- "trim"       -> value.trim()
-- "contains"    -> value.contains(parameters[0] as String)
-- "startsWith" -> value.startsWith(parameters[0] as String)
-- "endsWith"   -> value.endsWith(parameters[0] as String)
-- "lowercase"  -> value.lowercase()
-- "uppercase"  -> value.uppercase()
-- "isEmpty"    -> value.isEmpty()
-- "isNotEmpty" -> value.isNotEmpty()
-- "first"      -> value.first().toString()
-- "last"       -> value.last().toString()
+```Kotlin
+enum class ExpressionBuiltInMethod(
+    val methodName: String,
+    val description: String,
+    val postInsertString: String = "()",
+    val moveCaret: Int = 2,
+) {
+    LENGTH("length", "The length of the string"),
+    TRIM("trim", "The trimmed string"),
+    CONTAINS("contains", "Check if the string contains a substring", "(\"\")", 2),
+    STARTS_WITH("startsWith", "Check if the string starts with a substring", "(\"\")", 2),
+    ENDS_WITH("endsWith", "Check if the string ends with a substring", "(\"\")", 2),
+    LOWERCASE("lowercase", "The lowercase version of the string"),
+    UPPERCASE("uppercase", "The uppercase version of the string"),
+    IS_EMPTY("isEmpty", "Check if the string is empty"),
+    IS_NOT_EMPTY("isNotEmpty", "Check if the string is not empty"),
+    FIRST("first", "The first character of the string"),
+    LAST("last", "The last character of the string"),
+    MATCHES("matches", "Check if the string matches a regex pattern", "(\"//\")", 3);
+}
+```
