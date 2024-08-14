@@ -15,6 +15,24 @@ import java.util.stream.Stream
 
 object SonarlintProvider {
     fun analysisFile(project: Project, file: VirtualFile): String? {
+        return analysis(file, project) {
+            val result = StringBuilder()
+            it.findings.issuesPerFile.forEach { (file, issues) ->
+                result.append("File: $file\n")
+                issues.forEach { issue ->
+                    result.append("  - ${issue.userSeverity}: ${issue.message}\n")
+                }
+            }
+
+            result.toString()
+        }
+    }
+
+    private fun analysis(
+        file: VirtualFile,
+        project: Project,
+        callback: (AnalysisResult) -> String,
+    ): String? {
         val hasProject = Stream.of(file).anyMatch { f: VirtualFile -> f.path == project.basePath }
         if (hasProject) return null
 
@@ -22,27 +40,16 @@ object SonarlintProvider {
         val future = CompletableFuture<String>()
         val callback: AnalysisCallback = object : AnalysisCallback {
             override fun onSuccess(analysisResult: AnalysisResult) {
-                val result = StringBuilder()
-                analysisResult.findings.issuesPerFile.forEach { (file, issues) ->
-                    result.append("File: $file\n")
-                    issues.forEach { issue ->
-                        result.append("  - ${issue.userSeverity}: ${issue.message}\n")
-                    }
-                }
-
-                future.complete(result.toString())
+                future.complete(callback(analysisResult))
             }
 
             override fun onError(throwable: Throwable) {
                 future.completeExceptionally(throwable)
             }
-
         }
 
         val analysis = Analysis(project, listOf(file), TriggerType.CURRENT_FILE_ACTION, callback)
-        startBackgroundableModalTask(
-            project, AnalysisSubmitter.ANALYSIS_TASK_TITLE
-        ) { indicator: ProgressIndicator? ->
+        startBackgroundableModalTask(project, AnalysisSubmitter.ANALYSIS_TASK_TITLE) { indicator: ProgressIndicator? ->
             if (indicator != null) {
                 analysis.run(indicator)
             }
