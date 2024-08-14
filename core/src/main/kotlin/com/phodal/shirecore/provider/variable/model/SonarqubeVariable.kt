@@ -9,6 +9,7 @@ enum class SonarqubeVariable(
     override val description: String = "",
 ) : ToolchainVariable {
     Issue("sonarIssue", null, "the issue of current file"),
+    Results("sonarResults", null, "the results of current file")
     ;
 
     companion object {

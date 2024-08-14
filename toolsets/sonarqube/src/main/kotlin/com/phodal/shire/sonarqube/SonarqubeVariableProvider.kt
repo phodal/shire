@@ -22,6 +22,12 @@ class SonarqubeVariableProvider : ToolchainVariableProvider {
 
                 SonarlintProvider.analysisFile(project, file) ?: ""
             }
+            SonarqubeVariable.Results -> {
+                val file: VirtualFile = FileDocumentManager.getInstance().getFile(editor.document)
+                    ?: throw IllegalStateException("No file found for editor")
+
+                SonarlintProvider.analysisResults(project, file) ?: ""
+            }
             else -> ""
         }
     }
