@@ -1,5 +1,6 @@
 package com.phodal.shirecore.config.interaction.task
 
+import com.intellij.openapi.application.runInEdt
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.fileTypes.PlainTextLanguage
@@ -86,7 +87,9 @@ open class FileGenerateTask(
                             VfsUtil.markDirtyAndRefresh(true, true, true, parentDir)
                         } else {
                             try {
-                                FileEditorManager.getInstance(project).openFile(virtualFile, true)
+                                runInEdt {
+                                    FileEditorManager.getInstance(project).openFile(virtualFile, true)
+                                }
                                 return
                             } catch (e: Exception) {
                                 //
