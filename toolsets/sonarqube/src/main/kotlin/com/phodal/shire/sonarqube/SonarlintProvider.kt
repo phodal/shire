@@ -38,7 +38,7 @@ object SonarlintProvider {
 
         logger<SonarlintProvider>().info("Analysis file: ${file.path}")
         val future = CompletableFuture<String>()
-        val callback: AnalysisCallback = object : AnalysisCallback {
+        val analysis = Analysis(project, listOf(file), TriggerType.CURRENT_FILE_ACTION, object : AnalysisCallback {
             override fun onSuccess(analysisResult: AnalysisResult) {
                 future.complete(callback(analysisResult))
             }
@@ -46,9 +46,8 @@ object SonarlintProvider {
             override fun onError(throwable: Throwable) {
                 future.completeExceptionally(throwable)
             }
-        }
+        })
 
-        val analysis = Analysis(project, listOf(file), TriggerType.CURRENT_FILE_ACTION, callback)
         startBackgroundableModalTask(project, AnalysisSubmitter.ANALYSIS_TASK_TITLE) { indicator: ProgressIndicator? ->
             if (indicator != null) {
                 analysis.run(indicator)
@@ -61,6 +60,17 @@ object SonarlintProvider {
 
 
     fun analysisResults(project: Project, file: VirtualFile): String? {
-        TODO()
+        return analysis(file, project) {
+            val result = StringBuilder()
+            it.findings.issuesPerFile.forEach { (file, issues) ->
+                result.append("File: $file\n")
+                issues.forEach { issue ->
+                    result.append("  - ${issue.userSeverity}, ${issue.validTextRange}: ${issue.message}\n")
+                    result.append("  - ${issue.quickFixes()}\n")
+                }
+            }
+
+            result.toString()
+        }
     }
 }
