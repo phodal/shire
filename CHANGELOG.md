@@ -1,6 +1,16 @@
-# [](https://github.com/phodal/shire/compare/v0.5.0...v) (2024-08-09)
+# [](https://github.com/phodal/shire/compare/v0.5.2...v) (2024-08-15)
 
 ## [Unreleased]
+
+## [0.5.2](https://github.com/phodal/shire/compare/v0.5.0...v[0.5.2]) (2024-08-15)
+
+### Features
+
+- **plugin:** add sonarqube module and dependency [#54](https://github.com/phodal/shire/issues/54) ([0e71866](https://github.com/phodal/shire/commit/0e7186637061e2483d96b865389d2b8b58fa452c))
+- **sonarqube:** add CustomSonarLintMenu and extension provider [#54](https://github.com/phodal/shire/issues/54) ([cb2a401](https://github.com/phodal/shire/commit/cb2a4016ee4d9a64d533fc3307d60da0de65284d))
+- **sonarqube:** implement SonarlintProvider for analyzing current file [#54](https://github.com/phodal/shire/issues/54) ([a5a505b](https://github.com/phodal/shire/commit/a5a505b422595738131d65e6bd04f9872091e702))
+- **sonarqube:** implement SonarqubeVariableProvider and add SonarqubeVariable enum [#54](https://github.com/phodal/shire/issues/54) ([4b50a28](https://github.com/phodal/shire/commit/4b50a2879b5001c78633b071cbb8f88967247a88))
+- **toolsets:** add SonarQube plugin and project configuration [#54](https://github.com/phodal/shire/issues/54) ([a487e14](https://github.com/phodal/shire/commit/a487e1436ffb5689cc2c8786658b772ddd5e8284))
 
 ## [0.5.1] - 2024-08-09
 
@@ -433,7 +443,8 @@
 - **shell:** add shell language support plugin file ([bdc1c90](https://github.com/phodal/shire/commit/bdc1c90f10d7c2c4fb8f7157db343dd756c11352))
 - **shire:** add Shire context action group and location support ([e3df86d](https://github.com/phodal/shire/commit/e3df86d16d0c9985fec787a8e76ce553be9a9a45))
 
-[Unreleased]: https://github.com/phodal/shire/compare/v0.5.1...HEAD
+[Unreleased]: https://github.com/phodal/shire/compare/v0.5.2...HEAD
+[0.5.2]: https://github.com/phodal/shire/compare/v0.5.1...v0.5.2
 [0.5.1]: https://github.com/phodal/shire/compare/v0.4.8...v0.5.1
 [0.4.8]: https://github.com/phodal/shire/compare/v0.4.7...v0.4.8
 [0.4.7]: https://github.com/phodal/shire/compare/v0.4.6...v0.4.7
