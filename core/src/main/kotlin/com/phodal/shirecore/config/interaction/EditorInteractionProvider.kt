@@ -140,7 +140,7 @@ class EditorInteractionProvider : LocationInteractionProvider {
         val editor = context.editor
 
         val offset = if (isInsertBefore) {
-            context.editor.selectionModel.selectionStart
+            editor.selectionModel.selectionStart
         } else {
             editor.caretModel.offset
         }
