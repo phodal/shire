@@ -27,7 +27,7 @@ open class FileGenerateTask(
     val fileName: String?,
     private val codeOnly: Boolean = false,
     private val taskName: String = ShireCoreBundle.message("intentions.request.background.process.title"),
-    val postExecute: PostFunction
+    val postExecute: PostFunction,
 ) :
     Task.Backgroundable(project, taskName) {
     private val projectRoot = project.guessProjectDir()!!
@@ -77,27 +77,28 @@ open class FileGenerateTask(
         postExecute.invoke(result, null)
     }
 
-    private fun refreshAndOpenInEditor(file: Path, parentDir: VirtualFile) {
-        runBlocking {
-            ProgressManager.getInstance().run(object : Modal(project, "Refreshing Project Model", true) {
-                override fun run(indicator: ProgressIndicator) {
-                    repeat(5) {
-                        val virtualFile = LocalFileSystem.getInstance().findFileByNioFile(file)
-                        if (virtualFile == null) {
-                            VfsUtil.markDirtyAndRefresh(true, true, true, parentDir)
-                        } else {
-                            try {
-                                runInEdt {
-                                    FileEditorManager.getInstance(project).openFile(virtualFile, true)
-                                }
-                                return
-                            } catch (e: Exception) {
-                                //
-                            }
+    private fun refreshAndOpenInEditor(file: Path, parentDir: VirtualFile) = runBlocking {
+        ProgressManager.getInstance().run(RefreshProjectModal(file, parentDir))
+    }
+
+    inner class RefreshProjectModal(private val file: Path, private val parentDir: VirtualFile) :
+        Modal(project, "Refreshing Project Model", true) {
+        override fun run(indicator: ProgressIndicator) {
+            repeat(5) {
+                val virtualFile = LocalFileSystem.getInstance().findFileByNioFile(file)
+                if (virtualFile == null) {
+                    VfsUtil.markDirtyAndRefresh(true, true, true, parentDir)
+                } else {
+                    try {
+                        runInEdt {
+                            FileEditorManager.getInstance(project).openFile(virtualFile, true)
                         }
+                        return
+                    } catch (e: Exception) {
+                        //
                     }
                 }
-            })
+            }
         }
     }
 }
