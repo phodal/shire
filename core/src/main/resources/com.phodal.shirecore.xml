@@ -139,7 +139,7 @@
     </extensionPoints>
 
     <extensions defaultExtensionNs="JavaScript.JsonSchema">
-        <ProviderFactory implementation="com.phodal.shirecore.agent.schema.ShireCustomAgentSchemaProviderFactory"/>
+        <ProviderFactory implementation="com.phodal.shirecore.schema.ShireCustomAgentSchemaProviderFactory"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.phodal">

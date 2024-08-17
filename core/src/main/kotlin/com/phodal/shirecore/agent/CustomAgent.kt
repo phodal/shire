@@ -3,7 +3,7 @@ package com.phodal.shirecore.agent
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.psi.search.FilenameIndex
-import com.phodal.shirecore.agent.schema.CUSTOM_AGENT_JSON_EXTENSION
+import com.phodal.shirecore.schema.CUSTOM_AGENT_JSON_EXTENSION
 import com.phodal.shirecore.config.InteractionType
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json

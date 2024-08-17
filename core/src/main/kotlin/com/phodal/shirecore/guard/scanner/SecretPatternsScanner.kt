@@ -5,7 +5,7 @@ import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.psi.search.FilenameIndex
-import com.phodal.shirecore.agent.schema.SECRET_PATTERN_EXTENSION
+import com.phodal.shirecore.schema.SECRET_PATTERN_EXTENSION
 import com.phodal.shirecore.guard.base.LocalScanner
 import com.phodal.shirecore.guard.base.ScanResult
 import com.phodal.shirecore.guard.model.SecretPattern
