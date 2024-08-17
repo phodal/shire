@@ -22,12 +22,8 @@ enum class ShireActionLocation(val location: String, val description: String) {
             }
         }
 
-        fun all(): Array<ShireActionLocation> {
-            return values()
-        }
+        fun all(): Array<ShireActionLocation> = values()
 
-        fun default(): String {
-            return CONTEXT_MENU.location
-        }
+        fun default(): String = CONTEXT_MENU.location
     }
 }

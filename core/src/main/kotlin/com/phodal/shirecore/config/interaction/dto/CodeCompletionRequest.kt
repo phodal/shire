@@ -12,12 +12,9 @@ import com.phodal.shirecore.config.interaction.PostFunction
 
 class CodeCompletionRequest(
     val project: Project,
-    val useTabIndents: Boolean,
-    val tabWidth: Int,
     val fileUri: VirtualFile,
     val prefixText: String,
     val startOffset: Int,
-    val documentVersion: Long,
     val element: PsiElement?,
     val editor: Editor,
     val suffixText: String,
@@ -54,12 +51,9 @@ class CodeCompletionRequest(
 
             return CodeCompletionRequest(
                 project,
-                useTabs,
-                tabWidth,
                 file.virtualFile,
                 prefix ?: document.text,
                 offset,
-                documentVersion,
                 element,
                 editor,
                 suffixText,
