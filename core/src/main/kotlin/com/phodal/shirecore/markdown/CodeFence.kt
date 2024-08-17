@@ -3,9 +3,9 @@ package com.phodal.shirecore.markdown
 import com.intellij.lang.Language
 import com.intellij.openapi.fileTypes.PlainTextLanguage
 
-class Code(val ideaLanguage: Language, val text: String, val isComplete: Boolean, val extension: String?) {
+class CodeFence(val ideaLanguage: Language, val text: String, val isComplete: Boolean, val extension: String?) {
     companion object {
-        fun parse(content: String): Code {
+        fun parse(content: String): CodeFence {
             val regex = Regex("```([\\w#+\\s]*)")
             // convert content \\n to \n
             val lines = content.replace("\\n", "\n").lines()
@@ -54,14 +54,14 @@ class Code(val ideaLanguage: Language, val text: String, val isComplete: Boolean
 
             // if content is not empty, but code is empty, then it's a markdown
             if (trimmedCode.isEmpty()) {
-                return Code(findLanguage("markdown"), content.replace("\\n", "\n"), codeClosed, extension)
+                return CodeFence(findLanguage("markdown"), content.replace("\\n", "\n"), codeClosed, extension)
             }
 
             if (languageId == "shire") {
                 trimmedCode = trimmedCode.replace("\\`\\`\\`", "```")
             }
 
-            return Code(language, trimmedCode, codeClosed, extension)
+            return CodeFence(language, trimmedCode, codeClosed, extension)
         }
 
 

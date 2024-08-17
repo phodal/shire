@@ -15,7 +15,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.phodal.shirecore.ShireCoreBundle
 import com.phodal.shirecore.config.interaction.PostFunction
 import com.phodal.shirecore.llm.LlmProvider
-import com.phodal.shirecore.markdown.Code
+import com.phodal.shirecore.markdown.CodeFence
 import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.runBlocking
 import java.nio.file.Path
@@ -48,7 +48,7 @@ open class FileGenerateTask(
         }
 
         val inferFileName = if (fileName == null) {
-            val language = Code.parse(result).ideaLanguage
+            val language = CodeFence.parse(result).ideaLanguage
             val timestamp = System.currentTimeMillis()
             "output-" + timestamp + if (language == PlainTextLanguage.INSTANCE) ".txt" else ".$language"
         } else {
@@ -66,7 +66,7 @@ open class FileGenerateTask(
         }
 
         if (codeOnly) {
-            val code = Code.parse(result).text
+            val code = CodeFence.parse(result).text
             file.writeText(code)
             refreshAndOpenInEditor(file.toPath(), projectRoot)
         } else {

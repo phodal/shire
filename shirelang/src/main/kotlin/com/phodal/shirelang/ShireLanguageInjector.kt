@@ -10,7 +10,7 @@ import com.intellij.psi.util.elementType
 import com.phodal.shirelang.parser.CodeBlockElement
 import com.phodal.shirelang.parser.PatternElement
 import com.phodal.shirelang.psi.ShireTypes
-import com.phodal.shirecore.markdown.Code.Companion.findLanguage
+import com.phodal.shirecore.markdown.CodeFence.Companion.findLanguage
 
 class ShireLanguageInjector : LanguageInjector {
     override fun getLanguagesToInject(host: PsiLanguageInjectionHost, registrar: InjectedLanguagePlaces) {

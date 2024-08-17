@@ -13,7 +13,7 @@ import com.phodal.shirecore.ShireCoreBundle
 import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.config.interaction.dto.CodeCompletionRequest
 import com.phodal.shirecore.llm.LlmProvider
-import com.phodal.shirecore.markdown.Code
+import com.phodal.shirecore.markdown.CodeFence
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -80,7 +80,7 @@ open class ChatCompletionTask(private val request: CodeCompletionRequest) :
             val modifyEnd = currentOffset
 
             if (request.isReplacement) {
-                val parsedContent = Code.parse(suggestion.toString()).text
+                val parsedContent = CodeFence.parse(suggestion.toString()).text
                 InsertUtil.replaceText(project, editor, parsedContent)
             }
 

@@ -14,7 +14,7 @@ import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.phodal.shirelang.psi.ShireUsed
-import com.phodal.shirecore.markdown.Code
+import com.phodal.shirecore.markdown.CodeFence
 import com.phodal.shirelang.utils.lookupFile
 
 class WriteShireCommand(val myProject: Project, val argument: String, val content: String, private val used: ShireUsed) :
@@ -22,7 +22,7 @@ class WriteShireCommand(val myProject: Project, val argument: String, val conten
     private val pathSeparator = "/"
 
     override suspend fun doExecute(): String {
-        val content = Code.parse(content).text
+        val content = CodeFence.parse(content).text
 
         val range: LineInfo? = LineInfo.fromString(used.text)
         val filepath = argument.split("#")[0]

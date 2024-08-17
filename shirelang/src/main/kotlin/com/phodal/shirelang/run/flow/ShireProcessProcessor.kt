@@ -18,7 +18,7 @@ import com.phodal.shirelang.compiler.ShireSyntaxAnalyzer
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.psi.ShireVisitor
 import com.phodal.shirelang.run.ShireConsoleView
-import com.phodal.shirecore.markdown.Code
+import com.phodal.shirecore.markdown.CodeFence
 import kotlinx.coroutines.runBlocking
 
 @Service(Service.Level.PROJECT)
@@ -61,7 +61,7 @@ class ShireProcessProcessor(val project: Project) {
     fun process(output: String, event: ProcessEvent, scriptPath: String, consoleView: ShireConsoleView?) {
         conversationService.refreshIdeOutput(scriptPath, output)
 
-        val code = Code.parse(conversationService.getLlmResponse(scriptPath))
+        val code = CodeFence.parse(conversationService.getLlmResponse(scriptPath))
         if (code.ideaLanguage == ShireLanguage.INSTANCE) {
             runInEdt {
                 executeTask(ShireFile.fromString(project, code.text), consoleView)
