@@ -1,5 +1,5 @@
 ---
-name: "Context Variable"
+name: "Shire Command"
 description: "Here is a description of the action."
 interaction:  RunPanel
 variables:

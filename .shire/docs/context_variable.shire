@@ -5,7 +5,7 @@ interaction:  RunPanel
 variables:
   "contextVariable": /ContextVariable\.kt/ { cat }
   "psiContextVariable": /PsiContextVariable\.kt/ { cat }
-onStreamingEnd: { parseCode } // | saveFile("docs/shire/shire-builtin-variable.md")
+onStreamingEnd: { parseCode | saveFile("docs/shire/shire-builtin-variable.md") }
 ---
 
 根据如下的信息，编写对应的 ContextVariable 相关信息的 markdown 文档。
