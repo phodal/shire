@@ -6,7 +6,7 @@ import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.DumbAwareAction
 import com.phodal.shirecore.config.ShireActionLocation
-import com.phodal.shirecore.template.VariableActionEventDataHolder
+import com.phodal.shirecore.variable.template.VariableActionEventDataHolder
 import com.phodal.shirelang.ShireIcons
 import com.phodal.shirelang.actions.ShireRunFileAction
 import com.phodal.shirelang.actions.base.DynamicShireActionConfig

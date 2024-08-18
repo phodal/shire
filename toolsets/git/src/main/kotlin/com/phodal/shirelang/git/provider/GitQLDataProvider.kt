@@ -8,8 +8,8 @@ import com.intellij.openapi.project.Project
 import com.phodal.shirecore.ShireCoreBundle
 import com.phodal.shirecore.provider.shire.ShireQLDataProvider
 import com.phodal.shirecore.provider.shire.ShireQLDataType
-import com.phodal.shirecore.vcs.GitEntity
-import com.phodal.shirecore.vcs.ShireGitCommit
+import com.phodal.shirecore.variable.vcs.GitEntity
+import com.phodal.shirecore.variable.vcs.ShireGitCommit
 import git4idea.GitCommit
 import git4idea.history.GitHistoryUtils
 import git4idea.repo.GitRepositoryManager

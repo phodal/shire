@@ -1,5 +1,6 @@
 package com.phodal.shirecore.search
 
+import com.phodal.shirecore.search.algorithm.TfIdf
 import junit.framework.TestCase.assertEquals
 import org.junit.Test
 

@@ -4,7 +4,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.phodal.shirecore.provider.shire.ShireQLDataProvider
 import com.phodal.shirecore.provider.shire.ShireSymbolProvider
-import com.phodal.shirecore.vcs.ShireGitCommit
+import com.phodal.shirecore.variable.vcs.ShireGitCommit
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.ast.VariableElement
 import com.phodal.shirelang.compiler.hobbit.execute.schema.ShireDateSchema

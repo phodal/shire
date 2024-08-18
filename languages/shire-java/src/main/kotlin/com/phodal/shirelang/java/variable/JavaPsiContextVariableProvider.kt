@@ -10,7 +10,7 @@ import com.phodal.shirecore.provider.variable.impl.CodeSmellBuilder
 import com.phodal.shirecore.provider.variable.model.PsiContextVariable
 import com.phodal.shirecore.provider.variable.PsiContextVariableProvider
 import com.phodal.shirecore.provider.variable.model.PsiContextVariable.*
-import com.phodal.shirecore.search.SimilarChunksSearch
+import com.phodal.shirecore.search.similar.SimilarChunksSearch
 import com.phodal.shirelang.java.codemodel.JavaClassStructureProvider
 import com.phodal.shirelang.java.util.JavaTestHelper
 import com.phodal.shirelang.java.util.getContainingClass

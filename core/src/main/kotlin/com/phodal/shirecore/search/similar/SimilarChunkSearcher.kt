@@ -1,4 +1,4 @@
-package com.phodal.shirecore.search
+package com.phodal.shirecore.search.similar
 
 
 import com.intellij.openapi.application.runReadAction
@@ -12,7 +12,6 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
 import com.phodal.shirecore.search.algorithm.JaccardSimilarity
-import com.phodal.shirecore.search.similar.SimilarChunkContext
 import java.io.File
 
 class SimilarChunksSearch(private var snippetLength: Int = 60, private var maxRelevantFiles: Int = 20) :

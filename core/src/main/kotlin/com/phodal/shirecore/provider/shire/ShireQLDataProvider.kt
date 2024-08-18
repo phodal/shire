@@ -2,8 +2,8 @@ package com.phodal.shirecore.provider.shire
 
 import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.project.Project
-import com.phodal.shirecore.vcs.GitEntity
-import com.phodal.shirecore.vcs.ShireGitCommit
+import com.phodal.shirecore.variable.vcs.GitEntity
+import com.phodal.shirecore.variable.vcs.ShireGitCommit
 
 enum class ShireQLDataType(val dataKey: String) {
     GIT_COMMIT("GitCommit"),

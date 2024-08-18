@@ -1,4 +1,4 @@
-package com.phodal.shirecore.vcs
+package com.phodal.shirecore.variable.vcs
 
 data class ShireFileBranch(
     val name: String,

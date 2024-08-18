@@ -1,4 +1,4 @@
-package com.phodal.shirecore.template
+package com.phodal.shirecore.variable.template
 
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.util.Key

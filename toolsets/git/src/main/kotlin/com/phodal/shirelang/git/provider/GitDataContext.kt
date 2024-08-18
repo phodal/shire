@@ -3,7 +3,7 @@ package com.phodal.shirelang.git.provider
 import com.intellij.ide.DataManager
 import com.intellij.openapi.vcs.VcsDataKeys
 import com.intellij.vcs.commit.CommitWorkflowUi
-import com.phodal.shirecore.template.VariableActionEventDataHolder
+import com.phodal.shirecore.variable.template.VariableActionEventDataHolder
 
 fun getCommitWorkflowUi(): CommitWorkflowUi? {
     VariableActionEventDataHolder.getData()?.vcsDataContext?.let {

@@ -12,7 +12,7 @@ import com.intellij.psi.search.searches.MethodReferencesSearch
 import com.intellij.psi.search.searches.ReferencesSearch
 import com.intellij.psi.util.*
 import com.phodal.shirecore.search.tokenizer.CodeNamingTokenizer
-import com.phodal.shirecore.search.TfIdf
+import com.phodal.shirecore.search.algorithm.TfIdf
 import java.util.function.Consumer
 
 

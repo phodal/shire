@@ -1,4 +1,4 @@
-package com.phodal.shirecore.toolchain.refactoring
+package com.phodal.shirecore.variable.toolchain.refactoring
 
 data class RefactorInstElement(
     val isClass: Boolean,

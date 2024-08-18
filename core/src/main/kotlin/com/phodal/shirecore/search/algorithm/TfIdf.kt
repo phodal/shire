@@ -19,7 +19,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
-package com.phodal.shirecore.search
+package com.phodal.shirecore.search.algorithm
 
 import com.phodal.shirecore.search.tokenizer.RegexpTokenizer
 import com.phodal.shirecore.search.tokenizer.Tokenizer

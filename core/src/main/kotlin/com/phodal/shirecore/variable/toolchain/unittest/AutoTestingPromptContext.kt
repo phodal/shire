@@ -1,4 +1,4 @@
-package com.phodal.shirecore.toolchain.unittest
+package com.phodal.shirecore.variable.toolchain.unittest
 
 import com.intellij.lang.Language
 import com.intellij.openapi.vfs.VirtualFile
