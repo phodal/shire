@@ -2,7 +2,7 @@
 layout: default
 title: AI AutoTest
 parent: Shire Examples
-nav_order: 1
+nav_order: 2
 ---
 
     ---
