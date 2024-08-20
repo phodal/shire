@@ -212,7 +212,7 @@ project(":shirelang") {
         implementation("cc.unitmesh:cocoa-core:1.0.0")
 
         // for ShireQL Schema
-        implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.0")
+        implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
 
         implementation(kotlin("reflect"))
         implementation(project(":"))
