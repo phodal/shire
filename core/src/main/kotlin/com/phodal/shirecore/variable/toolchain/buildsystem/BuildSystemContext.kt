@@ -1,6 +1,6 @@
 package com.phodal.shirecore.variable.toolchain.buildsystem
 
-import com.phodal.shirecore.context.template.TemplateContext
+import com.phodal.shirecore.variable.template.TemplateContext
 
 class BuildSystemContext(
     val buildToolName: String,

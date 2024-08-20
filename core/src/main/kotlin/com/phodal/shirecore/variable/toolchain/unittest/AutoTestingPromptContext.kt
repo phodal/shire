@@ -3,7 +3,7 @@ package com.phodal.shirecore.variable.toolchain.unittest
 import com.intellij.lang.Language
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
-import com.phodal.shirecore.context.template.TemplateContext
+import com.phodal.shirecore.variable.template.TemplateContext
 
 data class AutoTestingPromptContext(
     val isNewFile: Boolean,
