@@ -1,0 +1,18 @@
+<idea-plugin package="com.phodal.shirelang.kotlin">
+    <!--suppress PluginXmlValidity -->
+    <dependencies>
+        <plugin id="org.jetbrains.kotlin"/>
+        <plugin id="org.jetbrains.plugins.gradle"/>
+    </dependencies>
+
+    <extensions defaultExtensionNs="com.phodal">
+        <fileStructureProvider language="kotlin"
+                               implementationClass="com.phodal.shirelang.kotlin.codemodel.KotlinFileStructureProvider"/>
+        <classStructureProvider language="kotlin"
+                                implementationClass="com.phodal.shirelang.kotlin.codemodel.KotlinClassStructureProvider"/>
+        <methodStructureProvider language="kotlin"
+                                 implementationClass="com.phodal.shirelang.kotlin.codemodel.KotlinMethodStructureProvider"/>
+        <variableStructureProvider language="kotlin"
+                                   implementationClass="com.phodal.shirelang.kotlin.codemodel.KotlinVariableStructureProvider"/>
+    </extensions>
+</idea-plugin>
