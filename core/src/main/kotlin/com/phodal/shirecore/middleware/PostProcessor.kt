@@ -9,6 +9,18 @@ data class PostProcessorNode(
     val args: List<Any>,
 )
 
+/**
+ * The PostProcessor interface defines a contract for post-processing tasks. Implementations of this
+ * interface are expected to handle specific post-processing operations, which are identified by a
+ * unique name.
+ *
+ * The interface provides methods to check the applicability of a given context for handling post codes,
+ * to set up any necessary initial tasks, to execute the post-processing function, and to perform clean
+ * up tasks after execution.
+ *
+ *
+ * @property processorName the unique name of the post-processing function, the built-in functions are defined in [BuiltinPostHandler]
+ */
 interface PostProcessor {
     val processorName: String
 
