@@ -5,6 +5,8 @@ import com.intellij.psi.PsiNameIdentifierOwner
 import com.phodal.shirecore.codemodel.ClassStructureProvider
 import com.phodal.shirecore.codemodel.model.ClassStructure
 import com.phodal.shirelang.kotlin.KotlinPsiUtil
+import org.jetbrains.kotlin.psi.KtClassOrObject
+import org.jetbrains.kotlin.psi.KtParameter
 
 class KotlinClassStructureProvider : ClassStructureProvider {
     private fun getPrimaryConstructorFields(kotlinClass: KtClassOrObject): List<KtParameter> {
