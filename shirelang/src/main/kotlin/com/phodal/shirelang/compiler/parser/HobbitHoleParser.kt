@@ -595,7 +595,7 @@ object HobbitHoleParser {
 
             "reranking" -> {
                 val first = args.firstOrNull() ?: "default"
-                PatternActionFunc.Reranking(args[0])
+                PatternActionFunc.Reranking(first)
             }
 
             "caching" -> {
