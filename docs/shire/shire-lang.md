@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Shire Language
+title: Shire Language Introduction
 parent: Shire Language
 nav_order: 1
 ---
