@@ -5,9 +5,10 @@ parent: Shire Language
 nav_order: 7
 ---
 
-Shire 查询语言是一种查询语言，允许你查询当前文件的 AST（抽象语法树）、Git、依赖信息等。它在 Shire 中用于定义当前文件的上下文以及可以在当前文件上执行的操作。
+ShireQL 是一个基于 IDE 的数据查询语言，它允许你查询当前文件的 AST（抽象语法树）、Git、依赖信息等。它在 Shire
+中用于定义当前文件的上下文以及可以在当前文件上执行的操作。
 
-## ShireQL 基本语法 
+## ShireQL 基本语法
 
 Design
 
@@ -64,7 +65,7 @@ enum class JvmPsiPqlMethod(val methodName: String, val description: String) {
 }
 ```
 
-## ShireQL 查询版本管理 
+## ShireQL 查询版本管理
 
 ### Git 示例
 
@@ -106,14 +107,14 @@ data class ShireGitCommit(
 Model design for #41
 
 - GitCommit
-  - Usage: support for git commit query
-  - Field: author, authorEmail, committer, committerEmail, hash, date, message, fullMessage
+    - Usage: support for git commit query
+    - Field: author, authorEmail, committer, committerEmail, hash, date, message, fullMessage
 - FileCommit
-  - Usage: support for file in history
-  - Field: commit, filename, status, path
+    - Usage: support for file in history
+    - Field: commit, filename, status, path
 - Branch
-  - Usage: support for branch query
-  - Field: name, commitCount
+    - Usage: support for branch query
+    - Field: name, commitCount
 
 Ref design: https://github.com/AmrDeveloper/GQL
 
@@ -138,7 +139,7 @@ variables:
 ---
 ```
 
-## 通用函数  
+## 通用函数
 
 ### 常用函数
 
@@ -157,26 +158,55 @@ variables:
 GQL: [https://github.com/AmrDeveloper/GQL](https://github.com/AmrDeveloper/GQL)
 
 ```sql
-SELECT author_name, COUNT(author_name) AS commit_num FROM commits GROUP BY author_name, author_email ORDER BY commit_num DESC LIMIT 10
-SELECT commit_count FROM branches WHERE commit_count BETWEEN 0 .. 10
+SELECT author_name, COUNT(author_name) AS commit_num
+FROM commits
+GROUP BY author_name, author_email
+ORDER BY commit_num DESC LIMIT 10
+SELECT commit_count
+FROM branches
+WHERE commit_count BETWEEN 0..10
 
-SELECT * FROM refs WHERE type = "branch"
-SELECT * FROM refs ORDER BY type
+SELECT *
+FROM refs
+WHERE type = "branch"
+SELECT *
+FROM refs
+ORDER BY type
 
-SELECT * FROM commits
-SELECT author_name, author_email FROM commits
-SELECT author_name, author_email FROM commits ORDER BY author_name DESC, author_email ASC
-SELECT author_name, author_email FROM commits WHERE name LIKE "%gmail%" ORDER BY author_name
-SELECT * FROM commits WHERE LOWER(name) = "amrdeveloper"
-SELECT author_name FROM commits GROUP By author_name
-SELECT author_name FROM commits GROUP By author_name having author_name = "AmrDeveloper"
+SELECT *
+FROM commits
+SELECT author_name, author_email
+FROM commits
+SELECT author_name, author_email
+FROM commits
+ORDER BY author_name DESC, author_email ASC
+SELECT author_name, author_email
+FROM commits
+WHERE name LIKE "%gmail%"
+ORDER BY author_name
+SELECT *
+FROM commits
+WHERE LOWER(name) = "amrdeveloper"
+SELECT author_name
+FROM commits
+GROUP By author_name
+SELECT author_name
+FROM commits
+GROUP By author_name
+having author_name = "AmrDeveloper"
 
-SELECT * FROM branches
-SELECT * FROM branches WHERE is_head = true
-SELECT name, LEN(name) FROM branches
+SELECT *
+FROM branches
+SELECT *
+FROM branches
+WHERE is_head = true
+SELECT name, LEN(name)
+FROM branches
 
-SELECT * FROM tags
-SELECT * FROM tags OFFSET 1 LIMIT 1
+SELECT *
+FROM tags
+SELECT *
+FROM tags OFFSET 1 LIMIT 1
 ```
 
 ### GitHub CodeQL
@@ -243,7 +273,6 @@ where expr.getLeftOperand().getType().hasName("int") and
     not expr.getAnOperand().isCompileTimeConstant()
 select expr
 ```
-
 
 ### SourceGraph CodeSearch
 
