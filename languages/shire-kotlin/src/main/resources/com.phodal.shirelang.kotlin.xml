@@ -14,5 +14,9 @@
                                  implementationClass="com.phodal.shirelang.kotlin.codemodel.KotlinMethodStructureProvider"/>
         <variableStructureProvider language="kotlin"
                                    implementationClass="com.phodal.shirelang.kotlin.codemodel.KotlinVariableStructureProvider"/>
+
+        <shireRefactoringTool
+                language="kotlin"
+                implementationClass="com.phodal.shirelang.kotlin.impl.KotlinRefactoringTool"/>
     </extensions>
 </idea-plugin>
