@@ -18,5 +18,9 @@
         <shireRefactoringTool
                 language="kotlin"
                 implementationClass="com.phodal.shirelang.kotlin.impl.KotlinRefactoringTool"/>
+
+        <shireLanguageToolchainProvider
+                language="JAVA"
+                implementationClass="com.phodal.shirelang.kotlin.variable.KotlinLanguageToolchainProvider"/>
     </extensions>
 </idea-plugin>
