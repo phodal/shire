@@ -5,6 +5,10 @@ parent: Shire Scene
 nav_order: 1
 ---
 
+> Desk Research（又称为二级研究）是一种利用已有的、已发布的信息进行分析和整理的研究方法。与初级研究不同，初级研究主要关注新数据的收集与生成，
+而二级研究则专注于对已有数据和研究成果的总结、整合和综合分析。典型的二级研究来源包括教科书、百科全书、新闻文章、评论文章和元分析等。
+
+这些文献通常不会包含详细的“方法”部分，因为它们依赖的是已有的研究数据，而非原始数据的生成。
 
 ## WebResource
 
@@ -12,7 +16,8 @@ nav_order: 1
 ---
 variables:
   "website": { extract(".md") | crawl() | thread("summary.shire") }
-  "confluence": { thread("confluence.bash", param1, param2) }  
+  "confluence": { thread("confluence.bash", param1, param2) }
+  "pythonNode.js": { thread("python.py", param1, param2) }  
 ---
 
 [website]: it will extract all the .md files and crawl them, then thread them with summary.shire, then return the result.
