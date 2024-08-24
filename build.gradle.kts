@@ -148,6 +148,17 @@ project(":languages:shire-kotlin") {
     }
 }
 
+project(":languages:shire-markdown") {
+    intellij {
+        version.set(prop("ideaVersion"))
+        plugins.set(ideaPlugins)
+    }
+
+    dependencies {
+        implementation(project(":core"))
+    }
+}
+
 project(":languages:shire-python") {
     intellij {
         version.set(prop("ideaVersion"))
@@ -277,6 +288,7 @@ project(":plugin") {
         implementation(project(":languages:shire-java"))
         implementation(project(":languages:shire-python"))
         implementation(project(":languages:shire-kotlin"))
+        implementation(project(":languages:shire-markdown"))
 
         implementation(project(":toolsets:git"))
         implementation(project(":toolsets:httpclient"))

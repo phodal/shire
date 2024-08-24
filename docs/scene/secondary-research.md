@@ -15,13 +15,17 @@ nav_order: 1
 ```shire
 ---
 variables:
-  "website": { extract(".md") | crawl() | thread("summary.shire") }
+  "website": { cat("source.md") | capture("markdown", "link") | crawl() | thread("summary.shire") }
   "confluence": { thread("confluence.bash", param1, param2) }
   "pythonNode.js": { thread("python.py", param1, param2) }  
 ---
 
 [website]: it will extract all the .md files and crawl them, then thread them with summary.shire, then return the result.
 ```
+
+- `capture` function, param1: Language, param2: NodeType
+- `crawl` function, param1: URLs
+- `thread` function, param1: Script, param2: Parameters
 
 ### API Resource by Bash
 
@@ -62,4 +66,8 @@ Authorization: Basic <encoded credentials>'
 
 ## Workflow Design
 
-topic collection summary insight expression
+topic
+- capture 
+- summary 
+- insight 
+- express

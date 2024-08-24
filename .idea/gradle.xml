@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$/languages" />
             <option value="$PROJECT_DIR$/languages/shire-java" />
             <option value="$PROJECT_DIR$/languages/shire-kotlin" />
+            <option value="$PROJECT_DIR$/languages/shire-markdown" />
             <option value="$PROJECT_DIR$/languages/shire-python" />
             <option value="$PROJECT_DIR$/plugin" />
             <option value="$PROJECT_DIR$/shirelang" />
