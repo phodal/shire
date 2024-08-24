@@ -146,6 +146,13 @@ sealed class PatternActionFunc(open val funcName: String) {
     class Redact(val strategy: String) : PatternActionFunc("redact")
 
     /**
+     * The Crawl function is used to crawl a list of urls, get markdown from html and save it to a file.
+     *
+     * @param urls The urls to crawl.
+     */
+    class Crawl(vararg val urls: String) : PatternActionFunc("crawl")
+
+    /**
      * User Custom Functions
      */
     class UserCustom(override val funcName: String, val args: List<String>) : PatternActionFunc(funcName) {

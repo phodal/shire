@@ -607,6 +607,10 @@ object HobbitHoleParser {
                 PatternActionFunc.Redact(first)
             }
 
+            "crawl" -> {
+                PatternActionFunc.Crawl(*args.toTypedArray())
+            }
+
             null -> {
                 logger.warn("parsePatternAction, Unknown pattern action: ${expr.funcCall}")
                 return null
