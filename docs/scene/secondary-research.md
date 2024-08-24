@@ -23,12 +23,12 @@ variables:
 [website]: it will extract all the .md files and crawl them, then thread them with summary.shire, then return the result.
 ```
 
-## API Resource by Bash
+### API Resource by Bash
 
 - Confluence API
 - Jira API
 
-### Confluence API
+#### Confluence API
 
 https://developer.atlassian.com/cloud/confluence/using-the-rest-api/
 
@@ -38,7 +38,7 @@ curl --request <method> '/rest/api/content/search?limit=1&cql=id!=0 order by las
 --header 'Authorization: Basic <encoded credentials>'
 ```
 
-### Jira API
+#### Jira API
 
 https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro/
 
@@ -47,3 +47,19 @@ curl --request <method> '<url>?<parameters>' \
 --header 'Accept: application/json' \
 Authorization: Basic <encoded credentials>'
 ```
+
+## AutoFeature
+
+- autoAnalysis
+- autoImage
+- autoDraft
+- autoSlide
+- block embedded
+- Notion like Block for Reference
+- Daily randomTip
+- toImage
+- Icon
+
+## Workflow Design
+
+topic collection summary insight expression
