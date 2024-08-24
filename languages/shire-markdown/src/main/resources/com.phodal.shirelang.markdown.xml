@@ -1,0 +1,6 @@
+<idea-plugin package="com.phodal.shirelang.markdown">
+    <!--suppress PluginXmlValidity -->
+    <dependencies>
+        <plugin id="org.intellij.plugins.markdown"/>
+    </dependencies>
+</idea-plugin>
