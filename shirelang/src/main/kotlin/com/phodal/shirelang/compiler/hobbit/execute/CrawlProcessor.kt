@@ -16,7 +16,7 @@ object CrawlProcessor {
         return body
     }
 
-    fun crawl(urls: Array<out String>): List<String> {
+    fun execute(urls: Array<out String>): List<String> {
         return runBlocking {
             coroutineScope {
                 urls.mapNotNull {

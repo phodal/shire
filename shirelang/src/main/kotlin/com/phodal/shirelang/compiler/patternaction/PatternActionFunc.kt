@@ -153,6 +153,14 @@ sealed class PatternActionFunc(open val funcName: String) {
     class Crawl(vararg val urls: String) : PatternActionFunc("crawl")
 
     /**
+     * The capture function used to capture file by NodeType
+     *
+     * @param fileName The file name to save the capture to.
+     * @param nodeType The node type to capture.
+     */
+    class Capture(val fileName: String, val nodeType: String) : PatternActionFunc("capture")
+
+    /**
      * User Custom Functions
      */
     class UserCustom(override val funcName: String, val args: List<String>) : PatternActionFunc(funcName) {

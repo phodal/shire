@@ -212,10 +212,15 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             }
 
             is PatternActionFunc.Redact -> {
-                RedactProcessor.redact(myProject, lastResult)
+                RedactProcessor.execute(myProject, lastResult)
             }
+
             is PatternActionFunc.Crawl -> {
-                CrawlProcessor.crawl(action.urls)
+                CrawlProcessor.execute(action.urls)
+            }
+
+            is PatternActionFunc.Capture -> {
+                CaptureProcessor.execute(myProject, action.fileName, action.nodeType)
             }
         }
     }
