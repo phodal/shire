@@ -95,26 +95,28 @@ variables:
 
 ## Pattern Function
 
-| 函数类别      | 功能描述        | 参数                                                                 | 示例                                          |
-|-----------|-------------|--------------------------------------------------------------------|---------------------------------------------|
-| prompt    | 显示消息提示      | `message`: 要显示的消息内容                                                | `prompt("You are xxx")`                     |
-| grep      | 使用模式进行搜索    | `patterns`: 要搜索的模式                                                 | `grep("error")`                             |
-| sed       | 查找和替换操作     | `pattern`: 要查找的模式<br>`replacements`: 替换的字符串<br>`isRegex`: 是否为正则表达式 | `sed("s/old/new/g")`                        |
-| sort      | 排序操作        | `arguments`: 排序所需的参数                                               | `sort`                                      |
-| uniq      | 去除重复行       | `texts`: 要处理的文本                                                    | `uniq("line1", "line2", "line1")`           |
-| head      | 获取文件的前几行    | `number`: 要获取的行数                                                   | `head(10)`                                  |
-| tail      | 获取文件的末尾几行   | `number`: 要获取的行数                                                   | `tail(5)`                                   |
-| xargs     | 处理变量        | `variables`: 要处理的变量                                                | `xargs("arg1", "arg2")`                     |
-| print     | 打印文本        | `texts`: 要打印的文本                                                    | `print("Hello", "World")`                   |
-| cat       | 连接文件        | `paths`: 要连接的文件路径                                                  | `cat("file1.txt", "file2.txt")`             |
-| execute   | 执行 Shire 脚本 | `string`: 要执行的脚本内容                                                 | `execute("next-script.shire")`              |
-| notify    | 使用 IDE 通知   | `message`: 要显示的通知消息                                                | `notify("Process completed successfully.")` |
-| splitting | 分割文本或文件     | `paths`: 要分割的文本或文件路径                                               | `splitting("file.txt", "file2.txt")`        |
-| embedding | 嵌入文本        | `entries`: 要嵌入的文本条目                                                | `embedding("entry1", "entry2")`             |
-| searching | 搜索文本        | `text`: 要搜索的文本                                                     | `searching("pattern")`                      |
-| reranking | 重新排序        | `type`: 重排类型，默认  lostInTheMiddle                                   | `reranking("pattern")`                      |
-| caching   | 缓存语义        | `text`: 要缓存的文本                                                     | `caching("data")`                           |
-| redact    | 屏蔽敏感数据      |                                                                    | `redact()`                                  |
+| 函数类别      | 功能描述             | 参数                                                                 | 示例                                          |
+|-----------|------------------|--------------------------------------------------------------------|---------------------------------------------|
+| prompt    | 显示消息提示           | `message`: 要显示的消息内容                                                | `prompt("You are xxx")`                     |
+| grep      | 使用模式进行搜索         | `patterns`: 要搜索的模式                                                 | `grep("error")`                             |
+| sed       | 查找和替换操作          | `pattern`: 要查找的模式<br>`replacements`: 替换的字符串<br>`isRegex`: 是否为正则表达式 | `sed("s/old/new/g")`                        |
+| sort      | 排序操作             | `arguments`: 排序所需的参数                                               | `sort`                                      |
+| uniq      | 去除重复行            | `texts`: 要处理的文本                                                    | `uniq("line1", "line2", "line1")`           |
+| head      | 获取文件的前几行         | `number`: 要获取的行数                                                   | `head(10)`                                  |
+| tail      | 获取文件的末尾几行        | `number`: 要获取的行数                                                   | `tail(5)`                                   |
+| xargs     | 处理变量             | `variables`: 要处理的变量                                                | `xargs("arg1", "arg2")`                     |
+| print     | 打印文本             | `texts`: 要打印的文本                                                    | `print("Hello", "World")`                   |
+| cat       | 连接文件             | `paths`: 要连接的文件路径                                                  | `cat("file1.txt", "file2.txt")`             |
+| execute   | 执行 Shire 脚本      | `string`: 要执行的脚本内容                                                 | `execute("next-script.shire")`              |
+| notify    | 使用 IDE 通知        | `message`: 要显示的通知消息                                                | `notify("Process completed successfully.")` |
+| splitting | 分割文本或文件          | `paths`: 要分割的文本或文件路径                                               | `splitting("file.txt", "file2.txt")`        |
+| embedding | 嵌入文本             | `entries`: 要嵌入的文本条目                                                | `embedding("entry1", "entry2")`             |
+| searching | 搜索文本             | `text`: 要搜索的文本                                                     | `searching("pattern")`                      |
+| reranking | 重新排序             | `type`: 重排类型，默认  lostInTheMiddle                                   | `reranking("pattern")`                      |
+| caching   | 缓存语义             | `text`: 要缓存的文本                                                     | `caching("data")`                           |
+| redact    | 屏蔽敏感数据           |                                                                    | `redact()`                                  |
+| thread    | 多线程执行            | `path`: 要执行的脚本路径                                                   | `thread("script.shire")`                    |
+| jsonpath  | 使用 JsonPath 选择数据 | `jsonPath`: JsonPath 表达式,其中 jsonString 为可选                         | `jsonpath(jsonString, "$.store.*")`         |
 
 ```kotlin
 sealed class PatternActionFunc(open val funcName: String) {
