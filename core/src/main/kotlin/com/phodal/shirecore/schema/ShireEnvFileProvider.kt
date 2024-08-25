@@ -23,3 +23,5 @@ class ShireEnvFileProvider(project: Project) : JsonSchemaFileProvider {
     override fun getSchemaFile(): VirtualFile? = VfsUtil.findFileByURL(javaClass.getResource(SCHEMA)!!)
     override fun getSchemaType(): SchemaType = SchemaType.embeddedSchema
 }
+
+
