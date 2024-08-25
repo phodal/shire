@@ -608,7 +608,11 @@ object HobbitHoleParser {
             }
 
             "crawl" -> {
-                PatternActionFunc.Crawl(*args.toTypedArray())
+                val urls: List<String> = args.filter {
+                    it.trim().isNotEmpty()
+                }
+
+                PatternActionFunc.Crawl(*urls.toTypedArray())
             }
 
             "capture" -> {

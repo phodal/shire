@@ -14,7 +14,7 @@ class MarkdownPsiCaptureTest {
         val markdownPsiCapture = MarkdownPsiCapture()
 
         // when
-        val result = markdownPsiCapture.captureUrl(markdownText, "link")
+        val result = markdownPsiCapture.capture(markdownText, "link")
 
         // then
         assertEquals("https://shire.phodal.com", result.first())
@@ -30,7 +30,7 @@ class MarkdownPsiCaptureTest {
         val markdownPsiCapture = MarkdownPsiCapture()
 
         // when
-        val result = markdownPsiCapture.captureUrl(markdownText, "link")
+        val result = markdownPsiCapture.capture(markdownText, "link")
 
         // then
         assertEquals("https://shire.phodal.com", result.first())
@@ -48,7 +48,7 @@ class MarkdownPsiCaptureTest {
         val markdownPsiCapture = MarkdownPsiCapture()
 
         // when
-        val result = markdownPsiCapture.captureUrl(markdownText, "link")
+        val result = markdownPsiCapture.capture(markdownText, "link")
 
         // then
         assertEquals(0, result.size)

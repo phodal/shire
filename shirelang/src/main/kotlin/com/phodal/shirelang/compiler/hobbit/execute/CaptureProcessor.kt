@@ -2,6 +2,7 @@ package com.phodal.shirelang.compiler.hobbit.execute
 
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiManager
+import com.phodal.shirecore.provider.psi.PsiCapture
 import com.phodal.shirelang.utils.lookupFile
 
 object CaptureProcessor {
@@ -14,6 +15,12 @@ object CaptureProcessor {
         // convert to psi
         val psiFile =
             PsiManager.getInstance(myProject).findFile(lookupFile) ?: return "Failed to find PSI file for $fileName"
+
+        val language = psiFile.language
+
+        PsiCapture.provide(language)?.let {
+            return it.capture(psiFile.text, nodeType)
+        }
 
         // execute the capture function
         val result = psiFile.children.filter {

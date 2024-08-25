@@ -172,7 +172,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             is PatternActionFunc.From,
             is PatternActionFunc.Select,
             is PatternActionFunc.Where,
-            -> {
+                -> {
                 logger<PatternActionProcessor>().error("Unknown pattern processor type: ${action.funcName}")
             }
 
@@ -218,7 +218,30 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             }
 
             is PatternActionFunc.Crawl -> {
-                CrawlProcessor.execute(action.urls)
+                val urls: MutableList<String> = mutableListOf()
+                if (action.urls.isEmpty()) {
+                    when (lastResult) {
+                        is ArrayList<*> -> {
+                            (lastResult as ArrayList<String>).forEach {
+                                urls.add(it)
+                            }
+                        }
+                        is String -> {
+                            lastResult.split("\n").forEach {
+                                urls.add(it)
+                            }
+                        }
+
+                        else -> {
+                            logger<FunctionStatementProcessor>().warn("crawl error: $lastResult")
+                        }
+                    }
+                } else {
+                    urls.addAll(action.urls)
+                }
+
+                val finalUrls = urls.map { it.trim() }.filter { it.isNotEmpty() }
+                CrawlProcessor.execute(finalUrls.toTypedArray())
             }
 
             is PatternActionFunc.Capture -> {
@@ -301,5 +324,4 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
 
         return absolutePaths
     }
-
 }

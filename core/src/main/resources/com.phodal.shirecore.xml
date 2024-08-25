@@ -46,6 +46,11 @@
             <with attribute="implementationClass" implements="com.phodal.shirecore.provider.shire.RefactoringTool"/>
         </extensionPoint>
 
+        <extensionPoint qualifiedName="com.phodal.shirePsiCapture"
+                        beanClass="com.intellij.lang.LanguageExtensionPoint" dynamic="true">
+            <with attribute="implementationClass" implements="com.phodal.shirecore.provider.psi.PsiCapture"/>
+        </extensionPoint>
+
         <extensionPoint qualifiedName="com.phodal.shireAutoTesting"
                         beanClass="com.intellij.lang.LanguageExtensionPoint" dynamic="true">
             <with attribute="implementationClass" implements="com.phodal.shirecore.provider.AutoTesting"/>

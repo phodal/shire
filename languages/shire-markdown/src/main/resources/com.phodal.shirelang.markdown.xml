@@ -3,4 +3,9 @@
     <dependencies>
         <plugin id="org.intellij.plugins.markdown"/>
     </dependencies>
+
+    <extensions defaultExtensionNs="com.phodal">
+        <shirePsiCapture language="Markdown"
+                         implementationClass="com.phodal.shirelang.markdown.MarkdownPsiCapture" />
+    </extensions>
 </idea-plugin>

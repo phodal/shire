@@ -14,10 +14,12 @@
         <module name="com.phodal.shirelang.java"/>
         <module name="com.phodal.shirelang.python"/>
         <module name="com.phodal.shirelang.kotlin"/>
-        <module name="com.phodal.shirelang.git"/>
+        <module name="com.phodal.shirelang.markdown"/>
 
         <module name="com.phodal.shire.httpclient"/>
         <module name="com.phodal.shire.terminal"/>
+
+        <module name="com.phodal.shirelang.git"/>
 
         <!-- experimental features -->
         <module name="com.phodal.shire.sonarqube"/>

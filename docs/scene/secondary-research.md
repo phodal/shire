@@ -15,7 +15,7 @@ nav_order: 1
 ```shire
 ---
 variables:
-  "website": { cat("source.md") | capture("markdown", "link") | crawl() | thread("summary.shire") }
+  "websites": /*\.md/ { capture("docs/crawlSample.md", "link") | crawl() | thread("summary.shire") }
   "confluence": { thread("confluence.bash", param1, param2) }
   "pythonNode.js": { thread("python.py", param1, param2) }  
 ---

@@ -1,5 +1,6 @@
 package com.phodal.shirelang.markdown
 
+import com.phodal.shirecore.provider.psi.PsiCapture
 import org.intellij.markdown.IElementType
 import org.intellij.markdown.MarkdownElementTypes
 import org.intellij.markdown.ast.ASTNode
@@ -9,15 +10,15 @@ import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
 import org.intellij.markdown.flavours.gfm.GFMTokenTypes
 import org.intellij.markdown.parser.MarkdownParser
 
-class MarkdownPsiCapture {
+class MarkdownPsiCapture: PsiCapture {
     private val embeddedHtmlType = IElementType("ROOT")
 
     /**
      * Capture markdown text with ast node Node
      */
-    fun captureUrl(markdownText: String, type: String): List<String> {
+    override fun capture(fileContent: String, type: String): List<String> {
         val flavour = GFMFlavourDescriptor()
-        val parsedTree: ASTNode = MarkdownParser(flavour).parse(embeddedHtmlType, markdownText)
+        val parsedTree: ASTNode = MarkdownParser(flavour).parse(embeddedHtmlType, fileContent)
 
         val types: List<String> = when (type) {
             /**
@@ -37,11 +38,11 @@ class MarkdownPsiCapture {
                         return
                     }
                     types.contains(node.type.name) -> {
-                        result.add(markdownText.substring(node.startOffset, node.endOffset))
+                        result.add(fileContent.substring(node.startOffset, node.endOffset))
                     }
 
                     node.type.name.lowercase() == type -> {
-                        result.add(markdownText.substring(node.startOffset, node.endOffset))
+                        result.add(fileContent.substring(node.startOffset, node.endOffset))
                     }
                 }
 
