@@ -9,17 +9,17 @@ import com.phodal.shirecore.ShireCoreBundle
 import org.jetbrains.annotations.NonNls
 
 @NonNls
-internal const val SECRET_PATTERN_EXTENSION = "shireSecretPattern.yml"
+internal const val SHIRE_ENV_PATTERN_EXTENSION = "shireEnv.json"
 
-class ShireSecretPatternSchemaFileProvider(project: Project) : JsonSchemaFileProvider {
+class ShireEnvFileProvider(project: Project) : JsonSchemaFileProvider {
     @NonNls
-    private val DOT_EXTENSION = ".$SECRET_PATTERN_EXTENSION"
+    private val DOT_EXTENSION = ".$SHIRE_ENV_PATTERN_EXTENSION"
 
     @NonNls
-    private val SCHEMA = "/schemas/shireSecretPattern.schema.json"
+    private val SCHEMA = "/schemas/shireEnv.schema.json"
 
     override fun isAvailable(file: VirtualFile): Boolean = file.nameSequence.endsWith(DOT_EXTENSION)
-    override fun getName(): String = ShireCoreBundle.message("schema.pattern.json.display.name")
+    override fun getName(): String = ShireCoreBundle.message("schema.env.json.display.name")
     override fun getSchemaFile(): VirtualFile? = VfsUtil.findFileByURL(javaClass.getResource(SCHEMA)!!)
     override fun getSchemaType(): SchemaType = SchemaType.embeddedSchema
 }

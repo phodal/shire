@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NonNls
 @NonNls
 internal const val CUSTOM_AGENT_JSON_EXTENSION = "shireCustomAgent.json"
 
-class CustomAgentSchemaFileProvider(project: Project) : JsonSchemaFileProvider {
+class ShireCustomAgentSchemaFileProvider(project: Project) : JsonSchemaFileProvider {
     @NonNls
     private val DOT_EXTENSION = ".$CUSTOM_AGENT_JSON_EXTENSION"
 
