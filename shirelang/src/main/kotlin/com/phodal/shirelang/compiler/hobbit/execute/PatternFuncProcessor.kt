@@ -222,6 +222,11 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             is PatternActionFunc.Capture -> {
                 CaptureProcessor.execute(myProject, action.fileName, action.nodeType)
             }
+
+            is PatternActionFunc.Thread -> {
+                ThreadProcessor.execute(myProject, action.fileName)
+            }
+
         }
     }
 

@@ -161,6 +161,13 @@ sealed class PatternActionFunc(open val funcName: String) {
     class Capture(val fileName: String, val nodeType: String) : PatternActionFunc("capture")
 
     /**
+     * the thread function will run the function in a new thread
+     *
+     * @param fileName The file name to run
+     */
+    class Thread(val fileName: String) : PatternActionFunc("thread")
+
+    /**
      * User Custom Functions
      */
     class UserCustom(override val funcName: String, val args: List<String>) : PatternActionFunc(funcName) {
