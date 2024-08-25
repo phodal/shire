@@ -629,6 +629,19 @@ object HobbitHoleParser {
                 PatternActionFunc.Thread(args.first())
             }
 
+            "jsonpath" -> {
+                if (args.isEmpty()) {
+                    logger.error("parsePatternAction, jsonpath requires at least 1 arguments")
+                    return null
+                }
+
+                if (args.size < 2) {
+                    PatternActionFunc.JsonPath(null, args[0])
+                } else {
+                    PatternActionFunc.JsonPath(args[0], args[1])
+                }
+            }
+
             null -> {
                 logger.warn("parsePatternAction, Unknown pattern action: ${expr.funcCall}")
                 return null

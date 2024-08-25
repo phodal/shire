@@ -168,6 +168,11 @@ sealed class PatternActionFunc(open val funcName: String) {
     class Thread(val fileName: String) : PatternActionFunc("thread")
 
     /**
+     * the jsonpath function will parse the json and get the value by jsonpath
+     */
+    class JsonPath(val obj: String?, val path: String) : PatternActionFunc("jsonpath")
+
+    /**
      * User Custom Functions
      */
     class UserCustom(override val funcName: String, val args: List<String>) : PatternActionFunc(funcName) {

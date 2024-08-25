@@ -7,6 +7,8 @@ import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.findFile
 import com.intellij.openapi.vfs.readText
+import com.nfeld.jsonpathkt.JsonPath
+import com.nfeld.jsonpathkt.extension.read
 import com.phodal.shirecore.ShirelangNotifications
 import com.phodal.shirecore.guard.RedactProcessor
 import com.phodal.shirecore.search.function.ScoredText
@@ -227,6 +229,23 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                 ThreadProcessor.execute(myProject, action.fileName)
             }
 
+            is PatternActionFunc.JsonPath -> {
+                val jsonStr = action.obj ?: lastResult as String
+
+                val result: String = try {
+                    JsonPath.parse(jsonStr)?.read<Any>(action.path.trim()).toString()
+                } catch (e: Exception) {
+                    logger<FunctionStatementProcessor>().warn("jsonpath error: $e")
+                    return jsonStr
+                }
+
+                if (result == "null") {
+                    logger<FunctionStatementProcessor>().warn("jsonpath error: $result for $jsonStr")
+                    return jsonStr
+                }
+
+                result
+            }
         }
     }
 
