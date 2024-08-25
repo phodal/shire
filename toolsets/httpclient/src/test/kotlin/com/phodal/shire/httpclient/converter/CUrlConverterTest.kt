@@ -1,10 +1,6 @@
 package com.phodal.shire.httpclient.converter
 
-
 import com.intellij.testFramework.LightPlatformCodeInsightTestCase
-import okhttp3.OkHttpClient
-
-
 
 class CUrlConverterTest : LightPlatformCodeInsightTestCase() {
     fun testShouldConvertCurlToRestClientRequest() {
@@ -15,7 +11,7 @@ class CUrlConverterTest : LightPlatformCodeInsightTestCase() {
         val restClientRequest = CUrlConverter.convert(project, content)
 
         // Then
-        assertEquals("http://example.com/api/resource", restClientRequest.url)
+        assertEquals("http://example.com/api/resource", restClientRequest.url.toString())
     }
 
     fun testShouldCallHttpClientWithConvertedRequest() {
