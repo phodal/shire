@@ -5,7 +5,6 @@ import com.intellij.httpClient.execution.auth.HttpClientAuthData
 import com.intellij.httpClient.execution.auth.HttpRequestAuthCredentials
 import com.intellij.httpClient.execution.auth.HttpRequestAuthScope
 import com.intellij.httpClient.execution.auth.HttpRequestCommonAuthSchemes
-import com.intellij.httpClient.execution.impl.HttpRequestHandlerHelper
 import com.intellij.httpClient.http.request.*
 import com.intellij.httpClient.http.request.psi.impl.HttpRequestPsiImplUtil
 import com.intellij.ide.scratch.ScratchFileService
@@ -14,6 +13,7 @@ import com.intellij.openapi.command.UndoConfirmationPolicy
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
+import com.intellij.openapi.util.text.StringUtil
 import com.intellij.psi.NavigatablePsiElement
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiManager
@@ -24,7 +24,7 @@ import java.io.IOException
 import java.net.URL
 
 fun RestClientRequest.buildFullUrl(): URL {
-    val url = URL(HttpRequestHandlerHelper.getFullUri(this.url, this))
+    val url = URL(getFullUri(this.url, this))
     if (url.userInfo == null) {
         return url
     }
@@ -53,6 +53,18 @@ fun RestClientRequest.buildFullUrl(): URL {
     }
 
     return URL(fullUrl)
+}
+
+fun getFullUri(uri: String, request: RestClientRequest): String {
+    var uriStr = uri
+    if (request.parametersEnabled) {
+        val query = request.createQueryString()
+        if (StringUtil.isNotEmpty(query)) {
+            uriStr = uriStr + (if (uriStr.contains("?")) "&" else "?") + query
+        }
+    }
+
+    return uriStr
 }
 
 
