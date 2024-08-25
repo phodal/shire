@@ -12,7 +12,6 @@ import com.intellij.httpClient.http.request.run.config.HttpRequestRunConfigurati
 import com.intellij.httpClient.http.request.run.config.HttpRequestRunConfigurationType
 import com.intellij.ide.scratch.ScratchRootType
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.NlsSafe
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile

@@ -5,12 +5,11 @@ import com.intellij.httpClient.execution.RestClientRequest
 import com.intellij.httpClient.http.request.HttpRequestHeaderFields
 import com.intellij.openapi.project.Project
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 
 object CUrlConverter {
-    fun convert(content: String): RestClientRequest {
+    private fun convert(content: String): RestClientRequest {
         val restClientRequest = CurlParser().parseToRestClientRequest(content)
         return restClientRequest
     }
