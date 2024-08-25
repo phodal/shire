@@ -41,12 +41,4 @@ object CUrlConverter {
 
         return builder.build()
     }
-
-    fun execute(myProject: Project, content: String) {
-        val client = OkHttpClient()
-        val request = this.convert(myProject, content)
-        val response = client.newCall(request).execute()
-
-        println(response.body?.string())
-    }
 }
