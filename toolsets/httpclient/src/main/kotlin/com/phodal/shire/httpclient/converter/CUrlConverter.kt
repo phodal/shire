@@ -1,7 +1,5 @@
 package com.phodal.shire.httpclient.converter
 
-import com.intellij.httpClient.actions.OpenInScratchFileUtil
-import com.intellij.httpClient.converters.curl.Utils
 import com.intellij.httpClient.converters.curl.parser.CurlParser
 import com.intellij.httpClient.execution.RestClientRequest
 import com.intellij.httpClient.http.request.*
@@ -19,14 +17,14 @@ import com.intellij.util.PathUtil
 import java.io.IOException
 
 object CUrlConverter {
-    fun convert(myProject: Project, content: String): Any? {
+    fun convert(myProject: Project, content: String): RestClientRequest {
         val restClientRequest = CurlParser().parseToRestClientRequest(content)
-
-        OpenInScratchFileUtil.createAndOpenScratchFile(
-            myProject,
-            restClientRequest,
-            Utils.createCurlStringComment(content)
-        )
+//
+//        OpenInScratchFileUtil.createAndOpenScratchFile(
+//            myProject,
+//            restClientRequest,
+//            Utils.createCurlStringComment(content)
+//        )
 
         return restClientRequest
     }
