@@ -9,7 +9,7 @@ import com.intellij.util.io.EnumeratorStringDescriptor
 import com.intellij.util.io.KeyDescriptor
 import java.util.stream.Collectors
 
-val SHIRE_ENV_ID: ID<String, Set<String>> = ID.create("http.request.execution.environment")
+val SHIRE_ENV_ID: ID<String, Set<String>> = ID.create("shire.environment")
 
 class ShireEnvironmentIndex : FileBasedIndexExtension<String, Set<String>>() {
 
