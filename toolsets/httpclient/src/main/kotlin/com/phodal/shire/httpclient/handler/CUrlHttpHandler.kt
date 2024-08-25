@@ -4,8 +4,12 @@ import com.intellij.httpClient.http.request.HttpRequestCollectionProvider
 import com.intellij.httpClient.http.request.notification.HttpClientWhatsNewContentService
 import com.intellij.ide.scratch.ScratchUtil
 import com.intellij.ide.scratch.ScratchesSearchScope
+import com.intellij.json.psi.JsonFile
+import com.intellij.json.psi.JsonObject
+import com.intellij.json.psi.JsonProperty
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
+import com.intellij.psi.PsiManager
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.search.GlobalSearchScopesCore
 import com.intellij.psi.search.ProjectScope
@@ -22,19 +26,36 @@ class CUrlHttpHandler : HttpHandler {
 
     override fun execute(project: Project, content: String): String? {
         val client = OkHttpClient()
-        val variables = fetchEnvironmentVariables(project)
+        val envName = getAllEnvironments(project, getSearchScope(project)).firstOrNull() ?: "development"
+        val variables = fetchEnvironmentVariables(project, envName)
+        val psiFile =
+            FileBasedIndex.getInstance().getContainingFiles(SHIRE_ENV_ID, envName, getSearchScope(project))
+                .firstOrNull()
+                ?.let {
+                    (PsiManager.getInstance(project).findFile(it) as? JsonFile)
+                }
 
-        val request = CUrlConverter.convert(content, variables)
+        val envObject = readEnvObject(psiFile, envName)
+
+        val request = CUrlConverter.convert(content, variables, envObject)
+
         val response = client.newCall(request).execute()
 
         return response.body?.string()
     }
 
-    private fun fetchEnvironmentVariables(project: Project): List<Set<String>> {
-        val firstEnv = getAllEnvironments(project, getSearchScope(project)).firstOrNull() ?: "development"
+    private fun readEnvObject(psiFile: JsonFile?, envName: String): JsonObject? {
+        val rootObject = psiFile?.topLevelValue as? JsonObject ?: return null
+
+        val properties: List<JsonProperty> = rootObject.propertyList
+        val envObject = properties.firstOrNull { it.name == envName }?.value as? JsonObject
+        return envObject
+    }
+
+    private fun fetchEnvironmentVariables(project: Project, envName: String): List<Set<String>> {
         val variables: List<Set<String>> = FileBasedIndex.getInstance().getValues(
             SHIRE_ENV_ID,
-            firstEnv,
+            envName,
             getSearchScope(project)
         )
 
