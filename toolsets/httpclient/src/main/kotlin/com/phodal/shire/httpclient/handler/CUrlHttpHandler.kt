@@ -30,9 +30,9 @@ class CUrlHttpHandler : HttpHandler {
         return response.body?.string()
     }
 
-    private fun fetchEnvironmentVariables(project: Project): MutableList<Set<String>> {
+    private fun fetchEnvironmentVariables(project: Project): List<Set<String>> {
         val firstEnv = getAllEnvironments(project, getSearchScope(project)).firstOrNull() ?: "development"
-        val variables: MutableList<Set<String>> = FileBasedIndex.getInstance().getValues(
+        val variables: List<Set<String>> = FileBasedIndex.getInstance().getValues(
             SHIRE_ENV_ID,
             firstEnv,
             getSearchScope(project)

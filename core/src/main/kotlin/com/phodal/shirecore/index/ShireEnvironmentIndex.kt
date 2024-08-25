@@ -2,6 +2,7 @@ package com.phodal.shirecore.index
 
 import com.intellij.json.psi.JsonFile
 import com.intellij.json.psi.JsonObject
+import com.intellij.openapi.util.text.StringUtil
 import com.intellij.psi.PsiFile
 import com.intellij.util.indexing.*
 import com.intellij.util.io.DataExternalizer
@@ -53,8 +54,10 @@ class ShireEnvironmentIndex : FileBasedIndexExtension<String, Set<String>>() {
 
         val result: MutableMap<String, Set<String>> = HashMap()
         for (property in topLevelValue.propertyList) {
-            if (property.value is JsonObject) {
-                result[property.name] = readEnvVariables(property.value as JsonObject, file.name)
+            when (val value = property.value) {
+                is JsonObject -> {
+                    result[property.name] = readEnvVariables(value, file.name)
+                }
             }
         }
 
@@ -67,9 +70,12 @@ class ShireEnvironmentIndex : FileBasedIndexExtension<String, Set<String>>() {
             emptySet()
         } else {
             val set = properties.stream()
-                .map { it.name }
-                .filter { it != null }
-                .collect(Collectors.toSet())
+                .map { property ->
+                    StringUtil.nullize(property.name)
+                }
+                .toList()
+                .mapNotNull { it }
+                .toSet()
 
             set
         }
