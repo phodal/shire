@@ -22,10 +22,10 @@ class CUrlHttpHandler : HttpHandler {
 
     override fun execute(project: Project, content: String): String? {
         val client = OkHttpClient()
-        val request = CUrlConverter.convert(project, content)
-        val response = client.newCall(request).execute()
+        val variables = fetchEnvironmentVariables(project)
 
-//        fetchEnvironmentVariables(project)
+        val request = CUrlConverter.convert(content, variables)
+        val response = client.newCall(request).execute()
 
         return response.body?.string()
     }
