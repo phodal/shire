@@ -10,11 +10,11 @@ class MarkdownPsiCaptureTest {
         val markdownText = """
             normal text link: https://shire.phodal.com
         """.trimIndent()
-        val type = "link"
+
         val markdownPsiCapture = MarkdownPsiCapture()
 
         // when
-        val result = markdownPsiCapture.captureUrl(markdownText, type)
+        val result = markdownPsiCapture.captureUrl(markdownText, "link")
 
         // then
         assertEquals("https://shire.phodal.com", result.first())
@@ -27,14 +27,30 @@ class MarkdownPsiCaptureTest {
             normal text link: [Shire](https://shire.phodal.com)
             link 2: https://aise.phodal.com
         """.trimIndent()
-        val type = "link"
         val markdownPsiCapture = MarkdownPsiCapture()
 
         // when
-        val result = markdownPsiCapture.captureUrl(markdownText, type)
+        val result = markdownPsiCapture.captureUrl(markdownText, "link")
 
         // then
         assertEquals("https://shire.phodal.com", result.first())
         assertEquals("https://aise.phodal.com", result[1])
+    }
+
+    @Test
+    fun should_ignore_image_url() {
+        // given
+        val markdownText = """
+            hello sample 
+            
+            ![Shire](https://shire.phodal.com/images/pluginIcon.svg)
+            """.trimIndent()
+        val markdownPsiCapture = MarkdownPsiCapture()
+
+        // when
+        val result = markdownPsiCapture.captureUrl(markdownText, "link")
+
+        // then
+        assertEquals(0, result.size)
     }
 }

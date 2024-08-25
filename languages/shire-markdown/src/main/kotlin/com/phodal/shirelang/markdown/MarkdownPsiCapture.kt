@@ -34,6 +34,10 @@ class MarkdownPsiCapture {
         parsedTree.accept(object : RecursiveVisitor() {
             override fun visitNode(node: ASTNode) {
                 when {
+                    // ignore image
+                    node.type == MarkdownElementTypes.IMAGE -> {
+                        return
+                    }
                     types.contains(node.type.name) -> {
                         result.add(markdownText.substring(node.startOffset, node.endOffset))
                     }
@@ -50,13 +54,13 @@ class MarkdownPsiCapture {
         return result.map { it.trim() }
     }
 
-
     class MarkdownNode(val node: ASTNode, val parent: MarkdownNode?, val rootText: String) {
         val children: List<MarkdownNode> = node.children.map { MarkdownNode(it, this, rootText) }
         val endOffset: Int get() = node.endOffset
         val startOffset: Int get() = node.startOffset
         val type: IElementType get() = node.type
         val text: String get() = rootText.substring(startOffset, endOffset)
+
         fun child(type: IElementType): MarkdownNode? = children.firstOrNull { it.type == type }
     }
 
@@ -69,6 +73,8 @@ class MarkdownPsiCapture {
 
             val nodeType = node.type
             val nodeText = node.text
+            println("nodeType: $nodeType, nodeText: $nodeText")
+
             when (nodeType) {
                 MarkdownElementTypes.UNORDERED_LIST -> wrapChildren("ul", newline = true)
                 MarkdownElementTypes.ORDERED_LIST -> wrapChildren("ol", newline = true)
@@ -84,7 +90,6 @@ class MarkdownPsiCapture {
                 MarkdownElementTypes.ATX_6 -> wrapChildren("h6")
                 MarkdownElementTypes.BLOCK_QUOTE -> wrapChildren("blockquote")
                 MarkdownElementTypes.PARAGRAPH -> wrapChildren("p", newline = true)
-
                 MarkdownElementTypes.CODE_SPAN,
                 MarkdownElementTypes.CODE_BLOCK,
                 MarkdownElementTypes.CODE_FENCE,
@@ -100,6 +105,7 @@ class MarkdownPsiCapture {
                     val linkLabelContent = linkLabelNode?.children
                         ?.dropWhile { it.type == MarkdownTokenTypes.LBRACKET }
                         ?.dropLastWhile { it.type == MarkdownTokenTypes.RBRACKET }
+
                     if (linkLabelContent != null) {
                         val label = linkLabelContent.joinToString(separator = "") { it.text }
                         val linkText = node.child(MarkdownElementTypes.LINK_TEXT)?.text ?: label
@@ -108,8 +114,8 @@ class MarkdownPsiCapture {
                 }
 
                 MarkdownElementTypes.INLINE_LINK -> {
-//                    val destination = node.child(MarkdownElementTypes.LINK_DESTINATION)?.text
-//                    result.add(destination ?: "")
+                    val destination = node.child(MarkdownElementTypes.LINK_DESTINATION)?.text
+                    result.add(destination ?: "")
                 }
 
                 MarkdownTokenTypes.TEXT,
@@ -134,7 +140,11 @@ class MarkdownPsiCapture {
                 GFMTokenTypes.TILDE -> {}
                 GFMElementTypes.TABLE -> {}
 
+                // ignore image
+                MarkdownElementTypes.IMAGE -> {}
+
                 else -> {
+//                    println("unknown type: $nodeType")
                     processChildren()
                 }
             }
