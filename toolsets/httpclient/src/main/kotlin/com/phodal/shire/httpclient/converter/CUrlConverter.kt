@@ -20,7 +20,11 @@ object CUrlConverter {
         val request = this.convert(content)
         builder.url(request.buildFullUrl())
         request.headers.forEach {
-            builder.header(it.key, it.value)
+            try {
+                builder.header(it.key, it.value)
+            } catch (e: IllegalArgumentException) {
+                // ignore
+            }
         }
 
         val body = request.textToSend

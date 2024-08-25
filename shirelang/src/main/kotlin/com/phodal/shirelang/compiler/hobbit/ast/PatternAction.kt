@@ -39,7 +39,7 @@ data class PatternAction(
                 }
 
                 else -> {
-                    logger<PatternAction>().warn("Unknown pattern processor type: $value")
+                    logger<PatternAction>().warn("Unknown pattern processor type: ${value.display()}")
                     null
                 }
             }

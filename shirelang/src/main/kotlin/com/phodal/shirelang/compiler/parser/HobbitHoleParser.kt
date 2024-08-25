@@ -611,6 +611,24 @@ object HobbitHoleParser {
                 PatternActionFunc.Crawl(*args.toTypedArray())
             }
 
+            "capture" -> {
+                if (args.size < 2) {
+                    logger.error("parsePatternAction, capture requires at least 2 arguments")
+                    return null
+                }
+
+                PatternActionFunc.Capture(args[0], args[1])
+            }
+
+            "thread" -> {
+                if (args.isEmpty()) {
+                    logger.error("parsePatternAction, thread requires at least 1 argument")
+                    return null
+                }
+
+                PatternActionFunc.Thread(args.first())
+            }
+
             null -> {
                 logger.warn("parsePatternAction, Unknown pattern action: ${expr.funcCall}")
                 return null
