@@ -1,3 +1,12 @@
-curl --request <method> '/rest/api/content/search?limit=1&cql=id!=0 order by lastmodified desc' \
---header 'Accept: application/json' \
---header 'Authorization: Basic <encoded credentials>'
+curl --location 'https://open.bigmodel.cn/api/paas/v4/chat/completions' \
+--header 'Authorization: Bearer <你的apikey>' \
+--header 'Content-Type: application/json' \
+--data '{
+    "model": "glm-4",
+    "messages": [
+        {
+            "role": "user",
+            "content": "你好"
+        }
+    ]
+}'

@@ -191,6 +191,15 @@ project(":toolsets:httpclient") {
 
     dependencies {
         implementation(project(":core"))
+
+        // custom agent deps
+        implementation("com.nfeld.jsonpathkt:jsonpathkt:2.0.1")
+        implementation("com.squareup.okhttp3:okhttp:4.4.1")
+        implementation("com.squareup.okhttp3:okhttp-sse:4.12.0")
+        // open ai deps
+        implementation("io.reactivex.rxjava3:rxjava:3.1.9")
+        implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.2")
+        implementation("com.fasterxml.jackson.core:jackson-databind:2.17.2")
     }
 }
 
