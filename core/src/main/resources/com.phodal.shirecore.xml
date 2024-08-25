@@ -136,6 +136,10 @@
         <extensionPoint qualifiedName="com.phodal.shireTerminalExecutor"
                         interface="com.phodal.shirecore.provider.action.TerminalLocationExecutor"
                         dynamic="true"/>
+
+        <extensionPoint qualifiedName="com.phodal.shireHttpHandler"
+                        interface="com.phodal.shirecore.provider.http.HttpHandler"
+                        dynamic="true"/>
     </extensionPoints>
 
     <extensions defaultExtensionNs="JavaScript.JsonSchema">
