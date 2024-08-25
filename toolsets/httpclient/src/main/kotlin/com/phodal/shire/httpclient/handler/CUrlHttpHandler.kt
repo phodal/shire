@@ -1,13 +1,10 @@
 package com.phodal.shire.httpclient.handler
 
 import com.intellij.httpClient.http.request.HttpRequestCollectionProvider
-import com.intellij.httpClient.http.request.environment.HttpRequestIndex
 import com.intellij.httpClient.http.request.notification.HttpClientWhatsNewContentService
 import com.intellij.ide.scratch.ScratchUtil
 import com.intellij.ide.scratch.ScratchesSearchScope
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiFile
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.search.GlobalSearchScopesCore
@@ -28,13 +25,29 @@ class CUrlHttpHandler : HttpHandler {
         val request = CUrlConverter.convert(project, content)
         val response = client.newCall(request).execute()
 
+//        fetchEnvironmentVariables(project)
+
+        return response.body?.string()
+    }
+
+    private fun fetchEnvironmentVariables(project: Project): MutableList<Set<String>> {
+        val firstEnv = getAllEnvironments(project, getSearchScope(project)).firstOrNull() ?: "development"
         val variables: MutableList<Set<String>> = FileBasedIndex.getInstance().getValues(
             SHIRE_ENV_ID,
-            "development",
+            firstEnv,
             getSearchScope(project)
         )
 
-        return response.body?.string()
+        return variables
+    }
+
+    private fun getAllEnvironments(project: Project, scope: GlobalSearchScope): Collection<String> {
+        val index = FileBasedIndex.getInstance()
+        val collection = index.getAllKeys(SHIRE_ENV_ID, project).stream()
+            .filter { index.getContainingFiles(SHIRE_ENV_ID, it, scope).isNotEmpty() }
+            .toList()
+
+        return collection
     }
 
     private fun getSearchScope(project: Project, contextFile: PsiFile? = null): GlobalSearchScope {
