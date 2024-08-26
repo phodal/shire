@@ -6,6 +6,7 @@ import kotlinx.coroutines.runBlocking
 
 object CrawlProcessor {
     suspend fun doExecute(url: String): String? {
+        /// todo: parse github README.md if it's a github repo
         return BrowseTool.parse(url).body
     }
 
