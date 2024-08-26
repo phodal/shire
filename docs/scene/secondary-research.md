@@ -36,7 +36,7 @@ variables:
 variables:
   "crawl": /crawlSample\.md/ { capture("docs/crawlSample.md", "link") | crawl() | thread(".shire/research/summary.shire") }
   "article": /crawlSample\.md/ { cat }
-onStreamingEnd: { save("docs/output.md") }
+onStreamingEnd: { saveFile("docs/output.md") }
 ---
 
 根据如下的草稿和对应的资料，编写一篇对应主题的文章。
