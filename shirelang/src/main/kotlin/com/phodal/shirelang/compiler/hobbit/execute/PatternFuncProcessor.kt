@@ -152,19 +152,6 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                 logger<PatternActionProcessor>().warn("TODO for User custom: ${action.funcName}")
             }
 
-            is PatternActionFunc.ExecuteShire -> {
-                // remove $ for all variableName
-                val variables: Array<String> = action.variableNames.map {
-                    if (it.startsWith("\$")) {
-                        it.substring(1)
-                    } else {
-                        it
-                    }
-                }.toTypedArray()
-
-                ShireRunFileAction.executeFile(myProject, action.filename, variables, variableTable)
-            }
-
             is PatternActionFunc.Notify -> {
                 ShirelangNotifications.info(myProject, action.message)
             }
@@ -248,8 +235,21 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                 CaptureProcessor.execute(myProject, action.fileName, action.nodeType)
             }
 
+            is PatternActionFunc.ExecuteShire -> {
+                // remove $ for all variableName
+                val variables: Array<String> = action.variableNames.map {
+                    if (it.startsWith("\$")) {
+                        it.substring(1)
+                    } else {
+                        it
+                    }
+                }.toTypedArray()
+
+                ShireRunFileAction.executeFile(myProject, action.filename, variables, variableTable)
+            }
+
             is PatternActionFunc.Thread -> {
-                ThreadProcessor.execute(myProject, action.fileName)
+                ThreadProcessor.execute(myProject, action.fileName, arrayOf(), variableTable)
             }
 
             is PatternActionFunc.JsonPath -> {
