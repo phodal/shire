@@ -6,6 +6,14 @@ import java.util.*
 
 @FunctionalInterface
 interface ShireRunListener : EventListener {
+    /**
+     * Run finish event
+     *
+     * @param allOutput all output with Console and debug output, it's design for debug
+     * @param llmOutput LLM output
+     * @param event ProcessEvent
+     * @param scriptPath script path
+     */
     fun runFinish(allOutput: String, llmOutput: String, event: ProcessEvent, scriptPath: String)
 
     companion object {

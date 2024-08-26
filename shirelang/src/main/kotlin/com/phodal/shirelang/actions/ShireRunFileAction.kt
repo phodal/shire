@@ -127,7 +127,7 @@ class ShireRunFileAction : DumbAwareAction() {
         ): String? {
             val variables: MutableMap<String, String> = mutableMapOf()
             for (i in variableNames.indices) {
-                variables[variableNames[i]] = variableTable[variableNames[i]].toString() ?: ""
+                variables[variableNames[i]] = variableTable[variableNames[i]].toString()
             }
 
             val config = DynamicShireActionConfig.from(file)
@@ -162,7 +162,7 @@ class ShireRunFileAction : DumbAwareAction() {
             val connection = ApplicationManager.getApplication().messageBus.connect(hintDisposable)
             connection.subscribe(ShireRunListener.TOPIC, object : ShireRunListener {
                 override fun runFinish(allOutput: String, llmOutput: String, event: ProcessEvent, scriptPath: String) {
-                    future.complete(allOutput)
+                    future.complete(llmOutput)
                 }
             })
 
