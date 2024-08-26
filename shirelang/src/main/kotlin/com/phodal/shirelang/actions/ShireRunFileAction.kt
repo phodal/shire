@@ -22,7 +22,6 @@ import com.phodal.shirelang.ShireActionStartupActivity
 import com.phodal.shirelang.actions.base.DynamicShireActionConfig
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.*
-import com.phodal.shirelang.run.flow.ShireProcessProcessor
 import org.jetbrains.annotations.NonNls
 import java.util.concurrent.CompletableFuture
 
@@ -49,6 +48,7 @@ class ShireRunFileAction : DumbAwareAction() {
 
     companion object {
         const val ID: @NonNls String = "runShireFileAction"
+
         fun createRunConfig(e: AnActionEvent): RunnerAndConfigurationSettings? {
             val context = ConfigurationContext.getFromContext(e.dataContext, e.place)
             val configProducer = RunConfigurationProducer.getInstance(ShireRunConfigurationProducer::class.java)
@@ -121,23 +121,13 @@ class ShireRunFileAction : DumbAwareAction() {
 
         fun suspendExecuteFile(
             project: Project,
-            fileName: String,
             variableNames: Array<String>,
             variableTable: MutableMap<String, Any?>,
+            file: ShireFile,
         ): String? {
             val variables: MutableMap<String, String> = mutableMapOf()
             for (i in variableNames.indices) {
                 variables[variableNames[i]] = variableTable[variableNames[i]].toString() ?: ""
-            }
-
-            val file = runReadAction {
-                ShireActionStartupActivity.obtainShireFiles(project).find {
-                    it.name == fileName
-                }
-            }
-
-            if (file == null) {
-                throw RuntimeException("File $fileName not found")
             }
 
             val config = DynamicShireActionConfig.from(file)

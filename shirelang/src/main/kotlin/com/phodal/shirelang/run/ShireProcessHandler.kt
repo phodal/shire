@@ -13,6 +13,7 @@ class ShireProcessHandler(private val myExecutionName: String) : BuildProcessHan
             notifyProcessTerminated(0)
         }
     }
+
     fun exitWithError() = notifyProcessTerminated(-1)
 
     override fun getProcessInput(): OutputStream? = null
