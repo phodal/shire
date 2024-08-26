@@ -250,7 +250,11 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
 
             is PatternActionFunc.Thread -> {
                 // remove $ for all variableName
-                val variables: Array<String> = action.variableNames.map {
+                val varNames = action.variableNames.toMutableList().apply {
+                    if (!contains("output")) {
+                        add("output")
+                    }
+                }.map {
                     if (it.startsWith("\$")) {
                         it.substring(1)
                     } else {
@@ -258,7 +262,12 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                     }
                 }.toTypedArray()
 
-                ThreadProcessor.execute(myProject, action.fileName, variables, variableTable)
+                if (!variableTable.containsKey("output")) {
+                    variableTable["output"] = lastResult
+                }
+
+
+                ThreadProcessor.execute(myProject, action.fileName, varNames, variableTable)
             }
 
             is PatternActionFunc.JsonPath -> {

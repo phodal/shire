@@ -10,12 +10,14 @@ object CrawlProcessor {
     }
 
     fun execute(urls: Array<out String>): List<String> {
-        return runBlocking {
+        val results = runBlocking {
             coroutineScope {
                 urls.mapNotNull {
                     doExecute(it)
                 }
             }
         }
+
+        return results
     }
 }
