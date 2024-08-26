@@ -13,7 +13,11 @@ object CrawlProcessor {
         val results = runBlocking {
             coroutineScope {
                 urls.mapNotNull {
-                    doExecute(it)
+                    try {
+                        doExecute(it)
+                    } catch (e: Exception) {
+                        null
+                    }
                 }
             }
         }
