@@ -173,51 +173,6 @@ class ShireRunFileAction : DumbAwareAction() {
             }
 
             val future = CompletableFuture<String>()
-//            val sb = StringBuilder()
-//
-//            val processHandler = object: ProcessHandler() {
-//                override fun destroyProcessImpl() {
-//                    future.complete(sb.toString())
-//                    try {
-//                        notifyProcessDetached()
-//                    } finally {
-//                        notifyProcessTerminated(0)
-//                    }
-//                }
-//
-//                override fun detachProcessImpl() {
-//                    future.complete(sb.toString())
-//                    try {
-//                        notifyProcessDetached()
-//                    } finally {
-//                        notifyProcessTerminated(0)
-//                    }
-//                }
-//
-//                override fun detachIsDefault(): Boolean {
-//                    return false
-//                }
-//
-//                override fun getProcessInput(): OutputStream? {
-//                    return null
-//                }
-//            }
-//
-//            ProcessTerminatedListener.attach(processHandler)
-//            processHandler.addProcessListener(ShireProcessAdapter(sb, runConfiguration))
-//
-//            var console: ShireConsoleView? = null
-//            invokeAndWait {
-//                val executionConsole = ConsoleViewImpl(project, true)
-//                console = ShireConsoleView(executionConsole)
-//            }
-//
-//            console!!.addMessageFilter { line, _ ->
-//                sb.append(line)
-//                null
-//            }
-//
-//            console!!.attachToProcess(processHandler)
 
             val hintDisposable = Disposer.newDisposable()
             val connection = ApplicationManager.getApplication().messageBus.connect(hintDisposable)
