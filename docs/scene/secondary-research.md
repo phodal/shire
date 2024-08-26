@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Secondary Research (TBC)
+title: Secondary Research
 parent: Shire Scene
 nav_order: 1
 ---

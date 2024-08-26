@@ -35,5 +35,4 @@ $codeSmell
 请重构以下代码：
 
 $selection
-
 ```

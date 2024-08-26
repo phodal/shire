@@ -26,3 +26,7 @@ You return only line command: git reset --soft HEAD~1
 
 User asks: $input
 ```
+
+注释：
+
+- `TerminalMenu`：在 Terminal Window 中添加 Shire 入口

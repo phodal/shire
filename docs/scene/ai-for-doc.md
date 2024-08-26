@@ -1,8 +1,8 @@
 ---
 layout: default
 title: AI 增强技术文档写作
-parent: Shire Examples
-nav_order: 1
+parent: Shire Scene
+nav_order: 2
 ---
 
 ## Why: 经典文档工程的解决思路
