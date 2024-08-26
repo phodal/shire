@@ -76,11 +76,15 @@ class ShireConversationService(val project: Project) {
         val finalPrompt = prompt.toString()
         if (consoleView != null) {
             runBlocking {
-                LlmProvider.provider(project)
-                    ?.stream(finalPrompt, "", true)
-                    ?.collect {
-                        consoleView.print(it, ConsoleViewContentType.NORMAL_OUTPUT)
-                    }
+                try {
+                    LlmProvider.provider(project)
+                        ?.stream(finalPrompt, "", true)
+                        ?.collect {
+                            consoleView.print(it, ConsoleViewContentType.NORMAL_OUTPUT)
+                        }
+                } catch (e: Exception) {
+                    consoleView.print(e.message ?: "Error", ConsoleViewContentType.ERROR_OUTPUT)
+                }
             }
         }
     }

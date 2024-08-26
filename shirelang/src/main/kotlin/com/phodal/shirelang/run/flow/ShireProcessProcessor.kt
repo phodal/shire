@@ -103,10 +103,13 @@ class ShireProcessProcessor(val project: Project) {
             if (consoleView == null) return
 
             runBlocking {
-                LlmProvider.provider(project)?.stream(result.shireOutput, "Shirelang", true)
-                    ?.collect {
-                        consoleView.print(it, ConsoleViewContentType.NORMAL_OUTPUT)
-                    }
+                try {
+                    LlmProvider.provider(project)?.stream(result.shireOutput, "Shirelang", true)?.collect {
+                            consoleView.print(it, ConsoleViewContentType.NORMAL_OUTPUT)
+                        }
+                } catch (e: Exception) {
+                    consoleView.print(e.message ?: "Error", ConsoleViewContentType.ERROR_OUTPUT)
+                }
             }
         } else {
             if (result.nextJob == null) return
