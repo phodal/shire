@@ -630,7 +630,8 @@ object HobbitHoleParser {
                     return null
                 }
 
-                PatternActionFunc.Thread(args.first())
+                val rest = args.drop(1).toTypedArray()
+                PatternActionFunc.Thread(args.first(), rest)
             }
 
             "jsonpath" -> {

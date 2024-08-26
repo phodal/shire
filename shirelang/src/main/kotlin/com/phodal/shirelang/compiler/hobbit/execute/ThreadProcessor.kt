@@ -28,7 +28,7 @@ object ThreadProcessor {
         }
 
         if (filename.endsWith(".shire")) {
-            return ShireRunFileAction.executeFile(myProject, fileName, variables, variableTable).toString()
+            return ShireRunFileAction.executeFile(myProject, file.name, variables, variableTable).toString()
         }
 
 

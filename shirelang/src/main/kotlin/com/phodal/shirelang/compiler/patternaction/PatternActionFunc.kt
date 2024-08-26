@@ -165,7 +165,7 @@ sealed class PatternActionFunc(open val funcName: String) {
      *
      * @param fileName The file name to run
      */
-    class Thread(val fileName: String) : PatternActionFunc("thread")
+    class Thread(val fileName: String, val variableNames: Array<String>) : PatternActionFunc("thread")
 
     /**
      * the jsonpath function will parse the json and get the value by jsonpath
