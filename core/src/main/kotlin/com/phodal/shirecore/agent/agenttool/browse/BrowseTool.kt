@@ -3,6 +3,7 @@ package com.phodal.shirecore.agent.agenttool.browse
 import com.phodal.shirecore.agent.agenttool.AgentToolContext
 import com.phodal.shirecore.provider.agent.AgentTool
 import com.phodal.shirecore.agent.agenttool.AgentToolResult
+import com.phodal.shirecore.agent.agenttool.ua.RandomUserAgent
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
@@ -24,7 +25,12 @@ class BrowseTool : AgentTool {
          * Intellij API: [com.intellij.inspectopedia.extractor.utils.HtmlUtils.cleanupHtml]
          */
         fun parse(url: String): DocumentContent {
-            val doc: Document = Jsoup.connect(url).get()
+            val doc: Document = Jsoup.connect(url)
+                .ignoreContentType(true)
+                .userAgent(RandomUserAgent.random())
+                .followRedirects(true)
+                .get()
+
             return DocumentCleaner().cleanHtml(doc)
         }
     }
