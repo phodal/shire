@@ -1,7 +1,9 @@
 package com.phodal.shirelang.compiler.hobbit.execute
 
+import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.readText
+import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.phodal.shirecore.provider.http.HttpHandler
 import com.phodal.shirecore.provider.http.HttpHandlerType
@@ -27,7 +29,9 @@ object ThreadProcessor {
             }
         }
 
-        val psiFile = PsiManager.getInstance(myProject).findFile(file) ?: return "Failed to find PSI file for $fileName"
+        val psiFile = ReadAction.compute<PsiFile, Throwable> {
+            PsiManager.getInstance(myProject).findFile(file)
+        } ?: return "Failed to find PSI file for $fileName"
 
         when (psiFile) {
             is ShireFile -> {
