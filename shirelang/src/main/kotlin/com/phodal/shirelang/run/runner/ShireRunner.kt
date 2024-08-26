@@ -13,7 +13,6 @@ import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.middleware.PostCodeHandleContext
 import com.phodal.shirecore.provider.action.TerminalLocationExecutor
 import com.phodal.shirecore.provider.context.ActionLocationEditor
-import com.phodal.shirecore.workerThread
 import com.phodal.shirelang.ShireBundle
 import com.phodal.shirelang.compiler.SHIRE_ERROR
 import com.phodal.shirelang.compiler.ShireParsedResult
@@ -28,10 +27,8 @@ import com.phodal.shirelang.run.executor.ShireDefaultLlmExecutor
 import com.phodal.shirelang.run.executor.ShireLlmExecutor
 import com.phodal.shirelang.run.executor.ShireLlmExecutorContext
 import com.phodal.shirelang.run.flow.ShireConversationService
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
+import java.util.concurrent.CompletableFuture
 
 class ShireRunner(
     private val shireFile: ShireFile,
@@ -44,23 +41,31 @@ class ShireRunner(
     private var compiledVariables: Map<String, Any> = mapOf()
     private val terminalLocationExecutor = TerminalLocationExecutor.provide(project)
 
-    suspend fun execute(parsedResult: ShireParsedResult) {
+    suspend fun execute(parsedResult: ShireParsedResult): String? {
         prepareExecute(parsedResult)
 
+        val result = CompletableFuture<String>()
+
         val runnerContext = processTemplateCompile(parsedResult)
-        if (runnerContext.hasError) return
+        if (runnerContext.hasError) return null
 
         project.getService(ShireConversationService::class.java)
             .createConversation(configuration.getScriptPath(), runnerContext.compileResult)
 
         if (runnerContext.hole?.actionLocation == ShireActionLocation.TERMINAL_MENU) {
             executeTerminalUiTask(runnerContext) { response, textRange ->
+                result.complete(response)
                 executePostFunction(runnerContext, runnerContext.hole, response, textRange)
             }
         } else {
             executeNormalUiTask(runnerContext) { response, textRange ->
+                result.complete(response)
                 executePostFunction(runnerContext, runnerContext.hole, response, textRange)
             }
+        }
+
+        return withContext(Dispatchers.IO) {
+            result.get()
         }
     }
 

@@ -6,7 +6,7 @@ import java.util.*
 
 @FunctionalInterface
 interface ShireRunListener : EventListener {
-    fun runFinish(string: String, event: ProcessEvent, scriptPath: String)
+    fun runFinish(allOutput: String, llmOutput: String, event: ProcessEvent, scriptPath: String)
 
     companion object {
         @Topic.AppLevel

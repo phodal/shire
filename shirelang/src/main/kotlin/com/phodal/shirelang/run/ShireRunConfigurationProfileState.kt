@@ -15,19 +15,15 @@ import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.progress.runBlockingCancellable
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Key
 import com.intellij.ui.components.panels.NonOpaquePanel
 import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirecore.provider.context.ActionLocationEditor
-import com.phodal.shirecore.workerThread
 import com.phodal.shirelang.compiler.ShireSyntaxAnalyzer
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.runner.ShireRunner
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import java.awt.BorderLayout
 import javax.swing.JComponent
@@ -54,7 +50,8 @@ open class ShireRunConfigurationProfileState(
         ProcessTerminatedListener.attach(processHandler)
 
         val sb = StringBuilder()
-        processHandler.addProcessListener(ShireProcessAdapter(sb, configuration))
+        val processAdapter = ShireProcessAdapter(sb, configuration)
+        processHandler.addProcessListener(processAdapter)
 
         // start message log in here
         console!!.addMessageFilter { line, _ ->
@@ -85,7 +82,8 @@ open class ShireRunConfigurationProfileState(
 
         console!!.print("Prepare for running ${configuration.name}...\n", ConsoleViewContentType.NORMAL_OUTPUT)
         ShireCoroutineScope.scope(myProject).launch {
-            shireRunner.execute(parsedResult)
+            val llmOutput = shireRunner.execute(parsedResult)
+            processAdapter.setLlmOutput(llmOutput)
         }
 
         return DefaultExecutionResult(console, processHandler)
@@ -121,17 +119,29 @@ class ShireConsoleView(private val executionConsole: ConsoleViewImpl) :
 
 class ShireProcessAdapter(private val sb: StringBuilder, val configuration: ShireConfiguration) : ProcessAdapter() {
     var result = ""
+    private var llmOutput: String = ""
+
     override fun processTerminated(event: ProcessEvent) {
         super.processTerminated(event)
 
         ApplicationManager.getApplication().messageBus
             .syncPublisher(ShireRunListener.TOPIC)
-            .runFinish(result, event, configuration.getScriptPath())
+            .runFinish(result, llmOutput, event, configuration.getScriptPath())
     }
 
     override fun onTextAvailable(event: ProcessEvent, outputType: Key<*>) {
         super.onTextAvailable(event, outputType)
         result = sb.toString()
+    }
+
+    fun setLlmOutput(llmOutput: String?) {
+        if (llmOutput != null) {
+            this.llmOutput = llmOutput
+        }
+    }
+
+    fun getLlmOutput(): String? {
+        return llmOutput
     }
 }
 

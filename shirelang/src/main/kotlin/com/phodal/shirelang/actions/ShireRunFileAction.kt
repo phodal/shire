@@ -6,12 +6,8 @@ import com.intellij.execution.RunnerAndConfigurationSettings
 import com.intellij.execution.actions.ConfigurationContext
 import com.intellij.execution.actions.RunConfigurationProducer
 import com.intellij.execution.executors.DefaultRunExecutor
-import com.intellij.execution.impl.ConsoleViewImpl
 import com.intellij.execution.process.ProcessEvent
-import com.intellij.execution.process.ProcessHandler
-import com.intellij.execution.process.ProcessTerminatedListener
 import com.intellij.execution.runners.ExecutionEnvironmentBuilder
-import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
@@ -28,9 +24,7 @@ import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.*
 import com.phodal.shirelang.run.flow.ShireProcessProcessor
 import org.jetbrains.annotations.NonNls
-import java.io.OutputStream
 import java.util.concurrent.CompletableFuture
-import javax.swing.SwingUtilities.invokeAndWait
 
 class ShireRunFileAction : DumbAwareAction() {
     override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT
@@ -177,12 +171,8 @@ class ShireRunFileAction : DumbAwareAction() {
             val hintDisposable = Disposer.newDisposable()
             val connection = ApplicationManager.getApplication().messageBus.connect(hintDisposable)
             connection.subscribe(ShireRunListener.TOPIC, object : ShireRunListener {
-                override fun runFinish(string: String, event: ProcessEvent, scriptPath: String) {
-                    val consoleView = (executionEnvironment.state as? ShireRunConfigurationProfileState)?.console
-                    executionEnvironment.project.getService(ShireProcessProcessor::class.java)
-                        .process(string, event, scriptPath, consoleView)
-
-                    future.complete(string)
+                override fun runFinish(allOutput: String, llmOutput: String, event: ProcessEvent, scriptPath: String) {
+                    future.complete(allOutput)
                 }
             })
 

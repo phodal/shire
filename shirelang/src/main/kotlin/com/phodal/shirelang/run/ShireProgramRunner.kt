@@ -35,7 +35,7 @@ class ShireProgramRunner : GenericProgramRunner<RunnerSettings>(), Disposable {
 
         if (!isSubscribed) {
             connection.subscribe(ShireRunListener.TOPIC, object : ShireRunListener {
-                override fun runFinish(string: String, event: ProcessEvent, scriptPath: String) {
+                override fun runFinish(string: String, llmOutput: String, event: ProcessEvent, scriptPath: String) {
                     val consoleView = (environment.state as? ShireRunConfigurationProfileState)?.console
                     environment.project.getService(ShireProcessProcessor::class.java)
                         .process(string, event, scriptPath, consoleView)
