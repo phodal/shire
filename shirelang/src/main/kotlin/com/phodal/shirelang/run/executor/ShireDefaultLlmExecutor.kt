@@ -53,14 +53,19 @@ class ShireDefaultLlmExecutor(
             ShireCoroutineScope.scope(context.myProject).launch {
                 val llmResult = StringBuilder()
                 runBlocking {
-                    LlmProvider.provider(context.myProject)?.stream(context.prompt, "", false)?.collect {
-                        llmResult.append(it)
+                    try {
+                        LlmProvider.provider(context.myProject)?.stream(context.prompt, "", false)?.collect {
+                            llmResult.append(it)
 
-                        context.console.print(it, ConsoleViewContentType.NORMAL_OUTPUT)
-                    } ?: context.console.print(
-                        ShireBundle.message("shire.llm.notfound"),
-                        ConsoleViewContentType.ERROR_OUTPUT
-                    )
+                            context.console.print(it, ConsoleViewContentType.NORMAL_OUTPUT)
+                        } ?: context.console.print(
+                            ShireBundle.message("shire.llm.notfound"),
+                            ConsoleViewContentType.ERROR_OUTPUT
+                        )
+                    } catch (e: Exception) {
+                        context.console.print(e.message ?: "Error", ConsoleViewContentType.ERROR_OUTPUT)
+                        context.processHandler.detachProcess()
+                    }
                 }
 
                 context.console.print(ShireBundle.message("shire.llm.done"), ConsoleViewContentType.SYSTEM_OUTPUT)
