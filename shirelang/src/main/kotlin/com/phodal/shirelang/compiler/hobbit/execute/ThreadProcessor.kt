@@ -28,9 +28,9 @@ object ThreadProcessor {
         }
 
         if (filename.endsWith(".shire")) {
-            return ShireRunFileAction.executeFile(myProject, file.name, variables, variableTable).toString()
+            val executeResult = ShireRunFileAction.suspendExecuteFile(myProject, file.name, variables, variableTable)
+            return executeResult ?: "No run service found"
         }
-
 
         val psiFile = PsiManager.getInstance(myProject).findFile(file) ?: return "File not found: $fileName"
         return FileRunService.provider(myProject, file)?.runFile(myProject, file, psiFile) ?: "No run service found"

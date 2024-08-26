@@ -29,7 +29,6 @@ class ShireProgramRunner : GenericProgramRunner<RunnerSettings>(), Disposable {
         if (environment.runProfile !is ShireConfiguration) return null
         val shireState = state as ShireRunConfigurationProfileState
 
-//        FileDocumentManager.getInstance().saveAllDocuments()
         var executeResult: ExecutionResult? = null
 
         val result = AtomicReference<RunContentDescriptor>()
