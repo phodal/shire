@@ -1,18 +1,36 @@
-# [](https://github.com/phodal/shire/compare/v0.5.2...v) (2024-08-15)
+# [](https://github.com/phodal/shire/compare/v0.6.0...v) (2024-08-26)
 
 ## [Unreleased]
 
-## [0.5.2](https://github.com/phodal/shire/compare/v0.5.0...v[0.5.2]) (2024-08-15)
+## [0.6.0](https://github.com/phodal/shire/compare/v0.5.2...v[0.6.0]) (2024-08-26)
+
+### Bug Fixes
+
+- **executor:** handle exceptions in ShireDefaultLlmExecutor [#60](https://github.com/phodal/shire/issues/60) ([da44e85](https://github.com/phodal/shire/commit/da44e858f32ea9bdb1c68b7b2b5d9f1db671676a))
+- **plugin:** add Kotlin module support ([c3c1ecb](https://github.com/phodal/shire/commit/c3c1ecb98b03418b88415e26eb9742db82da3806))
+- **shirelang:** add exception handling for LlmProvider streaming output [#60](https://github.com/phodal/shire/issues/60) ([a8272b2](https://github.com/phodal/shire/commit/a8272b2341e7770d2109ac666036e02d3d4bf103))
 
 ### Features
 
-- **plugin:** add sonarqube module and dependency [#54](https://github.com/phodal/shire/issues/54) ([0e71866](https://github.com/phodal/shire/commit/0e7186637061e2483d96b865389d2b8b58fa452c))
-- **sonarqube:** add CustomSonarLintMenu and extension provider [#54](https://github.com/phodal/shire/issues/54) ([cb2a401](https://github.com/phodal/shire/commit/cb2a4016ee4d9a64d533fc3307d60da0de65284d))
-- **sonarqube:** implement SonarlintProvider for analyzing current file [#54](https://github.com/phodal/shire/issues/54) ([a5a505b](https://github.com/phodal/shire/commit/a5a505b422595738131d65e6bd04f9872091e702))
-- **sonarqube:** implement SonarqubeVariableProvider and add SonarqubeVariable enum [#54](https://github.com/phodal/shire/issues/54) ([4b50a28](https://github.com/phodal/shire/commit/4b50a2879b5001c78633b071cbb8f88967247a88))
-- **toolsets:** add SonarQube plugin and project configuration [#54](https://github.com/phodal/shire/issues/54) ([a487e14](https://github.com/phodal/shire/commit/a487e1436ffb5689cc2c8786658b772ddd5e8284))
+- **browse:** add useragent generator [#60](https://github.com/phodal/shire/issues/60) ([df595f4](https://github.com/phodal/shire/commit/df595f4d983a794a41840be289bd6ca119fe35bb))
+- **compiler:** add JsonPath support for pattern actions and closed [#11](https://github.com/phodal/shire/issues/11) ([14bed16](https://github.com/phodal/shire/commit/14bed168ec74647072184b344bb5eb3e70b2a97c))
+- **compiler:** add support for 'capture' and 'thread' pattern actions [#11](https://github.com/phodal/shire/issues/11) ([dc50586](https://github.com/phodal/shire/commit/dc50586aec094172179e469c6faf380d2bae876d))
+- **core:** add cURL execution support and HTTP handler extension point [#11](https://github.com/phodal/shire/issues/11) ([2717014](https://github.com/phodal/shire/commit/271701435325c6856791ce17e81f64c8ff0119bb))
+- **httpclient:** add functionality to convert cURL to HTTP request scratch file [#11](https://github.com/phodal/shire/issues/11) ([079968e](https://github.com/phodal/shire/commit/079968e4ff354e03d139751aaa2d6f5df28669be))
+- **httpclient:** enhance CUrlConverter with variable support and testing adjustments [#11](https://github.com/phodal/shire/issues/11) ([9e97423](https://github.com/phodal/shire/commit/9e97423f583b1e4ec7becb75864945d5e88a4d70))
+- **httpclient:** implement buildFullUrl function for RestClientRequest [#11](https://github.com/phodal/shire/issues/11) ([b49049b](https://github.com/phodal/shire/commit/b49049be5cb56d6214389f03d20fbc120f477e80))
+- **httpclient:** Implement URL builder and scratch file creation [#11](https://github.com/phodal/shire/issues/11) ([9a2162e](https://github.com/phodal/shire/commit/9a2162e29d32f7c167649bf93aec7eff66551df9))
+- **index:** add ShireEnvironmentIndex for indexing environment variables [#11](https://github.com/phodal/shire/issues/11) ([d43eb96](https://github.com/phodal/shire/commit/d43eb96eb51507b6bc8ea2b2e2bec9d57fdac31a))
+- **kotlin-refactor:** implement Kotlin refactoring tool support [#58](https://github.com/phodal/shire/issues/58) ([ad6d1b2](https://github.com/phodal/shire/commit/ad6d1b253670b2d8a77eb901c0fb50830dccebc6))
+- **kotlin:** implement structure providers for Kotlin plugin [#58](https://github.com/phodal/shire/issues/58) ([393b747](https://github.com/phodal/shire/commit/393b74799db5d56d09b769bb5b1f5862a5e33e73))
+- **languages:** add shire-markdown module and update dependencies [#59](https://github.com/phodal/shire/issues/59) ([26fd92a](https://github.com/phodal/shire/commit/26fd92adf599b97fc599aa3d4c5be7678ddff000))
+- **markdown:** add MarkdownPsiCapture for URL extraction [#59](https://github.com/phodal/shire/issues/59) ([ab9739b](https://github.com/phodal/shire/commit/ab9739bf0607d00d914d1265a56c94c490ce92b6))
+- **runner:** Add LLM output to runFinish method and process handling [#60](https://github.com/phodal/shire/issues/60) ([5870ef8](https://github.com/phodal/shire/commit/5870ef8e00231abb12be061cf4c1a89964da01d1))
+- **shire-kotlin:** add Java support for KotlinLanguageToolchainProvider [#58](https://github.com/phodal/shire/issues/58) ([e026929](https://github.com/phodal/shire/commit/e0269299c57e99f3dc7b15608657544148901004))
+- **shirelang:** add crawl functionality and processor support [#59](https://github.com/phodal/shire/issues/59) ([ee5a3ea](https://github.com/phodal/shire/commit/ee5a3ea42b3b2b7feef4974002d5bb8b92817037))
+- **shirelang:** add support for threading function execution [#60](https://github.com/phodal/shire/issues/60) ([0d31f9e](https://github.com/phodal/shire/commit/0d31f9e8636d9fa169eb6359dd9fff1c4ebc61ad))
 
-## [0.5.1] - 2024-08-09
+## [0.5.2](https://github.com/phodal/shire/compare/v0.5.0...v[0.5.2]) (2024-08-15)
 
 ### Bug Fixes
 
@@ -443,9 +461,9 @@
 - **shell:** add shell language support plugin file ([bdc1c90](https://github.com/phodal/shire/commit/bdc1c90f10d7c2c4fb8f7157db343dd756c11352))
 - **shire:** add Shire context action group and location support ([e3df86d](https://github.com/phodal/shire/commit/e3df86d16d0c9985fec787a8e76ce553be9a9a45))
 
-[Unreleased]: https://github.com/phodal/shire/compare/v0.5.2...HEAD
-[0.5.2]: https://github.com/phodal/shire/compare/v0.5.1...v0.5.2
-[0.5.1]: https://github.com/phodal/shire/compare/v0.4.8...v0.5.1
+[Unreleased]: https://github.com/phodal/shire/compare/v0.6.0...HEAD
+[0.6.0]: https://github.com/phodal/shire/compare/v0.5.2...v0.6.0
+[0.5.2]: https://github.com/phodal/shire/compare/v0.4.8...v0.5.2
 [0.4.8]: https://github.com/phodal/shire/compare/v0.4.7...v0.4.8
 [0.4.7]: https://github.com/phodal/shire/compare/v0.4.6...v0.4.7
 [0.4.6]: https://github.com/phodal/shire/compare/v0.4.5...v0.4.6
