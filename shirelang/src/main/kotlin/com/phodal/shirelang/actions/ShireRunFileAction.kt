@@ -7,9 +7,11 @@ import com.intellij.execution.actions.ConfigurationContext
 import com.intellij.execution.actions.RunConfigurationProducer
 import com.intellij.execution.executors.DefaultRunExecutor
 import com.intellij.execution.impl.ConsoleViewImpl
+import com.intellij.execution.process.ProcessEvent
 import com.intellij.execution.process.ProcessHandler
 import com.intellij.execution.process.ProcessTerminatedListener
 import com.intellij.execution.runners.ExecutionEnvironmentBuilder
+import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
@@ -19,10 +21,12 @@ import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.Disposer
 import com.phodal.shirelang.ShireActionStartupActivity
 import com.phodal.shirelang.actions.base.DynamicShireActionConfig
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.*
+import com.phodal.shirelang.run.flow.ShireProcessProcessor
 import org.jetbrains.annotations.NonNls
 import java.io.OutputStream
 import java.util.concurrent.CompletableFuture
@@ -169,58 +173,70 @@ class ShireRunFileAction : DumbAwareAction() {
             }
 
             val future = CompletableFuture<String>()
-            val sb = StringBuilder()
+//            val sb = StringBuilder()
+//
+//            val processHandler = object: ProcessHandler() {
+//                override fun destroyProcessImpl() {
+//                    future.complete(sb.toString())
+//                    try {
+//                        notifyProcessDetached()
+//                    } finally {
+//                        notifyProcessTerminated(0)
+//                    }
+//                }
+//
+//                override fun detachProcessImpl() {
+//                    future.complete(sb.toString())
+//                    try {
+//                        notifyProcessDetached()
+//                    } finally {
+//                        notifyProcessTerminated(0)
+//                    }
+//                }
+//
+//                override fun detachIsDefault(): Boolean {
+//                    return false
+//                }
+//
+//                override fun getProcessInput(): OutputStream? {
+//                    return null
+//                }
+//            }
+//
+//            ProcessTerminatedListener.attach(processHandler)
+//            processHandler.addProcessListener(ShireProcessAdapter(sb, runConfiguration))
+//
+//            var console: ShireConsoleView? = null
+//            invokeAndWait {
+//                val executionConsole = ConsoleViewImpl(project, true)
+//                console = ShireConsoleView(executionConsole)
+//            }
+//
+//            console!!.addMessageFilter { line, _ ->
+//                sb.append(line)
+//                null
+//            }
+//
+//            console!!.attachToProcess(processHandler)
 
-            val processHandler = object: ProcessHandler() {
-                override fun destroyProcessImpl() {
-                    future.complete(sb.toString())
-                    try {
-                        notifyProcessDetached()
-                    } finally {
-                        notifyProcessTerminated(0)
-                    }
+            val hintDisposable = Disposer.newDisposable()
+            val connection = ApplicationManager.getApplication().messageBus.connect(hintDisposable)
+            connection.subscribe(ShireRunListener.TOPIC, object : ShireRunListener {
+                override fun runFinish(string: String, event: ProcessEvent, scriptPath: String) {
+                    val consoleView = (executionEnvironment.state as? ShireRunConfigurationProfileState)?.console
+                    executionEnvironment.project.getService(ShireProcessProcessor::class.java)
+                        .process(string, event, scriptPath, consoleView)
+
+                    future.complete(string)
                 }
-
-                override fun detachProcessImpl() {
-                    future.complete(sb.toString())
-                    try {
-                        notifyProcessDetached()
-                    } finally {
-                        notifyProcessTerminated(0)
-                    }
-                }
-
-                override fun detachIsDefault(): Boolean {
-                    return false
-                }
-
-                override fun getProcessInput(): OutputStream? {
-                    return null
-                }
-            }
-
-            ProcessTerminatedListener.attach(processHandler)
-            processHandler.addProcessListener(ShireProcessAdapter(sb, runConfiguration))
-
-            var console: ShireConsoleView? = null
-            invokeAndWait {
-                val executionConsole = ConsoleViewImpl(project, true)
-                console = ShireConsoleView(executionConsole)
-            }
-
-            console!!.addMessageFilter { line, _ ->
-                sb.append(line)
-                null
-            }
-
-            console!!.attachToProcess(processHandler)
+            })
 
             ExecutionManager.getInstance(project).restartRunProfile(
                 project,
                 executorInstance,
                 executionEnvironment.executionTarget,
                 settings,
-                processHandler
+                null
             )
 
             return future.get()
