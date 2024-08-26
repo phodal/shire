@@ -27,7 +27,68 @@ variables:
 - `crawl` function, param1: URLs
 - `thread` function, param1: Script, param2: Parameters
 
-### API Resource by Bash
+## Real world Example
+
+### Main.shire
+
+```shire
+---
+variables:
+  "crawl": /crawlSample\.md/ { capture("docs/crawlSample.md", "link") | crawl() | thread(".shire/research/summary.shire") }
+  "article": /crawlSample\.md/ { cat }
+onStreamingEnd: { save("docs/output.md") }
+---
+
+根据如下的草稿和对应的资料，编写一篇对应主题的文章。
+
+文章草稿如下：
+
+$article
+
+相关的资料如下：
+
+$crawl
+```
+
+### summary.shire
+
+```shire
+使用中文总结如下的开源项目。
+
+要求：
+
+1. 给出项目的基本介绍、首页和文档地址
+2. 列举 5 个关键特性
+
+$output
+````
+
+### crawlSample.md
+
+```md
+# AI 辅助软件工程：CLI 命令生成
+
+## 为什么需要 AI 来辅助 CLI？
+
+## 什么是 CLI 命令生成
+
+## 行业示例
+
+1. [nvtop](https://github.com/Syllo/nvtop) - <small>NVIDIA GPUs htop like monitoring tool</small>
+2. [nvitop](https://github.com/XuehaiPan/nvitop) - <small>An interactive NVIDIA-GPU process viewer and beyond.</small>
+3. [aichat](https://github.com/sigoden/aichat) - <small>all-in-one AI powered CLI chat and copilot.</small>
+4. [aider](https://github.com/paul-gauthier/aider) - <small>AI pair programming in your terminal</small>
+5. [elia](https://github.com/darrenburns/elia) - <small>A TUI ChatGPT client built with Textual</small>
+6. [gpterminator](https://github.com/AineeJames/ChatGPTerminator) - <small>A TUI for OpenAI's ChatGPT</small>
+7. [gtt](https://github.com/eeeXun/gtt) - <small>A TUI for Google Translate, ChatGPT, DeepL and other AI services.</small>
+8. [ollama](https://github.com/ollama/ollama) - <small>get up and running with large language models locally.</small>
+9. [oterm](https://github.com/ggozad/oterm) - <small>A text-based terminal client for ollama.</small>
+10. [tgpt](https://github.com/aandrew-me/tgpt) - <small>AI Chatbots in the terminal without needing API keys.</small>
+11. [yai](https://github.com/ekkinox/yai) - <small>Your AI powered terminal assistant</small>
+```
+
+
+## API Resource by Bash
 
 - Confluence API
 - Jira API
@@ -52,7 +113,9 @@ curl --request <method> '<url>?<parameters>' \
 Authorization: Basic <encoded credentials>'
 ```
 
-## AutoFeature
+## Design Pattern 
+
+### AutoFeature
 
 - autoAnalysis
 - autoImage
@@ -64,7 +127,7 @@ Authorization: Basic <encoded credentials>'
 - toImage
 - Icon
 
-## Workflow Design
+###  Workflow Design
 
 topic
 - capture 
