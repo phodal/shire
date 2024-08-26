@@ -38,8 +38,6 @@ import java.nio.charset.StandardCharsets
  * SSE.
  */
 class ResponseBodyCallback(private val emitter: FlowableEmitter<SSE>, private val emitDone: Boolean) : Callback {
-    val logger = logger<ResponseBodyCallback>()
-
     override fun onResponse(call: Call, response: Response) {
         var reader: BufferedReader? = null
         try {

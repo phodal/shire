@@ -82,8 +82,12 @@ open class ShireRunConfigurationProfileState(
 
         console!!.print("Prepare for running ${configuration.name}...\n", ConsoleViewContentType.NORMAL_OUTPUT)
         ShireCoroutineScope.scope(myProject).launch {
-            val llmOutput = shireRunner.execute(parsedResult)
-            processAdapter.setLlmOutput(llmOutput)
+            try {
+                val llmOutput = shireRunner.execute(parsedResult)
+                processAdapter.setLlmOutput(llmOutput)
+            } catch (e: Exception) {
+                console!!.print("Failed to run ${configuration.name}: ${e.message}\n", ConsoleViewContentType.ERROR_OUTPUT)
+            }
         }
 
         return DefaultExecutionResult(console, processHandler)

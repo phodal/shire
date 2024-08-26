@@ -80,13 +80,19 @@ class ShireRunner(
 
             val llmResult = StringBuilder()
             runBlocking {
-                LlmProvider.provider(project)?.stream(context.finalPrompt, "", false)?.collect {
-                    llmResult.append(it)
-                    handler.onChunk.invoke(it)
-                } ?: console.print(
-                    ShireBundle.message("shire.llm.notfound"),
-                    ConsoleViewContentType.ERROR_OUTPUT
-                )
+                try {
+                    LlmProvider.provider(project)?.stream(context.finalPrompt, "", false)?.collect {
+                        llmResult.append(it)
+                        handler.onChunk.invoke(it)
+                    } ?: console.print(
+                        ShireBundle.message("shire.llm.notfound"),
+                        ConsoleViewContentType.ERROR_OUTPUT
+                    )
+                } catch (e: Exception) {
+                    console.print(e.message ?: "Error", ConsoleViewContentType.ERROR_OUTPUT)
+                    handler.onFinish?.invoke(null)
+                    processHandler.detachProcess()
+                }
             }
 
             val response = llmResult.toString()
