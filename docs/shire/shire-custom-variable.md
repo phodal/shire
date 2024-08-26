@@ -107,7 +107,7 @@ variables:
 | xargs     | 处理变量             | `variables`: 要处理的变量                                                | `xargs("arg1", "arg2")`                     |
 | print     | 打印文本             | `texts`: 要打印的文本                                                    | `print("Hello", "World")`                   |
 | cat       | 连接文件             | `paths`: 要连接的文件路径                                                  | `cat("file1.txt", "file2.txt")`             |
-| execute   | 执行 Shire 脚本      | `string`: 要执行的脚本内容                                                 | `execute("next-script.shire")`              |
+| execute   | 异步执行 Shire 脚本    | `string`: 要执行的脚本内容                                                 | `execute("next-script.shire")`              |
 | notify    | 使用 IDE 通知        | `message`: 要显示的通知消息                                                | `notify("Process completed successfully.")` |
 | splitting | 分割文本或文件          | `paths`: 要分割的文本或文件路径                                               | `splitting("file.txt", "file2.txt")`        |
 | embedding | 嵌入文本             | `entries`: 要嵌入的文本条目                                                | `embedding("entry1", "entry2")`             |
@@ -115,7 +115,7 @@ variables:
 | reranking | 重新排序             | `type`: 重排类型，默认  lostInTheMiddle                                   | `reranking("pattern")`                      |
 | caching   | 缓存语义             | `text`: 要缓存的文本                                                     | `caching("data")`                           |
 | redact    | 屏蔽敏感数据           |                                                                    | `redact()`                                  |
-| thread    | 多线程执行            | `path`: 要执行的脚本路径                                                   | `thread("script.shire")`                    |
+| thread    | 线程执行（异步）         | `path`: 要执行的脚本路径                                                   | `thread("script.shire")`                    |
 | jsonpath  | 使用 JsonPath 选择数据 | `jsonPath`: JsonPath 表达式,其中 jsonString 为可选                         | `jsonpath(jsonString, "$.store.*")`         |
 
 ```kotlin
