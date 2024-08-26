@@ -20,7 +20,11 @@ object CaptureProcessor {
         val language = psiFile.language
 
         PsiCapture.provide(language)?.let {
-            return it.capture(psiFile.text, nodeType)
+            val text = ReadAction.compute<String, Throwable> {
+                psiFile.text
+            }
+
+            return it.capture(text, nodeType)
         }
 
         // execute the capture function
