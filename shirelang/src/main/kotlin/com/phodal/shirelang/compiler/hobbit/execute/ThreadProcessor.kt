@@ -37,9 +37,13 @@ object ThreadProcessor {
             is ShireFile -> {
                 return when (val output = variableTable["output"]) {
                     is List<*> -> {
-                        val results = output.map {
-                            variableTable["output"] = it
-                            executeTask(myProject, variables, variableTable, psiFile)
+                        val results = output.mapNotNull {
+                            try {
+                                variableTable["output"] = it
+                                executeTask(myProject, variables, variableTable, psiFile)
+                            } catch (e: Exception) {
+                                null
+                            }
                         }
 
                         results.joinToString("\n")
@@ -48,12 +52,12 @@ object ThreadProcessor {
                     is Array<*> -> {
                         output.joinToString("\n") {
                             variableTable["output"] = it
-                            executeTask(myProject, variables, variableTable, psiFile)
+                            executeTask(myProject, variables, variableTable, psiFile)  ?: "No run service found"
                         }
                     }
 
                     else -> {
-                        return executeTask(myProject, variables, variableTable, psiFile)
+                        return executeTask(myProject, variables, variableTable, psiFile) ?: "No run service found"
                     }
                 }
             }
@@ -68,8 +72,8 @@ object ThreadProcessor {
         variables: Array<String>,
         variableTable: MutableMap<String, Any?>,
         psiFile: ShireFile,
-    ): String {
+    ): String? {
         val executeResult = ShireRunFileAction.suspendExecuteFile(myProject, variables, variableTable, psiFile)
-        return executeResult ?: "No run service found"
+        return executeResult
     }
 }
