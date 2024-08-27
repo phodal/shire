@@ -1,0 +1,12 @@
+<idea-plugin package="com.phodal.shire.plantuml">
+    <!--suppress PluginXmlValidity -->
+    <dependencies>
+        <plugin id="PlantUML integration"/>
+    </dependencies>
+
+    <extensions defaultExtensionNs="com.phodal">
+        <shireLanguageToolchainProvider
+                language="PUML"
+                implementationClass="com.phodal.shire.plantuml.PlantUmlToolchainProvider"/>
+    </extensions>
+</idea-plugin>

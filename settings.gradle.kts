@@ -24,4 +24,5 @@ include(
     "toolsets:httpclient",
     "toolsets:terminal",
     "toolsets:sonarqube",
+    "toolsets:plantuml",
 )
