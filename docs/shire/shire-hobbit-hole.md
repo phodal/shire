@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Hobbit Hole Config
+title: Shire Config (Hobbit Hole)
 parent: Shire Language
 nav_order: 3
 ---

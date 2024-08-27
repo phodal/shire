@@ -11,6 +11,8 @@ import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.provider.ide.LocationInteractionContext
 import com.phodal.shirecore.provider.ide.LocationInteractionProvider
 import com.phodal.shirelang.ShireBundle
+import com.phodal.shirelang.actions.copyPaste.PasteManagerService
+import com.phodal.shirelang.actions.copyPaste.PasteProcessorConfig
 import com.phodal.shirelang.run.flow.ShireConversationService
 import kotlinx.coroutines.*
 
@@ -36,6 +38,14 @@ class ShireDefaultLlmExecutor(
             )
 
             if (context.hole?.interaction != null) {
+                if (context.hole?.interaction == InteractionType.OnPaste) {
+                        PasteManagerService.getInstance()
+                            .registerPasteProcessor(context.hole,
+                                PasteProcessorConfig(interactionContext, postFunction, context.processHandler)
+                            )
+
+                    return@invokeLater
+                }
                 val interactionProvider = LocationInteractionProvider.provide(interactionContext)
                 if (interactionProvider != null) {
                     interactionProvider.execute(interactionContext) { response, textRange ->
@@ -46,6 +56,7 @@ class ShireDefaultLlmExecutor(
                             context.console.print(e.message ?: "Error", ConsoleViewContentType.ERROR_OUTPUT)
                         }
                     }
+
                     return@invokeLater
                 }
             }

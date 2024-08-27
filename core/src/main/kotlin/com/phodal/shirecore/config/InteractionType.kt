@@ -8,7 +8,7 @@ enum class InteractionType(val description: String) {
     ReplaceCurrentFile("Replace the content of the current file"),
     InsertBeforeSelection("Insert content before the currently selected content"),
     RunPanel("Show Result in Run panel which is the bottom of the IDE"),
-    PasteBoard("Copy the content to the clipboard")
+    OnPaste("Copy the content to the clipboard")
     ;
 
     companion object {
@@ -21,7 +21,7 @@ enum class InteractionType(val description: String) {
                 ReplaceCurrentFile.name.lowercase() -> ReplaceCurrentFile
                 InsertBeforeSelection.name.lowercase() -> InsertBeforeSelection
                 RunPanel.name.lowercase() -> RunPanel
-                PasteBoard.name.lowercase() -> PasteBoard
+                OnPaste.name.lowercase() -> OnPaste
                 else -> RunPanel
             }
         }
