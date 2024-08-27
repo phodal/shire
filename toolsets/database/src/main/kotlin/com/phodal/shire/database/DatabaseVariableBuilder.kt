@@ -15,13 +15,13 @@ object DatabaseVariableBuilder {
     }
 
     fun getTables(project: Project): List<DasTable> {
-        val rawDataSource = retrieveFirstRawDataSource(project) ?: return emptyList()
-        val schemaName = rawDataSource.name.substringBeforeLast('@')
-        val dasTables = rawDataSource.let {
-            DasUtil.getTables(it).filter { table ->
+        val rawDataSource = retrieveRawDataSources(project) ?: return emptyList()
+        val dasTables = rawDataSource.map { rawDataSource ->
+            val schemaName = rawDataSource.name.substringBeforeLast('@')
+            DasUtil.getTables(rawDataSource).filter { table ->
                 table.kind == ObjectKind.TABLE && (table.dasParent?.name == schemaName || isSQLiteTable(rawDataSource, table))
-            }.toList()
-        }.toList()
+            }
+        }.flatten()
 
         return dasTables
     }
@@ -35,13 +35,13 @@ object DatabaseVariableBuilder {
         val dasTables = getTables(project)
 
         if (tables.isEmpty()) {
-            return dasTables.map {
-                val dasColumns = DasUtil.getColumns(it)
-                val columns = dasColumns.map {
-                    "${it.name}: ${it.dasType.toDataType()}"
+            return dasTables.map { table ->
+                val dasColumns = DasUtil.getColumns(table)
+                val columns = dasColumns.map { column ->
+                    "${column.name}: ${column.dasType.toDataType()}"
                 }.joinToString(", ")
 
-                "TableName: ${it.name}, Columns: $columns"
+                "TableName: ${table.name}, Columns: $columns"
             }
         }
 
@@ -59,10 +59,9 @@ object DatabaseVariableBuilder {
         }
     }
 
-    private fun retrieveFirstRawDataSource(project: Project): RawDataSource? {
+    private fun retrieveRawDataSources(project: Project): List<RawDataSource> {
         val dbPsiFacade = DbPsiFacade.getInstance(project)
-        val dataSource = dbPsiFacade.dataSources.firstOrNull() ?: return null
-        val rawDataSource = dbPsiFacade.getDataSourceManager(dataSource).dataSources.firstOrNull() ?: return null
-        return rawDataSource
+        val dataSource = dbPsiFacade.dataSources.firstOrNull() ?: return emptyList()
+        return dbPsiFacade.getDataSourceManager(dataSource).dataSources
     }
 }
