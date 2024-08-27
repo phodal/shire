@@ -2,7 +2,7 @@
 layout: default
 title: ShireQL Basic
 parent: ShireQL
-nav_order: 4
+nav_order: 1
 ---
 
 ## ShireQL 基本语法
@@ -14,7 +14,7 @@ Design
 variables
   "var1": query {
      // 变量声明部分
-     from  {} // datasource, like, dir, file symbol
+     from  {} // datasource，如：`PsiClass`, `GitCommit`, `ProjectDependency` 
      // 条件部分 
      where {} //  AST expand, and functions support for  regex, and methods: similar search, embedding search, tf-idf, and other advanced search
      // 结果部分

@@ -1,6 +1,6 @@
 ---
 layout: default
-title: ShireQL Dependency Query
+title: ShireQL Dependency Query (TBC)
 parent: ShireQL
 nav_order: 4
 ---
@@ -14,7 +14,7 @@ nav_order: 4
 variables:
   "mavenDependencies": {
     from {
-        Dependency dependency
+        ProjectDependency dependency
     }
     where {
         dependency.groupId == "org.springframework.boot" and dependency.artifactId == "spring-boot-starter-web"
