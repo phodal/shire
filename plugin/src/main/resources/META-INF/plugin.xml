@@ -18,6 +18,7 @@
 
         <module name="com.phodal.shire.httpclient"/>
         <module name="com.phodal.shire.terminal"/>
+        <module name="com.phodal.shire.database"/>
 
         <module name="com.phodal.shirelang.git"/>
 
