@@ -1,4 +1,4 @@
-package com.phodal.shire.database
+package com.phodal.shire.database.provider
 
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
@@ -9,7 +9,6 @@ import com.phodal.shirecore.provider.variable.model.toolchain.DatabaseToolchainV
 
 class DatabaseVariableProvider : ToolchainVariableProvider {
     override fun isResolvable(variable: ToolchainVariable, psiElement: PsiElement?): Boolean {
-//        return psiElement?.language is SqlLanguageDialect || psiElement?.language is SqlLanguage
         return variable is DatabaseToolchainVariable
     }
 
@@ -22,3 +21,4 @@ class DatabaseVariableProvider : ToolchainVariableProvider {
         }
     }
 }
+

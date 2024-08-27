@@ -5,6 +5,10 @@
     </dependencies>
 
     <extensions defaultExtensionNs="com.phodal">
-        <shireToolchainVariableProvider implementation="com.phodal.shire.database.DatabaseVariableProvider"/>
+        <shireToolchainVariableProvider implementation="com.phodal.shire.database.provider.DatabaseVariableProvider"/>
+
+        <shireLanguageToolchainProvider
+                language="SQL"
+                implementationClass="com.phodal.shire.database.provider.DatabaseToolchainProvider"/>
     </extensions>
 </idea-plugin>
