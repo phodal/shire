@@ -1,0 +1,10 @@
+<idea-plugin package="com.phodal.shire.database">
+    <!--suppress PluginXmlValidity -->
+    <dependencies>
+        <plugin id="com.intellij.database"/>
+    </dependencies>
+
+    <extensions defaultExtensionNs="com.phodal">
+        <shireToolchainVariableProvider implementation="com.phodal.shire.database.DatabaseVariableProvider"/>
+    </extensions>
+</idea-plugin>

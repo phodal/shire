@@ -25,4 +25,5 @@ include(
     "toolsets:terminal",
     "toolsets:sonarqube",
     "toolsets:plantuml",
+    "toolsets:database",
 )

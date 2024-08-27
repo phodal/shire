@@ -214,7 +214,6 @@ project(":toolsets:terminal") {
     }
 }
 
-
 project(":toolsets:sonarqube") {
     intellij {
         version.set(prop("ideaVersion"))
@@ -232,6 +231,16 @@ project(":toolsets:plantuml") {
         plugins.set(ideaPlugins + prop("plantUmlPlugin"))
     }
 
+    dependencies {
+        implementation(project(":core"))
+    }
+}
+
+project(":toolsets:database") {
+    intellij {
+        version.set(prop("ideaVersion"))
+        plugins.set(ideaPlugins + "com.intellij.database")
+    }
     dependencies {
         implementation(project(":core"))
     }
