@@ -8,7 +8,7 @@ import com.intellij.database.psi.DbPsiFacade
 import com.intellij.database.util.DasUtil
 import com.intellij.openapi.project.Project
 
-object DatabaseVariableBuilder {
+object DatabaseSchemaAssistant {
     fun getDataSources(project: Project): List<DbDataSource> {
         return DbPsiFacade.getInstance(project).dataSources.toList()
     }
@@ -18,6 +18,10 @@ object DatabaseVariableBuilder {
         return dbPsiFacade.dataSources.map { dataSource ->
             dbPsiFacade.getDataSourceManager(dataSource).dataSources
         }.flatten()
+    }
+
+    fun getDatabase(project: Project, dbName: String): RawDataSource {
+        return retrieveRawDataSources(project).first { it.name == dbName }
     }
 
     fun getTables(project: Project): List<DasTable> {
@@ -30,6 +34,11 @@ object DatabaseVariableBuilder {
         }.flatten()
 
         return dasTables
+    }
+
+    fun getTable(dataSource: RawDataSource, tableName: String): List<DasTable> {
+        val dasTables = DasUtil.getTables(dataSource)
+        return dasTables.filter { it.name == tableName }.toList()
     }
 
     private fun isSQLiteTable(
@@ -63,5 +72,12 @@ object DatabaseVariableBuilder {
                 null
             }
         }
+    }
+
+    fun getTableColumn(table: DasTable): List<String> {
+        val dasColumns = DasUtil.getColumns(table)
+        return dasColumns.map { column ->
+            "${column.name}: ${column.dasType.toDataType()}"
+        }.toList()
     }
 }

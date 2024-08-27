@@ -10,5 +10,7 @@
         <shireLanguageToolchainProvider
                 language="SQL"
                 implementationClass="com.phodal.shire.database.provider.DatabaseToolchainProvider"/>
+
+        <shireToolchainFunctionProvider implementation="com.phodal.shire.database.provider.DatabaseFunctionProvider"/>
     </extensions>
 </idea-plugin>
