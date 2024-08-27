@@ -54,34 +54,26 @@ object DatabaseSchemaAssistant {
         val dasTables = getAllTables(project)
 
         if (tables.isEmpty()) {
-            return dasTables.map { table ->
-                val dasColumns = DasUtil.getColumns(table)
-                val columns = dasColumns.map { column ->
-                    "${column.name}: ${column.dasType.toDataType()}"
-                }.joinToString(", ")
-
-                "TableName: ${table.name}, Columns: $columns"
-            }
+            return dasTables.map(::displayTable)
         }
 
-        return dasTables.mapNotNull { tableName ->
-            if (tables.contains(tableName.name)) {
-                val dasColumns = DasUtil.getColumns(tableName)
-                val columns = dasColumns.map {
-                    "${it.name}: ${it.dasType.toDataType()}"
-                }.joinToString(", ")
-
-                "TableName: ${tableName.name}, Columns: $columns"
+        return dasTables.mapNotNull { table ->
+            if (tables.contains(table.name)) {
+                displayTable(table)
             } else {
                 null
             }
         }
     }
 
-    fun getTableColumn(table: DasTable): List<String> {
+    fun getTableColumn(table: DasTable): String = displayTable(table)
+
+    private fun displayTable(table: DasTable): String {
         val dasColumns = DasUtil.getColumns(table)
-        return dasColumns.map { column ->
+        val columns = dasColumns.map { column ->
             "${column.name}: ${column.dasType.toDataType()}"
-        }.toList()
+        }.joinToString(", ")
+
+        return "TableName: ${table.name} Columns: { $columns }"
     }
 }

@@ -6,6 +6,7 @@ import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.phodal.shire.database.DatabaseSchemaAssistant
 import com.phodal.shirecore.provider.function.ToolchainFunctionProvider
+import java.util.Collections
 
 enum class DatabaseFunction(val funName: String) {
     Database("database"),
@@ -53,24 +54,31 @@ class DatabaseFunctionProvider : ToolchainFunctionProvider {
                     }
                 }
 
-
-                when (args[0]) {
+                when (val first = args[0]) {
                     is RawDataSource -> {
                         return if (args.size == 1) {
-                            DatabaseSchemaAssistant.getTableByDataSource(args[0] as RawDataSource)
+                            DatabaseSchemaAssistant.getTableByDataSource(first)
                         } else {
-                            DatabaseSchemaAssistant.getTable(args[0] as RawDataSource, args[1] as String)
+                            DatabaseSchemaAssistant.getTable(first, args[1] as String)
                         }
                     }
 
                     is DasTable -> {
-                        return DatabaseSchemaAssistant.getTableColumn(args[0] as DasTable)
+                        return DatabaseSchemaAssistant.getTableColumn(first)
                     }
 
-                    is ArrayList<*> -> {
-                        return when (val first = args[0]) {
+                    is List<*> -> {
+                        return when (first.first()) {
                             is RawDataSource -> {
-                                DatabaseSchemaAssistant.getTableByDataSource(first)
+                                return first.map {
+                                    DatabaseSchemaAssistant.getTableByDataSource(it as RawDataSource)
+                                }
+                            }
+
+                            is DasTable -> {
+                                return first.map {
+                                    DatabaseSchemaAssistant.getTableColumn(it as DasTable)
+                                }
                             }
 
                             else -> {
@@ -81,7 +89,7 @@ class DatabaseFunctionProvider : ToolchainFunctionProvider {
 
                     else -> {
                         /// logger type
-                        logger<DatabaseFunctionProvider>().error("args types: ${args.map { it::class }}")
+                        logger<DatabaseFunctionProvider>().error("args types: ${first.javaClass}")
                         return "ShireError: Table function requires a data source or a list of table names"
                     }
                 }
