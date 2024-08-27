@@ -65,6 +65,8 @@
             <className>com.phodal.shirelang.actions.intention.ShireIntentionHelper</className>
             <categoryKey>shire.intention.category</categoryKey>
         </intentionAction>
+
+        <copyPastePreProcessor implementation="com.phodal.shirelang.actions.copyPaste.ShireCopyPastePreProcessor"/>
     </extensions>
 
     <actions>
