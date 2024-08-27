@@ -31,6 +31,7 @@ class DatabaseFunctionProvider : ToolchainFunctionProvider {
     ): Any {
         val databaseFunction =
             DatabaseFunction.fromString(funcName) ?: throw IllegalArgumentException("Invalid Database function name")
+
         when (databaseFunction) {
             DatabaseFunction.Table -> {
                 if (args.isEmpty()) {
@@ -86,7 +87,6 @@ class DatabaseFunctionProvider : ToolchainFunctionProvider {
                     }
 
                     else -> {
-                        /// logger type
                         logger<DatabaseFunctionProvider>().error("args types: ${first.javaClass}")
                         return "ShireError: Table function requires a data source or a list of table names"
                     }
