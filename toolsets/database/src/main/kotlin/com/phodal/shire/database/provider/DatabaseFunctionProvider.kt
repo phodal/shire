@@ -30,18 +30,23 @@ class DatabaseFunctionProvider : ToolchainFunctionProvider {
         args: List<Any>,
         allVariables: Map<String, Any?>,
     ): Any {
-        val databaseFunction = DatabaseFunction.fromString(funcName) ?: throw IllegalArgumentException("Invalid Database function name")
+        val databaseFunction =
+            DatabaseFunction.fromString(funcName) ?: throw IllegalArgumentException("Invalid Database function name")
         when (databaseFunction) {
             DatabaseFunction.Database -> {
                 if (args.isEmpty()) {
-                    logger<DatabaseFunctionProvider>().error("Database function requires a database name")
-                    return "ShireError: Database function requires a database name"
+                    val dataSource = DatabaseSchemaAssistant.getAllRawDatasource(project).firstOrNull()
+                        ?: return "ShireError: No database found"
+                    return DatabaseSchemaAssistant.getTableByDataSource(dataSource)
                 }
 
-                return DatabaseSchemaAssistant.getDatabase(project, args[0] as String)
+                val database = DatabaseSchemaAssistant.getDatabase(project, args[0] as String)
+                    ?: return "ShireError: Database not found"
+                return DatabaseSchemaAssistant.getTableByDataSource(database)
             }
+
             DatabaseFunction.Table -> {
-                if (args.size < 2 ) {
+                if (args.size < 2) {
                     logger<DatabaseFunctionProvider>().error("Table function requires a table name")
                     return "ShireError: Table function requires a table name"
                 }
@@ -54,8 +59,9 @@ class DatabaseFunctionProvider : ToolchainFunctionProvider {
 
                 return DatabaseSchemaAssistant.getTable(args[0] as RawDataSource, args[1] as String)
             }
+
             DatabaseFunction.Column -> {
-                if (args.size < 2 ) {
+                if (args.size < 2) {
                     logger<DatabaseFunctionProvider>().error("Column function requires a table name")
                     return "ShireError: Column function requires a table name"
                 }

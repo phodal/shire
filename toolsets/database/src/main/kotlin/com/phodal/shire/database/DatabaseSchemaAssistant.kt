@@ -13,19 +13,19 @@ object DatabaseSchemaAssistant {
         return DbPsiFacade.getInstance(project).dataSources.toList()
     }
 
-    private fun retrieveRawDataSources(project: Project): List<RawDataSource> {
+    fun getAllRawDatasource(project: Project): List<RawDataSource> {
         val dbPsiFacade = DbPsiFacade.getInstance(project)
         return dbPsiFacade.dataSources.map { dataSource ->
             dbPsiFacade.getDataSourceManager(dataSource).dataSources
         }.flatten()
     }
 
-    fun getDatabase(project: Project, dbName: String): RawDataSource {
-        return retrieveRawDataSources(project).first { it.name == dbName }
+    fun getDatabase(project: Project, dbName: String): RawDataSource? {
+        return getAllRawDatasource(project).firstOrNull { it.name == dbName }
     }
 
-    fun getTables(project: Project): List<DasTable> {
-        val rawDataSource = retrieveRawDataSources(project)
+    fun getAllTables(project: Project): List<DasTable> {
+        val rawDataSource = getAllRawDatasource(project)
         val dasTables = rawDataSource.map { rawDataSource ->
             val schemaName = rawDataSource.name.substringBeforeLast('@')
             DasUtil.getTables(rawDataSource).filter { table ->
@@ -34,6 +34,10 @@ object DatabaseSchemaAssistant {
         }.flatten()
 
         return dasTables
+    }
+
+    fun getTableByDataSource(dataSource: RawDataSource): List<DasTable> {
+        return DasUtil.getTables(dataSource).toList()
     }
 
     fun getTable(dataSource: RawDataSource, tableName: String): List<DasTable> {
@@ -47,7 +51,7 @@ object DatabaseSchemaAssistant {
     ) = (rawDataSource.databaseVersion.name == "SQLite" && table.dasParent?.name == "main")
 
     fun getTableColumns(project: Project, tables: List<String> = emptyList()): List<String> {
-        val dasTables = getTables(project)
+        val dasTables = getAllTables(project)
 
         if (tables.isEmpty()) {
             return dasTables.map { table ->
