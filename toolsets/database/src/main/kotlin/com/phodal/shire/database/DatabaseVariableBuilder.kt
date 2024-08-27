@@ -19,17 +19,22 @@ object DatabaseVariableBuilder {
         val schemaName = rawDataSource.name.substringBeforeLast('@')
         val dasTables = rawDataSource.let {
             DasUtil.getTables(it).filter { table ->
-                table.kind == ObjectKind.TABLE && (table.dasParent?.name == schemaName)
+                table.kind == ObjectKind.TABLE && (table.dasParent?.name == schemaName || isSQLiteTable(rawDataSource, table))
             }.toList()
         }.toList()
 
         return dasTables
     }
 
+    private fun isSQLiteTable(
+        rawDataSource: RawDataSource,
+        table: DasTable,
+    ) = (rawDataSource.databaseVersion.name == "SQLite" && table.dasParent?.name == "main")
+
     fun getTableColumns(project: Project, tables: List<String> = emptyList()): List<String> {
         val dasTables = getTables(project)
 
-        if (dasTables.isEmpty()) {
+        if (tables.isEmpty()) {
             return dasTables.map {
                 val dasColumns = DasUtil.getColumns(it)
                 val columns = dasColumns.map {
