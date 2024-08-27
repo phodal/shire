@@ -11,10 +11,15 @@ nav_order: 7
 
 ## Database
 
+支持的函数：
+
+- `table`，获取数据库表信息，参数 1：`databaseName`，默认获取第一个连接的数据库。
+- `column`，获取数据库列信息，参数 1：`tableName`，默认获取第一个表的列信息。
+
 ```shire
 ---
 variables:
-  "customTables": /./ { database | table }
+  "customTables": /./ { table | column }
 ---
 
 根据如下的信息，生成 SQL：

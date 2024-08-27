@@ -6,10 +6,8 @@ import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.phodal.shire.database.DatabaseSchemaAssistant
 import com.phodal.shirecore.provider.function.ToolchainFunctionProvider
-import java.util.Collections
 
 enum class DatabaseFunction(val funName: String) {
-    Database("database"),
     Table("table"),
     Column("column");
 
@@ -34,7 +32,7 @@ class DatabaseFunctionProvider : ToolchainFunctionProvider {
         val databaseFunction =
             DatabaseFunction.fromString(funcName) ?: throw IllegalArgumentException("Invalid Database function name")
         when (databaseFunction) {
-            DatabaseFunction.Database -> {
+            DatabaseFunction.Table -> {
                 if (args.isEmpty()) {
                     val dataSource = DatabaseSchemaAssistant.getAllRawDatasource(project).firstOrNull()
                         ?: return "ShireError: No database found"
@@ -46,7 +44,7 @@ class DatabaseFunctionProvider : ToolchainFunctionProvider {
                 return DatabaseSchemaAssistant.getTableByDataSource(database)
             }
 
-            DatabaseFunction.Table -> {
+            DatabaseFunction.Column -> {
                 if (args.isEmpty()) {
                     val allTables = DatabaseSchemaAssistant.getAllTables(project)
                     return allTables.map {
@@ -93,21 +91,6 @@ class DatabaseFunctionProvider : ToolchainFunctionProvider {
                         return "ShireError: Table function requires a data source or a list of table names"
                     }
                 }
-            }
-
-            DatabaseFunction.Column -> {
-                if (args.size < 2) {
-                    logger<DatabaseFunctionProvider>().error("Column function requires a table name")
-                    return "ShireError: Column function requires a table name"
-                }
-
-                val table = args[0] as? DasTable
-                if (table == null) {
-                    logger<DatabaseFunctionProvider>().error("Column function requires a table")
-                    return "ShireError: Column function requires a table"
-                }
-
-                return DatabaseSchemaAssistant.getTableColumn(table)
             }
         }
     }

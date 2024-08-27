@@ -36,11 +36,11 @@ SonarQube 工具链提供以下变量：
 - `sonarIssues`，当前文件的 SonarQube 中的问题列表。
 - `sonarResults`，当前文件的 SonarQube 中的结果，含有问题的详细信息。
 
-## Maven, Gradle (TODO)
+## ProjectDependencies (TBC)
 
 {: .label .label-red }
 Builtin plugin: Java
 
 Maven, Gradle 工具链提供以下变量：
 
-- `mavenDependencies`，当前文件的 Maven, Gradle 依赖列表。
+- `projectDependencies`，当前文件的 Maven, Gradle 依赖列表。
