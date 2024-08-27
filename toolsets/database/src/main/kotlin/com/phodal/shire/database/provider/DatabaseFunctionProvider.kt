@@ -46,18 +46,45 @@ class DatabaseFunctionProvider : ToolchainFunctionProvider {
             }
 
             DatabaseFunction.Table -> {
-                if (args.size < 2) {
-                    logger<DatabaseFunctionProvider>().error("Table function requires a table name")
-                    return "ShireError: Table function requires a table name"
+                if (args.isEmpty()) {
+                    val allTables = DatabaseSchemaAssistant.getAllTables(project)
+                    return allTables.map {
+                        DatabaseSchemaAssistant.getTableColumn(it)
+                    }
                 }
 
-                val dataSource = args[0] as? RawDataSource
-                if (dataSource == null) {
-                    logger<DatabaseFunctionProvider>().error("Table function requires a data source")
-                    return "ShireError: Table function requires a data source"
-                }
 
-                return DatabaseSchemaAssistant.getTable(args[0] as RawDataSource, args[1] as String)
+                when (args[0]) {
+                    is RawDataSource -> {
+                        return if (args.size == 1) {
+                            DatabaseSchemaAssistant.getTableByDataSource(args[0] as RawDataSource)
+                        } else {
+                            DatabaseSchemaAssistant.getTable(args[0] as RawDataSource, args[1] as String)
+                        }
+                    }
+
+                    is DasTable -> {
+                        return DatabaseSchemaAssistant.getTableColumn(args[0] as DasTable)
+                    }
+
+                    is ArrayList<*> -> {
+                        return when (val first = args[0]) {
+                            is RawDataSource -> {
+                                DatabaseSchemaAssistant.getTableByDataSource(first)
+                            }
+
+                            else -> {
+                                "ShireError: Table function requires a data source or a list of table names"
+                            }
+                        }
+                    }
+
+                    else -> {
+                        /// logger type
+                        logger<DatabaseFunctionProvider>().error("args types: ${args.map { it::class }}")
+                        return "ShireError: Table function requires a data source or a list of table names"
+                    }
+                }
             }
 
             DatabaseFunction.Column -> {

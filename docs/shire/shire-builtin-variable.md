@@ -2,7 +2,7 @@
 layout: default
 title: Shire Builtin Variable
 parent: Shire Language
-nav_order: 3
+nav_order: 4
 ---
 
 在 Shire 中，我们提供了一些内置变量，以便用户可以更方便地使用。

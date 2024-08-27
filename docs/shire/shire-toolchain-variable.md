@@ -2,7 +2,7 @@
 layout: default
 title: Shire Toolchain Variable
 parent: Shire Language
-nav_order: 4
+nav_order: 6
 ---
 
 # Toolchain Variable

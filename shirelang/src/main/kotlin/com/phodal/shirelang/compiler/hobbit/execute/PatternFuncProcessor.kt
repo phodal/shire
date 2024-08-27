@@ -150,8 +150,29 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             }
 
             is PatternActionFunc.ToolchainFunction -> {
+                val args: MutableList<Any> = action.args.toMutableList()
+                /// add lastResult at args first
+                when(lastResult) {
+                    is String -> {
+                        args.add(0, lastResult)
+                    }
+                    is List<*> -> {
+                        if (lastResult.isNotEmpty()) {
+                            args.add(0, lastResult)
+                        }
+                    }
+                    is Array<*> -> {
+                        if (lastResult.isNotEmpty()) {
+                            args.add(0, lastResult)
+                        }
+                    }
+                    else -> {
+                        args.add(0, lastResult)
+                    }
+                }
+
                 ToolchainFunctionProvider.provide(myProject, action.funcName)
-                    ?.execute(myProject, action.funcName, action.args, variableTable)
+                    ?.execute(myProject, action.funcName, args, variableTable)
                     ?: logger<PatternActionProcessor>().error("TODO for User custom: ${action.funcName}")
             }
 

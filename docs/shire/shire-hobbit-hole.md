@@ -2,7 +2,7 @@
 layout: default
 title: Hobbit Hole Config
 parent: Shire Language
-nav_order: 2
+nav_order: 3
 ---
 
 Hobbit Hole 用于定义数据处理流程与 IDE 交互逻辑。

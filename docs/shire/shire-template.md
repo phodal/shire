@@ -2,7 +2,7 @@
 layout: default
 title: Shire Command & Template
 parent: Shire Language
-nav_order: 6
+nav_order: 2
 ---
 
 ## Shire Template
