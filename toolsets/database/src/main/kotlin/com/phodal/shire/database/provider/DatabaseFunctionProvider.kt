@@ -7,21 +7,21 @@ import com.intellij.openapi.project.Project
 import com.phodal.shire.database.DatabaseSchemaAssistant
 import com.phodal.shirecore.provider.function.ToolchainFunctionProvider
 
-enum class DataFunction(val funName: String) {
+enum class DatabaseFunction(val funName: String) {
     Database("database"),
     Table("table"),
     Column("column");
 
     companion object {
-        fun fromString(value: String): DataFunction {
-            return values().first { it.funName == value }
+        fun fromString(value: String): DatabaseFunction? {
+            return values().firstOrNull { it.funName == value }
         }
     }
 }
 
 class DatabaseFunctionProvider : ToolchainFunctionProvider {
     override fun isApplicable(project: Project, funcName: String): Boolean {
-        return DataFunction.values().any { it.funName == funcName }
+        return DatabaseFunction.values().any { it.funName == funcName }
     }
 
     override fun execute(
@@ -30,40 +30,40 @@ class DatabaseFunctionProvider : ToolchainFunctionProvider {
         args: List<Any>,
         allVariables: Map<String, Any?>,
     ): Any {
-        val dataFunction = DataFunction.fromString(funcName)
-        return when (dataFunction) {
-            DataFunction.Database -> {
+        val databaseFunction = DatabaseFunction.fromString(funcName) ?: throw IllegalArgumentException("Invalid Database function name")
+        when (databaseFunction) {
+            DatabaseFunction.Database -> {
                 if (args.isEmpty()) {
                     logger<DatabaseFunctionProvider>().error("Database function requires a database name")
-                    return ""
+                    return "ShireError: Database function requires a database name"
                 }
 
                 return DatabaseSchemaAssistant.getDatabase(project, args[0] as String)
             }
-            DataFunction.Table -> {
+            DatabaseFunction.Table -> {
                 if (args.size < 2 ) {
                     logger<DatabaseFunctionProvider>().error("Table function requires a table name")
-                    return ""
+                    return "ShireError: Table function requires a table name"
                 }
 
                 val dataSource = args[0] as? RawDataSource
                 if (dataSource == null) {
                     logger<DatabaseFunctionProvider>().error("Table function requires a data source")
-                    return ""
+                    return "ShireError: Table function requires a data source"
                 }
 
                 return DatabaseSchemaAssistant.getTable(args[0] as RawDataSource, args[1] as String)
             }
-            DataFunction.Column -> {
+            DatabaseFunction.Column -> {
                 if (args.size < 2 ) {
                     logger<DatabaseFunctionProvider>().error("Column function requires a table name")
-                    return ""
+                    return "ShireError: Column function requires a table name"
                 }
 
                 val table = args[0] as? DasTable
                 if (table == null) {
                     logger<DatabaseFunctionProvider>().error("Column function requires a table")
-                    return ""
+                    return "ShireError: Column function requires a table"
                 }
 
                 return DatabaseSchemaAssistant.getTableColumn(table)
