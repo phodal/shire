@@ -6,7 +6,7 @@ nav_order: 1
 ---
 
 > Desk Research（又称为二级研究）是一种利用已有的、已发布的信息进行分析和整理的研究方法。与初级研究不同，初级研究主要关注新数据的收集与生成，
-而二级研究则专注于对已有数据和研究成果的总结、整合和综合分析。典型的二级研究来源包括教科书、百科全书、新闻文章、评论文章和元分析等。
+> 而二级研究则专注于对已有数据和研究成果的总结、整合和综合分析。典型的二级研究来源包括教科书、百科全书、新闻文章、评论文章和元分析等。
 
 这些文献通常不会包含详细的“方法”部分，因为它们依赖的是已有的研究数据，而非原始数据的生成。
 
@@ -23,11 +23,14 @@ variables:
 [website]: it will extract all the .md files and crawl them, then thread them with summary.shire, then return the result.
 ```
 
-- `capture` function, param1: Language, param2: NodeType
-- `crawl` function, param1: URLs
-- `thread` function, param1: Script, param2: Parameters
+- `capture` 函数, 参数 1: Language, 参数 2: AST Node Type
+- `crawl` 函数, 参数 1: URLs: List<String>
+- `thread` 函数, 参数 1: `Script File`, 参数...: Parameters：`Array<String>`
+    - 如果 crawl 返回的是一个数组，那么 thread 会对数组中的每一个元素执行一次
 
-## Real world Example
+## 真实世界示例：AI 辅助运维桌面研究
+
+详细见如下的代码示例：
 
 ### Main.shire
 
@@ -80,13 +83,13 @@ $output
 4. [aider](https://github.com/paul-gauthier/aider) - <small>AI pair programming in your terminal</small>
 5. [elia](https://github.com/darrenburns/elia) - <small>A TUI ChatGPT client built with Textual</small>
 6. [gpterminator](https://github.com/AineeJames/ChatGPTerminator) - <small>A TUI for OpenAI's ChatGPT</small>
-7. [gtt](https://github.com/eeeXun/gtt) - <small>A TUI for Google Translate, ChatGPT, DeepL and other AI services.</small>
+7. [gtt](https://github.com/eeeXun/gtt) - <small>A TUI for Google Translate, ChatGPT, DeepL and other AI
+   services.</small>
 8. [ollama](https://github.com/ollama/ollama) - <small>get up and running with large language models locally.</small>
 9. [oterm](https://github.com/ggozad/oterm) - <small>A text-based terminal client for ollama.</small>
 10. [tgpt](https://github.com/aandrew-me/tgpt) - <small>AI Chatbots in the terminal without needing API keys.</small>
 11. [yai](https://github.com/ekkinox/yai) - <small>Your AI powered terminal assistant</small>
 ```
-
 
 ## API Resource by Bash
 
@@ -113,7 +116,7 @@ curl --request <method> '<url>?<parameters>' \
 Authorization: Basic <encoded credentials>'
 ```
 
-## Design Pattern 
+## Design Pattern
 
 ### AutoFeature
 
@@ -127,10 +130,11 @@ Authorization: Basic <encoded credentials>'
 - toImage
 - Icon
 
-###  Workflow Design
+### Workflow Design
 
 topic
-- capture 
-- summary 
-- insight 
+
+- capture
+- summary
+- insight
 - express
