@@ -122,6 +122,13 @@
                         dynamic="true">
         </extensionPoint>
 
+
+        <!-- Toolchain Function Provider -->
+        <extensionPoint qualifiedName="com.phodal.shireToolchainFunctionProvider"
+                        interface="com.phodal.shirecore.provider.function.ToolchainFunctionProvider"
+                        dynamic="true">
+        </extensionPoint>
+
         <!-- Post Code Middleware -->
         <extensionPoint qualifiedName="com.phodal.shirePostProcessor"
                         interface="com.phodal.shirecore.middleware.PostProcessor"
