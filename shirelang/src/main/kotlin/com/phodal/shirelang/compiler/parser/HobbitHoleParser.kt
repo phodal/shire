@@ -654,7 +654,7 @@ object HobbitHoleParser {
 
             else -> {
                 val funcName = funcCall.funcName.text ?: ""
-                PatternActionFunc.UserCustom(funcName, args)
+                PatternActionFunc.ToolchainFunction(funcName, args)
             }
         }
         return patternActionFunc

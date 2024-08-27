@@ -148,7 +148,8 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                 action.variables
             }
 
-            is PatternActionFunc.UserCustom -> {
+            is PatternActionFunc.ToolchainFunction -> {
+                /// todo: loading dynamic functions
                 logger<PatternActionProcessor>().warn("TODO for User custom: ${action.funcName}")
             }
 

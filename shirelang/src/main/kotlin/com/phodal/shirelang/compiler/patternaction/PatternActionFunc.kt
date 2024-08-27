@@ -175,7 +175,7 @@ sealed class PatternActionFunc(open val funcName: String) {
     /**
      * User Custom Functions
      */
-    class UserCustom(override val funcName: String, val args: List<String>) : PatternActionFunc(funcName) {
+    class ToolchainFunction(override val funcName: String, val args: List<String>) : PatternActionFunc(funcName) {
         override fun toString(): String {
             return "$funcName(${args.joinToString(", ")})"
         }
