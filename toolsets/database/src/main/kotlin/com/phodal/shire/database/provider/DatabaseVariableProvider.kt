@@ -15,7 +15,7 @@ class DatabaseVariableProvider : ToolchainVariableProvider {
 
     override fun resolve(variable: ToolchainVariable, project: Project, editor: Editor, psiElement: PsiElement?): Any {
        return when (variable) {
-            DatabaseToolchainVariable.Databases -> DatabaseVariableBuilder.getDatabases(project)
+            DatabaseToolchainVariable.Databases -> DatabaseVariableBuilder.getDataSources(project)
             DatabaseToolchainVariable.Tables -> DatabaseVariableBuilder.getTables(project)
             DatabaseToolchainVariable.Columns -> DatabaseVariableBuilder.getTableColumns(project)
             else -> ""

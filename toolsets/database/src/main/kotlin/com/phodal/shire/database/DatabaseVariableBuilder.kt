@@ -9,13 +9,19 @@ import com.intellij.database.util.DasUtil
 import com.intellij.openapi.project.Project
 
 object DatabaseVariableBuilder {
-    fun getDatabases(project: Project): List<DbDataSource> {
+    fun getDataSources(project: Project): List<DbDataSource> {
+        return DbPsiFacade.getInstance(project).dataSources.toList()
+    }
+
+    private fun retrieveRawDataSources(project: Project): List<RawDataSource> {
         val dbPsiFacade = DbPsiFacade.getInstance(project)
-        return dbPsiFacade.dataSources.toList()
+        return dbPsiFacade.dataSources.map { dataSource ->
+            dbPsiFacade.getDataSourceManager(dataSource).dataSources
+        }.flatten()
     }
 
     fun getTables(project: Project): List<DasTable> {
-        val rawDataSource = retrieveRawDataSources(project) ?: return emptyList()
+        val rawDataSource = retrieveRawDataSources(project)
         val dasTables = rawDataSource.map { rawDataSource ->
             val schemaName = rawDataSource.name.substringBeforeLast('@')
             DasUtil.getTables(rawDataSource).filter { table ->
@@ -57,11 +63,5 @@ object DatabaseVariableBuilder {
                 null
             }
         }
-    }
-
-    private fun retrieveRawDataSources(project: Project): List<RawDataSource> {
-        val dbPsiFacade = DbPsiFacade.getInstance(project)
-        val dataSource = dbPsiFacade.dataSources.firstOrNull() ?: return emptyList()
-        return dbPsiFacade.getDataSourceManager(dataSource).dataSources
     }
 }
