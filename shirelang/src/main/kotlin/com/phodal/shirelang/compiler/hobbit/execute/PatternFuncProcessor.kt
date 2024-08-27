@@ -11,6 +11,7 @@ import com.nfeld.jsonpathkt.JsonPath
 import com.nfeld.jsonpathkt.extension.read
 import com.phodal.shirecore.ShirelangNotifications
 import com.phodal.shirecore.guard.RedactProcessor
+import com.phodal.shirecore.provider.function.ToolchainFunctionProvider
 import com.phodal.shirecore.search.function.ScoredText
 import com.phodal.shirecore.search.function.SemanticService
 import com.phodal.shirelang.actions.ShireRunFileAction
@@ -35,7 +36,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
         action: PatternActionFunc,
         lastResult: Any,
         input: Any,
-        variableTable: MutableMap<String, Any?> = mutableMapOf()
+        variableTable: MutableMap<String, Any?> = mutableMapOf(),
     ): Any {
         val semanticService = myProject.getService(SemanticService::class.java)
 
@@ -149,8 +150,9 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             }
 
             is PatternActionFunc.ToolchainFunction -> {
-                /// todo: loading dynamic functions
-                logger<PatternActionProcessor>().warn("TODO for User custom: ${action.funcName}")
+                ToolchainFunctionProvider.provide(myProject, action.funcName)
+                    ?.execute(myProject, action.funcName, action.args, variableTable)
+                    ?: logger<PatternActionProcessor>().error("TODO for User custom: ${action.funcName}")
             }
 
             is PatternActionFunc.Notify -> {
@@ -214,6 +216,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                                 urls.add(it)
                             }
                         }
+
                         is String -> {
                             lastResult.split("\n").forEach {
                                 urls.add(it)
