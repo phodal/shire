@@ -4,6 +4,7 @@ import com.phodal.shirecore.provider.variable.model.PsiContextVariable
 import com.phodal.shirecore.provider.variable.model.ToolchainVariable
 import com.phodal.shirecore.provider.variable.model.toolchain.VcsToolchainVariable
 import com.phodal.shirecore.provider.variable.model.SystemInfoVariable
+import com.phodal.shirecore.provider.variable.model.toolchain.DatabaseToolchainVariable
 import com.phodal.shirelang.compiler.variable.value.ContextVariable
 
 data class VariableDisplay(
@@ -26,6 +27,10 @@ object CompositeVariableProvider {
 
         VcsToolchainVariable.values().forEach {
             results.add(VariableDisplay(it.variableName, it.description, 80.0))
+        }
+
+        DatabaseToolchainVariable.values().forEach {
+            results.add(VariableDisplay(it.variableName, it.description, 70.0))
         }
 
         ToolchainVariable.all().forEach {
