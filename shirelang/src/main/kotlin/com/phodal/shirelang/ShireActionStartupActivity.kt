@@ -7,6 +7,7 @@ import com.intellij.openapi.application.smartReadAction
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.ProjectActivity
+import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.psi.PsiManager
 import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.GlobalSearchScope
@@ -14,10 +15,10 @@ import com.phodal.shirecore.config.InteractionType
 import com.phodal.shirelang.actions.base.DynamicShireActionConfig
 import com.phodal.shirelang.actions.base.DynamicShireActionService
 import com.phodal.shirelang.actions.copyPaste.PasteManagerService
-import com.phodal.shirelang.actions.copyPaste.PasteProcessorConfig
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.parser.HobbitHoleParser
 import com.phodal.shirelang.psi.ShireFile
+import java.io.File
 
 
 class ShireActionStartupActivity : ProjectActivity {
@@ -74,9 +75,23 @@ class ShireActionStartupActivity : ProjectActivity {
             val allScope = GlobalSearchScope.allScope(project)
             val filesScope = GlobalSearchScope.getScopeRestrictedByFileTypes(allScope, ShireFileType.INSTANCE)
 
-            return FileTypeIndex.getFiles(ShireFileType.INSTANCE, filesScope).mapNotNull {
+            val projectShire = FileTypeIndex.getFiles(ShireFileType.INSTANCE, filesScope).mapNotNull {
+                PsiManager.getInstance(project).findFile(it) as? ShireFile
+            }
+
+            return projectShire + loadGlobalShire(project)
+        }
+
+        private fun loadGlobalShire(project: Project): List<ShireFile> {
+            val home = System.getProperty("user.home")
+            val homeShire = File(home, ".shire")
+
+            val parent = LocalFileSystem.getInstance().findFileByIoFile(homeShire) ?: return emptyList()
+
+            return parent.children.mapNotNull {
                 PsiManager.getInstance(project).findFile(it) as? ShireFile
             }
         }
+
     }
 }
