@@ -21,6 +21,7 @@ import com.intellij.ui.components.panels.NonOpaquePanel
 import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirelang.psi.ShireFile
+import com.phodal.shirelang.run.precompile.preAnalysisSyntax
 import com.phodal.shirelang.run.runner.ShireRunner
 import kotlinx.coroutines.launch
 import java.awt.BorderLayout

@@ -10,8 +10,12 @@ import com.intellij.openapi.startup.ProjectActivity
 import com.intellij.psi.PsiManager
 import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.GlobalSearchScope
+import com.phodal.shirecore.config.InteractionType
 import com.phodal.shirelang.actions.base.DynamicShireActionConfig
 import com.phodal.shirelang.actions.base.DynamicShireActionService
+import com.phodal.shirelang.actions.copyPaste.PasteManagerService
+import com.phodal.shirelang.actions.copyPaste.PasteProcessorConfig
+import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.parser.HobbitHoleParser
 import com.phodal.shirelang.psi.ShireFile
 
@@ -35,9 +39,18 @@ class ShireActionStartupActivity : ProjectActivity {
 
                 val shireActionConfig = DynamicShireActionConfig(shireConfig.name, shireConfig, it)
                 DynamicShireActionService.getInstance().putAction(shireConfig.name, shireActionConfig)
+
+                attachCopyPasteAction(shireConfig, it)
             }
 
             attachTerminalAction()
+        }
+    }
+
+    private fun attachCopyPasteAction(shireConfig: HobbitHole, shireFile: ShireFile) {
+        if (shireConfig.interaction == InteractionType.OnPaste) {
+            PasteManagerService.getInstance()
+                .registerPasteProcessor(shireConfig, shireFile)
         }
     }
 

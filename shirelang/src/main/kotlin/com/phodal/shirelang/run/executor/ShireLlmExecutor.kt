@@ -11,7 +11,7 @@ import com.phodal.shirelang.run.ShireConfiguration
 data class ShireLlmExecutorContext(
     val configuration: ShireConfiguration,
     val processHandler: ProcessHandler,
-    val console: ConsoleView,
+    val console: ConsoleView?,
     val myProject: Project,
     val hole: HobbitHole?,
     val prompt: String,

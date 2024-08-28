@@ -92,7 +92,7 @@ class EditorInteractionProvider : LocationInteractionProvider {
                         suggestion.append(char)
 
                         invokeLater {
-                            context.console.print(char, ConsoleViewContentType.NORMAL_OUTPUT)
+                            context.console?.print(char, ConsoleViewContentType.NORMAL_OUTPUT)
                         }
                     }
 

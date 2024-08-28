@@ -4,17 +4,16 @@ import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
 import com.phodal.shirecore.ShireCoroutineScope
-import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirecore.config.InteractionType
+import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirecore.config.interaction.PostFunction
 import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.provider.ide.LocationInteractionContext
 import com.phodal.shirecore.provider.ide.LocationInteractionProvider
 import com.phodal.shirelang.ShireBundle
-import com.phodal.shirelang.actions.copyPaste.PasteManagerService
-import com.phodal.shirelang.actions.copyPaste.PasteProcessorConfig
 import com.phodal.shirelang.run.flow.ShireConversationService
-import kotlinx.coroutines.*
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class ShireDefaultLlmExecutor(
     override val context: ShireLlmExecutorContext,
@@ -22,8 +21,9 @@ class ShireDefaultLlmExecutor(
 ) : ShireLlmExecutor(context) {
     override fun execute(postFunction: PostFunction) {
         ApplicationManager.getApplication().invokeLater({
+            val console = context.console
             if (isLocalMode) {
-                context.console.print(ShireBundle.message("shire.run.local.mode"), ConsoleViewContentType.SYSTEM_OUTPUT)
+                console?.print(ShireBundle.message("shire.run.local.mode"), ConsoleViewContentType.SYSTEM_OUTPUT)
                 context.processHandler.detachProcess()
                 return@invokeLater
             }
@@ -35,16 +35,11 @@ class ShireDefaultLlmExecutor(
                 editor = context.editor,
                 project = context.myProject,
                 prompt = context.prompt,
-                console = context.console,
+                console = console,
             )
 
             if (interaction != null) {
                 if (context.hole!!.interaction == InteractionType.OnPaste) {
-                        PasteManagerService.getInstance()
-                            .registerPasteProcessor(context.hole,
-                                PasteProcessorConfig(interactionContext, postFunction, context.processHandler)
-                            )
-
                     return@invokeLater
                 }
                 val interactionProvider = LocationInteractionProvider.provide(interactionContext)
@@ -54,7 +49,7 @@ class ShireDefaultLlmExecutor(
                         try {
                             context.processHandler.detachProcess()
                         } catch (e: Exception) {
-                            context.console.print(e.message ?: "Error", ConsoleViewContentType.ERROR_OUTPUT)
+                            console?.print(e.message ?: "Error", ConsoleViewContentType.ERROR_OUTPUT)
                         }
                     }
 
@@ -69,18 +64,18 @@ class ShireDefaultLlmExecutor(
                         LlmProvider.provider(context.myProject)?.stream(context.prompt, "", false)?.collect {
                             llmResult.append(it)
 
-                            context.console.print(it, ConsoleViewContentType.NORMAL_OUTPUT)
-                        } ?: context.console.print(
+                            console?.print(it, ConsoleViewContentType.NORMAL_OUTPUT)
+                        } ?: console?.print(
                             ShireBundle.message("shire.llm.notfound"),
                             ConsoleViewContentType.ERROR_OUTPUT
                         )
                     } catch (e: Exception) {
-                        context.console.print(e.message ?: "Error", ConsoleViewContentType.ERROR_OUTPUT)
+                        console?.print(e.message ?: "Error", ConsoleViewContentType.ERROR_OUTPUT)
                         context.processHandler.detachProcess()
                     }
                 }
 
-                context.console.print(ShireBundle.message("shire.llm.done"), ConsoleViewContentType.SYSTEM_OUTPUT)
+                console?.print(ShireBundle.message("shire.llm.done"), ConsoleViewContentType.SYSTEM_OUTPUT)
 
                 val response = llmResult.toString()
                 context.myProject.getService(ShireConversationService::class.java)

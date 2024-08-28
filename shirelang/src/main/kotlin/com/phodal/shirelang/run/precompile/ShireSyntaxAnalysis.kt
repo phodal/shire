@@ -1,4 +1,4 @@
-package com.phodal.shirelang.run
+package com.phodal.shirelang.run.precompile
 
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.provider.context.ActionLocationEditor

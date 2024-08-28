@@ -33,7 +33,7 @@ import java.util.concurrent.CompletableFuture
 class ShireRunner(
     private val shireFile: ShireFile,
     private val project: Project,
-    private val console: ShireConsoleView,
+    private val console: ShireConsoleView?,
     private val configuration: ShireConfiguration,
     private val variableMap: Map<String, String>,
     private val processHandler: ShireProcessHandler,
@@ -75,7 +75,7 @@ class ShireRunner(
         CoroutineScope(Dispatchers.Main).launch {
             val handler = terminalLocationExecutor?.bundler(project, variableMap["input"] ?: "",)
             if (handler == null) {
-                console.print("Terminal not found", ConsoleViewContentType.ERROR_OUTPUT)
+                console?.print("Terminal not found", ConsoleViewContentType.ERROR_OUTPUT)
                 processHandler.destroyProcess()
                 return@launch
             }
@@ -86,12 +86,12 @@ class ShireRunner(
                     LlmProvider.provider(project)?.stream(context.finalPrompt, "", false)?.collect {
                         llmResult.append(it)
                         handler.onChunk.invoke(it)
-                    } ?: console.print(
+                    } ?: console?.print(
                         ShireBundle.message("shire.llm.notfound"),
                         ConsoleViewContentType.ERROR_OUTPUT
                     )
                 } catch (e: Exception) {
-                    console.print(e.message ?: "Error", ConsoleViewContentType.ERROR_OUTPUT)
+                    console?.print(e.message ?: "Error", ConsoleViewContentType.ERROR_OUTPUT)
                     handler.onFinish?.invoke(null)
                     processHandler.detachProcess()
                 }
@@ -124,12 +124,14 @@ class ShireRunner(
             templateCompiler.putCustomVariable("output", it)
         }
 
-        printCompiledOutput(console, promptTextTrim, configuration)
+        if (console != null) {
+            printCompiledOutput(console, promptTextTrim, configuration)
+        }
 
         var hasError = false
 
         if (promptTextTrim.isEmpty()) {
-            console.print("No content to run", ConsoleViewContentType.ERROR_OUTPUT)
+            console?.print("No content to run", ConsoleViewContentType.ERROR_OUTPUT)
             shireProcessHandler.destroyProcess()
             hasError = true
         }

@@ -20,8 +20,9 @@ class CustomRemoteAgentLlmExecutor(
         ApplicationManager.getApplication().invokeLater {
             val stringFlow: Flow<String>? = CustomAgentSSEExecutor(project = context.myProject).execute(context.prompt, agent)
 
+            val console = context.console
             if (stringFlow == null) {
-                context.console.print(ShireBundle.message("shire.llm.notfound"), ConsoleViewContentType.ERROR_OUTPUT)
+                console?.print(ShireBundle.message("shire.llm.notfound"), ConsoleViewContentType.ERROR_OUTPUT)
                 context.processHandler.detachProcess()
                 postFunction(null, null)
                 return@invokeLater
@@ -32,11 +33,11 @@ class CustomRemoteAgentLlmExecutor(
                 runBlocking {
                     stringFlow.collect {
                         llmResult.append(it)
-                        context.console.print(it, ConsoleViewContentType.NORMAL_OUTPUT)
+                        console?.print(it, ConsoleViewContentType.NORMAL_OUTPUT)
                     }
                 }
 
-                context.console.print("\nDone!", ConsoleViewContentType.SYSTEM_OUTPUT)
+                console?.print("\nDone!", ConsoleViewContentType.SYSTEM_OUTPUT)
                 val llmResponse = llmResult.toString()
                 context.myProject.getService(ShireConversationService::class.java)
                     .refreshLlmResponseCache(context.configuration.getScriptPath(), llmResponse)

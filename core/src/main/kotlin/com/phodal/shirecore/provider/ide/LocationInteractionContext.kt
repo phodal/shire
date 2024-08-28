@@ -33,5 +33,5 @@ data class LocationInteractionContext(
     /**
      * the console view
      */
-    val console: ConsoleView,
+    val console: ConsoleView?,
 )
