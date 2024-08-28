@@ -28,17 +28,18 @@ class ShireDefaultLlmExecutor(
                 return@invokeLater
             }
 
+            val interaction = context.hole?.interaction
             val interactionContext = LocationInteractionContext(
                 location = context.hole?.actionLocation ?: ShireActionLocation.RUN_PANEL,
-                interactionType = context.hole?.interaction ?: InteractionType.AppendCursorStream,
+                interactionType = interaction ?: InteractionType.AppendCursorStream,
                 editor = context.editor,
                 project = context.myProject,
                 prompt = context.prompt,
                 console = context.console,
             )
 
-            if (context.hole?.interaction != null) {
-                if (context.hole?.interaction == InteractionType.OnPaste) {
+            if (interaction != null) {
+                if (context.hole!!.interaction == InteractionType.OnPaste) {
                         PasteManagerService.getInstance()
                             .registerPasteProcessor(context.hole,
                                 PasteProcessorConfig(interactionContext, postFunction, context.processHandler)
