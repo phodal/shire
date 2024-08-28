@@ -66,7 +66,7 @@ class PasteManagerService {
                 suggestion.append(char)
             }
 
-            val code = CodeFence.parse(suggestion.toString() ?: "")
+            val code = CodeFence.parse(suggestion.toString())
             future.complete(code.text)
 
             logger<ShireCopyPastePreProcessor>().info("paste code: $code")
@@ -96,7 +96,7 @@ class ShireCopyPastePreProcessor : CopyPastePreProcessor {
         file: PsiFile,
         editor: Editor,
         text: String,
-        rawText: RawText,
+        rawText: RawText?,
     ): String {
         val instance = PasteManagerService.getInstance()
         val hobbitHole = instance.firstProcessor() ?: return text
