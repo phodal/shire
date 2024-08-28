@@ -10,4 +10,5 @@ data class ShireRunnerContext(
     val compileResult: ShireParsedResult,
     val finalPrompt: String = "",
     val hasError: Boolean,
+    val compiledVariables: Map<String, Any>,
 )

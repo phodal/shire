@@ -20,8 +20,6 @@ import com.intellij.openapi.util.Key
 import com.intellij.ui.components.panels.NonOpaquePanel
 import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.config.ShireActionLocation
-import com.phodal.shirecore.provider.context.ActionLocationEditor
-import com.phodal.shirelang.compiler.ShireSyntaxAnalyzer
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.runner.ShireRunner
 import kotlinx.coroutines.launch
@@ -72,8 +70,7 @@ open class ShireRunConfigurationProfileState(
             shireFile, myProject, console!!, configuration, configuration.getVariables(), processHandler
         )
 
-        val syntaxAnalyzer = ShireSyntaxAnalyzer(myProject, shireFile, ActionLocationEditor.defaultEditor(myProject))
-        val parsedResult = syntaxAnalyzer.parse()
+        val parsedResult = preAnalysisSyntax(shireFile, myProject)
 
         val location = parsedResult.config?.actionLocation
         if (location == ShireActionLocation.TERMINAL_MENU || location == ShireActionLocation.COMMIT_MENU) {
@@ -97,7 +94,6 @@ open class ShireRunConfigurationProfileState(
         console?.dispose()
         executionConsole?.dispose()
     }
-
 }
 
 class ShireConsoleView(private val executionConsole: ConsoleViewImpl) :
@@ -148,4 +144,3 @@ class ShireProcessAdapter(private val sb: StringBuilder, val configuration: Shir
         return llmOutput
     }
 }
-

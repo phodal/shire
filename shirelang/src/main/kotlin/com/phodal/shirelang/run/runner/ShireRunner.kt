@@ -46,8 +46,10 @@ class ShireRunner(
 
         val result = CompletableFuture<String>()
 
-        val runnerContext = processTemplateCompile(parsedResult)
+        val runnerContext = processTemplateCompile(parsedResult, variableMap, processHandler)
         if (runnerContext.hasError) return null
+
+        this.compiledVariables = runnerContext.compiledVariables
 
         project.getService(ShireConversationService::class.java)
             .createConversation(configuration.getScriptPath(), runnerContext.compileResult)
@@ -103,7 +105,9 @@ class ShireRunner(
         }
     }
 
-    private suspend fun processTemplateCompile(compileResult: ShireParsedResult): ShireRunnerContext {
+    private suspend fun processTemplateCompile(
+        compileResult: ShireParsedResult, variableMap: Map<String, String>, shireProcessHandler: ShireProcessHandler
+    ): ShireRunnerContext {
         val hobbitHole = compileResult.config
 
         val templateCompiler =
@@ -120,20 +124,18 @@ class ShireRunner(
             templateCompiler.putCustomVariable("output", it)
         }
 
-        this.compiledVariables = compiledVariables
-
         printCompiledOutput(console, promptTextTrim, configuration)
 
         var hasError = false
 
         if (promptTextTrim.isEmpty()) {
             console.print("No content to run", ConsoleViewContentType.ERROR_OUTPUT)
-            processHandler.destroyProcess()
+            shireProcessHandler.destroyProcess()
             hasError = true
         }
 
         if (promptTextTrim.contains(SHIRE_ERROR)) {
-            processHandler.exitWithError()
+            shireProcessHandler.exitWithError()
             hasError = true
         }
 
@@ -142,7 +144,8 @@ class ShireRunner(
             editor = ActionLocationEditor.provide(project, hobbitHole?.actionLocation),
             compileResult,
             promptTextTrim,
-            hasError
+            hasError,
+            compiledVariables
         )
     }
 
