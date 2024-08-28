@@ -42,10 +42,6 @@ class PasteManagerService {
 
             flow?.cancellable()?.collect { char ->
                 suggestion.append(char)
-
-                invokeLater {
-                    config.context.console.print(char, ConsoleViewContentType.NORMAL_OUTPUT)
-                }
             }
 
             future.complete(suggestion.toString())
