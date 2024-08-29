@@ -44,3 +44,14 @@ Builtin plugin: Java
 Maven, Gradle 工具链提供以下变量：
 
 - `projectDependencies`，当前文件的 Maven, Gradle 依赖列表。
+
+## Database
+
+{: .label .label-red }
+Builtin plugin: Database
+
+数据库工具链提供以下变量：
+
+- `databases`，当前连接的数据库列表。
+- `tables`，当前数据库的表列表。
+- `columns`，当前数据库的表的列列表。
