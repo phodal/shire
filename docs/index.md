@@ -30,7 +30,7 @@ Shire 提供了一种简便 AI 编码智能体语言，能够让大型语言模�
 AutoDev 中，我们设计了一个面向开发者的 AI 驱动集成开发环境（IDE），其中包括 Shire 的前身 DevIns。DevIns 旨在让用户能够为他们自己的
 IDE 创建定制的 AI 代理，从而构建个性化的 AI 驱动开发环境。
 
-Shire example:
+Shire 示例:
 
 ![Shire Cheatsheet](images/shire-sheet.svg)
 
@@ -38,7 +38,13 @@ Shire Data Architecture:
 
 ![Shire Data Architecture](images/shire-data-flow.svg)
 
-Here’s an overview of its main features and functionalities:
+Shire Resources
+
+- Example projects: 
+  - [Java example](https://github.com/shire-lang/shire-spring-java-demo)
+- Documentation: [Shire AI Coding Agent Language](https://shire.phodal.com/)
+- [Shire Book: AI for software-engineering](https://aise.phodal.com/) (Chinese only)
+- [Shire.Run - the shareable AI coding agent](https://shire.run/)
 
 ## Demo Video
 

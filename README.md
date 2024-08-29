@@ -17,9 +17,7 @@
 the Shire offers a straightforward AI Coding Agent Language
 that enables communication between an LLM and control IDE for automated programming.
 
-[Quick Start →](https://shire.phodal.com/)
-
-[Shire Book: AI for software-engineering](https://aise.phodal.com/)
+[Quick Start →](https://shire.phodal.com/) (Documentation)
 
 > The concept of Shire originated from [AutoDev](https://github.com/unit-mesh/auto-dev), a subproject
 > of [UnitMesh](https://unitmesh.cc/). In AutoDev, we designed an AI-driven IDE for developers that includes DevIns, the
@@ -34,7 +32,13 @@ Shire Data Architecture:
 
 ![Shire Data Architecture](docs/images/shire-data-flow.svg)
 
-Documentation: [Shire AI Coding Agent Language](https://shire.phodal.com/)
+Shire Resources
+
+- Example projects:
+    - [Java example](https://github.com/shire-lang/shire-spring-java-demo)
+- Documentation: [Shire AI Coding Agent Language](https://shire.phodal.com/)
+- [Shire Book: AI for software-engineering](https://aise.phodal.com/) (Chinese only)
+- [Shire.Run - the shareable AI coding agent](https://shire.run/)
 
 ## Demo Video
 
