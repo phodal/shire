@@ -53,7 +53,7 @@
 
         <extensionPoint qualifiedName="com.phodal.shireAutoTesting"
                         beanClass="com.intellij.lang.LanguageExtensionPoint" dynamic="true">
-            <with attribute="implementationClass" implements="com.phodal.shirecore.provider.AutoTesting"/>
+            <with attribute="implementationClass" implements="com.phodal.shirecore.provider.TestingService"/>
         </extensionPoint>
 
         <!-- Toolchain Provider -->

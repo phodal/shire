@@ -11,15 +11,15 @@ import com.phodal.shirecore.provider.shire.FileRunService
 import com.phodal.shirecore.variable.toolchain.unittest.AutoTestingPromptContext
 
 /**
- * The `WriteTestService` class is an abstract class that provides a base implementation for writing tests in different programming languages.
- * It extends the `LazyExtensionInstance` class, which allows lazy initialization of the `WriteTestService` instances.
+ * The `TestService` class is an abstract class that provides a base implementation for writing tests in different programming languages.
+ * It extends the `LazyExtensionInstance` class, which allows lazy initialization of the `TestService` instances.
  *
  * @property language The programming language for which the test service is applicable.
  * @property implementationClass The fully qualified name of the implementation class.
  *
- * @constructor Creates a new instance of the `WriteTestService` class.
+ * @constructor Creates a new instance of the `TestService` class.
  */
-abstract class AutoTesting : LazyExtensionInstance<AutoTesting>(), FileRunService {
+abstract class TestingService : LazyExtensionInstance<TestingService>(), FileRunService {
     @Attribute("language")
     var language: String? = null
 
@@ -79,20 +79,20 @@ abstract class AutoTesting : LazyExtensionInstance<AutoTesting>(), FileRunServic
     }
 
     companion object {
-        private val EP_NAME: ExtensionPointName<AutoTesting> =
+        private val EP_NAME: ExtensionPointName<TestingService> =
             ExtensionPointName.create("com.phodal.shireAutoTesting")
 
-        fun context(psiElement: PsiElement): AutoTesting? {
+        fun context(psiElement: PsiElement): TestingService? {
             val extensionList = EP_NAME.extensionList
-            val writeTestService = extensionList.firstOrNull {
+            val testingService = extensionList.firstOrNull {
                 it.isApplicable(psiElement)
             }
 
-            if (writeTestService == null) {
+            if (testingService == null) {
                 return null
             }
 
-            return writeTestService
+            return testingService
         }
     }
 }
