@@ -20,7 +20,7 @@ import com.phodal.shirelang.compiler.hobbit.ast.FrontMatterType
 import com.phodal.shirelang.compiler.hobbit.ast.MethodCall
 import com.phodal.shirelang.compiler.hobbit.ast.PatternAction
 import com.phodal.shirelang.compiler.hobbit.ast.TaskRoutes
-import com.phodal.shirelang.compiler.patternaction.PatternActionTransform
+import com.phodal.shirelang.compiler.patternaction.VariableTransform
 import com.phodal.shirelang.psi.ShireFile
 
 /**
@@ -110,7 +110,7 @@ open class HobbitHole(
      *
      * ---
      */
-    val variables: MutableMap<String, PatternActionTransform> = mutableMapOf(),
+    val variables: MutableMap<String, VariableTransform> = mutableMapOf(),
 
     /**
      * This code snippet declares a variable 'when_' of type List<VariableCondition> and initializes it with an empty list.
@@ -319,12 +319,12 @@ open class HobbitHole(
             )
         }
 
-        private fun buildVariableTransformations(variableObject: Map<String, FrontMatterType>): MutableMap<String, PatternActionTransform> {
+        private fun buildVariableTransformations(variableObject: Map<String, FrontMatterType>): MutableMap<String, VariableTransform> {
             return variableObject.mapNotNull { (key, value) ->
                 val variable = key.removeSurrounding("\"")
                 PatternAction.from(value)?.let {
                     val pattern = it.pattern.removeSurrounding("/")
-                    PatternActionTransform(variable, pattern, it.patternFuncs, it.isQueryStatement)
+                    VariableTransform(variable, pattern, it.patternFuncs, it.isQueryStatement)
                 }
             }.associateBy { it.variable }.toMutableMap()
         }

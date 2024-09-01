@@ -14,7 +14,7 @@ import com.phodal.shirelang.compiler.hobbit.execute.schema.ShireQLSchema
 import com.phodal.shirelang.compiler.hobbit.execute.variable.ShireQLVariableBuilder
 import com.phodal.shirelang.compiler.hobbit.execute.variable.VariableContainerManager
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
-import com.phodal.shirelang.compiler.patternaction.PatternActionTransform
+import com.phodal.shirelang.compiler.patternaction.VariableTransform
 import kotlinx.coroutines.runBlocking
 
 /**
@@ -32,7 +32,7 @@ import kotlinx.coroutines.runBlocking
  */
 open class FunctionStatementProcessor(override val myProject: Project, override val hole: HobbitHole) :
     PatternFuncProcessor(myProject, hole) {
-    open fun execute(transform: PatternActionTransform): String {
+    open fun execute(transform: VariableTransform): String {
         val fromStmt = transform.patternActionFuncs.find { it is PatternActionFunc.From } as PatternActionFunc.From
         val selectStmt =
             transform.patternActionFuncs.find { it is PatternActionFunc.Select } as PatternActionFunc.Select

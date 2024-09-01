@@ -21,7 +21,7 @@ package com.phodal.shirelang.compiler.patternaction
  *
  * @see PatternAction
  */
-class PatternActionTransform(
+class VariableTransform(
     val variable: String,
     val pattern: String,
     val patternActionFuncs: List<PatternActionFunc>,
