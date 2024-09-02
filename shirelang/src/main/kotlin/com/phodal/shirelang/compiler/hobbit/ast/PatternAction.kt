@@ -25,7 +25,7 @@ data class PatternAction(
         fun from(value: FrontMatterType): PatternAction? {
             return when (value) {
                 is FrontMatterType.STRING -> {
-                    PatternAction("", listOf(PatternActionFunc.Prompt(value.value as? String ?: "")))
+                    PatternAction("", listOf(PatternActionFunc.Print(value.value as? String ?: "")))
                 }
 
                 is FrontMatterType.PATTERN -> {
