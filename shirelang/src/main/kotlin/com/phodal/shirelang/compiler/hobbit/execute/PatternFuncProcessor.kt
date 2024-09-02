@@ -173,7 +173,15 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             }
 
             is PatternActionFunc.Cat -> {
-                cat(action.paths, input)
+                val path: Array<String> = action.paths.map {
+                    if (it.startsWith("\$")) {
+                        variableTable[it.substring(1)]?.toString() ?: it
+                    } else {
+                        it
+                    }
+                }.toTypedArray()
+
+                cat(path, input)
             }
 
             is PatternActionFunc.Print -> {
@@ -407,7 +415,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
         }
     }
 
-    fun cat(paths: Array<out String>, input: Any): String {
+    fun cat(paths: Array<String>, input: Any): String {
         val absolutePaths: List<VirtualFile> = resolvePaths(paths, input)
         return absolutePaths.joinToString("\n") { it.readText() }
     }
