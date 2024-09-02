@@ -6,9 +6,11 @@ import com.phodal.shirecore.middleware.PostProcessor
 import com.phodal.shirelang.compiler.ShireSyntaxAnalyzer
 import com.phodal.shirelang.psi.ShireFile
 import junit.framework.TestCase
+import org.intellij.lang.annotations.Language
 
 class ShireLifecycleTest : BasePlatformTestCase() {
     fun testShouldHandleWhenStreamingEnd() {
+        @Language("Shire")
         val code = """
             ---
             onStreamingEnd:  { parseCode | saveFile("api.py") | verifyCode | runCode }
@@ -41,7 +43,7 @@ class ShireLifecycleTest : BasePlatformTestCase() {
     }
 
     fun testShouldHandleWhenAfterStreaming() {
-//        val code2 = "hi"
+        @Language("Shire")
         val code = """
             ---
             afterStreaming: {
@@ -62,7 +64,6 @@ class ShireLifecycleTest : BasePlatformTestCase() {
             ${'$'}allController
         """.trimIndent()
 
-//        myFixture.addFileToProject("sample2.shire", code2)
         val file = myFixture.addFileToProject("sample.shire", code)
 
         myFixture.openFileInEditor(file.virtualFile)
