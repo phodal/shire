@@ -10,7 +10,7 @@ import com.phodal.shirecore.provider.variable.model.ToolchainVariable
 import org.jetbrains.plugins.terminal.TerminalProjectOptionsProvider
 
 class TerminalToolchainVariableProvider : ToolchainVariableProvider {
-    override fun isResolvable(variable: ToolchainVariable, psiElement: PsiElement?): Boolean {
+    override fun isResolvable(variable: ToolchainVariable, psiElement: PsiElement?, project: Project): Boolean {
         return variable is TerminalToolchainVariable
     }
 

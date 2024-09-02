@@ -9,7 +9,7 @@ import com.phodal.shirecore.provider.variable.model.ToolchainVariable
 import com.phodal.shirecore.provider.variable.model.toolchain.DatabaseToolchainVariable
 
 class DatabaseVariableProvider : ToolchainVariableProvider {
-    override fun isResolvable(variable: ToolchainVariable, psiElement: PsiElement?): Boolean {
+    override fun isResolvable(variable: ToolchainVariable, psiElement: PsiElement?, project: Project): Boolean {
         return variable is DatabaseToolchainVariable
     }
 

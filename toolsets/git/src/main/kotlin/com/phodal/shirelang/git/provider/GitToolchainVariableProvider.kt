@@ -22,7 +22,7 @@ import java.awt.EventQueue.invokeAndWait
 class GitToolchainVariableProvider : ToolchainVariableProvider {
     private val logger = logger<GitToolchainVariableProvider>()
 
-    override fun isResolvable(variable: ToolchainVariable, psiElement: PsiElement?): Boolean {
+    override fun isResolvable(variable: ToolchainVariable, psiElement: PsiElement?, project: Project): Boolean {
         return when (variable) {
             VcsToolchainVariable.CurrentChanges -> true
             VcsToolchainVariable.HistoryCommitMessages -> true

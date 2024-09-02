@@ -1,15 +1,16 @@
-package com.phodal.shirecore.provider.variable.model
+package com.phodal.shirecore.provider.variable.model.toolchain
+
+import com.phodal.shirecore.provider.variable.model.ToolchainVariable
 
 /**
  * Enum representing variables used in the generation of code structures.
  */
-enum class SonarqubeVariable(
+enum class GradleToolchainVariable(
     override val variableName: String,
     override var value: Any? = null,
     override val description: String = "",
 ) : ToolchainVariable {
-    Issue("sonarIssue", null, "the issue of current file"),
-    Results("sonarResults", null, "the results of current file")
+    GradleDependencies("projectDependencies", description = "The dependencies of the project"),
     ;
 
     companion object {
@@ -19,8 +20,9 @@ enum class SonarqubeVariable(
          * @param variableName the variable name to search for
          * @return the PsiVariable with the given variable name
          */
-        fun from(variableName: String): SonarqubeVariable? {
+        fun from(variableName: String): GradleToolchainVariable? {
             return values().firstOrNull { it.variableName == variableName }
         }
     }
 }
+

@@ -22,6 +22,9 @@
         <shireBuildSystemProvider
                 implementation="com.phodal.shirelang.java.impl.JavaBuildSystemProvider"/>
 
+        <shireToolchainVariableProvider
+                implementation="com.phodal.shirelang.java.variable.JavaVariableProvider"/>
+
         <shireLanguageToolchainProvider
                 language="JAVA"
                 implementationClass="com.phodal.shirelang.java.variable.JavaLanguageToolchainProvider"/>

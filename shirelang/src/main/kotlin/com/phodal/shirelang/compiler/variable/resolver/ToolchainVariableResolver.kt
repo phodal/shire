@@ -16,7 +16,8 @@ class ToolchainVariableResolver(
         val result = mutableMapOf<String, Any>()
         context.variableTable.getAllVariables().forEach {
             val variable = ToolchainVariable.from(it.key) ?: return@forEach
-            val provider = ToolchainVariableProvider.provide(variable, context.element) ?: return@forEach
+            val provider = ToolchainVariableProvider
+                .provide(variable, context.element, context.myProject) ?: return@forEach
 
             result[it.key] = try {
                 val resolvedValue = provider.resolve(variable, context.myProject, context.editor, context.element)
