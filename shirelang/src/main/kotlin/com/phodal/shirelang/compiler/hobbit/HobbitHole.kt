@@ -200,13 +200,12 @@ open class HobbitHole(
         console: ConsoleView?,
         context: PostCodeHandleContext,
     ) {
-        // printline
         console?.print("\n", ConsoleViewContentType.SYSTEM_OUTPUT)
         onStreamingEnd.forEach { funcNode ->
             console?.print("execute: ${funcNode.funName}\n", ConsoleViewContentType.SYSTEM_OUTPUT)
             val postProcessor = PostProcessor.handler(funcNode.funName)
             if (postProcessor == null) {
-                console?.print("Not found: ${funcNode.funName}\n", ConsoleViewContentType.SYSTEM_OUTPUT)
+                console?.print("Not found function: ${funcNode.funName}\n", ConsoleViewContentType.SYSTEM_OUTPUT)
                 return@forEach
             }
 

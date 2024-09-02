@@ -1,15 +1,18 @@
 package com.phodal.shirelang.compiler.hobbit.execute
 
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.readText
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.intellij.sh.psi.ShFile
+import com.intellij.sh.run.ShRunner
 import com.phodal.shirecore.provider.http.HttpHandler
 import com.phodal.shirecore.provider.http.HttpHandlerType
 import com.phodal.shirecore.provider.shire.FileRunService
 import com.phodal.shirelang.actions.ShireRunFileAction
+import com.phodal.shirelang.compiler.SHIRE_ERROR
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.utils.lookupFile
 
@@ -64,12 +67,20 @@ object ThreadProcessor {
                 }
             }
             is ShFile -> {
-                return FileRunService.provider(myProject, file)?.runFile(myProject, file, psiFile)
-                    ?: "No run service found"
+                val virtualFile = psiFile.virtualFile
+                val workingDirectory = virtualFile.parent.path
+                val shRunner = ApplicationManager.getApplication().getService(ShRunner::class.java)
+                    ?: return "$SHIRE_ERROR: Shell runner not found"
+
+                if (shRunner.isAvailable(myProject)) {
+                    shRunner.run(myProject, virtualFile.path, workingDirectory, "RunShireShell", true)
+                }
+
+                return "Running shell command: $fileName"
             }
 
             else -> return FileRunService.provider(myProject, file)?.runFile(myProject, file, psiFile)
-                ?: "No run service found"
+                ?: "No run service found for $psiFile, $fileName"
         }
     }
 

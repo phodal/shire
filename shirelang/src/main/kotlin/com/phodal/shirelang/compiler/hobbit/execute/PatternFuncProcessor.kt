@@ -320,7 +320,11 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                     }
                 }.toTypedArray()
 
-                ShireRunFileAction.executeFile(myProject, action.filename, variables, variableTable)
+                try {
+                    ShireRunFileAction.executeFile(myProject, action.filename, variables, variableTable)
+                } catch (e: Exception) {
+                    logger<FunctionStatementProcessor>().warn("execute shire error: $e")
+                }
             }
 
             is PatternActionFunc.Thread -> {
