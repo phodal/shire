@@ -5,6 +5,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.readText
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
+import com.intellij.sh.psi.ShFile
 import com.phodal.shirecore.provider.http.HttpHandler
 import com.phodal.shirecore.provider.http.HttpHandlerType
 import com.phodal.shirecore.provider.shire.FileRunService
@@ -35,12 +36,13 @@ object ThreadProcessor {
 
         when (psiFile) {
             is ShireFile -> {
+                val psi = psiFile as ShireFile
                 return when (val output = variableTable["output"]) {
                     is List<*> -> {
                         val results = output.mapNotNull {
                             try {
                                 variableTable["output"] = it
-                                executeTask(myProject, variables, variableTable, psiFile)
+                                executeTask(myProject, variables, variableTable, psi)
                             } catch (e: Exception) {
                                 null
                             }
@@ -52,14 +54,18 @@ object ThreadProcessor {
                     is Array<*> -> {
                         output.joinToString("\n") {
                             variableTable["output"] = it
-                            executeTask(myProject, variables, variableTable, psiFile)  ?: "No run service found"
+                            executeTask(myProject, variables, variableTable, psi)  ?: "No run service found"
                         }
                     }
 
                     else -> {
-                        return executeTask(myProject, variables, variableTable, psiFile) ?: "No run service found"
+                        return executeTask(myProject, variables, variableTable, psi) ?: "No run service found"
                     }
                 }
+            }
+            is ShFile -> {
+                return FileRunService.provider(myProject, file)?.runFile(myProject, file, psiFile)
+                    ?: "No run service found"
             }
 
             else -> return FileRunService.provider(myProject, file)?.runFile(myProject, file, psiFile)
