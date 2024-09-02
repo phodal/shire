@@ -524,6 +524,15 @@ object HobbitHoleParser {
                 PatternActionFunc.Sort(*args.toTypedArray())
             }
 
+            "find" -> {
+                if (args.isEmpty()) {
+                    logger.error("parsePatternAction, find requires at least 1 argument")
+                    return null
+                }
+
+                PatternActionFunc.Find(args[0])
+            }
+
             "sed" -> {
                 if (args.size < 2) {
                     logger.error("parsePatternAction, sed requires at least 2 arguments")

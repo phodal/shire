@@ -26,6 +26,12 @@ sealed class PatternActionFunc(open val funcName: String) {
     class Grep(vararg val patterns: String) : PatternActionFunc("grep")
 
     /**
+     * Find subclass for searching with text
+     * @property text The patterns to search for.
+     */
+    class Find(val text: String) : PatternActionFunc("find")
+
+    /**
      * Sed subclass for find and replace operations.
      *
      * @property pattern The pattern to search for.
