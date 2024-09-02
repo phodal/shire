@@ -23,11 +23,11 @@ class OpenFileProcessor : PostProcessor {
     override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?, args: List<Any>): String {
         val file = context.pipeData["output"]
         if (file !is VirtualFile) {
-            // use ide lookup
             if (file is String) {
                 runInEdt {
-                    FileEditorManager.getInstance(project).openFile(project.lookupFile(file) ?: return@runInEdt)
+                    FileEditorManager.getInstance(project).openFile(project.findFile(file) ?: return@runInEdt)
                 }
+
                 return ""
             }
 
@@ -42,10 +42,9 @@ class OpenFileProcessor : PostProcessor {
     }
 }
 
-fun Project.lookupFile(path: String): VirtualFile? {
+fun Project.findFile(path: String): VirtualFile? {
     ApplicationManager.getApplication().assertReadAccessAllowed()
     val searchScope = ProjectScope.getProjectScope(this)
-    // get file type by path name
     val fileType: FileType = FileTypeManager.getInstance().getFileTypeByFileName(path)
     val allTypeFiles = FileTypeIndex.getFiles(fileType, searchScope)
 
