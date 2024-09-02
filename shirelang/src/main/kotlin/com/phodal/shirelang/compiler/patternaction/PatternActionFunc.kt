@@ -12,13 +12,6 @@ import com.phodal.shirelang.compiler.hobbit.ast.VariableElement
  */
 sealed class PatternActionFunc(open val funcName: String) {
     /**
-     * Prompt subclass for displaying a message prompt.
-     *
-     * @property message The message to be displayed.
-     */
-    class Prompt(val message: String) : PatternActionFunc("prompt")
-
-    /**
      * Grep subclass for searching with one or more patterns.
      *
      * @property patterns The patterns to search for.

@@ -41,10 +41,6 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
         val semanticService = myProject.getService(SemanticService::class.java)
 
         return when (action) {
-            is PatternActionFunc.Prompt -> {
-                action.message
-            }
-
             is PatternActionFunc.Find -> {
                 when (lastResult) {
                     is Array<*> -> {
@@ -179,6 +175,17 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             }
 
             is PatternActionFunc.Print -> {
+                if (action.texts.isEmpty()) {
+                    when (lastResult) {
+                        is Array<*> -> {
+                            return (lastResult as Array<String>).joinToString("\n")
+                        }
+
+                        else -> {
+                            return lastResult.toString()
+                        }
+                    }
+                }
                 action.texts.map {
                     if (it.startsWith("\$")) {
                         variableTable[it.substring(1)] ?: it

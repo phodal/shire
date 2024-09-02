@@ -97,7 +97,6 @@ variables:
 
 | 函数类别      | 功能描述             | 参数                           `                                     | 示例                                          |
 |-----------|------------------|--------------------------------------------------------------------|---------------------------------------------|
-| prompt    | 显示消息提示           | `message`: 要显示的消息内容                                                | `prompt("You are xxx")`                     |
 | find      | 基于文本搜索           | ` text`: 要搜索的文本                                                    | `find("error")`                             |
 | grep      | 使用模式进行搜索         | `patterns`: 要搜索的模式                                                 | ` grep("[a-zA-Z]+Controller")`              |
 | sed       | 查找和替换操作          | `pattern`: 要查找的模式<br>`replacements`: 替换的字符串<br>`isRegex`: 是否为正则表达式 | `sed("s/old/new/g")`                        |
@@ -122,18 +121,17 @@ variables:
 ```kotlin
 sealed class PatternActionFunc(open val funcName: String) {
   /**
-   * Prompt subclass for displaying a message prompt.
-   *
-   * @property message The message to be displayed.
-   */
-  class Prompt(val message: String) : PatternActionFunc("prompt")
-
-  /**
-   * find subclass for searching with one or more patterns.
+   * Grep subclass for searching with one or more patterns.
    *
    * @property patterns The patterns to search for.
    */
-  class find(vararg val patterns: String) : PatternActionFunc("find")
+  class Grep(vararg val patterns: String) : PatternActionFunc("grep")
+
+  /**
+   * Find subclass for searching with text
+   * @property text The patterns to search for.
+   */
+  class Find(val text: String) : PatternActionFunc("find")
 
   /**
    * Sed subclass for find and replace operations.
@@ -275,7 +273,7 @@ sealed class PatternActionFunc(open val funcName: String) {
    *
    * @param fileName The file name to run
    */
-  class Thread(val fileName: String) : PatternActionFunc("thread")
+  class Thread(val fileName: String, val variableNames: Array<String>) : PatternActionFunc("thread")
 
   /**
    * the jsonpath function will parse the json and get the value by jsonpath
@@ -285,7 +283,7 @@ sealed class PatternActionFunc(open val funcName: String) {
   /**
    * User Custom Functions
    */
-  class UserCustom(override val funcName: String, val args: List<String>) : PatternActionFunc(funcName) {
+  class ToolchainFunction(override val funcName: String, val args: List<String>) : PatternActionFunc(funcName) {
     override fun toString(): String {
       return "$funcName(${args.joinToString(", ")})"
     }
