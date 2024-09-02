@@ -188,6 +188,10 @@ class ShireRunner(
             runReadAction { PsiManager.getInstance(project).findFile(it) }
         }
 
+//        if (response != null && compiledVariables["output"] == null) {
+//            compiledVariables = compiledVariables.plus("output" to response)
+//        }
+
         val context = PostCodeHandleContext(
             selectedEntry = hobbitHole?.pickupElement(project, runnerContext.editor),
             currentLanguage = currentFile?.language,

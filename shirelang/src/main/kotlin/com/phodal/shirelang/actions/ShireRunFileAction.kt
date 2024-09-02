@@ -18,6 +18,7 @@ import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
+import com.phodal.shirecore.middleware.PostCodeHandleContext
 import com.phodal.shirelang.ShireActionStartupActivity
 import com.phodal.shirelang.actions.base.DynamicShireActionConfig
 import com.phodal.shirelang.psi.ShireFile
@@ -96,9 +97,14 @@ class ShireRunFileAction : DumbAwareAction() {
             variableNames: Array<String>,
             variableTable: MutableMap<String, Any?>,
         ): Any {
+//            var output: String? = null
             val variables: MutableMap<String, String> = mutableMapOf()
             for (i in variableNames.indices) {
                 variables[variableNames[i]] = variableTable[variableNames[i]].toString() ?: ""
+//                // if include output in variableTable
+//                if (variableNames[i] == "output") {
+//                    output = variableTable[variableNames[i]].toString()
+//                }
             }
 
             val file = runReadAction {
@@ -106,6 +112,16 @@ class ShireRunFileAction : DumbAwareAction() {
                     it.name == fileName
                 }
             }
+//
+//            val context = PostCodeHandleContext.getData() ?: PostCodeHandleContext(
+//                selectedEntry = null,
+//                currentLanguage = file?.language,
+//                currentFile = file,
+//                editor = null,
+//                compiledVariables = variableTable,
+//                lastTaskOutput = output
+//            )
+//            PostCodeHandleContext.putData(context)
 
             if (file == null) {
                 throw RuntimeException("File $fileName not found")
