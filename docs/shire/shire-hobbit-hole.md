@@ -44,7 +44,7 @@ actionLocation: ContextMenu
 when: $fileName.matches("/.*.java/")
 variables:
   "var1": "demo"
-  "var2": /**.java/ { grep("error.log") | sort | xargs("rm")}
+  "var2": /**.java/ { find("error.log") | sort | xargs("rm")}
 ---
 ```
 

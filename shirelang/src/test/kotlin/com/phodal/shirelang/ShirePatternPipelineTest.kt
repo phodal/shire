@@ -20,7 +20,7 @@ class ShirePatternPipelineTest : BasePlatformTestCase() {
             data: ["a", "b"]
             when: ${'$'}fileName.matches("/.*.java/")
             variables:
-              "var2": /.*ple.shire/ { cat | grep("fileName") | sort }
+              "var2": /.*ple.shire/ { cat | find("fileName") | sort }
             onStreamingEnd: { append(${'$'}var2) | saveFile("summary.md") }
             ---
             
@@ -53,7 +53,7 @@ class ShirePatternPipelineTest : BasePlatformTestCase() {
         }
 
         assertEquals("User prompt:\n\n" +
-                "  \"var2\": /.*ple.shire/ { cat | grep(\"fileName\") | sort }\n" +
+                "  \"var2\": /.*ple.shire/ { cat | find(\"fileName\") | sort }\n" +
                 "Summary webpage: \$fileName\n" +
                 "when: \$fileName.matches(\"/.*.java/\")", context.genText)
     }
@@ -114,7 +114,7 @@ class ShirePatternPipelineTest : BasePlatformTestCase() {
             interaction: AppendCursor
             variables:
               "openai": "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"
-              "var2": /.*ple.shire/ { cat | grep("openai") | sed("(?i)\b(sk-[a-zA-Z0-9]{20}T3BlbkFJ[a-zA-Z0-9]{20})(?:['|\"|\n|\r|\s|\x60|;]|${'$'})", "sk-***") }
+              "var2": /.*ple.shire/ { cat | find("openai") | sed("(?i)\b(sk-[a-zA-Z0-9]{20}T3BlbkFJ[a-zA-Z0-9]{20})(?:['|\"|\n|\r|\s|\x60|;]|${'$'})", "sk-***") }
             ---
             
             Summary webpage: ${'$'}var2
@@ -146,7 +146,7 @@ class ShirePatternPipelineTest : BasePlatformTestCase() {
         }
 
         assertEquals("  \"openai\": \"sk-***\n" +
-                "  \"var2\": /.*ple.shire/ { cat | grep(\"openai\") | sed(\"(?i)\\b(sk-[a-zA-Z0-9]{20}T3BlbkFJ[a-zA-Z0-9]{20})(?:['|\\\"|\\n|\\r|\\s|\\x60|;]|\$)\", \"sk-***\") }", context.compiledVariables["var2"]
+                "  \"var2\": /.*ple.shire/ { cat | find(\"openai\") | sed(\"(?i)\\b(sk-[a-zA-Z0-9]{20}T3BlbkFJ[a-zA-Z0-9]{20})(?:['|\\\"|\\n|\\r|\\s|\\x60|;]|\$)\", \"sk-***\") }", context.compiledVariables["var2"]
         )
     }
 }

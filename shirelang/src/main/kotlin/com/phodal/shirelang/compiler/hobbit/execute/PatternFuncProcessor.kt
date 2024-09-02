@@ -62,17 +62,44 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             }
 
             is PatternActionFunc.Grep -> {
+                val regexs = action.patterns.map { it.toRegex() }
                 when (lastResult) {
                     is Array<*> -> {
-                        (lastResult as Array<String>)
-                            .filter { line -> action.patterns.any { line.contains(it) } }
-                            .joinToString("\n")
+                        val inputArray = (lastResult as Array<String>)
+                        val result = regexs.map { regex ->
+                            inputArray.map { line ->
+                                regex.findAll(line)
+                                    .map {
+                                        if (it.groupValues.size > 1) {
+                                            it.groupValues[1]
+                                        } else {
+                                            it.groupValues[0]
+                                        }
+                                    }.toList()
+                            }.flatten()
+                        }.flatten().joinToString("\n")
+
+                        result
+                    }
+
+                    is String -> {
+                        val result = regexs.map { regex ->
+                            regex.findAll(lastResult)
+                                .map {
+                                    if (it.groupValues.size > 1) {
+                                        it.groupValues[1]
+                                    } else {
+                                        it.groupValues[0]
+                                    }
+                                }.toList()
+                        }.flatten().joinToString("\n")
+
+                        result
                     }
 
                     else -> {
-                        (lastResult as String).split("\n")
-                            .filter { line -> action.patterns.any { line.contains(it) } }
-                            .joinToString("\n")
+                        logger<PatternActionProcessor>().error("Unknown pattern input for ${action.funcName}, lastResult: $lastResult")
+                        ""
                     }
                 }
             }

@@ -11,6 +11,7 @@ import com.phodal.shirelang.compiler.hobbit.execute.PatternActionProcessor
 import com.phodal.shirelang.psi.ShireFile
 import junit.framework.TestCase
 import kotlinx.coroutines.runBlocking
+import org.intellij.lang.annotations.Language
 
 class ShireCompileTest : BasePlatformTestCase() {
     fun testNormalString() {
@@ -255,7 +256,7 @@ class ShireCompileTest : BasePlatformTestCase() {
             data: ["a", "b"]
             when: ${'$'}fileName.matches("/.*.java/")
             variables:
-              "var2": /.*ple.shire/ { cat | grep("fileName") | sort }
+              "var2": /.*ple.shire/ { cat | find("fileName") | sort }
             ---
             
             Summary webpage: ${'$'}fileName
@@ -275,7 +276,7 @@ class ShireCompileTest : BasePlatformTestCase() {
         }
 
         assertEquals(
-            "  \"var2\": /.*ple.shire/ { cat | grep(\"fileName\") | sort }\n" +
+            "  \"var2\": /.*ple.shire/ { cat | find(\"fileName\") | sort }\n" +
                     "Summary webpage: \$fileName\n" +
                     "when: \$fileName.matches(\"/.*.java/\")", results["var2"].toString()
         )
@@ -311,11 +312,45 @@ class ShireCompileTest : BasePlatformTestCase() {
             }
         }
 
-        assertEquals("/src/test.shire", results["var1"])
+        assertEquals("shire", results["var1"])
     }
 
+    fun testShouldSupportCorrectGrep() {
+        @Language("Shire")
+        val code = """
+            ---
+            name: Summary
+            description: "Generate Summary"
+            interaction: AppendCursor
+            data: ["a", "b"]
+            when: ${'$'}fileName.matches("/.*.java/")
+            variables:
+              "phoneNumber": "086-1234567890"
+              "phoneNumber2": "088-1234567890"
+              "var2": /.*ple.shire/ { cat | grep("[0-9]{3}-[0-9]{10}") }
+            ---
+            
+            Summary webpage: ${'$'}fileName
+        """.trimIndent()
+
+        val file = myFixture.addFileToProject("sample.shire", code)
+
+        myFixture.openFileInEditor(file.virtualFile)
+
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
+        val hole = compile.config!!
+
+        val results = runBlocking {
+            hole.variables.mapValues {
+                PatternActionProcessor(project, hole).execute(it.value)
+            }
+        }
+
+        assertEquals("086-1234567890\n088-1234567890", results["var2"].toString())
+    }
 
     fun testShouldHandleForDataRedact() {
+        @Language("Shire")
         val code = """
             ---
             name: Summary

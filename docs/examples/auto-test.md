@@ -12,7 +12,7 @@ nav_order: 2
     actionLocation: ContextMenu
     when: { $fileName.contains(".java") && $filePath.contains("src/main/java") }
     variables:
-      "frameworkContext": /.*/build\.gradle\.kts/ { grep("org.springframework.boot:spring-boot-starter-jdbc") | print("This project use Spring Framework")}
+      "frameworkContext": /.*/build\.gradle\.kts/ { find("org.springframework.boot:spring-boot-starter-jdbc") | print("This project use Spring Framework")}
     ---
     Write unit test for following ${context.language} code.
     

@@ -47,7 +47,7 @@ All
 | Pattern Action       | /regex/ { functionBlock }         | /.*.java/ { $selection.length() >= 0 }                                      |
 | Function             | { functionBlock }                 | { $selection.length() >= 0 }                                                |
 | Ast Query Expression | use `from`, `select`, `where`,    | see in `Ast Query Expression`                                               |
-| Case Block           | case "variable" { functionBlock } | case "$0" { default  { grep("ERROR")   \| sort \| xargs("notify_admin") } } |
+| Case Block           | case "variable" { functionBlock } | case "$0" { default  { find("ERROR")   \| sort \| xargs("notify_admin") } } |
 | Flags Block          | flags { flagBlock }               | flags { "ignore": { } }                                                     |
 
 #### Ast Query Expression

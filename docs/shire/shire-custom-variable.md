@@ -13,13 +13,13 @@ nav_order: 5
 ---
 variables:
   "var1": "demo"
-  "var2": /.*.java/ { grep("error.log") | sort | xargs("rm")}
+  "var2": /.*.java/ { find("error.log") | sort | xargs("rm")}
   "var3": /.*.log/ {
     case "$0" {
-      "error" { grep("ERROR") | sort | xargs("notify_admin") }
-      "warn" { grep("WARN") | sort | xargs("notify_admin") }
-      "info" { grep("INFO") | sort | xargs("notify_user") }
-      default  { grep("ERROR") | sort | xargs("notify_admin") }
+      "error" { find("ERROR") | sort | xargs("notify_admin") }
+      "warn" { find("WARN") | sort | xargs("notify_admin") }
+      "info" { find("INFO") | sort | xargs("notify_user") }
+      default  { find("ERROR") | sort | xargs("notify_admin") }
     }
   }  
 ---
@@ -41,10 +41,10 @@ variables:
 例如，在Shire中，您可以编写如下代码：
 
 ```text
-/*.java/ { grep("error.log") | sort | print }
+/*.java/ { find("error.log") | sort | print }
 ```
 
-这里，`/*.java/` 是模式部分，用于匹配所有以 `.java` 结尾的文件，而 `{ grep("error.log") | sort | xargs("rm")}` 是动作部分，
+这里，`/*.java/` 是模式部分，用于匹配所有以 `.java` 结尾的文件，而 `{ find("error.log") | sort | xargs("rm")}` 是动作部分，
 表示对匹配的文件执行一系列操作：首先搜索包含 "error.log" 的行，然后对这些行进行排序，最后将结果输出到标准输出。
 
 在 Shire 中，我们利用了 Intellij 的强大功能，如正则表达式匹配、代码高亮和语法检查，以帮助用户更高效地编写代码。例如，
@@ -57,18 +57,18 @@ variables:
 ```shire
 ---
 variables:
-  "var2": /.*.java/ { cat | grep("error.log") | sort | cat }
-  "extContext": /build\.gradle\.kts/ { cat | grep("org.springframework.boot:spring-boot-starter-jdbc") | print("This project use Spring Framework") }
+  "var2": /.*.java/ { cat | find("error.log") | sort | cat }
+  "extContext": /build\.gradle\.kts/ { cat | find("org.springframework.boot:spring-boot-starter-jdbc") | print("This project use Spring Framework") }
 ---
 ```
 
 在这个示例中：
 
-- **`var2` 变量**：匹配所有以 `.java` 结尾的文件。动作部分使用了管道操作符 `|`，依次执行了 `grep("error.log")`、`sort`
+- **`var2` 变量**：匹配所有以 `.java` 结尾的文件。动作部分使用了管道操作符 `|`，依次执行了 `find("error.log")`、`sort`
   ，然后再次使用 `cat` 输出结果。
 
 - **`extContext` 变量**：匹配所有名为 `build.gradle.kts`
-  的文件。动作部分执行了 `grep("org.springframework.boot:spring-boot-starter-jdbc")`，并输出一条指示该项目使用 Spring
+  的文件。动作部分执行了 `find("org.springframework.boot:spring-boot-starter-jdbc")`，并输出一条指示该项目使用 Spring
   Framework 的信息。
 
 ### 示例 2：Pattern-Action 多 CASE
@@ -98,7 +98,8 @@ variables:
 | 函数类别      | 功能描述             | 参数                                                                 | 示例                                          |
 |-----------|------------------|--------------------------------------------------------------------|---------------------------------------------|
 | prompt    | 显示消息提示           | `message`: 要显示的消息内容                                                | `prompt("You are xxx")`                     |
-| grep      | 使用模式进行搜索         | `patterns`: 要搜索的模式                                                 | `grep("error")`                             |
+| find      | 基于文本搜索           | ` text`: 要搜索的文本                                                    | `find("error")`                             |
+| grep      | 使用模式进行搜索         | `patterns`: 要搜索的模式                                                 | ` grep("[a-zA-Z]+Controller")`              |
 | sed       | 查找和替换操作          | `pattern`: 要查找的模式<br>`replacements`: 替换的字符串<br>`isRegex`: 是否为正则表达式 | `sed("s/old/new/g")`                        |
 | sort      | 排序操作             | `arguments`: 排序所需的参数                                               | `sort`                                      |
 | uniq      | 去除重复行            | `texts`: 要处理的文本                                                    | `uniq("line1", "line2", "line1")`           |
@@ -128,11 +129,11 @@ sealed class PatternActionFunc(open val funcName: String) {
   class Prompt(val message: String) : PatternActionFunc("prompt")
 
   /**
-   * Grep subclass for searching with one or more patterns.
+   * find subclass for searching with one or more patterns.
    *
    * @property patterns The patterns to search for.
    */
-  class Grep(vararg val patterns: String) : PatternActionFunc("grep")
+  class find(vararg val patterns: String) : PatternActionFunc("find")
 
   /**
    * Sed subclass for find and replace operations.

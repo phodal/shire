@@ -65,7 +65,7 @@ interaction: AppendCursor
 data: ["a", "b"]
 when: $fileName.matches("/.*.java/")
 variables:
-  "var2": /.*ple.shire/ { cat | grep("fileName") | sort }
+  "var2": /.*ple.shire/ { cat | find("fileName") | sort }
 onStreamingEnd: { append($var2) | saveFile("summary.md") }
 ---
 
