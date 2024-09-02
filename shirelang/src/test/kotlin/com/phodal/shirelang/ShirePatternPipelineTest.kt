@@ -49,7 +49,7 @@ class ShirePatternPipelineTest : BasePlatformTestCase() {
             }
 
             hole.setupStreamingEndProcessor(project, context = context)
-            hole.executeStreamingEndProcessor(project, null, context = context, compiledVariables)
+            hole.executeStreamingEndProcessor(project, null, context = context)
         }
 
         assertEquals("User prompt:\n\n" +
@@ -99,7 +99,7 @@ class ShirePatternPipelineTest : BasePlatformTestCase() {
             }
 
             hole.setupStreamingEndProcessor(project, context = context)
-            hole.executeAfterStreamingProcessor(project, null, context = context, compiledVariables)
+            hole.executeAfterStreamingProcessor(project, null, context = context)
         }
 
         assertEquals("User prompt:\n\n", context.lastTaskOutput)
@@ -142,7 +142,7 @@ class ShirePatternPipelineTest : BasePlatformTestCase() {
             }
 
             hole.setupStreamingEndProcessor(project, context = context)
-            hole.executeAfterStreamingProcessor(project, null, context = context, compiledVariables)
+            hole.executeAfterStreamingProcessor(project, null, context = context)
         }
 
         assertEquals("  \"openai\": \"sk-***\n" +
