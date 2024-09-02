@@ -45,13 +45,12 @@ object ThreadProcessor {
 
         when (psiFile) {
             is ShireFile -> {
-                val psi = psiFile as ShireFile
                 return when (val output = variableTable["output"]) {
                     is List<*> -> {
                         val results = output.mapNotNull {
                             try {
                                 variableTable["output"] = it
-                                executeTask(myProject, variables, variableTable, psi)
+                                executeTask(myProject, variables, variableTable, psiFile)
                             } catch (e: Exception) {
                                 null
                             }
@@ -63,12 +62,12 @@ object ThreadProcessor {
                     is Array<*> -> {
                         output.joinToString("\n") {
                             variableTable["output"] = it
-                            executeTask(myProject, variables, variableTable, psi) ?: "No run service found"
+                            executeTask(myProject, variables, variableTable, psiFile) ?: "No run service found"
                         }
                     }
 
                     else -> {
-                        return executeTask(myProject, variables, variableTable, psi) ?: "No run service found"
+                        return executeTask(myProject, variables, variableTable, psiFile) ?: "No run service found"
                     }
                 }
             }
@@ -90,8 +89,8 @@ object ThreadProcessor {
         val future = CompletableFuture<String>()
         ApplicationManager.getApplication().invokeAndWait {
             if (shRunner.isAvailable(myProject)) {
-                val output = runShellCommand(myProject, virtualFile)
-                future.complete(output ?: "No output")
+                val output = runShellCommand(virtualFile)
+                future.complete(output)
             }
         }
 
@@ -100,7 +99,7 @@ object ThreadProcessor {
 
     private const val DEFAULT_TIMEOUT: Int = 30000
 
-    private fun runShellCommand(project: Project?, virtualFile: VirtualFile): String {
+    private fun runShellCommand(virtualFile: VirtualFile): String {
         val workingDirectory = virtualFile.parent.path
 
         val commandLine: GeneralCommandLine = GeneralCommandLine()
