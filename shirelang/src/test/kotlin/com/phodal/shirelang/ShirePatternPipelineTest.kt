@@ -49,7 +49,7 @@ class ShirePatternPipelineTest : BasePlatformTestCase() {
             }
 
             hole.setupStreamingEndProcessor(project, context = context)
-            hole.executeStreamingEndProcessor(project, null, context = context)
+            hole.executeStreamingEndProcessor(project, null, context = context, compiledVariables)
         }
 
         assertEquals("User prompt:\n\n" +

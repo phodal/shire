@@ -199,6 +199,7 @@ open class HobbitHole(
         project: Project,
         console: ConsoleView?,
         context: PostCodeHandleContext,
+        compiledVariables: Map<String, Any>,
     ): String? {
         console?.print("\n", ConsoleViewContentType.SYSTEM_OUTPUT)
         onStreamingEnd.forEach { funcNode ->
@@ -209,7 +210,20 @@ open class HobbitHole(
                 return@forEach
             }
 
-            val lastResult = postProcessor.execute(project, context, console, funcNode.args)
+            val args: List<Any> = funcNode.args.map { arg ->
+                when(arg) {
+                    is String -> {
+                        if (arg.startsWith("$")) {
+                            compiledVariables[arg.removePrefix("$")] ?: ""
+                        } else {
+                            arg
+                        }
+                    }
+                    else -> arg
+                }
+            }
+
+            val lastResult = postProcessor.execute(project, context, console, args)
             context.lastTaskOutput = lastResult as? String
         }
 

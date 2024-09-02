@@ -208,7 +208,7 @@ class ShireRunner(
 
         PostCodeHandleContext.putData(context)
 
-        val processor = hobbitHole?.executeStreamingEndProcessor(project, console, context)
+        val processor = hobbitHole?.executeStreamingEndProcessor(project, console, context, compiledVariables)
         PostCodeHandleContext.updateOutput(processor)
 
         val processor2 = hobbitHole?.executeAfterStreamingProcessor(project, console, context)
