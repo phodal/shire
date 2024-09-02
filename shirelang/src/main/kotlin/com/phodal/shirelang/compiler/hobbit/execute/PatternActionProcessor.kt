@@ -1,13 +1,14 @@
 package com.phodal.shirelang.compiler.hobbit.execute
 
 import com.intellij.openapi.project.Project
+import com.phodal.shirecore.middleware.PostCodeHandleContext
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.execute.searcher.PatternSearcher
 import com.phodal.shirelang.compiler.patternaction.VariableTransform
 
 
 class PatternActionProcessor(override val myProject: Project, override val hole: HobbitHole) :
-PatternFuncProcessor(myProject, hole) {
+    PatternFuncProcessor(myProject, hole) {
     private val variableMap: MutableMap<String, Any?> = mutableMapOf()
 
     /**
@@ -50,6 +51,13 @@ PatternFuncProcessor(myProject, hole) {
      */
     suspend fun execute(transform: VariableTransform, input: Any): String {
         var result = input
+        val data = PostCodeHandleContext.getData()
+        data?.lastTaskOutput?.let {
+            if (variableMap["output"] == null) {
+                variableMap["output"] = it
+            }
+        }
+
         transform.patternActionFuncs.forEach { action ->
             result = patternFunctionExecute(action, result, input, variableMap)
         }

@@ -17,9 +17,6 @@ class CompositeVariableResolver(
 
     override suspend fun resolve(): Map<String, Any> {
         val resolverList = listOf(
-            /**
-             * Include ToolchainVariableProvider and PsiContextVariableProvider
-             */
             PsiContextVariableResolver(context),
             ToolchainVariableResolver(context),
             ContextVariableResolver(context),
