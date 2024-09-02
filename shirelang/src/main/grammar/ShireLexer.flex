@@ -321,6 +321,7 @@ AFTER_STREAMING          =afterStreaming
 
   {QUOTE_STRING}         { return QUOTE_STRING; }
   {PATTERN_EXPR}         { return PATTERN_EXPR; }
+  "$"                    { return VARIABLE_START; }
   "=>"                   { return ARROW; }
   [^]                    { patternActionBraceStart = false; yypushback(yylength()); yybegin(FRONT_MATTER_VALUE_BLOCK); }
 }
