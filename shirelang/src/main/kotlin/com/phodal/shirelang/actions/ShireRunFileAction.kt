@@ -91,35 +91,6 @@ class ShireRunFileAction : DumbAwareAction() {
             ExecutionManager.getInstance(project).restartRunProfile(executionEnvironment)
         }
 
-        fun executeFile(
-            myProject: Project,
-            fileName: String,
-            variableNames: Array<String>,
-            variableTable: MutableMap<String, Any?>,
-        ): Any {
-            val variables: MutableMap<String, String> = mutableMapOf()
-            for (i in variableNames.indices) {
-                variables[variableNames[i]] = variableTable[variableNames[i]].toString() ?: ""
-            }
-
-            val file = runReadAction {
-                ShireActionStartupActivity.obtainShireFiles(myProject).find {
-                    it.name == fileName
-                }
-            }
-
-            if (file == null) {
-                throw RuntimeException("File $fileName not found")
-            }
-
-            ApplicationManager.getApplication().invokeLater({
-                val config = DynamicShireActionConfig.from(file)
-                executeShireFile(myProject, config, null, variables)
-            }, ModalityState.NON_MODAL)
-
-            return ""
-        }
-
         fun suspendExecuteFile(
             project: Project,
             variableNames: Array<String>,

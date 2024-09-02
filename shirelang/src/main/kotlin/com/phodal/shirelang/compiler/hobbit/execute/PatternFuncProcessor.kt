@@ -2,6 +2,7 @@ package com.phodal.shirelang.compiler.hobbit.execute
 
 import com.intellij.execution.process.ProcessEvent
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
@@ -17,6 +18,7 @@ import com.phodal.shirecore.guard.RedactProcessor
 import com.phodal.shirecore.provider.function.ToolchainFunctionProvider
 import com.phodal.shirecore.search.function.ScoredText
 import com.phodal.shirecore.search.function.SemanticService
+import com.phodal.shirelang.ShireActionStartupActivity
 import com.phodal.shirelang.actions.ShireRunFileAction
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.ast.FrontMatterType
@@ -325,7 +327,18 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                 }.toTypedArray()
 
                 try {
-                    ShireRunFileAction.executeFile(myProject, action.filename, variables, variableTable)
+                    val file = runReadAction {
+                        ShireActionStartupActivity.obtainShireFiles(myProject).find {
+                            it.name == action.filename
+                        }
+                    }
+
+                    if (file == null) {
+                        logger<FunctionStatementProcessor>().warn("execute shire error: file not found")
+                        return ""
+                    }
+
+                    ShireRunFileAction.suspendExecuteFile(myProject, variables, variableTable, file) ?: ""
                 } catch (e: Exception) {
                     logger<FunctionStatementProcessor>().warn("execute shire error: $e")
                 }
