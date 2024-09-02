@@ -46,7 +46,15 @@ class ShireRunner(
 
         val result = CompletableFuture<String>()
 
-        val runnerContext = processTemplateCompile(parsedResult, variableMap, processHandler)
+        val varsMap = variableMap.toMutableMap()
+
+        val data = PostCodeHandleContext.getData()
+        val variables = data?.compiledVariables
+        if (variables?.get("output") != null && variableMap["output"] == null) {
+            varsMap["output"] = variables["output"].toString()
+        }
+
+        val runnerContext = processTemplateCompile(parsedResult, varsMap, processHandler)
         if (runnerContext.hasError) return null
 
         this.compiledVariables = runnerContext.compiledVariables
@@ -73,7 +81,7 @@ class ShireRunner(
 
     private fun executeTerminalUiTask(context: ShireRunnerContext, postFunction: PostFunction) {
         CoroutineScope(Dispatchers.Main).launch {
-            val handler = terminalLocationExecutor?.bundler(project, variableMap["input"] ?: "",)
+            val handler = terminalLocationExecutor?.bundler(project, variableMap["input"] ?: "")
             if (handler == null) {
                 console?.print("Terminal not found", ConsoleViewContentType.ERROR_OUTPUT)
                 processHandler.destroyProcess()
@@ -106,7 +114,7 @@ class ShireRunner(
     }
 
     private suspend fun processTemplateCompile(
-        compileResult: ShireParsedResult, variableMap: Map<String, String>, shireProcessHandler: ShireProcessHandler
+        compileResult: ShireParsedResult, variableMap: Map<String, String>, shireProcessHandler: ShireProcessHandler,
     ): ShireRunnerContext {
         val hobbitHole = compileResult.config
 
@@ -187,11 +195,6 @@ class ShireRunner(
         val currentFile = runnerContext.editor?.virtualFile?.let {
             runReadAction { PsiManager.getInstance(project).findFile(it) }
         }
-
-//        if (response != null && compiledVariables["output"] == null) {
-//            compiledVariables = compiledVariables.plus("output" to response)
-//        }
-
         val context = PostCodeHandleContext(
             selectedEntry = hobbitHole?.pickupElement(project, runnerContext.editor),
             currentLanguage = currentFile?.language,
@@ -205,8 +208,12 @@ class ShireRunner(
 
         PostCodeHandleContext.putData(context)
 
-        hobbitHole?.executeStreamingEndProcessor(project, console, context)
-        hobbitHole?.executeAfterStreamingProcessor(project, console, context)
+        val processor = hobbitHole?.executeStreamingEndProcessor(project, console, context)
+        PostCodeHandleContext.updateOutput(processor)
+
+        val processor2 = hobbitHole?.executeAfterStreamingProcessor(project, console, context)
+        PostCodeHandleContext.updateOutput(processor2)
+
         processHandler.detachProcess()
     }
 

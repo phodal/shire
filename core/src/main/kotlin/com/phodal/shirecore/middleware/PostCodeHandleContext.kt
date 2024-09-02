@@ -92,5 +92,22 @@ class PostCodeHandleContext(
         fun getData(): PostCodeHandleContext? {
             return userDataHolderBase.getUserData(DATA_KEY)
         }
+
+        fun updateOutput(output: Any?) {
+            val context = getData()
+            if (context != null) {
+                context.lastTaskOutput = output.toString()
+                putData(context)
+            }
+
+            // update variable
+            val compiledVariables = context?.compiledVariables?.toMutableMap()
+            compiledVariables?.set("output", output)
+
+            if (context != null) {
+                context.compiledVariables = compiledVariables ?: mapOf()
+                putData(context)
+            }
+        }
     }
 }

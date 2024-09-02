@@ -199,7 +199,7 @@ open class HobbitHole(
         project: Project,
         console: ConsoleView?,
         context: PostCodeHandleContext,
-    ) {
+    ): String? {
         console?.print("\n", ConsoleViewContentType.SYSTEM_OUTPUT)
         onStreamingEnd.forEach { funcNode ->
             console?.print("execute: ${funcNode.funName}\n", ConsoleViewContentType.SYSTEM_OUTPUT)
@@ -209,8 +209,11 @@ open class HobbitHole(
                 return@forEach
             }
 
-            postProcessor.execute(project, context, console, funcNode.args)
+            val lastResult = postProcessor.execute(project, context, console, funcNode.args)
+            context.lastTaskOutput = lastResult as? String
         }
+
+        return context.lastTaskOutput
     }
 
     fun executeAfterStreamingProcessor(

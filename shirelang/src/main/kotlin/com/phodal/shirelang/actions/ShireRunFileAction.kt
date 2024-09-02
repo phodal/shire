@@ -97,14 +97,9 @@ class ShireRunFileAction : DumbAwareAction() {
             variableNames: Array<String>,
             variableTable: MutableMap<String, Any?>,
         ): Any {
-//            var output: String? = null
             val variables: MutableMap<String, String> = mutableMapOf()
             for (i in variableNames.indices) {
                 variables[variableNames[i]] = variableTable[variableNames[i]].toString() ?: ""
-//                // if include output in variableTable
-//                if (variableNames[i] == "output") {
-//                    output = variableTable[variableNames[i]].toString()
-//                }
             }
 
             val file = runReadAction {
@@ -112,16 +107,6 @@ class ShireRunFileAction : DumbAwareAction() {
                     it.name == fileName
                 }
             }
-//
-//            val context = PostCodeHandleContext.getData() ?: PostCodeHandleContext(
-//                selectedEntry = null,
-//                currentLanguage = file?.language,
-//                currentFile = file,
-//                editor = null,
-//                compiledVariables = variableTable,
-//                lastTaskOutput = output
-//            )
-//            PostCodeHandleContext.putData(context)
 
             if (file == null) {
                 throw RuntimeException("File $fileName not found")
