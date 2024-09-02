@@ -72,8 +72,10 @@ object ThreadProcessor {
                 val shRunner = ApplicationManager.getApplication().getService(ShRunner::class.java)
                     ?: return "$SHIRE_ERROR: Shell runner not found"
 
-                if (shRunner.isAvailable(myProject)) {
-                    shRunner.run(myProject, virtualFile.path, workingDirectory, "RunShireShell", true)
+                ApplicationManager.getApplication().invokeAndWait {
+                    if (shRunner.isAvailable(myProject)) {
+                        shRunner.run(myProject, virtualFile.path, workingDirectory, "RunShireShell", true)
+                    }
                 }
 
                 return "Running shell command: $fileName"

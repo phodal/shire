@@ -1,8 +1,11 @@
 package com.phodal.shirelang.compiler.hobbit.execute
 
+import com.intellij.execution.process.ProcessEvent
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
+import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.findFile
@@ -19,6 +22,7 @@ import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.ast.FrontMatterType
 import com.phodal.shirelang.compiler.hobbit.ast.Statement
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
+import com.phodal.shirelang.run.ShireRunListener
 import java.io.File
 
 open class PatternFuncProcessor(open val myProject: Project, open val hole: HobbitHole) {
