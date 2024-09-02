@@ -1,20 +1,29 @@
 package com.phodal.shirelang.compiler.hobbit.execute
 
+import com.intellij.execution.process.*
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.NlsContexts.TabTitle
+import com.intellij.openapi.util.Pair
 import com.intellij.openapi.vfs.readText
+import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.intellij.sh.psi.ShFile
 import com.intellij.sh.run.ShRunner
+import com.intellij.terminal.TerminalExecutionConsole
+import com.intellij.terminal.ui.TerminalWidget
+import com.intellij.ui.content.Content
 import com.phodal.shirecore.provider.http.HttpHandler
 import com.phodal.shirecore.provider.http.HttpHandlerType
 import com.phodal.shirecore.provider.shire.FileRunService
 import com.phodal.shirelang.actions.ShireRunFileAction
 import com.phodal.shirelang.compiler.SHIRE_ERROR
 import com.phodal.shirelang.psi.ShireFile
+import com.phodal.shirelang.run.ShireProcessHandler
 import com.phodal.shirelang.utils.lookupFile
+import java.util.concurrent.CompletableFuture
 
 object ThreadProcessor {
     fun execute(
@@ -86,6 +95,42 @@ object ThreadProcessor {
         }
     }
 
+    private fun executeShFile(
+        psiFile: ShFile,
+        myProject: Project,
+        fileName: String,
+    ): String {
+        val virtualFile = psiFile.virtualFile
+        val workingDirectory = virtualFile.parent.path
+        val shRunner = ApplicationManager.getApplication().getService(ShRunner::class.java)
+            ?: return "$SHIRE_ERROR: Shell runner not found"
+
+        val future = CompletableFuture<String>()
+        ApplicationManager.getApplication().invokeAndWait {
+            if (shRunner.isAvailable(myProject)) {
+                val processHandler = ShireProcessHandler(fileName)
+                ProcessTerminatedListener.attach(processHandler)
+
+                shRunner.run(myProject, virtualFile.path, workingDirectory, "RunShireShell", false)
+
+                val processAdapter = object : ProcessAdapter() {
+                    override fun processTerminated(event: ProcessEvent) {
+                        future.complete(event.text)
+                    }
+                }
+
+                processHandler.addProcessListener(processAdapter)
+
+                val console: TerminalExecutionConsole = TerminalExecutionConsole(myProject, processHandler)
+                console.attachToProcess(processHandler)
+
+                processHandler.startNotify()
+            }
+        }
+
+        return future.get()
+    }
+
     private fun executeTask(
         myProject: Project,
         variables: Array<String>,
@@ -95,4 +140,5 @@ object ThreadProcessor {
         val executeResult = ShireRunFileAction.suspendExecuteFile(myProject, variables, variableTable, psiFile)
         return executeResult
     }
+
 }
