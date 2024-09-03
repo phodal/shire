@@ -7,6 +7,7 @@ enum class DatabaseToolchainVariable(
     override var value: Any? = null,
     override val description: String = "",
 ) : ToolchainVariable {
+    DatabaseInfo("databaseInfo", description = "The database information"),
     Databases("databases", description = "The databases in the database"),
     Tables("tables", description = "The tables in the database"),
     Columns("columns", description = "The columns in the database")

@@ -4,6 +4,7 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.phodal.shire.database.DatabaseSchemaAssistant
+import com.phodal.shire.database.SqlContextBuilder
 import com.phodal.shirecore.provider.variable.ToolchainVariableProvider
 import com.phodal.shirecore.provider.variable.model.ToolchainVariable
 import com.phodal.shirecore.provider.variable.model.toolchain.DatabaseToolchainVariable
@@ -14,11 +15,15 @@ class DatabaseVariableProvider : ToolchainVariableProvider {
     }
 
     override fun resolve(variable: ToolchainVariable, project: Project, editor: Editor, psiElement: PsiElement?): Any {
+        if (variable !is DatabaseToolchainVariable) {
+            return ""
+        }
+
        return when (variable) {
+            DatabaseToolchainVariable.DatabaseInfo -> SqlContextBuilder.buildDatabaseInfo(project)
             DatabaseToolchainVariable.Databases -> DatabaseSchemaAssistant.getDataSources(project)
             DatabaseToolchainVariable.Tables -> DatabaseSchemaAssistant.getAllTables(project)
             DatabaseToolchainVariable.Columns -> DatabaseSchemaAssistant.getTableColumns(project)
-            else -> ""
         }
     }
 }

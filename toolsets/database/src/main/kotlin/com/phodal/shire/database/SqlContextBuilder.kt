@@ -9,6 +9,7 @@ import com.intellij.database.model.basic.BasicTableOrViewColumn
 import com.intellij.database.psi.DbDataSource
 import com.intellij.database.util.ObjectPath
 import com.intellij.database.util.QNameUtil
+import com.intellij.openapi.project.Project
 import com.intellij.sql.psi.SqlFile
 
 object SqlContextBuilder {
@@ -37,4 +38,16 @@ object SqlContextBuilder {
         """.trimMargin()
 
     private fun columnType(it: BasicTableOrViewColumn) = it.dasType.specification
+
+    fun buildDatabaseInfo(project: Project): String {
+        val dataSources = DatabaseSchemaAssistant.getAllRawDatasource(project)
+        return dataSources.joinToString("\n") {
+            """
+            DatabaseName: ${it.databaseVersion.name}
+            DatabaseVersion: ${it.databaseVersion.version}
+            Database: ${it.name}
+            ConnectionConfig: ${it.connectionConfig?.url}
+            """.trimIndent()
+        }
+    }
 }
