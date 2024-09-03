@@ -40,9 +40,30 @@ class DatabaseFunctionProvider : ToolchainFunctionProvider {
                     return DatabaseSchemaAssistant.getTableByDataSource(dataSource)
                 }
 
-                val database = DatabaseSchemaAssistant.getDatabase(project, args[0] as String)
-                    ?: return "ShireError: Database not found"
-                return DatabaseSchemaAssistant.getTableByDataSource(database)
+                val dbName = args.first()
+                // [accounts, payment_limits, transactions]
+                var result = mutableListOf<DasTable>()
+                when (dbName) {
+                    is String -> {
+                        if (dbName.startsWith("[") && dbName.endsWith("]")) {
+                            val tableNames = dbName.substring(1, dbName.length - 1).split(",")
+                            result = tableNames.map {
+                                getTable(project, it.trim())
+                            }.flatten().toMutableList()
+                        }
+                    }
+                    is List<*> -> {
+                        result = dbName.map {
+                            getTable(project, it as String)
+                        }.flatten().toMutableList()
+                    }
+
+                    else -> {
+
+                    }
+                }
+
+                return result
             }
 
             DatabaseFunction.Column -> {
@@ -93,5 +114,11 @@ class DatabaseFunctionProvider : ToolchainFunctionProvider {
                 }
             }
         }
+    }
+
+    private fun getTable(project: Project, dbName: String): List<DasTable> {
+        val database = DatabaseSchemaAssistant.getDatabase(project, dbName)
+            ?: return emptyList()
+        return DatabaseSchemaAssistant.getTableByDataSource(database)
     }
 }

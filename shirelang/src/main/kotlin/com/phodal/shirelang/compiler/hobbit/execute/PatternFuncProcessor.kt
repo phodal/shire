@@ -219,8 +219,15 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                     }
                 }
 
+                val result = args.map {
+                    when (it) {
+                        is String -> it.fillVariable(variableTable)
+                        else -> it
+                    }
+                }
+
                 ToolchainFunctionProvider.provide(myProject, action.funcName)
-                    ?.execute(myProject, action.funcName, args, variableTable)
+                    ?.execute(myProject, action.funcName, result, variableTable)
                     ?: logger<PatternActionProcessor>().error("TODO for User custom: ${action.funcName}")
             }
 
