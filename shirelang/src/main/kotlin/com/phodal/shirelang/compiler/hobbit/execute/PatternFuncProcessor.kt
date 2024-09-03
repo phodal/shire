@@ -173,13 +173,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             }
 
             is PatternActionFunc.Cat -> {
-                val path: Array<String> = action.paths.map {
-                    if (it.startsWith("\$")) {
-                        variableTable[it.substring(1)]?.toString() ?: it
-                    } else {
-                        it
-                    }
-                }.toTypedArray()
+                val path: Array<String> = action.paths.map { it.fillVariable(variableTable) }.toTypedArray()
 
                 cat(path, input)
             }
@@ -196,13 +190,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                         }
                     }
                 }
-                action.texts.map {
-                    if (it.startsWith("\$")) {
-                        variableTable[it.substring(1)] ?: it
-                    } else {
-                        it
-                    }
-                }.joinToString("\n")
+                action.texts.joinToString("\n") { it.fillVariable(variableTable) }
             }
 
             is PatternActionFunc.Xargs -> {
@@ -214,7 +202,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                 /// add lastResult at args first
                 when(lastResult) {
                     is String -> {
-                        args.add(0, lastResult)
+                        args.add(0, lastResult.fillVariable(variableTable))
                     }
                     is List<*> -> {
                         if (lastResult.isNotEmpty()) {
@@ -257,10 +245,10 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             is PatternActionFunc.Embedding -> {
                 var result: List<ScoredText> = mutableListOf()
                 if (lastResult is List<*>) {
-                    if (lastResult.isNotEmpty() && lastResult.first() is ScoredText) {
-                        result = semanticService.embedding(lastResult as List<ScoredText>)
+                    result = if (lastResult.isNotEmpty() && lastResult.first() is ScoredText) {
+                        semanticService.embedding(lastResult as List<ScoredText>)
                     } else {
-                        result = semanticService.embedList(action.entries)
+                        semanticService.embedList(action.entries)
                     }
                 }
 
@@ -322,13 +310,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
 
             is PatternActionFunc.ExecuteShire -> {
                 // remove $ for all variableName
-                val variables: Array<String> = action.variableNames.map {
-                    if (it.startsWith("\$")) {
-                        it.substring(1)
-                    } else {
-                        it
-                    }
-                }.toTypedArray()
+                val variables: Array<String> = action.variableNames.map { it.fillVariable(variableTable) }.toTypedArray()
 
                 try {
                     val file = runReadAction {
@@ -355,11 +337,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                         add("output")
                     }
                 }.map {
-                    if (it.startsWith("\$")) {
-                        it.substring(1)
-                    } else {
-                        it
-                    }
+                    it.fillVariable(variableTable)
                 }.toTypedArray()
 
                 if (!variableTable.containsKey("output")) {
@@ -371,7 +349,8 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             }
 
             is PatternActionFunc.JsonPath -> {
-                val jsonStr = action.obj ?: lastResult as String
+                var jsonStr = action.obj ?: lastResult as String
+                jsonStr = jsonStr.fillVariable(variableTable)
 
                 val result: String = try {
                     JsonPath.parse(jsonStr)?.read<Any>(action.path.trim()).toString()
@@ -440,5 +419,15 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
         }
 
         return absolutePaths
+    }
+}
+
+private fun String.fillVariable(
+    variableTable: MutableMap<String, Any?>,
+): String {
+    return if (this.startsWith("\$")) {
+        variableTable[this.substring(1)]?.toString() ?: this
+    } else {
+        this
     }
 }
