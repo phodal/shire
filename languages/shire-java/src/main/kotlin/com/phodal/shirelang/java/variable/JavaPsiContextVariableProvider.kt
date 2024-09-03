@@ -36,16 +36,6 @@ class JavaPsiContextVariableProvider : PsiContextVariableProvider {
             TARGET_TEST_FILE_NAME -> sourceFile.name.replace(".java", "") + "Test.java"
             UNDER_TEST_METHOD_CODE -> JavaTestHelper.extractMethodCalls(project, psiElement)
             CODE_SMELL -> CodeSmellBuilder.collectElementProblemAsSting(psiElement, project, editor)
-
-            FRAMEWORK_CONTEXT -> {
-                runBlocking {
-                    val prepareContext = ToolchainPrepareContext(sourceFile, psiElement)
-                    val contextItems =
-                        LanguageToolchainProvider.collectToolchainContext(project, prepareContext)
-
-                    contextItems.joinToString("\n") { it.text }
-                }
-            }
             METHOD_CALLER -> {
                 if (psiElement !is PsiMethod) return ""
                 return JavaTestHelper.findCallers(psiElement).joinToString("\n") { it.text }
@@ -60,6 +50,8 @@ class JavaPsiContextVariableProvider : PsiContextVariableProvider {
             STRUCTURE -> clazz?.let {
                 JavaClassStructureProvider().build(it, true)?.toString() ?: ""
             } ?: ""
+
+            FRAMEWORK_CONTEXT -> return collectFrameworkContext(psiElement, project)
         }
     }
 }

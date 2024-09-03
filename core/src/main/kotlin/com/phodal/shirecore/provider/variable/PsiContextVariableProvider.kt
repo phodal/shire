@@ -5,8 +5,12 @@ import com.intellij.lang.LanguageExtension
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
+import com.phodal.shirecore.provider.context.LanguageToolchainProvider
+import com.phodal.shirecore.provider.context.ToolchainPrepareContext
 import com.phodal.shirecore.provider.variable.impl.DefaultPsiContextVariableProvider
 import com.phodal.shirecore.provider.variable.model.PsiContextVariable
+import kotlinx.coroutines.runBlocking
+import java.util.concurrent.CompletableFuture
 
 /**
  * Resolve variables for code struct generation.
@@ -21,6 +25,20 @@ interface PsiContextVariableProvider : VariableProvider<PsiContextVariable> {
      * @return the calculated value for the variable as a String
      */
     override fun resolve(variable: PsiContextVariable, project: Project, editor: Editor, psiElement: PsiElement?): Any
+
+
+    fun collectFrameworkContext(psiElement: PsiElement?, project: Project): String {
+        val future = CompletableFuture<String>()
+        runBlocking {
+            val prepareContext = ToolchainPrepareContext(psiElement?.containingFile, psiElement)
+            val contextItems =
+                LanguageToolchainProvider.collectToolchainContext(project, prepareContext)
+
+            future.complete(contextItems.joinToString("\n") { it.text })
+        }
+
+        return future.get()
+    }
 
     companion object {
         private val languageExtension: LanguageExtension<PsiContextVariableProvider> =
