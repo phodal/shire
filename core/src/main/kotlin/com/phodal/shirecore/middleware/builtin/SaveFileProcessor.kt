@@ -27,19 +27,23 @@ class SaveFileProcessor : PostProcessor, Disposable {
         args: List<Any>,
     ): String {
         var fileName: String = ""
+        val ext = getFileExt(context)
         if (args.isNotEmpty()) {
             fileName = args[0].toString()
-            handleForProjectFile(project, fileName, context, console)
+            handleForProjectFile(project, fileName, context, console, ext)
         } else {
-            val language = context.genTargetLanguage ?: PlainTextLanguage.INSTANCE
-            val ext = context.genTargetExtension ?: language?.associatedFileType?.defaultExtension ?: "txt"
-
             fileName = "${System.currentTimeMillis()}.$ext"
             handleForTempFile(project, fileName, context, console)
         }
 
 
         return fileName
+    }
+
+    private fun getFileExt(context: PostCodeHandleContext): String {
+        val language = context.genTargetLanguage ?: PlainTextLanguage.INSTANCE
+        val ext = context.genTargetExtension ?: language?.associatedFileType?.defaultExtension ?: "txt"
+        return ext
     }
 
     private fun handleForTempFile(
@@ -73,6 +77,7 @@ class SaveFileProcessor : PostProcessor, Disposable {
         fileName: String,
         context: PostCodeHandleContext,
         console: ConsoleView?,
+        ext: String,
     ) {
         ApplicationManager.getApplication().invokeAndWait {
             WriteAction.compute<VirtualFile, Throwable> {

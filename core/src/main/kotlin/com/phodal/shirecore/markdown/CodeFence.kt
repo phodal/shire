@@ -50,7 +50,7 @@ class CodeFence(val ideaLanguage: Language, val text: String, val isComplete: Bo
 
             var trimmedCode = codeBuilder.substring(startIndex, endIndex + 1).toString()
             val language = findLanguage(languageId ?: "")
-            val extension = findExtension(languageId ?: "txt")
+            val extension = language.associatedFileType?.defaultExtension ?: findExtension(languageId ?: "txt")
 
             // if content is not empty, but code is empty, then it's a markdown
             if (trimmedCode.isEmpty()) {
@@ -65,8 +65,7 @@ class CodeFence(val ideaLanguage: Language, val text: String, val isComplete: Bo
         }
 
 
-        fun findExtension(languageId: String): String {
-            // list common langauge adn return extension
+        private fun findExtension(languageId: String): String {
             return when (languageId) {
                 "c#" -> "cs"
                 "c++" -> "cpp"
@@ -79,6 +78,7 @@ class CodeFence(val ideaLanguage: Language, val text: String, val isComplete: Bo
                 "swift" -> "swift"
                 "typescript" -> "ts"
                 "markdown" -> "md"
+                "sql" -> "sql"
                 else -> "txt"
             }
         }
