@@ -13,6 +13,7 @@ import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.middleware.PostCodeHandleContext
 import com.phodal.shirecore.provider.action.TerminalLocationExecutor
 import com.phodal.shirecore.provider.context.ActionLocationEditor
+import com.phodal.shirecore.workerThread
 import com.phodal.shirelang.ShireBundle
 import com.phodal.shirelang.compiler.SHIRE_ERROR
 import com.phodal.shirelang.compiler.ShireParsedResult
@@ -80,7 +81,7 @@ class ShireRunner(
     }
 
     private fun executeTerminalUiTask(context: ShireRunnerContext, postFunction: PostFunction) {
-        CoroutineScope(Dispatchers.Main).launch {
+        CoroutineScope(workerThread).launch {
             val handler = terminalLocationExecutor?.bundler(project, variableMap["input"] ?: "")
             if (handler == null) {
                 console?.print("Terminal not found", ConsoleViewContentType.ERROR_OUTPUT)
