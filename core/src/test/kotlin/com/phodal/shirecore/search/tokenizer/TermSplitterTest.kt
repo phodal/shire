@@ -104,4 +104,34 @@ class TermSplitterTest {
         val expected = listOf("example123", "example")
         assertEquals(expected, result)
     }
+
+    @Test
+    fun should_handle_java_controller_in_real_world() {
+        // Given
+        val input = """
+    @PostMapping
+    @ResponseStatus(code = HttpStatus.CREATED)
+    public String postTicket(@RequestBody TicketCreateRequest ticketCreateRequest){
+        Ticket ticket = ticketMapper.toEntity(ticketCreateRequest);
+        List<Food> foods = ticketCreateRequest.getFood().stream()
+                .map((foodId) -> foodService.findById(foodId))
+                .collect(Collectors.toList());
+        ticket.setFoods(foods);
+        return ticketService.postTicket(ticket);
+    }            
+    """.trimMargin()
+
+        // When
+        val result = splitTerms(input).toList()
+
+        // Then
+        val expected = listOf(
+            "postmapping", "post", "mapping", "responsestatus", "response", "status", "code", "httpstatus", "http", "created",
+            "public", "string", "postticket", "ticket", "requestbody", "request", "body", "ticketcreaterequest", "create",
+            "ticketmapper", "mapper", "toentity", "entity", "list", "food", "foods", "getfood", "get", "stream", "map",
+            "foodid", "foodservice", "service", "findbyid", "find", "collect", "collectors", "tolist", "setfoods", "set",
+            "return", "ticketservice"
+        )
+        assertEquals(expected, result)
+    }
 }

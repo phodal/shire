@@ -69,7 +69,7 @@ object TermSplitter {
 
                 yieldAll(uniqueTerms)
             }
-        }
+        }.distinct()
     }
 
 }

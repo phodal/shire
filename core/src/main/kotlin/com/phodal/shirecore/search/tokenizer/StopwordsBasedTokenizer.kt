@@ -52,6 +52,8 @@ class StopwordsBasedTokenizer private constructor() : Tokenizer {
     )
 
     override fun tokenize(input: String): List<String> {
-        return splitTerms(input).toList().filter { !stopWordsSet.contains(it) }
+        return splitTerms(input).toList().filter {
+            !stopWordsSet.contains(it)
+        }
     }
 }
