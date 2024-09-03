@@ -45,7 +45,7 @@ class ShireRunner(
     suspend fun execute(parsedResult: ShireParsedResult): String? {
         prepareExecute(parsedResult)
 
-        val result = CompletableFuture<String>()
+        val runResult = CompletableFuture<String>()
 
         val varsMap = variableMap.toMutableMap()
 
@@ -56,7 +56,10 @@ class ShireRunner(
         }
 
         val runnerContext = processTemplateCompile(parsedResult, varsMap, processHandler)
-        if (runnerContext.hasError) return null
+        if (runnerContext.hasError) {
+            processHandler.exitWithError()
+            return null
+        }
 
         this.compiledVariables = runnerContext.compiledVariables
 
@@ -65,18 +68,18 @@ class ShireRunner(
 
         if (runnerContext.hole?.actionLocation == ShireActionLocation.TERMINAL_MENU) {
             executeTerminalUiTask(runnerContext) { response, textRange ->
-                result.complete(response)
+                runResult.complete(response)
                 executePostFunction(runnerContext, runnerContext.hole, response, textRange)
             }
         } else {
             executeNormalUiTask(runnerContext) { response, textRange ->
-                result.complete(response)
+                runResult.complete(response)
                 executePostFunction(runnerContext, runnerContext.hole, response, textRange)
             }
         }
 
         return withContext(Dispatchers.IO) {
-            result.get()
+            runResult.get()
         }
     }
 
@@ -115,7 +118,7 @@ class ShireRunner(
     }
 
     private suspend fun processTemplateCompile(
-        compileResult: ShireParsedResult, variableMap: Map<String, String>, shireProcessHandler: ShireProcessHandler,
+        compileResult: ShireParsedResult, variableMap: Map<String, String>, processHandler: ShireProcessHandler,
     ): ShireRunnerContext {
         val hobbitHole = compileResult.config
 
@@ -141,12 +144,10 @@ class ShireRunner(
 
         if (promptTextTrim.isEmpty()) {
             console?.print("No content to run", ConsoleViewContentType.ERROR_OUTPUT)
-            shireProcessHandler.destroyProcess()
             hasError = true
         }
 
         if (promptTextTrim.contains(SHIRE_ERROR)) {
-            shireProcessHandler.exitWithError()
             hasError = true
         }
 
