@@ -316,8 +316,14 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             }
 
             is PatternActionFunc.ExecuteShire -> {
-                // remove $ for all variableName
-                val variables: Array<String> = action.variableNames.map { it.fillVariable(variableTable) }.toTypedArray()
+                /// don't need to fill variable for filename
+                val variableNames: Array<String> = action.variableNames.map {
+                    if (it.startsWith("\$")) {
+                        it.substring(1)
+                    } else {
+                        it
+                    }
+                }.toTypedArray()
 
                 try {
                     val file = runReadAction {
@@ -331,7 +337,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                         return ""
                     }
 
-                    ShireRunFileAction.suspendExecuteFile(myProject, variables, variableTable, file) ?: ""
+                    ShireRunFileAction.suspendExecuteFile(myProject, variableNames, variableTable, file) ?: ""
                 } catch (e: Exception) {
                     logger<FunctionStatementProcessor>().warn("execute shire error: $e")
                 }
