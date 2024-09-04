@@ -54,7 +54,7 @@ object JsonPathUtil {
             it.substring(6)
         }.mapNotNull {
             try {
-                JsonPath.parse(it)?.read<Any>(jsonPath).toString()
+                JsonPath.parse(it)?.read<Any>(jsonPath)
             } catch (e: Exception) {
                 logger<FunctionStatementProcessor>().warn("jsonpath error: $e")
                 null
