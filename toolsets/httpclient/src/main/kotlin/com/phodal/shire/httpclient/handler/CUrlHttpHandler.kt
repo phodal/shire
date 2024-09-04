@@ -31,10 +31,12 @@ class CUrlHttpHandler : HttpHandler {
         variablesName: Array<String>,
         variableTable: MutableMap<String, Any?>
     ): String? {
+        val processVariables: Map<String, String> = variablesName.associateWith { (variableTable[it] as? String ?: "") }
+
         val client = OkHttpClient()
         val request = runReadAction {
             val envName = getAllEnvironments(project, getSearchScope(project)).firstOrNull() ?: "development"
-            val enVariables = fetchEnvironmentVariables(project, envName)
+            val enVariables: List<Set<String>> = fetchEnvironmentVariables(project, envName)
             val psiFile =
                 FileBasedIndex.getInstance().getContainingFiles(SHIRE_ENV_ID, envName, getSearchScope(project))
                     .firstOrNull()
@@ -43,7 +45,7 @@ class CUrlHttpHandler : HttpHandler {
                     }
 
             val envObject = readEnvObject(psiFile, envName)
-            CUrlConverter.convert(content, enVariables, envObject)
+            CUrlConverter.convert(content, enVariables, processVariables, envObject)
         }
 
         val response = client.newCall(request).execute()

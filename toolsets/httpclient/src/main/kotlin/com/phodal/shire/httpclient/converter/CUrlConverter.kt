@@ -5,7 +5,6 @@ import com.intellij.httpClient.execution.RestClientRequest
 import com.intellij.httpClient.http.request.HttpRequestHeaderFields
 import com.intellij.json.JsonUtil
 import com.intellij.json.psi.*
-import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.util.TextRange
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.Request
@@ -17,10 +16,15 @@ object CUrlConverter {
         return restClientRequest
     }
 
-    fun convert(content: String, variables: List<Set<String>> = listOf(), jsonObj: JsonObject? = null): Request {
+    fun convert(
+        content: String,
+        envVars: List<Set<String>> = listOf(),
+        processVars: Map<String, String> = mapOf(),
+        envObj: JsonObject? = null,
+    ): Request {
         val builder = Request.Builder()
 
-        val filledContent = fillVariables(content, variables, jsonObj)
+        val filledContent = fillVariables(content, envVars, envObj, processVars)
         val request = this.convert(filledContent)
 
         builder.url(request.buildFullUrl())
@@ -50,9 +54,14 @@ object CUrlConverter {
         return builder.build()
     }
 
-    private fun getVariableValue(myVariables: JsonObject, name: String): String? {
+    private fun getVariableValue(myVariables: JsonObject, name: String, processVars: Map<String, String>): String? {
         val value = JsonUtil.getPropertyValueOfType(myVariables, name, JsonLiteral::class.java)
-        return getValueAsString(value)
+        val jsonResult = getValueAsString(value)
+        if (jsonResult != null) {
+            return jsonResult
+        }
+
+        return processVars[name]
     }
 
     private fun getValueAsString(value: JsonLiteral?): String? {
@@ -63,18 +72,23 @@ object CUrlConverter {
         }
     }
 
-    private fun fillVariables(messageBody: String, variables: List<Set<String>>, obj: JsonObject?): String {
+    private fun fillVariables(
+        messageBody: String,
+        variables: List<Set<String>>,
+        obj: JsonObject?,
+        processVars: Map<String, String>
+    ): String {
         if (obj == null) return messageBody
         if (variables.isEmpty()) return messageBody
 
-        val variablesRanges = this.collectVariablesRangesInMessageBody(messageBody)
+        val envRanges = this.collectVariablesRangesInMessageBody(messageBody)
 
         val result = StringBuilder(messageBody.length)
         var lastVariableRangeEndOffset = 0
 
-        for (variableRange in variablesRanges) {
+        for (variableRange in envRanges) {
             result.append(messageBody as CharSequence, lastVariableRangeEndOffset, variableRange.startOffset)
-            val variableValue = getVariableValue(obj, getVariableKey(variableRange, messageBody)) ?: ""
+            val variableValue = getVariableValue(obj, getVariableKey(variableRange, messageBody), processVars)
 
             result.append(variableValue)
             lastVariableRangeEndOffset = variableRange.endOffset
@@ -85,7 +99,8 @@ object CUrlConverter {
         return sb
     }
 
-    private fun getVariableKey(variableRange: TextRange, messageBody: String) = variableRange.substring(messageBody).removePrefix("\${").removeSuffix("}")
+    private fun getVariableKey(variableRange: TextRange, messageBody: String) =
+        variableRange.substring(messageBody).removePrefix("\${").removeSuffix("}")
 
     private fun collectVariablesRangesInMessageBody(body: String): List<TextRange> {
         val ranges = mutableListOf<TextRange>()

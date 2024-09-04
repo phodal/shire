@@ -52,9 +52,9 @@ class PatternActionProcessor(override val myProject: Project, override val hole:
     suspend fun execute(transform: VariableTransform, input: Any): String {
         var result = input
         val data = PostCodeHandleContext.getData()
-        data?.lastTaskOutput?.let {
+        if (data?.lastTaskOutput != null && data.lastTaskOutput != "null") {
             if (variableMap["output"] == null) {
-                variableMap["output"] = it
+                variableMap["output"] = data.lastTaskOutput
             }
         }
 
