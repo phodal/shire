@@ -1,11 +1,12 @@
 package com.phodal.shirelang.compiler.hobbit.execute
 
+import com.phodal.shirelang.compiler.hobbit.execute.function.JsonPathFunction
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNull
 import org.junit.Test
 
-class JsonPathUtilTest {
+class JsonPathFunctionTest {
 
     @Test
     fun `should parse JSON string with valid JSON path`() {
@@ -14,7 +15,7 @@ class JsonPathUtilTest {
         val action = PatternActionFunc.JsonPath(null, "key")
 
         // when
-        val result = JsonPathUtil.parse(jsonStr, action)
+        val result = JsonPathFunction.parse(jsonStr, action)
 
         // then
         assertEquals("value", result)
@@ -27,7 +28,7 @@ class JsonPathUtilTest {
         val action = PatternActionFunc.JsonPath(null, "invalidKey")
 
         // when
-        val result = JsonPathUtil.parse(jsonStr, action)
+        val result = JsonPathFunction.parse(jsonStr, action)
 
         // then
         assertNull(result)
@@ -40,7 +41,7 @@ class JsonPathUtilTest {
         val jsonPath = "answer"
 
         // when
-        val result = JsonPathUtil.parseSSEResult(sseInput, jsonPath)
+        val result = JsonPathFunction.parseSSEResult(sseInput, jsonPath)
 
         // then
         assertEquals("The", result)
@@ -53,7 +54,7 @@ class JsonPathUtilTest {
         val jsonPath = "invalidKey"
 
         // when
-        val result = JsonPathUtil.parseSSEResult(sseInput, jsonPath)
+        val result = JsonPathFunction.parseSSEResult(sseInput, jsonPath)
 
         // then
         assertEquals("null", result)
@@ -67,7 +68,7 @@ class JsonPathUtilTest {
         val jsonPath = "event"
 
         // when
-        val result = JsonPathUtil.parseSSEResult(sseInput, jsonPath)
+        val result = JsonPathFunction.parseSSEResult(sseInput, jsonPath)
 
         // then
         assertEquals("agent_message\nmessage_end", result)

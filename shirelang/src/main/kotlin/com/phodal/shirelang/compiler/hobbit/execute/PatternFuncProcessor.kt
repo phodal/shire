@@ -8,8 +8,6 @@ import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.findFile
 import com.intellij.openapi.vfs.readText
-import com.nfeld.jsonpathkt.JsonPath
-import com.nfeld.jsonpathkt.extension.read
 import com.phodal.shirecore.ShirelangNotifications
 import com.phodal.shirecore.guard.RedactProcessor
 import com.phodal.shirecore.provider.function.ToolchainFunctionProvider
@@ -20,6 +18,7 @@ import com.phodal.shirelang.actions.ShireRunFileAction
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.ast.FrontMatterType
 import com.phodal.shirelang.compiler.hobbit.ast.Statement
+import com.phodal.shirelang.compiler.hobbit.execute.function.JsonPathFunction
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 import java.io.File
 
@@ -365,7 +364,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                 var jsonStr = action.obj ?: lastResult as String
                 jsonStr = jsonStr.fillVariable(variableTable)
 
-                JsonPathUtil.parse(jsonStr, action) ?: jsonStr
+                JsonPathFunction.parse(jsonStr, action) ?: jsonStr
             }
         }
     }
