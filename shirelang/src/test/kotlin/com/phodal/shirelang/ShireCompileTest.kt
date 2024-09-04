@@ -291,7 +291,7 @@ class ShireCompileTest : BasePlatformTestCase() {
                   "error" { grep("ERROR") | sort | xargs("notify_admin") }
                   "warn" { grep("WARN") | sort | xargs("notify_admin") }
                   "info" { grep("INFO") | sort | xargs("notify_user") }
-                  default  { grep("shire") | sort }
+                  default  { grep("(.*).shire") | sort }
                 }
               }
             ---
@@ -312,7 +312,7 @@ class ShireCompileTest : BasePlatformTestCase() {
             }
         }
 
-        assertEquals("test.shire", results["var1"])
+        assertEquals("/src/test", results["var1"])
     }
 
     fun testShouldSupportCorrectGrep() {
