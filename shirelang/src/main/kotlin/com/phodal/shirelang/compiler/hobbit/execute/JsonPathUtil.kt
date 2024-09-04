@@ -61,6 +61,6 @@ object JsonPathUtil {
             }
         }
 
-        return dataLines.joinToString("\n")
+        return dataLines.joinToString(separator = "")
     }
 }
