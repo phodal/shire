@@ -1,6 +1,7 @@
 package com.phodal.shirecore.middleware.builtin
 
 import com.intellij.diff.DiffContentFactoryEx
+import com.intellij.diff.DiffDialogHints
 import com.intellij.diff.DiffManager
 import com.intellij.diff.requests.SimpleDiffRequest
 import com.intellij.execution.ui.ConsoleView
@@ -35,7 +36,7 @@ class DiffProcessor : PostProcessor {
 
         val simpleDiffRequest = SimpleDiffRequest("Shire Diff", content1, content2, "Current code", "Llm response")
         runInEdt {
-            DiffManager.getInstance().showDiff(project, simpleDiffRequest)
+            DiffManager.getInstance().showDiff(project, simpleDiffRequest, DiffDialogHints.NON_MODAL)
         }
 
         return ""
