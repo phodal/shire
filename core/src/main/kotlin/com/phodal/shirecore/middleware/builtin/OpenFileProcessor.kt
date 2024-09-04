@@ -25,19 +25,24 @@ class OpenFileProcessor : PostProcessor {
         if (file !is VirtualFile) {
             if (file is String) {
                 runInEdt {
-                    FileEditorManager.getInstance(project).openFile(project.findFile(file) ?: return@runInEdt)
+                    val findFile = project.findFile(file)
+                    FileEditorManager.getInstance(project).openFile(findFile ?: return@runInEdt)
+                    // log file in hyperlink
+                    console?.print("Open file: $file\n", com.intellij.execution.ui.ConsoleViewContentType.SYSTEM_OUTPUT)
                 }
 
                 return ""
+            } else {
+                console?.print("No file to open\n", com.intellij.execution.ui.ConsoleViewContentType.ERROR_OUTPUT)
             }
 
-            console?.print("No file to open\n", com.intellij.execution.ui.ConsoleViewContentType.ERROR_OUTPUT)
             return ""
         }
 
         runInEdt {
             FileEditorManager.getInstance(project).openFile(file, true)
         }
+
         return ""
     }
 }
@@ -49,7 +54,7 @@ fun Project.findFile(path: String): VirtualFile? {
     val allTypeFiles = FileTypeIndex.getFiles(fileType, searchScope)
 
     for (file in allTypeFiles) {
-        if (file.name == path) {
+        if (file.name == path || file.path.endsWith(path)) {
             return file
         }
     }
