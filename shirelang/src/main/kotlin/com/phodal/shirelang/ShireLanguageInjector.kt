@@ -36,8 +36,7 @@ class ShireLanguageInjector : LanguageInjector {
                     val endOffset = element.startOffsetInParent + funcLength + element.textLength
 
                     // get display text from startOffset and endOffset
-                    val displayText = host.text.substring(startOffset, endOffset)
-
+//                    val displayText = host.text.substring(startOffset, endOffset)
                     registrar.addPlace(language, TextRange(startOffset, endOffset), null, null)
                 }
             }
