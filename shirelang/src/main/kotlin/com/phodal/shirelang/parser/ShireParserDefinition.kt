@@ -49,10 +49,13 @@ internal class ShireParserDefinition : ParserDefinition {
             ShireTypes.PATTERN -> {
                 PatternElement(node)
             }
-
-            //            elementType == ShireTypes.FUNC_CALL && node.firstChildNode.text == "grep" -> {
-            //                RegexPatternFunctionElement(node)
-            //            }
+            ShireTypes.FUNC_CALL -> {
+                if (node.firstChildNode.text == "grep") {
+                    RegexPatternFunctionElement(node)
+                } else {
+                    ShireTypes.Factory.createElement(node)
+                }
+            }
             ShireTypes.CODE_CONTENTS -> {
                 ASTWrapperPsiElement(node)
             }

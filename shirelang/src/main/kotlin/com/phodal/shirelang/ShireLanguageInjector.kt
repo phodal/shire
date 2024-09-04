@@ -28,19 +28,18 @@ class ShireLanguageInjector : LanguageInjector {
         }?.children ?: return
 
         val language = findLanguage("RegExp")
-        val length = "grep".length
+        val funcLength = "grep".length
         args.firstOrNull()?.let { element ->
-            val text = element.text
-            val startOffset = element.startOffsetInParent + length + 1
-            val endOffset = element.startOffsetInParent + element.textLength - 2
+            when(element.node.firstChildNode.elementType) {
+                ShireTypes.QUOTE_STRING -> {
+                    val startOffset = element.startOffsetInParent + funcLength + 2
+                    val endOffset = element.startOffsetInParent + funcLength + element.textLength
 
-            fun handleRegexpDelimiter(start: Int, end: Int) {
-                registrar.addPlace(language, TextRange(start, end), "Regexp", null)
-            }
+                    // get display text from startOffset and endOffset
+                    val displayText = host.text.substring(startOffset, endOffset)
 
-            when {
-                text.startsWith("\"") && text.endsWith("\"") -> handleRegexpDelimiter(startOffset, endOffset)
-                text.startsWith("/") && text.endsWith("/") -> handleRegexpDelimiter(startOffset, endOffset)
+                    registrar.addPlace(language, TextRange(startOffset, endOffset), null, null)
+                }
             }
         }
     }
