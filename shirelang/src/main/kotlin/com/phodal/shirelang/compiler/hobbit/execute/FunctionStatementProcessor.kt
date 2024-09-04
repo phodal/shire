@@ -107,7 +107,7 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
                 }
 
                 else -> {
-                    logger<FunctionStatementProcessor>().warn("unknown element: $element")
+                    logger<FunctionStatementProcessor>().error("unknown element: $element")
                 }
             }
         }
@@ -134,7 +134,7 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
             }
 
             else -> {
-                logger<FunctionStatementProcessor>().warn("unknown stmt: $statement expr: ${statement.display()}")
+                logger<FunctionStatementProcessor>().error("unknown stmt: $statement expr: ${statement.display()}")
                 null
             }
         }
