@@ -312,7 +312,7 @@ class ShireCompileTest : BasePlatformTestCase() {
             }
         }
 
-        assertEquals("shire", results["var1"])
+        assertEquals("test.shire", results["var1"])
     }
 
     fun testShouldSupportCorrectGrep() {
@@ -327,7 +327,7 @@ class ShireCompileTest : BasePlatformTestCase() {
             variables:
               "phoneNumber": "086-1234567890"
               "phoneNumber2": "088-1234567890"
-              "var2": /.*ple.shire/ { cat | grep("[0-9]{3}-[0-9]{10}") }
+              "var2": /.*ple.shire/ { cat | grep("([0-9]{3}-[0-9]{10})") }
             ---
             
             Summary webpage: ${'$'}fileName

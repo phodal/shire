@@ -11,7 +11,7 @@ import com.phodal.shirelang.parser.CodeBlockElement
 import com.phodal.shirelang.parser.PatternElement
 import com.phodal.shirelang.psi.ShireTypes
 import com.phodal.shirecore.markdown.CodeFence.Companion.findLanguage
-import com.phodal.shirelang.parser.RegexPatternFunctionElement
+import com.phodal.shirelang.parser.ShireGrepFuncCall
 
 class ShireLanguageInjector : LanguageInjector {
     override fun getLanguagesToInject(host: PsiLanguageInjectionHost, registrar: InjectedLanguagePlaces) {
@@ -21,7 +21,7 @@ class ShireLanguageInjector : LanguageInjector {
     }
 
     private fun injectRegexFunction(host: PsiLanguageInjectionHost, registrar: InjectedLanguagePlaces) {
-        if (host !is RegexPatternFunctionElement || !host.isValidHost()) return
+        if (host !is ShireGrepFuncCall || !host.isValidHost()) return
 
         val args = host.children.firstOrNull {
             it.elementType == ShireTypes.PIPELINE_ARGS

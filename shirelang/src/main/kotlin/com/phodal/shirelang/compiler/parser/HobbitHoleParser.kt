@@ -9,6 +9,7 @@ import com.intellij.psi.util.elementType
 import com.phodal.shirelang.compiler.hobbit.*
 import com.phodal.shirelang.compiler.hobbit.ast.*
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
+import com.phodal.shirelang.parser.ShireGrepFuncCall
 import com.phodal.shirelang.psi.*
 
 object HobbitHoleParser {
@@ -487,7 +488,7 @@ object HobbitHoleParser {
 
     private fun parseActionBodyFuncCall(shireActionExprs: List<ShireActionExpr>?): Processor {
         val processor: MutableList<PatternActionFunc> = mutableListOf()
-        shireActionExprs?.forEach { expr ->
+        shireActionExprs?.forEach { expr: ShireActionExpr ->
             expr.funcCall?.let { funcCall ->
                 parseActionBodyFunCall(funcCall, expr)?.let {
                     processor.add(it)
@@ -508,7 +509,7 @@ object HobbitHoleParser {
         return Processor(processor)
     }
 
-    fun parseActionBodyFunCall(funcCall: ShireFuncCall?, expr: ShireActionExpr): PatternActionFunc? {
+    private fun parseActionBodyFunCall(funcCall: ShireFuncCall?, expr: ShireActionExpr): PatternActionFunc? {
         val args = parseParameters(funcCall) ?: emptyList()
         val patternActionFunc = when (funcCall?.funcName?.text) {
             "grep" -> {

@@ -123,7 +123,7 @@ ShireFile
                       PsiElement(ShireTokenType.|)('|')
                       PsiWhiteSpace(' ')
                       ShireActionExprImpl(ACTION_EXPR)
-                        RegexPatternFunctionElement(FUNC_CALL)
+                        ShireGrepFuncCall(FUNC_CALL)
                           ShireFuncNameImpl(FUNC_NAME)
                             PsiElement(ShireTokenType.IDENTIFIER)('grep')
                           PsiElement(ShireTokenType.()('(')

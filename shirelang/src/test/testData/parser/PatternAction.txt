@@ -37,7 +37,7 @@ ShireFile
                     PsiWhiteSpace(' ')
                     ShireActionBodyImpl(ACTION_BODY)
                       ShireActionExprImpl(ACTION_EXPR)
-                        ShireFuncCallImpl(FUNC_CALL)
+                        ShireGrepFuncCall(FUNC_CALL)
                           ShireFuncNameImpl(FUNC_NAME)
                             PsiElement(ShireTokenType.IDENTIFIER)('grep')
                           PsiElement(ShireTokenType.()('(')
