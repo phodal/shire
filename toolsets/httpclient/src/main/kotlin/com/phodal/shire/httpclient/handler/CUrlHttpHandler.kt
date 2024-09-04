@@ -25,11 +25,16 @@ import okhttp3.OkHttpClient
 class CUrlHttpHandler : HttpHandler {
     override fun isApplicable(type: HttpHandlerType): Boolean = type == HttpHandlerType.CURL
 
-    override fun execute(project: Project, content: String): String? {
+    override fun execute(
+        project: Project,
+        content: String,
+        variablesName: Array<String>,
+        variableTable: MutableMap<String, Any?>
+    ): String? {
         val client = OkHttpClient()
         val request = runReadAction {
             val envName = getAllEnvironments(project, getSearchScope(project)).firstOrNull() ?: "development"
-            val variables = fetchEnvironmentVariables(project, envName)
+            val enVariables = fetchEnvironmentVariables(project, envName)
             val psiFile =
                 FileBasedIndex.getInstance().getContainingFiles(SHIRE_ENV_ID, envName, getSearchScope(project))
                     .firstOrNull()
@@ -38,7 +43,7 @@ class CUrlHttpHandler : HttpHandler {
                     }
 
             val envObject = readEnvObject(psiFile, envName)
-            CUrlConverter.convert(content, variables, envObject)
+            CUrlConverter.convert(content, enVariables, envObject)
         }
 
         val response = client.newCall(request).execute()

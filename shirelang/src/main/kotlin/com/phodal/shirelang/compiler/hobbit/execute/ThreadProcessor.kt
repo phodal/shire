@@ -24,7 +24,7 @@ import java.util.concurrent.CompletableFuture
 
 object ThreadProcessor {
     fun execute(
-        myProject: Project, fileName: String, variables: Array<String>, variableTable: MutableMap<String, Any?>,
+        myProject: Project, fileName: String, variablesName: Array<String>, variableTable: MutableMap<String, Any?>,
     ): String {
         val file = myProject.lookupFile(fileName) ?: return "File not found: $fileName"
 
@@ -33,7 +33,8 @@ object ThreadProcessor {
 
         // if ends with .cURL.sh, try call cURL service
         if (filename.endsWith(".curl.sh")) {
-            val execute = HttpHandler.provide(HttpHandlerType.CURL)?.execute(myProject, content)
+            val execute = HttpHandler.provide(HttpHandlerType.CURL)
+                ?.execute(myProject, content, variablesName, variableTable)
             if (execute != null) {
                 return execute
             }
@@ -50,7 +51,7 @@ object ThreadProcessor {
                         val results = output.mapNotNull {
                             try {
                                 variableTable["output"] = it
-                                executeTask(myProject, variables, variableTable, psiFile)
+                                executeTask(myProject, variablesName, variableTable, psiFile)
                             } catch (e: Exception) {
                                 null
                             }
@@ -62,12 +63,12 @@ object ThreadProcessor {
                     is Array<*> -> {
                         output.joinToString("\n") {
                             variableTable["output"] = it
-                            executeTask(myProject, variables, variableTable, psiFile) ?: "No run service found"
+                            executeTask(myProject, variablesName, variableTable, psiFile) ?: "No run service found"
                         }
                     }
 
                     else -> {
-                        return executeTask(myProject, variables, variableTable, psiFile) ?: "No run service found"
+                        return executeTask(myProject, variablesName, variableTable, psiFile) ?: "No run service found"
                     }
                 }
             }

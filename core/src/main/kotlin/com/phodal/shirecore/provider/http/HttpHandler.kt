@@ -6,7 +6,7 @@ import com.intellij.openapi.project.Project
 interface HttpHandler {
     fun isApplicable(type: HttpHandlerType): Boolean
 
-    fun execute(project: Project, content: String) : String?
+    fun execute(project: Project, content: String, variablesName: Array<String>, variableTable: MutableMap<String, Any?>) : String?
 
     companion object {
         private val EP_NAME: ExtensionPointName<HttpHandler> =
