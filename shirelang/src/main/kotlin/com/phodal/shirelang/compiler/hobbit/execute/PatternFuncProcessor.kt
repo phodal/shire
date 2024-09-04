@@ -365,19 +365,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                 var jsonStr = action.obj ?: lastResult as String
                 jsonStr = jsonStr.fillVariable(variableTable)
 
-                val result: String = try {
-                    JsonPath.parse(jsonStr)?.read<Any>(action.path.trim()).toString()
-                } catch (e: Exception) {
-                    logger<FunctionStatementProcessor>().warn("jsonpath error: $e")
-                    return jsonStr
-                }
-
-                if (result == "null") {
-                    logger<FunctionStatementProcessor>().warn("jsonpath error: $result for $jsonStr")
-                    return jsonStr
-                }
-
-                result
+                JsonPathUtil.parse(jsonStr, action) ?: jsonStr
             }
         }
     }

@@ -3,6 +3,7 @@ package com.phodal.shirelang.actions.intention
 import com.intellij.codeInsight.intention.IntentionAction
 import com.intellij.lang.injection.InjectedLanguageManager
 import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.JBPopupFactory
@@ -35,9 +36,12 @@ class ShireIntentionHelper : IntentionAction, Iconable {
 
         val title = ShireMainBundle.message("intentions.assistant.popup.title")
         val popupStep = CustomPopupStep(intentions, project, editor, file, title)
-        val popup = JBPopupFactory.getInstance().createListPopup(popupStep)
-
-        popup.showInBestPositionFor(editor)
+        try {
+            val popup = JBPopupFactory.getInstance().createListPopup(popupStep)
+            popup.showInBestPositionFor(editor)
+        } catch (e: Exception) {
+            logger<ShireIntentionHelper>().error("Failed to show popup", e)
+        }
     }
 
     companion object {

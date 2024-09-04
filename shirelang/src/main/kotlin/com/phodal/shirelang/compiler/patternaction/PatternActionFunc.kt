@@ -169,7 +169,7 @@ sealed class PatternActionFunc(open val funcName: String) {
     /**
      * the jsonpath function will parse the json and get the value by jsonpath
      */
-    class JsonPath(val obj: String?, val path: String) : PatternActionFunc("jsonpath")
+    class JsonPath(val obj: String?, val path: String, val sseMode: Boolean = false) : PatternActionFunc("jsonpath")
 
     /**
      * User Custom Functions

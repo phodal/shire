@@ -651,9 +651,16 @@ object HobbitHoleParser {
                 }
 
                 if (args.size < 2) {
-                    PatternActionFunc.JsonPath(null, args[0])
+                    PatternActionFunc.JsonPath(null, args[0], false)
                 } else {
-                    PatternActionFunc.JsonPath(args[0], args[1])
+                    when(args[1]) {
+                        "sse" -> {
+                            PatternActionFunc.JsonPath(args[0], args[2], true)
+                        }
+                        else -> {
+                            PatternActionFunc.JsonPath(args[0], args[1])
+                        }
+                    }
                 }
             }
 
