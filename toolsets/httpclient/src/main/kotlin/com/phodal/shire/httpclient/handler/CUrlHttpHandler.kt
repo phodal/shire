@@ -7,6 +7,7 @@ import com.intellij.ide.scratch.ScratchesSearchScope
 import com.intellij.json.psi.JsonFile
 import com.intellij.json.psi.JsonObject
 import com.intellij.json.psi.JsonProperty
+import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
@@ -26,21 +27,21 @@ class CUrlHttpHandler : HttpHandler {
 
     override fun execute(project: Project, content: String): String? {
         val client = OkHttpClient()
-        val envName = getAllEnvironments(project, getSearchScope(project)).firstOrNull() ?: "development"
-        val variables = fetchEnvironmentVariables(project, envName)
-        val psiFile =
-            FileBasedIndex.getInstance().getContainingFiles(SHIRE_ENV_ID, envName, getSearchScope(project))
-                .firstOrNull()
-                ?.let {
-                    (PsiManager.getInstance(project).findFile(it) as? JsonFile)
-                }
+        val request = runReadAction {
+            val envName = getAllEnvironments(project, getSearchScope(project)).firstOrNull() ?: "development"
+            val variables = fetchEnvironmentVariables(project, envName)
+            val psiFile =
+                FileBasedIndex.getInstance().getContainingFiles(SHIRE_ENV_ID, envName, getSearchScope(project))
+                    .firstOrNull()
+                    ?.let {
+                        (PsiManager.getInstance(project).findFile(it) as? JsonFile)
+                    }
 
-        val envObject = readEnvObject(psiFile, envName)
-
-        val request = CUrlConverter.convert(content, variables, envObject)
+            val envObject = readEnvObject(psiFile, envName)
+            CUrlConverter.convert(content, variables, envObject)
+        }
 
         val response = client.newCall(request).execute()
-
         return response.body?.string()
     }
 

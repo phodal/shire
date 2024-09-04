@@ -5,6 +5,7 @@ import com.intellij.httpClient.execution.RestClientRequest
 import com.intellij.httpClient.http.request.HttpRequestHeaderFields
 import com.intellij.json.JsonUtil
 import com.intellij.json.psi.*
+import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.util.TextRange
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.Request
@@ -62,7 +63,7 @@ object CUrlConverter {
         }
     }
 
-    fun fillVariables(messageBody: String, variables: List<Set<String>>, obj: JsonObject?): String {
+    private fun fillVariables(messageBody: String, variables: List<Set<String>>, obj: JsonObject?): String {
         if (obj == null) return messageBody
         if (variables.isEmpty()) return messageBody
 
