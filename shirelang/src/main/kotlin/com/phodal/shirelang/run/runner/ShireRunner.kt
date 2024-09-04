@@ -88,7 +88,7 @@ class ShireRunner(
             val handler = terminalLocationExecutor?.bundler(project, variableMap["input"] ?: "")
             if (handler == null) {
                 console?.print("Terminal not found", ConsoleViewContentType.ERROR_OUTPUT)
-                processHandler.destroyProcess()
+                processHandler.exitWithError()
                 return@launch
             }
 
@@ -105,7 +105,7 @@ class ShireRunner(
                 } catch (e: Exception) {
                     console?.print(e.message ?: "Error", ConsoleViewContentType.ERROR_OUTPUT)
                     handler.onFinish?.invoke(null)
-                    processHandler.detachProcess()
+                    processHandler.exitWithError()
                 }
             }
 

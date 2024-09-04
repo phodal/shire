@@ -140,8 +140,4 @@ class ShireProcessAdapter(private val sb: StringBuilder, val configuration: Shir
             this.llmOutput = llmOutput
         }
     }
-
-    fun getLlmOutput(): String? {
-        return llmOutput
-    }
 }
