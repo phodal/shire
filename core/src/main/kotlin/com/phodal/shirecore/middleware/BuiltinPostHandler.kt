@@ -78,6 +78,11 @@ enum class BuiltinPostHandler(var handleName: String) {
      */
     Patch("patch"),
 
+    /**
+     * Diff
+     */
+    Diff("diff"),
+
     UpdateEditorText("updateEditorText"),
     ;
 }

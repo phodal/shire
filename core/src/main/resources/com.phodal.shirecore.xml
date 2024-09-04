@@ -170,6 +170,7 @@
         <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.InsertCodeProcessor"/>
         <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.FormatCodeProcessor"/>
         <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.PatchProcessor"/>
+        <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.DiffProcessor"/>
 
         <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.AppendProcessor"/>
         <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.InsertNewlineProcessor"/>
