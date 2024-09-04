@@ -57,7 +57,7 @@ class JsonPathFunctionTest {
         val result = JsonPathFunction.parseSSEResult(sseInput, jsonPath)
 
         // then
-        assertEquals("null", result)
+        assertEquals("", result)
     }
 
     @Test
@@ -65,12 +65,12 @@ class JsonPathFunctionTest {
         // given
         val sseInput = "data: {\"event\":\"agent_message\",\"conversation_id\":\"48929266-a58f-46cc-a5eb-33145e6a96ef\",\"message_id\":\"91ad550b-1109-4062-88f8-07be18238e0e\",\"created_at\":1725437154,\"task_id\":\"4f846104-8571-42f1-b04c-f6f034b2fe9e\",\"id\":\"91ad550b-1109-4062-88f8-07be18238e0e\",\"answer\":\"The\"}\n" +
                 "data: {\"event\":\"message_end\",\"conversation_id\":\"48929266-a58f-46cc-a5eb-33145e6a96ef\",\"message_id\":\"91ad550b-1109-4062-88f8-07be18238e0e\",\"created_at\":1725437154,\"task_id\":\"4f846104-8571-42f1-b04c-f6f034b2fe9e\",\"id\":\"91ad550b-1109-4062-88f8-07be18238e0e\"}\n"
-        val jsonPath = "event"
+        val jsonPath = "$.event"
 
         // when
         val result = JsonPathFunction.parseSSEResult(sseInput, jsonPath)
 
         // then
-        assertEquals("agent_message\nmessage_end", result)
+        assertEquals("agent_messagemessage_end", result)
     }
 }
