@@ -1,5 +1,7 @@
 package com.phodal.shirecore.middleware.builtin
 
+import com.intellij.execution.filters.FileHyperlinkInfoBase
+import com.intellij.execution.filters.OpenFileHyperlinkInfo
 import com.intellij.execution.ui.ConsoleView
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.runInEdt
@@ -24,11 +26,17 @@ class OpenFileProcessor : PostProcessor {
         val file = context.pipeData["output"] ?: context.genText
         if (file !is VirtualFile) {
             if (file is String) {
+                // check has multiple files
+                val files = file.split("\n")
                 runInEdt {
-                    val findFile = project.findFile(file)
-                    FileEditorManager.getInstance(project).openFile(findFile ?: return@runInEdt)
-                    // log file in hyperlink
-                    console?.print("Open file: $file\n", com.intellij.execution.ui.ConsoleViewContentType.SYSTEM_OUTPUT)
+                    val findFiles = files.mapNotNull { project.findFile(it) }
+                    findFiles.map {
+                        console?.printHyperlink("$it", OpenFileHyperlinkInfo(project, it, -1, -1))
+                    }
+
+                    if (findFiles.isNotEmpty()) {
+                        FileEditorManager.getInstance(project).openFile(findFiles.first(), true)
+                    }
                 }
 
                 return ""
