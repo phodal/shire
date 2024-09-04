@@ -34,8 +34,9 @@ class OpenFileProcessor : PostProcessor {
                         console?.printHyperlink("$it", OpenFileHyperlinkInfo(project, it, -1, -1))
                     }
 
-                    if (findFiles.isNotEmpty()) {
-                        FileEditorManager.getInstance(project).openFile(findFiles.first(), true)
+                    findFiles.mapIndexed { index, it ->
+                        val isFocus = index == findFiles.size - 1
+                        FileEditorManager.getInstance(project).openFile(it, isFocus)
                     }
                 }
 
