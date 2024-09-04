@@ -19,3 +19,16 @@ class ShireGrepFuncCall(node: ASTNode) : ShireFuncCallImpl(node), PsiLanguageInj
         return LiteralTextEscaper.createSimple(this, false)
     }
 }
+
+class ShireSedFuncCall(node: ASTNode) : ShireFuncCallImpl(node), PsiLanguageInjectionHost,
+    InjectionBackgroundSuppressor {
+    override fun isValidHost(): Boolean = true
+
+    override fun updateText(text: String): PsiLanguageInjectionHost {
+        return ElementManipulators.handleContentChange(this, text)
+    }
+
+    override fun createLiteralTextEscaper(): LiteralTextEscaper<out PsiLanguageInjectionHost> {
+        return LiteralTextEscaper.createSimple(this, false)
+    }
+}

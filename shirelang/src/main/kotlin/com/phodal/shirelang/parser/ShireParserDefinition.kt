@@ -50,10 +50,16 @@ internal class ShireParserDefinition : ParserDefinition {
                 PatternElement(node)
             }
             ShireTypes.FUNC_CALL -> {
-                if (node.firstChildNode.text == "grep") {
-                    ShireGrepFuncCall(node)
-                } else {
-                    ShireTypes.Factory.createElement(node)
+                when (node.firstChildNode.text) {
+                    "grep" -> {
+                        ShireGrepFuncCall(node)
+                    }
+                    "sed" -> {
+                        ShireSedFuncCall(node)
+                    }
+                    else -> {
+                        ShireTypes.Factory.createElement(node)
+                    }
                 }
             }
             ShireTypes.CODE_CONTENTS -> {

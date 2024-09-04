@@ -21,7 +21,7 @@ class OpenFileProcessor : PostProcessor {
     override fun isApplicable(context: PostCodeHandleContext): Boolean = true
 
     override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?, args: List<Any>): String {
-        val file = context.pipeData["output"]
+        val file = context.pipeData["output"] ?: context.genText
         if (file !is VirtualFile) {
             if (file is String) {
                 runInEdt {

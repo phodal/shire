@@ -7,11 +7,11 @@ import com.intellij.psi.InjectedLanguagePlaces
 import com.intellij.psi.LanguageInjector
 import com.intellij.psi.PsiLanguageInjectionHost
 import com.intellij.psi.util.elementType
+import com.phodal.shirecore.markdown.CodeFence.Companion.findLanguage
 import com.phodal.shirelang.parser.CodeBlockElement
 import com.phodal.shirelang.parser.PatternElement
 import com.phodal.shirelang.psi.ShireTypes
-import com.phodal.shirecore.markdown.CodeFence.Companion.findLanguage
-import com.phodal.shirelang.parser.ShireGrepFuncCall
+import com.phodal.shirelang.psi.impl.ShireFuncCallImpl
 
 class ShireLanguageInjector : LanguageInjector {
     override fun getLanguagesToInject(host: PsiLanguageInjectionHost, registrar: InjectedLanguagePlaces) {
@@ -21,22 +21,18 @@ class ShireLanguageInjector : LanguageInjector {
     }
 
     private fun injectRegexFunction(host: PsiLanguageInjectionHost, registrar: InjectedLanguagePlaces) {
-        if (host !is ShireGrepFuncCall || !host.isValidHost()) return
+        if (host !is ShireFuncCallImpl || !host.isValidHost()) return
 
-        val args = host.children.firstOrNull {
-            it.elementType == ShireTypes.PIPELINE_ARGS
-        }?.children ?: return
+        val args = host.pipelineArgs?.children ?: return
 
         val language = findLanguage("RegExp")
-        val funcLength = "grep".length
+        val funcLength = host.funcName.text.length
+
         args.firstOrNull()?.let { element ->
-            when(element.node.firstChildNode.elementType) {
+            when (element.node.firstChildNode.elementType) {
                 ShireTypes.QUOTE_STRING -> {
                     val startOffset = element.startOffsetInParent + funcLength + 2
                     val endOffset = element.startOffsetInParent + funcLength + element.textLength
-
-                    // get display text from startOffset and endOffset
-//                    val displayText = host.text.substring(startOffset, endOffset)
                     registrar.addPlace(language, TextRange(startOffset, endOffset), null, null)
                 }
             }
