@@ -28,6 +28,7 @@ nav_order: 5
 | InsertNewline     | 插入新行。           |
 | Append            | 将文本追加到文件中。      |
 | UpdateEditorText  | 更新编辑器文本。        |
+| Patch             | 打补丁。            |
 
 最新版本见源码：com.phodal.shirecore.middleware.BuiltinPostHandler
 

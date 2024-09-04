@@ -211,14 +211,19 @@ open class HobbitHole(
             }
 
             val args: List<Any> = funcNode.args.map { arg ->
-                when(arg) {
+                when (arg) {
                     is String -> {
                         if (arg.startsWith("$")) {
-                            compiledVariables[arg.removePrefix("$")] ?: ""
+                            if (arg == "\$output" && context.lastTaskOutput != null) {
+                                context.lastTaskOutput ?: "\$output"
+                            } else {
+                                compiledVariables[arg.substring(1)] ?: ""
+                            }
                         } else {
                             arg
                         }
                     }
+
                     else -> arg
                 }
             }
