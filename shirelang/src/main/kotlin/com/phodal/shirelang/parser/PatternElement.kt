@@ -6,6 +6,8 @@ import com.intellij.psi.ElementManipulators
 import com.intellij.psi.LiteralTextEscaper
 import com.intellij.psi.PsiLanguageInjectionHost
 import com.intellij.psi.impl.source.tree.injected.InjectionBackgroundSuppressor
+import com.intellij.psi.util.elementType
+import com.phodal.shirelang.psi.ShireTypes
 
 class PatternElement(node: ASTNode) : ASTWrapperPsiElement(node), PsiLanguageInjectionHost,
     InjectionBackgroundSuppressor {
@@ -20,3 +22,16 @@ class PatternElement(node: ASTNode) : ASTWrapperPsiElement(node), PsiLanguageInj
     }
 }
 
+
+class RegexPatternFunctionElement(node: ASTNode) : ASTWrapperPsiElement(node), PsiLanguageInjectionHost,
+    InjectionBackgroundSuppressor {
+    override fun isValidHost(): Boolean = true
+
+    override fun updateText(text: String): PsiLanguageInjectionHost {
+        return ElementManipulators.handleContentChange(this, text)
+    }
+
+    override fun createLiteralTextEscaper(): LiteralTextEscaper<out PsiLanguageInjectionHost> {
+        return LiteralTextEscaper.createSimple(this, false)
+    }
+}

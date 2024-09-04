@@ -11,11 +11,35 @@ import com.phodal.shirelang.parser.CodeBlockElement
 import com.phodal.shirelang.parser.PatternElement
 import com.phodal.shirelang.psi.ShireTypes
 import com.phodal.shirecore.markdown.CodeFence.Companion.findLanguage
+import com.phodal.shirelang.parser.RegexPatternFunctionElement
 
 class ShireLanguageInjector : LanguageInjector {
     override fun getLanguagesToInject(host: PsiLanguageInjectionHost, registrar: InjectedLanguagePlaces) {
         injectRegexLanguage(host, registrar)
         injectCodeBlockLanguage(host, registrar)
+        injectRegexFunction(host, registrar)
+    }
+
+    private fun injectRegexFunction(host: PsiLanguageInjectionHost, registrar: InjectedLanguagePlaces) {
+        if (host !is RegexPatternFunctionElement || !host.isValidHost()) return
+
+        val args = host.children.firstOrNull {
+            it.elementType == ShireTypes.PIPELINE_ARGS
+        }?.children ?: return
+
+        val language = findLanguage("RegExp")
+        args.map {
+            val text = it.text
+            if (text.startsWith("\"") && text.endsWith("\"")) {
+                val range = TextRange(it.startOffsetInParent + 1, it.startOffsetInParent + it.textLength - 1)
+                registrar.addPlace(language, range, null, null)
+            }
+            // if surrouding with //
+            if (text.startsWith("/") && text.endsWith("/")) {
+                val range = TextRange(it.startOffsetInParent + 1, it.startOffsetInParent + it.textLength - 1)
+                registrar.addPlace(language, range, null, null)
+            }
+        }
     }
 
     private fun injectRegexLanguage(host: PsiLanguageInjectionHost, registrar: InjectedLanguagePlaces) {

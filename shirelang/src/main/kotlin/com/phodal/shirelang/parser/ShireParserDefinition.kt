@@ -50,6 +50,10 @@ internal class ShireParserDefinition : ParserDefinition {
             return PatternElement(node)
         }
 
+//        if (elementType == ShireTypes.FUNC_CALL && node.firstChildNode.text == "grep") {
+//            return RegexPatternFunctionElement(node)
+//        }
+
         if (elementType == ShireTypes.CODE_CONTENTS) {
             return ASTWrapperPsiElement(node)
         }
