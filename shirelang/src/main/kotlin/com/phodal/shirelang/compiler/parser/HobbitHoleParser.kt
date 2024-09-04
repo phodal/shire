@@ -270,7 +270,20 @@ object HobbitHoleParser {
             val condition = parseLiteral(expr.caseCondition)
             val body = parseRefExpr(expr.expr)
 
-            CaseKeyValue(condition, body as FrontMatterType.EXPRESSION)
+            when (body) {
+                is FrontMatterType.EXPRESSION -> {
+                    CaseKeyValue(condition, body)
+                }
+
+                is FrontMatterType.STRING -> {
+                    CaseKeyValue(condition, FrontMatterType.EXPRESSION(Value(body)))
+                }
+
+                else -> {
+                    logger.warn("parseExpr, Unknown condition type: ${expr.expr?.elementType}")
+                    null
+                }
+            }
         }
 
         else -> {
@@ -342,6 +355,15 @@ object HobbitHoleParser {
                 parseLogicOrExpr(expr)?.let {
                     FrontMatterType.EXPRESSION(it)
                 } ?: FrontMatterType.ERROR("cannot parse ShireLogicalOrExpr: ${expr.text}")
+            }
+
+            is ShireEqComparisonExpr -> {
+                val variable = parseRefExpr(expr.children.firstOrNull())
+                val value = parseRefExpr(expr.children.lastOrNull())
+                val operator = Operator(OperatorType.Equal)
+
+                val comparison = Comparison(variable, operator, value)
+                FrontMatterType.EXPRESSION(comparison)
             }
 
             else -> {

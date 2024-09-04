@@ -129,6 +129,10 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
                 invokeLocalMethodCall(statement, variableTable)
             }
 
+            is Value -> {
+                statement.value
+            }
+
             else -> {
                 logger<FunctionStatementProcessor>().warn("unknown stmt: $statement expr: ${statement.display()}")
                 null
