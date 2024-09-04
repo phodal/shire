@@ -41,24 +41,24 @@ internal class ShireParserDefinition : ParserDefinition {
 
     @NotNull
     override fun createElement(node: ASTNode?): PsiElement {
-        val elementType = node!!.elementType
-        if (elementType == ShireTypes.CODE) {
-            return CodeBlockElement(node)
+        return when (node!!.elementType) {
+            ShireTypes.CODE -> {
+                CodeBlockElement(node)
+            }
+
+            ShireTypes.PATTERN -> {
+                PatternElement(node)
+            }
+
+            //            elementType == ShireTypes.FUNC_CALL && node.firstChildNode.text == "grep" -> {
+            //                RegexPatternFunctionElement(node)
+            //            }
+            ShireTypes.CODE_CONTENTS -> {
+                ASTWrapperPsiElement(node)
+            }
+
+            else -> ShireTypes.Factory.createElement(node)
         }
-
-        if (elementType == ShireTypes.PATTERN) {
-            return PatternElement(node)
-        }
-
-//        if (elementType == ShireTypes.FUNC_CALL && node.firstChildNode.text == "grep") {
-//            return RegexPatternFunctionElement(node)
-//        }
-
-        if (elementType == ShireTypes.CODE_CONTENTS) {
-            return ASTWrapperPsiElement(node)
-        }
-
-        return ShireTypes.Factory.createElement(node)
     }
 
     companion object {
