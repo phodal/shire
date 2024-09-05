@@ -23,6 +23,7 @@ class ShireCompileTest : BasePlatformTestCase() {
     }
 
     fun testWithFrontmatter() {
+        @Language("Shire")
         val code = """
             ---
             name: Summary
@@ -48,6 +49,7 @@ class ShireCompileTest : BasePlatformTestCase() {
     }
 
     fun testWithFrontMatterArray() {
+        @Language("Shire")
         val code = """
             ---
             name: Summary
@@ -67,6 +69,7 @@ class ShireCompileTest : BasePlatformTestCase() {
     }
 
     fun testShouldCheckFile() {
+        @Language("Shire")
         val code = """
             ---
             name: Summary
@@ -86,6 +89,7 @@ class ShireCompileTest : BasePlatformTestCase() {
     }
 
     fun testShouldHandleForPatternAction() {
+        @Language("Shire")
         val code = """
             ---
             name: Summary
@@ -118,6 +122,7 @@ class ShireCompileTest : BasePlatformTestCase() {
     }
 
     fun testShouldHandleForWhenCondition() {
+        @Language("Shire")
         val code = """
             ---
             when: ${'$'}selection.length >= 1 && ${'$'}selection.first() == 'p'
@@ -147,6 +152,7 @@ class ShireCompileTest : BasePlatformTestCase() {
     }
 
     fun testShouldHandleForWhenConditionInVariableExpr() {
+        @Language("Shire")
         val code = """
             ---
             when: { ${'$'}selection.length >= 1 && ${'$'}selection.first() == 'p' }
@@ -176,6 +182,7 @@ class ShireCompileTest : BasePlatformTestCase() {
     }
 
     fun testShouldHandleForWhenConditionForContains() {
+        @Language("Shire")
         val code = """
             ---
             when: ${'$'}fileName.contains(".java") && ${'$'}filePath.contains("src/main/java")
@@ -194,6 +201,7 @@ class ShireCompileTest : BasePlatformTestCase() {
     }
 
     fun testShouldHandleForWhenConditionForPattern() {
+        @Language("Shire")
         val code = """
             ---
             when: ${'$'}fileName.matches("/.*.java/")
@@ -212,6 +220,7 @@ class ShireCompileTest : BasePlatformTestCase() {
     }
 
     fun testShouldGetSymbolTableValueFromCompileResult() {
+        @Language("Shire")
         val code = """
             ---
             name: Summary
@@ -248,6 +257,7 @@ class ShireCompileTest : BasePlatformTestCase() {
     }
 
     fun testShouldLoadFile() {
+        @Language("Shire")
         val code = """
             ---
             name: Summary
@@ -283,6 +293,7 @@ class ShireCompileTest : BasePlatformTestCase() {
     }
 
     fun testShouldComputePatterCaseResult() {
+        @Language("Shire")
         val code = """
             ---
             variables:
