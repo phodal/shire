@@ -1,6 +1,5 @@
 package com.phodal.shirecore.middleware.builtin
 
-import com.intellij.execution.filters.FileHyperlinkInfoBase
 import com.intellij.execution.filters.OpenFileHyperlinkInfo
 import com.intellij.execution.ui.ConsoleView
 import com.intellij.openapi.application.ApplicationManager
