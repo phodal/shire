@@ -32,6 +32,8 @@ class OpenFileProcessor : PostProcessor {
                     val findFiles = files.mapNotNull { project.findFile(it) }
                     findFiles.map {
                         console?.printHyperlink("$it", OpenFileHyperlinkInfo(project, it, -1, -1))
+                        // new line
+                        console?.print("\n", com.intellij.execution.ui.ConsoleViewContentType.NORMAL_OUTPUT)
                     }
 
                     findFiles.mapIndexed { index, it ->
