@@ -1,11 +1,8 @@
 package com.phodal.shirelang.compiler.hobbit.execute
 
-import com.intellij.execution.configurations.GeneralCommandLine
-import com.intellij.execution.process.CapturingProcessHandler
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.readText
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
@@ -18,7 +15,6 @@ import com.phodal.shirelang.actions.ShireRunFileAction
 import com.phodal.shirelang.compiler.SHIRE_ERROR
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.utils.lookupFile
-import java.nio.charset.StandardCharsets
 import java.util.concurrent.CompletableFuture
 
 
@@ -74,7 +70,8 @@ object ThreadProcessor {
             }
 
             is ShFile -> {
-                return executeShFile(psiFile, myProject)
+                val processVariables: Map<String, String> = variablesName.associateWith { (variableTable[it] as? String ?: "") }
+                return executeShFile(psiFile, myProject, processVariables)
             }
 
             else -> return FileRunService.provider(myProject, file)?.runFile(myProject, file, psiFile)
@@ -82,7 +79,7 @@ object ThreadProcessor {
         }
     }
 
-    private fun executeShFile(psiFile: ShFile, myProject: Project): String {
+    private fun executeShFile(psiFile: ShFile, myProject: Project, processVariables: Map<String, String>): String {
         val virtualFile = psiFile.virtualFile
         val shRunner = ApplicationManager.getApplication().getService(ShRunner::class.java)
             ?: return "$SHIRE_ERROR: Shell runner not found"
@@ -90,33 +87,12 @@ object ThreadProcessor {
         val future = CompletableFuture<String>()
         ApplicationManager.getApplication().invokeAndWait {
             if (shRunner.isAvailable(myProject)) {
-                val output = runShellCommand(virtualFile)
+                val output = ShireShellRunner.runShellCommand(virtualFile, myProject, processVariables)
                 future.complete(output)
             }
         }
 
         return future.get()
-    }
-
-    private const val DEFAULT_TIMEOUT: Int = 30000
-
-    private fun runShellCommand(virtualFile: VirtualFile): String {
-        val workingDirectory = virtualFile.parent.path
-
-        val commandLine: GeneralCommandLine = GeneralCommandLine()
-            .withParentEnvironmentType(GeneralCommandLine.ParentEnvironmentType.CONSOLE)
-            .withWorkDirectory(workingDirectory)
-            .withCharset(StandardCharsets.UTF_8)
-            .withExePath("sh")
-            .withParameters(virtualFile.path)
-
-        val processOutput = CapturingProcessHandler(commandLine).runProcess(DEFAULT_TIMEOUT)
-        val exitCode = processOutput.exitCode
-        if (exitCode != 0) {
-            throw RuntimeException("Cannot execute ${commandLine}: exit code $exitCode, error output: ${processOutput.stderr}")
-        }
-
-        return processOutput.stdout
     }
 
     private fun executeTask(
@@ -130,3 +106,4 @@ object ThreadProcessor {
     }
 
 }
+
