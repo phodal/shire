@@ -33,7 +33,7 @@ object HobbitHoleParser {
 
     fun parse(file: ShireFile): HobbitHole? {
         return runReadAction {
-            PsiTreeUtil.getChildrenOfTypeAsList(file, ShireFrontMatterHeader::class.java).firstOrNull()?.let {
+            PsiTreeUtil.getChildrenOfTypeAsList(file, ShireFrontMatterHeader::class.java)?.firstOrNull()?.let {
                 parse(it)
             }
         }
