@@ -1,14 +1,26 @@
-# [](https://github.com/phodal/shire/compare/v0.6.0...v) (2024-08-26)
+# [](https://github.com/phodal/shire/compare/v0.7.2...v) (2024-09-05)
 
 ## [Unreleased]
 
-## [0.6.0](https://github.com/phodal/shire/compare/v0.5.2...v[0.6.0]) (2024-08-26)
+## [0.7.2](https://github.com/phodal/shire/compare/v0.7.1...v[0.7.2]) (2024-09-05)
 
 ### Bug Fixes
 
-- **executor:** handle exceptions in ShireDefaultLlmExecutor [#60](https://github.com/phodal/shire/issues/60) ([da44e85](https://github.com/phodal/shire/commit/da44e858f32ea9bdb1c68b7b2b5d9f1db671676a))
-- **plugin:** add Kotlin module support ([c3c1ecb](https://github.com/phodal/shire/commit/c3c1ecb98b03418b88415e26eb9742db82da3806))
-- **shirelang:** add exception handling for LlmProvider streaming output [#60](https://github.com/phodal/shire/issues/60) ([a8272b2](https://github.com/phodal/shire/commit/a8272b2341e7770d2109ac666036e02d3d4bf103))
+- **runtime:** switch to workerThread for terminal UI tasks execution [#72](https://github.com/phodal/shire/issues/72) ([53672d3](https://github.com/phodal/shire/commit/53672d3def0a373de2358a0754a3798c398e8934))
+
+### Features
+
+- **database:** add function to retrieve and display database info ([c30dd13](https://github.com/phodal/shire/commit/c30dd130809290e1a5495ab5960f098945b02f73))
+- **httpclient:** enable pass variable table value to curl.sh file ([615b280](https://github.com/phodal/shire/commit/615b280ec54f4b76dfd1b1823f815373865a6747))
+- **middleware:** add DiffProcessor support [#66](https://github.com/phodal/shire/issues/66) ([b3110f6](https://github.com/phodal/shire/commit/b3110f634fe71be5c11170ccfae155558fd714de))
+- **middleware:** add Patch processor for applying code patches ([425fdb4](https://github.com/phodal/shire/commit/425fdb4ab28aa6f06ee645339d70289b9ae3acf8))
+- **parser:** enable regex pattern function support ([8f88ddd](https://github.com/phodal/shire/commit/8f88ddd0e21d5326f9b6a20c53b43f0c438749c9))
+- **parser:** implement custom ShireGrepFuncCall and refactor related components ([4a319ec](https://github.com/phodal/shire/commit/4a319ec9295b9b82e851c8bd1cdbacb822bd240e))
+- **parser:** implement sed function call and improve injection handling ([00f3aca](https://github.com/phodal/shire/commit/00f3acaf0724eaeea8ce0535ee15bad3d5016f70))
+- **shirelang:** implement regex pattern support for 'grep' function ([e3bb682](https://github.com/phodal/shire/commit/e3bb6828bfa72e9fba2bb39f954097487c8fa1bb))
+- **testing:** add Shire language annotation to test cases and implement shell script runner ([9c53db9](https://github.com/phodal/shire/commit/9c53db9d4609cb78c026a93fb6b719c4b294a05f))
+
+## [0.7.1](https://github.com/phodal/shire/compare/v0.7.0...v[0.7.1]) (2024-09-02)
 
 ### Features
 
@@ -29,6 +41,12 @@
 - **shire-kotlin:** add Java support for KotlinLanguageToolchainProvider [#58](https://github.com/phodal/shire/issues/58) ([e026929](https://github.com/phodal/shire/commit/e0269299c57e99f3dc7b15608657544148901004))
 - **shirelang:** add crawl functionality and processor support [#59](https://github.com/phodal/shire/issues/59) ([ee5a3ea](https://github.com/phodal/shire/commit/ee5a3ea42b3b2b7feef4974002d5bb8b92817037))
 - **shirelang:** add support for threading function execution [#60](https://github.com/phodal/shire/issues/60) ([0d31f9e](https://github.com/phodal/shire/commit/0d31f9e8636d9fa169eb6359dd9fff1c4ebc61ad))
+
+### Bug Fixes
+
+- **executor:** handle exceptions in ShireDefaultLlmExecutor [#60](https://github.com/phodal/shire/issues/60) ([da44e85](https://github.com/phodal/shire/commit/da44e858f32ea9bdb1c68b7b2b5d9f1db671676a))
+- **plugin:** add Kotlin module support ([c3c1ecb](https://github.com/phodal/shire/commit/c3c1ecb98b03418b88415e26eb9742db82da3806))
+- **shirelang:** add exception handling for LlmProvider streaming output [#60](https://github.com/phodal/shire/issues/60) ([a8272b2](https://github.com/phodal/shire/commit/a8272b2341e7770d2109ac666036e02d3d4bf103))
 
 ## [0.5.2](https://github.com/phodal/shire/compare/v0.5.0...v[0.5.2]) (2024-08-15)
 
@@ -461,8 +479,9 @@
 - **shell:** add shell language support plugin file ([bdc1c90](https://github.com/phodal/shire/commit/bdc1c90f10d7c2c4fb8f7157db343dd756c11352))
 - **shire:** add Shire context action group and location support ([e3df86d](https://github.com/phodal/shire/commit/e3df86d16d0c9985fec787a8e76ce553be9a9a45))
 
-[Unreleased]: https://github.com/phodal/shire/compare/v0.6.0...HEAD
-[0.6.0]: https://github.com/phodal/shire/compare/v0.5.2...v0.6.0
+[Unreleased]: https://github.com/phodal/shire/compare/v0.7.2...HEAD
+[0.7.2]: https://github.com/phodal/shire/compare/v0.7.1...v0.7.2
+[0.7.1]: https://github.com/phodal/shire/compare/v0.5.2...v0.7.1
 [0.5.2]: https://github.com/phodal/shire/compare/v0.4.8...v0.5.2
 [0.4.8]: https://github.com/phodal/shire/compare/v0.4.7...v0.4.8
 [0.4.7]: https://github.com/phodal/shire/compare/v0.4.6...v0.4.7
