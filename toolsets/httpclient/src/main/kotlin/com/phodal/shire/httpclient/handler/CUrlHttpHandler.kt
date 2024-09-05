@@ -5,8 +5,6 @@ import com.intellij.httpClient.http.request.notification.HttpClientWhatsNewConte
 import com.intellij.ide.scratch.ScratchUtil
 import com.intellij.ide.scratch.ScratchesSearchScope
 import com.intellij.json.psi.JsonFile
-import com.intellij.json.psi.JsonObject
-import com.intellij.json.psi.JsonProperty
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
@@ -17,6 +15,7 @@ import com.intellij.psi.search.ProjectScope
 import com.intellij.psi.util.PsiUtilCore
 import com.intellij.util.indexing.FileBasedIndex
 import com.phodal.shire.httpclient.converter.CUrlConverter
+import com.phodal.shirecore.provider.http.VariableFiller
 import com.phodal.shirecore.index.SHIRE_ENV_ID
 import com.phodal.shirecore.provider.http.HttpHandler
 import com.phodal.shirecore.provider.http.HttpHandlerType
@@ -44,7 +43,7 @@ class CUrlHttpHandler : HttpHandler {
                         (PsiManager.getInstance(project).findFile(it) as? JsonFile)
                     }
 
-            val envObject = CUrlConverter.readEnvObject(psiFile, envName)
+            val envObject = VariableFiller.readEnvObject(psiFile, envName)
             CUrlConverter.convert(content, enVariables, processVariables, envObject)
         }
 
