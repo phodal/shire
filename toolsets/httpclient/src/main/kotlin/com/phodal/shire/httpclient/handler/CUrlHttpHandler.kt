@@ -28,7 +28,7 @@ class CUrlHttpHandler : HttpHandler {
         project: Project,
         content: String,
         variablesName: Array<String>,
-        variableTable: MutableMap<String, Any?>
+        variableTable: MutableMap<String, Any?>,
     ): String? {
         val processVariables: Map<String, String> = variablesName.associateWith { (variableTable[it] as? String ?: "") }
 
@@ -37,12 +37,7 @@ class CUrlHttpHandler : HttpHandler {
             val scope = getSearchScope(project)
             val envName = ShireEnvReader.getAllEnvironments(project, scope).firstOrNull() ?: "development"
             val enVariables: List<Set<String>> = ShireEnvReader.fetchEnvironmentVariables(envName, scope)
-            val psiFile =
-                FileBasedIndex.getInstance().getContainingFiles(SHIRE_ENV_ID, envName, scope)
-                    .firstOrNull()
-                    ?.let {
-                        (PsiManager.getInstance(project).findFile(it) as? JsonFile)
-                    }
+            val psiFile = ShireEnvReader.getEnvJsonFile(envName, scope, project)
 
             val envObject = ShireEnvReader.readEnvObject(psiFile, envName)
             CUrlConverter.convert(content, enVariables, processVariables, envObject)

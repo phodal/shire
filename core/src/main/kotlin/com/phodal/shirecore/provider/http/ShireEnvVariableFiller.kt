@@ -4,11 +4,33 @@ import com.intellij.json.JsonUtil
 import com.intellij.json.psi.*
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
+import com.intellij.psi.PsiManager
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.util.indexing.FileBasedIndex
 import com.phodal.shirecore.index.SHIRE_ENV_ID
 
 object ShireEnvReader {
+    /**
+     * This function attempts to retrieve a JSON file associated with a given environment name within the specified scope and project.
+     *
+     * @param envName The name of the environment for which to find the associated JSON file.
+     * @param scope The GlobalSearchScope to limit the search for the JSON file.
+     * @param project The Project within which to search for the JSON file.
+     *
+     * @return A JsonFile object if a file with the environment name is found, or null if no such file exists within the given scope and project.
+     */
+    fun getEnvJsonFile(
+        envName: String,
+        scope: GlobalSearchScope,
+        project: Project,
+    ): JsonFile? {
+        return FileBasedIndex.getInstance().getContainingFiles(SHIRE_ENV_ID, envName, scope)
+            .firstOrNull()
+            ?.let {
+                (PsiManager.getInstance(project).findFile(it) as? JsonFile)
+            }
+    }
+
     /**
      * Read Shire env file object
      */
