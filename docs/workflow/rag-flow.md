@@ -18,7 +18,7 @@ variables:
   "input": "博客创建流程"
 afterStreaming: {
     case condition {
-      default { searching($output) | execute("search.shire") }
+      default { searching($output, "0.1") | execute("search.shire") }
     }
  }
 ---

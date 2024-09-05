@@ -111,7 +111,7 @@ variables:
 | notify    | 使用 IDE 通知        | `message`: 要显示的通知消息                                                | `notify("Process completed successfully.")` |
 | splitting | 分割文本或文件          | `paths`: 要分割的文本或文件路径                                               | `splitting("file.txt", "file2.txt")`        |
 | embedding | 嵌入文本             | `entries`: 要嵌入的文本条目                                                | `embedding("entry1", "entry2")`             |
-| searching | 搜索文本             | `text`: 要搜索的文本                                                     | `searching("pattern")`                      |
+| searching | 搜索文本             | `text`: 要搜索的文本, threshold: 置信度阈值（string, 默认 0.5）                   | `searching("pattern")`                      |
 | reranking | 重新排序             | `type`: 重排类型，默认  lostInTheMiddle                                   | `reranking("pattern")`                      |
 | caching   | 缓存语义             | `text`: 要缓存的文本                                                     | `caching("data")`                           |
 | redact    | 屏蔽敏感数据           |                                                                    | `redact()`                                  |
