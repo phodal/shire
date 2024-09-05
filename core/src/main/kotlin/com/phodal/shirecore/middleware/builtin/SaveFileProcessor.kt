@@ -74,18 +74,27 @@ class SaveFileProcessor : PostProcessor, Disposable {
 
     private fun handleForProjectFile(
         project: Project,
-        fileName: String,
+        filepath: String,
         context: PostCodeHandleContext,
         console: ConsoleView?,
         ext: String,
     ) {
+        var fileName = filepath
         ApplicationManager.getApplication().invokeAndWait {
             WriteAction.compute<VirtualFile, Throwable> {
                 val projectDir = project.guessProjectDir()
+                // if filename starts with / means it's an absolute path, we need to get relative path
+                if (fileName.startsWith("/")) {
+                    val projectPath = projectDir?.canonicalPath
+                    if (projectPath != null) {
+                        fileName = fileName.replace(projectPath, "")
+                    }
+                }
+
                 // filename may include path, like: `src/main/java/HelloWorld.java`, we need to split it
                 // first check if the file is already in the project
                 var outputFile = projectDir?.findFileByRelativePath(fileName)
-                if (projectDir?.findFileByRelativePath(fileName) == null) {
+                if (outputFile == null) {
                     outputFile = createFile(fileName, projectDir)
                 }
 
