@@ -2,60 +2,93 @@
 layout: default
 title: Remote AI Agent
 parent: Workflow
-nav_order: 1
+nav_order: 2
 ---
 
-## Custom AI Agent
+Remote AI Agent 是通过调用远程的 AI Agent 来执行任务。主要实现方式：
 
-1. Create new file with end `.shireCustomAgent.json` in your project, for example: `demo.shireCustomAgent.json`.
-2. Fill JSON format config in `demo.shireCustomAgent.json` file.
+- `thread` 来调用 `.curl.sh` 脚本，执行远程 AI Agent 的任务
 
-### Custom Agent Examples
+示例：
+
+```shire
+---
+variables:
+  "story": /any/ { thread(".shire/shell/dify-epic-story.curl.sh") | jsonpath("$.answer", true) }
+---
+```
+
+## 代码定位示例
+
+入口 Shire 文件
+
+```shire
+---
+name: "定位待变更代码"
+variables:
+  "story": /any/ { thread(".shire/shell/dify-user-story-workflow.curl.sh") | jsonpath("$.answer", true) }
+  "controllers": /.*.java/ { cat | grep("class\s+([a-zA-Z]*Controller)")  }
+  "services": /.*.java/ { cat | grep("class\s+([a-zA-Z]*Service)")  }
+  "firstController": /CinemaController\.java/ { print }
+  "firstService": /CinemaController\.java/ { print }
+  "domainLanguage": /domain-language\.csv/ { cat }
+onStreamingEnd: { parseCode | openFile }
+---
+
+你是一个网站资深的开发人员，能帮助我定位到代码文件。请根据如下的用户故事，以及对应的 controller, service 名称，选择最合适修改的代码文件
+
+用户故事：
+
+$story
+
+Controller 列表：
+
+$controllers
+
+Service 列表：
+
+$services
+
+这个网站的一些专有名词如下：
+
+$domainLanguage
+
+要求：
+
+如果没有合适的 controller，请给出最合适的 controller 和 service 路径。
+
+Controller 示例路径在：
+
+$firstController
+
+service 示例路径在：
+
+$firstService
+
+你只返回文件名，格式如：`src/main/xxx/DemoController.java`
+
+请严格按格式返回，只返回存在的代码文件，只返回文件路径。
+```
+
+`dify-user-story-workflow.curl.sh` 代码：
+
+```bash
+curl -X POST 'https://api.dify.ai/v1/completion-messages' \
+  --header "Authorization: Bearer ${singleStoryKey}" \
+  --header 'Content-Type: application/json' \
+  --data-raw '{
+      "inputs": {"feature": "Hello, world!", "story_list": "作为购物中心电影观众，我想要提前预订电影场次相关的食物，以便于节省购买食物的时间，更好地安排观影时间。", "story": "添加零食和饮料至购物车影院观众在购票时添加零食和饮料提前准备好观影期间的零食和饮料"},
+      "response_mode": "streaming",
+      "user": "phodal"
+  }'
+```
+
+其中的 `singleStoryKey` 可以通过在项目中创建 `xx.shireEnv.json` 来支持，示例：
 
 ```json
-[
-  {
-    "name": "内部 API 集成",
-    "description": "在一个组织或项目中，不同系统或组件之间的通信接口。",
-    "url": "http://127.0.0.1:8765/api/agent/api-market",
-    "responseAction": "Direct"
-  },
-  {
-    "name": "组件库查询",
-    "description": "从组件库中检索特定的 UI 组件，以便在开发的应用程序中使用。",
-    "url": "http://127.0.0.1:8765/api/agent/component-list",
-    "responseAction": "TextChunk"
-  },
-  {
-    "name": "页面生成",
-    "description": "使用 React 框架，基于组件和状态来生成页面。",
-    "url": "http://127.0.0.1:8765/api/agent/ux",
-    "auth": {
-      "type": "Bearer",
-      "token": "eyJhbGci"
-    },
-    "responseAction": "WebView"
-  },
-  {
-    "name": "DevInInsert",
-    "description": "Update，並指定20秒的timeout時間",
-    "url": "http://127.0.0.1:8765/api/agent/shire-sample",
-    "responseAction": "Shire",
-    "defaultTimeout": 20
-  },
-  {
-    "name": "内部 API 集成",
-    "description": "sample",
-    "url": "http://127.0.0.1:8765/api/agent/api-market",
-    "auth": {
-      "type": "Bearer",
-      "token": "eyJhbGci"
-    },
-    "connector": {
-      "requestFormat": "{\"customFields\": {\"model\": \"yi-34b-chat\", \"stream\": true}}",
-      "responseFormat": "$.choices[0].delta.content"
-    },
-    "responseAction": "Direct"
+{
+  "development": {
+    "singleStoryKey": "xxxx"
   }
-]
+}
 ```

@@ -6,10 +6,9 @@ has_children: true
 permalink: /workflow
 ---
 
+# Workflow
 
-概念：
+主要通过：
 
-## 可视化展示
-
-![ComfyUI](https://raw.githubusercontent.com/comfyanonymous/ComfyUI/master/comfyui_screenshot.png)
-
+- `thread` 函数来在多个线程中执行任务
+- `execute` 函数，在执行完后，调用额外的函数

@@ -2,7 +2,7 @@
 layout: default
 title: Response Routing Function
 parent: Workflow
-nav_order: 2
+nav_order: 1
 ---
 
 在 LLM 处理完后，可以返回后续的路由处理函数，以便在不同的场景下，对返回的结果进行处理。
