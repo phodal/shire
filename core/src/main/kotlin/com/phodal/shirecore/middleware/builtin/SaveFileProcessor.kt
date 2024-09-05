@@ -26,7 +26,7 @@ class SaveFileProcessor : PostProcessor, Disposable {
         console: ConsoleView?,
         args: List<Any>,
     ): String {
-        var fileName: String = ""
+        val fileName: String
         val ext = getFileExt(context)
         if (args.isNotEmpty()) {
             fileName = args[0].toString()
