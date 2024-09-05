@@ -3,7 +3,8 @@ package com.phodal.shire.httpclient.converter
 import com.intellij.json.psi.JsonFile
 import com.intellij.json.psi.JsonObject
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
-import com.phodal.shirecore.provider.http.VariableFiller
+import com.phodal.shirecore.provider.http.ShireEnvReader
+import com.phodal.shirecore.provider.http.ShireEnvVariableFiller
 
 class CUrlConverterTest : BasePlatformTestCase() {
     fun testShouldConvertCurlToRestClientRequest() {
@@ -51,13 +52,13 @@ class CUrlConverterTest : BasePlatformTestCase() {
         val envPsiFile = myFixture.addFileToProject("demo.shireEnv.json", jsonEnv)
 
         val variables = listOf(setOf("development"))
-        val obj = VariableFiller.readEnvObject(envPsiFile as JsonFile, "development") as JsonObject
+        val obj = ShireEnvReader.readEnvObject(envPsiFile as JsonFile, "development") as JsonObject
 
         // Given
         val messageBody = "Hello \${name}, my name is \${myName}!"
 
         // When
-        val result = VariableFiller.fillVariables(messageBody, variables, obj, mapOf("myName" to "Shire"))
+        val result = ShireEnvVariableFiller.fillVariables(messageBody, variables, obj, mapOf("myName" to "Shire"))
 
         // Then
         assertEquals("Hello Phodal, my name is Shire!", result)

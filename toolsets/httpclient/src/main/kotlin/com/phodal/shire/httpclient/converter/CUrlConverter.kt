@@ -4,7 +4,7 @@ import com.intellij.httpClient.converters.curl.parser.CurlParser
 import com.intellij.httpClient.execution.RestClientRequest
 import com.intellij.httpClient.http.request.HttpRequestHeaderFields
 import com.intellij.json.psi.*
-import com.phodal.shirecore.provider.http.VariableFiller
+import com.phodal.shirecore.provider.http.ShireEnvVariableFiller
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -23,7 +23,7 @@ object CUrlConverter {
     ): Request {
         val builder = Request.Builder()
 
-        val filledContent = VariableFiller.fillVariables(content, envVars, envObj, processVars)
+        val filledContent = ShireEnvVariableFiller.fillVariables(content, envVars, envObj, processVars)
         val request = this.convert(filledContent)
 
         builder.url(request.buildFullUrl())

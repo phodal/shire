@@ -15,10 +15,10 @@ import com.intellij.psi.search.ProjectScope
 import com.intellij.psi.util.PsiUtilCore
 import com.intellij.util.indexing.FileBasedIndex
 import com.phodal.shire.httpclient.converter.CUrlConverter
-import com.phodal.shirecore.provider.http.VariableFiller
 import com.phodal.shirecore.index.SHIRE_ENV_ID
 import com.phodal.shirecore.provider.http.HttpHandler
 import com.phodal.shirecore.provider.http.HttpHandlerType
+import com.phodal.shirecore.provider.http.ShireEnvReader
 import okhttp3.OkHttpClient
 
 class CUrlHttpHandler : HttpHandler {
@@ -34,40 +34,22 @@ class CUrlHttpHandler : HttpHandler {
 
         val client = OkHttpClient()
         val request = runReadAction {
-            val envName = getAllEnvironments(project, getSearchScope(project)).firstOrNull() ?: "development"
-            val enVariables: List<Set<String>> = fetchEnvironmentVariables(project, envName)
+            val scope = getSearchScope(project)
+            val envName = ShireEnvReader.getAllEnvironments(project, scope).firstOrNull() ?: "development"
+            val enVariables: List<Set<String>> = ShireEnvReader.fetchEnvironmentVariables(envName, scope)
             val psiFile =
-                FileBasedIndex.getInstance().getContainingFiles(SHIRE_ENV_ID, envName, getSearchScope(project))
+                FileBasedIndex.getInstance().getContainingFiles(SHIRE_ENV_ID, envName, scope)
                     .firstOrNull()
                     ?.let {
                         (PsiManager.getInstance(project).findFile(it) as? JsonFile)
                     }
 
-            val envObject = VariableFiller.readEnvObject(psiFile, envName)
+            val envObject = ShireEnvReader.readEnvObject(psiFile, envName)
             CUrlConverter.convert(content, enVariables, processVariables, envObject)
         }
 
         val response = client.newCall(request).execute()
         return response.body?.string()
-    }
-
-    private fun fetchEnvironmentVariables(project: Project, envName: String): List<Set<String>> {
-        val variables: List<Set<String>> = FileBasedIndex.getInstance().getValues(
-            SHIRE_ENV_ID,
-            envName,
-            getSearchScope(project)
-        )
-
-        return variables
-    }
-
-    private fun getAllEnvironments(project: Project, scope: GlobalSearchScope): Collection<String> {
-        val index = FileBasedIndex.getInstance()
-        val collection = index.getAllKeys(SHIRE_ENV_ID, project).stream()
-            .filter { index.getContainingFiles(SHIRE_ENV_ID, it, scope).isNotEmpty() }
-            .toList()
-
-        return collection
     }
 
     private fun getSearchScope(project: Project, contextFile: PsiFile? = null): GlobalSearchScope {

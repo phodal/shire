@@ -2,9 +2,13 @@ package com.phodal.shirecore.provider.http
 
 import com.intellij.json.JsonUtil
 import com.intellij.json.psi.*
+import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
+import com.intellij.psi.search.GlobalSearchScope
+import com.intellij.util.indexing.FileBasedIndex
+import com.phodal.shirecore.index.SHIRE_ENV_ID
 
-object VariableFiller {
+object ShireEnvReader {
     /**
      * Read Shire env file object
      */
@@ -16,6 +20,25 @@ object VariableFiller {
         return envObject
     }
 
+    fun fetchEnvironmentVariables(envName: String, scope: GlobalSearchScope): List<Set<String>> {
+        return FileBasedIndex.getInstance().getValues(
+            SHIRE_ENV_ID,
+            envName,
+            scope
+        )
+    }
+
+    fun getAllEnvironments(project: Project, scope: GlobalSearchScope): Collection<String> {
+        val index = FileBasedIndex.getInstance()
+
+        return index.getAllKeys(SHIRE_ENV_ID, project).stream()
+            .filter { index.getContainingFiles(SHIRE_ENV_ID, it, scope).isNotEmpty() }
+            .toList()
+    }
+
+}
+
+object ShireEnvVariableFiller {
     private fun getVariableValue(jsonObject: JsonObject, name: String, processVars: Map<String, String>): String? {
         val value = JsonUtil.getPropertyValueOfType(jsonObject, name, JsonLiteral::class.java)
         val jsonResult = getValueAsString(value)
