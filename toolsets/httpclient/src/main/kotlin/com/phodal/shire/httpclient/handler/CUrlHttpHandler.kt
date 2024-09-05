@@ -5,6 +5,7 @@ import com.intellij.httpClient.http.request.notification.HttpClientWhatsNewConte
 import com.intellij.ide.scratch.ScratchUtil
 import com.intellij.ide.scratch.ScratchesSearchScope
 import com.intellij.json.psi.JsonFile
+import com.intellij.json.psi.JsonObject
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
@@ -35,11 +36,11 @@ class CUrlHttpHandler : HttpHandler {
         val client = OkHttpClient()
         val request = runReadAction {
             val scope = getSearchScope(project)
-            val envName = ShireEnvReader.getAllEnvironments(project, scope).firstOrNull() ?: "development"
-            val enVariables: List<Set<String>> = ShireEnvReader.fetchEnvironmentVariables(envName, scope)
-            val psiFile = ShireEnvReader.getEnvJsonFile(envName, scope, project)
 
-            val envObject = ShireEnvReader.readEnvObject(psiFile, envName)
+            val envName = ShireEnvReader.getAllEnvironments(project, scope).firstOrNull() ?: ShireEnvReader.DEFAULT_ENV_NAME
+            val envObject = ShireEnvReader.getEnvObject(envName, scope, project)
+
+            val enVariables: List<Set<String>> = ShireEnvReader.fetchEnvironmentVariables(envName, scope)
             CUrlConverter.convert(content, enVariables, processVariables, envObject)
         }
 

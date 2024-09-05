@@ -10,6 +10,7 @@ import com.intellij.util.indexing.FileBasedIndex
 import com.phodal.shirecore.index.SHIRE_ENV_ID
 
 object ShireEnvReader {
+    const val DEFAULT_ENV_NAME = "development"
     /**
      * This function attempts to retrieve a JSON file associated with a given environment name within the specified scope and project.
      *
@@ -19,7 +20,7 @@ object ShireEnvReader {
      *
      * @return A JsonFile object if a file with the environment name is found, or null if no such file exists within the given scope and project.
      */
-    fun getEnvJsonFile(
+    private fun getEnvJsonFile(
         envName: String,
         scope: GlobalSearchScope,
         project: Project,
@@ -31,10 +32,20 @@ object ShireEnvReader {
             }
     }
 
+    fun getEnvObject(
+        envName: String,
+        scope: GlobalSearchScope,
+        project: Project,
+    ): JsonObject? {
+        val psiFile = getEnvJsonFile(envName, scope, project)
+        val envObject = getEnvObject(envName, psiFile)
+        return envObject
+    }
+
     /**
      * Read Shire env file object
      */
-    fun readEnvObject(psiFile: JsonFile?, envName: String): JsonObject? {
+    fun getEnvObject(envName: String, psiFile: JsonFile?): JsonObject? {
         val rootObject = psiFile?.topLevelValue as? JsonObject ?: return null
 
         val properties: List<JsonProperty> = rootObject.propertyList

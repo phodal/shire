@@ -52,7 +52,7 @@ class CUrlConverterTest : BasePlatformTestCase() {
         val envPsiFile = myFixture.addFileToProject("demo.shireEnv.json", jsonEnv)
 
         val variables = listOf(setOf("development"))
-        val obj = ShireEnvReader.readEnvObject(envPsiFile as JsonFile, "development") as JsonObject
+        val obj = ShireEnvReader.getEnvObject("development", envPsiFile as JsonFile) as JsonObject
 
         // Given
         val messageBody = "Hello \${name}, my name is \${myName}!"
