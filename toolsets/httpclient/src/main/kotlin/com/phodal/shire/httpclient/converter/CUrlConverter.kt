@@ -16,6 +16,14 @@ object CUrlConverter {
         return restClientRequest
     }
 
+    fun readEnvObject(psiFile: JsonFile?, envName: String): JsonObject? {
+        val rootObject = psiFile?.topLevelValue as? JsonObject ?: return null
+
+        val properties: List<JsonProperty> = rootObject.propertyList
+        val envObject = properties.firstOrNull { it.name == envName }?.value as? JsonObject
+        return envObject
+    }
+
     fun convert(
         content: String,
         envVars: List<Set<String>> = listOf(),
@@ -72,7 +80,7 @@ object CUrlConverter {
         }
     }
 
-    private fun fillVariables(
+    fun fillVariables(
         messageBody: String,
         variables: List<Set<String>>,
         obj: JsonObject?,

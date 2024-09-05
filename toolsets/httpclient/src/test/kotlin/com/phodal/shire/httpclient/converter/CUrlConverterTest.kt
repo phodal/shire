@@ -1,9 +1,8 @@
 package com.phodal.shire.httpclient.converter
 
-import com.intellij.psi.search.ProjectScope
+import com.intellij.json.psi.JsonFile
+import com.intellij.json.psi.JsonObject
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
-import com.intellij.util.indexing.FileBasedIndex
-import com.phodal.shirecore.index.SHIRE_ENV_ID
 
 class CUrlConverterTest : BasePlatformTestCase() {
     fun testShouldConvertCurlToRestClientRequest() {
@@ -37,35 +36,29 @@ class CUrlConverterTest : BasePlatformTestCase() {
 
         // Then
         assertEquals("https://open.bigmodel.cn/api/paas/v4/chat/completions", request.url.toString())
-//        val client = OkHttpClient()
-//        val response = client.newCall(request).execute()
-//        assertEquals(401, response.code)
     }
 
-//    fun testShouldHandleForVariable() {
-//        val jsonEnv = """
-//            {
-//              "development": {
-//                "name": "Phodal"
-//              }
-//            }
-//             """.trimIndent()
-//
-//        myFixture.addFileToProject("demo.shireEnv.json", jsonEnv)
-//
-//        val variables: MutableList<Set<String>> = FileBasedIndex.getInstance().getValues(
-//            SHIRE_ENV_ID,
-//            "development",
-//            ProjectScope.getContentScope(project)
-//        )
-//
-//        // Given
-//        val messageBody = "Hello \${name}!"
-//
-//        // When
-//        val result = CUrlConverter.fillVariables(messageBody,  variables)
-//
-//        // Then
-//        assertEquals("Hello !", result)
-//    }
+    fun testShouldHandleForVariable() {
+        val jsonEnv = """
+            {
+              "development": {
+                "name": "Phodal"
+              }
+            }
+             """.trimIndent()
+
+        val envPsiFile = myFixture.addFileToProject("demo.shireEnv.json", jsonEnv)
+
+        val variables = listOf(setOf("development"))
+        val obj = CUrlConverter.readEnvObject(envPsiFile as JsonFile, "development") as JsonObject
+
+        // Given
+        val messageBody = "Hello \${name}, my name is \${myName}!"
+
+        // When
+        val result = CUrlConverter.fillVariables(messageBody,  variables, obj, mapOf("myName" to "Shire"))
+
+        // Then
+        assertEquals("Hello Phodal, my name is Shire!", result)
+    }
 }

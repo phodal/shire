@@ -44,20 +44,12 @@ class CUrlHttpHandler : HttpHandler {
                         (PsiManager.getInstance(project).findFile(it) as? JsonFile)
                     }
 
-            val envObject = readEnvObject(psiFile, envName)
+            val envObject = CUrlConverter.readEnvObject(psiFile, envName)
             CUrlConverter.convert(content, enVariables, processVariables, envObject)
         }
 
         val response = client.newCall(request).execute()
         return response.body?.string()
-    }
-
-    private fun readEnvObject(psiFile: JsonFile?, envName: String): JsonObject? {
-        val rootObject = psiFile?.topLevelValue as? JsonObject ?: return null
-
-        val properties: List<JsonProperty> = rootObject.propertyList
-        val envObject = properties.firstOrNull { it.name == envName }?.value as? JsonObject
-        return envObject
     }
 
     private fun fetchEnvironmentVariables(project: Project, envName: String): List<Set<String>> {

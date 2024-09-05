@@ -8,7 +8,6 @@ import com.intellij.util.indexing.*
 import com.intellij.util.io.DataExternalizer
 import com.intellij.util.io.EnumeratorStringDescriptor
 import com.intellij.util.io.KeyDescriptor
-import java.util.stream.Collectors
 
 val SHIRE_ENV_ID: ID<String, Set<String>> = ID.create("shire.environment")
 
