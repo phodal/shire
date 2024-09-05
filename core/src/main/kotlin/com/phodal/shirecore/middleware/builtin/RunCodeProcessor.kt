@@ -3,6 +3,7 @@ package com.phodal.shirecore.middleware.builtin
 import com.intellij.execution.ui.ConsoleView
 import com.intellij.execution.ui.ConsoleViewContentType.*
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
@@ -23,8 +24,12 @@ class RunCodeProcessor : PostProcessor {
         when (val code = context.pipeData["output"]) {
             is VirtualFile -> {
                 LocalFileSystem.getInstance().refreshAndFindFileByPath(code.path)
-                PsiManager.getInstance(project).findFile(code)?.let { psiFile ->
-                    doExecute(console, project, code, psiFile)
+                val psiFile = ReadAction.compute<PsiFile?, Throwable> {
+                    PsiManager.getInstance(project).findFile(code)
+                }
+
+                psiFile?.let {
+                    doExecute(console, project, code, it)
                     return ""
                 }
             }
