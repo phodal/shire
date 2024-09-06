@@ -9,6 +9,7 @@ import com.phodal.shirelang.psi.ShireTypes
 import com.phodal.shirecore.agent.CustomAgent
 import com.phodal.shirecore.markdown.MarkdownUtil
 import com.phodal.shirelang.ShireLanguage
+import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 import com.phodal.shirelang.completion.dataprovider.BuiltinCommand
 import com.phodal.shirelang.compiler.variable.CompositeVariableProvider
 
@@ -42,6 +43,10 @@ class ShireDocumentationProvider : AbstractDocumentationProvider() {
                 }
             }
 
+//            ShireTypes.FUNC_NAME -> {
+//                val find = PatternActionFunc.all()?.find { it.simpleName == element.text }
+//            }
+
             ShireTypes.PATTERN_ACTION -> {
                 "Pattern action is a way to define a pattern for the agent to match. It's a JSONPath expression."
             }
@@ -61,3 +66,4 @@ class ShireDocumentationProvider : AbstractDocumentationProvider() {
         targetOffset: Int,
     ): PsiElement? = contextElement ?: file.findElementAt(targetOffset)
 }
+
