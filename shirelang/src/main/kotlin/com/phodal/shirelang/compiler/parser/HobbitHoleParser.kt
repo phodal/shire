@@ -9,6 +9,7 @@ import com.intellij.psi.util.elementType
 import com.phodal.shirelang.compiler.hobbit.*
 import com.phodal.shirelang.compiler.hobbit.ast.*
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
+import com.phodal.shirelang.compiler.patternaction.PatternActionFuncType
 import com.phodal.shirelang.psi.*
 
 object HobbitHoleParser {
@@ -532,35 +533,32 @@ object HobbitHoleParser {
 
     private fun parseActionBodyFunCall(funcCall: ShireFuncCall?, expr: ShireActionExpr): PatternActionFunc? {
         val args = parseParameters(funcCall) ?: emptyList()
-        val patternActionFunc = when (funcCall?.funcName?.text) {
-            "grep" -> {
+        val funcName = funcCall?.funcName?.text ?: return null
+
+        val patternActionFunc = when (PatternActionFuncType.values().find { it.funcName == funcName }) {
+            PatternActionFuncType.GREP -> {
                 if (args.isEmpty()) {
                     logger.error("parsePatternAction, grep requires at least 1 argument")
                     return null
                 }
-
                 PatternActionFunc.Grep(*args.toTypedArray())
             }
 
-            "sort" -> {
-                PatternActionFunc.Sort(*args.toTypedArray())
-            }
+            PatternActionFuncType.SORT -> PatternActionFunc.Sort(*args.toTypedArray())
 
-            "find" -> {
+            PatternActionFuncType.FIND -> {
                 if (args.isEmpty()) {
                     logger.error("parsePatternAction, find requires at least 1 argument")
                     return null
                 }
-
                 PatternActionFunc.Find(args[0])
             }
 
-            "sed" -> {
+            PatternActionFuncType.SED -> {
                 if (args.size < 2) {
                     logger.error("parsePatternAction, sed requires at least 2 arguments")
                     return null
                 }
-
                 if (args[0].startsWith("/") && args[0].endsWith("/")) {
                     PatternActionFunc.Sed(args[0], args[1], true)
                 } else {
@@ -568,15 +566,11 @@ object HobbitHoleParser {
                 }
             }
 
-            "xargs" -> {
-                PatternActionFunc.Xargs(*args.toTypedArray())
-            }
+            PatternActionFuncType.XARGS -> PatternActionFunc.Xargs(*args.toTypedArray())
 
-            "uniq" -> {
-                PatternActionFunc.Uniq(*args.toTypedArray())
-            }
+            PatternActionFuncType.UNIQ -> PatternActionFunc.Uniq(*args.toTypedArray())
 
-            "head" -> {
+            PatternActionFuncType.HEAD -> {
                 if (args.isEmpty()) {
                     PatternActionFunc.Head(10)
                 } else {
@@ -584,7 +578,7 @@ object HobbitHoleParser {
                 }
             }
 
-            "tail" -> {
+            PatternActionFuncType.TAIL -> {
                 if (args.isEmpty()) {
                     PatternActionFunc.Tail(10)
                 } else {
@@ -592,109 +586,89 @@ object HobbitHoleParser {
                 }
             }
 
-            "print" -> {
-                PatternActionFunc.Print(*args.toTypedArray())
-            }
+            PatternActionFuncType.PRINT -> PatternActionFunc.Print(*args.toTypedArray())
 
-            "cat" -> {
-                PatternActionFunc.Cat(*args.toTypedArray())
-            }
+            PatternActionFuncType.CAT -> PatternActionFunc.Cat(*args.toTypedArray())
 
-            /// System APIs
-            "execute" -> {
+            PatternActionFuncType.EXECUTE -> {
                 val first = args.firstOrNull() ?: ""
                 val rest = args.drop(1).toTypedArray()
-
                 PatternActionFunc.ExecuteShire(first, rest)
             }
 
-            "notify" -> {
-                PatternActionFunc.Notify(args[0])
-            }
+            PatternActionFuncType.NOTIFY -> PatternActionFunc.Notify(args[0])
 
-            "embedding" -> {
-                PatternActionFunc.Embedding(args.toTypedArray())
-            }
+            PatternActionFuncType.EMBEDDING -> PatternActionFunc.Embedding(args.toTypedArray())
 
-            "splitting" -> {
-                PatternActionFunc.Splitting(args.toTypedArray())
-            }
+            PatternActionFuncType.SPLITTING -> PatternActionFunc.Splitting(args.toTypedArray())
 
-            "searching" -> {
-                PatternActionFunc.Searching(args[0], args.getOrNull(1)?.toDouble() ?: 0.5)
-            }
+            PatternActionFuncType.SEARCHING -> PatternActionFunc.Searching(args[0], args.getOrNull(1)?.toDouble() ?: 0.5)
 
-            "reranking" -> {
+            PatternActionFuncType.RERANKING -> {
                 val first = args.firstOrNull() ?: "default"
                 PatternActionFunc.Reranking(first)
             }
 
-            "caching" -> {
-                PatternActionFunc.Caching(args[0])
-            }
+            PatternActionFuncType.CACHING -> PatternActionFunc.Caching(args[0])
 
-            "redact" -> {
+            PatternActionFuncType.REDACT -> {
                 val first = args.firstOrNull() ?: "default"
                 PatternActionFunc.Redact(first)
             }
 
-            "crawl" -> {
-                val urls: List<String> = args.filter {
-                    it.trim().isNotEmpty()
-                }
-
+            PatternActionFuncType.CRAWL -> {
+                val urls: List<String> = args.filter { it.trim().isNotEmpty() }
                 PatternActionFunc.Crawl(*urls.toTypedArray())
             }
 
-            "capture" -> {
+            PatternActionFuncType.CAPTURE -> {
                 if (args.size < 2) {
                     logger.error("parsePatternAction, capture requires at least 2 arguments")
                     return null
                 }
-
                 PatternActionFunc.Capture(args[0], args[1])
             }
 
-            "thread" -> {
+            PatternActionFuncType.THREAD -> {
                 if (args.isEmpty()) {
                     logger.error("parsePatternAction, thread requires at least 1 argument")
                     return null
                 }
-
                 val rest = args.drop(1).toTypedArray()
                 PatternActionFunc.Thread(args.first(), rest)
             }
 
-            "jsonpath" -> {
+            PatternActionFuncType.JSONPATH -> {
                 if (args.isEmpty()) {
-                    logger.error("parsePatternAction, jsonpath requires at least 1 arguments")
+                    logger.error("parsePatternAction, jsonpath requires at least 1 argument")
                     return null
                 }
-
                 if (args.size < 2) {
                     PatternActionFunc.JsonPath(null, args[0], false)
                 } else {
-                    when(args[1]) {
-                        "true" -> {
-                            PatternActionFunc.JsonPath(null, args[0], true)
-                        }
-                        else -> {
-                            PatternActionFunc.JsonPath(args[0], args[1])
-                        }
+                    when (args[1]) {
+                        "true" -> PatternActionFunc.JsonPath(null, args[0], true)
+                        else -> PatternActionFunc.JsonPath(args[0], args[1])
                     }
                 }
             }
+
+            PatternActionFuncType.TOOLCHAIN_FUNCTION -> PatternActionFunc.ToolchainFunction(funcName, args)
 
             null -> {
                 logger.warn("parsePatternAction, Unknown pattern action: ${expr.funcCall}")
                 return null
             }
 
-            else -> {
+            PatternActionFuncType.FROM,
+            PatternActionFuncType.WHERE,
+            PatternActionFuncType.SELECT,
+            PatternActionFuncType.CASE_MATCH -> {
                 val funcName = funcCall.funcName.text ?: ""
                 PatternActionFunc.ToolchainFunction(funcName, args)
             }
         }
+
         return patternActionFunc
     }
 

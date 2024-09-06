@@ -275,7 +275,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             }
 
             is PatternActionFunc.Reranking -> {
-                semanticService.reranking(action.type)
+                semanticService.reranking(action.strategy)
             }
 
             is PatternActionFunc.Redact -> {
