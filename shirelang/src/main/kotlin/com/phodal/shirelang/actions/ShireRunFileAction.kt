@@ -73,8 +73,6 @@ class ShireRunFileAction : DumbAwareAction() {
             runConfiguration.setScriptPath(config.shireFile.virtualFile.path)
             if (variables.isNotEmpty()) {
                 runConfiguration.setVariables(variables)
-//                // update for not update variable and set to PostHandleContext
-//                // if varValue start with $, it's a variable should be updated
                 PostCodeHandleContext.updateRunConfigVariables(variables)
             }
 

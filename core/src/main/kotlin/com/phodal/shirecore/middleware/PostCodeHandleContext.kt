@@ -85,26 +85,26 @@ class PostCodeHandleContext(
             )
         }
 
-        /// todo: refactor to GlobalVariableContext
+        // todo: refactor to GlobalVariableContext
         fun updateContextAndVariables(context: PostCodeHandleContext) {
-            if (context.compiledVariables.isNotEmpty()) {
-                // get old variables and update
-                val userData = userDataHolderBase.getUserData(DATA_KEY)
-                val oldVariables: MutableMap<String, Any?> =
-                    userData?.compiledVariables?.toMutableMap() ?: mutableMapOf()
+            context.compiledVariables = dynamicUpdateVariables(context.compiledVariables)
+            userDataHolderBase.putUserData(DATA_KEY, context)
+        }
 
-                context.compiledVariables.forEach {
-                    if (it.value.toString().startsWith("$")) {
-                        oldVariables.remove(it.key)
-                    } else if (it.value != null && it.value.toString().isNotEmpty()) {
-                        oldVariables[it.key] = it.value
-                    }
+        private fun dynamicUpdateVariables(variables: Map<String, Any?>): MutableMap<String, Any?> {
+            val userData = userDataHolderBase.getUserData(DATA_KEY)
+            val oldVariables: MutableMap<String, Any?> =
+                userData?.compiledVariables?.toMutableMap() ?: mutableMapOf()
+
+            variables.forEach {
+                if (it.value.toString().startsWith("$")) {
+                    oldVariables.remove(it.key)
+                } else if (it.value != null && it.value.toString().isNotEmpty()) {
+                    oldVariables[it.key] = it.value
                 }
-
-                context.compiledVariables = oldVariables
             }
 
-            userDataHolderBase.putUserData(DATA_KEY, context)
+            return oldVariables
         }
 
         fun getData(): PostCodeHandleContext? {
@@ -120,17 +120,6 @@ class PostCodeHandleContext(
 
             val compiledVariables = context?.compiledVariables?.toMutableMap()
             compiledVariables?.set("output", output)
-
-            if (context != null) {
-                context.compiledVariables = compiledVariables ?: mapOf()
-                updateContextAndVariables(context)
-            }
-        }
-
-        fun updateVariable(varName: String, varValue: String) {
-            val context = getData()
-            val compiledVariables = context?.compiledVariables?.toMutableMap()
-            compiledVariables?.set(varName, varValue)
 
             if (context != null) {
                 context.compiledVariables = compiledVariables ?: mapOf()
