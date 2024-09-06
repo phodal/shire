@@ -99,7 +99,15 @@ class ShireRunFileAction : DumbAwareAction() {
         ): String? {
             val variables: MutableMap<String, String> = mutableMapOf()
             for (i in variableNames.indices) {
-                variables[variableNames[i]] = variableTable[variableNames[i]].toString()
+                val varName = variableNames[i]
+                val varValue = variableTable[varName].toString()
+                variables[varName] = varValue
+
+//                // update for not update variable and set to PostHandleContext
+//                // if varValue start with $, it's a variable should be updated
+//                if (varName != "output") {
+//                    PostCodeHandleContext.updateVariable(varName, varValue)
+//                }
             }
 
             val config = DynamicShireActionConfig.from(file)

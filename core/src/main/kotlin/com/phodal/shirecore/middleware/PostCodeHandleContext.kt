@@ -100,9 +100,19 @@ class PostCodeHandleContext(
                 putData(context)
             }
 
-            // update variable
             val compiledVariables = context?.compiledVariables?.toMutableMap()
             compiledVariables?.set("output", output)
+
+            if (context != null) {
+                context.compiledVariables = compiledVariables ?: mapOf()
+                putData(context)
+            }
+        }
+
+        fun updateVariable(varName: String, varValue: String) {
+            val context = getData()
+            val compiledVariables = context?.compiledVariables?.toMutableMap()
+            compiledVariables?.set(varName, varValue)
 
             if (context != null) {
                 context.compiledVariables = compiledVariables ?: mapOf()
