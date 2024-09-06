@@ -1,4 +1,4 @@
-# theShire Language and Compiler
+# The Shire Language and Compiler
 
 
 ## Http Request
