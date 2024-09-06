@@ -51,6 +51,9 @@
                                         implementationClass="com.phodal.shirelang.run.ShireSyntaxLineMarkerProvider"/>
 
 
+        <gotoDeclarationHandler implementation="com.phodal.shirelang.navigation.ShireGotoDeclarationHandler"/>
+<!--        <gotoSymbolContributor implementation="com.phodal.shirelang.navigation.ShireGotoSymbolContributor"/>-->
+
         <lang.documentationProvider language="Shire"
                                     id="shireDocumentationProvider"
                                     implementationClass="com.phodal.shirelang.documentation.ShireDocumentationProvider"/>
