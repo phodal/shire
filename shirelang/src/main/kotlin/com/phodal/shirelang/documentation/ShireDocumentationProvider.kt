@@ -39,13 +39,14 @@ class ShireDocumentationProvider : AbstractDocumentationProvider() {
                         CompositeVariableProvider.all().find { it.name == element.text }?.description
                     }
 
+                   ShireTypes.FUNC_NAME -> {
+                       val funcName = element.text
+                       PatternActionFunc.findDocByName(funcName) ?: return null
+                   }
+
                     else -> null
                 }
             }
-
-//            ShireTypes.FUNC_NAME -> {
-//                val find = PatternActionFunc.all()?.find { it.simpleName == element.text }
-//            }
 
             ShireTypes.PATTERN_ACTION -> {
                 "Pattern action is a way to define a pattern for the agent to match. It's a JSONPath expression."

@@ -3,8 +3,6 @@ package com.phodal.shirelang.compiler.patternaction
 import com.phodal.shirelang.compiler.hobbit.ast.CaseKeyValue
 import com.phodal.shirelang.compiler.hobbit.ast.Statement
 import com.phodal.shirelang.compiler.hobbit.ast.VariableElement
-import org.reflections.Reflections
-import kotlin.reflect.KClass
 
 /**
  * The `PatternActionFunc` is a sealed class in Kotlin that represents a variety of pattern action functions.
@@ -122,7 +120,7 @@ sealed class PatternActionFunc(open val funcName: String) {
     /**
      * Embedding text
      */
-    class Embedding( val entries: Array<String>) : PatternActionFunc("embedding")
+    class Embedding(val entries: Array<String>) : PatternActionFunc("embedding")
 
     /**
      * searching text
@@ -181,42 +179,29 @@ sealed class PatternActionFunc(open val funcName: String) {
             return "$funcName(${args.joinToString(", ")})"
         }
     }
-//
-//    fun description(): String {
-//        return when (this) {
-//            is Caching -> TODO()
-//            is Capture -> TODO()
-//            is CaseMatch -> TODO()
-//            is Cat -> TODO()
-//            is Crawl -> TODO()
-//            is Embedding -> TODO()
-//            is ExecuteShire -> TODO()
-//            is Find -> TODO()
-//            is From -> TODO()
-//            is Grep -> TODO()
-//            is Head -> TODO()
-//            is JsonPath -> TODO()
-//            is Notify -> TODO()
-//            is Print -> TODO()
-//            is Redact -> TODO()
-//            is Reranking -> TODO()
-//            is Searching -> TODO()
-//            is Sed -> TODO()
-//            is Select -> TODO()
-//            is Sort -> TODO()
-//            is Splitting -> TODO()
-//            is Tail -> TODO()
-//            is Thread -> TODO()
-//            is ToolchainFunction -> TODO()
-//            is Uniq -> TODO()
-//            is Where -> TODO()
-//            is Xargs -> TODO()
-//        }
-//    }
 
     companion object {
-        fun all(): Set<Class<out PatternActionFunc>>? {
-            return Reflections("com.phodal.shirelang.compiler.patternaction").getSubTypesOf(PatternActionFunc::class.java)
+        fun findDocByName(funcName: String?): String? {
+            return when (funcName) {
+                "grep" -> {
+                    "grep is a command-line utility for searching plain-text data sets for lines that match a regular expression."
+                }
+                "thread" -> {
+                    """
+                    |`thread` function will run the function in a new thread
+                    |
+                    |Example:
+                    |
+                    |```shire
+                    |---
+                    |variables:
+                    |  "story": /any/ { thread(".shire/shell/dify-epic-story.curl.sh") | jsonpath("${'$'}.answer", true) }
+                    |---
+                    |```
+                    """.trimMargin()
+                }
+                else -> null
+            }
         }
     }
 }

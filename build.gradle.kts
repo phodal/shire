@@ -257,8 +257,6 @@ project(":shirelang") {
     }
 
     dependencies {
-        implementation("org.reflections:reflections:0.10.2")
-
         implementation("com.nfeld.jsonpathkt:jsonpathkt:2.0.1")
         implementation("org.apache.velocity:velocity-engine-core:2.3")
 
