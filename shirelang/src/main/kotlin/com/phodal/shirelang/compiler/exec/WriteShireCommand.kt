@@ -13,9 +13,9 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
+import com.phodal.shirecore.lookupFile
 import com.phodal.shirelang.psi.ShireUsed
 import com.phodal.shirecore.markdown.CodeFence
-import com.phodal.shirelang.utils.lookupFile
 
 class WriteShireCommand(val myProject: Project, val argument: String, val content: String, private val used: ShireUsed) :
     ShireCommand {

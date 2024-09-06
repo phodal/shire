@@ -8,10 +8,10 @@ import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.intellij.psi.util.elementType
-import com.phodal.shirecore.middleware.builtin.findFile
+import com.phodal.shirecore.findFile
+import com.phodal.shirecore.lookupFile
 import com.phodal.shirelang.psi.ShireFuncCall
 import com.phodal.shirelang.psi.ShireTypes
-import com.phodal.shirelang.utils.lookupFile
 
 class ShireGotoDeclarationHandler : GotoDeclarationHandlerBase(), GotoDeclarationHandler {
     private val validFunctionNames = setOf("execute", "thread", "saveFile")

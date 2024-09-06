@@ -21,7 +21,7 @@ variables:
       "info" { find("INFO") | sort | xargs("notify_user") }
       default  { find("ERROR") | sort | xargs("notify_admin") }
     }
-  }  
+  }
 ---
 ```
 
@@ -38,13 +38,13 @@ variables:
 1. **模式（Pattern）**：这代表用于筛选输入数据的规则或标准。在Unix/Linux中，这可以是一组文件名模式、正则表达式或其他条件，用于识别哪些数据需要进一步处理。
 2. **动作（Action）**：这是当数据符合模式时需要执行的任务。它由一系列命令组成，描述了如何处理匹配的数据。
 
-例如，在Shire中，您可以编写如下代码：
+例如，在Shire中，我们可以这样定义一个 Pattern-Action：
 
 ```text
-/*.java/ { find("error.log") | sort | print }
+/.*.java/ { find("error.log") | print }
 ```
 
-这里，`/*.java/` 是模式部分，用于匹配所有以 `.java` 结尾的文件，而 `{ find("error.log") | sort | xargs("rm")}` 是动作部分，
+这里，`/*.java/` 是模式部分，用于匹配所有以 `.java` 结尾的文件，而 `{ find("error.log") | print }` 是动作部分，
 表示对匹配的文件执行一系列操作：首先搜索包含 "error.log" 的行，然后对这些行进行排序，最后将结果输出到标准输出。
 
 在 Shire 中，我们利用了 Intellij 的强大功能，如正则表达式匹配、代码高亮和语法检查，以帮助用户更高效地编写代码。例如，
@@ -95,10 +95,10 @@ variables:
 
 ## Pattern Function
 
-| 函数类别      | 功能描述             | 参数                           `                                     | 示例                                          |
+| 函数类别      | 功能描述             | 参数                                                                 | 示例                                          |
 |-----------|------------------|--------------------------------------------------------------------|---------------------------------------------|
-| find      | 基于文本搜索           | ` text`: 要搜索的文本                                                    | `find("error")`                             |
-| grep      | 使用模式进行搜索         | `patterns`: 要搜索的模式                                                 | ` grep("[a-zA-Z]+Controller")`              |
+| find      | 基于文本搜索           | `text`: 要搜索的文本                                                     | `find("error")`                             |
+| grep      | 使用模式进行搜索         | `patterns`: 要搜索的模式                                                 | `grep("[a-zA-Z]+Controller")`               |
 | sed       | 查找和替换操作          | `pattern`: 要查找的模式<br>`replacements`: 替换的字符串<br>`isRegex`: 是否为正则表达式 | `sed("s/old/new/g")`                        |
 | sort      | 排序操作             | `arguments`: 排序所需的参数                                               | `sort`                                      |
 | uniq      | 去除重复行            | `texts`: 要处理的文本                                                    | `uniq("line1", "line2", "line1")`           |

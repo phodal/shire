@@ -76,7 +76,7 @@ class PostCodeHandleContext(
         private val DATA_KEY: Key<PostCodeHandleContext> = Key.create(PostCodeHandleContext::class.java.name)
         private val userDataHolderBase = UserDataHolderBase()
 
-        fun create(currentFile: PsiFile?,  selectedEntry: SelectedEntry?): PostCodeHandleContext {
+        fun create(currentFile: PsiFile?, selectedEntry: SelectedEntry?): PostCodeHandleContext {
             return PostCodeHandleContext(
                 selectedEntry = selectedEntry,
                 currentFile = currentFile,
@@ -85,8 +85,26 @@ class PostCodeHandleContext(
             )
         }
 
-        fun putData(context: PostCodeHandleContext) {
+        // todo: refactor to GlobalVariableContext
+        fun updateContextAndVariables(context: PostCodeHandleContext) {
+            context.compiledVariables = dynamicUpdateVariables(context.compiledVariables)
             userDataHolderBase.putUserData(DATA_KEY, context)
+        }
+
+        private fun dynamicUpdateVariables(variables: Map<String, Any?>): MutableMap<String, Any?> {
+            val userData = userDataHolderBase.getUserData(DATA_KEY)
+            val oldVariables: MutableMap<String, Any?> =
+                userData?.compiledVariables?.toMutableMap() ?: mutableMapOf()
+
+            variables.forEach {
+                if (it.value.toString().startsWith("$")) {
+                    oldVariables.remove(it.key)
+                } else if (it.value != null && it.value.toString().isNotEmpty()) {
+                    oldVariables[it.key] = it.value
+                }
+            }
+
+            return oldVariables
         }
 
         fun getData(): PostCodeHandleContext? {
@@ -97,16 +115,26 @@ class PostCodeHandleContext(
             val context = getData()
             if (context != null) {
                 context.lastTaskOutput = output.toString()
-                putData(context)
+                updateContextAndVariables(context)
             }
 
-            // update variable
             val compiledVariables = context?.compiledVariables?.toMutableMap()
             compiledVariables?.set("output", output)
 
             if (context != null) {
                 context.compiledVariables = compiledVariables ?: mapOf()
-                putData(context)
+                updateContextAndVariables(context)
+            }
+        }
+
+        fun updateRunConfigVariables(variables: Map<String, String>) {
+            val context = getData()
+            val compiledVariables = context?.compiledVariables?.toMutableMap()
+            compiledVariables?.putAll(variables)
+
+            if (context != null) {
+                context.compiledVariables = compiledVariables ?: mapOf()
+                updateContextAndVariables(context)
             }
         }
     }

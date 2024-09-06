@@ -3,10 +3,10 @@ package com.phodal.shirelang.compiler.exec
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
+import com.phodal.shirecore.lookupFile
 import com.phodal.shirecore.provider.TestingService
 import com.phodal.shirecore.provider.shire.ProjectRunService
 import com.phodal.shirelang.compiler.SHIRE_ERROR
-import com.phodal.shirelang.utils.lookupFile
 
 /**
  * The `RunAutoCommand` class is responsible for executing an auto command on a given project.
@@ -34,7 +34,8 @@ class RunShireCommand(val myProject: Project, private val argument: String) : Sh
                     ?: return "$SHIRE_ERROR: [RunShireCommand] File not found: $argument"
 
             val testService =
-                TestingService.context(psiFile) ?: return "$SHIRE_ERROR: [RunShireCommand] No test service found for file: $argument"
+                TestingService.context(psiFile)
+                    ?: return "$SHIRE_ERROR: [RunShireCommand] No test service found for file: $argument"
             testService.runFile(myProject, virtualFile, null)
 
             return "Tests run successfully for file: $argument"
