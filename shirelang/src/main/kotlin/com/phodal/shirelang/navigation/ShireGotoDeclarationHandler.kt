@@ -14,6 +14,8 @@ import com.phodal.shirelang.psi.ShireTypes
 import com.phodal.shirelang.utils.lookupFile
 
 class ShireGotoDeclarationHandler : GotoDeclarationHandlerBase(), GotoDeclarationHandler {
+    private val validFunctionNames = setOf("execute", "thread", "saveFile")
+
     override fun getGotoDeclarationTarget(element: PsiElement?, editor: Editor?): PsiElement? {
         if (element !is LeafPsiElement) return null
         if (element.elementType != ShireTypes.QUOTE_STRING) return null
@@ -24,7 +26,7 @@ class ShireGotoDeclarationHandler : GotoDeclarationHandlerBase(), GotoDeclaratio
         val funcCall = element.parent?.parent?.parent as? ShireFuncCall ?: return null
         val funcName = funcCall.funcName.text
 
-        if (funcName != "execute" && funcName != "thread") return null
+        if (funcName !in validFunctionNames) return null
 
         val fileName = element.text.removeSurrounding("\"")
         val file = project.lookupFile(fileName) ?: project.findFile(fileName) ?: return null
@@ -32,6 +34,7 @@ class ShireGotoDeclarationHandler : GotoDeclarationHandlerBase(), GotoDeclaratio
         runInEdt {
             FileEditorManager.getInstance(project).openFile(file, true)
         }
+
         return null
     }
 }

@@ -87,13 +87,16 @@ enum class PatternActionFuncType(val funcName: String, val description: String) 
         | `execute` function is used to execute a shire script.
         | 
         | Example:
+        | 
+        | ```shire
         | ---
         | name: "Search"
         | variables:
         |   "testTemplate": /.*.kt/ { caching("disk") | splitting | embedding }
         | afterStreaming: { searching(${'$'}output) | execute("search.shire") }
         | ---
-        | 
+        | ```
+        | g
     """.trimMargin()),
     NOTIFY("notify", "Use IDE Notify."),
     CASE_MATCH("switch", "Case Match."),
@@ -224,8 +227,6 @@ enum class PatternActionFuncType(val funcName: String, val description: String) 
         | The `jsonpath` function will parse the json and get the value by jsonpath.
         | 
         | Example:
-        | ```shire
-        | ---
         | ```shire
         | ---
         | variables:
