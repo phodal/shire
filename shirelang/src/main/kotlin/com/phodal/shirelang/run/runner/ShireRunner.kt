@@ -208,7 +208,7 @@ class ShireRunner(
             compiledVariables = compiledVariables,
         )
 
-        PostCodeHandleContext.putData(context)
+        PostCodeHandleContext.updateContextAndVariables(context)
 
         val processor = hobbitHole?.executeStreamingEndProcessor(project, console, context, compiledVariables)
         PostCodeHandleContext.updateOutput(processor)
@@ -257,7 +257,7 @@ class ShireRunner(
             editor = editor,
             compiledVariables = compiledVariables,
         )
-        PostCodeHandleContext.putData(context)
+        PostCodeHandleContext.updateContextAndVariables(context)
         hobbitHole?.setupStreamingEndProcessor(project, context)
 
     }

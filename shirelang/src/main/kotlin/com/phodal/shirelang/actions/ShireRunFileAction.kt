@@ -12,14 +12,11 @@ import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.application.ModalityState
-import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
 import com.phodal.shirecore.middleware.PostCodeHandleContext
-import com.phodal.shirelang.ShireActionStartupActivity
 import com.phodal.shirelang.actions.base.DynamicShireActionConfig
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.*
@@ -76,6 +73,9 @@ class ShireRunFileAction : DumbAwareAction() {
             runConfiguration.setScriptPath(config.shireFile.virtualFile.path)
             if (variables.isNotEmpty()) {
                 runConfiguration.setVariables(variables)
+//                // update for not update variable and set to PostHandleContext
+//                // if varValue start with $, it's a variable should be updated
+                PostCodeHandleContext.updateRunConfigVariables(variables)
             }
 
             val executorInstance = DefaultRunExecutor.getRunExecutorInstance()
@@ -102,12 +102,6 @@ class ShireRunFileAction : DumbAwareAction() {
                 val varName = variableNames[i]
                 val varValue = variableTable[varName].toString()
                 variables[varName] = varValue
-
-//                // update for not update variable and set to PostHandleContext
-//                // if varValue start with $, it's a variable should be updated
-//                if (varName != "output") {
-//                    PostCodeHandleContext.updateVariable(varName, varValue)
-//                }
             }
 
             val config = DynamicShireActionConfig.from(file)
@@ -124,6 +118,7 @@ class ShireRunFileAction : DumbAwareAction() {
             runConfiguration.setScriptPath(config.shireFile.virtualFile.path)
             if (variables.isNotEmpty()) {
                 runConfiguration.setVariables(variables)
+                PostCodeHandleContext.updateRunConfigVariables(variables)
             }
 
             val executorInstance = DefaultRunExecutor.getRunExecutorInstance()
