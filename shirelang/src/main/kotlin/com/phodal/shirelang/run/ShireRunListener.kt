@@ -13,8 +13,9 @@ interface ShireRunListener : EventListener {
      * @param llmOutput LLM output
      * @param event ProcessEvent
      * @param scriptPath script path
+     * @param consoleView shire consoleView
      */
-    fun runFinish(allOutput: String, llmOutput: String, event: ProcessEvent, scriptPath: String)
+    fun runFinish(allOutput: String, llmOutput: String, event: ProcessEvent, scriptPath: String, consoleView: ShireConsoleView?)
 
     companion object {
         @Topic.AppLevel

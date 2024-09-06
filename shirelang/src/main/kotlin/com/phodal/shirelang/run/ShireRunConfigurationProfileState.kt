@@ -49,7 +49,7 @@ open class ShireRunConfigurationProfileState(
         ProcessTerminatedListener.attach(processHandler)
 
         val sb = StringBuilder()
-        val processAdapter = ShireProcessAdapter(sb, configuration)
+        val processAdapter = ShireProcessAdapter(sb, configuration, console)
         processHandler.addProcessListener(processAdapter)
 
         // start message log in here
@@ -118,7 +118,7 @@ class ShireConsoleView(private val executionConsole: ConsoleViewImpl) :
     }
 }
 
-class ShireProcessAdapter(private val sb: StringBuilder, val configuration: ShireConfiguration) : ProcessAdapter() {
+class ShireProcessAdapter(private val sb: StringBuilder, val configuration: ShireConfiguration, val consoleView: ShireConsoleView?) : ProcessAdapter() {
     var result = ""
     private var llmOutput: String = ""
 
@@ -127,7 +127,7 @@ class ShireProcessAdapter(private val sb: StringBuilder, val configuration: Shir
 
         ApplicationManager.getApplication().messageBus
             .syncPublisher(ShireRunListener.TOPIC)
-            .runFinish(result, llmOutput, event, configuration.getScriptPath())
+            .runFinish(result, llmOutput, event, configuration.getScriptPath(), consoleView)
     }
 
     override fun onTextAvailable(event: ProcessEvent, outputType: Key<*>) {
