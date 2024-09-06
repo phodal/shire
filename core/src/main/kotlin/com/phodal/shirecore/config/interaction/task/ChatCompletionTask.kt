@@ -21,7 +21,7 @@ import java.awt.event.KeyEvent
 import javax.swing.KeyStroke
 
 open class ChatCompletionTask(private val request: CodeCompletionRequest) :
-    Task.Backgroundable(request.project, ShireCoreBundle.message("intentions.chat.code.complete.name")) {
+    ShireInteractionTask(request.project, ShireCoreBundle.message("intentions.chat.code.complete.name"), request.postExecute) {
     private val logger = logger<ChatCompletionTask>()
 
     private var isCanceled: Boolean = false
@@ -87,7 +87,7 @@ open class ChatCompletionTask(private val request: CodeCompletionRequest) :
             indicator.fraction = 0.8
             logger.info("Suggestion: $suggestion")
 
-            val textRange: TextRange = TextRange(modifyStart, modifyEnd)
+            val textRange = TextRange(modifyStart, modifyEnd)
 
             request.postExecute.invoke(suggestion.toString(), textRange)
             indicator.fraction = 1.0

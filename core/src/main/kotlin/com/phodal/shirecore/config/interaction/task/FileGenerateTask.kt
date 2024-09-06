@@ -27,9 +27,9 @@ open class FileGenerateTask(
     val fileName: String?,
     private val codeOnly: Boolean = false,
     private val taskName: String = ShireCoreBundle.message("intentions.request.background.process.title"),
-    val postExecute: PostFunction,
+    postExecute: PostFunction,
 ) :
-    Task.Backgroundable(project, taskName) {
+    ShireInteractionTask(project, taskName, postExecute) {
     private val projectRoot = project.guessProjectDir()!!
 
     override fun run(indicator: ProgressIndicator) {
@@ -74,7 +74,7 @@ open class FileGenerateTask(
             refreshAndOpenInEditor(Path(projectRoot.path), projectRoot)
         }
 
-        postExecute.invoke(result, null)
+        postExecute?.invoke(result, null)
     }
 
     private fun refreshAndOpenInEditor(file: Path, parentDir: VirtualFile) = runBlocking {
