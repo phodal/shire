@@ -134,7 +134,7 @@ class ShireRunFileAction : DumbAwareAction() {
             val hintDisposable = Disposer.newDisposable()
             val connection = ApplicationManager.getApplication().messageBus.connect(hintDisposable)
             connection.subscribe(ShireRunListener.TOPIC, object : ShireRunListener {
-                override fun runFinish(allOutput: String, llmOutput: String, event: ProcessEvent, scriptPath: String) {
+                override fun runFinish(allOutput: String, llmOutput: String, event: ProcessEvent, scriptPath: String, consoleView: ShireConsoleView?) {
                     future.complete(llmOutput)
                 }
             })

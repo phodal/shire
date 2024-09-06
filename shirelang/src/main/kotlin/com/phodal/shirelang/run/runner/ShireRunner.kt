@@ -256,8 +256,7 @@ class ShireRunner(
             currentFile = file,
             editor = editor,
             compiledVariables = compiledVariables,
-        )
-        PostCodeHandleContext.updateContextAndVariables(context)
+        ).also { PostCodeHandleContext.updateContextAndVariables(it) }
         hobbitHole?.setupStreamingEndProcessor(project, context)
 
     }

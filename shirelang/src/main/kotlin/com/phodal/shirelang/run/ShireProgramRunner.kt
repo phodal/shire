@@ -29,14 +29,13 @@ class ShireProgramRunner : GenericProgramRunner<RunnerSettings>(), Disposable {
         if (environment.runProfile !is ShireConfiguration) return null
         val shireState = state as ShireRunConfigurationProfileState
 
-        var executeResult: ExecutionResult? = null
+        var executeResult: ExecutionResult?
 
         val result = AtomicReference<RunContentDescriptor>()
 
         if (!isSubscribed) {
             connection.subscribe(ShireRunListener.TOPIC, object : ShireRunListener {
-                override fun runFinish(allOutput: String, llmOutput: String, event: ProcessEvent, scriptPath: String) {
-                    val consoleView = (environment.state as? ShireRunConfigurationProfileState)?.console
+                override fun runFinish(allOutput: String, llmOutput: String, event: ProcessEvent, scriptPath: String, consoleView: ShireConsoleView?) {
                     environment.project.getService(ShireProcessProcessor::class.java)
                         .process(allOutput, event, scriptPath, consoleView)
 

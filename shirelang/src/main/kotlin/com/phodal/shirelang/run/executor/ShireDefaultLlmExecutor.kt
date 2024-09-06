@@ -84,7 +84,7 @@ class ShireDefaultLlmExecutor(
                 postFunction(response, null)
                 context.processHandler.detachProcess()
             }
-        }, ModalityState.NON_MODAL)
+        }, ModalityState.nonModal())
     }
 }
 

@@ -4,7 +4,7 @@ import com.intellij.build.process.BuildProcessHandler
 import java.io.OutputStream
 
 class ShireProcessHandler(private val myExecutionName: String) : BuildProcessHandler() {
-    override fun detachIsDefault(): Boolean = false
+    override fun detachIsDefault(): Boolean = true
     override fun destroyProcessImpl() = Unit
     override fun detachProcessImpl() {
         try {

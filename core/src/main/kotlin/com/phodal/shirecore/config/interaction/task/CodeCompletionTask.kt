@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.launch
 
 class CodeCompletionTask(private val request: CodeCompletionRequest) :
-    Task.Backgroundable(request.project, ShireCoreBundle.message("intentions.chat.code.complete.name")) {
+    ShireInteractionTask(request.project, ShireCoreBundle.message("intentions.chat.code.complete.name"), request.postExecute) {
 
     private var isCanceled: Boolean = false
 
