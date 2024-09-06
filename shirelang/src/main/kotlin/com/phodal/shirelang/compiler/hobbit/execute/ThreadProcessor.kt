@@ -8,13 +8,13 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.intellij.sh.psi.ShFile
 import com.intellij.sh.run.ShRunner
+import com.phodal.shirecore.lookupFile
 import com.phodal.shirecore.provider.http.HttpHandler
 import com.phodal.shirecore.provider.http.HttpHandlerType
 import com.phodal.shirecore.provider.shire.FileRunService
 import com.phodal.shirelang.actions.ShireRunFileAction
 import com.phodal.shirelang.compiler.SHIRE_ERROR
 import com.phodal.shirelang.psi.ShireFile
-import com.phodal.shirelang.utils.lookupFile
 import java.util.concurrent.CompletableFuture
 
 
@@ -70,7 +70,8 @@ object ThreadProcessor {
             }
 
             is ShFile -> {
-                val processVariables: Map<String, String> = variablesName.associateWith { (variableTable[it] as? String ?: "") }
+                val processVariables: Map<String, String> =
+                    variablesName.associateWith { (variableTable[it] as? String ?: "") }
                 return executeShFile(psiFile, myProject, processVariables)
             }
 

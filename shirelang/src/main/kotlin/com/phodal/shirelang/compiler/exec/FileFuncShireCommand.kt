@@ -5,7 +5,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ProjectFileIndex
 import com.intellij.openapi.vfs.VirtualFile
 import com.phodal.shirelang.completion.dataprovider.FileFunc
-import com.phodal.shirelang.utils.canBeAdded
+import com.phodal.shirecore.canBeAdded
 
 class FileFuncShireCommand(val myProject: Project, private val prop: String) : ShireCommand {
     override suspend fun doExecute(): String {

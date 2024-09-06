@@ -4,7 +4,7 @@ import com.phodal.shirelang.compiler.hobbit.ast.LineInfo
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiManager
-import com.phodal.shirelang.utils.lookupFile
+import com.phodal.shirecore.lookupFile
 
 /**
  * FileAutoCommand is responsible for reading a file and returning its contents.

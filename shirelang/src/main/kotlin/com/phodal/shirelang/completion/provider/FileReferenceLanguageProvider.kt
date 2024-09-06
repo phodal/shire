@@ -1,6 +1,5 @@
 package com.phodal.shirelang.completion.provider
 
-import com.phodal.shirelang.utils.canBeAdded
 import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.codeInsight.completion.CompletionProvider
 import com.intellij.codeInsight.completion.CompletionResultSet
@@ -13,6 +12,7 @@ import com.intellij.openapi.project.guessProjectDir
 import com.intellij.openapi.roots.ProjectFileIndex
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.util.ProcessingContext
+import com.phodal.shirecore.canBeAdded
 import org.jetbrains.annotations.NonNls
 import java.io.File
 

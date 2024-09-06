@@ -2,15 +2,11 @@ package com.phodal.shirecore.middleware.builtin
 
 import com.intellij.execution.filters.OpenFileHyperlinkInfo
 import com.intellij.execution.ui.ConsoleView
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.runInEdt
 import com.intellij.openapi.fileEditor.FileEditorManager
-import com.intellij.openapi.fileTypes.FileType
-import com.intellij.openapi.fileTypes.FileTypeManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.psi.search.FileTypeIndex
-import com.intellij.psi.search.ProjectScope
+import com.phodal.shirecore.findFile
 import com.phodal.shirecore.middleware.BuiltinPostHandler
 import com.phodal.shirecore.middleware.PostCodeHandleContext
 import com.phodal.shirecore.middleware.PostProcessor
@@ -57,17 +53,3 @@ class OpenFileProcessor : PostProcessor {
     }
 }
 
-fun Project.findFile(path: String): VirtualFile? {
-    ApplicationManager.getApplication().assertReadAccessAllowed()
-    val searchScope = ProjectScope.getProjectScope(this)
-    val fileType: FileType = FileTypeManager.getInstance().getFileTypeByFileName(path)
-    val allTypeFiles = FileTypeIndex.getFiles(fileType, searchScope)
-
-    for (file in allTypeFiles) {
-        if (file.name == path || file.path.endsWith(path)) {
-            return file
-        }
-    }
-
-    return null
-}

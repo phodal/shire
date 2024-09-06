@@ -4,8 +4,8 @@ import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
+import com.phodal.shirecore.lookupFile
 import com.phodal.shirecore.provider.psi.PsiCapture
-import com.phodal.shirelang.utils.lookupFile
 
 object CaptureProcessor {
     fun execute(myProject: Project, fileName: String, nodeType: String): Any {

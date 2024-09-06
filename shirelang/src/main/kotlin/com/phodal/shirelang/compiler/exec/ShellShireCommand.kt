@@ -7,8 +7,8 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiManager
 import com.intellij.sh.psi.ShFile
 import com.intellij.sh.run.ShRunner
+import com.phodal.shirecore.lookupFile
 import com.phodal.shirelang.runner.ShellFileRunService
-import com.phodal.shirelang.utils.lookupFile
 
 /**
  * A class that implements the `InsCommand` interface to execute a shell command within the IntelliJ IDEA environment.
