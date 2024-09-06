@@ -36,27 +36,20 @@ open class ShireRunConfigurationProfileState(
     private val myProject: Project,
     private val configuration: ShireConfiguration,
 ) : RunProfileState, Disposable {
-    private var executionConsole: ConsoleViewImpl? = null
+    private var executionConsole: ShireExecutionConsole? = null
     var console: ShireConsoleView? = null
 
     var isShowRunContent = true
 
     override fun execute(executor: Executor?, runner: ProgramRunner<*>): ExecutionResult {
-        executionConsole = ConsoleViewImpl(myProject, true)
+        executionConsole = ShireExecutionConsole(myProject, true)
         console = ShireConsoleView(executionConsole!!)
 
         val processHandler = ShireProcessHandler(configuration.name)
         ProcessTerminatedListener.attach(processHandler)
 
-        val sb = StringBuilder()
-        val processAdapter = ShireProcessAdapter(sb, configuration, console)
+        val processAdapter = ShireProcessAdapter(configuration, console)
         processHandler.addProcessListener(processAdapter)
-
-        // start message log in here
-        console!!.addMessageFilter { line, _ ->
-            sb.append(line)
-            null
-        }
 
         console!!.attachToProcess(processHandler)
 
@@ -97,7 +90,7 @@ open class ShireRunConfigurationProfileState(
     }
 }
 
-class ShireConsoleView(private val executionConsole: ConsoleViewImpl) :
+class ShireConsoleView(private val executionConsole: ShireExecutionConsole) :
     ConsoleViewWrapperBase(executionConsole) {
     override fun getComponent(): JComponent = myPanel
     private var myPanel: NonOpaquePanel = NonOpaquePanel(BorderLayout())
@@ -112,13 +105,15 @@ class ShireConsoleView(private val executionConsole: ConsoleViewImpl) :
         myPanel.add(toolbar.component, BorderLayout.EAST)
     }
 
+    fun output(clearAndStop: Boolean = true) = executionConsole.getOutput(clearAndStop)
+
     override fun dispose() {
         super.dispose()
         executionConsole.dispose()
     }
 }
 
-class ShireProcessAdapter(private val sb: StringBuilder, val configuration: ShireConfiguration, val consoleView: ShireConsoleView?) : ProcessAdapter() {
+class ShireProcessAdapter(val configuration: ShireConfiguration, val consoleView: ShireConsoleView?) : ProcessAdapter() {
     var result = ""
     private var llmOutput: String = ""
 
@@ -132,7 +127,7 @@ class ShireProcessAdapter(private val sb: StringBuilder, val configuration: Shir
 
     override fun onTextAvailable(event: ProcessEvent, outputType: Key<*>) {
         super.onTextAvailable(event, outputType)
-        result = sb.toString()
+        result = consoleView?.output().toString()
     }
 
     fun setLlmOutput(llmOutput: String?) {
@@ -140,4 +135,25 @@ class ShireProcessAdapter(private val sb: StringBuilder, val configuration: Shir
             this.llmOutput = llmOutput
         }
     }
+}
+
+class ShireExecutionConsole(project: Project, viewer: Boolean, var isStopped: Boolean = false): ConsoleViewImpl(project, viewer) {
+
+    private val output = StringBuilder()
+
+    override fun print(text: String, contentType: ConsoleViewContentType) {
+        super.print(text, contentType)
+        if (!isStopped) output.append(text)
+    }
+
+    fun getOutput(clearAndStop: Boolean): String {
+        val o = output.toString()
+        if (clearAndStop) {
+            isStopped = true
+            output.clear()
+        }
+
+        return o
+    }
+
 }
