@@ -21,7 +21,7 @@ variables:
       "info" { find("INFO") | sort | xargs("notify_user") }
       default  { find("ERROR") | sort | xargs("notify_admin") }
     }
-  }  
+  }
 ---
 ```
 
@@ -95,7 +95,7 @@ variables:
 
 ## Pattern Function
 
-| 函数类别      | 功能描述             | 参数                           `                                     | 示例                                          |
+| 函数类别      | 功能描述             | 参数                                                                 | 示例                                          |
 |-----------|------------------|--------------------------------------------------------------------|---------------------------------------------|
 | find      | 基于文本搜索           | ` text`: 要搜索的文本                                                    | `find("error")`                             |
 | grep      | 使用模式进行搜索         | `patterns`: 要搜索的模式                                                 | ` grep("[a-zA-Z]+Controller")`              |
