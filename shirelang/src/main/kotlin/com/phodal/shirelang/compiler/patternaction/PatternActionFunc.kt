@@ -39,7 +39,6 @@ enum class PatternActionFuncType(val funcName: String, val description: String) 
         |variables:
         |  "var2": /.*ple.shire/ { cat | find("openai") | sed("(?i)\b(sk-[a-zA-Z0-9]{20}T3BlbkFJ[a-zA-Z0-9]{20})(?:['|\"|\n|\r|\s|\x60|;]|${'$'})", "sk-***") }
         |---
-        |
         |```
     """.trimMargin()),
     SORT("sort", "Sort subclass for sorting with one or more arguments."),
@@ -57,6 +56,8 @@ enum class PatternActionFuncType(val funcName: String, val description: String) 
         |variables:
         |  "story": /BlogController\.java/ { print }
         |---
+        |```
+        |
         |Text content Example:
         |
         |```shire
@@ -91,7 +92,18 @@ enum class PatternActionFuncType(val funcName: String, val description: String) 
     FROM("from", "Select subclass for selecting one or more elements."),
     WHERE("where", "Where subclass for filtering elements."),
     SELECT("select", "OrderBy subclass for ordering elements."),
-    EXECUTE("execute", "Execute a shire script."),
+    EXECUTE("execute", """
+        | `execute` function is used to execute a shire script.
+        | 
+        | Example:
+        | ---
+        | name: "Search"
+        | variables:
+        |   "testTemplate": /.*.kt/ { caching("disk") | splitting | embedding }
+        | afterStreaming: { searching(${'$'}output) | execute("search.shire") }
+        | ---
+        | 
+    """.trimMargin()),
     NOTIFY("notify", "Use IDE Notify."),
     CASE_MATCH("switch", "Case Match."),
     SPLITTING("splitting", "Splitting."),
@@ -99,9 +111,46 @@ enum class PatternActionFuncType(val funcName: String, val description: String) 
     SEARCHING("searching", "Searching text."),
     CACHING("caching", "Caching semantic."),
     RERANKING("reranking", "Reranking the result."),
-    REDACT("redact", "The Redact class is designed for handling sensitive data."),
-    CRAWL("crawl", "The Crawl function is used to crawl a list of urls."),
-    CAPTURE("capture", "The capture function used to capture file by NodeType."),
+    REDACT("redact", """
+        | `redact` class is designed for handling sensitive data by applying a specified redaction strategy.
+        | 
+        | Example:
+        | ```shire
+        | ---
+        | variables:
+        |   "phoneNumber": "086-1234567890"
+        |   "var2": /.*ple.shire/ { cat | redact }
+        | ---
+        | ```    
+    """.trimMargin()),
+    CRAWL("crawl", """
+        | `crawl` function is used to crawl a list of urls, get markdown from html and save it to a file.
+        | 
+        | Example: 
+        | ```shire
+        | ---
+        | variables:
+        |   "websites": /*\.md/ { capture("docs/crawlSample.md", "link") | crawl() | thread("summary.shire") }
+        |   "confluence": { thread("confluence.bash", param1, param2) }
+        |   "pythonNode.js": { thread("python.py", param1, param2) }  
+        | ---
+        | ```
+        | 
+    """.trimMargin()),
+    CAPTURE("capture", """
+        | `capture` function used to capture url link by NodeType, support Markdown only for now.
+        | 
+        | Example: 
+        | ```shire
+        | ---
+        | variables:
+        |   "websites": /*\.md/ { capture("docs/crawlSample.md", "link") | crawl() | thread("summary.shire") }
+        |   "confluence": { thread("confluence.bash", param1, param2) }
+        |   "pythonNode.js": { thread("python.py", param1, param2) }  
+        | ---
+        | ```
+        | 
+    """.trimMargin()),
     THREAD("thread",
         """
         |`thread` function will run the function in a new thread
