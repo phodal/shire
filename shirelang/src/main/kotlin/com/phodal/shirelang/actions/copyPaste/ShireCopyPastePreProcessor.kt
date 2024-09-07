@@ -1,7 +1,6 @@
 package com.phodal.shirelang.actions.copyPaste
 
 import com.intellij.codeInsight.editorActions.CopyPastePreProcessor
-import com.intellij.execution.process.ProcessHandler
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.logger
@@ -10,7 +9,6 @@ import com.intellij.openapi.editor.RawText
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
 import com.phodal.shirecore.ShireCoroutineScope
-import com.phodal.shirecore.config.interaction.PostFunction
 import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.markdown.CodeFence
 import com.phodal.shirecore.middleware.PostCodeHandleContext
@@ -55,9 +53,7 @@ class PasteManagerService {
             templateCompiler.putCustomVariable("output", it)
         }
 
-        val originPrompt = promptText
-
-        val flow: Flow<String>? = LlmProvider.provider(project)?.stream(originPrompt, "", false)
+        val flow: Flow<String>? = LlmProvider.provider(project)?.stream(promptText, "", false)
         ShireCoroutineScope.scope(project).launch {
             val suggestion = StringBuilder()
 
@@ -79,11 +75,6 @@ class PasteManagerService {
             ApplicationManager.getApplication().getService(PasteManagerService::class.java)
     }
 }
-
-data class PasteProcessorConfig(
-    val postExecute: PostFunction,
-    val processHandler: ProcessHandler,
-)
 
 class ShireCopyPastePreProcessor : CopyPastePreProcessor {
     override fun preprocessOnCopy(file: PsiFile, startOffsets: IntArray, endOffsets: IntArray, text: String): String? {
