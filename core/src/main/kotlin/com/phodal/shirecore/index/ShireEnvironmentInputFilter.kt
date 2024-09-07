@@ -11,11 +11,6 @@ class ShireEnvironmentInputFilter : DefaultFileTypeSpecificInputFilter(*arrayOf<
     }
 
     private fun isShireEnvFile(file: VirtualFile?): Boolean {
-        if (file != null) {
-            val fileName = file.name
-            return fileName.endsWith(".shireEnv.json")
-        }
-
-        return false
+        return file?.name?.endsWith(".shireEnv.json") ?: false
     }
 }
