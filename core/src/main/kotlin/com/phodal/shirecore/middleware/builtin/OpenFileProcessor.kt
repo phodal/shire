@@ -8,16 +8,16 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.phodal.shirecore.findFile
 import com.phodal.shirecore.middleware.BuiltinPostHandler
-import com.phodal.shirecore.middleware.PostCodeHandleContext
+import com.phodal.shirecore.middleware.ShireRunContext
 import com.phodal.shirecore.middleware.PostProcessor
 
 
 class OpenFileProcessor : PostProcessor {
     override val processorName: String = BuiltinPostHandler.OpenFile.handleName
 
-    override fun isApplicable(context: PostCodeHandleContext): Boolean = true
+    override fun isApplicable(context: ShireRunContext): Boolean = true
 
-    override fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?, args: List<Any>): String {
+    override fun execute(project: Project, context: ShireRunContext, console: ConsoleView?, args: List<Any>): String {
         val file = context.pipeData["output"] ?: context.genText
         if (file !is VirtualFile) {
             if (file is String) {

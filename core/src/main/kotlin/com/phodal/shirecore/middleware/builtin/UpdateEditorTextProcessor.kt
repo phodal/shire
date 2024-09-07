@@ -5,7 +5,7 @@ import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.middleware.BuiltinPostHandler
-import com.phodal.shirecore.middleware.PostCodeHandleContext
+import com.phodal.shirecore.middleware.ShireRunContext
 import com.phodal.shirecore.middleware.PostProcessor
 import com.phodal.shirecore.workerThread
 import kotlinx.coroutines.CoroutineScope
@@ -14,11 +14,11 @@ import kotlinx.coroutines.launch
 class UpdateEditorTextProcessor : PostProcessor {
     override val processorName: String = BuiltinPostHandler.UpdateEditorText.handleName
 
-    override fun isApplicable(context: PostCodeHandleContext): Boolean = true
+    override fun isApplicable(context: ShireRunContext): Boolean = true
 
     override fun execute(
         project: Project,
-        context: PostCodeHandleContext,
+        context: ShireRunContext,
         console: ConsoleView?,
         args: List<Any>,
     ): Any {

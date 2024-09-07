@@ -9,7 +9,7 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirecore.config.InteractionType
-import com.phodal.shirecore.middleware.PostCodeHandleContext
+import com.phodal.shirecore.middleware.ShireRunContext
 import com.phodal.shirecore.middleware.PostProcessor
 import com.phodal.shirecore.middleware.PostProcessorNode
 import com.phodal.shirecore.middleware.select.SelectElementStrategy
@@ -210,7 +210,7 @@ open class HobbitHole(
         }
     }
 
-    fun setupStreamingEndProcessor(project: Project, context: PostCodeHandleContext) {
+    fun setupStreamingEndProcessor(project: Project, context: ShireRunContext) {
         onStreamingEnd.forEach { funcNode ->
             PostProcessor.handler(funcNode.funName)?.setup(context)
         }
@@ -219,7 +219,7 @@ open class HobbitHole(
     fun executeStreamingEndProcessor(
         project: Project,
         console: ConsoleView?,
-        context: PostCodeHandleContext,
+        context: ShireRunContext,
         compiledVariables: Map<String, Any>,
     ): String? {
         console?.print("\n", ConsoleViewContentType.SYSTEM_OUTPUT)
@@ -259,7 +259,7 @@ open class HobbitHole(
     fun executeAfterStreamingProcessor(
         myProject: Project,
         console: ConsoleView?,
-        context: PostCodeHandleContext,
+        context: ShireRunContext,
     ): Any? {
         val result = afterStreaming?.execute(myProject, context, this)
         context.lastTaskOutput = result as? String

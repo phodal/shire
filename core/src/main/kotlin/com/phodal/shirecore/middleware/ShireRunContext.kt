@@ -9,7 +9,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.phodal.shirecore.middleware.select.SelectedEntry
 
-class PostCodeHandleContext(
+class ShireRunContext(
     /**
      * The element to be handled, which will be load from current editor when parse code
      */
@@ -71,13 +71,12 @@ class PostCodeHandleContext(
 
     var compiledVariables: Map<String, Any?> = mapOf(),
 ) {
-
     companion object {
-        private val DATA_KEY: Key<PostCodeHandleContext> = Key.create(PostCodeHandleContext::class.java.name)
+        private val DATA_KEY: Key<ShireRunContext> = Key.create(ShireRunContext::class.java.name)
         private val userDataHolderBase = UserDataHolderBase()
 
         // todo: refactor to GlobalVariableContext
-        fun updateContextAndVariables(context: PostCodeHandleContext) {
+        fun updateContextAndVariables(context: ShireRunContext) {
             context.compiledVariables = dynamicUpdateVariables(context.compiledVariables)
             userDataHolderBase.putUserData(DATA_KEY, context)
         }
@@ -98,7 +97,7 @@ class PostCodeHandleContext(
             return oldVariables
         }
 
-        fun getData(): PostCodeHandleContext? {
+        fun getData(): ShireRunContext? {
             return userDataHolderBase.getUserData(DATA_KEY)
         }
 

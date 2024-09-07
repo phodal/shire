@@ -8,25 +8,23 @@ import com.intellij.diff.chains.SimpleDiffRequestProducer
 import com.intellij.diff.requests.SimpleDiffRequest
 import com.intellij.execution.ui.ConsoleView
 import com.intellij.execution.ui.ConsoleViewContentType
-import com.intellij.openapi.application.runInEdt
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.ThrowableComputable
 import com.intellij.util.ui.UIUtil
 import com.phodal.shirecore.middleware.BuiltinPostHandler
-import com.phodal.shirecore.middleware.PostCodeHandleContext
+import com.phodal.shirecore.middleware.ShireRunContext
 import com.phodal.shirecore.middleware.PostProcessor
 
 class DiffProcessor : PostProcessor {
     override val processorName: String = BuiltinPostHandler.Diff.handleName
     private val diffFactory = DiffContentFactoryEx.getInstanceEx()
 
-    override fun isApplicable(context: PostCodeHandleContext): Boolean {
+    override fun isApplicable(context: ShireRunContext): Boolean {
         return true
     }
 
     override fun execute(
         project: Project,
-        context: PostCodeHandleContext,
+        context: ShireRunContext,
         console: ConsoleView?,
         args: List<Any>,
     ): Any {

@@ -12,17 +12,17 @@ import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.vfs.VirtualFile
 import com.phodal.shirecore.middleware.SHIRE_TEMP_OUTPUT
 import com.phodal.shirecore.middleware.BuiltinPostHandler
-import com.phodal.shirecore.middleware.PostCodeHandleContext
+import com.phodal.shirecore.middleware.ShireRunContext
 import com.phodal.shirecore.middleware.PostProcessor
 
 class SaveFileProcessor : PostProcessor, Disposable {
     override val processorName: String = BuiltinPostHandler.SaveFile.handleName
 
-    override fun isApplicable(context: PostCodeHandleContext): Boolean = true
+    override fun isApplicable(context: ShireRunContext): Boolean = true
 
     override fun execute(
         project: Project,
-        context: PostCodeHandleContext,
+        context: ShireRunContext,
         console: ConsoleView?,
         args: List<Any>,
     ): String {
@@ -40,7 +40,7 @@ class SaveFileProcessor : PostProcessor, Disposable {
         return fileName
     }
 
-    private fun getFileExt(context: PostCodeHandleContext): String {
+    private fun getFileExt(context: ShireRunContext): String {
         val language = context.genTargetLanguage ?: PlainTextLanguage.INSTANCE
         val ext = context.genTargetExtension ?: language?.associatedFileType?.defaultExtension ?: "txt"
         return ext
@@ -49,7 +49,7 @@ class SaveFileProcessor : PostProcessor, Disposable {
     private fun handleForTempFile(
         project: Project,
         fileName: String,
-        context: PostCodeHandleContext,
+        context: ShireRunContext,
         console: ConsoleView?,
     ) {
         ApplicationManager.getApplication().invokeAndWait {
@@ -75,7 +75,7 @@ class SaveFileProcessor : PostProcessor, Disposable {
     private fun handleForProjectFile(
         project: Project,
         filepath: String,
-        context: PostCodeHandleContext,
+        context: ShireRunContext,
         console: ConsoleView?,
         ext: String,
     ) {
@@ -110,7 +110,7 @@ class SaveFileProcessor : PostProcessor, Disposable {
         }
     }
 
-    private fun getContent(context: PostCodeHandleContext): String? {
+    private fun getContent(context: ShireRunContext): String? {
         val outputData = context.pipeData["output"]
 
         if (outputData is String && outputData.isNotEmpty()) {

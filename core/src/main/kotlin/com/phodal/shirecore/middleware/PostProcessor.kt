@@ -30,12 +30,12 @@ interface PostProcessor {
      * @param context the PostCodeHandleContext to be checked for applicability
      * @return true if the context is applicable for handling post codes, false otherwise
      */
-    fun isApplicable(context: PostCodeHandleContext): Boolean
+    fun isApplicable(context: ShireRunContext): Boolean
 
     /**
      * Some init tasks, like metric for time, etc.
      */
-    fun setup(context: PostCodeHandleContext): Any {
+    fun setup(context: ShireRunContext): Any {
         return ""
     }
 
@@ -47,12 +47,12 @@ interface PostProcessor {
      * @param genText the generated text to be used in the execution
      * @return a string result of the execution
      */
-    fun execute(project: Project, context: PostCodeHandleContext, console: ConsoleView?, args: List<Any>): Any
+    fun execute(project: Project, context: ShireRunContext, console: ConsoleView?, args: List<Any>): Any
 
     /**
      * Clean up tasks, like metric for time, etc.
      */
-    fun finish(context: PostCodeHandleContext): Any? {
+    fun finish(context: ShireRunContext): Any? {
         return ""
     }
 
@@ -70,7 +70,7 @@ interface PostProcessor {
             return EP_NAME.extensionList.map { it.processorName }
         }
 
-        fun execute(project: Project, funcNodes: List<PostProcessorNode>, handleContext: PostCodeHandleContext, console: ConsoleView?) {
+        fun execute(project: Project, funcNodes: List<PostProcessorNode>, handleContext: ShireRunContext, console: ConsoleView?) {
             funcNodes.forEach { funNode ->
                 val handler = handler(funNode.funName)
                 if (handler != null) {

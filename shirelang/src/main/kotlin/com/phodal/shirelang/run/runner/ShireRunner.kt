@@ -10,7 +10,7 @@ import com.intellij.psi.PsiManager
 import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirecore.config.interaction.PostFunction
 import com.phodal.shirecore.llm.LlmProvider
-import com.phodal.shirecore.middleware.PostCodeHandleContext
+import com.phodal.shirecore.middleware.ShireRunContext
 import com.phodal.shirecore.provider.action.TerminalLocationExecutor
 import com.phodal.shirecore.provider.context.ActionLocationEditor
 import com.phodal.shirecore.workerThread
@@ -49,7 +49,7 @@ class ShireRunner(
 
         val varsMap = variableMap.toMutableMap()
 
-        val data = PostCodeHandleContext.getData()
+        val data = ShireRunContext.getData()
         val variables = data?.compiledVariables
         if (variables?.get("output") != null && variableMap["output"] == null) {
             varsMap["output"] = variables["output"].toString()
@@ -132,7 +132,7 @@ class ShireRunner(
         val promptTextTrim = templateCompiler.compile().trim()
         val compiledVariables = templateCompiler.compiledVariables
 
-        PostCodeHandleContext.getData()?.lastTaskOutput?.let {
+        ShireRunContext.getData()?.lastTaskOutput?.let {
             templateCompiler.putCustomVariable("output", it)
         }
 
@@ -197,7 +197,7 @@ class ShireRunner(
         val currentFile = runnerContext.editor?.virtualFile?.let {
             runReadAction { PsiManager.getInstance(project).findFile(it) }
         }
-        val context = PostCodeHandleContext(
+        val context = ShireRunContext(
             selectedEntry = hobbitHole?.pickupElement(project, runnerContext.editor),
             currentLanguage = currentFile?.language,
             currentFile = currentFile,
@@ -208,13 +208,13 @@ class ShireRunner(
             compiledVariables = compiledVariables,
         )
 
-        PostCodeHandleContext.updateContextAndVariables(context)
+        ShireRunContext.updateContextAndVariables(context)
 
         val processor = hobbitHole?.executeStreamingEndProcessor(project, console, context, compiledVariables)
-        PostCodeHandleContext.updateOutput(processor)
+        ShireRunContext.updateOutput(processor)
 
         val processor2 = hobbitHole?.executeAfterStreamingProcessor(project, console, context)
-        PostCodeHandleContext.updateOutput(processor2)
+        ShireRunContext.updateOutput(processor2)
 
         processHandler.detachProcess()
     }
@@ -250,13 +250,16 @@ class ShireRunner(
             editor?.let { PsiManager.getInstance(project).findFile(it.virtualFile) }
         }
 
-        val context = PostCodeHandleContext.getData() ?: PostCodeHandleContext(
+        val context = ShireRunContext.getData() ?: ShireRunContext(
             selectedEntry = pickupElement,
             currentLanguage = file?.language,
             currentFile = file,
             editor = editor,
             compiledVariables = compiledVariables,
-        ).also { PostCodeHandleContext.updateContextAndVariables(it) }
+        ).also {
+            ShireRunContext.updateContextAndVariables(it)
+        }
+
         hobbitHole?.setupStreamingEndProcessor(project, context)
 
     }
