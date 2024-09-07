@@ -205,7 +205,7 @@ class ShireRunner(
             editor = runnerContext.editor,
             lastTaskOutput = response,
             compiledVariables = compiledVariables,
-            hobbitHole = hobbitHole,
+            llmModelName = hobbitHole?.model,
         )
 
         ShireRunVariableContext.updateContextAndVariables(context)
@@ -255,7 +255,7 @@ class ShireRunner(
             currentLanguage = file?.language,
             editor = editor,
             compiledVariables = compiledVariables,
-            hobbitHole = hobbitHole,
+            llmModelName = hobbitHole?.model
         ).also {
             ShireRunVariableContext.updateContextAndVariables(it)
         }

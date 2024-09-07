@@ -55,13 +55,7 @@ class ShireRunVariableContext(
 
     var compiledVariables: Map<String, Any?> = mapOf(),
 
-    /**
-     * TODO: refactor to HobbitHole
-     * FIXME: we should refactor to HobbitHole
-     * We should [com.phodal.shirelang.compiler.hobbit.HobbitHole] to store the data, but we cannot access in
-     * the core module, so we use Any to store the data
-     */
-    val hobbitHole: Any? = null,
+    val llmModelName: String? = null,
 ) {
     companion object {
         private val DATA_KEY: Key<ShireRunVariableContext> = Key.create(ShireRunVariableContext::class.java.name)

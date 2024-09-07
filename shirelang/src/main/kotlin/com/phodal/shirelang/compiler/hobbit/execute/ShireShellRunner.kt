@@ -2,14 +2,12 @@ package com.phodal.shirelang.compiler.hobbit.execute
 
 import com.intellij.execution.configurations.GeneralCommandLine
 import com.intellij.execution.process.CapturingProcessHandler
-import com.intellij.framework.detection.FileContentPattern.fileContent
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.readText
 import com.intellij.psi.search.ProjectScope
-import com.intellij.testFramework.LightVirtualFile
 import com.phodal.shirecore.provider.http.ShireEnvReader
 import com.phodal.shirecore.provider.http.ShireEnvVariableFiller
 import java.io.File
