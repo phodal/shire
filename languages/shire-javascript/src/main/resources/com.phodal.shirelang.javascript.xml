@@ -4,6 +4,26 @@
         <plugin id="JavaScript"/>
     </dependencies>
     <extensions defaultExtensionNs="com.phodal">
+        <classStructureProvider language="JavaScript"
+                                implementationClass="com.phodal.shirelang.javascript.codemodel.JavaScriptClassStructureProvider"/>
+        <classStructureProvider language="TypeScript"
+                                implementationClass="com.phodal.shirelang.javascript.codemodel.JavaScriptClassStructureProvider"/>
+
+        <fileStructureProvider language="JavaScript"
+                               implementationClass="com.phodal.shirelang.javascript.codemodel.JavaScriptFileStructureProvider"/>
+        <fileStructureProvider language="TypeScript"
+                               implementationClass="com.phodal.shirelang.javascript.codemodel.JavaScriptFileStructureProvider"/>
+
+        <methodStructureProvider language="JavaScript"
+                                 implementationClass="com.phodal.shirelang.javascript.codemodel.JavaScriptMethodStructureProvider"/>
+        <methodStructureProvider language="TypeScript"
+                                 implementationClass="com.phodal.shirelang.javascript.codemodel.JavaScriptMethodStructureProvider"/>
+
+        <variableStructureProvider language="JavaScript"
+                                   implementationClass="com.phodal.shirelang.javascript.codemodel.JavaScriptVariableStructureProvider"/>
+        <variableStructureProvider language="TypeScript"
+                                   implementationClass="com.phodal.shirelang.javascript.codemodel.JavaScriptVariableStructureProvider"/>
+
         <shireLanguageToolchainProvider language="TypeScript"
                                         implementationClass="com.phodal.shirelang.javascript.variable.JavaScriptLanguageToolchainProvider"/>
         <shireRefactoringTool
@@ -12,5 +32,6 @@
 
         <shireBuildSystemProvider
                 implementation="com.phodal.shirelang.javascript.impl.JavaScriptBuildSystemProvider"/>
+
     </extensions>
 </idea-plugin>
