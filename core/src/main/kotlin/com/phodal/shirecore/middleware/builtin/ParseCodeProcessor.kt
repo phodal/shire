@@ -12,9 +12,6 @@ class ParseCodeProcessor : PostProcessor {
 
     override fun isApplicable(context: ShireRunContext): Boolean = true
 
-    /**
-     * Todo: support parse [ShireRunContext.currentParams] for language in parse
-     */
     override fun execute(project: Project, context: ShireRunContext, console: ConsoleView?, args: List<Any>): String {
         val code = CodeFence.parse(context.genText ?: "")
         val codeText = code.text

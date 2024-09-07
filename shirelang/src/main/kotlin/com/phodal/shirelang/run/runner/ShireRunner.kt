@@ -198,9 +198,8 @@ class ShireRunner(
             runReadAction { PsiManager.getInstance(project).findFile(it) }
         }
         val context = ShireRunContext(
-            selectedEntry = hobbitHole?.pickupElement(project, runnerContext.editor),
-            currentLanguage = currentFile?.language,
             currentFile = currentFile,
+            currentLanguage = currentFile?.language,
             genText = response,
             modifiedTextRange = textRange,
             editor = runnerContext.editor,
@@ -251,9 +250,8 @@ class ShireRunner(
         }
 
         val context = ShireRunContext.getData() ?: ShireRunContext(
-            selectedEntry = pickupElement,
-            currentLanguage = file?.language,
             currentFile = file,
+            currentLanguage = file?.language,
             editor = editor,
             compiledVariables = compiledVariables,
         ).also {

@@ -7,14 +7,8 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.openapi.util.UserDataHolderBase
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
-import com.phodal.shirecore.middleware.select.SelectedEntry
 
 class ShireRunContext(
-    /**
-     * The element to be handled, which will be load from current editor when parse code
-     */
-    var selectedEntry: SelectedEntry? = null,
-
     /**
      * Convert code to file
      */
@@ -24,11 +18,6 @@ class ShireRunContext(
      * The language of the code to be handled, which will parse from the GenText when parse code
      */
     var currentLanguage: Language? = null,
-
-    /**
-     * Convert code to file
-     */
-    var genTargetFile: PsiFile? = null,
 
     /**
      * Target Language
@@ -46,11 +35,6 @@ class ShireRunContext(
      * The generated text to be handled
      */
     var genText: String? = null,
-
-    /**
-     * Parse from the [com.phodal.shirelang.compiler.hobbit.HobbitHole]
-     */
-    val currentParams: List<String>? = null,
 
     /**
      * The data to be passed to the post-processor
