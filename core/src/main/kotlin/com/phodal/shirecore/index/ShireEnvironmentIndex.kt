@@ -1,10 +1,7 @@
 package com.phodal.shirecore.index
 
-import com.intellij.json.psi.JsonArray
-import com.intellij.json.psi.JsonFile
-import com.intellij.json.psi.JsonObject
+import com.intellij.json.psi.*
 import com.intellij.openapi.util.text.StringUtil
-import com.intellij.psi.PsiFile
 import com.intellij.util.indexing.*
 import com.intellij.util.io.DataExternalizer
 import com.intellij.util.io.EnumeratorStringDescriptor
@@ -34,58 +31,39 @@ class ShireEnvironmentIndex : FileBasedIndexExtension<String, Set<String>>() {
     }
 
     private fun getVariablesFromFile(file: JsonFile): Map<String, Set<String>> {
-        val topLevelValue: JsonObject? = file.topLevelValue as? JsonObject
-        if (topLevelValue !is JsonObject) {
-            return emptyMap()
-        }
-
         val result: MutableMap<String, Set<String>> = HashMap()
-        for (property in topLevelValue.propertyList) {
-            when (val value = property.value) {
-                is JsonObject -> {
-                    result[property.name] = readEnvVariables(value, file.name)
+        when (val topLevelValue = file.topLevelValue) {
+            is JsonObject -> {
+                for (property in topLevelValue.propertyList) {
+                    when (val value = property.value) {
+                        is JsonObject -> {
+                            result[property.name] = readEnvVariables(value, file.name)
+                        }
+
+                        is JsonArray -> {
+                            // the prop key should be "models"
+                            if (property.name != MODEL_LIST) {
+                                continue
+                            }
+
+                            // the child elements of the array are objects, which should have prop call "name"
+                            val envVariables = value.children
+                                .filterIsInstance<JsonObject>()
+                                .mapNotNull { obj ->
+                                    val name = obj.findProperty(MODEL_TITLE)?.value?.text
+                                    name?.let { StringUtil.unquoteString(it) }
+                                }
+                                .toSet()
+
+                            result[property.name] = envVariables
+                        }
+                    }
                 }
             }
         }
 
         return result
     }
-
-
-//    private fun getVariablesFromFile(file: JsonFile): Map<String, Set<String>> {
-//        val result: MutableMap<String, Set<String>> = HashMap()
-//        when (val topLevelValue = file.topLevelValue) {
-//            is JsonObject -> {
-//                for (property in topLevelValue.propertyList) {
-//                    when (val value = property.value) {
-//                        is JsonObject -> {
-//                            result[property.name] = readEnvVariables(value, file.name)
-//                        }
-//
-//                        is JsonArray -> {
-//                            // the prop key should be "models"
-//                            if (property.name != MODEL_LIST) {
-//                                continue
-//                            }
-//
-//                            // the child elements of the array are objects, which should have prop call "name"
-//                            val envVariables = value.children
-//                                .filterIsInstance<JsonObject>()
-//                                .mapNotNull { obj ->
-//                                    val name = obj.findProperty(MODEL_TITLE)?.value?.text
-//                                    name?.let { StringUtil.unquoteString(it) }
-//                                }
-//                                .toSet()
-//
-//                            result[property.name] = envVariables
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//
-//        return result
-//    }
 
     private fun readEnvVariables(obj: JsonObject, fileName: String): Set<String> {
         val properties = obj.propertyList

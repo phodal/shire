@@ -31,6 +31,8 @@ actionLocation: ContextMenu
 - `onStreamingEnd`：在流处理结束后执行的后中间件操作列表，如日志记录、指标收集、代码验证、运行代码、解析代码等。
 - `afterStreaming`：流结束后执行任务的决策，路由到不同的任务。
 - `shortcut`：操作的 IDE 快捷键，使用 IntelliJ IDEA 的快捷键格式。
+- `enabled`：是否启用操作。
+- `model`: 使用的大语言模型，使用 `.shireEnv.json` 定义。
 - `userData`：其余数据。
 
 ### 示例代码

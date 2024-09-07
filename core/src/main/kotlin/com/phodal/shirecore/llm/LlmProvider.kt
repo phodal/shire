@@ -1,11 +1,9 @@
 package com.phodal.shirecore.llm
 
-import com.intellij.json.psi.JsonArray
-import com.intellij.json.psi.JsonFile
-import com.intellij.json.psi.JsonObject
+import com.intellij.json.JsonUtil
+import com.intellij.json.psi.*
 import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.project.ProjectManager
 import com.intellij.psi.PsiManager
 import com.intellij.psi.search.ProjectScope
 import com.intellij.util.indexing.FileBasedIndex
@@ -13,6 +11,7 @@ import com.phodal.shirecore.ShirelangNotifications
 import com.phodal.shirecore.index.MODEL_LIST
 import com.phodal.shirecore.index.MODEL_TITLE
 import com.phodal.shirecore.index.SHIRE_ENV_ID
+import com.phodal.shirecore.index.valueAsString
 import com.phodal.shirecore.middleware.ShireRunVariableContext
 import kotlinx.coroutines.flow.Flow
 
@@ -25,6 +24,8 @@ import kotlinx.coroutines.flow.Flow
  *
  */
 interface LlmProvider {
+    var project: Project?
+
     /**
      * Default timeout for the provider.
      * This is used to set the default timeout for the provider.
@@ -57,14 +58,17 @@ interface LlmProvider {
      * config LLM Provider from [ShireRunVariableContext]
      */
     fun configRunLlm(): LlmConfig? {
-        val modelName = ShireRunVariableContext.getData()?.llmModelName ?: return null
-        val project = ProjectManager.getInstance().defaultProject
-        val scope = ProjectScope.getContentScope(project)
+        if (project == null) {
+            return null
+        }
 
-        val jsonFile = FileBasedIndex.getInstance().getContainingFiles(SHIRE_ENV_ID, modelName, scope)
+        val modelName = ShireRunVariableContext.getData()?.llmModelName ?: return null
+        val scope = ProjectScope.getContentScope(project!!)
+
+        val jsonFile = FileBasedIndex.getInstance().getContainingFiles(SHIRE_ENV_ID, MODEL_LIST, scope)
             .firstOrNull()
             ?.let {
-                (PsiManager.getInstance(project).findFile(it) as? JsonFile)
+                (PsiManager.getInstance(project!!).findFile(it) as? JsonFile)
             }
 
         val modelConfig = getModelConfig(modelName, jsonFile)
@@ -79,10 +83,9 @@ interface LlmProvider {
         val rootObject = psiFile?.topLevelValue as? JsonObject ?: return null
         val envObject = rootObject.propertyList.firstOrNull { it.name == MODEL_LIST }?.value as? JsonArray
         return envObject?.children?.firstOrNull {
-            it is JsonObject && it.findProperty(MODEL_TITLE)?.value?.text == modelName
+            it is JsonObject && it.findProperty(MODEL_TITLE)?.valueAsString(it) == modelName
         } as? JsonObject
     }
-
 
     /**
      * Clears the message displayed in the UI.
