@@ -1,0 +1,13 @@
+<idea-plugin package="com.phodal.shirelang.javascript">
+    <!--suppress PluginXmlValidity -->
+    <dependencies>
+        <plugin id="JavaScript"/>
+    </dependencies>
+    <extensions defaultExtensionNs="com.phodal">
+        <shireLanguageToolchainProvider language="TypeScript"
+                                        implementationClass="com.phodal.shirelang.javascript.variable.JavaScriptLanguageToolchainProvider"/>
+        <shireRefactoringTool
+                language="TypeScript"
+                implementationClass="com.phodal.shirelang.javascript.impl.TypeScriptRefactoringTool"/>
+    </extensions>
+</idea-plugin>
