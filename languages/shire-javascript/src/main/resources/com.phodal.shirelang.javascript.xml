@@ -9,5 +9,8 @@
         <shireRefactoringTool
                 language="TypeScript"
                 implementationClass="com.phodal.shirelang.javascript.impl.TypeScriptRefactoringTool"/>
+
+        <shireBuildSystemProvider
+                implementation="com.phodal.shirelang.javascript.impl.JavaScriptBuildSystemProvider"/>
     </extensions>
 </idea-plugin>

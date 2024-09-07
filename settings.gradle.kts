@@ -16,6 +16,7 @@ include(
     "shirelang",
 
     "languages:shire-java",
+    "languages:shire-javascript",
     "languages:shire-python",
     "languages:shire-kotlin",
     "languages:shire-markdown",
