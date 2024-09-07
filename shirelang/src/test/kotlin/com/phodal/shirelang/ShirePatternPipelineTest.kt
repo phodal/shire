@@ -1,7 +1,7 @@
 package com.phodal.shirelang
 
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
-import com.phodal.shirecore.middleware.ShireRunContext
+import com.phodal.shirecore.middleware.ShireRunVariableContext
 import com.phodal.shirelang.compiler.ShireSyntaxAnalyzer
 import com.phodal.shirelang.compiler.ShireTemplateCompiler
 import com.phodal.shirelang.compiler.hobbit.execute.PatternActionProcessor
@@ -34,7 +34,7 @@ class ShirePatternPipelineTest : BasePlatformTestCase() {
         val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
         val hole = compile.config!!
 
-        val context = ShireRunContext(
+        val context = ShireRunVariableContext(
             genText = "User prompt:\n\n",
         )
 
@@ -84,7 +84,7 @@ class ShirePatternPipelineTest : BasePlatformTestCase() {
         val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
         val hole = compile.config!!
 
-        val context = ShireRunContext(
+        val context = ShireRunVariableContext(
             genText = "User prompt:\n\n",
         )
 
@@ -127,7 +127,7 @@ class ShirePatternPipelineTest : BasePlatformTestCase() {
         val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
         val hole = compile.config!!
 
-        val context = ShireRunContext(
+        val context = ShireRunVariableContext(
             genText = "User prompt:\n\n",
         )
 

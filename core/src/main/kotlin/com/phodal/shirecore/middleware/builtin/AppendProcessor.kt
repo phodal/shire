@@ -3,17 +3,17 @@ package com.phodal.shirecore.middleware.builtin
 import com.intellij.execution.ui.ConsoleView
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.middleware.BuiltinPostHandler
-import com.phodal.shirecore.middleware.ShireRunContext
+import com.phodal.shirecore.middleware.ShireRunVariableContext
 import com.phodal.shirecore.middleware.PostProcessor
 
 class AppendProcessor : PostProcessor {
     override val processorName: String = BuiltinPostHandler.Append.handleName
 
-    override fun isApplicable(context: ShireRunContext): Boolean = true
+    override fun isApplicable(context: ShireRunVariableContext): Boolean = true
 
     override fun execute(
         project: Project,
-        context: ShireRunContext,
+        context: ShireRunVariableContext,
         console: ConsoleView?,
         args: List<Any>,
     ): Any {

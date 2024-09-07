@@ -11,7 +11,7 @@ import com.intellij.psi.PsiFile
 import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.markdown.CodeFence
-import com.phodal.shirecore.middleware.ShireRunContext
+import com.phodal.shirecore.middleware.ShireRunVariableContext
 import com.phodal.shirelang.compiler.ShireTemplateCompiler
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.psi.ShireFile
@@ -49,7 +49,7 @@ class PasteManagerService {
             templateCompiler.compile().trim()
         }
 
-        ShireRunContext.getData()?.lastTaskOutput?.let {
+        ShireRunVariableContext.getData()?.lastTaskOutput?.let {
             templateCompiler.putCustomVariable("output", it)
         }
 

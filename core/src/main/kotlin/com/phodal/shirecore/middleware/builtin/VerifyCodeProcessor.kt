@@ -16,17 +16,17 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.*
 import com.intellij.util.messages.MessageBusConnection
 import com.phodal.shirecore.middleware.BuiltinPostHandler
-import com.phodal.shirecore.middleware.ShireRunContext
+import com.phodal.shirecore.middleware.ShireRunVariableContext
 import com.phodal.shirecore.middleware.PostProcessor
 
 class VerifyCodeProcessor : PostProcessor {
     override val processorName: String = BuiltinPostHandler.VerifyCode.handleName
 
-    override fun isApplicable(context: ShireRunContext): Boolean = true
+    override fun isApplicable(context: ShireRunVariableContext): Boolean = true
 
     override fun execute(
         project: Project,
-        context: ShireRunContext,
+        context: ShireRunVariableContext,
         console: ConsoleView?,
         args: List<Any>,
     ): String {

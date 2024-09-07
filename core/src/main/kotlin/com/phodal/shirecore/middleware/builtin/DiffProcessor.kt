@@ -11,20 +11,20 @@ import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.project.Project
 import com.intellij.util.ui.UIUtil
 import com.phodal.shirecore.middleware.BuiltinPostHandler
-import com.phodal.shirecore.middleware.ShireRunContext
+import com.phodal.shirecore.middleware.ShireRunVariableContext
 import com.phodal.shirecore.middleware.PostProcessor
 
 class DiffProcessor : PostProcessor {
     override val processorName: String = BuiltinPostHandler.Diff.handleName
     private val diffFactory = DiffContentFactoryEx.getInstanceEx()
 
-    override fun isApplicable(context: ShireRunContext): Boolean {
+    override fun isApplicable(context: ShireRunVariableContext): Boolean {
         return true
     }
 
     override fun execute(
         project: Project,
-        context: ShireRunContext,
+        context: ShireRunVariableContext,
         console: ConsoleView?,
         args: List<Any>,
     ): Any {

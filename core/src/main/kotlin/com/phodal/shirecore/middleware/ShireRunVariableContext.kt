@@ -8,7 +8,7 @@ import com.intellij.openapi.util.UserDataHolderBase
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 
-class ShireRunContext(
+class ShireRunVariableContext(
     /**
      * Convert code to file
      */
@@ -54,13 +54,21 @@ class ShireRunContext(
     var lastTaskOutput: String? = null,
 
     var compiledVariables: Map<String, Any?> = mapOf(),
+
+    /**
+     * TODO: refactor to HobbitHole
+     * FIXME: we should refactor to HobbitHole
+     * We should [com.phodal.shirelang.compiler.hobbit.HobbitHole] to store the data, but we cannot access in
+     * the core module, so we use Any to store the data
+     */
+    val hobbitHole: Any? = null,
 ) {
     companion object {
-        private val DATA_KEY: Key<ShireRunContext> = Key.create(ShireRunContext::class.java.name)
+        private val DATA_KEY: Key<ShireRunVariableContext> = Key.create(ShireRunVariableContext::class.java.name)
         private val userDataHolderBase = UserDataHolderBase()
 
         // todo: refactor to GlobalVariableContext
-        fun updateContextAndVariables(context: ShireRunContext) {
+        fun updateContextAndVariables(context: ShireRunVariableContext) {
             context.compiledVariables = dynamicUpdateVariables(context.compiledVariables)
             userDataHolderBase.putUserData(DATA_KEY, context)
         }
@@ -81,7 +89,7 @@ class ShireRunContext(
             return oldVariables
         }
 
-        fun getData(): ShireRunContext? {
+        fun getData(): ShireRunVariableContext? {
             return userDataHolderBase.getUserData(DATA_KEY)
         }
 

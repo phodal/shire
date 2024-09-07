@@ -11,16 +11,16 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.PsiManager
 import com.phodal.shirecore.middleware.BuiltinPostHandler
-import com.phodal.shirecore.middleware.ShireRunContext
+import com.phodal.shirecore.middleware.ShireRunVariableContext
 import com.phodal.shirecore.middleware.PostProcessor
 import com.phodal.shirecore.provider.shire.FileRunService
 
 class RunCodeProcessor : PostProcessor {
     override val processorName: String = BuiltinPostHandler.RunCode.handleName
 
-    override fun isApplicable(context: ShireRunContext): Boolean = true
+    override fun isApplicable(context: ShireRunVariableContext): Boolean = true
 
-    override fun execute(project: Project, context: ShireRunContext, console: ConsoleView?, args: List<Any>): String {
+    override fun execute(project: Project, context: ShireRunVariableContext, console: ConsoleView?, args: List<Any>): String {
         when (val code = context.pipeData["output"]) {
             is VirtualFile -> {
                 LocalFileSystem.getInstance().refreshAndFindFileByPath(code.path)

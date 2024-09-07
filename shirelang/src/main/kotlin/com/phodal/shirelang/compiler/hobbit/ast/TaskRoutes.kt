@@ -2,7 +2,7 @@ package com.phodal.shirelang.compiler.hobbit.ast
 
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
-import com.phodal.shirecore.middleware.ShireRunContext
+import com.phodal.shirecore.middleware.ShireRunVariableContext
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.execute.FunctionStatementProcessor
 
@@ -29,7 +29,7 @@ data class TaskRoutes(
      */
     val defaultTask: Task? = null,
 ) {
-    fun execute(myProject: Project, context: ShireRunContext, hobbitHole: HobbitHole): Any? {
+    fun execute(myProject: Project, context: ShireRunVariableContext, hobbitHole: HobbitHole): Any? {
         val conditionResult = mutableMapOf<String, Any?>()
         /// todo: get processor variable table
         val variableTable = context.compiledVariables.toMutableMap()

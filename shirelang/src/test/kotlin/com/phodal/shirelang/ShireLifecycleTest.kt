@@ -1,7 +1,7 @@
 package com.phodal.shirelang
 
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
-import com.phodal.shirecore.middleware.ShireRunContext
+import com.phodal.shirecore.middleware.ShireRunVariableContext
 import com.phodal.shirecore.middleware.PostProcessor
 import com.phodal.shirelang.compiler.ShireSyntaxAnalyzer
 import com.phodal.shirelang.psi.ShireFile
@@ -38,7 +38,7 @@ class ShireLifecycleTest : BasePlatformTestCase() {
         assertEquals(funcNode[2].funName, "verifyCode")
         assertEquals(funcNode[3].funName, "runCode")
 
-        val handleContext = ShireRunContext(currentLanguage = ShireLanguage.INSTANCE, editor = null)
+        val handleContext = ShireRunVariableContext(currentLanguage = ShireLanguage.INSTANCE, editor = null)
         PostProcessor.execute(project, funcNode, handleContext, null)
     }
 
@@ -95,7 +95,7 @@ class ShireLifecycleTest : BasePlatformTestCase() {
                 }
             }
            """.trimIndent()
-        val handleContext = ShireRunContext(
+        val handleContext = ShireRunVariableContext(
             currentLanguage = ShireLanguage.INSTANCE,
             genText = genJson,
             editor = null

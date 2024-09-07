@@ -1,7 +1,7 @@
 package com.phodal.shirelang.compiler.hobbit.execute
 
 import com.intellij.openapi.project.Project
-import com.phodal.shirecore.middleware.ShireRunContext
+import com.phodal.shirecore.middleware.ShireRunVariableContext
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.execute.searcher.PatternSearcher
 import com.phodal.shirelang.compiler.patternaction.VariableTransform
@@ -51,7 +51,7 @@ class PatternActionProcessor(override val myProject: Project, override val hole:
      */
     suspend fun execute(transform: VariableTransform, input: Any): String {
         var result = input
-        val data = ShireRunContext.getData()
+        val data = ShireRunVariableContext.getData()
         if (data?.lastTaskOutput != null && data.lastTaskOutput != "null") {
             if (variableMap["output"] == null) {
                 variableMap["output"] = data.lastTaskOutput
