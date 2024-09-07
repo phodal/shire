@@ -17,11 +17,12 @@ class ShireVcsSingleAction : DumbAwareAction() {
     override fun update(e: AnActionEvent) {
         val isOnlyOneConfig = shireActionConfigs().size == 1
 
-        val hobbitHole = shireActionConfigs().firstOrNull()?.hole ?: return
+        val hobbitHole = shireActionConfigs().firstOrNull()?.hole
         e.presentation.isVisible = isOnlyOneConfig
-        e.presentation.isEnabled = hobbitHole.enabled
-
-        e.presentation.text = hobbitHole.name ?: "<Placeholder>"
+        e.presentation.isEnabled = hobbitHole != null && hobbitHole.enabled
+        if (hobbitHole != null) {
+            e.presentation.text = hobbitHole.name ?: "<Placeholder>"
+        }
     }
 
     override fun actionPerformed(e: AnActionEvent) {
@@ -29,7 +30,7 @@ class ShireVcsSingleAction : DumbAwareAction() {
 
         VariableActionEventDataHolder.putData(VariableActionEventDataHolder(e.dataContext))
 
-        val config = shireActionConfigs().first()
+        val config = shireActionConfigs().firstOrNull() ?: return
         ShireRunFileAction.executeShireFile(project, config, null)
     }
 }
