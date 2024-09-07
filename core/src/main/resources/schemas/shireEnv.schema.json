@@ -2,155 +2,191 @@
   "title": "Shire Environment JSON schema",
   "$schema": "https://json-schema.org/draft-07/schema#",
   "type": "object",
+  "properties": {
+    "models": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string",
+            "enum": ["openai"]
+          },
+          "apiBase": {
+            "type": "string"
+          },
+          "apiKey": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          },
+          "temperature": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "title",
+          "apiKey",
+          "model"
+        ]
+      }
+    }
+  },
   "patternProperties": {
-    ".+": {
-      "type": "object",
-      "properties": {
-        "Security": {
-          "type": "object",
-          "properties": {
-            "Auth": {
-              "type": "object",
-              "patternProperties": {
-                ".+": {
-                  "properties": {
-                    "Type": {
-                      "enum": [
-                        "OAuth2",
-                        "Mock"
-                      ]
-                    },
-                    "Grant Type": {
-                      "enum": [
-                        "Authorization Code",
-                        "Implicit",
-                        "Password",
-                        "Client Credentials",
-                        "Device Authorization"
-                      ]
-                    },
-                    "Auth URL": {
-                      "type": "string"
-                    },
-                    "Token URL": {
-                      "type": "string"
-                    },
-                    "Redirect URL": {
-                      "type": "string"
-                    },
-                    "Client ID": {
-                      "type": "string"
-                    },
-                    "Client Secret": {
-                      "type": "string"
-                    },
-                    "Client Credentials": {
-                      "anyOf": [
-                        {
-                          "type": "boolean"
-                        },
-                        {
-                          "enum": [
-                            "basic",
-                            "in body",
-                            "none"
-                          ]
-                        }
-                      ]
-                    },
-                    "Username": {
-                      "type": "string"
-                    },
-                    "Password": {
-                      "type": "string"
-                    },
-                    "Acquire Automatically": {
-                      "type": "boolean"
-                    },
-                    "Scope": {
-                      "type": "string"
-                    },
-                    "State": {
-                      "type": "string"
-                    },
-                    "PKCE": {
-                      "anyOf": [
-                        {
-                          "type": "boolean"
-                        },
-                        {
-                          "type": "object",
-                          "properties": {
-                            "Code Challenge Method": {
-                              "enum": [
-                                "SHA-256",
-                                "Plain"
-                              ]
-                            },
-                            "Code Verifier": {
-                              "type": "string",
-                              "pattern": "^[A-Za-z0-9.\\-~]{43,128}$"
+    "^models$": {
+      "not": {
+        "type": "object",
+        "properties": {
+          "Security": {
+            "type": "object",
+            "properties": {
+              "Auth": {
+                "type": "object",
+                "patternProperties": {
+                  ".+": {
+                    "properties": {
+                      "Type": {
+                        "enum": [
+                          "OAuth2",
+                          "Mock"
+                        ]
+                      },
+                      "Grant Type": {
+                        "enum": [
+                          "Authorization Code",
+                          "Implicit",
+                          "Password",
+                          "Client Credentials",
+                          "Device Authorization"
+                        ]
+                      },
+                      "Auth URL": {
+                        "type": "string"
+                      },
+                      "Token URL": {
+                        "type": "string"
+                      },
+                      "Redirect URL": {
+                        "type": "string"
+                      },
+                      "Client ID": {
+                        "type": "string"
+                      },
+                      "Client Secret": {
+                        "type": "string"
+                      },
+                      "Client Credentials": {
+                        "anyOf": [
+                          {
+                            "type": "boolean"
+                          },
+                          {
+                            "enum": [
+                              "basic",
+                              "in body",
+                              "none"
+                            ]
+                          }
+                        ]
+                      },
+                      "Username": {
+                        "type": "string"
+                      },
+                      "Password": {
+                        "type": "string"
+                      },
+                      "Acquire Automatically": {
+                        "type": "boolean"
+                      },
+                      "Scope": {
+                        "type": "string"
+                      },
+                      "State": {
+                        "type": "string"
+                      },
+                      "PKCE": {
+                        "anyOf": [
+                          {
+                            "type": "boolean"
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "Code Challenge Method": {
+                                "enum": [
+                                  "SHA-256",
+                                  "Plain"
+                                ]
+                              },
+                              "Code Verifier": {
+                                "type": "string",
+                                "pattern": "^[A-Za-z0-9.\\-~]{43,128}$"
+                              }
                             }
                           }
+                        ]
+                      },
+                      "Open Complete URI": {
+                        "type": "boolean"
+                      },
+                      "Device Auth URL": {
+                        "type": "string"
+                      },
+                      "Start Polling After Browser": {
+                        "type": "boolean"
+                      },
+                      "Use ID Token": {
+                        "type": "boolean"
+                      },
+                      "Custom Request Parameters": {
+                        "type": "object",
+                        "properties": {
+                          "resource": {
+                            "$ref": "#/$defs/customParameter"
+                          },
+                          "audience": {
+                            "$ref": "#/$defs/customParameter"
+                          },
+                          ".+": {
+                            "$ref": "#/$defs/customParameter"
+                          }
                         }
-                      ]
-                    },
-                    "Open Complete URI": {
-                      "type": "boolean"
-                    },
-                    "Device Auth URL": {
-                      "type": "string"
-                    },
-                    "Start Polling After Browser": {
-                      "type": "boolean"
-                    },
-                    "Use ID Token": {
-                      "type": "boolean"
-                    },
-                    "Custom Request Parameters": {
-                      "type": "object",
-                      "properties": {
-                        "resource": {
-                          "$ref": "#/$defs/customParameter"
-                        },
-                        "audience": {
-                          "$ref": "#/$defs/customParameter"
-                        },
-                        ".+": {
-                          "$ref": "#/$defs/customParameter"
-                        }
+                      },
+                      "Token": {
+                        "type": "string"
+                      },
+                      "ID Token": {
+                        "type": "string"
                       }
                     },
-                    "Token": {
-                      "type": "string"
-                    },
-                    "ID Token": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "Type"
-                  ]
+                    "required": [
+                      "Type"
+                    ]
+                  }
                 }
               }
             }
           }
-        }
-      },
-      "patternProperties": {
-        ".+": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            }
-          ],
-          "description": "User defined variable"
-        }
-      },
-      "description": "Environment"
+        },
+        "patternProperties": {
+          ".+": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "description": "User defined variable"
+          }
+        },
+        "description": "Environment"
+      }
     }
   },
   "$defs": {
@@ -163,7 +199,7 @@
           "type": "object",
           "properties": {
             "Value": {
-              "type": "String"
+              "type": "string"
             },
             "Use": {
               "enum": [
