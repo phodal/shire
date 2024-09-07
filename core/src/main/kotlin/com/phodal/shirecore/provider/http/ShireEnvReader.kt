@@ -6,6 +6,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiManager
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.util.indexing.FileBasedIndex
+import com.phodal.shirecore.index.MODEL_LIST
 import com.phodal.shirecore.index.SHIRE_ENV_ID
 
 object ShireEnvReader {
@@ -61,7 +62,9 @@ object ShireEnvReader {
         val index = FileBasedIndex.getInstance()
 
         return index.getAllKeys(SHIRE_ENV_ID, project).stream()
-            .filter { index.getContainingFiles(SHIRE_ENV_ID, it, scope).isNotEmpty() }
+            .filter {
+                it != MODEL_LIST && index.getContainingFiles(SHIRE_ENV_ID, it, scope).isNotEmpty()
+            }
             .toList()
     }
 

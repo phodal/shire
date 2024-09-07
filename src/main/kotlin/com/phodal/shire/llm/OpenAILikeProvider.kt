@@ -3,7 +3,6 @@ package com.phodal.shire.llm
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.project.ProjectManager
 import com.phodal.shire.custom.CustomSSEHandler
 import com.phodal.shire.custom.appendCustomHeaders
 import com.phodal.shire.custom.updateCustomFormat
