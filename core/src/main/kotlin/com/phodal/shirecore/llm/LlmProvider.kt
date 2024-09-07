@@ -33,15 +33,6 @@ interface LlmProvider {
     fun isApplicable(project: Project): Boolean
 
     /**
-     * Call LLM and return Text object as response.
-     *
-     * @param promptText the text to be displayed as a prompt
-     * @return the String value entered by the user
-     */
-    fun text(promptText: String): String
-
-
-    /**
      * Streams chat completion responses from the service.
      *
      * @param promptText The text prompt to send to the service.

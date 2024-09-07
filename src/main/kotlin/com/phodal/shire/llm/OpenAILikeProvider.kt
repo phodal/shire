@@ -12,12 +12,9 @@ import com.phodal.shirecore.llm.ChatRole
 import com.phodal.shirecore.llm.CustomRequest
 import com.phodal.shirecore.llm.LlmProvider
 import kotlinx.coroutines.flow.Flow
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.time.Duration
 
@@ -25,16 +22,14 @@ class OpenAILikeProvider : CustomSSEHandler(), LlmProvider {
     private val logger: Logger = logger<OpenAILikeProvider>()
     private val timeout = Duration.ofSeconds(defaultTimeout)
 
-    private val modelName: String get() = ShireSettingsState.getInstance().modelName
-    private val key: String get() = ShireSettingsState.getInstance().apiToken
-    private val url: String get() = ShireSettingsState.getInstance().apiHost.ifEmpty {
+    private var modelName: String = ShireSettingsState.getInstance().modelName
+    private var temperature: Float  = ShireSettingsState.getInstance().temperature
+    private var key: String = ShireSettingsState.getInstance().apiToken
+    private var url: String = ShireSettingsState.getInstance().apiHost.ifEmpty {
         "https://api.openai.com/v1/chat/completions"
     }
 
-    private val temperature: Float get() = ShireSettingsState.getInstance().temperature
-
     private val messages: MutableList<ChatMessage> = ArrayList()
-    private var historyMessageLength: Int = 0
     private var client = OkHttpClient()
 
     override val requestFormat: String get() = """{ "customFields": {"model": "$modelName", "temperature": $temperature, "stream": true} }"""
@@ -46,38 +41,6 @@ class OpenAILikeProvider : CustomSSEHandler(), LlmProvider {
 
     override fun clearMessage() {
         messages.clear()
-        historyMessageLength = 0
-    }
-
-    override fun text(promptText: String): String {
-        messages += ChatMessage(ChatRole.user, promptText)
-        val customRequest = CustomRequest(messages)
-        val requestContent = Json.encodeToString<CustomRequest>(customRequest)
-
-        val body = RequestBody.create("application/json; charset=utf-8".toMediaTypeOrNull(), requestContent)
-
-        logger.info("Requesting form: $requestContent $body")
-        val builder = Request.Builder()
-        if (key.isNotEmpty()) {
-            builder.addHeader("Authorization", "Bearer $key")
-        }
-
-        try {
-            client = client.newBuilder().readTimeout(timeout).build()
-
-            val request = builder.url(url).post(body).build()
-            val response = client.newCall(request).execute()
-
-            if (!response.isSuccessful) {
-                logger.error("$response")
-                return ""
-            }
-
-            return response.body?.string() ?: ""
-        } catch (e: IllegalArgumentException) {
-            logger.error("Failed to set timeout", e)
-            return ""
-        }
     }
 
     override fun stream(promptText: String, systemPrompt: String, keepHistory: Boolean): Flow<String> {
