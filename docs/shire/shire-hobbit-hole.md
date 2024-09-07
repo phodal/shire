@@ -66,6 +66,9 @@ enum class InteractionType(val description: String) {
 }
 ```
 
+{: .note }
+由于性能原因，OnPaste 暂时只支持 Java 和 Kotlin 语言，并且需要行数多于 5 行。
+
 ### Action Location
 
 ```kotlin

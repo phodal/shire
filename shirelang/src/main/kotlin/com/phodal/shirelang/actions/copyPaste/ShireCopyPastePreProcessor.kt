@@ -91,8 +91,14 @@ class ShireCopyPastePreProcessor : CopyPastePreProcessor {
         val instance = PasteManagerService.getInstance()
         val hobbitHole = instance.firstProcessor() ?: return text
 
-        /// only for test java only
-        if (file.language.displayName.lowercase() != "java") {
+        /// only for test java and kotlin
+        val language = file.language.displayName.lowercase()
+        if (!(language == "java" || language == "kotlin")) {
+            return text
+        }
+
+        /// should be more than 7 lines
+        if (text.lines().size < 5) {
             return text
         }
 
