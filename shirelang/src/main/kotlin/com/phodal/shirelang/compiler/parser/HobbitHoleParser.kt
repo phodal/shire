@@ -27,7 +27,7 @@ object HobbitHoleParser {
      */
     fun parse(psiElement: ShireFrontMatterHeader): HobbitHole? {
         return psiElement.children.firstOrNull()?.let {
-            val fm = processFrontmatter(it.children)
+            val fm = processFrontMatter(it.children)
             HobbitHole.from(fm)
         }
     }
@@ -40,7 +40,7 @@ object HobbitHoleParser {
         }
     }
 
-    private fun processFrontmatter(frontMatterEntries: Array<PsiElement>): MutableMap<String, FrontMatterType> {
+    private fun processFrontMatter(frontMatterEntries: Array<PsiElement>): MutableMap<String, FrontMatterType> {
         val frontMatter: MutableMap<String, FrontMatterType> = mutableMapOf()
         var lastKey = ""
 
@@ -55,7 +55,7 @@ object HobbitHoleParser {
 
                     ShireTypes.FRONT_MATTER_VALUE -> {
                         frontMatter[lastKey] = parseFrontMatterValue(child)
-                            ?: FrontMatterType.STRING("Frontmatter value parsing failed: ${child.text}")
+                            ?: FrontMatterType.STRING("FrontMatter value parsing failed: ${child.text}")
                     }
 
                     ShireTypes.PATTERN_ACTION -> {
@@ -91,8 +91,7 @@ object HobbitHoleParser {
                      * ```
                      */
                     ShireTypes.VARIABLE_EXPR -> {
-                        // ignore
-                        val childExpr = (child as ShireVariableExpr).expr
+                        val childExpr = (child as? ShireVariableExpr)?.expr
                         if (childExpr != null) {
                             parseExpr(childExpr)?.let {
                                 frontMatter[lastKey] = FrontMatterType.EXPRESSION(it)
@@ -107,7 +106,7 @@ object HobbitHoleParser {
                     }
 
                     else -> {
-                        logger.warn("processFrontmatter, Unknown frontmatter type: ${child.elementType}")
+                        logger.warn("processFrontMatter, Unknown FrontMatter type: ${child.elementType}, value: $child")
                     }
                 }
             }
@@ -439,7 +438,7 @@ object HobbitHoleParser {
                 val map: MutableMap<String, FrontMatterType> = mutableMapOf()
                 element.children.mapNotNull {
                     if (it.elementType == ShireTypes.KEY_VALUE) {
-                        processFrontmatter(it.children)
+                        processFrontMatter(it.children)
                     } else {
                         null
                     }
