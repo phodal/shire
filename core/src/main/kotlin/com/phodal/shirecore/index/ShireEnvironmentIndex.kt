@@ -1,5 +1,6 @@
 package com.phodal.shirecore.index
 
+import com.intellij.json.psi.JsonArray
 import com.intellij.json.psi.JsonFile
 import com.intellij.json.psi.JsonObject
 import com.intellij.openapi.util.text.StringUtil
@@ -11,9 +12,16 @@ import com.intellij.util.io.KeyDescriptor
 
 val SHIRE_ENV_ID: ID<String, Set<String>> = ID.create("shire.environment")
 
-class ShireEnvironmentIndex : FileBasedIndexExtension<String, Set<String>>() {
+val MODEL_TITLE = "title"
+val MODEL_LIST = "models"
 
+class ShireEnvironmentIndex : FileBasedIndexExtension<String, Set<String>>() {
+    override fun getValueExternalizer(): DataExternalizer<Set<String>> = ShireStringsExternalizer()
+    override fun getVersion(): Int = 2
+    override fun getInputFilter(): FileBasedIndex.InputFilter = ShireEnvironmentInputFilter()
+    override fun dependsOnFileContent(): Boolean = true
     override fun getName(): ID<String, Set<String>> = SHIRE_ENV_ID
+    override fun getKeyDescriptor(): KeyDescriptor<String> = EnumeratorStringDescriptor.INSTANCE
 
     override fun getIndexer(): DataIndexer<String, Set<String>, FileContent> {
         return DataIndexer { inputData: FileContent ->
@@ -25,28 +33,8 @@ class ShireEnvironmentIndex : FileBasedIndexExtension<String, Set<String>>() {
         }
     }
 
-    override fun getKeyDescriptor(): KeyDescriptor<String> {
-        return EnumeratorStringDescriptor.INSTANCE
-    }
-
-    override fun getValueExternalizer(): DataExternalizer<Set<String>> {
-        return ShireStringsExternalizer()
-    }
-
-    override fun getVersion(): Int {
-        return 1
-    }
-
-    override fun getInputFilter(): FileBasedIndex.InputFilter {
-        return ShireEnvironmentInputFilter()
-    }
-
-    override fun dependsOnFileContent(): Boolean {
-        return true
-    }
-
-    private fun getVariablesFromFile(file: PsiFile): Map<String, Set<String>> {
-        val topLevelValue: JsonObject? = (file as JsonFile).topLevelValue as? JsonObject
+    private fun getVariablesFromFile(file: JsonFile): Map<String, Set<String>> {
+        val topLevelValue: JsonObject? = file.topLevelValue as? JsonObject
         if (topLevelValue !is JsonObject) {
             return emptyMap()
         }
@@ -62,6 +50,42 @@ class ShireEnvironmentIndex : FileBasedIndexExtension<String, Set<String>>() {
 
         return result
     }
+
+
+//    private fun getVariablesFromFile(file: JsonFile): Map<String, Set<String>> {
+//        val result: MutableMap<String, Set<String>> = HashMap()
+//        when (val topLevelValue = file.topLevelValue) {
+//            is JsonObject -> {
+//                for (property in topLevelValue.propertyList) {
+//                    when (val value = property.value) {
+//                        is JsonObject -> {
+//                            result[property.name] = readEnvVariables(value, file.name)
+//                        }
+//
+//                        is JsonArray -> {
+//                            // the prop key should be "models"
+//                            if (property.name != MODEL_LIST) {
+//                                continue
+//                            }
+//
+//                            // the child elements of the array are objects, which should have prop call "name"
+//                            val envVariables = value.children
+//                                .filterIsInstance<JsonObject>()
+//                                .mapNotNull { obj ->
+//                                    val name = obj.findProperty(MODEL_TITLE)?.value?.text
+//                                    name?.let { StringUtil.unquoteString(it) }
+//                                }
+//                                .toSet()
+//
+//                            result[property.name] = envVariables
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        return result
+//    }
 
     private fun readEnvVariables(obj: JsonObject, fileName: String): Set<String> {
         val properties = obj.propertyList

@@ -51,7 +51,14 @@ class OpenAILikeProvider : CustomSSEHandler(), LlmProvider {
     }
 
     override fun stream(promptText: String, systemPrompt: String, keepHistory: Boolean): Flow<String> {
-//        configRunLlm()
+//        configRunLlm().let {
+//            it?.let {
+//                modelName = it.model
+//                temperature = it.temperature.toFloat()
+//                key = it.apiKey
+//                url = it.apiBase
+//            }
+//        }
 
         if (!keepHistory) {
             clearMessage()
