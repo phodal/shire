@@ -76,15 +76,6 @@ class PostCodeHandleContext(
         private val DATA_KEY: Key<PostCodeHandleContext> = Key.create(PostCodeHandleContext::class.java.name)
         private val userDataHolderBase = UserDataHolderBase()
 
-        fun create(currentFile: PsiFile?, selectedEntry: SelectedEntry?): PostCodeHandleContext {
-            return PostCodeHandleContext(
-                selectedEntry = selectedEntry,
-                currentFile = currentFile,
-                currentLanguage = currentFile?.language,
-                editor = null,
-            )
-        }
-
         // todo: refactor to GlobalVariableContext
         fun updateContextAndVariables(context: PostCodeHandleContext) {
             context.compiledVariables = dynamicUpdateVariables(context.compiledVariables)
