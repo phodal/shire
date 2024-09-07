@@ -16,10 +16,12 @@ class ShireVcsSingleAction : DumbAwareAction() {
 
     override fun update(e: AnActionEvent) {
         val isOnlyOneConfig = shireActionConfigs().size == 1
-        e.presentation.isVisible = isOnlyOneConfig
-        e.presentation.isEnabled = isOnlyOneConfig
 
-        e.presentation.text = shireActionConfigs().firstOrNull()?.hole?.name ?: "<Placeholder>"
+        val hobbitHole = shireActionConfigs().firstOrNull()?.hole ?: return
+        e.presentation.isVisible = isOnlyOneConfig
+        e.presentation.isEnabled = hobbitHole.enabled
+
+        e.presentation.text = hobbitHole.name ?: "<Placeholder>"
     }
 
     override fun actionPerformed(e: AnActionEvent) {

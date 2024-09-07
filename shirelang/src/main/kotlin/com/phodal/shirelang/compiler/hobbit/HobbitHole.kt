@@ -178,6 +178,27 @@ open class HobbitHole(
     val shortcut: KeyboardShortcut? = null,
 
     /**
+     * the status of the action, default is true.
+     *
+     * ```shire
+     * ---
+     * enabled: false
+     * ---
+     */
+    val enabled: Boolean = true,
+
+    /**
+     * the LLM model for action, default is null which will use the default model.
+     *
+     * ```shire
+     * ---
+     * model: "default"
+     * ---
+     *
+     */
+    val model: String? = null,
+
+    /**
      * The rest of the data.
      */
     val userData: Map<String, FrontMatterType> = mutableMapOf(),
@@ -253,8 +274,12 @@ open class HobbitHole(
         const val ON_STREAMING_END = "onStreamingEnd"
         const val AFTER_STREAMING = "afterStreaming"
         const val ON_STREAMING = "onStreaming"
+        const val ENABLED = "enabled"
+        const val MODEL = "model"
+
         private const val DESCRIPTION = "description"
         private const val VARIABLES = "variables"
+
         const val WHEN = "when"
         const val SHORTCUT = "shortcut"
 
@@ -290,6 +315,8 @@ open class HobbitHole(
             val description = frontMatterMap[DESCRIPTION]?.value as? String ?: ""
             val interaction = frontMatterMap[INTERACTION]?.value as? String ?: ""
             val actionLocation = frontMatterMap[ACTION_LOCATION]?.value as? String ?: ShireActionLocation.default()
+            val enabled = frontMatterMap[ENABLED]?.value as? Boolean ?: true
+            val model = frontMatterMap[MODEL]?.value as? String
 
             val shortcut = (frontMatterMap[SHORTCUT]?.value as? String)?.let {
                 KeyboardShortcut.fromString(it)
@@ -337,6 +364,8 @@ open class HobbitHole(
                 onStreamingEnd = endProcessors,
                 afterStreaming = afterStreaming,
                 shortcut = shortcut,
+                enabled = enabled,
+                model = model
             )
         }
 

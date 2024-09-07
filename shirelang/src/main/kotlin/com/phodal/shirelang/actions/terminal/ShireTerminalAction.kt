@@ -37,10 +37,13 @@ class ShireTerminalAction : DumbAwareAction() {
         DynamicShireActionService.getInstance().getAction(ShireActionLocation.TERMINAL_MENU)
 
     override fun update(e: AnActionEvent) {
-        e.presentation.isVisible = shireActionConfigs().size == 1
-        e.presentation.isEnabled = shireActionConfigs().size == 1
+        val shireActionConfigs = shireActionConfigs()
+        val firstHole = shireActionConfigs.firstOrNull()?.hole ?: return
 
-        e.presentation.text = shireActionConfigs().firstOrNull()?.hole?.description ?: ""
+        e.presentation.isVisible = shireActionConfigs.size == 1 && firstHole.enabled
+        e.presentation.isEnabled = shireActionConfigs.size == 1 && firstHole.enabled
+
+        e.presentation.text = firstHole.description ?: ""
     }
 
     override fun actionPerformed(e: AnActionEvent) {

@@ -90,6 +90,7 @@ class ShireCopyPastePreProcessor : CopyPastePreProcessor {
     ): String {
         val instance = PasteManagerService.getInstance()
         val hobbitHole = instance.firstProcessor() ?: return text
+        if (!hobbitHole.enabled) return text
 
         /// only for test java and kotlin
         val language = file.language.displayName.lowercase()

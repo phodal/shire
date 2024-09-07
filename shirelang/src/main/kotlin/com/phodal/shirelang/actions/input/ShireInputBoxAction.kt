@@ -27,8 +27,10 @@ class ShireInputBoxAction : DumbAwareAction() {
         DynamicShireActionService.getInstance().getAction(ShireActionLocation.INPUT_BOX)
 
     override fun update(e: AnActionEvent) {
-        e.presentation.isEnabled = shireActionConfigs().isNotEmpty()
-        e.presentation.text = shireActionConfigs().firstOrNull()?.hole?.description ?: ""
+        val hobbitHole = shireActionConfigs().firstOrNull()?.hole ?: return
+
+        e.presentation.isEnabled = hobbitHole.enabled
+        e.presentation.text = hobbitHole?.description ?: ""
     }
 
     override fun actionPerformed(e: AnActionEvent) {

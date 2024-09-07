@@ -31,5 +31,9 @@ class RealWorldShireParsingTest : ParsingTestCase("realworld", "shire", ShirePar
     fun testOutputInVariable() {
         doTest(true)
     }
+
+    fun testOnPaste() {
+        doTest(true)
+    }
 }
 

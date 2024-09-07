@@ -33,6 +33,9 @@ class ShireSyntaxHighlighter : SyntaxHighlighter {
             ShireTypes.ENDIF,
             ShireTypes.AND,
 
+            // true and false
+            ShireTypes.BOOLEAN,
+
             // lifecycle
             ShireTypes.WHEN,
             ShireTypes.ON_STREAMING,

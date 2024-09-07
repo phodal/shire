@@ -18,6 +18,7 @@ class ShireVcsActionGroup : ActionGroup() {
     override fun update(e: AnActionEvent) {
         val isMultipleActions = shireActionConfigs().size > 1
         e.presentation.isVisible = isMultipleActions
+        e.presentation.isEnabled = shireActionConfigs().any { it.hole?.enabled == true }
         e.presentation.isPopupGroup = true
     }
 
