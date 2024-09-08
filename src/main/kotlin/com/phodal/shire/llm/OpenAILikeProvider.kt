@@ -1,6 +1,5 @@
 package com.phodal.shire.llm
 
-import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.phodal.shire.custom.CustomSSEHandler
@@ -19,7 +18,6 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.time.Duration
 
 class OpenAILikeProvider : CustomSSEHandler(), LlmProvider {
-    private val logger: Logger = logger<OpenAILikeProvider>()
     private val timeout = Duration.ofSeconds(defaultTimeout)
 
     private var modelName: String = ShireSettingsState.getInstance().modelName
@@ -35,14 +33,11 @@ class OpenAILikeProvider : CustomSSEHandler(), LlmProvider {
     override val requestFormat: String get() = """{ "customFields": {"model": "$modelName", "temperature": $temperature, "stream": true} }"""
     override val responseFormat: String get() = "\$.choices[0].delta.content"
     override var project: Project? = null
+    override fun clearMessage() = messages.clear()
 
     override fun isApplicable(project: Project): Boolean {
         this.project = project
         return key.isNotEmpty() && modelName.isNotEmpty()
-    }
-
-    override fun clearMessage() {
-        messages.clear()
     }
 
     override fun stream(promptText: String, systemPrompt: String, keepHistory: Boolean): Flow<String> {
@@ -73,7 +68,7 @@ class OpenAILikeProvider : CustomSSEHandler(), LlmProvider {
         }
         builder.appendCustomHeaders(requestFormat)
 
-        logger.info("Requesting form: $requestContent $body")
+        logger<OpenAILikeProvider>().info("Requesting form: $requestContent $body")
 
         client = client.newBuilder().readTimeout(timeout).build()
         val call = client.newCall(builder.url(url).post(body).build())
