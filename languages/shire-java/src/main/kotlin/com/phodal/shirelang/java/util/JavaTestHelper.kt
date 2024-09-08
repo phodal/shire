@@ -18,16 +18,21 @@ object JavaTestHelper {
         val searchScope = GlobalSearchScope.allScope(project)
 
         return when (psiElement) {
-            is PsiMethod -> {
-                PsiTreeUtil.findChildrenOfAnyType(psiElement.body, PsiMethodCallExpression::class.java)
-                    .filter { isMethodCallFromInheritedClass(it, searchScope) }
-                    .joinToString("\n") { it.text }
+            is PsiFile -> {
+                PsiTreeUtil.findChildrenOfAnyType(psiElement, PsiClass::class.java)
+                    .joinToString("\n") { extractMethodCalls(project, it) }
             }
+
             is PsiClass -> {
                 PsiTreeUtil.findChildrenOfAnyType(psiElement, PsiMethod::class.java)
                     .joinToString("\n") { extractMethodCalls(project, it) }
             }
 
+            is PsiMethod -> {
+                PsiTreeUtil.findChildrenOfAnyType(psiElement.body, PsiMethodCallExpression::class.java)
+                    .filter { isMethodCallFromInheritedClass(it, searchScope) }
+                    .joinToString("\n") { it.text }
+            }
             else -> ""
         }
     }
