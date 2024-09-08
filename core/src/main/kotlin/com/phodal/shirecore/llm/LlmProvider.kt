@@ -2,6 +2,7 @@ package com.phodal.shirecore.llm
 
 import com.intellij.json.JsonUtil
 import com.intellij.json.psi.*
+import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiManager
@@ -65,11 +66,13 @@ interface LlmProvider {
         val modelName = ShireRunVariableContext.getData()?.llmModelName ?: return null
         val scope = ProjectScope.getContentScope(project!!)
 
-        val jsonFile = FileBasedIndex.getInstance().getContainingFiles(SHIRE_ENV_ID, MODEL_LIST, scope)
-            .firstOrNull()
-            ?.let {
-                (PsiManager.getInstance(project!!).findFile(it) as? JsonFile)
-            }
+        val jsonFile = runReadAction {
+            FileBasedIndex.getInstance().getContainingFiles(SHIRE_ENV_ID, MODEL_LIST, scope)
+                .firstOrNull()
+                ?.let {
+                    (PsiManager.getInstance(project!!).findFile(it) as? JsonFile)
+                }
+        }
 
         val modelConfig = getModelConfig(modelName, jsonFile)
         if (modelConfig != null) {
