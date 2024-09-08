@@ -19,7 +19,6 @@ open class JavaCodeModifier : CodeModifier {
     override fun isApplicable(language: Language) = language is JavaLanguage
 
     override fun smartInsert(sourceFile: VirtualFile, project: Project, code: String): PsiElement? {
-        // check sourceFile is tested file
         val isTestFile = sourceFile.name.endsWith("Test.java")
         if (!isTestFile) {
             return insertTestCode(sourceFile, project, code)

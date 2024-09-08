@@ -1,10 +1,7 @@
 package com.phodal.shirelang.java.util
 
 import com.intellij.openapi.project.Project
-import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiMethod
-import com.intellij.psi.PsiMethodCallExpression
-import com.intellij.psi.PsiReference
+import com.intellij.psi.*
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.search.PsiShortNamesCache
 import com.intellij.psi.search.searches.ClassInheritorsSearch
@@ -22,10 +19,13 @@ object JavaTestHelper {
 
         return when (psiElement) {
             is PsiMethod -> {
-
                 PsiTreeUtil.findChildrenOfAnyType(psiElement.body, PsiMethodCallExpression::class.java)
                     .filter { isMethodCallFromInheritedClass(it, searchScope) }
                     .joinToString("\n") { it.text }
+            }
+            is PsiClass -> {
+                PsiTreeUtil.findChildrenOfAnyType(psiElement, PsiMethod::class.java)
+                    .joinToString("\n") { extractMethodCalls(project, it) }
             }
 
             else -> ""
