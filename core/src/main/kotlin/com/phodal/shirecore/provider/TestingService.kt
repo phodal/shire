@@ -1,5 +1,6 @@
 package com.phodal.shirecore.provider
 
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
@@ -7,6 +8,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.serviceContainer.LazyExtensionInstance
 import com.intellij.util.xmlb.annotations.Attribute
+import com.phodal.shirecore.codemodel.model.ClassStructure
 import com.phodal.shirecore.provider.shire.FileRunService
 import com.phodal.shirecore.variable.toolchain.unittest.AutoTestingPromptContext
 
@@ -50,9 +52,9 @@ abstract class TestingService : LazyExtensionInstance<TestingService>(), FileRun
      *
      * @param project the project in which to perform the lookup
      * @param element the element for which to find the relevant classes
-     * @return a list of ClassContext objects representing the relevant classes found in the project
+     * @return a list of ClassStructure objects representing the relevant classes found in the project
      */
-    abstract fun lookupRelevantClass(project: Project, element: PsiElement): List<String>
+    abstract fun lookupRelevantClass(project: Project, element: PsiElement): List<ClassStructure>
 
     /**
      * This method is used to collect syntax errors from a given project and write them to an output file.
@@ -79,6 +81,7 @@ abstract class TestingService : LazyExtensionInstance<TestingService>(), FileRun
     }
 
     companion object {
+        val log = logger<TestingService>()
         private val EP_NAME: ExtensionPointName<TestingService> =
             ExtensionPointName.create("com.phodal.shireAutoTesting")
 
