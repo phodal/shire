@@ -248,7 +248,7 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         val results = runBlocking {
             hole.variables.mapValues {
-                PatternActionProcessor(project, hole).execute(it.value)
+                PatternActionProcessor(project, hole, mapOf()).execute(it.value)
             }
         }
 
@@ -281,7 +281,7 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         val results = runBlocking {
             hole.variables.mapValues {
-                PatternActionProcessor(project, hole).execute(it.value)
+                PatternActionProcessor(project, hole, mapOf()).execute(it.value)
             }
         }
 
@@ -319,7 +319,7 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         val results = runBlocking {
             hole.variables.mapValues {
-                PatternActionProcessor(project, hole).execute(it.value)
+                PatternActionProcessor(project, hole, mapOf()).execute(it.value)
             }
         }
 
@@ -353,7 +353,7 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         val results = runBlocking {
             hole.variables.mapValues {
-                PatternActionProcessor(project, hole).execute(it.value)
+                PatternActionProcessor(project, hole, mapOf()).execute(it.value)
             }
         }
 
@@ -386,11 +386,12 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         val results = runBlocking {
             hole.variables.mapValues {
-                PatternActionProcessor(project, hole).execute(it.value)
+                PatternActionProcessor(project, hole, mapOf()).execute(it.value)
             }
         }
 
-        assertEquals("""---
+        assertEquals(
+            """---
 name: Summary
 description: "Generate Summary"
 interaction: AppendCursor
@@ -403,5 +404,35 @@ variables:
 
 Summary webpage: ${'$'}fileName""", results["var2"].toString()
         )
+    }
+
+    fun testShouldConvertSourceCode() {
+        @Language("Shire")
+        val code = """
+            ---
+            name: "添加测试"
+            actionLocation: ContextMenu
+            variables:
+              "sourceCode": /any/ { print(${'$'}filePath) | sed("src/test", "src/main") | sed("sample.shire", "sampleTest.shire") | print }
+            onStreamingEnd: { parseCode | patch(${'$'}filePath, ${'$'}output) }
+            ---
+        """.trimIndent()
+
+        val file = myFixture.addFileToProject("sample.shire", code)
+
+        myFixture.openFileInEditor(file.virtualFile)
+
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
+        val hole = compile.config!!
+
+        val results = runBlocking {
+            hole.variables.mapValues {
+                PatternActionProcessor(project, hole, mapOf(
+                    "filePath" to "src/test/resources/sample.shire"
+                )).execute(it.value)
+            }
+        }
+
+        assertEquals(results["sourceCode"], "src/main/resources/sampleTest.shire")
     }
 }

@@ -15,7 +15,7 @@ class CompositeVariableResolver(
         }
     }
 
-    override suspend fun resolve(): Map<String, Any> {
+    override suspend fun resolve(initVariables: Map<String, Any>): Map<String, Any> {
         val resolverList = listOf(
             PsiContextVariableResolver(context),
             ToolchainVariableResolver(context),
@@ -24,8 +24,9 @@ class CompositeVariableResolver(
             UserCustomVariableResolver(context),
         )
 
-        return resolverList.fold(mutableMapOf()) { acc, resolver ->
-            acc.putAll(resolver.resolve())
+        val initial = mutableMapOf<String, Any>()
+        return resolverList.fold(initial) { acc: MutableMap<String, Any>, resolver: VariableResolver ->
+            acc.putAll(resolver.resolve(acc))
             acc
         }
     }

@@ -49,7 +49,7 @@ class ShireQueryExpressionTest : BasePlatformTestCase() {
 
         val results = runBlocking {
             hole.variables.mapValues {
-                PatternActionProcessor(project, hole).execute(it.value)
+                PatternActionProcessor(project, hole, mapOf()).execute(it.value)
             }
         }
 
@@ -89,7 +89,7 @@ class ShireQueryExpressionTest : BasePlatformTestCase() {
 
         val results = runBlocking {
             hole.variables.mapValues {
-                PatternActionProcessor(project, hole).execute(it.value)
+                PatternActionProcessor(project, hole, mapOf()).execute(it.value)
             }
         }
 

@@ -63,7 +63,7 @@ class ShireTemplateCompiler(
 
     suspend fun compileVariable(editor: Editor): Map<String, Any> {
         val context = VariableResolverContext(myProject, editor, hole, variableTable, null)
-        val additionalMap: Map<String, Any> = CompositeVariableResolver(context).resolve()
+        val additionalMap: Map<String, Any> = CompositeVariableResolver(context).resolve(mapOf())
         return additionalMap
     }
 }

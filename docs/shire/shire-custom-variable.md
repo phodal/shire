@@ -93,6 +93,22 @@ variables:
     - 如果匹配到 `Service`，则输出 `ServiceTest.java` 的内容。
     - 如果没有匹配到上述任何值（`default`），则输出 `DefaultTest.java` 的内容。
 
+### 示例 3：变量二次处理
+
+用户自定义变量可以对 Shire 自带变量进行二次处理，例如：
+
+```shire
+---
+name: "添加测试"
+actionLocation: ContextMenu
+variables:
+  "sourceCode": /any/ { print($filePath) | sed("src\/test\/", "src/main/") | sed("Test.java", ".java") | cat }
+onStreamingEnd: { parseCode | patch($filePath, $output) }
+---
+```agsl
+
+```
+
 ## Pattern Function
 
 | 函数类别      | 功能描述             | 参数                                                                 | 示例                                          |

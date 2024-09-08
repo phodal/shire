@@ -12,7 +12,7 @@ class ContextVariableResolver(
 ) : VariableResolver {
     fun all(): List<ContextVariable> = values().toList()
 
-    override suspend fun resolve(): Map<String, String> = ReadAction.compute<Map<String, String>, Throwable> {
+    override suspend fun resolve(variables: Map<String, Any>): Map<String, String> = ReadAction.compute<Map<String, String>, Throwable> {
         val file = context.element?.containingFile
         val caretModel = context.editor.caretModel
 

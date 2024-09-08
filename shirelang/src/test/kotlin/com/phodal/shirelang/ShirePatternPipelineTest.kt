@@ -45,7 +45,7 @@ class ShirePatternPipelineTest : BasePlatformTestCase() {
             context.compiledVariables = compiledVariables
 
             hole.variables.mapValues {
-                PatternActionProcessor(project, hole).execute(it.value)
+                PatternActionProcessor(project, hole, mapOf()).execute(it.value)
             }
 
             hole.setupStreamingEndProcessor(project, context = context)
@@ -95,7 +95,7 @@ class ShirePatternPipelineTest : BasePlatformTestCase() {
             context.compiledVariables = compiledVariables
 
             hole.variables.mapValues {
-                PatternActionProcessor(project, hole).execute(it.value)
+                PatternActionProcessor(project, hole, mapOf()).execute(it.value)
             }
 
             hole.setupStreamingEndProcessor(project, context = context)
@@ -138,7 +138,7 @@ class ShirePatternPipelineTest : BasePlatformTestCase() {
             context.compiledVariables = compiledVariables
 
             hole.variables.mapValues {
-                PatternActionProcessor(project, hole).execute(it.value)
+                PatternActionProcessor(project, hole, mapOf()).execute(it.value)
             }
 
             hole.setupStreamingEndProcessor(project, context = context)
