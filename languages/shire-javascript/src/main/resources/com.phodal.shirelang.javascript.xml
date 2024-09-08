@@ -33,5 +33,15 @@
         <shireBuildSystemProvider
                 implementation="com.phodal.shirelang.javascript.impl.JavaScriptBuildSystemProvider"/>
 
+        <shireCodeModifier language="JavaScript"
+                           implementationClass="com.phodal.shirelang.javascript.codeedit.JestCodeModifier"/>
+        <shireCodeModifier language="TypeScript"
+                           implementationClass="com.phodal.shirelang.javascript.codeedit.JestCodeModifier"/>
+
+        <shireAutoTesting language="JavaScript"
+                          implementationClass="com.phodal.shirelang.javascript.codeedit.JSAutoTestingService"/>
+        <shireAutoTesting language="TypeScript"
+                          implementationClass="com.phodal.shirelang.javascript.codeedit.JSAutoTestingService"/>
+
     </extensions>
 </idea-plugin>
