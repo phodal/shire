@@ -11,8 +11,8 @@ class LlmConfig(
     val apiKey: String,
     val model: String,
     val temperature: Double = 0.0,
-    val customHeaders: Map<String, String> = mapOf(),
-    val customFields: Map<String, String> = mapOf(),
+    val requestFormat: Map<String, String> = mapOf(),
+    val responseFormat: String = "\$.choices[0].delta.content",
     val messageKeys: Map<String, String> = mapOf(),
 ) {
     companion object {
@@ -37,8 +37,8 @@ class LlmConfig(
                 apiKey = apiKey,
                 model = model,
                 temperature = temperature ?: 0.0,
-                customHeaders = mapOf(),
-                customFields = mapOf(),
+                requestFormat = mapOf(),
+                responseFormat = "\$.choices[0].delta.content",
                 messageKeys = mapOf(),
             )
         }
