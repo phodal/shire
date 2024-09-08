@@ -43,3 +43,17 @@ Shire Environment 用于定义 Shire 的环境变量，用于存储一些敏感�
   ]
 }
 ```
+
+Model 配置详细示例：
+
+```kotlin
+class LlmConfig(
+    val title: String,
+    val provider: String = "openai",
+    val apiBase: String = "https://api.openai.com/v1/chat/completions",
+    val apiKey: String,
+    val model: String,
+    val temperature: Double = 0.0,
+    val maxTokens: Int? = 1024
+)
+```
