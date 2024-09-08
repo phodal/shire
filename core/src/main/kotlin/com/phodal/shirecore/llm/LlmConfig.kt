@@ -11,6 +11,7 @@ class LlmConfig(
     val apiKey: String,
     val model: String,
     val temperature: Double = 0.0,
+    val maxTokens: Int? = 1024,
     val requestFormat: Map<String, String> = mapOf(),
     val responseFormat: String = "\$.choices[0].delta.content",
     val messageKeys: Map<String, String> = mapOf(),
@@ -29,6 +30,11 @@ class LlmConfig(
             } catch (e: Exception) {
                 null
             }
+            val maxTokens = try {
+                modelConfig.findNumber("maxTokens")?.toInt()
+            } catch (e: Exception) {
+                null
+            }
 
             return LlmConfig(
                 title = title,
@@ -37,6 +43,7 @@ class LlmConfig(
                 apiKey = apiKey,
                 model = model,
                 temperature = temperature ?: 0.0,
+                maxTokens = maxTokens,
                 requestFormat = mapOf(),
                 responseFormat = "\$.choices[0].delta.content",
                 messageKeys = mapOf(),

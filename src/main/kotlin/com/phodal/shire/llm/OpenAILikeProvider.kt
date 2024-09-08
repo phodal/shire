@@ -17,11 +17,19 @@ import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.time.Duration
 
+data class CustomFields(
+    val model: String,
+    val temperature: Double,
+    val maxTokens: Int?,
+    val stream: Boolean
+)
+
 class OpenAILikeProvider : CustomSSEHandler(), LlmProvider {
     private val timeout = Duration.ofSeconds(defaultTimeout)
 
     private var modelName: String = ShireSettingsState.getInstance().modelName
     private var temperature: Float  = ShireSettingsState.getInstance().temperature
+    private var maxTokens: Int? = null
     private var key: String = ShireSettingsState.getInstance().apiToken
     private var url: String = ShireSettingsState.getInstance().apiHost.ifEmpty {
         "https://api.openai.com/v1/chat/completions"
@@ -30,7 +38,11 @@ class OpenAILikeProvider : CustomSSEHandler(), LlmProvider {
     private val messages: MutableList<ChatMessage> = ArrayList()
     private var client = OkHttpClient()
 
-    override val requestFormat: String get() = """{ "customFields": {"model": "$modelName", "temperature": $temperature, "stream": true} }"""
+    override val requestFormat: String get() = if (maxTokens != null) {
+        """{ "customFields": {"model": "$modelName", "temperature": $temperature, "max_tokens": $maxTokens, "stream": true} }"""
+    } else {
+        """{ "customFields": {"model": "$modelName", "temperature": $temperature, "stream": true} }"""
+    }
     override val responseFormat: String get() = "\$.choices[0].delta.content"
     override var project: Project? = null
     override fun clearMessage() = messages.clear()
@@ -47,6 +59,7 @@ class OpenAILikeProvider : CustomSSEHandler(), LlmProvider {
                 temperature = it.temperature.toFloat()
                 key = it.apiKey
                 url = it.apiBase
+                maxTokens = it.maxTokens
             }
         }
 
