@@ -50,6 +50,8 @@ class DatabaseFunctionProvider : ToolchainFunctionProvider {
                             result = tableNames.map {
                                 getTable(project, it.trim())
                             }.flatten().toMutableList()
+                        } else {
+                            result = getTable(project, dbName).toMutableList()
                         }
                     }
                     is List<*> -> {
@@ -104,6 +106,18 @@ class DatabaseFunctionProvider : ToolchainFunctionProvider {
                             else -> {
                                 "ShireError: Table function requires a data source or a list of table names"
                             }
+                        }
+                    }
+
+                    is String -> {
+                        val allTables = DatabaseSchemaAssistant.getAllTables(project)
+                        if (first.startsWith("[") && first.endsWith("]")) {
+                            val tableNames = first.substring(1, first.length - 1).split(",")
+                            return tableNames.map {
+                                DatabaseSchemaAssistant.getTableColumn(allTables.first { table -> table.name == it.trim() })
+                            }
+                        } else {
+                            return DatabaseSchemaAssistant.getTableColumn(allTables.first { table -> table.name == first })
                         }
                     }
 

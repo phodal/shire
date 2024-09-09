@@ -534,6 +534,7 @@ object HobbitHoleParser {
         val args = parseParameters(funcCall) ?: emptyList()
         val funcName = funcCall?.funcName?.text ?: return null
 
+        // todo: handle with toolchain functions
         val patternActionFunc = when (PatternActionFuncType.values().find { it.funcName == funcName }) {
             PatternActionFuncType.GREP -> {
                 if (args.isEmpty()) {
@@ -652,13 +653,6 @@ object HobbitHoleParser {
                 }
             }
 
-            PatternActionFuncType.TOOLCHAIN_FUNCTION -> PatternActionFunc.ToolchainFunction(funcName, args)
-
-            null -> {
-                logger.warn("parsePatternAction, Unknown pattern action: ${expr.funcCall}")
-                return null
-            }
-
             PatternActionFuncType.FROM,
             PatternActionFuncType.WHERE,
             PatternActionFuncType.SELECT,
@@ -666,6 +660,9 @@ object HobbitHoleParser {
                 val funcName = funcCall.funcName.text ?: ""
                 PatternActionFunc.ToolchainFunction(funcName, args)
             }
+
+            PatternActionFuncType.TOOLCHAIN_FUNCTION  -> PatternActionFunc.ToolchainFunction(funcName, args)
+            else -> PatternActionFunc.ToolchainFunction(funcName, args)
         }
 
         return patternActionFunc
