@@ -1,6 +1,28 @@
-# [](https://github.com/phodal/shire/compare/v0.7.2...v) (2024-09-05)
+# [](https://github.com/phodal/shire/compare/v0.7.3...v) (2024-09-09)
 
 ## [Unreleased]
+
+## ## [0.7.3](https://github.com/phodal/shire/compare/v0.7.2...v[0.7.3]) (2024-09-09)
+
+### Bug Fixes
+
+- **runner:** An unexpected exception occurred, causing the shire process cannot be canceled ([7eba18c](https://github.com/phodal/shire/commit/7eba18c8b1adaccf226fad1362a239cb60d19da9))
+- **runner:** The consoleView is not the original consoleView when processing the exit code of the script ([474b681](https://github.com/phodal/shire/commit/474b6813565e790a832c37f74e7ac4acd6db7696))
+- **runner:** The messageFilter of the console view appends extra data ([a47db5d](https://github.com/phodal/shire/commit/a47db5dd1fe51408409339a4711c7d16a23922d1))
+- **shirelang:** ensure null safety in ShireVcsSingleAction [#78](https://github.com/phodal/shire/issues/78) ([0c4665b](https://github.com/phodal/shire/commit/0c4665b9faf4573b2fb66abb1fabccc484fc3d51))
+
+### Features
+
+- **actions:** add support for enabling/disabling actions and improve action config handling [#78](https://github.com/phodal/shire/issues/78) ([045c962](https://github.com/phodal/shire/commit/045c962be11e55139c83cdb241d3a8a13f749b52))
+- **codemodel:** Add JavaScript and TypeScript structure providers ([ce936bd](https://github.com/phodal/shire/commit/ce936bda74be3e1aa07bc47ffde133fefa867f8e))
+- **javascript:** add JavaScript support and build system integration ([c09e3d3](https://github.com/phodal/shire/commit/c09e3d36483be5e85c3cead1dbec88f361f16d71))
+- **javascript:** add JestCodeModifier and JSAutoTestingService ([fde85ad](https://github.com/phodal/shire/commit/fde85ad1e959a18d102e4ce44c6197e0914f3bc8))
+- **javascript:** implement TypeScript refactoring tool and language support ([f46a3f8](https://github.com/phodal/shire/commit/f46a3f877a2aeed6fdce703a9b3008e617cf6625))
+- **llm:** add LlmConfig class for LLM configuration management [#78](https://github.com/phodal/shire/issues/78) ([a824eda](https://github.com/phodal/shire/commit/a824eda7e6bc15b7e81c8fc088484582c1bd4276))
+- **llm:** add maxTokens parameter to CustomFields and LlmConfig [#78](https://github.com/phodal/shire/issues/78) ([c47ae75](https://github.com/phodal/shire/commit/c47ae75e062a65b7b2ca4479efa16346c05dd644))
+- **model:** enable for custom model in project && closed [#78](https://github.com/phodal/shire/issues/78) ([d3e4859](https://github.com/phodal/shire/commit/d3e4859b28f60d7b85e8188ae50eaf5a46ba1abb))
+- **navigation:** implement GotoDeclarationHandler for Shire language ([2c7d744](https://github.com/phodal/shire/commit/2c7d7444759e81e9c3661f5ec5633ae7a086f810))
+- **pattern-action:** refactor to use PatternActionFuncType enum ([445b2ac](https://github.com/phodal/shire/commit/445b2ac9e9539cf41468a7c9a0a819b98d63aa7f))
 
 ## [0.7.2](https://github.com/phodal/shire/compare/v0.7.1...v[0.7.2]) (2024-09-05)
 
@@ -479,7 +501,8 @@
 - **shell:** add shell language support plugin file ([bdc1c90](https://github.com/phodal/shire/commit/bdc1c90f10d7c2c4fb8f7157db343dd756c11352))
 - **shire:** add Shire context action group and location support ([e3df86d](https://github.com/phodal/shire/commit/e3df86d16d0c9985fec787a8e76ce553be9a9a45))
 
-[Unreleased]: https://github.com/phodal/shire/compare/v0.7.2...HEAD
+[Unreleased]: https://github.com/phodal/shire/compare/v0.7.3...HEAD
+[0.7.3]: https://github.com/phodal/shire/compare/v0.7.2...v0.7.3
 [0.7.2]: https://github.com/phodal/shire/compare/v0.7.1...v0.7.2
 [0.7.1]: https://github.com/phodal/shire/compare/v0.5.2...v0.7.1
 [0.5.2]: https://github.com/phodal/shire/compare/v0.4.8...v0.5.2
