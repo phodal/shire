@@ -11,7 +11,7 @@ Shire Environment 用于定义 Shire 的环境变量，用于存储一些敏感�
 当前 Shire Env 支持两种变量：
 
 - `development`：配置 Token、API Key 等信息。
-- `models`：配置模型信息（在 `0.7.3` 版本后支持）。
+- `models`：配置模型信息（在 `0.7.4` 版本后支持）。
 
 ## `.shireEnv.json` 文件
 
@@ -44,7 +44,22 @@ Shire Environment 用于定义 Shire 的环境变量，用于存储一些敏感�
 }
 ```
 
-Model 配置详细示例：
+### 使用你的  apiKey
+
+在 Shell 中放在 `${}` 中即可：
+
+```shell
+curl -X POST 'https://api.dify.ai/v1/completion-messages' \
+  --header "Authorization: Bearer ${apiKey}" \
+  --header 'Content-Type: application/json' \
+  --data-raw '{
+      "inputs": {"feature": "Hello, world!", "story_list": ${storyList}},
+      "response_mode": "streaming",
+      "user": "phodal"
+  }'
+```
+
+### Model 配置详细示例：
 
 ```kotlin
 class LlmConfig(
