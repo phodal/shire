@@ -16,13 +16,15 @@ nav_order: 7
 - `table`，获取数据库表信息，参数 1：`databaseName`，默认获取第一个连接的数据库。
 - `column`，获取数据库列信息，参数 1：`tableName`，默认获取第一个表的列信息。
 
+### 示例 1
+
 ```shire
 ---
 variables:
-  "customTables": /./ { table | column }
+  "relatedTableInfo": /./ { column("user", "post", "tag") }
 ---
 
 根据如下的信息，生成 SQL：
 
-$customTables
+$relatedTableInfo
 ```
