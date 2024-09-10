@@ -1,12 +1,17 @@
 package com.phodal.shirelang
 
+import com.intellij.execution.ui.ConsoleView
+import com.intellij.openapi.project.Project
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.phodal.shirecore.middleware.ShireRunVariableContext
 import com.phodal.shirecore.middleware.PostProcessor
+import com.phodal.shirecore.middleware.PostProcessor.Companion.handler
+import com.phodal.shirecore.middleware.PostProcessorNode
 import com.phodal.shirelang.compiler.ShireSyntaxAnalyzer
 import com.phodal.shirelang.psi.ShireFile
 import junit.framework.TestCase
 import org.intellij.lang.annotations.Language
+import org.jetbrains.annotations.TestOnly
 
 class ShireLifecycleTest : BasePlatformTestCase() {
     fun testShouldHandleWhenStreamingEnd() {
@@ -39,7 +44,19 @@ class ShireLifecycleTest : BasePlatformTestCase() {
         assertEquals(funcNode[3].funName, "runCode")
 
         val handleContext = ShireRunVariableContext(currentLanguage = ShireLanguage.INSTANCE, editor = null)
-        PostProcessor.execute(project, funcNode, handleContext, null)
+        execute(project, funcNode, handleContext, null)
+    }
+
+    @TestOnly
+    fun execute(project: Project, funcNodes: List<PostProcessorNode>, handleContext: ShireRunVariableContext, console: ConsoleView?) {
+        funcNodes.forEach { funNode ->
+            val handler = handler(funNode.funName)
+            if (handler != null) {
+                handler.setup(handleContext)
+                handler.execute(project, handleContext, console, funNode.args)
+                handler.finish(handleContext)
+            }
+        }
     }
 
     fun testShouldHandleWhenAfterStreaming() {

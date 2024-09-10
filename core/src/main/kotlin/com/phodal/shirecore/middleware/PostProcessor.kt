@@ -70,17 +70,5 @@ interface PostProcessor {
         fun allNames(): List<String> {
             return EP_NAME.extensionList.map { it.processorName }
         }
-
-        @TestOnly
-        fun execute(project: Project, funcNodes: List<PostProcessorNode>, handleContext: ShireRunVariableContext, console: ConsoleView?) {
-            funcNodes.forEach { funNode ->
-                val handler = handler(funNode.funName)
-                if (handler != null) {
-                    handler.setup(handleContext)
-                    handler.execute(project, handleContext, console, funNode.args)
-                    handler.finish(handleContext)
-                }
-            }
-        }
     }
 }
