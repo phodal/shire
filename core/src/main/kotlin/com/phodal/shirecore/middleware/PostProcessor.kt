@@ -3,6 +3,7 @@ package com.phodal.shirecore.middleware
 import com.intellij.execution.ui.ConsoleView
 import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.project.Project
+import org.jetbrains.annotations.TestOnly
 
 data class PostProcessorNode(
     val funName: String,
@@ -70,6 +71,7 @@ interface PostProcessor {
             return EP_NAME.extensionList.map { it.processorName }
         }
 
+        @TestOnly
         fun execute(project: Project, funcNodes: List<PostProcessorNode>, handleContext: ShireRunVariableContext, console: ConsoleView?) {
             funcNodes.forEach { funNode ->
                 val handler = handler(funNode.funName)

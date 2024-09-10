@@ -20,6 +20,7 @@ import com.phodal.shirelang.compiler.hobbit.ast.FrontMatterType
 import com.phodal.shirelang.compiler.hobbit.ast.MethodCall
 import com.phodal.shirelang.compiler.hobbit.ast.PatternAction
 import com.phodal.shirelang.compiler.hobbit.ast.TaskRoutes
+import com.phodal.shirelang.compiler.hobbit.execute.PatternFuncProcessor
 import com.phodal.shirelang.compiler.patternaction.VariableTransform
 import com.phodal.shirelang.psi.ShireFile
 
@@ -227,6 +228,8 @@ open class HobbitHole(
             console?.print("endExecute: ${funcNode.funName}\n", ConsoleViewContentType.SYSTEM_OUTPUT)
             val postProcessor = PostProcessor.handler(funcNode.funName)
             if (postProcessor == null) {
+                // TODO: change execute
+//                PatternActionFunc
                 console?.print("Not found function: ${funcNode.funName}\n", ConsoleViewContentType.SYSTEM_OUTPUT)
                 return@forEach
             }
