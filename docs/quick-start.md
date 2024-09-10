@@ -57,9 +57,34 @@ ${context.frameworkContext}
 
 当前我们只支持 OpenAI API 风格的 SAAS 服务，你需要在 `Settings` -> `Tools` -> `Shire` 中配置你的 API Token 和 Model。
 
+### OpenAI
+
+- LLM API Host: 不填
+- ModelName: gpt-4o
+- Engine Token: your key
+
 ### GLM 示例
 
 - LLM API Host: https://open.bigmodel.cn/api/paas/v4/chat/completions
 - ModelName: glm-4
-- Engine Token: xxxx
+- Engine Token: your key
+
+### 零一万物 
+
+- LLM API Host: https://api.lingyiwangwu.com/v1/chat/completions
+- ModelName: yi-34b-chat
+- Engine Token: your key
+
+### Moonshot AI
+
+- LLM API Host: https://api.moonshot.cn/v1/chat/completions
+- ModelName: moonshot-v1-8k
+- Engine Token: your key
+
+### DeepSeek AI
+
+- LLM API Host: https://api.deepseek.com/v1/chat/completions
+- ModelName: deepseek-chat
+- Engine Token: your key
+
 
