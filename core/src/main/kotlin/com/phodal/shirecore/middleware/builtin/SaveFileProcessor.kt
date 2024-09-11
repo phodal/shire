@@ -10,6 +10,8 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.util.PathUtil.isValidFileName
+import com.phodal.shirecore.markdown.CodeFence
 import com.phodal.shirecore.middleware.SHIRE_TEMP_OUTPUT
 import com.phodal.shirecore.middleware.BuiltinPostHandler
 import com.phodal.shirecore.middleware.ShireRunVariableContext
@@ -29,21 +31,19 @@ class SaveFileProcessor : PostProcessor, Disposable {
         val fileName: String
         val ext = getFileExt(context)
         if (args.isNotEmpty()) {
-            fileName = args[0].toString()
+            fileName = getValidFileName(args[0].toString(), ext)
             handleForProjectFile(project, fileName, context, console, ext)
         } else {
             fileName = "${System.currentTimeMillis()}.$ext"
             handleForTempFile(project, fileName, context, console)
         }
 
-
         return fileName
     }
 
     private fun getFileExt(context: ShireRunVariableContext): String {
         val language = context.genTargetLanguage ?: PlainTextLanguage.INSTANCE
-        val ext = context.genTargetExtension ?: language?.associatedFileType?.defaultExtension ?: "txt"
-        return ext
+        return context.genTargetExtension ?: language?.associatedFileType?.defaultExtension ?: "txt"
     }
 
     private fun handleForTempFile(
@@ -149,3 +149,16 @@ class SaveFileProcessor : PostProcessor, Disposable {
     }
 }
 
+fun getValidFileName(fileName: String, ext: String): String {
+    if (fileName.isBlank()) {
+        return "${System.currentTimeMillis()}.$ext"
+    }
+
+    return if (isValidFileName(fileName)) {
+        fileName
+    } else if (fileName.contains("`") && fileName.contains("```")) {
+        CodeFence.parse(fileName).text
+    } else {
+        "${System.currentTimeMillis()}.$ext"
+    }
+}
