@@ -226,7 +226,9 @@ class ShireRunner(
     ) {
         console.print("Shire Script: ${shireConfiguration.getScriptPath()}\n", ConsoleViewContentType.SYSTEM_OUTPUT)
         console.print("Shire Script Compile output:\n", ConsoleViewContentType.SYSTEM_OUTPUT)
-        console.print("Used model: ${ShireRunVariableContext.getData()?.llmModelName}\n", ConsoleViewContentType.SYSTEM_OUTPUT)
+        ShireRunVariableContext.getData()?.llmModelName?.let {
+            console.print("Used model: $it\n", ConsoleViewContentType.SYSTEM_OUTPUT)
+        }
 
         promptText.split("\n").forEach {
             when {
