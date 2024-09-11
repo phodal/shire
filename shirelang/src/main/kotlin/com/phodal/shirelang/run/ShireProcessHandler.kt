@@ -1,6 +1,7 @@
 package com.phodal.shirelang.run
 
 import com.intellij.build.process.BuildProcessHandler
+import com.intellij.openapi.diagnostic.logger
 import java.io.OutputStream
 
 class ShireProcessHandler(private val myExecutionName: String) : BuildProcessHandler() {
@@ -9,7 +10,11 @@ class ShireProcessHandler(private val myExecutionName: String) : BuildProcessHan
     override fun detachProcessImpl() {
         try {
             notifyProcessDetached()
-        } finally {
+        } catch (e: Exception) {
+            // ignore
+            logger<ShireProcessHandler>().warn(e)
+        }
+        finally {
             notifyProcessTerminated(0)
         }
     }

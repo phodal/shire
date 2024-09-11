@@ -226,6 +226,8 @@ class ShireRunner(
     ) {
         console.print("Shire Script: ${shireConfiguration.getScriptPath()}\n", ConsoleViewContentType.SYSTEM_OUTPUT)
         console.print("Shire Script Compile output:\n", ConsoleViewContentType.SYSTEM_OUTPUT)
+        console.print("Used model: ${ShireRunVariableContext.getData()?.llmModelName}\n", ConsoleViewContentType.SYSTEM_OUTPUT)
+
         promptText.split("\n").forEach {
             when {
                 it.contains(SHIRE_ERROR) -> {
