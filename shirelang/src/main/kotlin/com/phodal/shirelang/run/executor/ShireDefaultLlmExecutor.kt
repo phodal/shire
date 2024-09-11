@@ -63,10 +63,9 @@ class ShireDefaultLlmExecutor(
                     try {
                         LlmProvider.provider(context.myProject)?.stream(context.prompt, "", false)?.collect {
                             llmResult.append(it)
-
                             console?.print(it, ConsoleViewContentType.NORMAL_OUTPUT)
                         } ?: console?.print(
-                            ShireBundle.message("shire.llm.notfound"),
+                            "DefaultLlm" + ShireBundle.message("shire.llm.notfound"),
                             ConsoleViewContentType.ERROR_OUTPUT
                         )
                     } catch (e: Exception) {

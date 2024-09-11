@@ -3,6 +3,7 @@ package com.phodal.shire.settings.components
 import com.intellij.openapi.project.Project
 import com.intellij.ui.dsl.builder.Align
 import com.intellij.ui.dsl.builder.Panel
+import com.phodal.shirecore.ShireCoreBundle
 import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.llm.LlmProvider
 import kotlinx.coroutines.flow.Flow
@@ -19,8 +20,9 @@ fun Panel.testLLMConnection(project: Project?) {
             ShireCoroutineScope.scope(project).launch {
                 try {
                     val flowString: Flow<String> =
-                        LlmProvider.provider(project)?.stream("hi", "", false)
-                            ?: throw IllegalStateException("No LLM provider found")
+                        LlmProvider.provider(project)
+                            ?.stream("hi", "", false)
+                            ?: throw Exception(ShireCoreBundle.message("shire.llm.notfound"))
                     flowString.collect {
                         result.text += it
                     }

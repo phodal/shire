@@ -49,7 +49,9 @@ class OpenAILikeProvider : CustomSSEHandler(), LlmProvider {
 
     override fun isApplicable(project: Project): Boolean {
         this.project = project
-        return key.isNotEmpty() && modelName.isNotEmpty()
+        // dynamic check for the API key and model name
+        return ShireSettingsState.getInstance().apiToken.isNotEmpty()
+                && ShireSettingsState.getInstance().modelName.isNotEmpty()
     }
 
     override fun stream(promptText: String, systemPrompt: String, keepHistory: Boolean): Flow<String> {

@@ -73,7 +73,8 @@ class SemanticService(val project: Project) {
     suspend fun searching(input: String, threshold: Double = 0.5): List<ScoredText> {
         lastQuery = input
         val inputEmbedding = embed(input)
-        return index.findClosest(inputEmbedding, 10).filter { it.similarity > threshold }
+        val findClosest = index.findClosest(inputEmbedding, 10)
+        return findClosest.filter { it.similarity > threshold }
     }
 
     suspend fun reranking(type: String): List<ScoredText> {

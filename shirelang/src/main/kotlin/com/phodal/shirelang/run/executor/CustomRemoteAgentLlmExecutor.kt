@@ -22,7 +22,10 @@ class CustomRemoteAgentLlmExecutor(
 
             val console = context.console
             if (stringFlow == null) {
-                console?.print(ShireBundle.message("shire.llm.notfound"), ConsoleViewContentType.ERROR_OUTPUT)
+                console?.print(
+                    "CustomRemoteAgent:" + ShireBundle.message("shire.llm.notfound"),
+                    ConsoleViewContentType.ERROR_OUTPUT
+                )
                 context.processHandler.detachProcess()
                 postFunction(null, null)
                 return@invokeLater

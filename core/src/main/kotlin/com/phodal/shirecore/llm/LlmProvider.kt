@@ -1,13 +1,15 @@
 package com.phodal.shirecore.llm
 
-import com.intellij.json.JsonUtil
-import com.intellij.json.psi.*
+import com.intellij.json.psi.JsonArray
+import com.intellij.json.psi.JsonFile
+import com.intellij.json.psi.JsonObject
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiManager
 import com.intellij.psi.search.ProjectScope
 import com.intellij.util.indexing.FileBasedIndex
+import com.phodal.shirecore.ShireCoreBundle
 import com.phodal.shirecore.ShirelangNotifications
 import com.phodal.shirecore.index.MODEL_LIST
 import com.phodal.shirecore.index.MODEL_TITLE
@@ -108,7 +110,7 @@ interface LlmProvider {
         fun provider(project: Project): LlmProvider? {
             val providers = EP_NAME.extensions.filter { it.isApplicable(project) }
             return if (providers.isEmpty()) {
-                ShirelangNotifications.info(project, "No LLM provider found")
+                ShirelangNotifications.error(project, ShireCoreBundle.message("shire.llm.notfound"))
                 null
             } else {
                 providers.first()

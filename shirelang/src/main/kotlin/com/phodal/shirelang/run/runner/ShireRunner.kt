@@ -99,7 +99,7 @@ class ShireRunner(
                         llmResult.append(it)
                         handler.onChunk.invoke(it)
                     } ?: console?.print(
-                        ShireBundle.message("shire.llm.notfound"),
+                        "ShireRunner:" + ShireBundle.message("shire.llm.notfound"),
                         ConsoleViewContentType.ERROR_OUTPUT
                     )
                 } catch (e: Exception) {
