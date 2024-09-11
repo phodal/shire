@@ -29,14 +29,14 @@ class DatabaseFunctionProvider : ToolchainFunctionProvider {
         args: List<Any>,
         allVariables: Map<String, Any?>,
     ): Any {
-        val databaseFunction =
-            DatabaseFunction.fromString(funcName) ?: throw IllegalArgumentException("Invalid Database function name")
+        val databaseFunction = DatabaseFunction.fromString(funcName)
+            ?: throw IllegalArgumentException("Shire[DBTool]: Invalid Database function name")
 
         when (databaseFunction) {
             DatabaseFunction.Table -> {
                 if (args.isEmpty()) {
                     val dataSource = DatabaseSchemaAssistant.getAllRawDatasource(project).firstOrNull()
-                        ?: return "ShireError: No database found"
+                        ?: return "ShireError[DBTool]: No database found"
                     return DatabaseSchemaAssistant.getTableByDataSource(dataSource)
                 }
 
@@ -54,6 +54,7 @@ class DatabaseFunctionProvider : ToolchainFunctionProvider {
                             result = getTable(project, dbName).toMutableList()
                         }
                     }
+
                     is List<*> -> {
                         result = dbName.map {
                             getTable(project, it as String)
@@ -104,7 +105,7 @@ class DatabaseFunctionProvider : ToolchainFunctionProvider {
                             }
 
                             else -> {
-                                "ShireError: Table function requires a data source or a list of table names"
+                                "ShireError[DBTool]: Table function requires a data source or a list of table names"
                             }
                         }
                     }
@@ -113,17 +114,29 @@ class DatabaseFunctionProvider : ToolchainFunctionProvider {
                         val allTables = DatabaseSchemaAssistant.getAllTables(project)
                         if (first.startsWith("[") && first.endsWith("]")) {
                             val tableNames = first.substring(1, first.length - 1).split(",")
-                            return tableNames.map {
-                                DatabaseSchemaAssistant.getTableColumn(allTables.first { table -> table.name == it.trim() })
+                            return tableNames.mapNotNull {
+                                val dasTable = allTables.firstOrNull { table ->
+                                    table.name == it.trim()
+                                }
+
+                                dasTable?.let {
+                                    DatabaseSchemaAssistant.getTableColumn(it)
+                                }
                             }
                         } else {
-                            return DatabaseSchemaAssistant.getTableColumn(allTables.first { table -> table.name == first })
+                            val dasTable = allTables.firstOrNull { table ->
+                                table.name == first
+                            }
+
+                            return dasTable?.let {
+                                DatabaseSchemaAssistant.getTableColumn(it)
+                            } ?: "ShireError[DBTool]: Table not found"
                         }
                     }
 
                     else -> {
-                        logger<DatabaseFunctionProvider>().error("args types: ${first.javaClass}")
-                        return "ShireError: Table function requires a data source or a list of table names"
+                        logger<DatabaseFunctionProvider>().error("ShireError[DBTool] args types: ${first.javaClass}")
+                        return "ShireError[DBTool]: Table function requires a data source or a list of table names"
                     }
                 }
             }
