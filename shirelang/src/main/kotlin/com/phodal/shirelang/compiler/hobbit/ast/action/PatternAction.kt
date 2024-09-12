@@ -1,6 +1,8 @@
-package com.phodal.shirelang.compiler.hobbit.ast
+package com.phodal.shirelang.compiler.hobbit.ast.action
 
 import com.intellij.openapi.diagnostic.logger
+import com.phodal.shirelang.compiler.hobbit.ast.FrontMatterType
+import com.phodal.shirelang.compiler.hobbit.ast.ShirePsiQueryStatement
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 
 /**
@@ -14,7 +16,7 @@ data class PatternAction(
     val pattern: String,
     val patternFuncs: List<PatternActionFunc>,
     val isQueryStatement: Boolean = false
-) {
+) : DirectAction(patternFuncs) {
     companion object {
         /**
          * Creates a list of PatternFun instances from a FrontMatterType object.

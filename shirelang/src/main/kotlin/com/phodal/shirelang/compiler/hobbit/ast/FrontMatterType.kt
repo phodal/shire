@@ -1,5 +1,7 @@
 package com.phodal.shirelang.compiler.hobbit.ast
 
+import com.phodal.shirelang.compiler.hobbit.ast.action.RuleBasedPatternAction
+
 
 /**
  * The `FrontMatterType` is a sealed class in Kotlin that represents different types of front matter data.

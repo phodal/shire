@@ -18,8 +18,9 @@ import com.phodal.shirelang.compiler.parser.HobbitHoleParser
 import com.phodal.shirelang.compiler.hobbit.base.Smials
 import com.phodal.shirelang.compiler.hobbit.ast.FrontMatterType
 import com.phodal.shirelang.compiler.hobbit.ast.MethodCall
-import com.phodal.shirelang.compiler.hobbit.ast.PatternAction
+import com.phodal.shirelang.compiler.hobbit.ast.action.PatternAction
 import com.phodal.shirelang.compiler.hobbit.ast.TaskRoutes
+import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 import com.phodal.shirelang.compiler.patternaction.VariableTransform
 import com.phodal.shirelang.psi.ShireFile
 
@@ -146,6 +147,15 @@ open class HobbitHole(
     val onStreaming: List<PostProcessor> = emptyList(),
 
     /**
+     * ```shire
+     * ---
+     * beforeStreaming: { parseCode}
+     * ---
+     * ```
+     */
+    val beforeStreaming: List<PatternActionFunc> = emptyList(),
+
+    /**
      * The list of actions that this action depends on.
      *
      * ```shire
@@ -157,8 +167,8 @@ open class HobbitHole(
      *     }
      *     case condition {
      *       "variable-sucesss" { done }
-     *       "jsonpath-success" { task() }
-     *       default { task() }
+     *       "jsonpath-success" { TODO }
+     *       default { TODO }
      *     }
      *   }
      * ---
@@ -228,7 +238,6 @@ open class HobbitHole(
             val postProcessor = PostProcessor.handler(funcNode.funName)
             if (postProcessor == null) {
                 // TODO: change execute
-//                PatternActionFunc
                 console?.print("Not found function: ${funcNode.funName}\n", ConsoleViewContentType.SYSTEM_OUTPUT)
                 return@forEach
             }
@@ -273,9 +282,12 @@ open class HobbitHole(
         const val ACTION_LOCATION = "actionLocation"
         const val INTERACTION = "interaction"
         const val STRATEGY_SELECTION = "selectionStrategy"
+
         const val ON_STREAMING_END = "onStreamingEnd"
+        const val BEFORE_STREAMING = "beforeStreaming"
         const val AFTER_STREAMING = "afterStreaming"
         const val ON_STREAMING = "onStreaming"
+
         const val ENABLED = "enabled"
         const val MODEL = "model"
 
@@ -306,8 +318,9 @@ open class HobbitHole(
                 STRATEGY_SELECTION to "The strategy to select the element to apply the action",
                 VARIABLES to "The list of variables to apply for the action",
 
-                ON_STREAMING to "TBD    ",
+                ON_STREAMING to "TBD ",
                 ON_STREAMING_END to "After Streaming end middleware actions, like Logging, Metrics, CodeVerify, RunCode, ParseCode etc.",
+                BEFORE_STREAMING to "The task/patternAction before streaming",
                 AFTER_STREAMING to "Decision to run the task after streaming, routing to different tasks",
             )
         }
@@ -342,6 +355,10 @@ open class HobbitHole(
             val variables = (frontMatterMap[VARIABLES] as? FrontMatterType.OBJECT)?.let {
                 buildVariableTransformations(it.toValue())
             } ?: mutableMapOf()
+
+//            val beforeStreaming: List<DirectAction> = frontMatterMap[BEFORE_STREAMING]?.let {
+//
+//            } ?: emptyList()
 
             val afterStreaming: TaskRoutes? = (frontMatterMap[AFTER_STREAMING] as? FrontMatterType.ARRAY)?.let {
                 try {
