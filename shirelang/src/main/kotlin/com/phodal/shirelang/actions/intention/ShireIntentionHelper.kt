@@ -33,6 +33,7 @@ class ShireIntentionHelper : IntentionAction, Iconable {
 
     override fun invoke(project: Project, editor: Editor, file: PsiFile) {
         val intentions = getAiAssistantIntentions(file, null)
+        if (intentions.isEmpty()) return
 
         val title = ShireMainBundle.message("intentions.assistant.popup.title")
         val popupStep = CustomPopupStep(intentions, project, editor, file, title)
@@ -40,7 +41,7 @@ class ShireIntentionHelper : IntentionAction, Iconable {
             val popup = JBPopupFactory.getInstance().createListPopup(popupStep)
             popup.showInBestPositionFor(editor)
         } catch (e: Exception) {
-            logger<ShireIntentionHelper>().error("Failed to show popup", e)
+            logger<ShireIntentionHelper>().warn("Failed to show popup", e)
         }
     }
 
