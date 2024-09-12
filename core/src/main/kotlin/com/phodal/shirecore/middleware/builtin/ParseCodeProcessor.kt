@@ -3,12 +3,12 @@ package com.phodal.shirecore.middleware.builtin
 import com.intellij.execution.ui.ConsoleView
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.markdown.CodeFence
-import com.phodal.shirecore.middleware.BuiltinPostHandler
+import com.phodal.shirecore.middleware.PostProcessorType
 import com.phodal.shirecore.middleware.ShireRunVariableContext
 import com.phodal.shirecore.middleware.PostProcessor
 
 class ParseCodeProcessor : PostProcessor {
-    override val processorName: String = BuiltinPostHandler.ParseCode.handleName
+    override val processorName: String = PostProcessorType.ParseCode.handleName
 
     override fun isApplicable(context: ShireRunVariableContext): Boolean = true
 

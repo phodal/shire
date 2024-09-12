@@ -11,7 +11,7 @@ import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirecore.config.InteractionType
 import com.phodal.shirecore.middleware.ShireRunVariableContext
 import com.phodal.shirecore.middleware.PostProcessor
-import com.phodal.shirecore.middleware.PostProcessorNode
+import com.phodal.shirecore.middleware.PostProcessorFuncSign
 import com.phodal.shirecore.middleware.select.SelectElementStrategy
 import com.phodal.shirecore.middleware.select.SelectedEntry
 import com.phodal.shirelang.compiler.parser.HobbitHoleParser
@@ -20,7 +20,6 @@ import com.phodal.shirelang.compiler.hobbit.ast.FrontMatterType
 import com.phodal.shirelang.compiler.hobbit.ast.MethodCall
 import com.phodal.shirelang.compiler.hobbit.ast.PatternAction
 import com.phodal.shirelang.compiler.hobbit.ast.TaskRoutes
-import com.phodal.shirelang.compiler.hobbit.execute.PatternFuncProcessor
 import com.phodal.shirelang.compiler.patternaction.VariableTransform
 import com.phodal.shirelang.psi.ShireFile
 
@@ -138,7 +137,7 @@ open class HobbitHole(
      * ---
      * ```
      */
-    val onStreamingEnd: List<PostProcessorNode> = emptyList(),
+    val onStreamingEnd: List<PostProcessorFuncSign> = emptyList(),
 
     /**
      * TBD, keep it for future use.
@@ -382,8 +381,8 @@ open class HobbitHole(
             }.associateBy { it.variable }.toMutableMap()
         }
 
-        private fun buildStreamingEndProcessors(item: FrontMatterType): List<PostProcessorNode> {
-            val endProcessors: MutableList<PostProcessorNode> = mutableListOf()
+        private fun buildStreamingEndProcessors(item: FrontMatterType): List<PostProcessorFuncSign> {
+            val endProcessors: MutableList<PostProcessorFuncSign> = mutableListOf()
             when (item) {
                 is FrontMatterType.ARRAY -> {
                     item.toValue().forEach { matterType ->
@@ -400,7 +399,7 @@ open class HobbitHole(
 
                 is FrontMatterType.STRING -> {
                     val handleName = item.value as String
-                    endProcessors.add(PostProcessorNode(handleName, emptyList()))
+                    endProcessors.add(PostProcessorFuncSign(handleName, emptyList()))
                 }
 
                 else -> {}
@@ -409,17 +408,17 @@ open class HobbitHole(
             return endProcessors
         }
 
-        private fun toPostProcessorNode(expression: FrontMatterType.EXPRESSION): PostProcessorNode {
+        private fun toPostProcessorNode(expression: FrontMatterType.EXPRESSION): PostProcessorFuncSign {
             return when (val child = expression.value) {
                 is MethodCall -> {
                     val handleName = child.objectName.display()
                     val args: List<String> = child.arguments?.map { it.toString() } ?: emptyList()
-                    return PostProcessorNode(handleName, args)
+                    return PostProcessorFuncSign(handleName, args)
                 }
 
                 else -> {
                     val handleName = expression.display()
-                    PostProcessorNode(handleName, emptyList())
+                    PostProcessorFuncSign(handleName, emptyList())
                 }
             }
         }

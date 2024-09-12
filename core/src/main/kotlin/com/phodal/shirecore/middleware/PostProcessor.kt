@@ -3,9 +3,8 @@ package com.phodal.shirecore.middleware
 import com.intellij.execution.ui.ConsoleView
 import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.project.Project
-import org.jetbrains.annotations.TestOnly
 
-data class PostProcessorNode(
+data class PostProcessorFuncSign(
     val funName: String,
     val args: List<Any>,
 )
@@ -20,7 +19,7 @@ data class PostProcessorNode(
  * up tasks after execution.
  *
  *
- * @property processorName the unique name of the post-processing function, the built-in functions are defined in [BuiltinPostHandler]
+ * @property processorName the unique name of the post-processing function, the built-in functions are defined in [PostProcessorType]
  */
 interface PostProcessor {
     val processorName: String

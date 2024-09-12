@@ -4,9 +4,8 @@ import com.intellij.execution.ui.ConsoleView
 import com.intellij.openapi.project.Project
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.phodal.shirecore.middleware.ShireRunVariableContext
-import com.phodal.shirecore.middleware.PostProcessor
 import com.phodal.shirecore.middleware.PostProcessor.Companion.handler
-import com.phodal.shirecore.middleware.PostProcessorNode
+import com.phodal.shirecore.middleware.PostProcessorFuncSign
 import com.phodal.shirelang.compiler.ShireSyntaxAnalyzer
 import com.phodal.shirelang.psi.ShireFile
 import junit.framework.TestCase
@@ -48,7 +47,7 @@ class ShireLifecycleTest : BasePlatformTestCase() {
     }
 
     @TestOnly
-    fun execute(project: Project, funcNodes: List<PostProcessorNode>, handleContext: ShireRunVariableContext, console: ConsoleView?) {
+    fun execute(project: Project, funcNodes: List<PostProcessorFuncSign>, handleContext: ShireRunVariableContext, console: ConsoleView?) {
         funcNodes.forEach { funNode ->
             val handler = handler(funNode.funName)
             if (handler != null) {

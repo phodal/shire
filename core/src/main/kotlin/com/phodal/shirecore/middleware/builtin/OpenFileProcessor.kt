@@ -7,13 +7,13 @@ import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.phodal.shirecore.findFile
-import com.phodal.shirecore.middleware.BuiltinPostHandler
+import com.phodal.shirecore.middleware.PostProcessorType
 import com.phodal.shirecore.middleware.ShireRunVariableContext
 import com.phodal.shirecore.middleware.PostProcessor
 
 
 class OpenFileProcessor : PostProcessor {
-    override val processorName: String = BuiltinPostHandler.OpenFile.handleName
+    override val processorName: String = PostProcessorType.OpenFile.handleName
 
     override fun isApplicable(context: ShireRunVariableContext): Boolean = true
 

@@ -5,7 +5,7 @@ package com.phodal.shirecore.middleware
  * Logging, Metrics, CodeVerify, RunCode, ParseCode etc.
  *
  */
-enum class BuiltinPostHandler(var handleName: String) {
+enum class PostProcessorType(var handleName: String) {
     /**
      * Logging the action.
      */

@@ -10,13 +10,13 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.PsiManager
-import com.phodal.shirecore.middleware.BuiltinPostHandler
+import com.phodal.shirecore.middleware.PostProcessorType
 import com.phodal.shirecore.middleware.ShireRunVariableContext
 import com.phodal.shirecore.middleware.PostProcessor
 import com.phodal.shirecore.provider.shire.FileRunService
 
 class RunCodeProcessor : PostProcessor {
-    override val processorName: String = BuiltinPostHandler.RunCode.handleName
+    override val processorName: String = PostProcessorType.RunCode.handleName
 
     override fun isApplicable(context: ShireRunVariableContext): Boolean = true
 

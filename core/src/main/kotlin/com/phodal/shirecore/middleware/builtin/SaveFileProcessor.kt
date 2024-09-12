@@ -13,12 +13,12 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.util.PathUtil.isValidFileName
 import com.phodal.shirecore.markdown.CodeFence
 import com.phodal.shirecore.middleware.SHIRE_TEMP_OUTPUT
-import com.phodal.shirecore.middleware.BuiltinPostHandler
+import com.phodal.shirecore.middleware.PostProcessorType
 import com.phodal.shirecore.middleware.ShireRunVariableContext
 import com.phodal.shirecore.middleware.PostProcessor
 
 class SaveFileProcessor : PostProcessor, Disposable {
-    override val processorName: String = BuiltinPostHandler.SaveFile.handleName
+    override val processorName: String = PostProcessorType.SaveFile.handleName
 
     override fun isApplicable(context: ShireRunVariableContext): Boolean = true
 
