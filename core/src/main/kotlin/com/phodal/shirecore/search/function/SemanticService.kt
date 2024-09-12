@@ -30,7 +30,7 @@ class SemanticService(val project: Project) {
     private val logger = Logger.getInstance(SemanticService::class.java)
 
     suspend fun embed(chunk: String): FloatArray {
-        TODO()
+        TODO("see in issue: https://github.com/phodal/shire/issues/84")
     }
 
     suspend fun embedList(chunk: Array<out String>): List<ScoredText> {
