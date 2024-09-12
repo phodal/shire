@@ -16,7 +16,6 @@ import com.intellij.openapi.vfs.toNioPathOrNull
 import com.phodal.shirecore.search.indices.DiskSynchronizedEmbeddingSearchIndex
 import com.phodal.shirecore.search.indices.EmbeddingSearchIndex
 import com.phodal.shirecore.search.indices.InMemoryEmbeddingSearchIndex
-import com.phodal.shirecore.search.indices.normalized
 import com.phodal.shirecore.search.rank.Reranker
 import kotlinx.coroutines.*
 import java.io.File
@@ -30,15 +29,8 @@ class SemanticService(val project: Project) {
     private var index: EmbeddingSearchIndex = InMemoryEmbeddingSearchIndex(cacheDir())
     private val logger = Logger.getInstance(SemanticService::class.java)
 
-    suspend fun embedding(): Deferred<LocalEmbedding> = coroutineScope {
-        async(Dispatchers.IO) {
-            LocalEmbedding.create() ?: throw IllegalStateException("Can't create embedding")
-        }
-    }
-
     suspend fun embed(chunk: String): FloatArray {
-        val embedding = embedding()
-        return embedding.await().embed(chunk).normalized()
+        TODO()
     }
 
     suspend fun embedList(chunk: Array<out String>): List<ScoredText> {

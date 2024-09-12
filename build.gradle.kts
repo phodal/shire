@@ -118,11 +118,11 @@ project(":core") {
 
         // chocolate factory
         // follow: https://onnxruntime.ai/docs/get-started/with-java.html
-        implementation("com.microsoft.onnxruntime:onnxruntime:1.19.2")
-        implementation("ai.djl.huggingface:tokenizers:0.29.0")
+//        implementation("com.microsoft.onnxruntime:onnxruntime:1.19.2")
+//        implementation("ai.djl.huggingface:tokenizers:0.29.0")
 
-        implementation("cc.unitmesh:cocoa-core:1.0.0")
         implementation("cc.unitmesh:document:1.0.0")
+        implementation("cc.unitmesh:cocoa-core:1.0.0")
     }
 }
 

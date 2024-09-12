@@ -9,10 +9,7 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 include(
     "plugin",
-    // idea core
     "core",
-    // cross-platform core?
-//    "core-api",
     "shirelang",
 
     "languages:shire-java",
