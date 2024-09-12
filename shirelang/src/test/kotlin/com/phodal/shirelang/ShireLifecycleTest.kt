@@ -121,4 +121,27 @@ class ShireLifecycleTest : BasePlatformTestCase() {
             hole.afterStreaming?.execute(myFixture.project, handleContext, hole)
         }
     }
+
+    fun testShouldSupportForBeforeStreaming(){
+        @Language("Shire")
+        val code = """
+            ---
+            beforeStreaming: { caching("disk") | splitting | embedding }
+            ---
+            
+            ${'$'}allController
+        """.trimIndent()
+
+        val file = myFixture.addFileToProject("sample.shire", code)
+
+        myFixture.openFileInEditor(file.virtualFile)
+
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
+        val hole = compile.config!!.beforeStreaming!!
+
+        assertEquals(hole.processors.size, 3)
+        assertEquals(hole.processors[0].funcName, "caching")
+        assertEquals(hole.processors[1].funcName, "splitting")
+        assertEquals(hole.processors[2].funcName, "embedding")
+    }
 }

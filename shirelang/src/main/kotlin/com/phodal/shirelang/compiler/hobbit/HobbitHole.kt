@@ -20,7 +20,7 @@ import com.phodal.shirelang.compiler.hobbit.ast.FrontMatterType
 import com.phodal.shirelang.compiler.hobbit.ast.MethodCall
 import com.phodal.shirelang.compiler.hobbit.ast.action.PatternAction
 import com.phodal.shirelang.compiler.hobbit.ast.TaskRoutes
-import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
+import com.phodal.shirelang.compiler.hobbit.ast.action.DirectAction
 import com.phodal.shirelang.compiler.patternaction.VariableTransform
 import com.phodal.shirelang.psi.ShireFile
 
@@ -153,7 +153,7 @@ open class HobbitHole(
      * ---
      * ```
      */
-    val beforeStreaming: List<PatternActionFunc> = emptyList(),
+    val beforeStreaming: DirectAction? = null,
 
     /**
      * The list of actions that this action depends on.
@@ -356,9 +356,11 @@ open class HobbitHole(
                 buildVariableTransformations(it.toValue())
             } ?: mutableMapOf()
 
-//            val beforeStreaming: List<DirectAction> = frontMatterMap[BEFORE_STREAMING]?.let {
-//
-//            } ?: emptyList()
+            val beforeStreaming:  DirectAction?  = if (frontMatterMap[BEFORE_STREAMING] != null) {
+                DirectAction.from(frontMatterMap[BEFORE_STREAMING]!!)
+            } else {
+                null
+            }
 
             val afterStreaming: TaskRoutes? = (frontMatterMap[AFTER_STREAMING] as? FrontMatterType.ARRAY)?.let {
                 try {
@@ -380,6 +382,7 @@ open class HobbitHole(
                 variables = variables,
                 userData = data,
                 when_ = whenCondition,
+                beforeStreaming = beforeStreaming,
                 onStreamingEnd = endProcessors,
                 afterStreaming = afterStreaming,
                 shortcut = shortcut,
