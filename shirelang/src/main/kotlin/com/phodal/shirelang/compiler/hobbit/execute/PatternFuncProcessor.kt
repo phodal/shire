@@ -47,7 +47,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                     is Array<*> -> {
                         (lastResult as Array<String>)
                             .filter { line -> line.contains(action.text) }
-                            .joinToString("\n")
+                            .toTypedArray()
                     }
 
                     else -> {
@@ -74,9 +74,9 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                                         }
                                     }.toList()
                             }.flatten()
-                        }.flatten().joinToString("\n")
+                        }.flatten()
 
-                        result
+                        result.toTypedArray()
                     }
 
                     is String -> {
@@ -174,7 +174,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             is PatternActionFunc.Cat -> {
                 val path: Array<String> = action.paths.map { it.fillVariable(variableTable) }.toTypedArray()
 
-                cat(path, input)
+                cat(path, lastResult)
             }
 
             is PatternActionFunc.Print -> {
