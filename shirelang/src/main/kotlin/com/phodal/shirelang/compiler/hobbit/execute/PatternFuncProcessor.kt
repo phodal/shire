@@ -126,7 +126,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             is PatternActionFunc.Sort -> {
                 when (lastResult) {
                     is Array<*> -> {
-                        (lastResult as Array<String>).sorted().joinToString("\n")
+                        (lastResult as Array<String>).sorted()
                     }
 
                     else -> {
@@ -138,7 +138,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             is PatternActionFunc.Uniq -> {
                 when (lastResult) {
                     is Array<*> -> {
-                        (lastResult as Array<String>).distinct().joinToString("\n")
+                        (lastResult as Array<String>).distinct()
                     }
 
                     else -> {
@@ -150,7 +150,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             is PatternActionFunc.Head -> {
                 when (lastResult) {
                     is Array<*> -> {
-                        (lastResult as Array<String>).take(action.number.toInt()).joinToString("\n")
+                        (lastResult as Array<String>).take(action.number.toInt())
                     }
 
                     else -> {
@@ -162,7 +162,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             is PatternActionFunc.Tail -> {
                 when (lastResult) {
                     is Array<*> -> {
-                        (lastResult as Array<String>).takeLast(action.number.toInt()).joinToString("\n")
+                        (lastResult as Array<String>).takeLast(action.number.toInt())
                     }
 
                     else -> {
@@ -173,7 +173,6 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
 
             is PatternActionFunc.Cat -> {
                 val path: Array<String> = action.paths.map { it.fillVariable(variableTable) }.toTypedArray()
-
                 cat(path, lastResult)
             }
 
@@ -181,7 +180,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                 if (action.texts.isEmpty()) {
                     when (lastResult) {
                         is Array<*> -> {
-                            return (lastResult as Array<String>).joinToString("\n")
+                            return (lastResult as Array<String>)
                         }
 
                         else -> {
