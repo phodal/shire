@@ -6,7 +6,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.codeStyle.CodeStyleManager
 import com.phodal.shirecore.middleware.PostProcessorType
-import com.phodal.shirecore.middleware.ShireRunVariableContext
+import com.phodal.shirecore.middleware.PostProcessorContext
 import com.phodal.shirecore.middleware.PostProcessor
 import com.phodal.shirecore.workerThread
 import kotlinx.coroutines.CoroutineScope
@@ -15,9 +15,9 @@ import kotlinx.coroutines.launch
 class FormatCodeProcessor : PostProcessor {
     override val processorName: String = PostProcessorType.FormatCode.handleName
 
-    override fun isApplicable(context: ShireRunVariableContext): Boolean = true
+    override fun isApplicable(context: PostProcessorContext): Boolean = true
 
-    override fun execute(project: Project, context: ShireRunVariableContext, console: ConsoleView?, args: List<Any>): Any {
+    override fun execute(project: Project, context: PostProcessorContext, console: ConsoleView?, args: List<Any>): Any {
         val file = context.currentFile ?: return ""
         val document = PsiDocumentManager.getInstance(project).getDocument(file) ?: return ""
 

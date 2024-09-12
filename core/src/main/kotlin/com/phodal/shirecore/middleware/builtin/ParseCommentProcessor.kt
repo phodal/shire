@@ -3,7 +3,7 @@ package com.phodal.shirecore.middleware.builtin
 import com.intellij.execution.ui.ConsoleView
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.middleware.PostProcessorType
-import com.phodal.shirecore.middleware.ShireRunVariableContext
+import com.phodal.shirecore.middleware.PostProcessorContext
 import com.phodal.shirecore.middleware.PostProcessor
 import com.phodal.shirecore.provider.psi.PsiElementDataBuilder
 import org.jetbrains.annotations.NonNls
@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NonNls
 class ParseCommentProcessor : PostProcessor {
     override val processorName: String = PostProcessorType.ParseComment.handleName
 
-    override fun isApplicable(context: ShireRunVariableContext): Boolean = true
+    override fun isApplicable(context: PostProcessorContext): Boolean = true
 
     fun preHandleDoc(newDoc: String): @NonNls String {
         val newDocWithoutCodeBlock = newDoc.removePrefix("```java")
@@ -38,10 +38,10 @@ class ParseCommentProcessor : PostProcessor {
         return substring
     }
 
-    private fun getDocFromOutput(context: ShireRunVariableContext) =
+    private fun getDocFromOutput(context: PostProcessorContext) =
         preHandleDoc(context.pipeData["output"] as String? ?: context.genText ?: "")
 
-    override fun execute(project: Project, context: ShireRunVariableContext, console: ConsoleView?, args: List<Any>): String {
+    override fun execute(project: Project, context: PostProcessorContext, console: ConsoleView?, args: List<Any>): String {
         val defaultComment: String = getDocFromOutput(context)
         val currentFile = context.currentFile ?: return defaultComment
 

@@ -3,7 +3,7 @@ package com.phodal.shirelang
 import com.intellij.execution.ui.ConsoleView
 import com.intellij.openapi.project.Project
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
-import com.phodal.shirecore.middleware.ShireRunVariableContext
+import com.phodal.shirecore.middleware.PostProcessorContext
 import com.phodal.shirecore.middleware.PostProcessor.Companion.handler
 import com.phodal.shirecore.middleware.PostProcessorFuncSign
 import com.phodal.shirelang.compiler.ShireSyntaxAnalyzer
@@ -42,12 +42,12 @@ class ShireLifecycleTest : BasePlatformTestCase() {
         assertEquals(funcNode[2].funName, "verifyCode")
         assertEquals(funcNode[3].funName, "runCode")
 
-        val handleContext = ShireRunVariableContext(currentLanguage = ShireLanguage.INSTANCE, editor = null)
+        val handleContext = PostProcessorContext(currentLanguage = ShireLanguage.INSTANCE, editor = null)
         execute(project, funcNode, handleContext, null)
     }
 
     @TestOnly
-    fun execute(project: Project, funcNodes: List<PostProcessorFuncSign>, handleContext: ShireRunVariableContext, console: ConsoleView?) {
+    fun execute(project: Project, funcNodes: List<PostProcessorFuncSign>, handleContext: PostProcessorContext, console: ConsoleView?) {
         funcNodes.forEach { funNode ->
             val handler = handler(funNode.funName)
             if (handler != null) {
@@ -111,7 +111,7 @@ class ShireLifecycleTest : BasePlatformTestCase() {
                 }
             }
            """.trimIndent()
-        val handleContext = ShireRunVariableContext(
+        val handleContext = PostProcessorContext(
             currentLanguage = ShireLanguage.INSTANCE,
             genText = genJson,
             editor = null

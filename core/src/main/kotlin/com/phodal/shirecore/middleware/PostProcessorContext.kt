@@ -8,7 +8,7 @@ import com.intellij.openapi.util.UserDataHolderBase
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 
-class ShireRunVariableContext(
+class PostProcessorContext(
     /**
      * Convert code to file
      */
@@ -58,11 +58,11 @@ class ShireRunVariableContext(
     val llmModelName: String? = null,
 ) {
     companion object {
-        private val DATA_KEY: Key<ShireRunVariableContext> = Key.create(ShireRunVariableContext::class.java.name)
+        private val DATA_KEY: Key<PostProcessorContext> = Key.create(PostProcessorContext::class.java.name)
         private val userDataHolderBase = UserDataHolderBase()
 
         // todo: refactor to GlobalVariableContext
-        fun updateContextAndVariables(context: ShireRunVariableContext) {
+        fun updateContextAndVariables(context: PostProcessorContext) {
             context.compiledVariables = dynamicUpdateVariables(context.compiledVariables)
             userDataHolderBase.putUserData(DATA_KEY, context)
         }
@@ -83,7 +83,7 @@ class ShireRunVariableContext(
             return oldVariables
         }
 
-        fun getData(): ShireRunVariableContext? {
+        fun getData(): PostProcessorContext? {
             return userDataHolderBase.getUserData(DATA_KEY)
         }
 

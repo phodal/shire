@@ -16,7 +16,7 @@ import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
-import com.phodal.shirecore.middleware.ShireRunVariableContext
+import com.phodal.shirecore.middleware.PostProcessorContext
 import com.phodal.shirelang.actions.base.DynamicShireActionConfig
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.*
@@ -73,7 +73,7 @@ class ShireRunFileAction : DumbAwareAction() {
             runConfiguration.setScriptPath(config.shireFile.virtualFile.path)
             if (variables.isNotEmpty()) {
                 runConfiguration.setVariables(variables)
-                ShireRunVariableContext.updateRunConfigVariables(variables)
+                PostProcessorContext.updateRunConfigVariables(variables)
             }
 
             val executorInstance = DefaultRunExecutor.getRunExecutorInstance()
@@ -116,7 +116,7 @@ class ShireRunFileAction : DumbAwareAction() {
             runConfiguration.setScriptPath(config.shireFile.virtualFile.path)
             if (variables.isNotEmpty()) {
                 runConfiguration.setVariables(variables)
-                ShireRunVariableContext.updateRunConfigVariables(variables)
+                PostProcessorContext.updateRunConfigVariables(variables)
             }
 
             val executorInstance = DefaultRunExecutor.getRunExecutorInstance()

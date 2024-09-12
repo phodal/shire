@@ -15,7 +15,7 @@ import com.phodal.shirecore.index.MODEL_LIST
 import com.phodal.shirecore.index.MODEL_TITLE
 import com.phodal.shirecore.index.SHIRE_ENV_ID
 import com.phodal.shirecore.index.valueAsString
-import com.phodal.shirecore.middleware.ShireRunVariableContext
+import com.phodal.shirecore.middleware.PostProcessorContext
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -58,14 +58,14 @@ interface LlmProvider {
     fun stream(promptText: String, systemPrompt: String, keepHistory: Boolean = true): Flow<String>
 
     /**
-     * config LLM Provider from [ShireRunVariableContext]
+     * config LLM Provider from [PostProcessorContext]
      */
     fun configRunLlm(): LlmConfig? {
         if (project == null) {
             return null
         }
 
-        val modelName = ShireRunVariableContext.getData()?.llmModelName ?: return null
+        val modelName = PostProcessorContext.getData()?.llmModelName ?: return null
         val scope = ProjectScope.getContentScope(project!!)
 
         val jsonFile = runReadAction {

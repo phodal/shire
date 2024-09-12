@@ -30,12 +30,12 @@ interface PostProcessor {
      * @param context the PostCodeHandleContext to be checked for applicability
      * @return true if the context is applicable for handling post codes, false otherwise
      */
-    fun isApplicable(context: ShireRunVariableContext): Boolean
+    fun isApplicable(context: PostProcessorContext): Boolean
 
     /**
      * Some init tasks, like metric for time, etc.
      */
-    fun setup(context: ShireRunVariableContext): Any {
+    fun setup(context: PostProcessorContext): Any {
         return ""
     }
 
@@ -47,12 +47,12 @@ interface PostProcessor {
      * @param genText the generated text to be used in the execution
      * @return a string result of the execution
      */
-    fun execute(project: Project, context: ShireRunVariableContext, console: ConsoleView?, args: List<Any>): Any
+    fun execute(project: Project, context: PostProcessorContext, console: ConsoleView?, args: List<Any>): Any
 
     /**
      * Clean up tasks, like metric for time, etc.
      */
-    fun finish(context: ShireRunVariableContext): Any? {
+    fun finish(context: PostProcessorContext): Any? {
         return ""
     }
 

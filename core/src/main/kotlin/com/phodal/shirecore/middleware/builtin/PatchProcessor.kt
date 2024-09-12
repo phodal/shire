@@ -12,17 +12,17 @@ import com.intellij.openapi.vcs.changes.patch.MatchPatchPaths
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.util.containers.MultiMap
 import com.phodal.shirecore.middleware.PostProcessorType
-import com.phodal.shirecore.middleware.ShireRunVariableContext
+import com.phodal.shirecore.middleware.PostProcessorContext
 import com.phodal.shirecore.middleware.PostProcessor
 
 class PatchProcessor : PostProcessor {
     override val processorName: String = PostProcessorType.Patch.handleName
 
-    override fun isApplicable(context: ShireRunVariableContext): Boolean = true
+    override fun isApplicable(context: PostProcessorContext): Boolean = true
 
     override fun execute(
         project: Project,
-        context: ShireRunVariableContext,
+        context: PostProcessorContext,
         console: ConsoleView?,
         args: List<Any>,
     ): Any {

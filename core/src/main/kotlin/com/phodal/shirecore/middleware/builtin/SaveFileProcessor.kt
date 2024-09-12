@@ -12,19 +12,19 @@ import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.util.PathUtil.isValidFileName
 import com.phodal.shirecore.markdown.CodeFence
-import com.phodal.shirecore.middleware.SHIRE_TEMP_OUTPUT
+import com.phodal.shirecore.SHIRE_TEMP_OUTPUT
 import com.phodal.shirecore.middleware.PostProcessorType
-import com.phodal.shirecore.middleware.ShireRunVariableContext
+import com.phodal.shirecore.middleware.PostProcessorContext
 import com.phodal.shirecore.middleware.PostProcessor
 
 class SaveFileProcessor : PostProcessor, Disposable {
     override val processorName: String = PostProcessorType.SaveFile.handleName
 
-    override fun isApplicable(context: ShireRunVariableContext): Boolean = true
+    override fun isApplicable(context: PostProcessorContext): Boolean = true
 
     override fun execute(
         project: Project,
-        context: ShireRunVariableContext,
+        context: PostProcessorContext,
         console: ConsoleView?,
         args: List<Any>,
     ): String {
@@ -41,7 +41,7 @@ class SaveFileProcessor : PostProcessor, Disposable {
         return fileName
     }
 
-    private fun getFileExt(context: ShireRunVariableContext): String {
+    private fun getFileExt(context: PostProcessorContext): String {
         val language = context.genTargetLanguage ?: PlainTextLanguage.INSTANCE
         return context.genTargetExtension ?: language?.associatedFileType?.defaultExtension ?: "txt"
     }
@@ -49,7 +49,7 @@ class SaveFileProcessor : PostProcessor, Disposable {
     private fun handleForTempFile(
         project: Project,
         fileName: String,
-        context: ShireRunVariableContext,
+        context: PostProcessorContext,
         console: ConsoleView?,
     ) {
         ApplicationManager.getApplication().invokeAndWait {
@@ -75,7 +75,7 @@ class SaveFileProcessor : PostProcessor, Disposable {
     private fun handleForProjectFile(
         project: Project,
         filepath: String,
-        context: ShireRunVariableContext,
+        context: PostProcessorContext,
         console: ConsoleView?,
         ext: String,
     ) {
@@ -110,7 +110,7 @@ class SaveFileProcessor : PostProcessor, Disposable {
         }
     }
 
-    private fun getContent(context: ShireRunVariableContext): String? {
+    private fun getContent(context: PostProcessorContext): String? {
         val outputData = context.pipeData["output"]
 
         if (outputData is String && outputData.isNotEmpty()) {
