@@ -6,7 +6,7 @@ import com.intellij.openapi.components.Storage
 import com.intellij.openapi.components.StoragePathMacros
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.ui.Messages
+import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowFactory
 import com.intellij.ui.components.JBScrollPane
@@ -17,11 +17,12 @@ import com.intellij.ui.table.TableView
 import com.intellij.util.ui.ColumnInfo
 import com.intellij.util.ui.ListTableModel
 import com.phodal.shire.ShireMainBundle
+import com.phodal.shirecore.ShirelangNotifications
 import java.awt.BorderLayout
 import java.awt.Component
 import javax.swing.*
-import javax.swing.table.TableCellEditor
 import javax.swing.table.TableCellRenderer
+
 
 class MarketplaceToolWindowFactory : ToolWindowFactory, DumbAware {
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
@@ -73,14 +74,10 @@ class ShirePackageTableComponent {
         },
         object : ColumnInfo<ShirePackage, JButton>(ShireMainBundle.message("marketplace.column.action")) {
             override fun getRenderer(item: ShirePackage): TableCellRenderer = ButtonRenderer()
-            override fun getEditor(item: ShirePackage): TableCellEditor = ButtonEditor()
-            override fun isCellEditable(item: ShirePackage): Boolean = false
-            override fun getColumnClass(): Class<*> = JButton::class.java
-
             override fun valueOf(data: ShirePackage): JButton {
                 val installButton = JButton(ShireMainBundle.message("marketplace.action.install"))
                 installButton.addActionListener {
-                    onInstallClicked(data)
+                    JOptionPane.showMessageDialog(mainPanel, "Button clicked")
                 }
 
                 return installButton
@@ -101,54 +98,23 @@ class ShirePackageTableComponent {
         val scrollPane = JBScrollPane(tableView)
         mainPanel.add(scrollPane, BorderLayout.CENTER)
     }
-
-    private fun onInstallClicked(data: ShirePackage) {
-        Messages.showMessageDialog(
-            ShireMainBundle.message("marketplace.action.installing", data.name),
-            ShireMainBundle.message("marketplace.column.action"),
-            Messages.getInformationIcon()
-        )
-    }
 }
 
 data class ShirePackage(val name: String, val description: String, val version: String, val author: String)
 
 class ButtonRenderer : JButton(), TableCellRenderer {
-    init {
-        isOpaque = true
-        // add click listener
-        addActionListener {
-            println("Button clicked")
-        }
-    }
-
     override fun getTableCellRendererComponent(
         table: JTable, value: Any?, isSelected: Boolean,
         hasFocus: Boolean, row: Int, column: Int,
-    ): Component {
-        text = (value as JButton).text
-        return this
-    }
-}
-
-class ButtonEditor : DefaultCellEditor(JCheckBox()) {
-    private val button = JButton()
-
-    init {
-        button.addActionListener {
-            fireEditingStopped()
+    ): Component = panel {
+        row {
+            cell(JButton("Install")).apply {
+                addActionListener {
+                    val project = ProjectManager.getInstance().openProjects.firstOrNull() ?: return@addActionListener
+                    ShirelangNotifications.info(project, "Button clicked")
+                }
+            }
         }
     }
-
-    override fun getTableCellEditorComponent(
-        table: JTable, value: Any?, isSelected: Boolean,
-        row: Int, column: Int,
-    ): Component {
-        button.text = (value as JButton).text
-        return button
-    }
-
-    override fun getCellEditorValue(): Any {
-        return button
-    }
 }
+
