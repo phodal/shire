@@ -9,6 +9,28 @@ nav_order: 7
 
 > Toolchain 函数默认遵循 Pattern-Action 模式，用于定义数据处理逻辑。在接受参数时，默认的第一个参数为上下文变量，即 `lastResult`
 
+## Git
+
+支持的函数：
+
+- commit，提交代码，参数 1：`message`
+- push，推送代码
+
+### 示例：
+
+```shire
+---
+name: "Auto Commit and Push"
+afterStreaming: {
+  case condition {
+    default { print("feat: add auto commit and push sample") | commit | push }
+  }
+}
+---
+
+hi
+```
+
 ## Database
 
 支持的函数：
