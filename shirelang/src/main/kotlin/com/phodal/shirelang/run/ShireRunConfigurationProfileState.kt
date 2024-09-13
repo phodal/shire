@@ -8,6 +8,7 @@ import com.intellij.execution.console.ConsoleViewWrapperBase
 import com.intellij.execution.impl.ConsoleViewImpl
 import com.intellij.execution.process.ProcessAdapter
 import com.intellij.execution.process.ProcessEvent
+import com.intellij.execution.process.ProcessListener
 import com.intellij.execution.process.ProcessTerminatedListener
 import com.intellij.execution.runners.ProgramRunner
 import com.intellij.execution.ui.ConsoleViewContentType
@@ -20,6 +21,7 @@ import com.intellij.openapi.util.Key
 import com.intellij.ui.components.panels.NonOpaquePanel
 import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.config.ShireActionLocation
+import com.phodal.shirecore.console.ShireConsoleViewBase
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.precompile.preAnalysisSyntax
 import com.phodal.shirelang.run.runner.ShireRunner
@@ -62,7 +64,14 @@ open class ShireRunConfigurationProfileState(
 
         val shireRunner = ShireRunner(
             shireFile, myProject, console!!, configuration, configuration.getVariables(), processHandler
-        )
+        ).also {
+            console?.bindShireRunner(it)
+            processHandler.addProcessListener(object : ProcessListener {
+                override fun processTerminated(event: ProcessEvent) {
+                    it.cancel()
+                }
+            })
+        }
 
         val parsedResult = preAnalysisSyntax(shireFile, myProject)
 
@@ -91,9 +100,13 @@ open class ShireRunConfigurationProfileState(
 }
 
 class ShireConsoleView(private val executionConsole: ShireExecutionConsole) :
-    ConsoleViewWrapperBase(executionConsole) {
+    ShireConsoleViewBase(executionConsole) {
+
     override fun getComponent(): JComponent = myPanel
+
     private var myPanel: NonOpaquePanel = NonOpaquePanel(BorderLayout())
+
+    private var shireRunner: ShireRunner? = null
 
     init {
         val baseComponent = delegate.component
@@ -106,6 +119,17 @@ class ShireConsoleView(private val executionConsole: ShireExecutionConsole) :
     }
 
     fun output(clearAndStop: Boolean = true) = executionConsole.getOutput(clearAndStop)
+
+    override fun cancelCallback(callback: (String) -> Unit) {
+        shireRunner?.addCancelListener(callback)
+    }
+
+    override fun isCanceled(): Boolean = shireRunner?.isCanceled() ?: super.isCanceled()
+
+
+    fun bindShireRunner(runner: ShireRunner) {
+        shireRunner = runner
+    }
 
     override fun dispose() {
         super.dispose()

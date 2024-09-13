@@ -12,6 +12,7 @@ import com.intellij.openapi.project.DumbAwareAction
 import com.phodal.shirecore.ShireCoreBundle
 import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.config.interaction.dto.CodeCompletionRequest
+import com.phodal.shirecore.console.cancelHandler
 import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.markdown.CodeFence
 import kotlinx.coroutines.cancel
@@ -25,6 +26,8 @@ open class ChatCompletionTask(private val request: CodeCompletionRequest) :
     private val logger = logger<ChatCompletionTask>()
 
     private var isCanceled: Boolean = false
+
+    private var cancelCallback: ((String) -> Unit)? = null
 
     override fun run(indicator: ProgressIndicator) {
         indicator.isIndeterminate = false
@@ -56,7 +59,7 @@ open class ChatCompletionTask(private val request: CodeCompletionRequest) :
         ShireCoroutineScope.scope(request.project).launch {
             val suggestion = StringBuilder()
 
-            flow.cancellable().collect { char ->
+            flow.cancelHandler { cancelCallback = it }.cancellable().collect { char ->
                 if (isCanceled) {
                     cancel()
                     return@collect
@@ -100,6 +103,7 @@ open class ChatCompletionTask(private val request: CodeCompletionRequest) :
 
     override fun onCancel() {
         this.isCanceled = true
+        this.cancelCallback?.invoke("This job is canceled")
         super.onCancel()
     }
 }

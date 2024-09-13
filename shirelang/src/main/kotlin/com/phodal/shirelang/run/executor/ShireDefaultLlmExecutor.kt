@@ -7,6 +7,7 @@ import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.config.InteractionType
 import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirecore.config.interaction.PostFunction
+import com.phodal.shirecore.console.cancelWithConsole
 import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.provider.ide.LocationInteractionContext
 import com.phodal.shirecore.provider.ide.LocationInteractionProvider
@@ -61,7 +62,8 @@ class ShireDefaultLlmExecutor(
                 val llmResult = StringBuilder()
                 runBlocking {
                     try {
-                        LlmProvider.provider(context.myProject)?.stream(context.prompt, "", false)?.collect {
+                        LlmProvider.provider(context.myProject)?.stream(context.prompt, "", false)
+                            ?.cancelWithConsole(console)?.collect {
                             llmResult.append(it)
                             console?.print(it, ConsoleViewContentType.NORMAL_OUTPUT)
                         } ?: console?.print(

@@ -8,6 +8,7 @@ import com.phodal.shire.custom.sse.ChatCompletionResult
 import com.phodal.shire.custom.sse.JSONBodyResponseCallback
 import com.phodal.shire.custom.sse.ResponseBodyCallback
 import com.phodal.shire.custom.sse.SSE
+import com.phodal.shirecore.console.CustomFlowWrapper
 import com.phodal.shirecore.llm.ChatMessage
 import com.phodal.shirecore.llm.ChatRole
 import com.phodal.shirecore.llm.CustomRequest
@@ -59,14 +60,15 @@ open class CustomSSEHandler {
 
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun streamSSE(call: Call, messages: MutableList<ChatMessage>): Flow<String> {
+        var emit: FlowableEmitter<SSE>? = null
         val sseFlowable = Flowable
             .create({ emitter: FlowableEmitter<SSE> ->
-                call.enqueue(ResponseBodyCallback(emitter, true))
+                emit = emitter.apply { call.enqueue(ResponseBodyCallback(emitter, true)) }
             }, BackpressureStrategy.BUFFER)
 
         try {
             var output = ""
-            return callbackFlow {
+            return CustomFlowWrapper(callbackFlow {
                 withContext(Dispatchers.IO) {
                     sseFlowable
                         .doOnError {
@@ -120,7 +122,7 @@ open class CustomSSEHandler {
                     close()
                 }
                 awaitClose()
-            }
+            }).also { it.cancelCallback { emit?.onComplete() } }
         } catch (e: Exception) {
             if (hasSuccessRequest) {
                 logger.info("Failed to stream", e)

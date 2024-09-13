@@ -1,8 +1,10 @@
 package com.phodal.shirecore.config.interaction.task
 
+import com.intellij.execution.ui.ConsoleView
 import com.intellij.openapi.progress.Task.Backgroundable
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.config.interaction.PostFunction
+import com.phodal.shirecore.console.addCancelCallback
 import java.util.concurrent.CompletableFuture
 
 /**
@@ -20,3 +22,6 @@ abstract class ShireInteractionTask(project: Project, taskName: String, val post
     }
 
 }
+
+fun ShireInteractionTask.cancelWithConsole(consoleView: ConsoleView?): ShireInteractionTask =
+    apply { consoleView?.addCancelCallback { onCancel() } }

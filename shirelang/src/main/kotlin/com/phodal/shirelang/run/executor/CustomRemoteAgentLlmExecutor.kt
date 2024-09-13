@@ -8,6 +8,7 @@ import com.phodal.shirelang.ShireBundle
 import com.phodal.shirelang.run.flow.ShireConversationService
 import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.config.interaction.PostFunction
+import com.phodal.shirecore.console.cancelWithConsole
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -34,7 +35,7 @@ class CustomRemoteAgentLlmExecutor(
             ShireCoroutineScope.scope(context.myProject).launch {
                 val llmResult = StringBuilder()
                 runBlocking {
-                    stringFlow.collect {
+                    stringFlow.cancelWithConsole(console).collect {
                         llmResult.append(it)
                         console?.print(it, ConsoleViewContentType.NORMAL_OUTPUT)
                     }

@@ -3,6 +3,7 @@ package com.phodal.shirelang.run.flow
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.project.Project
+import com.phodal.shirecore.console.cancelWithConsole
 import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirelang.ShireBundle
 import com.phodal.shirelang.compiler.ShireParsedResult
@@ -79,6 +80,7 @@ class ShireConversationService(val project: Project) {
                 try {
                     LlmProvider.provider(project)
                         ?.stream(finalPrompt, "", true)
+                        ?.cancelWithConsole(consoleView)
                         ?.collect {
                             consoleView.print(it, ConsoleViewContentType.NORMAL_OUTPUT)
                         }

@@ -9,6 +9,7 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiManager
 import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirecore.config.interaction.PostFunction
+import com.phodal.shirecore.console.cancelWithConsole
 import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.middleware.PostProcessorContext
 import com.phodal.shirecore.provider.action.TerminalLocationExecutor
@@ -41,6 +42,10 @@ class ShireRunner(
 ) {
     private var compiledVariables: Map<String, Any> = mapOf()
     private val terminalLocationExecutor = TerminalLocationExecutor.provide(project)
+
+    private var isCanceled: Boolean = false
+
+    private val cancelListeners = mutableSetOf<(String) -> Unit>()
 
     suspend fun execute(parsedResult: ShireParsedResult): String? {
         prepareExecute(parsedResult)
@@ -95,7 +100,8 @@ class ShireRunner(
             val llmResult = StringBuilder()
             runBlocking {
                 try {
-                    LlmProvider.provider(project)?.stream(context.finalPrompt, "", false)?.collect {
+                    LlmProvider.provider(project)?.stream(context.finalPrompt, "", false)
+                        ?.cancelWithConsole(console)?.collect {
                         llmResult.append(it)
                         handler.onChunk.invoke(it)
                     } ?: console?.print(
@@ -194,6 +200,7 @@ class ShireRunner(
         response: String?,
         textRange: TextRange?,
     ) {
+        if (console?.isCanceled() == true) return
         val currentFile = runnerContext.editor?.virtualFile?.let {
             runReadAction { PsiManager.getInstance(project).findFile(it) }
         }
@@ -268,4 +275,25 @@ class ShireRunner(
         hobbitHole?.setupStreamingEndProcessor(project, context)
 
     }
+
+    @Synchronized
+    fun addCancelListener(listener: (String) -> Unit) {
+        if (isCanceled) cancel(listener)
+        else cancelListeners.add(listener)
+    }
+
+    @Synchronized
+    fun cancel() {
+        if (!isCanceled) {
+            isCanceled = true
+            cancelListeners.forEach { cancel(it) }
+        }
+    }
+
+    fun isCanceled() = isCanceled
+
+    private fun cancel(cancel: (String) -> Unit) {
+        cancel("This job is canceled")
+    }
+
 }
