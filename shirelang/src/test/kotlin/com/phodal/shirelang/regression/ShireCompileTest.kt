@@ -16,8 +16,7 @@ import kotlinx.coroutines.runBlocking
 import org.intellij.lang.annotations.Language
 
 class ShireCompileTest : BasePlatformTestCase() {
-    fun testShouldReturnControllerCodeWithFindCat() {
-        val javaHelloController = """
+    val javaHelloController = """
             package com.phodal.shirelang.controller;
             
             import org.springframework.web.bind.annotation.GetMapping;
@@ -32,9 +31,7 @@ class ShireCompileTest : BasePlatformTestCase() {
             }
         """.trimIndent()
 
-        myFixture.addFileToProject("src/main/java/com/phodal/shirelang/controller/HelloController.java", javaHelloController)
-
-        val javaHelloEntity = """
+    val javaHelloEntity = """
             package com.phodal.shirelang.entity;
             
             public class HelloEntity {
@@ -50,6 +47,11 @@ class ShireCompileTest : BasePlatformTestCase() {
             }
         """.trimIndent()
 
+    fun testShouldReturnControllerCodeWithFindCat() {
+        myFixture.addFileToProject(
+            "src/main/java/com/phodal/shirelang/controller/HelloController.java",
+            javaHelloController
+        )
         myFixture.addFileToProject("src/main/java/com/phodal/shirelang/entity/HelloEntity.java", javaHelloEntity)
 
         @Language("Shire")
@@ -96,6 +98,65 @@ public class HelloController {
     public String hello() {
         return "Hello, World!";
     }
-}""", context.compiledVariables["controllers"])
+}""", context.compiledVariables["controllers"]
+        )
+    }
+
+    fun testShouldReturnControllerCodeWithFindCatWithHead() {
+        myFixture.addFileToProject(
+            "src/main/java/com/phodal/shirelang/controller/HelloController.java",
+            javaHelloController
+        )
+        myFixture.addFileToProject("src/main/java/com/phodal/shirelang/entity/HelloEntity.java", javaHelloEntity)
+
+        @Language("Shire")
+        val code = """
+            ---
+            name: "类图分析"
+            variables:
+              "output": "name.adl"
+              "con": /.*.java/ { print | head(1)}
+              "controllers": /.*.java/ { find("Controller") | grep("src/main/java/.*") | head(1)  | cat   }
+              "outputFile": /any/ { print("name.adl") }
+            onStreamingEnd: { parseCode | saveFile(${'$'}outputFile) }
+            
+            ---
+            
+            下面是你要执行转换的数据：
+            ${'$'}controllers
+        """.trimIndent()
+
+        val file = myFixture.configureByText("test.shire", code)
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
+        val hole = compile.config!!
+
+        val context = PostProcessorContext(
+            genText = "User prompt:\n\n",
+        )
+
+        runBlocking {
+            val templateCompiler = ShireTemplateCompiler(project, hole, compile.variableTable, code)
+            val compiledVariables =
+                templateCompiler.compileVariable(myFixture.editor)
+
+            context.compiledVariables = compiledVariables
+        }
+
+        assertEquals(
+            """[/src/src/main/java/com/phodal/shirelang/entity/HelloEntity.java]""",
+            context.compiledVariables["con"]
+        )
+        assertEquals("package com.phodal.shirelang.controller;\n" +
+                "\n" +
+                "import org.springframework.web.bind.annotation.GetMapping;\n" +
+                "import org.springframework.web.bind.annotation.RestController;\n" +
+                "\n" +
+                "@RestController\n" +
+                "public class HelloController {\n" +
+                "    @GetMapping(\"/hello\")\n" +
+                "    public String hello() {\n" +
+                "        return \"Hello, World!\";\n" +
+                "    }\n" +
+                "}", context.compiledVariables["controllers"])
     }
 }

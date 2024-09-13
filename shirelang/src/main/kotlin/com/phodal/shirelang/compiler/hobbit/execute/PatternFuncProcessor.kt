@@ -406,7 +406,23 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
         val baseDir = myProject.guessProjectDir()!!
         var paths = userPaths
         if (userPaths.isEmpty()) {
-            paths = patterMatchPaths as Array<String>
+            when (patterMatchPaths) {
+                is List<*> -> {
+                    paths = (patterMatchPaths as List<String>).toTypedArray()
+                }
+
+                is Array<*> -> {
+                    paths = patterMatchPaths as Array<String>
+                }
+
+                is String -> {
+                    paths = arrayOf(patterMatchPaths)
+                }
+
+                else -> {
+                    logger<PatternFuncProcessor>().warn("resolvePaths error: $patterMatchPaths")
+                }
+            }
         }
 
         val absolutePaths: List<VirtualFile> = paths.mapNotNull {
