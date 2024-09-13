@@ -10,7 +10,6 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.util.PathUtil.isValidFileName
 import com.phodal.shirecore.markdown.CodeFence
 import com.phodal.shirecore.SHIRE_TEMP_OUTPUT
 import com.phodal.shirecore.middleware.PostProcessorType
@@ -31,7 +30,7 @@ class SaveFileProcessor : PostProcessor, Disposable {
         val fileName: String
         val ext = getFileExt(context)
         if (args.isNotEmpty()) {
-            fileName = getValidFileName(args[0].toString(), ext)
+            fileName = getValidFilePath(args[0].toString(), ext)
             handleForProjectFile(project, fileName, context, console, ext)
         } else {
             fileName = "${System.currentTimeMillis()}.$ext"
@@ -149,15 +148,17 @@ class SaveFileProcessor : PostProcessor, Disposable {
     }
 }
 
-fun getValidFileName(fileName: String, ext: String): String {
-    if (fileName.isBlank()) {
+fun getValidFilePath(filePath: String, ext: String): String {
+    val pathRegex = """^([a-zA-Z]:\\(?:[^<>:"/\\|?*]+\\)*[^<>:"/\\|?*]*)|(/[^<>:"/\\|?*]+(/[^<>:"/\\|?*]*)*)$""".toRegex()
+
+    if (filePath.isBlank()) {
         return "${System.currentTimeMillis()}.$ext"
     }
 
-    return if (isValidFileName(fileName)) {
-        fileName
-    } else if (fileName.contains("`") && fileName.contains("```")) {
-        CodeFence.parse(fileName).text
+    return if (pathRegex.matches(filePath)) {
+        filePath
+    } else if (filePath.contains("`") && filePath.contains("```")) {
+        CodeFence.parse(filePath).text
     } else {
         "${System.currentTimeMillis()}.$ext"
     }
