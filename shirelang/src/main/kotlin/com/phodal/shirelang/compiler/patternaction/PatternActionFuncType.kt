@@ -8,91 +8,92 @@ import org.intellij.lang.annotations.Language
 enum class PatternActionFuncType(val funcName: String, val description: String) {
     GREP(
         "grep", """
-        |Grep subclass for searching with one or more regex patterns.
-        |
-        |Example:
-        |
-        |```shire
-        |---
-        |variables:
-        |  "controllers": /.*.java/ { cat | grep("class\s+([a-zA-Z]*Controller)")  }
-        |---
-        |```
+        | Grep subclass for searching with one or more regex patterns.
+        | 
+        | Example:
+        | 
+        | ```shire
+        | ---
+        | variables:
+        |   "controllers": /.*.java/ { cat | grep("class\s+([a-zA-Z]*Controller)")  }
+        | ---
+        | ```
         """.trimMargin()
     ),
     FIND(
         "find", """
-        |Find subclass for searching with text.
-        |
-        |Example:
-        |
-        |```shire
-        |---
-        |variables:
-        |  "story": /any/ { find("epic") }
-        |---
-        |```
+        | Find subclass for searching with text.
+        | 
+        | Example:
+        | 
+        | ```shire
+        | ---
+        | variables:
+        |   "story": /any/ { find("epic") }
+        | ---
+        | ```
         """.trimMargin()
     ),
     SED(
         "sed", """
-        |Sed subclass for find and replace operations. 
-        |
-        |Example:
-        |
-        |```shire
-        |---
-        |variables:
-        |  "var2": /.*ple.shire/ { cat | find("openai") | sed("(?i)\b(sk-[a-zA-Z0-9]{20}T3BlbkFJ[a-zA-Z0-9]{20})(?:['|\"|\n|\r|\s|\x60|;]|${'$'})", "sk-***") }
-        |---
-        |```
+        | Sed subclass for find and replace operations. 
+        | 
+        | Example:
+        | 
+        | ```shire
+        | ---
+        | variables:
+        |   "var2": /.*ple.shire/ { cat | find("openai") | sed("(?i)\b(sk-[a-zA-Z0-9]{20}T3BlbkFJ[a-zA-Z0-9]{20})(?:['|\"|\n|\r|\s|\x60|;]|${'$'})", "sk-***") }
+        | ---
+        | ```
     """.trimMargin()
     ),
     PRINT(
         "print", """
-        |`print` function is used to print text or last output. 
-        |
-        |Last output Example:
-        |
-        |```shire
-        |---
-        |variables:
-        |  "story": /BlogController\.java/ { print }
-        |---
-        |```
-        |
-        |Text content Example:
-        |
-        |```shire
-        |---
-        |variables:
-        |  "story": /any/ { print("hello world") }
-        |---  
-        |```
+        | `print` function is used to print text or last output. 
+        | 
+        | Last output Example:
+        | 
+        | ```shire
+        | ---
+        | variables:
+        |   "story": /BlogController\.java/ { print }
+        | ---
+        | ```
+        | 
+        | Text content Example:
+        | 
+        | ```shire
+        | ---
+        | variables:
+        |   "story": /any/ { print("hello world") }
+        | ---  
+        | ```
     """.trimMargin()
     ),
     CAT(
         "cat", """
-        |`cat` function is used to concatenate one or more files.
-        |
-        |Paths can be absolute or relative to the current working directory.
-        |
-        |Last output Example:
-        |
-        |```shire
-        |---
-        |variables:
-        |  "story": /BlogController\.java/ { cat }
-        |---
+        | `cat` function is used to concatenate one or more files.
         | 
-        |File path Example:
-        |
-        |```shire
-        |---
-        |variables:
-        |  "story": /any/ { cat("file.txt") }
-        |---  
-        |```
+        | Paths can be absolute or relative to the current working directory.
+        | 
+        | Last output Example:
+        | 
+        | ```shire
+        | ---
+        | variables:
+        |   "story": /BlogController\.java/ { cat }
+        | ---
+        | ```
+        | 
+        | File path Example:
+        | 
+        | ```shire
+        | ---
+        | variables:
+        |   "story": /any/ { cat("file.txt") }
+        | ---  
+        | ```
     """.trimMargin()
     ),
     EXECUTE(
@@ -255,16 +256,16 @@ enum class PatternActionFuncType(val funcName: String, val description: String) 
     THREAD(
         "thread",
         """
-        |`thread` function will run the function in a new thread
-        |
-        |Example:
-        |
-        |```shire
-        |---
-        |variables:
-        |  "story": /any/ { thread(".shire/shell/dify-epic-story.curl.sh") | jsonpath("${'$'}.answer", true) }
-        |---
-        |```
+        | `thread` function will run the function in a new thread
+        | 
+        | Example:
+        | 
+        | ```shire
+        | ---
+        | variables:
+        |   "story": /any/ { thread(".shire/shell/dify-epic-story.curl.sh") | jsonpath("${'$'}.answer", true) }
+        | ---
+        | ```
         """.trimMargin()
     ),
     JSONPATH(
@@ -293,16 +294,16 @@ enum class PatternActionFuncType(val funcName: String, val description: String) 
     UNIQ("uniq", "Uniq subclass for removing duplicates based on one or more arguments."),
     HEAD(
         "head", """
-        |Head subclass for retrieving the first few lines.
-        |
-        |Example:
-        |
-        |```shire
-        |---
-        |variables:
-        |  "controllers": /.*.java/ { find("Controller") | grep("src/main/java/.*") | head(1)  | cat }
-        |---
-        |```
+        | Head subclass for retrieving the first few lines.
+        | 
+        | Example:
+        | 
+        | ```shire
+        | ---
+        | variables:
+        |   "controllers": /.*.java/ { find("Controller") | grep("src/main/java/.*") | head(1)  | cat }
+        | ---
+        | ```
         """.trimMargin()
     ),
     TAIL("tail", "Tail subclass for retrieving the last few lines."),
@@ -312,16 +313,19 @@ enum class PatternActionFuncType(val funcName: String, val description: String) 
     SELECT("select", "OrderBy subclass for ordering elements."),
     TOOLCHAIN_FUNCTION(
         "toolchain", """
-        |`toolchain` function is define by the different IDE plugins, for example, the Database plugin, the Shell plugin, etc.
-        |
-        |Example:
-        |
-        |```shire
-        |---
-        |variables:
-        |  "relatedTableInfo": /./ { column("user", "post", "tag") }
-        |---
-        |```
+        | the Toolchain functions are define by the different IDEA plugins.
+        | for example, the Database plugin, the Shell plugin, etc.
+        | 
+        | Database Plugin Example:
+        | 
+        | ```shire
+        | ---
+        | variables:
+        |   "relatedTableInfo": /./ { column("user", "post", "tag") }
+        | ---
+        | ```
+        | 
+        | For more goto: [https://shire.phodal.com/shire/shire-toolchain-function](https://shire.phodal.com/shire/shire-toolchain-function)
         """.trimMargin()
     );
 
