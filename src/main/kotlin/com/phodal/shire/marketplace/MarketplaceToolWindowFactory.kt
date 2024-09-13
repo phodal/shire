@@ -58,6 +58,35 @@ class MarketPlaceView(val project: Project) : Disposable {
 
 class ShirePackageTableComponent {
     val mainPanel: JPanel = JPanel(BorderLayout())
+    private val columns = arrayOf(
+        object : ColumnInfo<ShirePackage, String>(ShireMainBundle.message("marketplace.column.name")) {
+            override fun valueOf(data: ShirePackage): String = data.name
+        },
+        object : ColumnInfo<ShirePackage, String>(ShireMainBundle.message("marketplace.column.description")) {
+            override fun valueOf(data: ShirePackage): String = data.description
+        },
+        object : ColumnInfo<ShirePackage, String>(ShireMainBundle.message("marketplace.column.version")) {
+            override fun valueOf(data: ShirePackage): String = data.version
+        },
+        object : ColumnInfo<ShirePackage, String>(ShireMainBundle.message("marketplace.column.author")) {
+            override fun valueOf(data: ShirePackage): String = data.author
+        },
+        object : ColumnInfo<ShirePackage, JButton>(ShireMainBundle.message("marketplace.column.action")) {
+            override fun getRenderer(item: ShirePackage): TableCellRenderer = ButtonRenderer()
+            override fun getEditor(item: ShirePackage): TableCellEditor = ButtonEditor()
+            override fun isCellEditable(item: ShirePackage): Boolean = false
+            override fun getColumnClass(): Class<*> = JButton::class.java
+
+            override fun valueOf(data: ShirePackage): JButton {
+                val installButton = JButton(ShireMainBundle.message("marketplace.action.install"))
+                installButton.addActionListener {
+                    onInstallClicked(data)
+                }
+
+                return installButton
+            }
+        }
+    )
 
     // Create a list to store the row data
     val dataList = listOf(
@@ -67,51 +96,16 @@ class ShirePackageTableComponent {
     )
 
     init {
-        val columns = arrayOf(
-            object : ColumnInfo<ShirePackage, String>(ShireMainBundle.message("marketplace.column.name")) {
-                override fun valueOf(data: ShirePackage): String = data.name
-            },
-            object : ColumnInfo<ShirePackage, String>(ShireMainBundle.message("marketplace.column.description")) {
-                override fun valueOf(data: ShirePackage): String = data.description
-            },
-            object : ColumnInfo<ShirePackage, String>(ShireMainBundle.message("marketplace.column.version")) {
-                override fun valueOf(data: ShirePackage): String = data.version
-            },
-            object : ColumnInfo<ShirePackage, String>(ShireMainBundle.message("marketplace.column.author")) {
-                override fun valueOf(data: ShirePackage): String = data.author
-            },
-            object : ColumnInfo<ShirePackage, JButton>(ShireMainBundle.message("marketplace.column.action")) {
-                override fun valueOf(data: ShirePackage): JButton {
-                    val installButton = JButton(ShireMainBundle.message("marketplace.action.install"))
-                    installButton.addActionListener {
-                        onInstallClicked(data)
-                    }
-                    return installButton
-                }
-
-                override fun getRenderer(item: ShirePackage?): TableCellRenderer? = ButtonRenderer()
-
-                override fun getEditor(item: ShirePackage?): TableCellEditor? {
-                    return ButtonEditor()
-                }
-
-                override fun isCellEditable(item: ShirePackage): Boolean = true
-
-                override fun getColumnClass(): Class<*> = JButton::class.java
-            }
-        )
-
         val model = ListTableModel(columns, dataList)
         val tableView = TableView(model)
         val scrollPane = JBScrollPane(tableView)
         mainPanel.add(scrollPane, BorderLayout.CENTER)
     }
 
-    // Action when the Install button is clicked
     private fun onInstallClicked(data: ShirePackage) {
         Messages.showMessageDialog(
             ShireMainBundle.message("marketplace.action.installing", data.name),
-            ShireMainBundle.message("marketplace.dialog.installAction"),
+            ShireMainBundle.message("marketplace.column.action"),
             Messages.getInformationIcon()
         )
     }
@@ -119,15 +113,18 @@ class ShirePackageTableComponent {
 
 data class ShirePackage(val name: String, val description: String, val version: String, val author: String)
 
-
 class ButtonRenderer : JButton(), TableCellRenderer {
     init {
         isOpaque = true
+        // add click listener
+        addActionListener {
+            println("Button clicked")
+        }
     }
 
     override fun getTableCellRendererComponent(
         table: JTable, value: Any?, isSelected: Boolean,
-        hasFocus: Boolean, row: Int, column: Int
+        hasFocus: Boolean, row: Int, column: Int,
     ): Component {
         text = (value as JButton).text
         return this
@@ -145,7 +142,7 @@ class ButtonEditor : DefaultCellEditor(JCheckBox()) {
 
     override fun getTableCellEditorComponent(
         table: JTable, value: Any?, isSelected: Boolean,
-        row: Int, column: Int
+        row: Int, column: Int,
     ): Component {
         button.text = (value as JButton).text
         return button
