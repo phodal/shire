@@ -331,14 +331,14 @@ sealed class PatternActionFunc(val type: PatternActionFuncType) {
                     ToolchainFunction(funcName, args)
                 }
 
-                PatternActionFuncType.TOOLCHAIN_FUNCTION -> ToolchainFunction(funcName, args)
                 PatternActionFuncType.BATCH -> {
                     Batch(args[0], args.drop(1))
                 }
                 PatternActionFuncType.DESTROY -> {
                     Destroy()
                 }
-                null -> {
+                PatternActionFuncType.TOOLCHAIN_FUNCTION -> ToolchainFunction(funcName, args)
+                else -> {
                     ToolchainFunction(funcName, args)
                 }
             }
