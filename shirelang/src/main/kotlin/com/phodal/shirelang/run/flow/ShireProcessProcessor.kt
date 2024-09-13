@@ -12,6 +12,7 @@ import com.intellij.psi.util.PsiUtilBase
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.ShirelangNotifications
+import com.phodal.shirecore.console.cancelWithConsole
 import com.phodal.shirecore.middleware.select.SelectElementStrategy
 import com.phodal.shirelang.ShireLanguage
 import com.phodal.shirelang.compiler.ShireSyntaxAnalyzer
@@ -104,7 +105,7 @@ class ShireProcessProcessor(val project: Project) {
 
             runBlocking {
                 try {
-                    LlmProvider.provider(project)?.stream(result.shireOutput, "Shirelang", true)?.collect {
+                    LlmProvider.provider(project)?.stream(result.shireOutput, "Shirelang", true)?.cancelWithConsole(consoleView)?.collect {
                             consoleView.print(it, ConsoleViewContentType.NORMAL_OUTPUT)
                         }
                 } catch (e: Exception) {

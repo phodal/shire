@@ -11,6 +11,8 @@ import com.phodal.shirecore.config.InteractionType
 import com.phodal.shirecore.config.interaction.dto.CodeCompletionRequest
 import com.phodal.shirecore.config.interaction.task.ChatCompletionTask
 import com.phodal.shirecore.config.interaction.task.FileGenerateTask
+import com.phodal.shirecore.config.interaction.task.cancelWithConsole
+import com.phodal.shirecore.console.cancelWithConsole
 import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.provider.ide.LocationInteractionContext
 import com.phodal.shirecore.provider.ide.LocationInteractionProvider
@@ -30,7 +32,7 @@ class EditorInteractionProvider : LocationInteractionProvider {
             InteractionType.AppendCursor,
             InteractionType.AppendCursorStream,
             -> {
-                val task = createTask(context, context.prompt, isReplacement = false, postExecute = postExecute, false)
+                val task = createTask(context, context.prompt, isReplacement = false, postExecute = postExecute, false)?.cancelWithConsole(context.console)
 
                 if (task == null) {
                     ShirelangNotifications.error(context.project, "Failed to create code completion task.")
@@ -44,13 +46,13 @@ class EditorInteractionProvider : LocationInteractionProvider {
 
             InteractionType.OutputFile -> {
                 val fileName = targetFile?.name
-                val task = FileGenerateTask(context.project, context.prompt, fileName, postExecute = postExecute)
+                val task = FileGenerateTask(context.project, context.prompt, fileName, postExecute = postExecute).cancelWithConsole(context.console)
                 ProgressManager.getInstance()
                     .runProcessWithProgressAsynchronously(task, BackgroundableProcessIndicator(task))
             }
 
             InteractionType.ReplaceSelection -> {
-                val task = createTask(context, context.prompt, true, postExecute, false)
+                val task = createTask(context, context.prompt, true, postExecute, false)?.cancelWithConsole(context.console)
 
                 if (task == null) {
                     ShirelangNotifications.error(context.project, "Failed to create code completion task.")
@@ -64,14 +66,14 @@ class EditorInteractionProvider : LocationInteractionProvider {
 
             InteractionType.ReplaceCurrentFile -> {
                 val fileName = targetFile?.name
-                val task = FileGenerateTask(context.project, context.prompt, fileName, postExecute = postExecute)
+                val task = FileGenerateTask(context.project, context.prompt, fileName, postExecute = postExecute).cancelWithConsole(context.console)
 
                 ProgressManager.getInstance()
                     .runProcessWithProgressAsynchronously(task, BackgroundableProcessIndicator(task))
             }
 
             InteractionType.InsertBeforeSelection -> {
-                val task = createTask(context, context.prompt, false, postExecute, isInsertBefore = true)
+                val task = createTask(context, context.prompt, false, postExecute, isInsertBefore = true)?.cancelWithConsole(context.console)
 
                 if (task == null) {
                     ShirelangNotifications.error(context.project, "Failed to create code completion task.")
@@ -88,7 +90,7 @@ class EditorInteractionProvider : LocationInteractionProvider {
                 ShireCoroutineScope.scope(context.project).launch {
                     val suggestion = StringBuilder()
 
-                    flow?.cancellable()?.collect { char ->
+                    flow?.cancelWithConsole(context.console)?.cancellable()?.collect { char ->
                         suggestion.append(char)
 
                         invokeLater {

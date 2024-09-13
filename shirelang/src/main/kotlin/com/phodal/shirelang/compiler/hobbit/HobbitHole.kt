@@ -9,6 +9,7 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirecore.config.InteractionType
+import com.phodal.shirecore.console.isCanceled
 import com.phodal.shirecore.middleware.PostProcessorContext
 import com.phodal.shirecore.middleware.PostProcessor
 import com.phodal.shirecore.middleware.PostProcessorFuncSign
@@ -234,6 +235,7 @@ open class HobbitHole(
     ): String? {
         console?.print("\n", ConsoleViewContentType.SYSTEM_OUTPUT)
         onStreamingEnd.forEach { funcNode ->
+            if (console?.isCanceled() == true) return@forEach
             console?.print("endExecute: ${funcNode.funName}\n", ConsoleViewContentType.SYSTEM_OUTPUT)
             val postProcessor = PostProcessor.handler(funcNode.funName)
             if (postProcessor == null) {
@@ -272,6 +274,7 @@ open class HobbitHole(
         console: ConsoleView?,
         context: PostProcessorContext,
     ): Any? {
+        if (console?.isCanceled() == true) return null
         val result = afterStreaming?.execute(myProject, context, this)
         context.lastTaskOutput = result as? String
         return result
