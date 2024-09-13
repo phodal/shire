@@ -30,11 +30,14 @@ class MarketPlaceView(project: Project) : Disposable {
                 label("Hello, World!")
             }
         }
+
+        val marketplacePanel = MarketplacePanel()
+        marketplacePanel.isVisible = true
     }
 
     fun initToolWindow(toolWindow: ToolWindow) {
         val contentFactory = ContentFactory.getInstance()
-        val content = contentFactory.createContent(myToolWindowPanel, "", false)
+        val content = contentFactory.createContent(myToolWindowPanel, "Shire Marketplace", false)
         toolWindow.contentManager.addContent(content)
     }
 
