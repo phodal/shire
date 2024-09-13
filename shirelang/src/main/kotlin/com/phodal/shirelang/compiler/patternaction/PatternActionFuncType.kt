@@ -91,9 +91,7 @@ enum class PatternActionFuncType(val funcName: String, val description: String) 
         | ```shire
         | ---
         | name: "Search"
-        | variables:
-        |   "testTemplate": /.*.kt/ { caching("disk") | splitting | embedding }
-        | afterStreaming: { searching(${'$'}output) | execute("search.shire") }
+        | afterStreaming: { execute("search.shire") }
         | ---
         | ```
         | g
@@ -125,13 +123,13 @@ enum class PatternActionFuncType(val funcName: String, val description: String) 
         | ```
     """.trimMargin()),
     SEARCHING("searching", """
-        | `searching` function is used to search text.
+        | `searching` function is used to search embedding text.
         | 
         | Example:
         | ```shire
         | ---
         | variables:
-        |   "story": /any/ { searching("epic") }
+        |   "story": /any/ { caching("disk") | splitting | embedding | searching("epic") }
         | ---
         | ```
         | with threshold:
@@ -139,7 +137,7 @@ enum class PatternActionFuncType(val funcName: String, val description: String) 
         | ```shire
         | ---
         | variables:
-        |  "story": /any/ { searching("epic", 0.5) }
+        |  "story": /any/ { caching("disk") | splitting | embedding | searching("epic", 0.5) }
         | ---
         | ```
         | 
@@ -151,7 +149,7 @@ enum class PatternActionFuncType(val funcName: String, val description: String) 
         | ```shire
         | ---
         | variables:
-        |  "testTemplate": /.*.kt/ { caching("disk") | splitting | embedding }
+        |  "testTemplate": /.*.kt/ { caching("disk") }
         |  "story": /any/ { caching("memory") }
         | ---
         | ```
