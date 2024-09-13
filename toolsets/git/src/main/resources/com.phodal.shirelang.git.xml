@@ -9,6 +9,8 @@
 
         <shireToolchainVariableProvider implementation="com.phodal.shirelang.git.provider.GitToolchainVariableProvider"/>
 
+        <shireToolchainFunctionProvider implementation="com.phodal.shirelang.git.provider.GitFunctionProvider"/>
+
         <shireActionLocationEditor implementation="com.phodal.shirelang.git.provider.GitActionLocationEditor"/>
 
         <shireQLDataProvider implementation="com.phodal.shirelang.git.provider.GitQLDataProvider"/>
