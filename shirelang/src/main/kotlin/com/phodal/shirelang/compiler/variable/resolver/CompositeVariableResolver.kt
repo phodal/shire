@@ -24,7 +24,7 @@ class CompositeVariableResolver(
             UserCustomVariableResolver(context),
         )
 
-        val initial = mutableMapOf<String, Any>()
+        val initial = initVariables.toMutableMap()
         return resolverList.fold(initial) { acc: MutableMap<String, Any>, resolver: VariableResolver ->
             acc.putAll(resolver.resolve(acc))
             acc

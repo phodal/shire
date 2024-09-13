@@ -41,7 +41,7 @@ class ShireTemplateCompiler(
         val currentEditor = VariableTemplateCompiler.defaultEditor(myProject)
 
         if (currentEditor != null) {
-            val additionalMap: Map<String, Any> = compileVariable(currentEditor)
+            val additionalMap: Map<String, Any> = compileVariable(currentEditor, customVariables)
 
             compiledVariables = additionalMap.mapValues { it.value.toString() }
 
@@ -61,9 +61,9 @@ class ShireTemplateCompiler(
         return input
     }
 
-    suspend fun compileVariable(editor: Editor): Map<String, Any> {
+    suspend fun compileVariable(editor: Editor, customVariables: MutableMap<String, String>): Map<String, Any> {
         val context = VariableResolverContext(myProject, editor, hole, variableTable, null)
-        val additionalMap: Map<String, Any> = CompositeVariableResolver(context).resolve(mapOf())
+        val additionalMap: Map<String, Any> = CompositeVariableResolver(context).resolve(customVariables)
         return additionalMap
     }
 }

@@ -1,17 +1,10 @@
 package com.phodal.shirelang.regression
 
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
-import com.phodal.shirecore.config.ShireActionLocation
-import com.phodal.shirecore.config.InteractionType
 import com.phodal.shirecore.middleware.PostProcessorContext
-import com.phodal.shirelang.compiler.parser.HobbitHoleParser
 import com.phodal.shirelang.compiler.ShireSyntaxAnalyzer
 import com.phodal.shirelang.compiler.ShireTemplateCompiler
-import com.phodal.shirelang.compiler.hobbit.ast.LogicalExpression
-import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
-import com.phodal.shirelang.compiler.hobbit.execute.PatternActionProcessor
 import com.phodal.shirelang.psi.ShireFile
-import junit.framework.TestCase
 import kotlinx.coroutines.runBlocking
 import org.intellij.lang.annotations.Language
 
@@ -81,7 +74,7 @@ class ShireCompileTest : BasePlatformTestCase() {
         runBlocking {
             val templateCompiler = ShireTemplateCompiler(project, hole, compile.variableTable, code)
             val compiledVariables =
-                templateCompiler.compileVariable(myFixture.editor)
+                templateCompiler.compileVariable(myFixture.editor, mutableMapOf())
 
             context.compiledVariables = compiledVariables
         }
@@ -137,7 +130,7 @@ public class HelloController {
         runBlocking {
             val templateCompiler = ShireTemplateCompiler(project, hole, compile.variableTable, code)
             val compiledVariables =
-                templateCompiler.compileVariable(myFixture.editor)
+                templateCompiler.compileVariable(myFixture.editor, mutableMapOf())
 
             context.compiledVariables = compiledVariables
         }
