@@ -17,7 +17,6 @@ import com.intellij.vcsUtil.VcsUtil
 import com.phodal.shirecore.provider.function.ToolchainFunctionProvider
 import git4idea.GitRemoteBranch
 import git4idea.GitVcs
-import git4idea.branch.GitBranchesCollection
 import git4idea.i18n.GitBundle
 import git4idea.push.GitPushOperation
 import git4idea.push.GitPushSource
@@ -66,7 +65,7 @@ class GitFunctionProvider : ToolchainFunctionProvider {
             }
 
             GitFunction.Push -> {
-                pushChanges(project, repository)
+                pushChanges(project, repository).get().toString()
             }
         }
     }
@@ -123,52 +122,50 @@ class GitFunctionProvider : ToolchainFunctionProvider {
         val progressIndicator =
             ObjectUtils.notNull(ProgressManager.getInstance().progressIndicator, EmptyProgressIndicator())
 
-        val branchesCollection: GitBranchesCollection = repository.branches
         val future = CompletableFuture<GitRemoteBranch>()
 
-        for (branch in branchesCollection.localBranches) {
-            val pushTarget = GitPushSupport.getPushTargetIfExist(repository, branch!!)
-                ?: continue
-
-            val gitPushSupport = DvcsUtil.getPushSupport(GitVcs.getInstance(project)) as? GitPushSupport
-                ?: return CompletableFuture.failedFuture(ProcessCanceledException())
-
-            ProgressManager.getInstance().runProcessWithProgressAsynchronously(
-                object : Task.Backgroundable(repository.project, DvcsBundle.message("push.process.pushing"), true) {
-
-                    override fun run(indicator: ProgressIndicator) {
-                        indicator.text = DvcsBundle.message("push.process.pushing")
-                        val pushSpec = PushSpec(GitPushSource.create(branch), pushTarget)
-                        val pushResult = GitPushOperation(
-                            repository.project,
-                            gitPushSupport,
-                            mapOf(repository to pushSpec),
-                            null,
-                            false,
-                            false
-                        )
-                            .execute().results[repository] ?: error("Missing push result")
-                        check(pushResult.error == null) {
-                            GitBundle.message("push.failed.error.message", pushResult.error.orEmpty())
-                        }
-                    }
-
-                    override fun onSuccess() {
-                        future.complete(pushTarget.branch)
-                    }
-
-                    override fun onThrowable(error: Throwable) {
-                        future.completeExceptionally(error)
-                    }
-
-                    override fun onCancel() {
-                        future.completeExceptionally(ProcessCanceledException())
-                    }
-                }, progressIndicator
+        val branch = repository.currentBranch ?: return CompletableFuture.failedFuture(ProcessCanceledException())
+        val pushTarget =
+            GitPushSupport.getPushTargetIfExist(repository, branch) ?: return CompletableFuture.failedFuture(
+                ProcessCanceledException()
             )
 
-            return future
-        }
+        val gitPushSupport = DvcsUtil.getPushSupport(GitVcs.getInstance(project)) as? GitPushSupport
+            ?: return CompletableFuture.failedFuture(ProcessCanceledException())
+
+        ProgressManager.getInstance().runProcessWithProgressAsynchronously(
+            object : Task.Backgroundable(repository.project, DvcsBundle.message("push.process.pushing"), true) {
+
+                override fun run(indicator: ProgressIndicator) {
+                    indicator.text = DvcsBundle.message("push.process.pushing")
+                    val pushSpec = PushSpec(GitPushSource.create(branch), pushTarget)
+                    val pushResult = GitPushOperation(
+                        repository.project,
+                        gitPushSupport,
+                        mapOf(repository to pushSpec),
+                        null,
+                        false,
+                        false
+                    )
+                        .execute().results[repository] ?: error("Missing push result")
+                    check(pushResult.error == null) {
+                        GitBundle.message("push.failed.error.message", pushResult.error.orEmpty())
+                    }
+                }
+
+                override fun onSuccess() {
+                    future.complete(pushTarget.branch)
+                }
+
+                override fun onThrowable(error: Throwable) {
+                    future.completeExceptionally(error)
+                }
+
+                override fun onCancel() {
+                    future.completeExceptionally(ProcessCanceledException())
+                }
+            }, progressIndicator
+        )
 
         return future
     }
