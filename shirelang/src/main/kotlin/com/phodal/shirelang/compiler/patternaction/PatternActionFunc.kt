@@ -182,7 +182,7 @@ sealed class PatternActionFunc(val type: PatternActionFuncType) {
 
     class Destroy : PatternActionFunc(PatternActionFuncType.DESTROY)
 
-    class Batch(val fileName: String, val inputs: List<Any>) : PatternActionFunc(PatternActionFuncType.BATCH)
+    class Batch(val fileName: String, val inputs: List<String>, val batchSize: Int = 1) : PatternActionFunc(PatternActionFuncType.BATCH)
 
     /**
      * User Custom Functions

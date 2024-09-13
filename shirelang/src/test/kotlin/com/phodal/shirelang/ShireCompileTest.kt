@@ -248,7 +248,7 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         val results = runBlocking {
             hole.variables.mapValues {
-                PatternActionProcessor(project, hole, mapOf()).execute(it.value)
+                PatternActionProcessor(project, hole, mutableMapOf()).execute(it.value)
             }
         }
 
@@ -281,7 +281,7 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         val results = runBlocking {
             hole.variables.mapValues {
-                PatternActionProcessor(project, hole, mapOf()).execute(it.value)
+                PatternActionProcessor(project, hole, mutableMapOf()).execute(it.value)
             }
         }
 
@@ -319,7 +319,7 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         val results = runBlocking {
             hole.variables.mapValues {
-                PatternActionProcessor(project, hole, mapOf()).execute(it.value)
+                PatternActionProcessor(project, hole, mutableMapOf()).execute(it.value)
             }
         }
 
@@ -353,7 +353,7 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         val results = runBlocking {
             hole.variables.mapValues {
-                PatternActionProcessor(project, hole, mapOf()).execute(it.value)
+                PatternActionProcessor(project, hole, mutableMapOf()).execute(it.value)
             }
         }
 
@@ -386,7 +386,7 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         val results = runBlocking {
             hole.variables.mapValues {
-                PatternActionProcessor(project, hole, mapOf()).execute(it.value)
+                PatternActionProcessor(project, hole, mutableMapOf()).execute(it.value)
             }
         }
 
@@ -427,9 +427,11 @@ Summary webpage: ${'$'}fileName""", results["var2"].toString()
 
         val results = runBlocking {
             hole.variables.mapValues {
-                PatternActionProcessor(project, hole, mapOf(
-                    "filePath" to "src/test/resources/sample.shire"
-                )).execute(it.value)
+                PatternActionProcessor(
+                    project, hole, mutableMapOf(
+                        "filePath" to "src/test/resources/sample.shire"
+                    )
+                ).execute(it.value)
             }
         }
 

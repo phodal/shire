@@ -342,7 +342,6 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             }
 
             is PatternActionFunc.Thread -> {
-                // remove $ for all variableName
                 val varNames = action.variableNames.toMutableList().apply {
                     if (!contains("output")) {
                         add("output")
@@ -355,8 +354,11 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                     variableTable["output"] = lastResult
                 }
 
-
                 ThreadProcessor.execute(myProject, action.fileName, varNames, variableTable)
+            }
+
+            is PatternActionFunc.Batch -> {
+                BatchProcessor.execute(myProject, action.fileName, action.inputs, action.batchSize, variableTable)
             }
 
             is PatternActionFunc.JsonPath -> {
@@ -364,10 +366,6 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                 jsonStr = jsonStr.fillVariable(variableTable)
 
                 JsonPathFunction.parse(jsonStr, action) ?: jsonStr
-            }
-
-            is PatternActionFunc.Batch -> {
-                TODO()
             }
             is PatternActionFunc.Destroy -> TODO()
         }

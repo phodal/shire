@@ -313,7 +313,7 @@ enum class PatternActionFuncType(val funcName: String, val description: String) 
     SELECT("select", "OrderBy subclass for ordering elements."),
     BATCH(
         "batch", """
-        | Batch for some specific tasks.
+        | Batch for some specific tasks. Since the limit of your LLM providers, the default batch size is 1.
         | 
         | Example:
         | 
@@ -322,7 +322,7 @@ enum class PatternActionFuncType(val funcName: String, val description: String) 
         | name: "Generate Swagger Doc"
         | variables:
         |   "controllers": /BlogController.java/ { cat }
-        |   "gen-swagger": /any/ { batch("controller-with-swagger.shire", ${"$"}controllers) }
+        |   "gen-swagger": /any/ { batch("controller-with-swagger.shire", ${"$"}controllers, 2) }
         | ---
         | 
         | ```

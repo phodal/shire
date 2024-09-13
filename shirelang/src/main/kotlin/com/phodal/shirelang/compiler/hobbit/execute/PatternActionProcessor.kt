@@ -10,10 +10,9 @@ import com.phodal.shirelang.compiler.patternaction.VariableTransform
 class PatternActionProcessor(
     override val myProject: Project,
     override val hole: HobbitHole,
-    val initVariables: Map<String, Any>
+    private val variableMap: MutableMap<String, Any?>
 ) :
     PatternFuncProcessor(myProject, hole) {
-    private val variableMap: MutableMap<String, Any?> = initVariables.toMutableMap()
 
     /**
      * We should execute the variable function with the given key and pipeline functions.
