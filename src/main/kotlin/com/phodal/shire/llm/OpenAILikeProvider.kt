@@ -26,7 +26,6 @@ data class CustomFields(
 
 class OpenAILikeProvider : CustomSSEHandler(), LlmProvider {
     private val timeout = Duration.ofSeconds(defaultTimeout)
-
     private var modelName: String = ShireSettingsState.getInstance().modelName
     private var temperature: Float  = ShireSettingsState.getInstance().temperature
     private var maxTokens: Int? = null
@@ -54,14 +53,25 @@ class OpenAILikeProvider : CustomSSEHandler(), LlmProvider {
                 && ShireSettingsState.getInstance().modelName.isNotEmpty()
     }
 
+    private fun configFromState() {
+        modelName = ShireSettingsState.getInstance().modelName
+        temperature = ShireSettingsState.getInstance().temperature
+        key = ShireSettingsState.getInstance().apiToken
+        url = ShireSettingsState.getInstance().apiHost.ifEmpty {
+            "https://api.openai.com/v1/chat/completions"
+        }
+    }
+
     override fun stream(promptText: String, systemPrompt: String, keepHistory: Boolean): Flow<String> {
         configRunLlm().let {
-            it?.let {
+            if (it != null) {
                 modelName = it.model
                 temperature = it.temperature.toFloat()
                 key = it.apiKey
                 url = it.apiBase
                 maxTokens = it.maxTokens
+            } else {
+                configFromState()
             }
         }
 
