@@ -180,6 +180,10 @@ sealed class PatternActionFunc(val type: PatternActionFuncType) {
     class JsonPath(val obj: String?, val path: String, val sseMode: Boolean = false) :
         PatternActionFunc(PatternActionFuncType.JSONPATH)
 
+    class Destroy : PatternActionFunc(PatternActionFuncType.DESTROY)
+
+    class Batch(val fileName: String, val inputs: List<Any>) : PatternActionFunc(PatternActionFuncType.BATCH)
+
     /**
      * User Custom Functions
      */
@@ -328,7 +332,15 @@ sealed class PatternActionFunc(val type: PatternActionFuncType) {
                 }
 
                 PatternActionFuncType.TOOLCHAIN_FUNCTION -> ToolchainFunction(funcName, args)
-                else -> ToolchainFunction(funcName, args)
+                PatternActionFuncType.BATCH -> {
+                    Batch(args[0], args.drop(1))
+                }
+                PatternActionFuncType.DESTROY -> {
+                    Destroy()
+                }
+                null -> {
+                    ToolchainFunction(funcName, args)
+                }
             }
         }
     }

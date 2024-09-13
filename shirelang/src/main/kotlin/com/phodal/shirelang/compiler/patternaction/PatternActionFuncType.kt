@@ -311,6 +311,27 @@ enum class PatternActionFuncType(val funcName: String, val description: String) 
     FROM("from", "Select subclass for selecting one or more elements."),
     WHERE("where", "Where subclass for filtering elements."),
     SELECT("select", "OrderBy subclass for ordering elements."),
+    BATCH(
+        "batch", """
+        | Batch for some specific tasks.
+        | 
+        | Example:
+        | 
+        | ```shire
+        | ---
+        | name: "Generate Swagger Doc"
+        | variables:
+        |   "controllers": /BlogController.java/ { cat }
+        |   "gen-swagger": /any/ { batch("controller-with-swagger.shire", ${"$"}controllers) }
+        | ---
+        | 
+        | ```
+        """.trimMargin()
+    ),
+
+    /// destroy the current context
+    DESTROY("destroy", "Destroy the current task."),
+
     TOOLCHAIN_FUNCTION(
         "toolchain", """
         | the Toolchain functions are define by the different IDEA plugins.

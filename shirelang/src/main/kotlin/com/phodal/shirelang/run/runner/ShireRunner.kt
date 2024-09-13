@@ -249,7 +249,8 @@ class ShireRunner(
     fun prepareExecute(parsedResult: ShireParsedResult) {
         val hobbitHole = parsedResult.config
         val editor = FileEditorManager.getInstance(project).selectedTextEditor
-        val pickupElement = hobbitHole?.pickupElement(project, editor)
+        hobbitHole?.pickupElement(project, editor)
+
         val file = runReadAction {
             editor?.let { PsiManager.getInstance(project).findFile(it.virtualFile) }
         }
