@@ -133,6 +133,7 @@ onStreamingEnd: { parseCode | patch($filePath, $output) }
 | redact    | 屏蔽敏感数据           |                                                                    | `redact()`                                  |
 | thread    | 线程执行（异步）         | `path`: 要执行的脚本路径                                                   | `thread("script.shire")`                    |
 | jsonpath  | 使用 JsonPath 选择数据 | `jsonPath`: JsonPath 表达式,其中 jsonString 为可选                         | `jsonpath(jsonString, "$.store.*")`         |
+| batch     | 批处理操作            | `fileName`: Shire  文件名，: paths`: 要处理的文件路径                          | `batch("file1.shire", "file2.txt")`         |
 
 ```kotlin
 sealed class PatternActionFunc(open val funcName: String) {
