@@ -178,16 +178,17 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
 
             is PatternActionFunc.Print -> {
                 if (action.texts.isEmpty()) {
-                    when (lastResult) {
+                    return when (lastResult) {
                         is Array<*> -> {
-                            return (lastResult as Array<String>)
+                            (lastResult as Array<String>)
                         }
 
                         else -> {
-                            return lastResult.toString()
+                            lastResult.toString()
                         }
                     }
                 }
+
                 action.texts.joinToString("\n") { it.fillVariable(variableTable) }
             }
 
@@ -341,6 +342,23 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                 }
             }
 
+            is PatternActionFunc.Batch -> {
+                val inputs: List<String> = action.inputs.map { input ->
+                    if (input.startsWith("\$")) {
+                        when (val variable = variableTable[input.substring(1)]) {
+                            is String -> listOf(variable.toString())
+                            is List<*> -> variable.map(Any?::toString)
+                            is Array<*> -> variable.map(Any?::toString)
+                            else -> listOf()
+                        }
+                    } else {
+                        listOf(input.toString())
+                    }
+                }.flatten()
+
+                BatchProcessor.execute(myProject, action.fileName, inputs, action.batchSize, variableTable)
+            }
+
             is PatternActionFunc.Thread -> {
                 val varNames = action.variableNames.toMutableList().apply {
                     if (!contains("output")) {
@@ -355,10 +373,6 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                 }
 
                 ThreadProcessor.execute(myProject, action.fileName, varNames, variableTable)
-            }
-
-            is PatternActionFunc.Batch -> {
-                BatchProcessor.execute(myProject, action.fileName, action.inputs, action.batchSize, variableTable)
             }
 
             is PatternActionFunc.JsonPath -> {
@@ -440,7 +454,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
     }
 }
 
-private fun String.fillVariable(
+fun String.fillVariable(
     variableTable: MutableMap<String, Any?>,
 ): String {
     return if (this.startsWith("\$")) {
