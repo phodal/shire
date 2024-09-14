@@ -2,6 +2,7 @@ package com.phodal.shirecore.codemodel.model
 
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
+import com.intellij.psi.PsiNameIdentifierOwner
 import com.phodal.shirecore.codemodel.base.FormatableElement
 
 class DirectoryStructure(
@@ -34,7 +35,12 @@ class DirectoryStructure(
     override fun format(): String {
         val fileDetails = files.joinToString("\n") { structure ->
             val file = structure.root
-            val classes = structure.classes.mapNotNull { it.name }.joinToString(", ")
+            val classes = structure.classes.mapNotNull {
+                when (it) {
+                    is PsiNameIdentifierOwner -> it.name
+                    else -> null
+                }
+            }.joinToString(", ")
             "file `${file.name}` classes: [$classes]"
         }
 
