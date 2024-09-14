@@ -10,6 +10,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/languages" />
+            <option value="$PROJECT_DIR$/languages/shire-go" />
             <option value="$PROJECT_DIR$/languages/shire-java" />
             <option value="$PROJECT_DIR$/languages/shire-javascript" />
             <option value="$PROJECT_DIR$/languages/shire-kotlin" />

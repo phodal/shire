@@ -1,0 +1,19 @@
+<idea-plugin package="com.phodal.shirelang.go">
+    <!--suppress PluginXmlValidity -->
+    <dependencies>
+        <plugin id="org.jetbrains.plugins.go"/>
+        <plugin id="com.intellij.modules.go-capable"/>
+        <plugin id="com.intellij.modules.platform"/>
+    </dependencies>
+
+    <extensions defaultExtensionNs="com.phodal">
+        <fileStructureProvider language="go"
+                               implementationClass="com.phodal.shirelang.go.codemodel.GoFileStructureProvider"/>
+        <classStructureProvider language="go"
+                                implementationClass="com.phodal.shirelang.go.codemodel.GoClassStructureProvider"/>
+        <methodStructureProvider language="go"
+                                 implementationClass="com.phodal.shirelang.go.codemodel.GoMethodStructureProvider"/>
+        <variableStructureProvider language="go"
+                                   implementationClass="com.phodal.shirelang.go.codemodel.GoVariableStructureProvider"/>
+    </extensions>
+</idea-plugin>

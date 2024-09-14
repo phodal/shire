@@ -12,7 +12,7 @@ class FileStructure(
     private val path: String,
     private val packageString: String? = null,
     private val imports: List<PsiElement> = emptyList(),
-    val classes: List<PsiNameIdentifierOwner> = emptyList(),
+    val classes: List<PsiElement> = emptyList(),
     private val methods: List<PsiNameIdentifierOwner> = emptyList(),
 ) : FormatableElement(root, path, name) {
     private fun getClassDetail(): List<String> = classes.mapNotNull {

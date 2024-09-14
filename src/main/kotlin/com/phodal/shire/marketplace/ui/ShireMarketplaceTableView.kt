@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.project.guessProjectDir
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.dsl.builder.Align
@@ -53,8 +54,7 @@ class ShireMarketplaceTableView(val project: Project) {
                             ShirelangNotifications.info(project, "Success Downloaded ${item.title}")
 
                             invokeLater {
-                                val shireDir = File(project.basePath, ".shire")
-                                LocalFileSystem.getInstance().refreshAndFindFileByPath(shireDir.path)
+                                project.guessProjectDir()?.refresh(true, true)
                             }
 
                             fireEditingStopped()

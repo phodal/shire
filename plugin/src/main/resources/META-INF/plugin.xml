@@ -15,6 +15,7 @@
         <module name="com.phodal.shirelang.javascript"/>
         <module name="com.phodal.shirelang.python"/>
         <module name="com.phodal.shirelang.kotlin"/>
+        <module name="com.phodal.shirelang.go"/>
         <module name="com.phodal.shirelang.markdown"/>
 
         <module name="com.phodal.shire.httpclient"/>

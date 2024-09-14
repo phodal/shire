@@ -86,7 +86,7 @@ object ThreadProcessor {
             ?: return "$SHIRE_ERROR: Shell runner not found"
 
         val future = CompletableFuture<String>()
-        ApplicationManager.getApplication().invokeAndWait {
+        ApplicationManager.getApplication().invokeLater {
             if (shRunner.isAvailable(myProject)) {
                 val output = ShireShellRunner.runShellCommand(virtualFile, myProject, processVariables)
                 future.complete(output)
