@@ -15,5 +15,14 @@
                                  implementationClass="com.phodal.shirelang.go.codemodel.GoMethodStructureProvider"/>
         <variableStructureProvider language="go"
                                    implementationClass="com.phodal.shirelang.go.codemodel.GoVariableStructureProvider"/>
+
+        <shireLanguageToolchainProvider
+                language="go"
+                implementationClass="com.phodal.shirelang.go.variable.GoLanguageProvider"/>
+
+
+        <!--        <shirePsiVariableProvider-->
+<!--                language="JAVA"-->
+<!--                implementationClass="com.phodal.shirelang.java.variable.JavaPsiContextVariableProvider"/>-->
     </extensions>
 </idea-plugin>
