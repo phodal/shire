@@ -16,11 +16,12 @@ class GoLanguageProvider : LanguageToolchainProvider {
     }
 
     override suspend fun collect(project: Project, context: ToolchainPrepareContext): List<ToolchainContextItem> {
+        val psiElement = context.element ?: return emptyList()
         val sourceFile = context.sourceFile ?: return emptyList()
 
         return ReadAction.compute<List<ToolchainContextItem>, Throwable> {
             val goVersion = GoSdkService.getInstance(project).getSdk(GoUtil.module(sourceFile)).version
-            val targetVersion = GoTargetSdkVersionProvider.getTargetGoSdkVersion(sourceFile).toString()
+            val targetVersion = GoTargetSdkVersionProvider.getTargetGoSdkVersion(psiElement).toString()
 
             val prompt = "Go Version: $goVersion, Target Version: $targetVersion"
             val element = ToolchainContextItem(GoLanguageProvider::class, prompt)
