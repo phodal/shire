@@ -17,7 +17,6 @@ import com.intellij.util.ui.ColumnInfo
 import com.intellij.util.ui.ListTableModel
 import com.phodal.shire.ShireIdeaIcons
 import com.phodal.shire.ShireMainBundle
-import com.phodal.shirecore.ShirelangNotifications
 import java.awt.BorderLayout
 import java.awt.Component
 import javax.swing.JPanel
@@ -86,7 +85,7 @@ class ShirePackageTableComponent(val project: Project) {
                 return object : IconButtonTableCellEditor(item, ShireIdeaIcons.Download, "Download") {
                     init {
                         myButton.addActionListener {
-                            ShirelangNotifications.info(project, "Downloading ${item.name}")
+                            ShireDownloader.downloadAndUnzip(project, item)
                             fireEditingStopped()
                         }
                     }
@@ -121,9 +120,13 @@ class ShirePackageTableComponent(val project: Project) {
 
     // Create a list to store the row data
     val dataList = listOf(
-        ShirePackage("Plugin 1", "A useful plugin", "1.0", "Author A", "https://shire.run/"),
-        ShirePackage("Plugin 2", "Another great plugin", "2.1", "B", "https://shire.run/"),
-        ShirePackage("Plugin 3", "Yet another plugin", "3.0", "B", "https://shire.run/")
+        ShirePackage(
+            "基础 AI 辅助编程",
+            "基础 AI 编码能力包：自动化单测、提交信息生成、代码重构、AI 终端命令生成、Java 注释生成。",
+            "TODO",
+            "Phodal Huang",
+            "https://static.shire.run/package/basic-assistant.zip"
+        ),
     )
 
     init {

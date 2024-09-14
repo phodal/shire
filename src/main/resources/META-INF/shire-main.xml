@@ -9,7 +9,7 @@
         <projectService serviceImplementation="com.phodal.shire.marketplace.MarketPlaceView" client="all"/>
         <toolWindow id="Shire MarketPlace"
                     anchor="left" icon="com.phodal.shire.ShireIdeaIcons.Default"
-                    factoryClass="com.phodal.shire.marketplace.MarketplaceToolWindowFactory" canCloseContents="true"/>
+                    factoryClass="com.phodal.shire.marketplace.MarketplaceToolWindowFactory"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.phodal">
