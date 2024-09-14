@@ -1,8 +1,11 @@
 package com.phodal.shirelang.go.util
 
 import com.goide.psi.*
+import com.goide.psi.impl.GoPackage.GoPomTargetPsiElement
+import com.goide.psi.impl.containsIota
 import com.intellij.openapi.roots.ProjectFileIndex
 import com.intellij.psi.PsiElement
+import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.concurrency.annotations.RequiresReadLock
 
 object GoPsiUtil {
@@ -58,4 +61,51 @@ object GoPsiUtil {
         val virtualFile = element.containingFile.virtualFile ?: return true
         return ProjectFileIndex.getInstance(element.project).isInContent(virtualFile)
     }
+
+    private fun notInLibrary(element: PsiElement): Boolean {
+        return !(element is GoPomTargetPsiElement ||
+                ProjectFileIndex.getInstance(element.project).isInLibrary(element.containingFile.virtualFile))
+    }
+
+    private fun parentWithContext(element: PsiElement): PsiElement? {
+        return when (element) {
+            is GoTypeSpec, is GoMethodSpec, is GoFieldDefinition -> parentTypeSpecOrDeclaration(element)
+            is GoMethodDeclaration -> {
+                val resolveTypeSpec = element.resolveTypeSpec()
+                resolveTypeSpec?.let { parentTypeSpecOrDeclaration(it) }
+            }
+
+            is GoVarOrConstDefinition -> parentVarOrConstSpecOrDeclaration(element)
+            is GoImportSpec -> parentImportList(element)
+            else -> element
+        }
+    }
+
+    private fun parentImportList(importSpec: GoImportSpec): PsiElement {
+        val importList = PsiTreeUtil.getParentOfType(importSpec, GoImportList::class.java, true)
+        return if (importList?.importDeclarationList?.size == 1) importList else importSpec
+    }
+
+    private fun parentTypeSpecOrDeclaration(element: PsiElement): PsiElement {
+        val typeSpec = PsiTreeUtil.getParentOfType(element, GoTypeSpec::class.java, false)
+            ?: return element
+        val typeDeclaration = PsiTreeUtil.getParentOfType(typeSpec, GoTypeDeclaration::class.java, true)
+        return if (typeDeclaration?.typeSpecList?.size == 1) typeDeclaration else typeSpec
+    }
+
+    private fun parentVarOrConstSpecOrDeclaration(element: PsiElement): PsiElement {
+        val varOrConstSpec = PsiTreeUtil.getParentOfType(element, GoVarOrConstSpec::class.java, false)
+            ?: return element
+
+        val varOrConstDeclaration =
+            PsiTreeUtil.getParentOfType(varOrConstSpec, GoVarOrConstDeclaration::class.java, true)
+                ?: return varOrConstSpec
+
+        return when {
+            varOrConstDeclaration.specList.size == 1 -> varOrConstDeclaration
+            varOrConstDeclaration is GoConstDeclaration && varOrConstDeclaration.containsIota() -> varOrConstDeclaration
+            else -> varOrConstSpec
+        }
+    }
+
 }
