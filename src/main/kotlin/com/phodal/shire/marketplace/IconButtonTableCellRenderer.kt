@@ -166,7 +166,7 @@ interface IconTableCell {
     fun setIcon(icon: Icon?)
 }
 
-class IconButton internal constructor(defaultIcon: Icon) : JButton(defaultIcon), IconTableCell {
+class IconButton(defaultIcon: Icon) : JButton(defaultIcon), IconTableCell {
     private var myDefaultIcon: Icon
 
     init {

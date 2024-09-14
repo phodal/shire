@@ -23,22 +23,12 @@ import javax.swing.JTable
 import javax.swing.event.ChangeEvent
 import javax.swing.table.TableCellEditor
 
-open class IconButtonTableCellEditor protected constructor(
-    value: Any,
-    icon: Icon,
-    tooltipText: String,
-) :
-    AbstractCellEditor(), TableCellEditor {
-    protected val myButton: IconButton
-    protected var myValue: Any?
-
-    init {
-        myButton = IconButton(icon)
-
-        myButton.setOpaque(true)
-        myButton.setToolTipText(tooltipText)
-
-        myValue = value
+open class IconButtonTableCellEditor(value: Any, icon: Icon, tooltipText: String) : AbstractCellEditor(),
+    TableCellEditor {
+    protected var myValue: Any = value
+    protected val myButton: IconButton = IconButton(icon).apply {
+        setOpaque(true)
+        setToolTipText(tooltipText)
     }
 
     @get:VisibleForTesting
