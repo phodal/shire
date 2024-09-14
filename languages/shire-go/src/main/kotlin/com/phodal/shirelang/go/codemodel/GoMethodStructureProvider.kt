@@ -9,7 +9,6 @@ import com.phodal.shirecore.codemodel.model.MethodStructure
 
 class GoMethodStructureProvider : MethodStructureProvider {
     override fun build(psiElement: PsiElement, includeClassContext: Boolean, gatherUsages: Boolean): MethodStructure? {
-
         if (psiElement !is GoFunctionOrMethodDeclaration) {
             return null
         }

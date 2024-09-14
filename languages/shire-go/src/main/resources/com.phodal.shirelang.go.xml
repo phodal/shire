@@ -21,8 +21,8 @@
                 implementationClass="com.phodal.shirelang.go.variable.GoLanguageProvider"/>
 
 
-        <!--        <shirePsiVariableProvider-->
-<!--                language="JAVA"-->
-<!--                implementationClass="com.phodal.shirelang.java.variable.JavaPsiContextVariableProvider"/>-->
+        <shirePsiVariableProvider
+                language="go"
+                implementationClass="com.phodal.shirelang.go.variable.GoPsiContextVariableProvider"/>
     </extensions>
 </idea-plugin>
