@@ -88,7 +88,8 @@ class ShireMarketplaceTableView(val project: Project) {
             }
         }
     )
-    private var mainPanel: JPanel
+
+    var mainPanel: JPanel
     private val client = OkHttpClient()
 
     init {
@@ -119,12 +120,10 @@ class ShireMarketplaceTableView(val project: Project) {
 
     private fun makeApiCall(): List<ShirePackage> {
         try {
-            val request = Request.Builder().url(SHIRE_MKT_HOST).get().build()
-
-            var responses: Response? = null
             val objectMapper = ObjectMapper()
 
-            responses = client.newCall(request).execute()
+            val request = Request.Builder().url(SHIRE_MKT_HOST).get().build()
+            var responses: Response = client.newCall(request).execute()
 
             val jsonData = responses.body?.string()
             val packages = objectMapper.readValue(jsonData, Array<ShirePackage>::class.java)
