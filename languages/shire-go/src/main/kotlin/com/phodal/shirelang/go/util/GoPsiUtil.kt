@@ -2,7 +2,7 @@ package com.phodal.shirelang.go.util
 
 import com.goide.psi.*
 import com.goide.psi.impl.GoPackage.GoPomTargetPsiElement
-import com.goide.psi.impl.containsIota
+import com.goide.psi.impl.GoPsiImplUtil
 import com.intellij.openapi.roots.ProjectFileIndex
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
@@ -106,6 +106,23 @@ object GoPsiUtil {
             varOrConstDeclaration is GoConstDeclaration && varOrConstDeclaration.containsIota() -> varOrConstDeclaration
             else -> varOrConstSpec
         }
+    }
+
+    private fun GoExpression.containsIota(): Boolean {
+        val traverser = GoPsiTreeUtil.goTraverser().withRoot(this)
+        for (element in traverser.traverse()) {
+            if (GoPsiImplUtil.isIota(element)) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private fun GoConstDeclaration.containsIota(): Boolean {
+        return constSpecList
+            .asSequence()
+            .flatMap { it.expressionList.asSequence() }
+            .any { it.containsIota() }
     }
 
 }
