@@ -75,7 +75,7 @@ class ShireDownloader(val project: Project, val item: ShirePackage) {
             ZipUtil.extract(file, getTargetDir(pluginDir).toPath(), null)
             return true
         } catch (e: IOException) {
-            val message = "Can't download Android Plugin component: " + item.name
+            val message = "Can't download Shire package: " + item.name
             logger<ShireDownloader>().warn(message, e)
             ShirelangNotifications.error(project, e.message ?: message)
             return false
@@ -87,7 +87,7 @@ class ShireDownloader(val project: Project, val item: ShirePackage) {
     }
 
     private fun getPluginDir(): File {
-        val pluginDir = File(project.basePath, ".shire")
+        val pluginDir = File(project.basePath, "")
         if (!pluginDir.exists()) {
             pluginDir.mkdirs()
 
