@@ -1,5 +1,6 @@
 package com.phodal.shire.marketplace.ui
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.LocalFileSystem
@@ -14,6 +15,9 @@ import com.phodal.shire.ShireMainBundle
 import com.phodal.shire.marketplace.model.ShirePackage
 import com.phodal.shire.marketplace.util.ShireDownloader
 import com.phodal.shirecore.ShirelangNotifications
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
 import java.awt.Component
 import java.io.File
 import javax.swing.JButton
@@ -22,21 +26,20 @@ import javax.swing.JTable
 import javax.swing.table.TableCellEditor
 import javax.swing.table.TableCellRenderer
 
+
+private const val SHIRE_MKT_HOST = "https://shire.run/packages.json"
+
 class ShireMarketplaceTable(val project: Project) {
-    val columns = arrayOf(
+    private val columns = arrayOf(
         object : ColumnInfo<ShirePackage, String>(ShireMainBundle.message("marketplace.column.name")) {
-            override fun valueOf(data: ShirePackage): String = data.name
+            override fun valueOf(data: ShirePackage): String = data.title
+            override fun getWidth(table: JTable?): Int = 120
         },
         object : ColumnInfo<ShirePackage, String>(ShireMainBundle.message("marketplace.column.description")) {
             override fun valueOf(data: ShirePackage): String = data.description
         },
-        object : ColumnInfo<ShirePackage, String>(ShireMainBundle.message("marketplace.column.version")) {
-            override fun valueOf(data: ShirePackage): String = data.version
-        },
-        object : ColumnInfo<ShirePackage, String>(ShireMainBundle.message("marketplace.column.author")) {
-            override fun valueOf(data: ShirePackage): String = data.author
-        },
-        object : ColumnInfo<ShirePackage, ShirePackage>(ShireMainBundle.message("marketplace.column.action")) {
+        object : ColumnInfo<ShirePackage, ShirePackage>("") {
+            override fun getWidth(table: JTable?): Int = 40
             override fun valueOf(item: ShirePackage?): ShirePackage? = item
             override fun isCellEditable(item: ShirePackage?): Boolean = true
 
@@ -44,9 +47,9 @@ class ShireMarketplaceTable(val project: Project) {
                 return object : IconButtonTableCellEditor(item, ShireIdeaIcons.Download, "Download") {
                     init {
                         myButton.addActionListener {
-                            ShirelangNotifications.info(project, "Downloading ${item.name}")
+                            ShirelangNotifications.info(project, "Downloading ${item.title}")
                             ShireDownloader(project, item).downloadAndUnzip()
-                            ShirelangNotifications.info(project, "Success Downloaded ${item.name}")
+                            ShirelangNotifications.info(project, "Success Downloaded ${item.title}")
 
                             // refresh .shire dir
                             val shireDir = File(project.basePath, ".shire")
@@ -83,42 +86,49 @@ class ShireMarketplaceTable(val project: Project) {
         }
     )
     var mainPanel: JPanel
-
-    // Create a list to store the row data
-    val dataList = listOf(
-        ShirePackage(
-            "基础 AI 辅助编程",
-            "基础 AI 编码能力包：自动化单测、提交信息生成、代码重构、AI 终端命令生成、Java 注释生成。",
-            "TODO",
-            "Phodal Huang",
-            "https://static.shire.run/package/basic-assistant.zip"
-        ),
-    )
+    val client = OkHttpClient()
 
     init {
-        val model = ListTableModel(columns, dataList)
-        val tableView = TableView(model)
+        val tableModel = ListTableModel(columns, listOf<ShirePackage>())
+        val tableView = TableView(tableModel)
         val scrollPane = JBScrollPane(tableView)
 
         val myReloadButton = JButton(AllIcons.Actions.Refresh)
 
         mainPanel = panel {
-            /// add header
             row {
                 cell(myReloadButton.apply {
                     addActionListener {
-                        fetchData()
+                        tableModel.items = makeApiCall()
+                        tableModel.fireTableDataChanged()
                     }
                 })
             }
 
             row {
                 cell(scrollPane).align(Align.FILL)
-            }
+            }.resizableRow()
         }
+
+        tableModel.items = makeApiCall()
+        tableModel.fireTableDataChanged()
     }
 
-    fun fetchData() {
-        ShirelangNotifications.info(project, "Fetching data")
+    private fun makeApiCall(): List<ShirePackage> {
+        try {
+            val request = Request.Builder().url(SHIRE_MKT_HOST).get().build()
+
+            var responses: Response? = null
+            val objectMapper = ObjectMapper()
+
+            responses = client.newCall(request).execute()
+
+            val jsonData = responses.body?.string()
+            val packages = objectMapper.readValue(jsonData, Array<ShirePackage>::class.java)
+            return packages.toList()
+        } catch (e: Exception) {
+            ShirelangNotifications.error(project, "Failed to fetch data: $e")
+            return listOf()
+        }
     }
 }

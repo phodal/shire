@@ -1,9 +1,12 @@
 package com.phodal.shire.marketplace.model
 
 data class ShirePackage(
-    val name: String,
+    val title: String,
     val description: String,
-    val version: String,
-    val author: String,
-    val url: String,
-)
+    val link: String,
+    val installCmd: String = "",
+    val featured: Boolean = false
+) {
+    // for Jackson
+    constructor() : this("", "", "")
+}

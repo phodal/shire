@@ -27,13 +27,13 @@ class ShireDownloader(val project: Project, val item: ShirePackage) {
     fun downloadAndUnzip(): Boolean {
         val service = DownloadableFileService.getInstance()
 
-        val filename = item.url.substringAfterLast("/")
+        val filename = item.link.substringAfterLast("/")
         val description = service.createFileDescription(
-            item.url,
+            item.link,
             filename
         )
 
-        val downloader = service.createDownloader(listOf(description), "Download Shire package: " + item.name)
+        val downloader = service.createDownloader(listOf(description), "Download Shire package: " + item.title)
 
         if (SwingUtilities.isEventDispatchThread()) {
             ApplicationManager.getApplication()
@@ -76,7 +76,7 @@ class ShireDownloader(val project: Project, val item: ShirePackage) {
             ZipUtil.extract(file, getTargetDir(pluginDir).toPath(), null)
             return true
         } catch (e: IOException) {
-            val message = "Can't download Shire package: " + item.name
+            val message = "Can't download Shire package: " + item.title
             logger<ShireDownloader>().warn(message, e)
             ShirelangNotifications.error(project, e.message ?: message)
             return false
