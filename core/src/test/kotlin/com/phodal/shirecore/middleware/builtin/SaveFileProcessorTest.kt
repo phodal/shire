@@ -1,10 +1,8 @@
 package com.phodal.shirecore.middleware.builtin
 
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
-import junit.framework.TestCase
 
 class FileNameTest : BasePlatformTestCase() {
-
     fun testReturnTimestampWithExtensionWhenFilePathIsBlank() {
         val ext = "txt"
         val filePath = ""
@@ -23,13 +21,22 @@ class FileNameTest : BasePlatformTestCase() {
         assertEquals(filePath, result)
     }
 
+    // "docs/api.yml"
+    fun testReturnValidFilePathIfItMatchesRegexForLinux() {
+        val ext = "yml"
+        val filePath = "docs/api.yml"
+        val result = getValidFilePath(filePath, ext)
+
+        // Since the path is valid, it should return the same file path
+        assertEquals(filePath, result)
+    }
+
     fun testReturnTimestampWithExtensionIfPathIsInvalid() {
         val ext = "txt"
         val filePath = "Invalid\\Path\\test"
         val result = getValidFilePath(filePath, ext)
 
-        // If the file path is invalid, it should return a timestamp followed by the extension
-        assertTrue(result.matches(Regex("""\d+\.txt""")))
+        assertEquals(result, filePath)
     }
 
     fun testReturnTimestampWithExtensionIfPathIsInvalidForLinux() {

@@ -149,7 +149,7 @@ class SaveFileProcessor : PostProcessor, Disposable {
 }
 
 fun getValidFilePath(filePath: String, ext: String): String {
-    val pathRegex = """^([a-zA-Z]:\\(?:[^<>:"/\\|?*]+\\)*[^<>:"/\\|?*]*)|(/[^<>:"/\\|?*]+(/[^<>:"/\\|?*]*)*)$""".toRegex()
+    val pathRegex = """^([a-zA-Z]:\\|\\\\|/|)([a-zA-Z0-9_\-\\/.]+)$""".toRegex()
 
     if (filePath.isBlank()) {
         return "${System.currentTimeMillis()}.$ext"
