@@ -258,6 +258,17 @@ project(":toolsets:plantuml") {
     }
 }
 
+project(":toolsets:wiremock") {
+    intellij {
+        version.set(prop("ideaVersion"))
+        plugins.set(ideaPlugins + prop("wireMockPlugin"))
+    }
+
+    dependencies {
+        implementation(project(":core"))
+    }
+}
+
 project(":toolsets:database") {
     intellij {
         version.set(prop("ideaVersion"))

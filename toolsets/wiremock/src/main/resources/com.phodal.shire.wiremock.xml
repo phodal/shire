@@ -1,0 +1,10 @@
+<idea-plugin package="com.phodal.shire.wiremock">
+    <!--suppress PluginXmlValidity -->
+    <dependencies>
+        <plugin id="com.intellij.wiremock"/>
+    </dependencies>
+
+    <extensions defaultExtensionNs="com.phodal">
+        <shireToolchainFunctionProvider implementation="com.phodal.shire.wiremock.provider.WiremockFunctionProvider"/>
+    </extensions>
+</idea-plugin>
