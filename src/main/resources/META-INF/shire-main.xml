@@ -6,7 +6,7 @@
                                  id="shireLlmSettingsConfigurable"
                                  displayName="Shire"/>
 
-        <projectService serviceImplementation="com.phodal.shire.marketplace.MarketPlaceView" client="all"/>
+        <projectService serviceImplementation="com.phodal.shire.marketplace.ui.MarketplaceView" client="all"/>
         <toolWindow id="Shire MarketPlace"
                     anchor="right" icon="com.phodal.shire.ShireIdeaIcons.Default"
                     factoryClass="com.phodal.shire.marketplace.MarketplaceToolWindowFactory"/>
