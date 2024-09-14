@@ -22,10 +22,10 @@
             <option value="$PROJECT_DIR$/toolsets/database" />
             <option value="$PROJECT_DIR$/toolsets/git" />
             <option value="$PROJECT_DIR$/toolsets/httpclient" />
+            <option value="$PROJECT_DIR$/toolsets/mock" />
             <option value="$PROJECT_DIR$/toolsets/plantuml" />
             <option value="$PROJECT_DIR$/toolsets/sonarqube" />
             <option value="$PROJECT_DIR$/toolsets/terminal" />
-            <option value="$PROJECT_DIR$/toolsets/wiremock" />
           </set>
         </option>
       </GradleProjectSettings>

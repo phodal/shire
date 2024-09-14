@@ -25,5 +25,5 @@ include(
     "toolsets:sonarqube",
     "toolsets:plantuml",
     "toolsets:database",
-    "toolsets:wiremock",
+    "toolsets:mock",
 )

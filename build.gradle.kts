@@ -258,7 +258,7 @@ project(":toolsets:plantuml") {
     }
 }
 
-project(":toolsets:wiremock") {
+project(":toolsets:mock") {
     intellij {
         version.set(prop("ideaVersion"))
         plugins.set(ideaPlugins + prop("wireMockPlugin"))
@@ -359,6 +359,7 @@ project(":plugin") {
         implementation(project(":toolsets:terminal"))
         implementation(project(":toolsets:sonarqube"))
         implementation(project(":toolsets:database"))
+        implementation(project(":toolsets:mock"))
     }
 
     // Collects all jars produced by compilation of project modules and merges them into singe one.

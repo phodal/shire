@@ -21,8 +21,9 @@
         <module name="com.phodal.shire.httpclient"/>
         <module name="com.phodal.shire.terminal"/>
         <module name="com.phodal.shire.database"/>
-
         <module name="com.phodal.shirelang.git"/>
+
+        <module name="com.phodal.shire.mock"/>
 
         <!-- experimental features -->
         <module name="com.phodal.shire.sonarqube"/>

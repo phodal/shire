@@ -1,4 +1,4 @@
-<idea-plugin package="com.phodal.shire.wiremock">
+<idea-plugin package="com.phodal.shire.mock">
     <!--suppress PluginXmlValidity -->
     <dependencies>
         <plugin id="com.intellij.wiremock"/>
