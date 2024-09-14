@@ -21,7 +21,6 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import java.awt.Component
-import java.io.File
 import javax.swing.JButton
 import javax.swing.JPanel
 import javax.swing.JTable
