@@ -85,14 +85,14 @@ class ShirePackageTableComponent(val project: Project) {
                 return object : IconButtonTableCellEditor(item, ShireIdeaIcons.Download, "Download") {
                     init {
                         myButton.addActionListener {
-                            ShireDownloader.downloadAndUnzip(project, item)
+                            ShireDownloader(project, item).downloadAndUnzip()
                             fireEditingStopped()
                         }
                     }
                 }
             }
 
-            override fun getRenderer(item: ShirePackage?): TableCellRenderer? {
+            override fun getRenderer(item: ShirePackage?): TableCellRenderer {
                 return object : IconButtonTableCellRenderer(ShireIdeaIcons.Download, "Download") {
                     override fun getTableCellRendererComponent(
                         table: JTable,

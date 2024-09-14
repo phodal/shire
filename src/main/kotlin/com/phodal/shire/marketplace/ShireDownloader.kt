@@ -1,76 +1,108 @@
+// Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.phodal.shire.marketplace
 
-import com.intellij.openapi.command.WriteCommandAction
-import com.intellij.openapi.progress.ProgressIndicator
+import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.diagnostic.logger
+import com.intellij.openapi.progress.PerformInBackgroundOption
 import com.intellij.openapi.progress.ProgressManager
-import com.intellij.openapi.progress.Task
+import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.project.ProjectBundle
 import com.intellij.openapi.project.guessProjectDir
-import com.intellij.openapi.projectRoots.impl.jdkDownloader.JdkInstaller
-import com.intellij.openapi.util.NlsContexts
-import com.intellij.openapi.vfs.VirtualFileManager
+import com.intellij.openapi.util.Computable
+import com.intellij.openapi.util.io.FileUtil
+import com.intellij.util.download.DownloadableFileService
+import com.intellij.util.download.FileDownloader
+import com.intellij.util.io.ZipUtil
 import com.phodal.shire.ShireMainBundle
 import com.phodal.shirecore.ShirelangNotifications
-import java.io.BufferedInputStream
-import java.io.FileOutputStream
-import java.net.URL
+import java.io.File
+import java.io.IOException
 import java.nio.file.Files
-import java.nio.file.Paths
-import java.util.zip.ZipEntry
-import java.util.zip.ZipInputStream
+import java.nio.file.Path
+import java.util.concurrent.locks.ReentrantReadWriteLock
+import javax.swing.SwingUtilities
 
-object ShireDownloader {
-    fun downloadAndUnzip(project: Project, item: ShirePackage) {
+class ShireDownloader(val project: Project, val item: ShirePackage) {
+    private val downloadLock = ReentrantReadWriteLock()
+
+    fun downloadAndUnzip(): Boolean {
         ShirelangNotifications.info(project, "Downloading ${item.name}")
-        computeInBackground(project, ShireMainBundle.message("downloading.item", item.name)) {
-            val dir = project.guessProjectDir()!!
-            val targetPath = Paths.get(dir.path, ".")
+        val dir = project.guessProjectDir()!!
+        val service = DownloadableFileService.getInstance()
 
-            val zipFile = Files.createTempFile("temp_download", ".zip")
-            downloadFile(item.url, zipFile.toString())
+        val filename = item.url.substringAfterLast("/")
+        val description = service.createFileDescription(
+            item.url,
+            filename
+        )
 
-            unzipFile(zipFile.toString(), targetPath.toString())
+        val downloader = service.createDownloader(listOf(description), "Download Shire package: " + item.name)
 
-            WriteCommandAction.runWriteCommandAction(null) {
-                VirtualFileManager.getInstance().syncRefresh()
-            }
-        }
+        if (SwingUtilities.isEventDispatchThread()) {
+            ApplicationManager.getApplication()
+                .executeOnPooledThread<Boolean> { downloadWithLock(downloader) }
 
-        ShirelangNotifications.info(project, "Downloaded ${item.name}")
-    }
-
-    private fun downloadFile(downloadUrl: String, outputFilePath: String) {
-        URL(downloadUrl).openStream().use { inputStream ->
-            Files.newOutputStream(Paths.get(outputFilePath)).use { outputStream ->
-                inputStream.copyTo(outputStream)
-            }
+            return true
+        } else {
+            return downloadWithLock(downloader)
         }
     }
 
-    private fun unzipFile(zipFilePath: String, targetDirPath: String) {
-        ZipInputStream(BufferedInputStream(Files.newInputStream(Paths.get(zipFilePath)))).use { zis ->
-            var entry: ZipEntry?
-            while (zis.nextEntry.also { entry = it } != null) {
-                val filePath = Paths.get(targetDirPath, entry!!.name)
-                if (entry!!.isDirectory) {
-                    Files.createDirectories(filePath)
-                } else {
-                    Files.createDirectories(filePath.parent)
-                    FileOutputStream(filePath.toFile()).use { outputStream ->
-                        zis.copyTo(outputStream)
-                    }
-                }
+    private fun downloadWithLock(downloader: FileDownloader): Boolean {
+        downloadLock.writeLock().lock()
+        try {
+            val pluginDir: File = getPluginDir()
+            return downloadWithProgress { doDownload(pluginDir, downloader) }
+        } finally {
+            downloadLock.writeLock().unlock()
+        }
+    }
+
+    private fun downloadWithProgress(downloadTask: Computable<Boolean>): Boolean {
+        if (ProgressManager.getInstance().hasProgressIndicator()) {
+            return downloadTask.compute()
+        } else {
+            val indicator =
+                BackgroundableProcessIndicator(
+                    null, ShireMainBundle.message("downloading.package"),
+                    PerformInBackgroundOption.ALWAYS_BACKGROUND, null, null, true
+                )
+            return ProgressManager.getInstance().runProcess(downloadTask, indicator)
+        }
+    }
+
+    protected fun doDownload(pluginDir: File?, downloader: FileDownloader): Boolean {
+        var tempDir: Path? = null
+        try {
+            tempDir = Files.createTempDirectory(".shire-download")
+            val list = downloader.download(tempDir.toFile())
+            val file = list[0].first
+            ZipUtil.extract(file, getTargetDir(pluginDir), null)
+            return true
+        } catch (e: IOException) {
+            val message = "Can't download Android Plugin component: " + item.name
+            logger<ShireDownloader>().warn(message, e)
+            ShirelangNotifications.error(project, e.message ?: message)
+            return false
+        } finally {
+            if (tempDir != null) {
+                FileUtil.delete(tempDir.toFile())
             }
         }
     }
 
-    private inline fun <T : Any?> computeInBackground(
-        project: Project?,
-        @NlsContexts.DialogTitle title: String,
-        crossinline action: (ProgressIndicator) -> T,
-    ): T =
-        ProgressManager.getInstance().run(object : Task.WithResult<T, Exception>(project, title, true) {
-            override fun compute(indicator: ProgressIndicator) = action(indicator)
-        })
+    private fun getPluginDir(): File {
+        val pluginDir = File(project.basePath, ".shire")
+        if (!pluginDir.exists()) {
+            pluginDir.mkdirs()
+
+            return pluginDir
+        }
+
+        return pluginDir
+    }
+
+    private fun getTargetDir(pluginDir: File?): File {
+        return pluginDir?.let { File(it, "") } ?: File(project.basePath, "")
+    }
 }
