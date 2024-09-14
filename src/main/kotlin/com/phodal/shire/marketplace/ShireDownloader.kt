@@ -3,11 +3,9 @@ package com.phodal.shire.marketplace
 
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.diagnostic.logger
-import com.intellij.openapi.progress.PerformInBackgroundOption
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.project.guessProjectDir
 import com.intellij.openapi.util.Computable
 import com.intellij.openapi.util.io.FileUtil
 import com.intellij.util.download.DownloadableFileService
@@ -26,8 +24,6 @@ class ShireDownloader(val project: Project, val item: ShirePackage) {
     private val downloadLock = ReentrantReadWriteLock()
 
     fun downloadAndUnzip(): Boolean {
-        ShirelangNotifications.info(project, "Downloading ${item.name}")
-        val dir = project.guessProjectDir()!!
         val service = DownloadableFileService.getInstance()
 
         val filename = item.url.substringAfterLast("/")
@@ -64,8 +60,7 @@ class ShireDownloader(val project: Project, val item: ShirePackage) {
         } else {
             val indicator =
                 BackgroundableProcessIndicator(
-                    null, ShireMainBundle.message("downloading.package"),
-                    PerformInBackgroundOption.ALWAYS_BACKGROUND, null, null, true
+                    project, ShireMainBundle.message("downloading.package"), null, null, true
                 )
             return ProgressManager.getInstance().runProcess(downloadTask, indicator)
         }
@@ -76,8 +71,8 @@ class ShireDownloader(val project: Project, val item: ShirePackage) {
         try {
             tempDir = Files.createTempDirectory(".shire-download")
             val list = downloader.download(tempDir.toFile())
-            val file = list[0].first
-            ZipUtil.extract(file, getTargetDir(pluginDir), null)
+            val file = list[0].first.toPath()
+            ZipUtil.extract(file, getTargetDir(pluginDir).toPath(), null)
             return true
         } catch (e: IOException) {
             val message = "Can't download Android Plugin component: " + item.name

@@ -6,6 +6,7 @@ import com.intellij.openapi.components.Storage
 import com.intellij.openapi.components.StoragePathMacros
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowFactory
 import com.intellij.ui.components.JBScrollPane
@@ -17,8 +18,10 @@ import com.intellij.util.ui.ColumnInfo
 import com.intellij.util.ui.ListTableModel
 import com.phodal.shire.ShireIdeaIcons
 import com.phodal.shire.ShireMainBundle
+import com.phodal.shirecore.ShirelangNotifications
 import java.awt.BorderLayout
 import java.awt.Component
+import java.io.File
 import javax.swing.JPanel
 import javax.swing.JTable
 import javax.swing.table.TableCellEditor
@@ -85,7 +88,13 @@ class ShirePackageTableComponent(val project: Project) {
                 return object : IconButtonTableCellEditor(item, ShireIdeaIcons.Download, "Download") {
                     init {
                         myButton.addActionListener {
+                            ShirelangNotifications.info(project, "Downloading ${item.name}")
                             ShireDownloader(project, item).downloadAndUnzip()
+                            ShirelangNotifications.info(project, "Success Downloaded ${item.name}")
+
+                            // refresh .shire dir
+                            val shireDir = File(project.basePath, ".shire")
+                            LocalFileSystem.getInstance().refreshAndFindFileByPath(shireDir.path)
                             fireEditingStopped()
                         }
                     }
