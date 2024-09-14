@@ -56,7 +56,7 @@ class GoPsiContextVariableProvider : PsiContextVariableProvider {
             PsiContextVariable.RELATED_CLASSES -> {
                 when (underTestElement) {
                     is GoFunctionOrMethodDeclaration -> {
-                        GoPsiUtil.findRelatedTypes(underTestElement)
+                        GoPsiUtil.findRelatedTypes(underTestElement).map { it.text}
                     }
 
                     is GoFile -> {
@@ -65,7 +65,7 @@ class GoPsiContextVariableProvider : PsiContextVariableProvider {
 
                         (functions + methods).flatMap {
                             GoPsiUtil.findRelatedTypes(it)
-                        }
+                        }.map { it.text}
                     }
 
                     else -> emptyList()
