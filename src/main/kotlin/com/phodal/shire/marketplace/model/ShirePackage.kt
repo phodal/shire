@@ -7,6 +7,6 @@ data class ShirePackage(
     val installCmd: String = "",
     val featured: Boolean = false
 ) {
-    // for Jackson
+    // for Jackson, do not remove
     constructor() : this("", "", "")
 }

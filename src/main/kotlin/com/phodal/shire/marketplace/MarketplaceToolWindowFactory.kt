@@ -6,10 +6,8 @@ import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowFactory
 import com.phodal.shire.marketplace.ui.MarketplaceView
 
-
 class MarketplaceToolWindowFactory : ToolWindowFactory, DumbAware {
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
         project.getService(MarketplaceView::class.java).initToolWindow(toolWindow)
     }
-
 }

@@ -15,7 +15,7 @@ import javax.swing.JPanel
 class MarketplaceView(val project: Project) : Disposable {
     private var myToolWindowPanel: JPanel? = null
 
-    private val shirePackageTableComponent = ShireMarketplaceTable(project)
+    private val shirePackageTableComponent = ShireMarketplaceTableView(project)
 
     init {
         myToolWindowPanel = panel {
