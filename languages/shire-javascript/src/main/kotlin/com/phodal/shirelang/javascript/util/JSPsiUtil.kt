@@ -14,12 +14,17 @@ import com.intellij.lang.javascript.psi.stubs.JSImplicitElement
 import com.intellij.lang.javascript.psi.util.JSDestructuringUtil
 import com.intellij.lang.javascript.psi.util.JSStubBasedPsiTreeUtil
 import com.intellij.lang.javascript.psi.util.JSUtils
+import com.intellij.openapi.application.ReadAction
+import com.intellij.openapi.application.runReadAction
+import com.intellij.openapi.diagnostic.logger
+import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ProjectFileIndex
-import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiPolyVariantReference
+import com.intellij.psi.*
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.parents
 import com.phodal.shirecore.project.isInProject
+import java.io.File
+import java.nio.file.Path
 
 object JSPsiUtil {
     fun resolveReference(node: JSReferenceExpression, scope: PsiElement): PsiElement? {
@@ -78,7 +83,6 @@ object JSPsiUtil {
             else -> false
         }
     }
-
 
     fun isExportedFileFunction(element: PsiElement): Boolean {
         when (val parent = element.parent) {
@@ -177,5 +181,104 @@ object JSPsiUtil {
 
         val attributeList = element.attributeList
         return attributeList?.accessType == JSAttributeList.AccessType.PRIVATE
+    }
+
+    /**
+     * In JavaScript/TypeScript a testable element is a function, a class or a variable.
+     *
+     * Function:
+     * ```javascript
+     * function testableFunction() {}
+     * export testableFunction
+     * ```
+     *
+     * Class:
+     * ```javascript
+     * export class TestableClass {}
+     * ```
+     *
+     * Variable:
+     * ```javascript
+     * var functionA = function() {}
+     * export functionA
+     * ```
+     */
+    fun getElementToTest(psiElement: PsiElement): PsiElement? {
+        val jsFunc = PsiTreeUtil.getParentOfType(psiElement, JSFunction::class.java, false)
+        val jsVarStatement = PsiTreeUtil.getParentOfType(psiElement, JSVarStatement::class.java, false)
+        val jsClazz = PsiTreeUtil.getParentOfType(psiElement, JSClass::class.java, false)
+
+        val elementForTests: PsiElement? = when {
+            jsFunc != null -> jsFunc
+            jsVarStatement != null -> jsVarStatement
+            jsClazz != null -> jsClazz
+            else -> null
+        }
+
+        if (elementForTests == null) return null
+
+        return when {
+            JSPsiUtil.isExportedClassPublicMethod(elementForTests) -> elementForTests
+            JSPsiUtil.isExportedFileFunction(elementForTests) -> elementForTests
+            JSPsiUtil.isExportedClass(elementForTests) -> elementForTests
+            else -> {
+                null
+            }
+        }
+    }
+
+    fun getTestFilePath(element: PsiElement): Path? {
+        val testDirectory = suggestTestDirectory(element)
+        if (testDirectory == null) {
+            logger<JSPsiUtil>().warn("Failed to find test directory for: $element")
+            return null
+        }
+
+        val containingFile: PsiFile = runReadAction { element.containingFile } ?: return null
+        val extension = containingFile.virtualFile?.extension ?: return null
+        val elementName = JSPsiUtil.elementName(element) ?: return null
+        val testFile: Path = generateUniqueTestFile(elementName, containingFile, testDirectory, extension).toPath()
+        return testFile
+    }
+
+    /**
+     * Todo: since in JavaScript has different test framework, we need to find the test directory by the framework.
+     */
+    private fun suggestTestDirectory(element: PsiElement): PsiDirectory? =
+        ReadAction.compute<PsiDirectory?, Throwable> {
+            val project: Project = element.project
+            val elementDirectory = element.containingFile
+
+            val parentDir = elementDirectory?.virtualFile?.parent ?: return@compute null
+            val psiManager = PsiManager.getInstance(project)
+
+            val findDirectory = psiManager.findDirectory(parentDir)
+            if (findDirectory != null) {
+                return@compute findDirectory
+            }
+
+            val createChildDirectory = parentDir.createChildDirectory(this, "test")
+            return@compute psiManager.findDirectory(createChildDirectory)
+        }
+
+    private fun generateUniqueTestFile(
+        elementName: String?,
+        containingFile: PsiFile,
+        testDirectory: PsiDirectory,
+        extension: String,
+    ): File {
+        val testPath = testDirectory.virtualFile.path
+        val prefix = elementName ?: containingFile.name.substringBefore('.', "")
+        val nameCandidate = "$prefix.test.$extension"
+        var testFile = File(testPath, nameCandidate)
+
+        var i = 1
+        while (testFile.exists()) {
+            val nameCandidateWithIndex = "$prefix${i}.test.$extension"
+            i++
+            testFile = File(testPath, nameCandidateWithIndex)
+        }
+
+        return testFile
     }
 }

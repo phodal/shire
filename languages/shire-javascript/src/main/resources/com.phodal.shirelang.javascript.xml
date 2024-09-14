@@ -43,5 +43,9 @@
         <shireAutoTesting language="TypeScript"
                           implementationClass="com.phodal.shirelang.javascript.codeedit.JSAutoTestingService"/>
 
+        <shirePsiVariableProvider
+                language="TypeScript"
+                implementationClass="com.phodal.shirelang.javascript.variable.JSPsiContextVariableProvider"/>
+
     </extensions>
 </idea-plugin>
