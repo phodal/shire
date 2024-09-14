@@ -3,6 +3,7 @@ package com.phodal.shirelang.go.util
 import com.goide.psi.*
 import com.intellij.openapi.roots.ProjectFileIndex
 import com.intellij.psi.PsiElement
+import com.intellij.util.concurrency.annotations.RequiresReadLock
 
 object GoPsiUtil {
     fun getDeclarationName(psiElement: PsiElement): String? {
@@ -29,7 +30,7 @@ object GoPsiUtil {
         }
     }
 
-
+    @RequiresReadLock
     fun findRelatedTypes(declaration: GoFunctionOrMethodDeclaration): List<GoTypeSpec> {
         val signature = declaration.signature ?: return emptyList()
 

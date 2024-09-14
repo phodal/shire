@@ -53,8 +53,27 @@ class GoPsiContextVariableProvider : PsiContextVariableProvider {
             }
 
             PsiContextVariable.CURRENT_METHOD_CODE -> psiElement.text
-            PsiContextVariable.RELATED_CLASSES -> TODO()
-            PsiContextVariable.SIMILAR_TEST_CASE -> CodeSmellBuilder.collectElementProblemAsSting(underTestElement, project, editor)
+            PsiContextVariable.RELATED_CLASSES -> {
+                when (underTestElement) {
+                    is GoFunctionOrMethodDeclaration -> {
+                        GoPsiUtil.findRelatedTypes(underTestElement)
+                    }
+
+                    is GoFile -> {
+                        val functions = underTestElement.functions
+                        val methods = underTestElement.methods
+
+                        (functions + methods).flatMap {
+                            GoPsiUtil.findRelatedTypes(it)
+                        }
+                    }
+
+                    else -> emptyList()
+                }
+            }
+
+            PsiContextVariable.SIMILAR_TEST_CASE -> TODO()
+
             PsiContextVariable.IMPORTS -> {
                 val importList = PsiTreeUtil.getChildrenOfTypeAsList(underTestFile, GoImportDeclaration::class.java)
                 importList.map { it.text }
@@ -65,18 +84,26 @@ class GoPsiContextVariableProvider : PsiContextVariableProvider {
                 val name = GoPsiUtil.getDeclarationName(underTestElement) ?: return ""
                 toTestFileName(name)
             }
+
             PsiContextVariable.UNDER_TEST_METHOD_CODE -> {
                 when (underTestElement) {
                     is GoFunctionOrMethodDeclaration -> psiElement.text
                     else -> psiElement.text
                 }
             }
+
             PsiContextVariable.FRAMEWORK_CONTEXT -> return collectFrameworkContext(psiElement, project)
-            PsiContextVariable.CODE_SMELL -> ""
+            PsiContextVariable.CODE_SMELL -> CodeSmellBuilder.collectElementProblemAsSting(
+                underTestElement,
+                project,
+                editor
+            )
+
             PsiContextVariable.METHOD_CALLER -> {
                 if (psiElement !is GoFunctionOrMethodDeclaration) return ""
                 ""
             }
+
             PsiContextVariable.CALLED_METHOD -> TODO()
             PsiContextVariable.SIMILAR_CODE -> TODO()
             PsiContextVariable.STRUCTURE -> null
