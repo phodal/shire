@@ -11,6 +11,7 @@ import com.intellij.testIntegration.TestFinderHelper
 import com.phodal.shirecore.provider.variable.PsiContextVariableProvider
 import com.phodal.shirecore.provider.variable.impl.CodeSmellBuilder
 import com.phodal.shirecore.provider.variable.model.PsiContextVariable
+import com.phodal.shirecore.search.similar.SimilarChunksSearch
 import com.phodal.shirelang.go.codemodel.GoClassStructureProvider
 import com.phodal.shirelang.go.codemodel.GoMethodStructureProvider
 import com.phodal.shirelang.go.util.GoPsiUtil
@@ -104,9 +105,22 @@ class GoPsiContextVariableProvider : PsiContextVariableProvider {
                 ""
             }
 
-            PsiContextVariable.CALLED_METHOD -> TODO()
+            PsiContextVariable.CALLED_METHOD -> return SimilarChunksSearch.createQuery(psiElement) ?: ""
             PsiContextVariable.SIMILAR_CODE -> TODO()
-            PsiContextVariable.STRUCTURE -> null
+            PsiContextVariable.STRUCTURE -> {
+                when (underTestElement) {
+                    is GoTypeDeclaration,
+                    is GoTypeSpec,
+                        -> {
+                        GoClassStructureProvider().build(underTestElement, true)?.toString() ?: ""
+                    }
+
+                    is GoFunctionOrMethodDeclaration -> GoMethodStructureProvider()
+                        .build(underTestElement, true, true)
+                        ?.toString() ?: ""
+                    else -> ""
+                }
+            }
         } ?: ""
     }
 
