@@ -38,11 +38,11 @@ class WiremockFunctionProvider : ToolchainFunctionProvider, ConfigurationRunner 
 
                 val mockFilepath = args.first()
                 val mockFile = project.baseDir.findFileByRelativePath(mockFilepath.toString())
-                    ?: throw IllegalArgumentException("ShireError[Wiremock]: No file found")
+                    ?: throw IllegalArgumentException("ShireError[Wiremock]: No file found: $mockFilepath")
 
                 val jsonFile = runReadAction {
                     PsiManager.getInstance(project).findFile(mockFile) as? JsonFile
-                } ?: throw IllegalArgumentException("ShireError[Wiremock]: No file found")
+                } ?: throw IllegalArgumentException("ShireError[Wiremock]: No JsonFile found: $mockFilepath")
 
                 runMock(project, jsonFile)
             }
@@ -62,6 +62,7 @@ class WiremockFunctionProvider : ToolchainFunctionProvider, ConfigurationRunner 
         runManager.selectedConfiguration = configurationSettings
 
         configurationSettings.isActivateToolWindowBeforeRun = true
+        configurationSettings.isTemporary = true
 
         val runContext = createRunContext()
         executeRunConfigurations(null, configurationSettings, runContext, null, null)
