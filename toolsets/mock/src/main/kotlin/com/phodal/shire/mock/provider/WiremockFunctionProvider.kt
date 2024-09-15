@@ -62,6 +62,7 @@ class WiremockFunctionProvider : ToolchainFunctionProvider, ConfigurationRunner 
         runManager.selectedConfiguration = configurationSettings
 
         configurationSettings.isActivateToolWindowBeforeRun = true
+        configurationSettings.isFocusToolWindowBeforeRun = true
         configurationSettings.isTemporary = true
 
         val runContext = createRunContext()

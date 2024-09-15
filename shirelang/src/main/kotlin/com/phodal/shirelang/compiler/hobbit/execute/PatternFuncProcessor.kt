@@ -199,22 +199,25 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             is PatternActionFunc.ToolchainFunction -> {
                 val args: MutableList<Any> = action.args.toMutableList()
                 /// add lastResult at args first
-                when(lastResult) {
+                when (lastResult) {
                     is String -> {
-                        args.add(0, lastResult.fillVariable(variableTable))
+                        args.add(lastResult.fillVariable(variableTable))
                     }
+
                     is List<*> -> {
                         if (lastResult.isNotEmpty()) {
-                            args.add(0, lastResult)
+                            args.add(lastResult)
                         }
                     }
+
                     is Array<*> -> {
                         if (lastResult.isNotEmpty()) {
-                            args.add(0, lastResult)
+                            args.add(lastResult)
                         }
                     }
+
                     else -> {
-                        args.add(0, lastResult)
+                        args.add(lastResult)
                     }
                 }
 
@@ -227,7 +230,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
 
                 ToolchainFunctionProvider.provide(myProject, action.funcName)
                     ?.execute(myProject, action.funcName, result, variableTable)
-                    ?: logger<PatternActionProcessor>().error("TODO for User custom: ${action.funcName}")
+                    ?: logger<PatternActionProcessor>().error("No match function: ${action.funcName}, If you using toolchain function, visit: https://shire.phodal.com/shire/shire-toolchain-function for more. TODO for User custom.")
             }
 
             is PatternActionFunc.Notify -> {
@@ -381,6 +384,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
 
                 JsonPathFunction.parse(jsonStr, action) ?: jsonStr
             }
+
             is PatternActionFunc.Destroy -> TODO()
         }
     }
