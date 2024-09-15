@@ -1,11 +1,9 @@
 package com.phodal.shirelang.compiler.patternaction
 
 import com.intellij.openapi.diagnostic.logger
-import com.intellij.openapi.util.NlsSafe
 import com.phodal.shirelang.compiler.hobbit.ast.CaseKeyValue
 import com.phodal.shirelang.compiler.hobbit.ast.Statement
 import com.phodal.shirelang.compiler.hobbit.ast.VariableElement
-import com.phodal.shirelang.compiler.parser.HobbitHoleParser
 
 /**
  * The `PatternActionFunc` is a sealed class in Kotlin that represents a variety of pattern action functions.
@@ -106,7 +104,7 @@ sealed class PatternActionFunc(val type: PatternActionFuncType) {
     /**
      * Execute a shire script
      */
-    class ExecuteShire(val filename: String, val variableNames: Array<String>) :
+    class Execute(val filename: String, val variableNames: Array<String>) :
         PatternActionFunc(PatternActionFuncType.EXECUTE)
 
     /**
@@ -260,7 +258,7 @@ sealed class PatternActionFunc(val type: PatternActionFuncType) {
                 PatternActionFuncType.EXECUTE -> {
                     val first = args.firstOrNull() ?: ""
                     val rest = args.drop(1).toTypedArray()
-                    ExecuteShire(first, rest)
+                    Execute(first, rest)
                 }
 
                 PatternActionFuncType.NOTIFY -> Notify(args[0])

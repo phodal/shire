@@ -320,7 +320,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                 CaptureProcessor.execute(myProject, action.fileName, action.nodeType)
             }
 
-            is PatternActionFunc.ExecuteShire -> {
+            is PatternActionFunc.Execute -> {
                 /// don't need to fill variable for filename
                 val variableNames: Array<String> = action.variableNames.map {
                     if (it.startsWith("\$")) {
@@ -330,22 +330,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                     }
                 }.toTypedArray()
 
-                try {
-                    val file = runReadAction {
-                        ShireActionStartupActivity.obtainShireFiles(myProject).find {
-                            it.name == action.filename
-                        }
-                    }
-
-                    if (file == null) {
-                        logger.warn("execute shire error: file not found")
-                        return ""
-                    }
-
-                    ShireRunFileAction.suspendExecuteFile(myProject, variableNames, variableTable, file) ?: ""
-                } catch (e: Exception) {
-                    logger.warn("execute shire error: $e")
-                }
+                ExecuteProcessor.execute(myProject, action.filename, variableNames, variableTable)
             }
 
             is PatternActionFunc.Batch -> {
