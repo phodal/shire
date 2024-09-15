@@ -33,14 +33,14 @@ class ShireLifecycleTest : BasePlatformTestCase() {
         val funcNode = hole.onStreamingEnd
 
         assertEquals(funcNode.size, 4)
-        assertEquals(funcNode[0].funName, "parseCode")
+        assertEquals(funcNode[0].funcName, "parseCode")
         assertEquals(funcNode[0].args.size, 0)
 
-        assertEquals(funcNode[1].funName, "saveFile")
+        assertEquals(funcNode[1].funcName, "saveFile")
         assertEquals(funcNode[1].args[0], "api.py")
 
-        assertEquals(funcNode[2].funName, "verifyCode")
-        assertEquals(funcNode[3].funName, "runCode")
+        assertEquals(funcNode[2].funcName, "verifyCode")
+        assertEquals(funcNode[3].funcName, "runCode")
 
         val handleContext = PostProcessorContext(currentLanguage = ShireLanguage.INSTANCE, editor = null)
         execute(project, funcNode, handleContext, null)
@@ -49,7 +49,7 @@ class ShireLifecycleTest : BasePlatformTestCase() {
     @TestOnly
     fun execute(project: Project, funcNodes: List<PostProcessorFuncSign>, handleContext: PostProcessorContext, console: ConsoleView?) {
         funcNodes.forEach { funNode ->
-            val handler = handler(funNode.funName)
+            val handler = handler(funNode.funcName)
             if (handler != null) {
                 handler.setup(handleContext)
                 handler.execute(project, handleContext, console, funNode.args)

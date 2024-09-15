@@ -5,7 +5,7 @@ import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.project.Project
 
 data class PostProcessorFuncSign(
-    val funName: String,
+    val funcName: String,
     val args: List<Any>,
 )
 

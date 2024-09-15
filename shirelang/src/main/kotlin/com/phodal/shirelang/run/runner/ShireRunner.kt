@@ -102,9 +102,9 @@ class ShireRunner(
                 try {
                     LlmProvider.provider(project)?.stream(context.finalPrompt, "", false)
                         ?.cancelWithConsole(console)?.collect {
-                        llmResult.append(it)
-                        handler.onChunk.invoke(it)
-                    } ?: console?.print(
+                            llmResult.append(it)
+                            handler.onChunk.invoke(it)
+                        } ?: console?.print(
                         "ShireRunner:" + ShireBundle.message("shire.llm.notfound"),
                         ConsoleViewContentType.ERROR_OUTPUT
                     )
@@ -272,8 +272,10 @@ class ShireRunner(
             PostProcessorContext.updateContextAndVariables(it)
         }
 
-        hobbitHole?.setupStreamingEndProcessor(project, context)
+        val vars: MutableMap<String, Any?> = compiledVariables.toMutableMap()
+        hobbitHole?.executeBeforeStreamingProcessor(project, context, console, vars)
 
+        hobbitHole?.setupStreamingEndProcessor(project, context)
     }
 
     @Synchronized

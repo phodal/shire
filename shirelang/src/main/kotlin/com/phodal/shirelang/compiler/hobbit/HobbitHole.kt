@@ -15,6 +15,7 @@ import com.phodal.shirecore.middleware.PostProcessor
 import com.phodal.shirecore.middleware.PostProcessorFuncSign
 import com.phodal.shirecore.middleware.select.SelectElementStrategy
 import com.phodal.shirecore.middleware.select.SelectedEntry
+import com.phodal.shirecore.workerThread
 import com.phodal.shirelang.compiler.parser.HobbitHoleParser
 import com.phodal.shirelang.compiler.hobbit.base.Smials
 import com.phodal.shirelang.compiler.hobbit.ast.FrontMatterType
@@ -22,8 +23,12 @@ import com.phodal.shirelang.compiler.hobbit.ast.MethodCall
 import com.phodal.shirelang.compiler.hobbit.ast.action.PatternAction
 import com.phodal.shirelang.compiler.hobbit.ast.TaskRoutes
 import com.phodal.shirelang.compiler.hobbit.ast.action.DirectAction
+import com.phodal.shirelang.compiler.hobbit.execute.FunctionStatementProcessor
 import com.phodal.shirelang.compiler.patternaction.VariableTransform
 import com.phodal.shirelang.psi.ShireFile
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 /**
  * Hobbit Hole 用于定义 IDE 交互逻辑与用户数据的流处理。
@@ -223,7 +228,7 @@ open class HobbitHole(
 
     fun setupStreamingEndProcessor(project: Project, context: PostProcessorContext) {
         onStreamingEnd.forEach { funcNode ->
-            PostProcessor.handler(funcNode.funName)?.setup(context)
+            PostProcessor.handler(funcNode.funcName)?.setup(context)
         }
     }
 
@@ -236,11 +241,11 @@ open class HobbitHole(
         console?.print("\n", ConsoleViewContentType.SYSTEM_OUTPUT)
         onStreamingEnd.forEach { funcNode ->
             if (console?.isCanceled() == true) return@forEach
-            console?.print("endExecute: ${funcNode.funName}\n", ConsoleViewContentType.SYSTEM_OUTPUT)
-            val postProcessor = PostProcessor.handler(funcNode.funName)
+            console?.print("endExecute: ${funcNode.funcName}\n", ConsoleViewContentType.SYSTEM_OUTPUT)
+            val postProcessor = PostProcessor.handler(funcNode.funcName)
             if (postProcessor == null) {
                 // TODO: change execute
-                console?.print("Not found function: ${funcNode.funName}\n", ConsoleViewContentType.SYSTEM_OUTPUT)
+                console?.print("Not found function: ${funcNode.funcName}\n", ConsoleViewContentType.SYSTEM_OUTPUT)
                 return@forEach
             }
 
@@ -264,6 +269,26 @@ open class HobbitHole(
 
             val lastResult = postProcessor.execute(project, context, console, args)
             context.lastTaskOutput = lastResult as? String
+        }
+
+        return context.lastTaskOutput
+    }
+
+    fun executeBeforeStreamingProcessor(
+        myProject: Project,
+        context: PostProcessorContext,
+        console: ConsoleView?,
+        compiledVariables: MutableMap<String, Any?>,
+    ): Any? {
+        if (console?.isCanceled() == true) return null
+        if (beforeStreaming == null) return null
+        if (beforeStreaming.processors.isEmpty()) return null
+
+        CoroutineScope(workerThread).launch {
+            FunctionStatementProcessor(myProject, this@HobbitHole).execute(
+                beforeStreaming.processors,
+                compiledVariables
+            )
         }
 
         return context.lastTaskOutput
@@ -359,7 +384,7 @@ open class HobbitHole(
                 buildVariableTransformations(it.toValue())
             } ?: mutableMapOf()
 
-            val beforeStreaming:  DirectAction?  = if (frontMatterMap[BEFORE_STREAMING] != null) {
+            val beforeStreaming: DirectAction? = if (frontMatterMap[BEFORE_STREAMING] != null) {
                 DirectAction.from(frontMatterMap[BEFORE_STREAMING]!!)
             } else {
                 null
