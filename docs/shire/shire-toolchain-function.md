@@ -7,7 +7,8 @@ nav_order: 7
 
 # Toolchain Function
 
-> Toolchain 函数默认遵循 Pattern-Action 模式，用于定义数据处理逻辑。在接受参数时，默认的第一个参数为上下文变量，即 `lastResult`
+> Toolchain 函数默认遵循 Pattern-Action 模式，用于定义数据处理逻辑。在接受参数时，默认的第一个参数为上下文变量，即
+`lastResult`
 
 ## Git
 
@@ -49,4 +50,53 @@ variables:
 根据如下的信息，生成 SQL：
 
 $relatedTableInfo
+```
+
+## WireMock
+
+支持的函数：
+
+- `mock`，启动 WireMock 服务，参数 1：`filePath`。默认 8080 端口。
+
+### 示例
+
+```shire
+---
+name: "sample"
+variables:
+  "mock": /any/ { mock("samples/mock/blog_v0-stubs.json") }
+---
+```
+
+其中的 `samples/mock/blog_v0-stubs.json` 文件内容如下：
+
+```json
+{
+  "mappings": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/blog",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$.title"
+          },
+          {
+            "matchesJsonPath": "$.content"
+          },
+          {
+            "matchesJsonPath": "$.author"
+          }
+        ]
+      },
+      "response": {
+        "status": 201,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": "{\"message\": \"Blog post created successfully\", \"id\": 1}"
+      }
+    }
+  ]
+}
 ```
