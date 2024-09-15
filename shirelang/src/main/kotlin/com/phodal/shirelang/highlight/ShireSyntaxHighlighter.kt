@@ -38,6 +38,7 @@ class ShireSyntaxHighlighter : SyntaxHighlighter {
 
             // lifecycle
             ShireTypes.WHEN,
+            ShireTypes.BEFORE_STREAMING,
             ShireTypes.ON_STREAMING,
             ShireTypes.ON_STREAMING_END,
             ShireTypes.AFTER_STREAMING,

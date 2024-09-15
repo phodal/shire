@@ -14,7 +14,7 @@ import com.phodal.shirelang.psi.ShireFuncCall
 import com.phodal.shirelang.psi.ShireTypes
 
 class ShireGotoDeclarationHandler : GotoDeclarationHandlerBase(), GotoDeclarationHandler {
-    private val validFunctionNames = setOf("execute", "thread", "saveFile", "batch")
+    private val validFunctionNames = setOf("execute", "thread", "saveFile", "batch", "mock")
 
     override fun getGotoDeclarationTarget(element: PsiElement?, editor: Editor?): PsiElement? {
         if (element !is LeafPsiElement) return null
