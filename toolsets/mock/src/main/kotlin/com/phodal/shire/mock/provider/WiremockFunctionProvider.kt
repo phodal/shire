@@ -1,8 +1,9 @@
-package com.phodal.shire.wiremock.provider
+package com.phodal.shire.mock.provider
 
 import com.intellij.execution.RunManager
 import com.intellij.execution.actions.ConfigurationContext
 import com.intellij.json.psi.JsonFile
+import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiManager
 import com.phodal.shirecore.provider.function.ToolchainFunctionProvider
@@ -39,28 +40,32 @@ class WiremockFunctionProvider : ToolchainFunctionProvider, ConfigurationRunner 
                 val mockFile = project.baseDir.findFileByRelativePath(mockFilepath.toString())
                     ?: throw IllegalArgumentException("ShireError[Wiremock]: No file found")
 
-                val jsonFile = PsiManager.getInstance(project).findFile(mockFile) as? JsonFile
-                    ?: throw IllegalArgumentException("ShireError[Wiremock]: No file found")
+                val jsonFile = runReadAction {
+                    PsiManager.getInstance(project).findFile(mockFile) as? JsonFile
+                } ?: throw IllegalArgumentException("ShireError[Wiremock]: No file found")
 
                 runMock(project, jsonFile)
             }
         }
     }
 
-    private fun runMock(project: Project, mockFile: JsonFile): Any {
-        val configurationSettings =
-            ConfigurationContext(mockFile).configurationsFromContext?.firstOrNull()?.configurationSettings
-                ?: return "Please install Wiremock plugin"
+    private fun runMock(project: Project, configFile: JsonFile): Any {
+        val configurationSettings = runReadAction {
+            ConfigurationContext(configFile).configurationsFromContext?.firstOrNull()?.configurationSettings
+        } ?: throw IllegalArgumentException("ShireError[Wiremock]: Please install Wiremock plugin")
+
+        if (!configurationSettings.name.startsWith("WireMock")) {
+            throw IllegalArgumentException("ShireError[Wiremock]: No a valid WireMock configure found")
+        }
 
         val runManager = RunManager.getInstance(project)
-//        val configure = runManager.allConfigurationsList.firstOrNull() ?: return "Please install Wiremock plugin"
         runManager.selectedConfiguration = configurationSettings
 
         configurationSettings.isActivateToolWindowBeforeRun = true
 
         val runContext = createRunContext()
-        executeRunConfigures(project, configurationSettings, runContext, null, null)
+        executeRunConfigurations(null, configurationSettings, runContext, null, null)
 
-        return "ShireError[Wiremock]: No file found"
+        return "Done"
     }
 }

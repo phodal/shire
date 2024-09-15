@@ -154,8 +154,8 @@ object HobbitHoleParser {
     }
 
     private fun parseLogicAndExpr(child: ShireLogicalAndExpr): LogicalExpression? {
-        val left = child.exprList.firstOrNull() ?: return null
-        val right = child.exprList.lastOrNull() ?: return null
+        val left = child.exprList?.firstOrNull() ?: return null
+        val right = child.exprList?.lastOrNull() ?: return null
 
         val leftStmt = parseExpr(left) ?: return null
         val rightStmt = parseExpr(right) ?: return null

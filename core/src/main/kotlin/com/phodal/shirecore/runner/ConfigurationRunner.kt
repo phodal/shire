@@ -59,21 +59,22 @@ interface ConfigurationRunner {
      * @param indicator The progress indicator for the execution.
      */
     fun executeRunConfigurations(
-        connection: MessageBusConnection,
+        connection: MessageBusConnection?,
         configurations: RunnerAndConfigurationSettings,
         runContext: RunContext,
         testEventsListener: SMTRunnerEventsListener?,
         indicator: ProgressIndicator?,
     ) {
         testEventsListener?.let {
-            connection.subscribe(SMTRunnerEventsListener.TEST_STATUS, it)
+            connection?.subscribe(SMTRunnerEventsListener.TEST_STATUS, it)
         }
-        Disposer.register(connection, runContext)
+        connection?.let {
+            Disposer.register(runContext, it)
+        }
 
         runInEdt {
-            connection.subscribe(ExecutionManager.EXECUTION_TOPIC, CheckExecutionListener(runnerId(), runContext))
-
             try {
+                connection?.subscribe(ExecutionManager.EXECUTION_TOPIC, CheckExecutionListener(runnerId(), runContext))
                 configurations.startRunConfigurationExecution(runContext)
             } catch (e: ExecutionException) {
                 runContext.latch.countDown()
