@@ -16,3 +16,15 @@ beforeStreaming: { mock("docs/mock_v0-stubs.json") }
 ---
 
 ```
+
+### 示例：执行 Gradle Task
+
+```shire
+---
+name: "Blog.sample"
+beforeStreaming: { execute(":bootRun") }
+onStreamingEnd: { parseCode | saveFile | openFile | runCode }
+---
+
+hi
+```

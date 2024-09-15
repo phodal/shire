@@ -268,9 +268,9 @@ class ShireRunner(
             editor = editor,
             compiledVariables = compiledVariables,
             llmModelName = hobbitHole?.model
-        ).also {
-            PostProcessorContext.updateContextAndVariables(it)
-        }
+        )
+
+        PostProcessorContext.updateContextAndVariables(context)
 
         val vars: MutableMap<String, Any?> = compiledVariables.toMutableMap()
         hobbitHole?.executeBeforeStreamingProcessor(project, context, console, vars)
