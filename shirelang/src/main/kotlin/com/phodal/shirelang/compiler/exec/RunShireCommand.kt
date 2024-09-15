@@ -27,7 +27,7 @@ class RunShireCommand(val myProject: Project, private val argument: String) : Sh
             return "Task run successfully: $argument"
         }
 
-        val virtualFile = myProject.lookupFile(argument.trim()) ?: return "$SHIRE_ERROR: File not found: $argument"
+        val virtualFile = myProject.lookupFile(argument.trim()) ?: return "$SHIRE_ERROR: [RunShireCommand] File not found: $argument"
         try {
             val psiFile: PsiFile =
                 PsiManager.getInstance(myProject).findFile(virtualFile)

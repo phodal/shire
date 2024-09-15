@@ -59,12 +59,14 @@ object ThreadProcessor {
                     is Array<*> -> {
                         output.joinToString("\n") {
                             variableTable["output"] = it
-                            executeTask(myProject, variablesName, variableTable, psiFile) ?: "No run service found"
+                            executeTask(myProject, variablesName, variableTable, psiFile)
+                                ?: "$SHIRE_ERROR - Thread: No run service found"
                         }
                     }
 
                     else -> {
-                        return executeTask(myProject, variablesName, variableTable, psiFile) ?: "No run service found"
+                        return executeTask(myProject, variablesName, variableTable, psiFile)
+                            ?: "$SHIRE_ERROR - Thread: No run service found"
                     }
                 }
             }
