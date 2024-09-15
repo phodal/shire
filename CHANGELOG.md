@@ -1,11 +1,75 @@
-# [](https://github.com/phodal/shire/compare/v0.7.3...v) (2024-09-09)
+# [](https://github.com/phodal/shire/compare/v0.7.4...v) (2024-09-15)
 
 ## [Unreleased]
 
-## ## [0.7.3](https://github.com/phodal/shire/compare/v0.7.2...v[0.7.3]) (2024-09-09)
+## [0.8.0] - 2024-09-15
 
 ### Bug Fixes
 
+- **core:** update file path validation regex and related tests ([3ab4e9f](https://github.com/phodal/shire/commit/3ab4e9f4e8d42643170141ecc4d0538612907def))
+- **database:** update rror messages ([8b4e932](https://github.com/phodal/shire/commit/8b4e932e12cef7a6a2df78b8c76303ceaff5c15a))
+- **llm:** add configuration update from state in OpenAILikeProvider [#85](https://github.com/phodal/shire/issues/85) ([56a1961](https://github.com/phodal/shire/commit/56a19612a4e4fb94471d4a63b876d7b1b6b7d562))
+- **middleware:** 修正文件保存处理器，避免非法文件名 ([35785bd](https://github.com/phodal/shire/commit/35785bdb980f28ba61d30c7827a29d5f33658275))
+- **patternaction:** 修复PatternActionFunc中的空指针异常 ([e048ab9](https://github.com/phodal/shire/commit/e048ab9c058393ad6a9aa509ceeda52c896357ea))
+- **PatternFuncProcessor:** enhance path resolution and refactor tests [#83](https://github.com/phodal/shire/issues/83) ([a81c603](https://github.com/phodal/shire/commit/a81c6032b36f295c2c828010546bae61d64d600f))
+- **PatternFuncProcessor:** remove joinToString from array operations [#83](https://github.com/phodal/shire/issues/83) ([9e251f7](https://github.com/phodal/shire/commit/9e251f7734affa2cc24c1d8be59be97a5bd48f60))
+- **runner:** adjust execution subscription order in ConfigurationRunner ([8ba7447](https://github.com/phodal/shire/commit/8ba7447e5e5570281d370a38917a089cdd67c5d3))
+- **runner:** LlmProvider is still working after canceling the shire process ([d458e1f](https://github.com/phodal/shire/commit/d458e1f88e0ea621b77e593b6b1dc66aba7e7974))
+- **runner:** 简化输出LLM模型名 ([06ddd76](https://github.com/phodal/shire/commit/06ddd76fca69ca6782ed3bc09ed4d2e196c27295))
+- **shirelang:** add empty intentions check and change error level in ShireIntentionHelper ([badc42c](https://github.com/phodal/shire/commit/badc42cb9e6f5dc09326ee0ffdb773fa4a76fe15))
+- **shirelang:** refactor array handling and add regression test [#83](https://github.com/phodal/shire/issues/83) ([1f4c8fe](https://github.com/phodal/shire/commit/1f4c8fe8d96e65959f3c0d61cb6899febb87edf6))
+- **Wiremock:** 添加文件路径到 Wiremock 错误信息中，以便于调试 ([2a888cd](https://github.com/phodal/shire/commit/2a888cd75703c161bb009e0569276557862eae5e))
+- 在ShireProcessHandler中添加异常日志记录 ([28d6dea](https://github.com/phodal/shire/commit/28d6dea0c4650b6254079ed2fee5af6b78ccfe70))
+
+### Features
+
+- add basic batch processor of content ([ec4fa1c](https://github.com/phodal/shire/commit/ec4fa1c58d2053fd22bfdea8c87a318473879d96))
+- add more psiUtil for helper [#89](https://github.com/phodal/shire/issues/89) ([b4fa3eb](https://github.com/phodal/shire/commit/b4fa3eb59c6ab2b64430392bbf4aa5090f283796))
+- **batch-processing:** implement batch processing functionality ([f38dbc2](https://github.com/phodal/shire/commit/f38dbc2915891945fae99f245e2d3425142bd5cc))
+- **batch:** add custom variables support to ShireTemplateCompiler ([6ce8430](https://github.com/phodal/shire/commit/6ce8430ca9a35e272824f43e9ad2b159b7acb9e9))
+- **batch:** add goto decl ([9412afb](https://github.com/phodal/shire/commit/9412afbdf5ff6c38999c603bcd12d4a0055442be))
+- **beforeStreaming:** refactor function naming and add coroutine support ([1a1bd30](https://github.com/phodal/shire/commit/1a1bd30964bf477dcdd038211f2b4b3e13625fc1))
+- **codemodel:** enhance class name extraction in DirectoryStructure [#89](https://github.com/phodal/shire/issues/89) ([dfb02b3](https://github.com/phodal/shire/commit/dfb02b320cfc3fe28528fb513053b47cd2b555f4))
+- **compiler:** add Batch and Destroy functions to PatternActionFunc ([e32fc61](https://github.com/phodal/shire/commit/e32fc61cebd44597c09beba059c32e904c5592fe))
+- **compiler:** refactor action classes and add beforeStreaming functionality ([461361d](https://github.com/phodal/shire/commit/461361df471d668cf4d6748cf53d150306501319))
+- **execute:** enable for gradle run support ([9521375](https://github.com/phodal/shire/commit/95213753eaeaf10ab4da3f17e72a4e0d92deec7d))
+- **git:** add git commit function support ([820ec89](https://github.com/phodal/shire/commit/820ec89991e313caf5d9aa77a7039114c3a4e726))
+- **git:** enhance commitChanges function in GitFunctionProvider ([fb7c286](https://github.com/phodal/shire/commit/fb7c286f31bee87565ac83388ac932becfee7daa))
+- **go:** add golang tool context provider [#89](https://github.com/phodal/shire/issues/89) ([6058a5a](https://github.com/phodal/shire/commit/6058a5a680a2bb5886a810884e90beb6f47ef921))
+- **GoLanguageProvider:** add method to get Go version [#89](https://github.com/phodal/shire/issues/89) ([56478b5](https://github.com/phodal/shire/commit/56478b52b0d367acef7bb984cf3db3f743b3ae75))
+- **GoPsiContextVariableProvider:** map related types to text [#89](https://github.com/phodal/shire/issues/89) ([cce91ed](https://github.com/phodal/shire/commit/cce91ed81c4be2b9a80412e8fa9d8bac10b5f28e))
+- init downloader for marketplace [#86](https://github.com/phodal/shire/issues/86) ([9aaa430](https://github.com/phodal/shire/commit/9aaa43010dca2b55655e32d3ae46961851367658))
+- **javascript:** add variable provider and utility functions ([1e5ff4e](https://github.com/phodal/shire/commit/1e5ff4e2a7084720c8a9ba3b40a841b418140a81))
+- **lifecycle:** add 'beforeStreaming' and 'mock' functions ([293d361](https://github.com/phodal/shire/commit/293d3616296451a8e892a9bb41fe082a8c10cdef))
+- **marketplace:** add download notifications and refresh functionality [#86](https://github.com/phodal/shire/issues/86) ([97482aa](https://github.com/phodal/shire/commit/97482aa964ee633224ca58e55bea44b66178dc4b))
+- **marketplace:** add MarketplacePanel UI and functionality [#86](https://github.com/phodal/shire/issues/86) ([ece56e0](https://github.com/phodal/shire/commit/ece56e07f267f4ea1f7fe85c9165549e21621ab7))
+- **marketplace:** add MarketplaceToolWindowFactory and ShireIdeaIcons [#86](https://github.com/phodal/shire/issues/86) ([70ef324](https://github.com/phodal/shire/commit/70ef324d15432ab190d25b8ebe8304f65281c5c4))
+- **marketplace:** add refresh button and refactor UI layout [#86](https://github.com/phodal/shire/issues/86) ([f996913](https://github.com/phodal/shire/commit/f99691388694d64c8ecac7e652b3f1f18c50af63))
+- **marketplace:** change UI anchor and update error messages [#86](https://github.com/phodal/shire/issues/86) ([a34fd1c](https://github.com/phodal/shire/commit/a34fd1c1cf7c9ccc56a981a49d5c7e9ef7503f8d))
+- **marketplace:** enhance ShirePackage table with download functionality [#86](https://github.com/phodal/shire/issues/86) ([e868010](https://github.com/phodal/shire/commit/e868010c94e958df6b465e28b12a027212cef31a))
+- **marketplace:** refactor MarketplacePanel and add table view [#86](https://github.com/phodal/shire/issues/86) ([7088492](https://github.com/phodal/shire/commit/70884927f878b2ca193c45e5781a9ea86a7e894a))
+- **marketplace:** refactor table component and add install action [#86](https://github.com/phodal/shire/issues/86) ([fc18040](https://github.com/phodal/shire/commit/fc18040664e54dce91189b57c81ecad45739e7e7))
+- **marketplace:** update ShireMarketplaceTable to fetch data from API [#86](https://github.com/phodal/shire/issues/86) ([bcecadb](https://github.com/phodal/shire/commit/bcecadbe2c19e227b42ee6dc858b1610146fa1c7))
+- **mock:** init for run mock serivce ([ec41dfb](https://github.com/phodal/shire/commit/ec41dfbe31dd8dafa2c026a8d26226d20f503369))
+- **mock:** init mock server for testing apis ([6813876](https://github.com/phodal/shire/commit/6813876203fdb4c313d07895cae9d63939666846))
+- **mock:** update Wiremock provider path and improve error handling ([2389f53](https://github.com/phodal/shire/commit/2389f53b53c7db0a3b47826fae412574637955dd))
+- **patternaction:** refactor pattern action function parsing ([4b6e13a](https://github.com/phodal/shire/commit/4b6e13a9f0c5ed7bc5243ba0a6ffef0ff0e89bf7))
+- **PatternFuncProcessor:** change argument addition order and improve error message ([9d2c1bc](https://github.com/phodal/shire/commit/9d2c1bc22fcde20caf3ad34ed52dd24ae6dbc797))
+- **python:** init py psi util ([c441f62](https://github.com/phodal/shire/commit/c441f626132224d34a375bbcb5fb19e0bb68ca84))
+- **run-service:** wrap operations in runReadAction in ShirePythonRunService.kt ([478a3d9](https://github.com/phodal/shire/commit/478a3d990c23cb5d30520cf876fe886c3cd2499f))
+- **search:** disable semantic embedding functionality ([3560a23](https://github.com/phodal/shire/commit/3560a23c1481f9aeddc71bbc86c8739094387345))
+- **shire-go:** add GoPsiContextVariableProvider for Go language support [#89](https://github.com/phodal/shire/issues/89) ([aefdadb](https://github.com/phodal/shire/commit/aefdadbb28e8fa65799445d796f082b19db91c99))
+- **shire-go:** add iota detection in Go expressions and constants [#89](https://github.com/phodal/shire/issues/89) ([33216d7](https://github.com/phodal/shire/commit/33216d77c9e2d4fb510d5f8f8f74ebfeae92e32c))
+- **shire-go:** add support for Go language [#89](https://github.com/phodal/shire/issues/89) ([ab09a6f](https://github.com/phodal/shire/commit/ab09a6fe57586d1ac65893346e18373e6bac8af1))
+- **shire-go:** enhance related classes and code smell handling in GoPsiContextVariableProvider [#89](https://github.com/phodal/shire/issues/89) ([8d91a88](https://github.com/phodal/shire/commit/8d91a88943e350e5365ceb6705f6ceeee42bf5e2))
+- **variable-provider:** enhance context variable handling in JS and Go ([d344944](https://github.com/phodal/shire/commit/d34494437238f58c06c2e4c6c403be02735faf9a))
+- 添加 LLM 提供者未找到的错误信息 ([fde5a88](https://github.com/phodal/shire/commit/fde5a88f24ce99392ccc67335bc7f81c25d20e6e))
+
+## [0.7.4](https://github.com/phodal/shire/compare/v0.7.3...v[0.7.4]) (2024-09-09)
+
+### Bug Fixes
+
+- **db:** fix toolchain call issue ([99eb680](https://github.com/phodal/shire/commit/99eb680b20d806967df871b64a0c752e844f6e76))
 - **runner:** An unexpected exception occurred, causing the shire process cannot be canceled ([7eba18c](https://github.com/phodal/shire/commit/7eba18c8b1adaccf226fad1362a239cb60d19da9))
 - **runner:** The consoleView is not the original consoleView when processing the exit code of the script ([474b681](https://github.com/phodal/shire/commit/474b6813565e790a832c37f74e7ac4acd6db7696))
 - **runner:** The messageFilter of the console view appends extra data ([a47db5d](https://github.com/phodal/shire/commit/a47db5dd1fe51408409339a4711c7d16a23922d1))
@@ -501,8 +565,9 @@
 - **shell:** add shell language support plugin file ([bdc1c90](https://github.com/phodal/shire/commit/bdc1c90f10d7c2c4fb8f7157db343dd756c11352))
 - **shire:** add Shire context action group and location support ([e3df86d](https://github.com/phodal/shire/commit/e3df86d16d0c9985fec787a8e76ce553be9a9a45))
 
-[Unreleased]: https://github.com/phodal/shire/compare/v0.7.3...HEAD
-[0.7.3]: https://github.com/phodal/shire/compare/v0.7.2...v0.7.3
+[Unreleased]: https://github.com/phodal/shire/compare/v0.8.0...HEAD
+[0.8.0]: https://github.com/phodal/shire/compare/v0.7.4...v0.8.0
+[0.7.4]: https://github.com/phodal/shire/compare/v0.7.2...v0.7.4
 [0.7.2]: https://github.com/phodal/shire/compare/v0.7.1...v0.7.2
 [0.7.1]: https://github.com/phodal/shire/compare/v0.5.2...v0.7.1
 [0.5.2]: https://github.com/phodal/shire/compare/v0.4.8...v0.5.2
