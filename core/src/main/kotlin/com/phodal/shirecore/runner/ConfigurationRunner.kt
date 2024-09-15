@@ -41,11 +41,11 @@ interface ConfigurationRunner {
         testEventsListener: SMTRunnerEventsAdapter?,
         indicator: ProgressIndicator?,
     ) {
-        val connection = project.messageBus.connect()
+        val connection: MessageBusConnection? = project.messageBus.connect()
         try {
             return executeRunConfigurations(connection, settings, runContext, testEventsListener, indicator)
         } finally {
-            connection.disconnect()
+            connection?.disconnect()
         }
     }
 
@@ -69,13 +69,14 @@ interface ConfigurationRunner {
             connection?.subscribe(SMTRunnerEventsListener.TEST_STATUS, it)
         }
         connection?.let {
-            Disposer.register(runContext, it)
+            Disposer.register(runContext, connection)
         }
 
         runInEdt {
             try {
                 configurations.startRunConfigurationExecution(runContext)
-                connection?.subscribe(ExecutionManager.EXECUTION_TOPIC, CheckExecutionListener(runnerId(), runContext))
+                val handler = CheckExecutionListener(runnerId(), runContext)
+                connection?.subscribe(ExecutionManager.EXECUTION_TOPIC, handler)
             } catch (e: ExecutionException) {
                 logger<ConfigurationRunner>().warn("Failed to start run configuration: ${configurations.name}")
                 runContext.latch.countDown()
