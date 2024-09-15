@@ -14,6 +14,7 @@ import com.phodal.shirecore.provider.function.ToolchainFunctionProvider
 import com.phodal.shirecore.search.function.ScoredText
 import com.phodal.shirecore.search.function.SemanticService
 import com.phodal.shirelang.ShireActionStartupActivity
+import com.phodal.shirelang.ShireBundle
 import com.phodal.shirelang.actions.ShireRunFileAction
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.ast.FrontMatterType
@@ -23,6 +24,8 @@ import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 import java.io.File
 
 open class PatternFuncProcessor(open val myProject: Project, open val hole: HobbitHole) {
+    private val logger = logger<PatternActionProcessor>()
+
     /**
      * This function `patternFunctionExecute` is used to execute a specific action based on the type of `PatternActionFunc` provided.
      * It takes three parameters: `action`, `input`, and `lastResult`.
@@ -95,7 +98,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                     }
 
                     else -> {
-                        logger<PatternActionProcessor>().error("Unknown pattern input for ${action.funcName}, lastResult: $lastResult")
+                        logger.error("Unknown pattern input for ${action.funcName}, lastResult: $lastResult")
                         ""
                     }
                 }
@@ -230,7 +233,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
 
                 ToolchainFunctionProvider.provide(myProject, action.funcName)
                     ?.execute(myProject, action.funcName, result, variableTable)
-                    ?: logger<PatternActionProcessor>().error("No match function: ${action.funcName}, If you using toolchain function, visit: https://shire.phodal.com/shire/shire-toolchain-function for more. TODO for User custom.")
+                    ?: logger.error(ShireBundle.message("shire.toolchain.function.not.found", action.funcName))
             }
 
             is PatternActionFunc.Notify -> {
@@ -241,7 +244,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             is PatternActionFunc.Select,
             is PatternActionFunc.Where,
                 -> {
-                logger<PatternActionProcessor>().error("Unknown pattern processor type: ${action.funcName}")
+                logger.error("Unknown pattern processor type: ${action.funcName}")
             }
 
             is PatternActionFunc.CaseMatch -> {
@@ -302,7 +305,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                         }
 
                         else -> {
-                            logger<FunctionStatementProcessor>().warn("crawl error: $lastResult")
+                            logger.warn("crawl error: $lastResult")
                         }
                     }
                 } else {
@@ -335,13 +338,13 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                     }
 
                     if (file == null) {
-                        logger<FunctionStatementProcessor>().warn("execute shire error: file not found")
+                        logger.warn("execute shire error: file not found")
                         return ""
                     }
 
                     ShireRunFileAction.suspendExecuteFile(myProject, variableNames, variableTable, file) ?: ""
                 } catch (e: Exception) {
-                    logger<FunctionStatementProcessor>().warn("execute shire error: $e")
+                    logger.warn("execute shire error: $e")
                 }
             }
 
@@ -441,7 +444,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                 }
 
                 else -> {
-                    logger<PatternFuncProcessor>().warn("resolvePaths error: $patterMatchPaths")
+                    logger.warn("resolvePaths error: $patterMatchPaths")
                 }
             }
         }
