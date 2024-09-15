@@ -74,8 +74,8 @@ interface ConfigurationRunner {
 
         runInEdt {
             try {
-                connection?.subscribe(ExecutionManager.EXECUTION_TOPIC, CheckExecutionListener(runnerId(), runContext))
                 configurations.startRunConfigurationExecution(runContext)
+                connection?.subscribe(ExecutionManager.EXECUTION_TOPIC, CheckExecutionListener(runnerId(), runContext))
             } catch (e: ExecutionException) {
                 logger<ConfigurationRunner>().warn("Failed to start run configuration: ${configurations.name}")
                 runContext.latch.countDown()
