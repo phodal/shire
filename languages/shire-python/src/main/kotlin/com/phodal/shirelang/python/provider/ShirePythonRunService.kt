@@ -5,6 +5,7 @@ import com.intellij.execution.actions.ConfigurationContext
 import com.intellij.execution.actions.RunConfigurationProducer
 import com.intellij.execution.configurations.RunConfiguration
 import com.intellij.execution.configurations.RunProfile
+import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiManager
@@ -17,21 +18,28 @@ class ShirePythonRunService : FileRunService {
     override fun runConfigurationClass(project: Project): Class<out RunProfile> = PythonRunConfiguration::class.java
 
     override fun createConfiguration(project: Project, virtualFile: VirtualFile): RunConfiguration? {
-        val psiFile: PyFile = PsiManager.getInstance(project).findFile(virtualFile) as? PyFile ?: return null
+        val psiFile: PyFile = runReadAction {
+            PsiManager.getInstance(project).findFile(virtualFile) as? PyFile
+        } ?: return null
         val runManager = RunManager.getInstance(project)
 
-        val context = ConfigurationContext(psiFile)
+        val context = runReadAction {
+            ConfigurationContext(psiFile)
+        }
+
         val configProducer = RunConfigurationProducer.getInstance(
             PythonRunConfigurationProducer::class.java
         )
         var settings = configProducer.findExistingConfiguration(context)
 
         if (settings == null) {
-            val fromContext = configProducer.createConfigurationFromContext(context) ?: return null
+            val fromContext = configProducer.createConfigurationFromContext(context)
+                ?: throw IllegalStateException("Failed to create configuration from context")
+
             settings = fromContext.configurationSettings
             runManager.setTemporaryConfiguration(settings)
         }
-        val configuration = settings.configuration as PythonRunConfiguration
-        return configuration
+
+        return settings.configuration as PythonRunConfiguration
     }
 }
