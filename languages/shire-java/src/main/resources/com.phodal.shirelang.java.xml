@@ -23,7 +23,7 @@
                 implementation="com.phodal.shirelang.java.impl.JavaBuildSystemProvider"/>
 
         <shireAutoTesting language="JAVA"
-                          implementationClass="com.phodal.shirelang.java.codeedit.JavaAutoTestingService"/>
+                          implementationClass="com.phodal.shirelang.java.codeedit.JavaAutoTestService"/>
 
         <shireToolchainVariableProvider
                 implementation="com.phodal.shirelang.java.variable.JavaVariableProvider"/>
