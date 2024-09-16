@@ -21,9 +21,36 @@ nav_order: 3
   Download the [latest release](https://github.com/phodal/shire/releases/latest) and install it manually using
   <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
 
+Examples: [https://github.com/shire-lang/shire-spring-java-demo](https://github.com/shire-lang/shire-spring-java-demo)
+
 ## Usage
 
-1. first create new file, like `sample.shire`, with content:
+### "Hello World" example
+
+1. create a new file, like `hi.shire`, with content:
+
+```shire
+hi
+```
+
+2. Run file with `Shire` plugin, and you will see AI response result.
+
+```
+Prepare for running hi.shire...
+Shire Script: /Volumes/source/ai/shire/hi.shire
+Shire Script Compile output:
+Used model: gpt-4o
+hi
+
+--------------------
+Hello! How's it going?
+
+Process finished with exit code 0
+```
+
+### Example 2
+
+1. first create a new file, like `sample.shire`, with content:
 
 ```shire
 Explain code /file:src/main/java/com/example/Controller.java
@@ -55,11 +82,12 @@ ${context.frameworkContext}
 
 ## Config LLM
 
-当前我们只支持 OpenAI API 风格的 SAAS 服务，你需要在 `Settings` -> `Tools` -> `Shire` 中配置你的 API Token 和 Model。
+Current we support OpenAI, GLM, 零一万物, Moonshot AI, DeepSeek AI. You need to configure your API Token and Model in
+`Settings` -> `Tools` -> `Shire`.
 
 ### OpenAI
 
-- LLM API Host: 不填
+- LLM API Host: Empty
 - ModelName: gpt-4o
 - Engine Token: your key
 
