@@ -59,6 +59,10 @@ class WiremockFunctionProvider : ToolchainFunctionProvider, ConfigurationRunner 
         }
 
         val runManager = RunManager.getInstance(project)
+        // java.lang.Throwable: WireMock.WireMock mock_v0-stubs.json must be added before selecting
+        //	at com.intellij.openapi.diagnostic.Logger.error(Logger.java:376)
+        //	at com.intellij.execution.impl.RunManagerImpl.setSelectedConfiguration(Run
+        runManager.addConfiguration(configurationSettings)
         runManager.selectedConfiguration = configurationSettings
 
         configurationSettings.isActivateToolWindowBeforeRun = true
