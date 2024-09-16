@@ -1,5 +1,6 @@
 package com.phodal.shirecore.provider
 
+import com.intellij.lang.LanguageExtension
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.project.Project
@@ -23,15 +24,7 @@ import com.phodal.shirecore.variable.toolchain.unittest.AutoTestingPromptContext
  *
  * @constructor Creates a new instance of the `TestService` class.
  */
-abstract class TestingService : LazyExtensionInstance<TestingService>(), FileRunService {
-    @Attribute("language")
-    var language: String? = null
-
-    @Attribute("implementation")
-    var implementationClass: String? = null
-
-    override fun getImplementationClassName(): String? = implementationClass
-
+abstract class TestingService : FileRunService {
     abstract fun isApplicable(element: PsiElement): Boolean
     /**
      * Finds or creates a test file for the given source file, project, and element.
@@ -84,20 +77,10 @@ abstract class TestingService : LazyExtensionInstance<TestingService>(), FileRun
 
     companion object {
         val log = logger<TestingService>()
-        private val EP_NAME: ExtensionPointName<TestingService> =
-            ExtensionPointName.create("com.phodal.shireAutoTesting")
+        private val EP_NAME: LanguageExtension<TestingService> = LanguageExtension("com.phodal.shireAutoTesting")
 
         fun context(psiElement: PsiElement): TestingService? {
-            val extensionList = EP_NAME.extensionList
-            val testingService = extensionList.firstOrNull {
-                it.isApplicable(psiElement)
-            }
-
-            if (testingService == null) {
-                return null
-            }
-
-            return testingService
+            return EP_NAME.forLanguage(psiElement.language)
         }
 
         fun PsiFile.collectPsiError(): MutableList<String> {
