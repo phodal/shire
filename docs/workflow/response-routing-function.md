@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Response Routing Function
+title: Response Routing - afterStreaming
 parent: Workflow
 nav_order: 1
 ---
