@@ -105,7 +105,6 @@ variables:
   "sourceCode": /any/ { print($filePath) | sed("src\/test\/", "src/main/") | sed("Test.java", ".java") | cat }
 onStreamingEnd: { parseCode | patch($filePath, $output) }
 ---
-```agsl
 
 ```
 
