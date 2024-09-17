@@ -9,5 +9,8 @@
 
         <shireAutoTesting language="Python"
                           implementationClass="com.phodal.shirelang.python.provider.ShirePythonAutoTesting"/>
+
+        <shirePsiVariableProvider language="Python"
+                                  implementationClass="com.phodal.shirelang.python.provider.ShirePythonPsiVariableProvider"/>
     </extensions>
 </idea-plugin>
