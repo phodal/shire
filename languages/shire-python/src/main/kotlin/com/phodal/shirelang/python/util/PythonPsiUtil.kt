@@ -88,7 +88,7 @@ object PythonPsiUtil {
 
         val resultType = function.getReturnStatementType(context)
 
-        val parameters = function.parameterList.parameters
+        val parameters = (function as? PyCallable)?.parameterList?.parameters?.toList() ?: emptyList()
 
         val parameterTypes = parameters
             .filterIsInstance<PyTypedElement>()
@@ -115,7 +115,9 @@ object PythonPsiUtil {
             }
 
             private fun addResolvedElement(declarationName: String, element: PsiElement?) {
-                if (element == null || ProjectFileIndex.getInstance(element.project).isInLibrary(element.containingFile.virtualFile)) return
+                if (element == null || ProjectFileIndex.getInstance(element.project)
+                        .isInLibrary(element.containingFile.virtualFile)
+                ) return
 
                 val resolvedElement = if (PyUtil.isInitOrNewMethod(element)) {
                     PsiTreeUtil.getParentOfType(element, PyClass::class.java, false)
