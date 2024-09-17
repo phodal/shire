@@ -1,4 +1,4 @@
-package com.phodal.shirelang.python.provider
+package com.phodal.shirelang.python.util
 
 import com.intellij.lang.injection.InjectedLanguageManager
 import com.intellij.openapi.editor.Editor
@@ -33,7 +33,7 @@ object PyPsiUtil {
         return PsiTreeUtil.getParentOfType(element, PyClass::class.java, false) ?: containingFile
     }
 
-    private fun getTestNameExample(file: VirtualFile): String {
+    fun getTestNameExample(file: VirtualFile): String {
         val children = file.children
         for (child in children) {
             val fileName = (child ?: continue).name
@@ -45,7 +45,7 @@ object PyPsiUtil {
         return "test_example.py"
     }
 
-    private fun getTestsDirectory(file: VirtualFile, project: Project): VirtualFile {
+    fun getTestsDirectory(file: VirtualFile, project: Project): VirtualFile {
         val baseDirectory: VirtualFile? = ProjectFileIndex.getInstance(project).getContentRootForFile(file)
         if (baseDirectory == null) {
             val parent = file.parent
@@ -56,7 +56,7 @@ object PyPsiUtil {
         return testDir
     }
 
-    private fun toTestFileName(testFileName: String, exampleName: String): String {
+    fun toTestFileName(testFileName: String, exampleName: String): String {
         if (exampleName.startsWith("test_")) return "test_$testFileName.py"
         return "${testFileName}_test.py"
     }

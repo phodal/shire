@@ -6,5 +6,8 @@
 
     <extensions defaultExtensionNs="com.phodal">
         <shireFileRunService implementation="com.phodal.shirelang.python.provider.ShirePythonRunService"/>
+
+        <shireAutoTesting language="Python"
+                          implementationClass="com.phodal.shirelang.python.provider.ShirePythonAutoTesting"/>
     </extensions>
 </idea-plugin>
