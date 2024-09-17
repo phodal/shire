@@ -13,7 +13,7 @@ import com.intellij.psi.util.PsiUtilBase
 import com.jetbrains.python.psi.PyClass
 import com.jetbrains.python.psi.PyFunction
 
-object PyPsiUtil {
+object PyTestUtil {
     fun getElementForTests(project: Project, editor: Editor): PsiElement? {
         val element = PsiUtilBase.getElementAtCaret(editor) ?: return null
         val containingFile: PsiFile = element.containingFile ?: return null

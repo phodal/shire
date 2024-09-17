@@ -18,7 +18,7 @@ import com.jetbrains.python.run.PythonRunConfigurationProducer
 import com.phodal.shirecore.codemodel.model.ClassStructure
 import com.phodal.shirecore.provider.TestingService
 import com.phodal.shirecore.variable.toolchain.unittest.AutoTestingPromptContext
-import com.phodal.shirelang.python.util.PyPsiUtil
+import com.phodal.shirelang.python.util.PyTestUtil
 
 class ShirePythonAutoTesting : TestingService() {
     override fun isApplicable(element: PsiElement): Boolean = element.language.displayName == "Python"
@@ -44,10 +44,10 @@ class ShirePythonAutoTesting : TestingService() {
     }
 
     override fun findOrCreateTestFile(sourceFile: PsiFile, project: Project, psiElement: PsiElement): AutoTestingPromptContext? {
-        val testFileName = PyPsiUtil.getTestNameExample(sourceFile.virtualFile)
-        val testDir = PyPsiUtil.getTestsDirectory(sourceFile.virtualFile, project)
+        val testFileName = PyTestUtil.getTestNameExample(sourceFile.virtualFile)
+        val testDir = PyTestUtil.getTestsDirectory(sourceFile.virtualFile, project)
         val testFile = WriteAction.computeAndWait<VirtualFile?, Throwable> {
-            testDir.findOrCreateChildData(this, PyPsiUtil.toTestFileName(testFileName, sourceFile.name))
+            testDir.findOrCreateChildData(this, PyTestUtil.toTestFileName(testFileName, sourceFile.name))
         } ?: return null
 
         return AutoTestingPromptContext(true, testFile, listOf(), "", PythonLanguage.INSTANCE)
