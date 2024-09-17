@@ -8,6 +8,7 @@ import com.jetbrains.python.psi.PyClass
 import com.jetbrains.python.psi.PyFile
 import com.jetbrains.python.psi.PyFunction
 import com.phodal.shirecore.provider.variable.PsiContextVariableProvider
+import com.phodal.shirecore.provider.variable.impl.CodeSmellBuilder
 import com.phodal.shirecore.provider.variable.model.PsiContextVariable
 import com.phodal.shirelang.python.util.PyTestUtil
 import com.phodal.shirelang.python.util.PythonPsiUtil
@@ -71,11 +72,23 @@ class ShirePythonPsiVariableProvider : PsiContextVariableProvider {
             PsiContextVariable.TARGET_TEST_FILE_NAME -> {
                 PyTestUtil.getTestNameExample(underTestFile.virtualFile)
             }
+
             PsiContextVariable.UNDER_TEST_METHOD_CODE -> TODO()
-            PsiContextVariable.FRAMEWORK_CONTEXT -> TODO()
-            PsiContextVariable.CODE_SMELL -> TODO()
-            PsiContextVariable.METHOD_CALLER -> TODO()
-            PsiContextVariable.CALLED_METHOD -> TODO()
+            PsiContextVariable.FRAMEWORK_CONTEXT -> return collectFrameworkContext(psiElement, project)
+            PsiContextVariable.CODE_SMELL -> CodeSmellBuilder.collectElementProblemAsSting(
+                underTestElement,
+                project,
+                editor
+            )
+
+            PsiContextVariable.METHOD_CALLER -> {
+                PythonPsiUtil.collectAndResolveReferences(underTestElement)
+            }
+
+            PsiContextVariable.CALLED_METHOD -> {
+                PythonPsiUtil.collectAndResolveReferences(underTestElement)
+            }
+
             PsiContextVariable.SIMILAR_CODE -> TODO()
             PsiContextVariable.STRUCTURE -> TODO()
         }

@@ -1,7 +1,10 @@
 package com.phodal.shirelang.python.util
 
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.roots.ProjectFileIndex
+import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
+import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.concurrency.annotations.RequiresReadLock
 import com.jetbrains.python.psi.*
 import com.jetbrains.python.psi.types.PyType
@@ -93,5 +96,48 @@ object PythonPsiUtil {
             .toMutableList()
 
         return parameterTypes + resultType
+    }
+
+    fun collectAndResolveReferences(psiElement: PsiElement): String {
+        val list = mutableListOf<String>()
+        psiElement.accept(object : PyRecursiveElementVisitor() {
+            override fun visitPyCallExpression(expression: PyCallExpression) {
+                super.visitPyCallExpression(expression)
+                val callee = expression.callee
+                val resolved = callee?.reference?.resolve()
+                addResolvedElement(expression.text, resolved)
+            }
+
+            override fun visitPyReferenceExpression(expression: PyReferenceExpression) {
+                super.visitPyReferenceExpression(expression)
+                val resolved = expression.reference.multiResolve(false).firstOrNull()?.element
+                addResolvedElement(expression.text, resolved)
+            }
+
+            private fun addResolvedElement(declarationName: String, element: PsiElement?) {
+                if (element == null || ProjectFileIndex.getInstance(element.project).isInLibrary(element.containingFile.virtualFile)) return
+
+                val resolvedElement = if (PyUtil.isInitOrNewMethod(element)) {
+                    PsiTreeUtil.getParentOfType(element, PyClass::class.java, false)
+                } else {
+                    element
+                }
+
+                when (resolvedElement) {
+                    is PyFunction -> addFunction(declarationName, resolvedElement)
+                    is PyClass -> addClass(declarationName, resolvedElement)
+                }
+            }
+
+            private fun addClass(declarationName: String, clazz: PyClass) {
+                list.add(clazz.text)
+            }
+
+            private fun addFunction(declarationName: String, function: PyFunction) {
+                list.add(function.text)
+            }
+        })
+
+        return list.joinToString("\n")
     }
 }
