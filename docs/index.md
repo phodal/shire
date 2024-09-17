@@ -22,6 +22,18 @@ permalink: /
   </a>
 </p>
 
+## English Introduction
+
+**Shire** offers a seamless AI coding agent language, enabling large language models (LLMs) to engage in fluid dialogue
+with integrated development environments (IDEs) to achieve automated programming.
+
+> The concept of Shire has its roots in [AutoDev](https://github.com/unit-mesh/auto-dev), a subproject of 
+> [UnitMesh](https://unitmesh.cc/). Within AutoDev, we envisioned an AI-driven integrated development environment 
+> for developers, which included Shire’s predecessor, DevIns. DevIns was designed to empower users to create custom AI 
+> agents tailored to their own IDEs, thus forging a personalized AI-powered development realm.
+
+## Chinese Introduction
+
 PS：the Shire 一词来自于《魔戒》(LOTR）中的（夏尔）Shire，是霍比特人（Hobbit）的家园。
 
 Shire 提供了一种简便 AI 编码智能体语言，能够让大型语言模型（LLM）与控制集成开发环境（IDE）之间自由对话，以实现自动化编程。
