@@ -279,6 +279,16 @@ project(":toolsets:database") {
     }
 }
 
+project(":toolsets:ui-test") {
+    intellij {
+        version.set(prop("ideaVersion"))
+        plugins.set(ideaPlugins + prop("testAutomationPlugin"))
+    }
+    dependencies {
+        implementation(project(":core"))
+    }
+}
+
 project(":shirelang") {
     apply {
         plugin("org.jetbrains.grammarkit")

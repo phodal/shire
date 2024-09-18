@@ -26,4 +26,5 @@ include(
     "toolsets:plantuml",
     "toolsets:database",
     "toolsets:mock",
+    "toolsets:ui-test",
 )

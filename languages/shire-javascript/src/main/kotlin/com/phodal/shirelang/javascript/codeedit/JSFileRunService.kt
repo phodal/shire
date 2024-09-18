@@ -22,9 +22,6 @@ class JSFileRunService : FileRunService {
     }
 
     override fun createConfiguration(project: Project, virtualFile: VirtualFile): RunConfiguration? {
-        // skip if the file is not a JS file
-        val psiFile = PsiManager.getInstance(project).findFile(virtualFile) as? JSFile ?: return null
-
         val configurationSetting = runReadAction {
             val runManager = RunManager.getInstance(project)
             val configurationType = NodeJsRunConfigurationType.getInstance()
