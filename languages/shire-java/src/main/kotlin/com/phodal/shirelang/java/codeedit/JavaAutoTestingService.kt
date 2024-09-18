@@ -44,6 +44,9 @@ class JavaAutoTestService : TestingService() {
     private val maxLevelOneClass = 8
     override fun runConfigurationClass(project: Project): Class<out RunProfile> = GradleRunConfiguration::class.java
     override fun isApplicable(element: PsiElement): Boolean = element.language is JavaLanguage
+    override fun isApplicable(project: Project, file: VirtualFile): Boolean {
+        return file.extension == "java" && PsiManager.getInstance(project).findFile(file) is PsiJavaFile
+    }
 
     override fun createConfiguration(project: Project, virtualFile: VirtualFile): RunConfiguration? {
         val psiFile =

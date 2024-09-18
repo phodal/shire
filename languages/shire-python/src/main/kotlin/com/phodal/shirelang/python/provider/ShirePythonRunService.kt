@@ -15,6 +15,10 @@ import com.jetbrains.python.run.PythonRunConfigurationProducer
 import com.phodal.shirecore.provider.shire.FileRunService
 
 class ShirePythonRunService : FileRunService {
+    override fun isApplicable(project: Project, file: VirtualFile): Boolean {
+        return file.extension == "py" && PsiManager.getInstance(project).findFile(file) is PyFile
+    }
+
     override fun runConfigurationClass(project: Project): Class<out RunProfile> = PythonRunConfiguration::class.java
 
     override fun createConfiguration(project: Project, virtualFile: VirtualFile): RunConfiguration? {

@@ -23,13 +23,15 @@ import com.intellij.psi.PsiManager
 import com.phodal.shirecore.provider.shire.FileRunService
 
 class HttpClientFileRunService : FileRunService {
+    override fun isApplicable(project: Project, file: VirtualFile): Boolean {
+        return PsiManager.getInstance(project).findFile(file) is HttpRequestPsiFile
+    }
+
     override fun runConfigurationClass(project: Project): Class<out RunProfile> {
         return HttpRequestRunConfiguration::class.java
     }
 
     override fun runFile(project: Project, virtualFile: VirtualFile, psiElement: PsiElement?): String? {
-//        val originFile: PsiFile = PsiManager.getInstance(project).findFile(virtualFile) ?: return null
-//        val text = originFile.text
         val scratchFile = ScratchRootType.getInstance()
             .createScratchFile(project, "shireRequest.http", HttpRequestLanguage.INSTANCE, virtualFile.readText())
             ?: return null

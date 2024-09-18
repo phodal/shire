@@ -21,6 +21,8 @@ import com.phodal.shirecore.runner.RunServiceTask
 interface FileRunService {
     private val logger: Logger get() = logger<FileRunService>()
 
+    fun isApplicable(project: Project, file: VirtualFile): Boolean
+
     /**
      * Retrieves the run configuration class for the given project.
      *
@@ -125,7 +127,7 @@ interface FileRunService {
         fun provider(project: Project, file: VirtualFile): FileRunService? {
             val fileRunServices = EP_NAME.extensionList
             return fileRunServices.firstOrNull {
-                it.createConfiguration(project, file) != null
+                !it.isApplicable(project, file)
             }
         }
 

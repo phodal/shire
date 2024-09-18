@@ -13,6 +13,10 @@ import com.intellij.sh.run.ShRunConfiguration
 import com.phodal.shirecore.provider.shire.FileRunService
 
 class ShellFileRunService : FileRunService {
+    override fun isApplicable(project: Project, file: VirtualFile): Boolean {
+        return PsiManager.getInstance(project).findFile(file) is ShFile
+    }
+
     override fun runConfigurationClass(project: Project): Class<out RunProfile> = ShRunConfiguration::class.java
 
     override fun createConfiguration(project: Project, virtualFile: VirtualFile): RunConfiguration? {

@@ -13,6 +13,10 @@ import com.jetbrains.nodejs.run.NodeJsRunConfigurationType
 import com.phodal.shirecore.provider.shire.FileRunService
 
 class JSFileRunService : FileRunService {
+    override fun isApplicable(project: Project, file: VirtualFile): Boolean {
+        return PsiManager.getInstance(project).findFile(file) is JSFile
+    }
+
     override fun runConfigurationClass(project: Project): Class<out RunProfile>? {
         return NodeJsRunConfiguration::class.java
     }
