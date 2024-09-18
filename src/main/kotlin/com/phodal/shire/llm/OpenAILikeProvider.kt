@@ -6,10 +6,7 @@ import com.phodal.shire.custom.CustomSSEHandler
 import com.phodal.shire.custom.appendCustomHeaders
 import com.phodal.shire.custom.updateCustomFormat
 import com.phodal.shire.settings.ShireSettingsState
-import com.phodal.shirecore.llm.ChatMessage
-import com.phodal.shirecore.llm.ChatRole
-import com.phodal.shirecore.llm.CustomRequest
-import com.phodal.shirecore.llm.LlmProvider
+import com.phodal.shirecore.llm.*
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
@@ -62,8 +59,13 @@ class OpenAILikeProvider : CustomSSEHandler(), LlmProvider {
         }
     }
 
-    override fun stream(promptText: String, systemPrompt: String, keepHistory: Boolean): Flow<String> {
-        configRunLlm().let {
+    override fun stream(
+        promptText: String,
+        systemPrompt: String,
+        keepHistory: Boolean,
+        llmConfig: LlmConfig?
+    ): Flow<String> {
+        (llmConfig ?: configRunLlm()).let {
             if (it != null) {
                 modelName = it.model
                 temperature = it.temperature.toFloat()

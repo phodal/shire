@@ -1,19 +1,24 @@
 package com.phodal.shire.settings
 
-import com.intellij.application.options.EditorFontsConstants
 import com.intellij.openapi.options.ConfigurableUi
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.ui.components.JBPasswordField
+import com.intellij.ui.dsl.builder.Align
 import com.intellij.ui.dsl.builder.AlignX
 import com.intellij.ui.dsl.builder.panel
 import com.intellij.util.MathUtil
 import com.intellij.util.ui.JBDimension
-import com.phodal.shire.settings.components.testLLMConnection
+import com.phodal.shirecore.ShireCoreBundle
+import com.phodal.shirecore.ShireCoroutineScope
+import com.phodal.shirecore.llm.LlmConfig
+import com.phodal.shirecore.llm.LlmProvider
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
-import javax.swing.JComponent
-import javax.swing.JPanel
-import javax.swing.JTextField
+import javax.swing.*
 
 class ShireSettingUi : ConfigurableUi<ShireSettingsState> {
     private var panel: JPanel? = null
@@ -24,6 +29,10 @@ class ShireSettingUi : ConfigurableUi<ShireSettingsState> {
     private var temperatureField: JTextField = JTextField(4)
     private val minTemperature = 0.0f
     private val maxTemperature = 1.0f
+
+    private val testConnectionButton = JButton("Test LLM Connection")
+    private val testResultField = JTextArea()
+    private var testJob: Job? = null
 
     init {
         this.panel = panel {
@@ -71,7 +80,18 @@ class ShireSettingUi : ConfigurableUi<ShireSettingsState> {
                 })
             }
 
-            testLLMConnection(ProjectManager.getInstance().openProjects.firstOrNull())
+
+            row {
+                cell(testConnectionButton.apply {
+                    addActionListener {
+                        onTestConnection()
+                    }
+                })
+                cell(testResultField).align(Align.FILL)
+            }
+            row {
+                text("Don't forget to APPLY change after test!")
+            }
         }
     }
 
@@ -98,5 +118,38 @@ class ShireSettingUi : ConfigurableUi<ShireSettingsState> {
 
     override fun getComponent(): JComponent {
         return panel!!
+    }
+
+
+    private fun onTestConnection() {
+        val project = ProjectManager.getInstance().openProjects.firstOrNull() ?: return
+        // cancel last test job
+        testJob?.cancel()
+        testResultField.text = "user: hi. robot: "
+
+        // use CoroutineExceptionHandler to handle exception, it will automatically ignore CancelledException
+        testJob = ShireCoroutineScope.scope(project).launch(CoroutineExceptionHandler { coroutineContext, throwable ->
+            testResultField.text = throwable.message ?: "Unknown error"
+        }) {
+            val flowString: Flow<String> =
+                LlmProvider.provider(project)
+                    ?.stream(
+                        promptText = "hi",
+                        systemPrompt = "",
+                        keepHistory = false,
+                        llmConfig = LlmConfig(
+                            model = modelName.text,
+                            apiKey = engineToken.text,
+                            apiBase = apiHost.text,
+                            temperature = temperatureField.text.toDoubleOrNull() ?: 0.0,
+                            title = modelName.text,
+                        )
+                    )
+                    ?: throw Exception(ShireCoreBundle.message("shire.llm.notfound"))
+            flowString.collect {
+                testResultField.text += it
+            }
+
+        }
     }
 }
