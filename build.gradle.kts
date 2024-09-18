@@ -279,7 +279,7 @@ project(":toolsets:database") {
     }
 }
 
-project(":toolsets:ui-test") {
+project(":toolsets:uitest") {
     intellij {
         version.set(prop("ideaVersion"))
         plugins.set(ideaPlugins + prop("testAutomationPlugin"))
@@ -370,7 +370,7 @@ project(":plugin") {
         implementation(project(":toolsets:sonarqube"))
         implementation(project(":toolsets:database"))
         implementation(project(":toolsets:mock"))
-        implementation(project(":toolsets:ui-test"))
+        implementation(project(":toolsets:uitest"))
     }
 
     // Collects all jars produced by compilation of project modules and merges them into singe one.

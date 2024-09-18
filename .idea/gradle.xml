@@ -26,7 +26,7 @@
             <option value="$PROJECT_DIR$/toolsets/plantuml" />
             <option value="$PROJECT_DIR$/toolsets/sonarqube" />
             <option value="$PROJECT_DIR$/toolsets/terminal" />
-            <option value="$PROJECT_DIR$/toolsets/ui-test" />
+            <option value="$PROJECT_DIR$/toolsets/uitest" />
           </set>
         </option>
       </GradleProjectSettings>
