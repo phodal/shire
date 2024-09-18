@@ -279,15 +279,15 @@ project(":toolsets:database") {
     }
 }
 
-project(":toolsets:uitest") {
-    intellij {
-        version.set(prop("ideaVersion"))
-        plugins.set(ideaPlugins + prop("testAutomationPlugin"))
-    }
-    dependencies {
-        implementation(project(":core"))
-    }
-}
+//project(":toolsets:uitest") {
+//    intellij {
+//        version.set(prop("ideaVersion"))
+//        plugins.set(ideaPlugins + prop("testAutomationPlugin"))
+//    }
+//    dependencies {
+//        implementation(project(":core"))
+//    }
+//}
 
 project(":shirelang") {
     apply {
@@ -370,7 +370,7 @@ project(":plugin") {
         implementation(project(":toolsets:sonarqube"))
         implementation(project(":toolsets:database"))
         implementation(project(":toolsets:mock"))
-        implementation(project(":toolsets:uitest"))
+//        implementation(project(":toolsets:uitest"))
     }
 
     // Collects all jars produced by compilation of project modules and merges them into singe one.

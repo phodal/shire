@@ -1,6 +1,5 @@
 package com.phodal.shire.uitest.provider
 
-import com.intellij.aqua.runners.playwright.js.PlaywrightRunConfiguration
 import com.intellij.aqua.runners.playwright.js.PlaywrightRunConfigurationProducer
 import com.intellij.execution.RunManager
 import com.intellij.execution.actions.ConfigurationContext
@@ -26,7 +25,8 @@ class PlaywrightFileRunService : FileRunService {
     }
 
     override fun runConfigurationClass(project: Project): Class<out RunProfile>? {
-        return PlaywrightRunConfiguration::class.java
+//        return PlaywrightRunConfiguration::class.java
+        return null
     }
 
     override fun createConfiguration(project: Project, virtualFile: VirtualFile): RunConfiguration? {
