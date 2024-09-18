@@ -46,6 +46,9 @@
         <shirePsiVariableProvider
                 language="TypeScript"
                 implementationClass="com.phodal.shirelang.javascript.variable.JSPsiContextVariableProvider"/>
+        <shirePsiVariableProvider
+                language="JavaScript"
+                implementationClass="com.phodal.shirelang.javascript.variable.JSPsiContextVariableProvider"/>
 
     </extensions>
 </idea-plugin>
