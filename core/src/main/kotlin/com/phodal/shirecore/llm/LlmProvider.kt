@@ -53,9 +53,10 @@ interface LlmProvider {
      * @param promptText The text prompt to send to the service.
      * @param systemPrompt The system prompt to send to the service.
      * @param keepHistory Flag indicating whether to keep the chat history.
+     * @param llmConfig A default llmConfig, if not provided it will be read from the project settings.
      * @return A Flow of String values representing the chat completion responses.
      */
-    fun stream(promptText: String, systemPrompt: String, keepHistory: Boolean = true): Flow<String>
+    fun stream(promptText: String, systemPrompt: String, keepHistory: Boolean = true, llmConfig: LlmConfig? = null): Flow<String>
 
     /**
      * config LLM Provider from [PostProcessorContext]
