@@ -29,6 +29,17 @@ class ShireActionStartupActivity : ProjectActivity {
     }
 
     private suspend fun bindingShireActions(project: Project) {
+//        RunOnceUtil.runOnceForProject(project, "OpenDatabaseViewOnStart", Runnable {
+//            val toolWindowManager = ToolWindowManager.getInstance(project)
+//            toolWindowManager.invokeLater {
+//                if (toolWindowManager.activeToolWindowId == null && !FileEditorManager.getInstance(project)
+//                        .hasOpenFiles()
+//                ) {
+//                    window.activate(null)
+//                }
+//            }
+//        })
+
         smartReadAction(project) {
             obtainShireFiles(project).forEach {
                 val shireConfig = try {
