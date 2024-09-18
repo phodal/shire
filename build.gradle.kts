@@ -370,6 +370,7 @@ project(":plugin") {
         implementation(project(":toolsets:sonarqube"))
         implementation(project(":toolsets:database"))
         implementation(project(":toolsets:mock"))
+        implementation(project(":toolsets:ui-test"))
     }
 
     // Collects all jars produced by compilation of project modules and merges them into singe one.

@@ -14,7 +14,7 @@ import com.phodal.shirecore.provider.shire.FileRunService
 
 class JSFileRunService : FileRunService {
     override fun isApplicable(project: Project, file: VirtualFile): Boolean {
-        return PsiManager.getInstance(project).findFile(file) is JSFile
+        return PsiManager.getInstance(project).findFile(file) is JSFile && file.name.endsWith(".js")
     }
 
     override fun runConfigurationClass(project: Project): Class<out RunProfile>? {

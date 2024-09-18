@@ -24,6 +24,7 @@
         <module name="com.phodal.shirelang.git"/>
 
         <module name="com.phodal.shire.mock"/>
+        <module name="com.phodal.shire.uitest"/>
 
         <!-- experimental features -->
         <module name="com.phodal.shire.sonarqube"/>
