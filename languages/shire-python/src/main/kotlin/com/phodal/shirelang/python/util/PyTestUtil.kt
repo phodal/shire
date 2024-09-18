@@ -22,15 +22,9 @@ object PyTestUtil {
             return containingFile
         }
 
-        val psiElement: PsiElement? = PsiTreeUtil.getParentOfType(
-            element,
-            PyFunction::class.java, false
-        )
-        if (psiElement != null) {
-            return psiElement
-        }
-
-        return PsiTreeUtil.getParentOfType(element, PyClass::class.java, false) ?: containingFile
+        return PsiTreeUtil.getParentOfType(element, PyFunction::class.java, false)
+            ?: PsiTreeUtil.getParentOfType(element, PyClass::class.java, false)
+            ?: containingFile
     }
 
     fun getTestNameExample(file: VirtualFile): String {

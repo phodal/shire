@@ -1,0 +1,12 @@
+<idea-plugin package="com.phodal.python-test" xmlns:xi="http://www.w3.org/2001/XInclude">
+    <id>com.phodal.shire</id>
+    <depends>com.intellij.modules.python</depends>
+
+    <xi:include href="/META-INF/shire-main.xml" xpointer="xpointer(/idea-plugin/*)"/>
+    <xi:include href="/com.phodal.shirecore.xml" xpointer="xpointer(/idea-plugin/*)"/>
+
+    <content>
+        <module name="com.phodal.shirelang"/>
+        <module name="com.phodal.shirelang.python"/>
+    </content>
+</idea-plugin>
