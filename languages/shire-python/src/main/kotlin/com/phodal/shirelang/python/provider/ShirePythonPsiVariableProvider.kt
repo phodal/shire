@@ -2,10 +2,13 @@ package com.phodal.shirelang.python.provider
 
 import com.intellij.openapi.application.WriteAction
 import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.findFile
 import com.intellij.psi.PsiElement
+import com.intellij.psi.search.GlobalSearchScope
+import com.intellij.psi.search.searches.ReferencesSearch
 import com.jetbrains.python.PythonLanguage
 import com.jetbrains.python.psi.PyClass
 import com.jetbrains.python.psi.PyFile
@@ -80,6 +83,7 @@ class ShirePythonPsiVariableProvider : PsiContextVariableProvider {
 
                 testFile != null
             }
+
             PsiContextVariable.TARGET_TEST_FILE_NAME -> {
                 PyTestUtil.getTestNameExample(sourceFile.virtualFile)
             }
@@ -93,7 +97,9 @@ class ShirePythonPsiVariableProvider : PsiContextVariableProvider {
             )
 
             PsiContextVariable.METHOD_CALLER -> {
-                PythonPsiUtil.collectAndResolveReferences(underTestElement)
+                val psiReferences = ReferencesSearch.search(underTestElement, GlobalSearchScope.projectScope(project))
+                ProgressManager.checkCanceled()
+                psiReferences.mapNotNull { it.element?.text }.toList()
             }
 
             PsiContextVariable.CALLED_METHOD -> {
