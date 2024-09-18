@@ -22,9 +22,9 @@
         <module name="com.phodal.shire.terminal"/>
         <module name="com.phodal.shire.database"/>
         <module name="com.phodal.shirelang.git"/>
-
         <module name="com.phodal.shire.mock"/>
-        <module name="com.phodal.shire.uitest"/>
+
+<!--        <module name="com.phodal.shire.uitest"/>-->
 
         <!-- experimental features -->
         <module name="com.phodal.shire.sonarqube"/>
