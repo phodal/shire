@@ -97,6 +97,8 @@ class CodeFence(val ideaLanguage: Language, val text: String, val isComplete: Bo
             val fixedLanguage = when (languageName) {
                 "csharp" -> "c#"
                 "cpp" -> "c++"
+                "shell" -> "Shell Script"
+                "sh" -> "Shell Script"
                 else -> languageName
             }
 
