@@ -4,6 +4,7 @@ import com.intellij.execution.RunManager
 import com.intellij.execution.configurations.RunConfiguration
 import com.intellij.execution.configurations.RunProfile
 import com.intellij.lang.javascript.psi.JSFile
+import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiManager
@@ -17,12 +18,14 @@ class JSFileRunService : FileRunService {
     }
 
     override fun createConfiguration(project: Project, virtualFile: VirtualFile): RunConfiguration? {
-        val psiFile = PsiManager.getInstance(project).findFile(virtualFile) as? JSFile ?: return null
-        val configurationSetting = RunManager.getInstance(project)
-            .createConfiguration(psiFile.name, NodeJsRunConfigurationType.getInstance())
+        val configurationSetting = runReadAction {
+            val runManager = RunManager.getInstance(project)
+            val configurationType = NodeJsRunConfigurationType.getInstance()
+            val configuration = runManager.createConfiguration("Node.js", configurationType.configurationFactories[0])
+            runManager.addConfiguration(configuration)
+            configuration
+        }
 
-        val configuration = configurationSetting.configuration as NodeJsRunConfiguration
-        configuration.mainScriptFilePath = virtualFile.path
         return configurationSetting.configuration
     }
 }
