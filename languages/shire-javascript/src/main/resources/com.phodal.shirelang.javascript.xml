@@ -2,7 +2,9 @@
     <!--suppress PluginXmlValidity -->
     <dependencies>
         <plugin id="JavaScript"/>
+        <plugin id="NodeJS"/>
     </dependencies>
+
     <extensions defaultExtensionNs="com.phodal">
         <classStructureProvider language="JavaScript"
                                 implementationClass="com.phodal.shirelang.javascript.codemodel.JavaScriptClassStructureProvider"/>
@@ -42,6 +44,9 @@
                           implementationClass="com.phodal.shirelang.javascript.codeedit.JSAutoTestingService"/>
         <shireAutoTesting language="TypeScript"
                           implementationClass="com.phodal.shirelang.javascript.codeedit.JSAutoTestingService"/>
+
+        <shireFileRunService
+                implementation="com.phodal.shirelang.javascript.codeedit.JSFileRunService"/>
 
         <shirePsiVariableProvider
                 language="TypeScript"

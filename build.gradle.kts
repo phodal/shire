@@ -140,7 +140,7 @@ project(":languages:shire-java") {
 project(":languages:shire-javascript") {
     intellij {
         version.set(prop("ideaVersion"))
-        plugins.set(ideaPlugins)
+        plugins.set(ideaPlugins + prop("nodejsPlugin"))
     }
 
     dependencies {
