@@ -1,7 +1,10 @@
 package com.phodal.shirelang.python.provider
 
+import com.intellij.openapi.application.WriteAction
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.vfs.findFile
 import com.intellij.psi.PsiElement
 import com.jetbrains.python.PythonLanguage
 import com.jetbrains.python.psi.PyClass
@@ -19,11 +22,11 @@ class ShirePythonPsiVariableProvider : PsiContextVariableProvider {
         project: Project,
         editor: Editor,
         psiElement: PsiElement?,
-    ): String {
+    ): Any {
         if (psiElement?.language !is PythonLanguage) return ""
 
         val underTestElement = PyTestUtil.getElementForTests(project, editor)
-        val underTestFile = underTestElement?.containingFile as? PyFile ?: return ""
+        val sourceFile = underTestElement?.containingFile as? PyFile ?: return ""
 
         return when (variable) {
             PsiContextVariable.CURRENT_CLASS_NAME -> {
@@ -67,10 +70,18 @@ class ShirePythonPsiVariableProvider : PsiContextVariableProvider {
             }
 
             PsiContextVariable.SIMILAR_TEST_CASE -> TODO()
-            PsiContextVariable.IMPORTS -> PythonPsiUtil.getImportsInFile(underTestFile)
-            PsiContextVariable.IS_NEED_CREATE_FILE -> TODO()
+            PsiContextVariable.IMPORTS -> PythonPsiUtil.getImportsInFile(sourceFile)
+            PsiContextVariable.IS_NEED_CREATE_FILE -> {
+                val testFileName = PyTestUtil.getTestNameExample(sourceFile.virtualFile)
+                val testDir = PyTestUtil.getTestsDirectory(sourceFile.virtualFile, project)
+                val testFile = WriteAction.computeAndWait<VirtualFile?, Throwable> {
+                    testDir.findFile(PyTestUtil.toTestFileName(testFileName, sourceFile.name))
+                }
+
+                testFile != null
+            }
             PsiContextVariable.TARGET_TEST_FILE_NAME -> {
-                PyTestUtil.getTestNameExample(underTestFile.virtualFile)
+                PyTestUtil.getTestNameExample(sourceFile.virtualFile)
             }
 
             PsiContextVariable.UNDER_TEST_METHOD_CODE -> TODO()

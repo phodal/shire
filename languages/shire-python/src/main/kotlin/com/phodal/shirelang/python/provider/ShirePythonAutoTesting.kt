@@ -48,7 +48,7 @@ class ShirePythonAutoTesting : TestingService() {
         val testDir = PyTestUtil.getTestsDirectory(sourceFile.virtualFile, project)
         val testFile = WriteAction.computeAndWait<VirtualFile?, Throwable> {
             testDir.findOrCreateChildData(this, PyTestUtil.toTestFileName(testFileName, sourceFile.name))
-        } ?: return null
+        }
 
         return AutoTestingPromptContext(true, testFile, listOf(), "", PythonLanguage.INSTANCE)
     }
