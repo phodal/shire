@@ -134,4 +134,8 @@
             <add-to-group group-id="ShowIntentionsGroup" relative-to-action="ShowIntentionActions" anchor="after"/>
         </group>
     </actions>
+
+    <extensions defaultExtensionNs="com.phodal">
+        <shireFileRunService implementation="com.phodal.shirelang.runner.ShellFileRunService"/>
+    </extensions>
 </idea-plugin>

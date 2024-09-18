@@ -7,6 +7,7 @@ import com.intellij.execution.configurations.GeneralCommandLine
 import com.intellij.execution.configurations.RunConfiguration
 import com.intellij.execution.configurations.RunProfile
 import com.intellij.execution.util.ExecUtil
+import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.extensions.ExtensionPointName
@@ -93,7 +94,9 @@ interface FileRunService {
     }
 
     private fun createDefaultTestConfigurations(project: Project, element: PsiElement): RunnerAndConfigurationSettings? {
-        return ConfigurationContext(element).configurationsFromContext?.firstOrNull()?.configurationSettings
+        return runReadAction {
+            ConfigurationContext(element).configurationsFromContext?.firstOrNull()?.configurationSettings
+        }
     }
 
     /**
