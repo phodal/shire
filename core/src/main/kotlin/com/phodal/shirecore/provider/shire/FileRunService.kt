@@ -127,7 +127,7 @@ interface FileRunService {
         fun provider(project: Project, file: VirtualFile): FileRunService? {
             val fileRunServices = EP_NAME.extensionList
             return fileRunServices.firstOrNull {
-                !it.isApplicable(project, file)
+                runReadAction { it.isApplicable(project, file) }
             }
         }
 
