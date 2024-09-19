@@ -122,8 +122,7 @@ class ShireMarketplaceTableView(val project: Project) {
             val objectMapper = ObjectMapper()
 
             val request = Request.Builder().url(SHIRE_MKT_HOST).get().build()
-            var responses: Response = client.newCall(request).execute()
-
+            val responses: Response = client.newCall(request).execute()
             val jsonData = responses.body?.string()
             val packages = objectMapper.readValue(jsonData, Array<ShirePackage>::class.java)
             return packages.toList()

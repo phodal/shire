@@ -223,7 +223,11 @@ class ShireRunner(
         val processor2 = hobbitHole?.executeAfterStreamingProcessor(project, console, context)
         PostProcessorContext.updateOutput(processor2)
 
-        processHandler.detachProcess()
+        try {
+            processHandler.detachProcess()
+        } catch (e: Exception) {
+//            console?.print(e.message ?: "Error", ConsoleViewContentType.ERROR_OUTPUT)
+        }
     }
 
     private fun printCompiledOutput(
