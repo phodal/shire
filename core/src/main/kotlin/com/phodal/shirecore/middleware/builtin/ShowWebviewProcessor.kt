@@ -4,9 +4,13 @@ import com.intellij.execution.ui.ConsoleView
 import com.intellij.ide.DataManager
 import com.intellij.openapi.application.runInEdt
 import com.intellij.openapi.diagnostic.logger
+import com.intellij.openapi.editor.colors.EditorFontType
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.JBPopupFactory
+import com.intellij.ui.components.JBTextArea
 import com.intellij.ui.dsl.builder.*
+import com.phodal.shirecore.ShireCoroutineScope
+import com.phodal.shirecore.console.cancelHandler
 import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.markdown.CodeFence
 import com.phodal.shirecore.middleware.PostProcessor
@@ -14,6 +18,7 @@ import com.phodal.shirecore.middleware.PostProcessorContext
 import com.phodal.shirecore.middleware.PostProcessorType
 import com.phodal.shirecore.middleware.builtin.ui.WebViewWindow
 import kotlinx.coroutines.flow.cancellable
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
@@ -33,31 +38,43 @@ class ShowWebviewProcessor : PostProcessor {
         val dataContext = DataManager.getInstance().dataContextFromFocusAsync.blockingGet(10000)
             ?: throw IllegalStateException("No data context")
 
-        class WebviewKeyAdapter : KeyAdapter() {
+        class WebviewKeyAdapter(val textarea: JBTextArea) : KeyAdapter() {
+            private var cancelCallback: ((String) -> Unit)? = null
             override fun keyPressed(e: KeyEvent) {
                 if (e.keyCode == KeyEvent.VK_ENTER) {
+                    textarea.isEditable = false
+                    webview?.loadHtml("Processing...")
                     var result = ""
-                    val stream = LlmProvider.provider(project)
-                        ?.stream(
-                            "according user input to modify code. Use input: $continueMessage\nCode: \n```html\n$html\n```",
-                            "",
-                            false
-                        )
 
-                    runBlocking {
-                        stream?.cancellable()?.collect {
-                            result += it
+                    ShireCoroutineScope.scope(project).launch {
+                        val flow = LlmProvider.provider(project)
+                            ?.stream(
+                                "According user input to modify code, return new code." +
+                                        " Use input: ${textarea.text}\nCode: \n```html\n$html\n```" +
+                                        "\n" +
+                                        "Return new code: ",
+                                "",
+                                false
+                            )!!
+
+                        runBlocking {
+                            flow.cancelHandler { cancelCallback = it }.cancellable().collect {
+                                result += it
+                            }
+
+                            textarea.isEditable = true
                         }
-                    }
 
-                    val newHtml = CodeFence.parse(result).text
-                    logger<ShowWebviewProcessor>().info("Result: $result")
-                    runInEdt {
-                        webview?.loadHtml(newHtml ?: "")
-                    }
+                        val newHtml = CodeFence.parse(result).text
+                        logger<ShowWebviewProcessor>().info("Result: $result")
+                        runInEdt {
+                            webview?.loadHtml(newHtml)
+                        }
 
-                    html = newHtml
-                    continueMessage = ""
+                        html = newHtml
+                        textarea.text = ""
+                        continueMessage = ""
+                    }
                 }
             }
         }
@@ -75,7 +92,8 @@ class ShowWebviewProcessor : PostProcessor {
                         .align(Align.FILL)
                         .bindText(::continueMessage)
                         .applyToComponent {
-                            addKeyListener(WebviewKeyAdapter())
+                            font = EditorFontType.getGlobalPlainFont()
+                            addKeyListener(WebviewKeyAdapter(this))
                         }
                 }
             }
