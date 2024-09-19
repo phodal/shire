@@ -3,8 +3,8 @@ package com.phodal.shire.settings
 import com.intellij.openapi.options.ConfigurableUi
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.ui.components.JBPasswordField
-import com.intellij.ui.dsl.builder.Align
 import com.intellij.ui.dsl.builder.AlignX
+import com.intellij.ui.dsl.builder.AlignY
 import com.intellij.ui.dsl.builder.panel
 import com.intellij.util.MathUtil
 import com.intellij.util.ui.JBDimension
@@ -31,7 +31,7 @@ class ShireSettingUi : ConfigurableUi<ShireSettingsState> {
     private val maxTemperature = 1.0f
 
     private val testConnectionButton = JButton("Test LLM Connection")
-    private val testResultField = JTextArea()
+    private val testResultField = JTextPane()
     private var testJob: Job? = null
 
     init {
@@ -87,7 +87,7 @@ class ShireSettingUi : ConfigurableUi<ShireSettingsState> {
                         onTestConnection()
                     }
                 })
-                cell(testResultField).align(Align.FILL)
+                cell(testResultField).align(AlignY.CENTER)
             }
             row {
                 text("Don't forget to APPLY change after test!")
