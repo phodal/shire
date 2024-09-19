@@ -41,7 +41,6 @@ class OpenWebpageProcessor : PostProcessor {
                 get() = lazyElement ?: file
         }
 
-
         try {
             val browser = findUsingBrowser()
             val urls = WebBrowserService.getInstance().getUrlsToOpen(request, true)

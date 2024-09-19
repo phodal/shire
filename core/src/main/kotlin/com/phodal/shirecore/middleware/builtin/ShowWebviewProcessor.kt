@@ -5,6 +5,7 @@ import com.intellij.ide.DataManager
 import com.intellij.openapi.application.runInEdt
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.JBPopupFactory
+import com.intellij.ui.dsl.builder.panel
 import com.phodal.shirecore.middleware.PostProcessor
 import com.phodal.shirecore.middleware.PostProcessorContext
 import com.phodal.shirecore.middleware.PostProcessorType
@@ -26,8 +27,14 @@ class ShowWebviewProcessor : PostProcessor {
         runInEdt {
             val component = WebViewWindow().apply { loadHtml(html ?: "") }.component
 
+            val panel = panel {
+                row {
+                    cell(component)
+                }
+            }
+
             val popup = JBPopupFactory.getInstance()
-                .createComponentPopupBuilder(component, null)
+                .createComponentPopupBuilder(panel, null)
                 .setResizable(true)
                 .setMovable(true)
                 .setTitle("Preview")
