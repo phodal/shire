@@ -1,6 +1,7 @@
 package com.phodal.shirecore.middleware.builtin.ui
 
 import com.intellij.ui.JBColor
+import com.intellij.ui.jcef.JBCefApp
 import com.intellij.ui.jcef.JBCefBrowser
 import javax.swing.JComponent
 
@@ -17,6 +18,7 @@ class WebViewWindow {
     init {
         browser = try {
             JBCefBrowser.createBuilder()
+                .setOffScreenRendering(JBCefApp.isOffScreenRenderingModeEnabled())
                 .build()
         } catch (e: Exception) {
             JBCefBrowser()

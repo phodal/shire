@@ -4,16 +4,11 @@ import com.intellij.execution.ui.ConsoleView
 import com.intellij.ide.DataManager
 import com.intellij.openapi.application.runInEdt
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.ui.MessageType
-import com.intellij.openapi.ui.popup.Balloon
 import com.intellij.openapi.ui.popup.JBPopupFactory
-import com.intellij.ui.dsl.builder.panel
-import com.intellij.util.ui.JBUI
 import com.phodal.shirecore.middleware.PostProcessor
 import com.phodal.shirecore.middleware.PostProcessorContext
 import com.phodal.shirecore.middleware.PostProcessorType
 import com.phodal.shirecore.middleware.builtin.ui.WebViewWindow
-import java.awt.Dimension
 
 class ShowWebviewProcessor : PostProcessor {
     override val processorName: String get() = PostProcessorType.ShowWebview.handleName
@@ -33,7 +28,11 @@ class ShowWebviewProcessor : PostProcessor {
 
             val popup = JBPopupFactory.getInstance()
                 .createComponentPopupBuilder(component, null)
-                .setMinSize(Dimension(JBUI.scale(640), JBUI.scale(320)))
+//                .setMinSize(Dimension(JBUI.scale(640), JBUI.scale(320)))
+                .setResizable(true)
+                .setMovable(true)
+                .setTitle("Preview")
+                .setFocusable(true)
                 .setRequestFocus(true)
                 .createPopup()
 
