@@ -11,26 +11,28 @@ nav_order: 5
 
 内置的后处理器包括：
 
-| 后处理器              | 描述              |
-|-------------------|-----------------|
-| Logging           | 记录操作日志。         |
-| TimeMetric        | 记录操作耗时。         |
-| AcceptanceMetric  | 接受度指标。          |
-| VerifyCode        | 检查代码错误或 PSI 问题。 |
-| RunCode           | 运行生成的文本代码。      |
-| ParseCode         | 将文本解析为代码块。      |
-| InferCodeLocation | 推断代码位置。         |
-| SaveFile          | 将文件保存到磁盘。       |
-| OpenFile          | 在编辑器中打开文件。      |
-| InsertCode        | 在当前光标位置插入代码。    |
-| FormatCode        | 格式化代码。          |
-| ParseComment      | 解析注释为注释块。       |
-| InsertNewline     | 插入新行。           |
-| Append            | 将文本追加到文件中。      |
-| UpdateEditorText  | 更新编辑器文本。        |
-| Patch             | 打补丁。            |
+| 后处理器              | 描述               |
+|-------------------|------------------|
+| Logging           | 记录操作日志。          |
+| TimeMetric        | 记录操作耗时。          |
+| AcceptanceMetric  | 接受度指标。           |
+| VerifyCode        | 检查代码错误或 PSI 问题。  |
+| RunCode           | 运行生成的文本代码。       |
+| ParseCode         | 将文本解析为代码块。       |
+| InferCodeLocation | 推断代码位置。          |
+| SaveFile          | 将文件保存到磁盘。        |
+| OpenFile          | 在编辑器中打开文件。       |
+| InsertCode        | 在当前光标位置插入代码。     |
+| FormatCode        | 格式化代码。           |
+| ParseComment      | 解析注释为注释块。        |
+| InsertNewline     | 插入新行。            |
+| Append            | 将文本追加到文件中。       |
+| UpdateEditorText  | 更新编辑器文本。         |
+| Patch             | 打补丁。             |
+| Diff              | 生成 diff view 对比。 | 
+| OpenWebpage       | 打开网页。            |
 
-最新版本见源码：com.phodal.shirecore.middleware.BuiltinPostHandler
+最新版本见源码：com.phodal.shirecore.middleware.PostProcessorType
 
 ## 示例
 
