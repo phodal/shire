@@ -66,7 +66,7 @@ class RunCodeProcessor : PostProcessor {
                 return
             }
 
-            console?.print("RunCode: No run service found\n", ERROR_OUTPUT)
+            console?.print("RunCode: No run service found for file: $file\n", ERROR_OUTPUT)
             return
         }
 
