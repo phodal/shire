@@ -2,7 +2,7 @@ package com.phodal.shirecore.middleware.builtin.ui
 
 import com.intellij.ui.JBColor
 import com.intellij.ui.jcef.JBCefBrowser
-import java.awt.Component
+import javax.swing.JComponent
 
 /**
  * WebViewWindow is a class that provides a custom webview functionality. It allows developers to
@@ -25,7 +25,7 @@ class WebViewWindow {
         browser.component.background = JBColor.WHITE
     }
 
-    val component: Component = browser.component
+    val component: JComponent = browser.component
 
     fun loadHtml(html: String) {
         browser.loadHTML(html)

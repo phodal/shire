@@ -7,9 +7,13 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.MessageType
 import com.intellij.openapi.ui.popup.Balloon
 import com.intellij.openapi.ui.popup.JBPopupFactory
+import com.intellij.ui.dsl.builder.panel
+import com.intellij.util.ui.JBUI
 import com.phodal.shirecore.middleware.PostProcessor
 import com.phodal.shirecore.middleware.PostProcessorContext
 import com.phodal.shirecore.middleware.PostProcessorType
+import com.phodal.shirecore.middleware.builtin.ui.WebViewWindow
+import java.awt.Dimension
 
 class ShowWebviewProcessor : PostProcessor {
     override val processorName: String get() = PostProcessorType.ShowWebview.handleName
@@ -25,12 +29,15 @@ class ShowWebviewProcessor : PostProcessor {
             ?: throw IllegalStateException("No data context")
 
         runInEdt {
-            val popupLocation = JBPopupFactory.getInstance().guessBestPopupLocation(dataContext)
-            JBPopupFactory.getInstance()
-                .createHtmlTextBalloonBuilder(html ?: "", MessageType.INFO, null)
-                .setFadeoutTime(3000)
-                .createBalloon()
-                .show(popupLocation, Balloon.Position.above)
+            val component = WebViewWindow().apply { loadHtml(html ?: "") }.component
+
+            val popup = JBPopupFactory.getInstance()
+                .createComponentPopupBuilder(component, null)
+                .setMinSize(Dimension(JBUI.scale(640), JBUI.scale(320)))
+                .setRequestFocus(true)
+                .createPopup()
+
+            popup.showInBestPositionFor(dataContext)
         }
 
         return ""
