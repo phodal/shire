@@ -19,3 +19,10 @@ permalink: /faq
 - 确认代理服务器的主机名和端口是否可用。
 - 如果不需要代理，尝试关闭IDE的代理设置。
 - 根据具体情况调整IDE配置或代理服务器配置。
+
+## `RunCode: No run service found for file`
+
+可能原因：
+
+- 缺少对应语言的 IDE 插件：诸如 [HttpClient](https://plugins.jetbrains.com/plugin/13121-http-client)、JavaScript 插件等。
+- 缺少对应语言的 FileRunService 实现。
