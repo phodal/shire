@@ -8,14 +8,14 @@ nav_order: 5
 Shire 自定义变量的核心是 Variable -> Pattern-Action 模型。在 Shire 中，Pattern-Action 模型是一种用于处理数据的模式匹配和动作执行模型。
 如下图所示：
 
-![](images/shire-pattern-action.svg)
+![](../images/shire-pattern-action.svg)
 
 - variable 是用户自定义的变量。
 - pattern 是用于筛选输入数据的规则或标准，可以是一组文件名模式、正则表达式，用于识别哪些数据需要进一步处理。
 - action 是当数据符合 pattern 时需要执行的任务，由一系列命令组成，描述了如何处理匹配的数据。
     - function name 是 Shire 内置的函数，用于处理数据。
     - arguments 是函数的参数，用于传递数据。
-- pipe(|) 是用于连接多个操作的管道操作符，每个操作都是一个函数，其输出作为下一个函数的输入。
+- pipe(`|`) 是用于连接多个操作的管道操作符，每个操作都是一个函数，其输出作为下一个函数的输入。
 
 Custom Variable 的三种实现方式：
 
