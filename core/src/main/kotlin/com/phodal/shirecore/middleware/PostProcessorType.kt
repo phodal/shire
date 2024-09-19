@@ -84,5 +84,11 @@ enum class PostProcessorType(var handleName: String) {
     Diff("diff"),
 
     UpdateEditorText("updateEditorText"),
+
+    // openWebpage
+    OpenWebpage("openWebpage"),
+
+    // showWebView
+    ShowWebView("showWebView"),
     ;
 }

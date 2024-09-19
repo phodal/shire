@@ -175,11 +175,12 @@
         <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.AppendProcessor"/>
         <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.InsertNewlineProcessor"/>
         <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.UpdateEditorTextProcessor"/>
-
         <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.ParseCommentProcessor"/>
 
         <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.SaveFileProcessor"/>
         <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.OpenFileProcessor"/>
+
+        <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.OpenWebpageProcessor"/>
 
         <!--   LocationInteractionProvider-->
         <shireLocationInteraction implementation="com.phodal.shirecore.config.interaction.EditorInteractionProvider"/>
