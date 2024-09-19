@@ -65,7 +65,7 @@ class CodeFence(val ideaLanguage: Language, val text: String, val isComplete: Bo
         }
 
 
-        fun lookupFileExt(languageId: String): String {
+        private fun lookupFileExt(languageId: String): String {
             return when (languageId) {
                 "c#" -> "cs"
                 "c++" -> "cpp"
@@ -81,7 +81,15 @@ class CodeFence(val ideaLanguage: Language, val text: String, val isComplete: Bo
                 "sql" -> "sql"
                 "plantuml" -> "puml"
                 "shell" -> "sh"
-                else -> "txt"
+                "objective-c" -> "m"
+                "objective-c++" -> "mm"
+                "go" -> "go"
+                "html" -> "html"
+                "css" -> "css"
+                "dart" -> "dart"
+                "scala" -> "scala"
+                "rust" -> "rs"
+                else -> languageId
             }
         }
 
