@@ -24,7 +24,7 @@ class OpenWebpageProcessor : PostProcessor {
     override val processorName: String get() = PostProcessorType.OpenWebpage.handleName
 
     override fun isApplicable(context: PostProcessorContext): Boolean {
-        return context.genText?.contains("<html>") ?: false
+        return context.genText?.contains("<html") ?: false
     }
 
     override fun execute(project: Project, context: PostProcessorContext, console: ConsoleView?, args: List<Any>): Any {
