@@ -33,7 +33,7 @@ class CUrlHttpHandler : HttpHandler {
         variablesName: Array<String>,
         variableTable: MutableMap<String, Any?>,
     ): String? {
-        val processVariables: Map<String, String> = variablesName.associateWith { (variableTable[it] as? String ?: "") }
+        val processVariables: Map<String, String> = variableTable.mapValues { it.value.toString() }
 
         var filledShell: String = content
         val client = OkHttpClient()
@@ -52,13 +52,15 @@ class CUrlHttpHandler : HttpHandler {
             CUrlConverter.convert(restClientRequest!!)
         }
 
-        showLogInConsole(project, filledShell, restClientRequest)
+        restClientRequest?.let {
+            showLogInConsole(project, filledShell, it)
+        }
 
         val response = client.newCall(request).execute()
         return response.body?.string()
     }
 
-    private fun showLogInConsole(project: Project, content: String, request: RestClientRequest?) {
+    private fun showLogInConsole(project: Project, content: String, request: RestClientRequest) {
         val contentManager = RunContentManager.getInstance(project)
         val console = contentManager.selectedContent?.executionConsole as? ConsoleViewWrapperBase ?: return
 
@@ -69,11 +71,13 @@ class CUrlHttpHandler : HttpHandler {
         /// new line
         console.print("\n", ConsoleViewContentType.LOG_INFO_OUTPUT)
         /// converted content
-        console.print(request.toString(), ConsoleViewContentType.LOG_INFO_OUTPUT)
-        /// request.body
-        request?.formBodyPart?.forEach {
-            console.print(it.toString(), ConsoleViewContentType.LOG_INFO_OUTPUT)
+        console.print(request.httpMethod + request.url, ConsoleViewContentType.LOG_INFO_OUTPUT)
+        /// headers
+        request.headers.forEach {
+            console.print("\n${it.key}: ${it.value}", ConsoleViewContentType.LOG_INFO_OUTPUT)
         }
+        /// request.body
+        console.print(request.textToSend.toString(), ConsoleViewContentType.LOG_INFO_OUTPUT)
         console.print("\n--------------------\n", ConsoleViewContentType.LOG_INFO_OUTPUT)
     }
 
