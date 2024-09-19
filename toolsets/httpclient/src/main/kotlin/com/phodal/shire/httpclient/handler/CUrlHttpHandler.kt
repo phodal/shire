@@ -3,6 +3,8 @@ package com.phodal.shire.httpclient.handler
 import com.intellij.execution.console.ConsoleViewWrapperBase
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.execution.ui.RunContentManager
+import com.intellij.httpClient.converters.curl.parser.CurlParser
+import com.intellij.httpClient.execution.RestClientRequest
 import com.intellij.httpClient.http.request.HttpRequestCollectionProvider
 import com.intellij.httpClient.http.request.notification.HttpClientWhatsNewContentService
 import com.intellij.ide.scratch.ScratchUtil
@@ -18,8 +20,9 @@ import com.phodal.shire.httpclient.converter.CUrlConverter
 import com.phodal.shirecore.provider.http.HttpHandler
 import com.phodal.shirecore.provider.http.HttpHandlerType
 import com.phodal.shirecore.provider.http.ShireEnvReader
+import com.phodal.shirecore.provider.http.ShireEnvVariableFiller
 import okhttp3.OkHttpClient
-import okhttp3.Request
+import okio.Buffer
 
 class CUrlHttpHandler : HttpHandler {
     override fun isApplicable(type: HttpHandlerType): Boolean = type == HttpHandlerType.CURL
@@ -32,7 +35,9 @@ class CUrlHttpHandler : HttpHandler {
     ): String? {
         val processVariables: Map<String, String> = variablesName.associateWith { (variableTable[it] as? String ?: "") }
 
+        var filledShell: String = content
         val client = OkHttpClient()
+        var restClientRequest: RestClientRequest? = null
         val request = runReadAction {
             val scope = getSearchScope(project)
 
@@ -41,18 +46,19 @@ class CUrlHttpHandler : HttpHandler {
             val envObject = ShireEnvReader.getEnvObject(envName, scope, project)
 
             val enVariables: List<Set<String>> = ShireEnvReader.fetchEnvironmentVariables(envName, scope)
-            CUrlConverter.convert(content, enVariables, processVariables, envObject)
+            filledShell = ShireEnvVariableFiller.fillVariables(content, enVariables, envObject, processVariables)
+            restClientRequest = CurlParser().parseToRestClientRequest(filledShell)
+
+            CUrlConverter.convert(restClientRequest!!)
         }
 
-        // get current terminl console
-        showLogInConsole(project, content, request)
-
+        showLogInConsole(project, filledShell, restClientRequest)
 
         val response = client.newCall(request).execute()
         return response.body?.string()
     }
 
-    fun showLogInConsole(project: Project, content: String, request: Request) {
+    private fun showLogInConsole(project: Project, content: String, request: RestClientRequest?) {
         val contentManager = RunContentManager.getInstance(project)
         val console = contentManager.selectedContent?.executionConsole as? ConsoleViewWrapperBase ?: return
 
@@ -64,6 +70,10 @@ class CUrlHttpHandler : HttpHandler {
         console.print("\n", ConsoleViewContentType.LOG_INFO_OUTPUT)
         /// converted content
         console.print(request.toString(), ConsoleViewContentType.LOG_INFO_OUTPUT)
+        /// request.body
+        request?.formBodyPart?.forEach {
+            console.print(it.toString(), ConsoleViewContentType.LOG_INFO_OUTPUT)
+        }
         console.print("\n--------------------\n", ConsoleViewContentType.LOG_INFO_OUTPUT)
     }
 

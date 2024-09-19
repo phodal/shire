@@ -1,5 +1,6 @@
 package com.phodal.shire.httpclient.converter
 
+import com.intellij.httpClient.converters.curl.parser.CurlParser
 import com.intellij.json.psi.JsonFile
 import com.intellij.json.psi.JsonObject
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
@@ -10,9 +11,10 @@ class CUrlConverterTest : BasePlatformTestCase() {
     fun testShouldConvertCurlToRestClientRequest() {
         // Given
         val content = "curl -X POST http://example.com/api/resource -d 'data'"
+        val request = CurlParser().parseToRestClientRequest(content)
 
         // When
-        val restClientRequest = CUrlConverter.convert(content)
+        val restClientRequest = CUrlConverter.convert(request = request)
 
         // Then
         assertEquals("http://example.com/api/resource", restClientRequest.url.toString())
@@ -32,9 +34,9 @@ class CUrlConverterTest : BasePlatformTestCase() {
                 "        }\n" +
                 "    ]\n" +
                 "}'"
-
+        val req = CurlParser().parseToRestClientRequest(content)
         // When
-        val request = CUrlConverter.convert(content)
+        val request = CUrlConverter.convert(request = req)
 
         // Then
         assertEquals("https://open.bigmodel.cn/api/paas/v4/chat/completions", request.url.toString())
