@@ -89,6 +89,6 @@ enum class PostProcessorType(var handleName: String) {
     OpenWebpage("openWebpage"),
 
     // showWebView
-    ShowWebView("showWebView"),
+    ShowWebview("showWebView"),
     ;
 }

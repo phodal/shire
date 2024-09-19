@@ -241,7 +241,7 @@ open class HobbitHole(
         console?.print("\n", ConsoleViewContentType.SYSTEM_OUTPUT)
         onStreamingEnd.forEach { funcNode ->
             if (console?.isCanceled() == true) return@forEach
-            console?.print("endExecute: ${funcNode.funcName}\n", ConsoleViewContentType.SYSTEM_OUTPUT)
+            console?.print("execute streamingEnd: ${funcNode.funcName}\n", ConsoleViewContentType.SYSTEM_OUTPUT)
             val postProcessor = PostProcessor.handler(funcNode.funcName)
             if (postProcessor == null) {
                 // TODO: change execute
