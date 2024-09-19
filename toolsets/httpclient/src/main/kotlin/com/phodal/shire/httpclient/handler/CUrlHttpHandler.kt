@@ -1,5 +1,8 @@
 package com.phodal.shire.httpclient.handler
 
+import com.intellij.execution.console.ConsoleViewWrapperBase
+import com.intellij.execution.ui.ConsoleViewContentType
+import com.intellij.execution.ui.RunContentManager
 import com.intellij.httpClient.http.request.HttpRequestCollectionProvider
 import com.intellij.httpClient.http.request.notification.HttpClientWhatsNewContentService
 import com.intellij.ide.scratch.ScratchUtil
@@ -16,6 +19,7 @@ import com.phodal.shirecore.provider.http.HttpHandler
 import com.phodal.shirecore.provider.http.HttpHandlerType
 import com.phodal.shirecore.provider.http.ShireEnvReader
 import okhttp3.OkHttpClient
+import okhttp3.Request
 
 class CUrlHttpHandler : HttpHandler {
     override fun isApplicable(type: HttpHandlerType): Boolean = type == HttpHandlerType.CURL
@@ -32,15 +36,35 @@ class CUrlHttpHandler : HttpHandler {
         val request = runReadAction {
             val scope = getSearchScope(project)
 
-            val envName = ShireEnvReader.getAllEnvironments(project, scope).firstOrNull() ?: ShireEnvReader.DEFAULT_ENV_NAME
+            val envName =
+                ShireEnvReader.getAllEnvironments(project, scope).firstOrNull() ?: ShireEnvReader.DEFAULT_ENV_NAME
             val envObject = ShireEnvReader.getEnvObject(envName, scope, project)
 
             val enVariables: List<Set<String>> = ShireEnvReader.fetchEnvironmentVariables(envName, scope)
             CUrlConverter.convert(content, enVariables, processVariables, envObject)
         }
 
+        // get current terminl console
+        showLogInConsole(project, content, request)
+
+
         val response = client.newCall(request).execute()
         return response.body?.string()
+    }
+
+    fun showLogInConsole(project: Project, content: String, request: Request) {
+        val contentManager = RunContentManager.getInstance(project)
+        val console = contentManager.selectedContent?.executionConsole as? ConsoleViewWrapperBase ?: return
+
+        ///-----
+        console.print("--------------------\n", ConsoleViewContentType.LOG_INFO_OUTPUT)
+        /// original content
+        console.print(content, ConsoleViewContentType.LOG_INFO_OUTPUT)
+        /// new line
+        console.print("\n", ConsoleViewContentType.LOG_INFO_OUTPUT)
+        /// converted content
+        console.print(request.toString(), ConsoleViewContentType.LOG_INFO_OUTPUT)
+        console.print("\n--------------------\n", ConsoleViewContentType.LOG_INFO_OUTPUT)
     }
 
     private fun getSearchScope(project: Project, contextFile: PsiFile? = null): GlobalSearchScope {

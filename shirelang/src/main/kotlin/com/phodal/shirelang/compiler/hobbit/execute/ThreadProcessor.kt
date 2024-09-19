@@ -31,6 +31,7 @@ object ThreadProcessor {
         if (filename.endsWith(".curl.sh")) {
             val execute = HttpHandler.provide(HttpHandlerType.CURL)
                 ?.execute(myProject, content, variablesName, variableTable)
+
             if (execute != null) {
                 return execute
             }
