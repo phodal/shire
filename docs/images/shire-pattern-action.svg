@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1011px" height="316px" viewBox="0 0 1011 316" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 62 (91390) - https://sketch.com -->
+    <title>Group</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group" transform="translate(0.000000, -6.000000)">
+            <text id="&quot;sourceCode&quot;:-/.*Con" font-family="NotoSerifSC-Bold, Noto Serif SC" font-size="18" font-weight="bold">
+                <tspan x="9" y="237" fill="#087D18">"sourceCode"</tspan>
+                <tspan x="130.608" y="237" fill="#011C32">: /</tspan>
+                <tspan x="145.728" y="237" fill="#48A178">.*Controller.java</tspan>
+                <tspan x="293.472" y="237" fill="#011C32">/ </tspan>
+                <tspan x="305.154" y="237" fill="#000000" fill-opacity="0.5">{</tspan>
+                <tspan x="311.994" y="237" fill="#011C32"> </tspan>
+                <tspan x="316.512" y="237" fill="#DA4167">print</tspan>
+                <tspan x="362.862" y="237" fill="#011C32">(</tspan>
+                <tspan x="370.026" y="237" fill="#0032B3">$filePath</tspan>
+                <tspan x="450.684" y="237" fill="#011C32">) </tspan>
+                <tspan x="462.366" y="237" fill="#CC850A">|</tspan>
+                <tspan x="467.622" y="237" fill="#011C32"> </tspan>
+                <tspan x="472.14" y="237" fill="#DA4167">sed</tspan>
+                <tspan x="503.154" y="237" fill="#011C32">(</tspan>
+                <tspan x="510.318" y="237" fill="#48A178">"src\/test\/"</tspan>
+                <tspan x="611.91" y="237" fill="#011C32">,</tspan>
+                <tspan x="617.94" y="237" fill="#013D4F"> "src/main/"</tspan>
+                <tspan x="726.012" y="237" fill="#011C32">) </tspan>
+                <tspan x="737.694" y="237" fill="#CC850A">|</tspan>
+                <tspan x="742.95" y="237" fill="#011C32"> </tspan>
+                <tspan x="747.468" y="237" fill="#DA4167">sed</tspan>
+                <tspan x="778.482" y="237" fill="#011C32">(</tspan>
+                <tspan x="785.646" y="237" fill="#48A178">"Test.java"</tspan>
+                <tspan x="878.436" y="237" fill="#011C32">, ".java") | </tspan>
+                <tspan x="965.574" y="237" fill="#DA4167">cat</tspan>
+                <tspan x="993.042" y="237" fill="#011C32"> </tspan>
+                <tspan x="997.56" y="237" fill="#000000" fill-opacity="0.5">}</tspan>
+            </text>
+            <path id="Line" d="M66,154 L66,202.932 L70.8784245,194.259739 L71.3686857,193.388163 L73.1118368,194.368686 L72.6215755,195.240261 L65.8715755,207.240261 L65,208.789729 L64.1284245,207.240261 L57.3784245,195.240261 L56.8881632,194.368686 L58.6313143,193.388163 L59.1215755,194.259739 L64,202.932 L64,154 L66,154 Z" fill="#087D18" fill-rule="nonzero"></path>
+            <path id="Line" d="M351,107 L351,198.932 L355.878424,190.259739 L356.368686,189.388163 L358.111837,190.368686 L357.621576,191.240261 L350.871576,203.240261 L350,204.789729 L349.128424,203.240261 L342.378424,191.240261 L341.888163,190.368686 L343.631314,189.388163 L344.121576,190.259739 L349,198.932 L349,107 L351,107 Z" fill="#DA4167" fill-rule="nonzero"></path>
+            <path id="Line" d="M429,63 L429,198.932 L433.878424,190.259739 L434.368686,189.388163 L436.111837,190.368686 L435.621576,191.240261 L428.871576,203.240261 L428,204.789729 L427.128424,203.240261 L420.378424,191.240261 L419.888163,190.368686 L421.631314,189.388163 L422.121576,190.259739 L427,198.932 L427,63 L429,63 Z" fill="#0032B3" fill-rule="nonzero"></path>
+            <path id="Line" d="M243,150 L243,198.932 L247.878424,190.259739 L248.368686,189.388163 L250.111837,190.368686 L249.621576,191.240261 L242.871576,203.240261 L242,204.789729 L241.128424,203.240261 L234.378424,191.240261 L233.888163,190.368686 L235.631314,189.388163 L236.121576,190.259739 L241,198.932 L241,150 L243,150 Z" fill="#48A178" fill-rule="nonzero"></path>
+            <path id="Line" d="M565,154 L565,202.932 L569.878424,194.259739 L570.368686,193.388163 L572.111837,194.368686 L571.621576,195.240261 L564.871576,207.240261 L564,208.789729 L563.128424,207.240261 L556.378424,195.240261 L555.888163,194.368686 L557.631314,193.388163 L558.121576,194.259739 L563,202.932 L563,154 L565,154 Z" fill="#48A178" fill-rule="nonzero"></path>
+            <path id="Line" d="M476,150 L476,198.932 L480.878424,190.259739 L481.368686,189.388163 L483.111837,190.368686 L482.621576,191.240261 L475.871576,203.240261 L475,204.789729 L474.128424,203.240261 L467.378424,191.240261 L466.888163,190.368686 L468.631314,189.388163 L469.121576,190.259739 L474,198.932 L474,150 L476,150 Z" fill="#CC850A" fill-rule="nonzero"></path>
+            <text id="custom-variable" font-family="NotoSerifSC-Bold, Noto Serif SC" font-size="18" font-weight="bold" fill="#087D18">
+                <tspan x="0" y="129">custom variable</tspan>
+            </text>
+            <text id="function-name" font-family="NotoSerifSC-Bold, Noto Serif SC" font-size="18" font-weight="bold" fill="#DA4167">
+                <tspan x="272" y="91">function name</tspan>
+            </text>
+            <text id="function-arg-(variab" font-family="NotoSerifSC-Bold, Noto Serif SC" font-size="18" font-weight="bold" fill="#0032B3">
+                <tspan x="373" y="21">function arg</tspan>
+                <tspan x="373" y="47">(variable arg)</tspan>
+            </text>
+            <text id="function-arg" font-family="NotoSerifSC-Bold, Noto Serif SC" font-size="18" font-weight="bold" fill="#48A178">
+                <tspan x="508" y="129">function arg</tspan>
+            </text>
+            <text id="pipe" font-family="NotoSerifSC-Bold, Noto Serif SC" font-size="18" font-weight="bold" fill="#CC850A">
+                <tspan x="455" y="129">pipe</tspan>
+            </text>
+            <text id="file-regex-pattern" font-family="NotoSerifSC-Bold, Noto Serif SC" font-size="18" font-weight="bold" fill="#48A178">
+                <tspan x="164" y="129">file regex pattern</tspan>
+            </text>
+            <line x1="142" y1="275" x2="291" y2="275" id="Line-2" stroke="#48A178" stroke-width="4" stroke-linecap="square"></line>
+            <line x1="310" y1="275" x2="1009" y2="276" id="Line-2" stroke="#1C274C" stroke-width="4" stroke-linecap="square"></line>
+            <text id="pattern" font-family="NotoSerifSC-Bold, Noto Serif SC" font-size="18" font-weight="bold" fill="#48A178">
+                <tspan x="150" y="312">pattern</tspan>
+            </text>
+            <text id="variable" font-family="NotoSerifSC-Bold, Noto Serif SC" font-size="18" font-weight="bold" fill="#087D18">
+                <tspan x="31" y="317">variable</tspan>
+            </text>
+            <text id="actions-(-pipeline-a" font-family="NotoSerifSC-Bold, Noto Serif SC" font-size="18" font-weight="bold">
+                <tspan x="321" y="317" fill="#48A178">actions ( </tspan>
+                <tspan x="403.296" y="317" fill="#CC850A">pipe</tspan>
+                <tspan x="443.562" y="317" fill="#48A178">line action )</tspan>
+            </text>
+        </g>
+    </g>
+</svg>
