@@ -28,7 +28,6 @@ class ShowWebviewProcessor : PostProcessor {
 
             val popup = JBPopupFactory.getInstance()
                 .createComponentPopupBuilder(component, null)
-//                .setMinSize(Dimension(JBUI.scale(640), JBUI.scale(320)))
                 .setResizable(true)
                 .setMovable(true)
                 .setTitle("Preview")
