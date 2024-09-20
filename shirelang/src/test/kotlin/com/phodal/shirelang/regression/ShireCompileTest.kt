@@ -136,7 +136,7 @@ public class HelloController {
         }
 
         assertEquals(
-            """[/src/src/main/java/com/phodal/shirelang/entity/HelloEntity.java]""",
+            """/src/src/main/java/com/phodal/shirelang/entity/HelloEntity.java""",
             context.compiledVariables["con"]
         )
         assertEquals("package com.phodal.shirelang.controller;\n" +
