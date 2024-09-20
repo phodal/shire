@@ -4,7 +4,6 @@ import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.smartReadAction
-import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.ProjectActivity
 import com.intellij.openapi.vfs.LocalFileSystem
@@ -12,17 +11,14 @@ import com.intellij.psi.PsiManager
 import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.GlobalSearchScope
 import com.phodal.shirecore.config.InteractionType
-import com.phodal.shirelang.actions.base.DynamicShireActionConfig
-import com.phodal.shirelang.actions.base.DynamicShireActionService
+import com.phodal.shirelang.actions.ShireFileChangesProvider
 import com.phodal.shirelang.actions.copyPaste.PasteManagerService
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
-import com.phodal.shirelang.compiler.parser.HobbitHoleParser
 import com.phodal.shirelang.psi.ShireFile
 import java.io.File
 
 
 class ShireActionStartupActivity : ProjectActivity {
-    private val logger = logger<ShireActionStartupActivity>()
 
     override suspend fun execute(project: Project) {
         bindingShireActions(project)
@@ -40,19 +36,11 @@ class ShireActionStartupActivity : ProjectActivity {
 //            }
 //        })
 
+        val changesProvider = ShireFileChangesProvider.getInstance(project)
         smartReadAction(project) {
+            changesProvider.startup(::attachCopyPasteAction)
             obtainShireFiles(project).forEach {
-                val shireConfig = try {
-                    HobbitHoleParser.parse(it)
-                } catch (e: Exception) {
-                    logger.warn("parse shire config error for file: ${it.virtualFile.path}", e)
-                    return@forEach
-                } ?: return@forEach
-
-                val shireActionConfig = DynamicShireActionConfig(shireConfig.name, shireConfig, it)
-                DynamicShireActionService.getInstance().putAction(shireConfig.name, shireActionConfig)
-
-                attachCopyPasteAction(shireConfig, it)
+                changesProvider.onUpdated(it)
             }
 
             attachTerminalAction()
