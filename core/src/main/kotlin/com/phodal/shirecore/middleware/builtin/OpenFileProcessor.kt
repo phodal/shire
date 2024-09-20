@@ -18,7 +18,8 @@ class OpenFileProcessor : PostProcessor {
     override fun isApplicable(context: PostProcessorContext): Boolean = true
 
     override fun execute(project: Project, context: PostProcessorContext, console: ConsoleView?, args: List<Any>): String {
-        val file = context.pipeData["output"] ?: context.genText
+        val firstArg = args.firstOrNull()
+        val file = firstArg ?: context.pipeData["output"] ?: context.genText
         if (file !is VirtualFile) {
             if (file is String) {
                 // check has multiple files
