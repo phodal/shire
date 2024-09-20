@@ -71,13 +71,13 @@ class CUrlHttpHandler : HttpHandler {
         /// new line
         console.print("\n", ConsoleViewContentType.LOG_INFO_OUTPUT)
         /// converted content
-        console.print(request.httpMethod + request.url, ConsoleViewContentType.LOG_INFO_OUTPUT)
+        console.print(request.httpMethod + " " + request.url, ConsoleViewContentType.LOG_INFO_OUTPUT)
         /// headers
         request.headers.forEach {
             console.print("\n${it.key}: ${it.value}", ConsoleViewContentType.LOG_INFO_OUTPUT)
         }
         /// request.body
-        console.print(request.textToSend.toString(), ConsoleViewContentType.LOG_INFO_OUTPUT)
+        console.print("\n" + request.textToSend.toString(), ConsoleViewContentType.LOG_INFO_OUTPUT)
         console.print("\n--------------------\n", ConsoleViewContentType.LOG_INFO_OUTPUT)
     }
 
