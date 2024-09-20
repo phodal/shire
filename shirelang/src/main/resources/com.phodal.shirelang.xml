@@ -70,6 +70,13 @@
         </intentionAction>
 
         <copyPastePreProcessor implementation="com.phodal.shirelang.actions.copyPaste.ShireCopyPastePreProcessor"/>
+
+        <vfs.asyncListener implementation="com.phodal.shirelang.actions.AsyncShireFileListener"/>
+
+        <fileDocumentManagerListener implementation="com.phodal.shirelang.actions.ShireFileModifcationListener"/>
+
+        <editorFactoryDocumentListener implementation="com.phodal.shirelang.actions.ShireFileModifcationListener"/>
+
     </extensions>
 
     <actions>

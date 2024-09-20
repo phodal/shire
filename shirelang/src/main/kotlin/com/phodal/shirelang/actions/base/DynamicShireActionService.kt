@@ -7,14 +7,18 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.keymap.KeymapManager
 import com.phodal.shirecore.config.ShireActionLocation
+import com.phodal.shirelang.psi.ShireFile
+import java.util.*
 
 @Service(Service.Level.APP)
 class DynamicShireActionService {
-    private val actionCache = mutableMapOf<String, DynamicShireActionConfig>()
+    private val actionCache = WeakHashMap<ShireFile, DynamicShireActionConfig>()
 
-    fun putAction(key: String, action: DynamicShireActionConfig) {
+    fun putAction(key: ShireFile, action: DynamicShireActionConfig) {
         actionCache[key] = action
     }
+
+    fun removeAction(key: ShireFile) = actionCache.keys.removeIf{ key === it }
 
     fun getAllActions(): List<DynamicShireActionConfig> = actionCache.values.toList()
 
