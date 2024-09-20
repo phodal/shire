@@ -11,7 +11,7 @@ object JsonPathFunction {
         jsonStr: String,
         action: PatternActionFunc.JsonPath,
     ): String? {
-        if (action.sseMode) {
+        if (action.sseMode || jsonStr.startsWith("data: ")) {
             return parseSSEResult(jsonStr, action.path.trim())
         }
 
