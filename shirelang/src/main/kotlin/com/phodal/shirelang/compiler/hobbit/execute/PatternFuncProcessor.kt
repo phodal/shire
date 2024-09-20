@@ -183,7 +183,11 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                 if (action.texts.isEmpty()) {
                     return when (lastResult) {
                         is Array<*> -> {
-                            (lastResult as Array<String>)
+                            (lastResult as Array<String>).joinToString("\n")
+                        }
+
+                        is List<*> -> {
+                            (lastResult as List<String>).joinToString("\n")
                         }
 
                         else -> {
