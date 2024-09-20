@@ -25,15 +25,13 @@ object DatabaseSchemaAssistant {
     }
 
     fun getAllTables(project: Project): List<DasTable> {
-        val rawDataSource = getAllRawDatasource(project)
-        val dasTables = rawDataSource.map { rawDataSource ->
-            val schemaName = rawDataSource.name.substringBeforeLast('@')
-            DasUtil.getTables(rawDataSource).filter { table ->
-                table.kind == ObjectKind.TABLE && (table.dasParent?.name == schemaName || isSQLiteTable(rawDataSource, table))
+        val rawDataSources = getAllRawDatasource(project)
+        return rawDataSources.map {
+            val schemaName = it.name.substringBeforeLast('@')
+            DasUtil.getTables(it).filter { table ->
+                table.kind == ObjectKind.TABLE && (table.dasParent?.name == schemaName || isSQLiteTable(it, table))
             }
         }.flatten()
-
-        return dasTables
     }
 
     fun getTableByDataSource(dataSource: RawDataSource): List<DasTable> {
