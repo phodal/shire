@@ -142,12 +142,12 @@ class GitToolchainVariableProvider : ToolchainVariableProvider {
         val changes = commitWorkflowUi.getIncludedChanges()
         val unversionedFiles = commitWorkflowUi.getIncludedUnversionedFiles()
 
-        val unversionedFileChanges = unversionedFiles.map {
+        val changeList = unversionedFiles.map {
             Change(null, CurrentContentRevision(it))
         }
 
-        if (changes.isNotEmpty() || unversionedFileChanges.isNotEmpty()) {
-            return changes + unversionedFileChanges
+        if (changes.isNotEmpty() || changeList.isNotEmpty()) {
+            return changes + changeList
         }
 
         return null
