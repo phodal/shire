@@ -1,6 +1,7 @@
 package com.phodal.shirelang.actions
 
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.util.messages.MessageBusConnection
@@ -46,25 +47,27 @@ class ShireFileModifier(val project: Project, val afterUpdater: ((HobbitHole, Sh
                 queue.clear()
             }
             runBlocking {
-                waitingUpdateQueue.forEach { file ->
-                    if (!file.isValid) {
-                        dynamicShireActionService.removeAction(file)
-                        logger.debug("Shire file[${file.name}] is deleted")
-                        return@forEach
-                    }
-                    if (!file.isPhysical) return@forEach
-                    try {
-                        HobbitHoleParser.parse(file)?.let {
-                            dynamicShireActionService.putAction(file, DynamicShireActionConfig(it.name, it, file))
-                            afterUpdater?.invoke(it, file)
-                            logger.debug("Shire action[${it.name}] is loaded")
+                runReadAction {
+                    waitingUpdateQueue.forEach { file ->
+                        if (!file.isValid) {
+                            dynamicShireActionService.removeAction(file)
+                            logger.debug("Shire file[${file.name}] is deleted")
+                            return@forEach
                         }
-                    } catch (e: Exception) {
-                        logger.warn("An error occurred while parsing shire file: ${file.virtualFile.path}", e)
+                        if (!file.isPhysical) return@forEach
+                        try {
+                            HobbitHoleParser.parse(file)?.let {
+                                dynamicShireActionService.putAction(file, DynamicShireActionConfig(it.name, it, file))
+                                afterUpdater?.invoke(it, file)
+                                logger.debug("Shire action[${it.name}] is loaded")
+                            }
+                        } catch (e: Exception) {
+                            logger.warn("An error occurred while parsing shire file: ${file.virtualFile.path}", e)
+                        }
                     }
                 }
+                waitingUpdateQueue.clear()
             }
-            waitingUpdateQueue.clear()
         }
     }
 
