@@ -41,7 +41,7 @@ class GitToolchainVariableProvider : ToolchainVariableProvider {
             VcsToolchainVariable.CurrentChanges -> {
                 val commitWorkflowUi = getCommitWorkflowUi()
                 if (commitWorkflowUi !is CommitWorkflowUi) {
-                    logger.error("Cannot get commit workflow UI.")
+                    logger.warn("Cannot get commit workflow UI, you may not be in a commit workflow.")
                     return variable
                 }
                 var changes: List<Change>? = null
