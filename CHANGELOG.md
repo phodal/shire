@@ -1,8 +1,31 @@
-# [](https://github.com/phodal/shire/compare/v0.7.4...v) (2024-09-15)
+# [](https://github.com/phodal/shire/compare/v0.8.2...v) (2024-09-23)
 
 ## [Unreleased]
 
-## [0.8.0] - 2024-09-15
+## [0.8.2](https://github.com/phodal/shire/compare/v0.8.1...v[0.8.2]) (2024-09-22)
+
+### Bug Fixes
+
+- **middleware:** use <html to replace <html> ([483ab87](https://github.com/phodal/shire/commit/483ab8781e146ba483906394d285c02a217db1bb))
+
+### Features
+
+- add OpenWebpage processor ([24c2bf2](https://github.com/phodal/shire/commit/24c2bf217e601f99bd4628e9438f3edbc0e5d14a))
+- **core:** add ShowWebviewProcessor and WebViewWindow ([6a3ddb4](https://github.com/phodal/shire/commit/6a3ddb47110621558fdc46feaed2e27246bcd116))
+- **core:** allow OpenFileProcessor to accept arguments ([f54e0c0](https://github.com/phodal/shire/commit/f54e0c0ed14292018ae9c99b894cb95299019ea8))
+- **core:** enhance error message in RunCodeProcessor ([87d65cd](https://github.com/phodal/shire/commit/87d65cdc3868efffc3ee91277a3aff07590df85e))
+- **database:** add Excel toolchain functions ([868510c](https://github.com/phodal/shire/commit/868510c6cf949efc813d2e0d7dfd64ed1ae1e3e2))
+- **docs:** update documentation and add WebView functionality ([15b5a4c](https://github.com/phodal/shire/commit/15b5a4c280c91173cbc34d33e2ebffc02155ef64))
+- **gradle:** update pluginUntilBuild version in gradle.properties ([a219ce4](https://github.com/phodal/shire/commit/a219ce41edd44aee7f44c261b27967a3eb0c227a))
+- **httpclient:** add log display in console for HTTP requests ([d181831](https://github.com/phodal/shire/commit/d18183196a3e77845db1dd538d350078b7f4f54e))
+- **httpclient:** improve request logging format in CUrlHttpHandler ([3f7740e](https://github.com/phodal/shire/commit/3f7740e7ecdf0e30935f605c16e86ea743ec7c1f))
+- **httpclient:** refactor CUrlHttpHandler and CUrlConverter for better variable handling ([a039679](https://github.com/phodal/shire/commit/a03967985a5156c8abfc56bb96a3b699495b6e7e))
+- **json-path:** enable for parse start for `data:` ([d5a2d71](https://github.com/phodal/shire/commit/d5a2d71b8eba81c7ecd42e787870552cd59d9d54))
+- **PatternFuncProcessor:** add newline join for Array and List results ([57ea7e6](https://github.com/phodal/shire/commit/57ea7e6e609173f6c67bcfd32eafa71cb17710aa))
+- **ShireFileModifier:** wrap file processing in runReadAction ([e8cc6f0](https://github.com/phodal/shire/commit/e8cc6f06fd8238ea7679dc0e31a1c3f976d2f1d0))
+- **UI:** enable off-screen rendering and improve webview popup ([96f3791](https://github.com/phodal/shire/commit/96f37913f889de070c608313481361cb73badce4))
+
+## [0.8.1](https://github.com/phodal/shire/compare/v0.8.0...v[0.8.1]) (2024-09-18)
 
 ### Bug Fixes
 
@@ -565,8 +588,9 @@
 - **shell:** add shell language support plugin file ([bdc1c90](https://github.com/phodal/shire/commit/bdc1c90f10d7c2c4fb8f7157db343dd756c11352))
 - **shire:** add Shire context action group and location support ([e3df86d](https://github.com/phodal/shire/commit/e3df86d16d0c9985fec787a8e76ce553be9a9a45))
 
-[Unreleased]: https://github.com/phodal/shire/compare/v0.8.0...HEAD
-[0.8.0]: https://github.com/phodal/shire/compare/v0.7.4...v0.8.0
+[Unreleased]: https://github.com/phodal/shire/compare/v0.8.2...HEAD
+[0.8.2]: https://github.com/phodal/shire/compare/v0.8.1...v0.8.2
+[0.8.1]: https://github.com/phodal/shire/compare/v0.7.4...v0.8.1
 [0.7.4]: https://github.com/phodal/shire/compare/v0.7.2...v0.7.4
 [0.7.2]: https://github.com/phodal/shire/compare/v0.7.1...v0.7.2
 [0.7.1]: https://github.com/phodal/shire/compare/v0.5.2...v0.7.1
