@@ -14,7 +14,7 @@ class ShireShellRunnerTest: BasePlatformTestCase() {
             }
              """.trimIndent()
 
-        val envPsiFile = myFixture.addFileToProject("demo.shireEnv.json", jsonEnv)
+        myFixture.addFileToProject("demo.shireEnv.json", jsonEnv)
 
         @Language("Shell Script")
         val content = """

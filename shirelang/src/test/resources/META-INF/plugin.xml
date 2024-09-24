@@ -2,6 +2,7 @@
     <id>com.phodal.shire</id>
 
     <xi:include href="/META-INF/shire-main.xml" xpointer="xpointer(/idea-plugin/*)"/>
+    <xi:include href="/com.phodal.shire.json.xml" xpointer="xpointer(/idea-plugin/*)"/>
     <!--suppress PluginXmlValidity -->
     <content>
         <module name="com.phodal.shirelang"/>
