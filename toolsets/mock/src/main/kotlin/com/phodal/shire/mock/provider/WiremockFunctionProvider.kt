@@ -2,9 +2,9 @@ package com.phodal.shire.mock.provider
 
 import com.intellij.execution.RunManager
 import com.intellij.execution.actions.ConfigurationContext
-import com.intellij.json.psi.JsonFile
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.project.Project
+import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.phodal.shirecore.provider.function.ToolchainFunctionProvider
 import com.phodal.shirecore.runner.ConfigurationRunner
@@ -41,7 +41,7 @@ class WiremockFunctionProvider : ToolchainFunctionProvider, ConfigurationRunner 
                     ?: throw IllegalArgumentException("ShireError[Wiremock]: No file found: $mockFilepath")
 
                 val jsonFile = runReadAction {
-                    PsiManager.getInstance(project).findFile(mockFile) as? JsonFile
+                    PsiManager.getInstance(project).findFile(mockFile)
                 } ?: throw IllegalArgumentException("ShireError[Wiremock]: No JsonFile found: $mockFilepath")
 
                 runMock(project, jsonFile)
@@ -49,7 +49,7 @@ class WiremockFunctionProvider : ToolchainFunctionProvider, ConfigurationRunner 
         }
     }
 
-    private fun runMock(project: Project, configFile: JsonFile): Any {
+    private fun runMock(project: Project, configFile: PsiFile): Any {
         val configurationSettings = runReadAction {
             ConfigurationContext(configFile).configurationsFromContext?.firstOrNull()?.configurationSettings
         } ?: throw IllegalArgumentException("ShireError[Wiremock]: Please install Wiremock plugin")
