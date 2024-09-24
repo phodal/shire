@@ -1,8 +1,6 @@
 package com.phodal.shire.httpclient.converter
 
 import com.intellij.httpClient.converters.curl.parser.CurlParser
-import com.intellij.json.psi.JsonFile
-import com.intellij.json.psi.JsonObject
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.phodal.shirecore.provider.http.ShireEnvReader
 import com.phodal.shirecore.provider.http.ShireEnvVariableFiller
@@ -54,7 +52,7 @@ class CUrlConverterTest : BasePlatformTestCase() {
         val envPsiFile = myFixture.addFileToProject("demo.shireEnv.json", jsonEnv)
 
         val variables = listOf(setOf("development"))
-        val obj = ShireEnvReader.getEnvObject("development", envPsiFile as JsonFile) as JsonObject
+        val obj = ShireEnvReader.getEnvObject("development", envPsiFile)
 
         // Given
         val messageBody = "Hello \${name}, my name is \${myName}!"

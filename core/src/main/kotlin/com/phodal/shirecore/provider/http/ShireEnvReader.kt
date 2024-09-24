@@ -3,6 +3,7 @@ package com.phodal.shirecore.provider.http
 import com.intellij.json.psi.JsonFile
 import com.intellij.json.psi.JsonObject
 import com.intellij.openapi.project.Project
+import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.util.indexing.FileBasedIndex
@@ -45,8 +46,8 @@ object ShireEnvReader {
     /**
      * Read Shire env file object
      */
-    fun getEnvObject(envName: String, psiFile: JsonFile?): JsonObject? {
-        val rootObject = psiFile?.topLevelValue as? JsonObject ?: return null
+    fun getEnvObject(envName: String, psiFile: PsiFile?): JsonObject? {
+        val rootObject = (psiFile as? JsonFile)?.topLevelValue as? JsonObject ?: return null
         return rootObject.propertyList.firstOrNull { it.name == envName }?.value as? JsonObject
     }
 

@@ -22,7 +22,6 @@ import com.phodal.shirecore.provider.http.HttpHandlerType
 import com.phodal.shirecore.provider.http.ShireEnvReader
 import com.phodal.shirecore.provider.http.ShireEnvVariableFiller
 import okhttp3.OkHttpClient
-import okio.Buffer
 
 class CUrlHttpHandler : HttpHandler {
     override fun isApplicable(type: HttpHandlerType): Boolean = type == HttpHandlerType.CURL
