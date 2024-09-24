@@ -1,5 +1,6 @@
 import groovy.util.Node
 import groovy.xml.XmlParser
+import org.jetbrains.changelog.Changelog
 import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType.*
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
@@ -701,7 +702,7 @@ project(":plugin") {
             }
         }
 
-        withType<PatchPluginXmlTask> {
+        patchPluginXml {
             pluginDescription.set(provider { file("description.html").readText() })
 
             changelog {
