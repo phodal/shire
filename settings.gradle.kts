@@ -18,6 +18,7 @@ include(
     "languages:shire-kotlin",
     "languages:shire-go",
     "languages:shire-markdown",
+    "languages:shire-json",
 
     "toolsets:git",
     "toolsets:httpclient",

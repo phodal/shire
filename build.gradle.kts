@@ -26,7 +26,7 @@ fun prop(name: String): String =
     extra.properties[name] as? String
         ?: error("Property `$name` is not defined in gradle.properties")
 
-val ideaPlatformVersion = prop("ideaPlatformVersion")
+val platformVersion = prop("ideaPlatformVersion").toInt()
 val pluginProjects: List<Project> get() = rootProject.allprojects.toList()
 val basePluginArchiveName = "intellij-shire"
 val ideaPlugins = listOf(
@@ -67,7 +67,7 @@ allprojects {
         version.set(prop("platformVersion"))
         type.set(prop("platformType"))
         instrumentCode.set(false)
-        sandboxDir.set("${layout.projectDirectory}/build/idea-sandbox-$ideaPlatformVersion")
+        sandboxDir.set("${layout.projectDirectory}/build/idea-sandbox-$platformVersion")
     }
 
     idea {
@@ -113,6 +113,8 @@ project(":core") {
     }
 
     dependencies {
+        implementation(project(":languages:shire-json"))
+
         implementation("com.charleskorn.kaml:kaml:0.61.0")
         implementation("org.reflections:reflections:0.10.2")
 
@@ -189,6 +191,39 @@ project(":languages:shire-go") {
 
     dependencies {
         implementation(project(":core"))
+    }
+}
+
+project(":languages:shire-json") {
+    intellij {
+        version.set(prop("ideaVersion"))
+        val jsonPlugins = ideaPlugins.toMutableList()
+        if (platformVersion == 243) {
+            jsonPlugins += "com.intellij.modules.json"
+        }
+        plugins.set(jsonPlugins)
+    }
+
+    dependencies {
+    }
+
+    sourceSets {
+        main {
+            resources.srcDirs("src/$platformVersion/main/resources")
+        }
+        test {
+            resources.srcDirs("src/$platformVersion/test/resources")
+        }
+    }
+    kotlin {
+        sourceSets {
+            main {
+                kotlin.srcDirs("src/$platformVersion/main/kotlin")
+            }
+            test {
+                kotlin.srcDirs("src/$platformVersion/test/kotlin")
+            }
+        }
     }
 }
 
