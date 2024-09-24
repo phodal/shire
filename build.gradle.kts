@@ -15,6 +15,13 @@ import java.util.*
 fun properties(key: String) = providers.gradleProperty(key)
 fun environment(key: String) = providers.environmentVariable(key)
 
+// Configure Gradle Changelog Plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
+changelog {
+    version.set(properties("pluginVersion"))
+    groups.empty()
+    path.set(rootProject.file("CHANGELOG.md").toString())
+    repositoryUrl.set(properties("pluginRepositoryUrl"))
+}
 
 /// maybe refs: https://github.com/HaxeFoundation/intellij-haxe/blob/develop/build.gradle.kts
 /// and https://github.com/JetBrains/educational-plugin
@@ -164,11 +171,6 @@ project(":languages:shire-java") {
 }
 
 project(":languages:shire-javascript") {
-//    intellij {
-//        version.set(prop("ideaVersion"))
-//        plugins.set(ideaPlugins + prop("nodejsPlugin"))
-//    }
-
     dependencies {
         intellijPlatform {
             intellijIde(prop("ideaVersion"))
