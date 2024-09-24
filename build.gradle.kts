@@ -20,13 +20,15 @@ plugins {
     alias(libs.plugins.serialization)
 
     id("org.jetbrains.grammarkit") version "2022.3.2.2"
+
+    id("net.saliman.properties") version "1.5.2"
 }
 
 fun prop(name: String): String =
     extra.properties[name] as? String
         ?: error("Property `$name` is not defined in gradle.properties")
 
-val platformVersion = prop("ideaPlatformVersion").toInt()
+val ideaPlatformVersion = prop("ideaPlatformVersion").toInt()
 val pluginProjects: List<Project> get() = rootProject.allprojects.toList()
 val basePluginArchiveName = "intellij-shire"
 val ideaPlugins = listOf(
@@ -67,7 +69,7 @@ allprojects {
         version.set(prop("platformVersion"))
         type.set(prop("platformType"))
         instrumentCode.set(false)
-        sandboxDir.set("${layout.projectDirectory}/build/idea-sandbox-$platformVersion")
+        sandboxDir.set("${layout.projectDirectory}/build/idea-sandbox-$ideaPlatformVersion")
     }
 
     idea {
@@ -198,7 +200,7 @@ project(":languages:shire-json") {
     intellij {
         version.set(prop("ideaVersion"))
         val jsonPlugins = ideaPlugins.toMutableList()
-        if (platformVersion == 243) {
+        if (ideaPlatformVersion == 243) {
             jsonPlugins += "com.intellij.modules.json"
         }
         plugins.set(jsonPlugins)
@@ -209,19 +211,19 @@ project(":languages:shire-json") {
 
     sourceSets {
         main {
-            resources.srcDirs("src/$platformVersion/main/resources")
+            resources.srcDirs("src/$ideaPlatformVersion/main/resources")
         }
         test {
-            resources.srcDirs("src/$platformVersion/test/resources")
+            resources.srcDirs("src/$ideaPlatformVersion/test/resources")
         }
     }
     kotlin {
         sourceSets {
             main {
-                kotlin.srcDirs("src/$platformVersion/main/kotlin")
+                kotlin.srcDirs("src/$ideaPlatformVersion/main/kotlin")
             }
             test {
-                kotlin.srcDirs("src/$platformVersion/test/kotlin")
+                kotlin.srcDirs("src/$ideaPlatformVersion/test/kotlin")
             }
         }
     }

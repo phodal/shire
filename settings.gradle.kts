@@ -1,9 +1,5 @@
 rootProject.name = "intellij-shire"
 
-plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
-}
-
 enableFeaturePreview("VERSION_CATALOGS")
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
@@ -11,7 +7,9 @@ include(
     "plugin",
     "core",
     "shirelang",
+)
 
+include(
     "languages:shire-java",
     "languages:shire-javascript",
     "languages:shire-python",
