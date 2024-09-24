@@ -1,4 +1,4 @@
-package com.phodal.shirecore.index
+package com.phodal.shire.json
 
 import com.intellij.util.io.DataExternalizer
 import java.io.DataInput

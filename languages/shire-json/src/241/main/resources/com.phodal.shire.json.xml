@@ -1,0 +1,10 @@
+<idea-plugin package="com.phodal.shire.json">
+<!--    <dependencies>-->
+<!--        <plugin id="com.intellij.modules.lang"/>-->
+<!--    </dependencies>-->
+
+    <extensions defaultExtensionNs="com.intellij">
+        <fileBasedIndex implementation="com.phodal.shire.json.ShireEnvironmentIndex"/>
+
+    </extensions>
+</idea-plugin>

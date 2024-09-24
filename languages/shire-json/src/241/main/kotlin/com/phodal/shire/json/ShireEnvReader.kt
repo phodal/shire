@@ -1,4 +1,4 @@
-package com.phodal.shirecore.provider.http
+package com.phodal.shire.json
 
 import com.intellij.json.psi.JsonFile
 import com.intellij.json.psi.JsonObject
@@ -7,8 +7,6 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.util.indexing.FileBasedIndex
-import com.phodal.shirecore.index.MODEL_LIST
-import com.phodal.shirecore.index.SHIRE_ENV_ID
 
 object ShireEnvReader {
     const val DEFAULT_ENV_NAME = "development"

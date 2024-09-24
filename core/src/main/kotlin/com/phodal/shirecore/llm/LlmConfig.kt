@@ -1,8 +1,8 @@
 package com.phodal.shirecore.llm
 
 import com.intellij.json.psi.JsonObject
-import com.phodal.shirecore.index.findNumber
-import com.phodal.shirecore.index.findString
+import com.phodal.shire.json.findNumber
+import com.phodal.shire.json.findString
 
 class LlmConfig(
     val title: String,

@@ -1,4 +1,4 @@
-package com.phodal.shirecore.index
+package com.phodal.shire.json
 
 import com.intellij.json.JsonUtil
 import com.intellij.json.psi.*

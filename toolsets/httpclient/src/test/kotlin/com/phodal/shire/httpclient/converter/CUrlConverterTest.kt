@@ -2,8 +2,8 @@ package com.phodal.shire.httpclient.converter
 
 import com.intellij.httpClient.converters.curl.parser.CurlParser
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
-import com.phodal.shirecore.provider.http.ShireEnvReader
-import com.phodal.shirecore.provider.http.ShireEnvVariableFiller
+import com.phodal.shire.json.ShireEnvReader
+import com.phodal.shire.json.ShireEnvVariableFiller
 
 class CUrlConverterTest : BasePlatformTestCase() {
     fun testShouldConvertCurlToRestClientRequest() {

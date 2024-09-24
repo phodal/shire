@@ -8,11 +8,10 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.readText
 import com.intellij.psi.search.ProjectScope
-import com.phodal.shirecore.provider.http.ShireEnvReader
-import com.phodal.shirecore.provider.http.ShireEnvVariableFiller
+import com.phodal.shire.json.ShireEnvReader
+import com.phodal.shire.json.ShireEnvVariableFiller
 import java.io.File
 import java.nio.charset.StandardCharsets
-
 
 object ShireShellRunner {
     private const val DEFAULT_TIMEOUT: Int = 30000

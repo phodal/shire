@@ -19,8 +19,8 @@ import com.intellij.psi.util.PsiUtilCore
 import com.phodal.shire.httpclient.converter.CUrlConverter
 import com.phodal.shirecore.provider.http.HttpHandler
 import com.phodal.shirecore.provider.http.HttpHandlerType
-import com.phodal.shirecore.provider.http.ShireEnvReader
-import com.phodal.shirecore.provider.http.ShireEnvVariableFiller
+import com.phodal.shire.json.ShireEnvReader
+import com.phodal.shire.json.ShireEnvVariableFiller
 import okhttp3.OkHttpClient
 
 class CUrlHttpHandler : HttpHandler {

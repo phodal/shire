@@ -248,6 +248,7 @@ project(":toolsets:httpclient") {
 
     dependencies {
         implementation(project(":core"))
+        implementation(project(":languages:shire-json"))
 
         // custom agent deps
         implementation("com.nfeld.jsonpathkt:jsonpathkt:2.0.1")
@@ -346,6 +347,7 @@ project(":shirelang") {
         implementation(kotlin("reflect"))
         implementation(project(":"))
         implementation(project(":core"))
+        implementation(project(":languages:shire-json"))
     }
 
     tasks {
@@ -398,6 +400,7 @@ project(":plugin") {
         implementation(project(":languages:shire-kotlin"))
         implementation(project(":languages:shire-go"))
         implementation(project(":languages:shire-markdown"))
+        implementation(project(":languages:shire-json"))
 
         implementation(project(":toolsets:git"))
         implementation(project(":toolsets:httpclient"))
@@ -535,6 +538,7 @@ project(":") {
 
     dependencies {
         implementation(project(":core"))
+        implementation(project(":languages:shire-json"))
 
         // custom agent deps
         implementation(libs.json.pathkt)

@@ -1,21 +1,12 @@
 package com.phodal.shirecore.llm
 
-import com.intellij.json.psi.JsonArray
-import com.intellij.json.psi.JsonFile
-import com.intellij.json.psi.JsonObject
-import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.project.Project
-import com.intellij.psi.PsiManager
 import com.intellij.psi.search.ProjectScope
-import com.intellij.util.indexing.FileBasedIndex
 import com.phodal.shirecore.ShireCoreBundle
 import com.phodal.shirecore.ShirelangNotifications
-import com.phodal.shirecore.index.MODEL_LIST
-import com.phodal.shirecore.index.MODEL_TITLE
-import com.phodal.shirecore.index.SHIRE_ENV_ID
-import com.phodal.shirecore.index.valueAsString
 import com.phodal.shirecore.middleware.PostProcessorContext
+import com.phodal.shire.json.llm.LlmEnv
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -62,35 +53,18 @@ interface LlmProvider {
      * config LLM Provider from [PostProcessorContext]
      */
     fun configRunLlm(): LlmConfig? {
-        if (project == null) {
-            return null
-        }
+        if (project == null) return null
 
         val modelName = PostProcessorContext.getData()?.llmModelName ?: return null
         val scope = ProjectScope.getContentScope(project!!)
 
-        val jsonFile = runReadAction {
-            FileBasedIndex.getInstance().getContainingFiles(SHIRE_ENV_ID, MODEL_LIST, scope)
-                .firstOrNull()
-                ?.let {
-                    (PsiManager.getInstance(project!!).findFile(it) as? JsonFile)
-                }
-        }
 
-        val modelConfig = getModelConfig(modelName, jsonFile)
+        val modelConfig = LlmEnv.configFromFile(modelName, scope, project!!)
         if (modelConfig != null) {
             return LlmConfig.fromJson(modelConfig)
         }
 
         return null
-    }
-
-    fun getModelConfig(modelName: String, psiFile: JsonFile?): JsonObject? {
-        val rootObject = psiFile?.topLevelValue as? JsonObject ?: return null
-        val envObject = rootObject.propertyList.firstOrNull { it.name == MODEL_LIST }?.value as? JsonArray
-        return envObject?.children?.firstOrNull {
-            it is JsonObject && it.findProperty(MODEL_TITLE)?.valueAsString(it) == modelName
-        } as? JsonObject
     }
 
     /**
