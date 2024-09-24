@@ -36,10 +36,13 @@ val ideaPlugins = listOf(
     "com.intellij.java",
     "org.jetbrains.plugins.gradle",
     "org.jetbrains.idea.maven",
-    "org.jetbrains.kotlin",
     "JavaScript",
     "com.jetbrains.restClient"
-)
+) + if (ideaPlatformVersion < 243) {
+    listOf("org.jetbrains.kotlin")
+} else {
+    emptyList()
+}
 
 
 // Configure project's dependencies
