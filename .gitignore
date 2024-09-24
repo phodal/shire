@@ -4,3 +4,4 @@
 build
 .kotlin/
 .shire-output
+.intellijPlatform
