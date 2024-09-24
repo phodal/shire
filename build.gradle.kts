@@ -152,6 +152,10 @@ project(":core") {
         }
     }
 
+    intellijPlatform {
+        instrumentCode = false
+    }
+
     dependencies {
         intellijPlatform {
             intellijIde(prop("ideaVersion"))
@@ -815,6 +819,10 @@ fun IntelliJPlatformTestingExtension.customRunIdeTask(
 
 /// for customize and business logic
 project(":") {
+    intellijPlatform {
+        instrumentCode = false
+    }
+
     dependencies {
         intellijPlatform {
             intellijIde(prop("ideaVersion"))
