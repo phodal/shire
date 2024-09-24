@@ -15,6 +15,10 @@ import java.util.*
 fun properties(key: String) = providers.gradleProperty(key)
 fun environment(key: String) = providers.environmentVariable(key)
 
+
+/// maybe refs: https://github.com/HaxeFoundation/intellij-haxe/blob/develop/build.gradle.kts
+/// and https://github.com/JetBrains/educational-plugin
+
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     id("java") // Java support
@@ -100,13 +104,6 @@ allprojects {
         implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
         implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
     }
-//
-//    intellij {
-//        version.set(prop("platformVersion"))
-//        type.set(prop("platformType"))
-//        instrumentCode.set(false)
-//        sandboxDir.set("${layout.projectDirectory}/build/idea-sandbox-$ideaPlatformVersion")
-//    }
 
     idea {
         module {
@@ -115,29 +112,6 @@ allprojects {
             isDownloadSources = true
         }
     }
-//
-//    tasks {
-//        withType<KotlinCompile> {
-//            kotlinOptions {
-//                jvmTarget = VERSION_17.toString()
-//                languageVersion = "1.8"
-//                // see https://plugins.jetbrains.com/docs/intellij/using-kotlin.html#kotlin-standard-library
-//                apiVersion = "1.7"
-//                freeCompilerArgs = listOf("-Xjvm-default=all")
-//            }
-//        }
-//
-//        withType<PatchPluginXmlTask> {
-//            sinceBuild.set(prop("pluginSinceBuild"))
-//            untilBuild.set(prop("pluginUntilBuild"))
-//        }
-//
-//        // All these tasks don't make sense for non-root subprojects
-//        // Root project (i.e. `:plugin`) enables them itself if needed
-//        runIde { enabled = false }
-//        prepareSandbox { enabled = false }
-//        buildSearchableOptions { enabled = false }
-//    }
 }
 
 project(":core") {
@@ -160,11 +134,6 @@ project(":core") {
     dependencies {
         intellijPlatform {
             intellijIde(prop("ideaVersion"))
-//            intellijIdeaCommunity("2024.2.2")
-//            bundledPlugin("com.intellij.java")
-//            pluginVerifier()
-//            zipSigner()
-//            instrumentationTools()
             testFramework(TestFrameworkType.Platform)
         }
 
@@ -184,10 +153,6 @@ project(":core") {
 }
 
 project(":languages:shire-java") {
-//    intellij {
-//        version.set(prop("ideaVersion"))
-//        plugins.set(ideaPlugins)
-//    }
     dependencies {
         intellijPlatform {
             intellijIde(prop("ideaVersion"))
@@ -262,15 +227,6 @@ project(":languages:shire-go") {
 }
 
 project(":languages:shire-json") {
-//    intellij {
-//        version.set(prop("ideaVersion"))
-//        val jsonPlugins = ideaPlugins.toMutableList()
-//        if (ideaPlatformVersion == 243) {
-//            jsonPlugins += "com.intellij.modules.json"
-//        }
-//        plugins.set(jsonPlugins)
-//    }
-
     dependencies {
         intellijPlatform {
             intellijIde(prop("ideaVersion"))
@@ -299,11 +255,6 @@ project(":languages:shire-json") {
 }
 
 project(":toolsets:git") {
-//    intellij {
-//        version.set(prop("ideaVersion"))
-//        plugins.set(ideaPlugins + "Git4Idea")
-//    }
-
     dependencies {
         intellijPlatform {
             intellijIde(prop("ideaVersion"))
@@ -318,11 +269,6 @@ project(":toolsets:git") {
 }
 
 project(":toolsets:httpclient") {
-//    intellij {
-//        version.set(prop("ideaVersion"))
-//        plugins.set(ideaPlugins)
-//    }
-
     dependencies {
         intellijPlatform {
             intellijIde(prop("ideaVersion"))
@@ -344,11 +290,6 @@ project(":toolsets:httpclient") {
 }
 
 project(":toolsets:terminal") {
-//    intellij {
-//        version.set(prop("ideaVersion"))
-//        plugins.set(ideaPlugins)
-//    }
-
     dependencies {
         intellijPlatform {
             intellijIde(prop("ideaVersion"))
@@ -360,11 +301,6 @@ project(":toolsets:terminal") {
 }
 
 project(":toolsets:sonarqube") {
-//    intellij {
-//        version.set(prop("ideaVersion"))
-//        plugins.set(ideaPlugins + prop("sonarPlugin"))
-//    }
-
     dependencies {
         intellijPlatform {
             intellijIde(prop("ideaVersion"))
@@ -376,10 +312,6 @@ project(":toolsets:sonarqube") {
 }
 
 project(":toolsets:plantuml") {
-//    intellij {
-//        version.set(prop("ideaVersion"))
-//        plugins.set(ideaPlugins + prop("plantUmlPlugin"))
-//    }
     dependencies {
         intellijPlatform {
             intellijIde(prop("ideaVersion"))
@@ -391,11 +323,6 @@ project(":toolsets:plantuml") {
 }
 
 project(":toolsets:mock") {
-//    intellij {
-//        version.set(prop("ideaVersion"))
-//        plugins.set(ideaPlugins + prop("wireMockPlugin"))
-//    }
-
     dependencies {
         intellijPlatform {
             intellijIde(prop("ideaVersion"))
@@ -407,10 +334,6 @@ project(":toolsets:mock") {
 }
 
 project(":toolsets:database") {
-//    intellij {
-//        version.set(prop("ideaVersion"))
-//        plugins.set(ideaPlugins + "com.intellij.database")
-//    }
     dependencies {
         intellijPlatform {
             intellijIde(prop("ideaVersion"))
@@ -425,11 +348,6 @@ project(":shirelang") {
     apply {
         plugin("org.jetbrains.grammarkit")
     }
-
-//    intellij {
-//        version.set(prop("platformVersion"))
-//        plugins.set((listOf<String>() + "org.intellij.plugins.markdown" + "com.jetbrains.sh" + "Git4Idea"))
-//    }
 
     dependencies {
         intellijPlatform {
@@ -498,8 +416,6 @@ project(":plugin") {
             id = "com.github.phodal.shire"
             name = "shire"
             version = prop("pluginVersion")
-//            changeNotes = provider { file("changes.html").readText() }
-//            description = provider { file("description.html").readText() }
 
             ideaVersion {
                 sinceBuild = prop("pluginSinceBuild")
@@ -514,26 +430,6 @@ project(":plugin") {
         buildSearchableOptions = false
     }
 
-//    dependencies {
-//        implementation(project(":"))
-//        implementation(project(":core"))
-//        implementation(project(":shirelang"))
-//
-//        implementation(project(":languages:shire-java"))
-//        implementation(project(":languages:shire-javascript"))
-//        implementation(project(":languages:shire-python"))
-//        implementation(project(":languages:shire-kotlin"))
-//        implementation(project(":languages:shire-go"))
-//        implementation(project(":languages:shire-markdown"))
-//        implementation(project(":languages:shire-json"))
-//
-//        implementation(project(":toolsets:git"))
-//        implementation(project(":toolsets:httpclient"))
-//        implementation(project(":toolsets:terminal"))
-//        implementation(project(":toolsets:sonarqube"))
-//        implementation(project(":toolsets:database"))
-//        implementation(project(":toolsets:mock"))
-//    }
     dependencies {
         intellijPlatform {
             intellijIde(prop("ideaVersion"))
@@ -564,54 +460,6 @@ project(":plugin") {
         }
     }
 
-    // Collects all jars produced by compilation of project modules and merges them into singe one.
-    // We need to put all plugin manifest files into single jar to make new plugin model work
-//    val mergePluginJarTask = task<Jar>("mergePluginJars") {
-//        duplicatesStrategy = DuplicatesStrategy.FAIL
-//        archiveBaseName.set(basePluginArchiveName)
-//
-//        exclude("META-INF/MANIFEST.MF")
-//        exclude("**/classpath.index")
-//
-//        val pluginLibDir by lazy {
-//            val sandboxTask = tasks.prepareSandbox.get()
-//            sandboxTask.destinationDir.resolve("${sandboxTask.pluginName.get()}/lib")
-//        }
-//
-//        val pluginJars by lazy {
-//            pluginLibDir.listFiles().orEmpty().filter {
-//                it.isPluginJar()
-//            }
-//        }
-//
-//        destinationDirectory.set(project.layout.dir(provider { pluginLibDir }))
-//
-//        doFirst {
-//            for (file in pluginJars) {
-//                from(zipTree(file))
-//            }
-//        }
-//
-//        doLast {
-//            delete(pluginJars)
-//        }
-//    }
-//
-//    // Add plugin sources to the plugin ZIP.
-//    // gradle-intellij-plugin will use it as a plugin sources if the plugin is used as a dependency
-//    val createSourceJar = task<Jar>("createSourceJar") {
-//        for (prj in pluginProjects) {
-//            from(prj.kotlin.sourceSets.main.get().kotlin) {
-//                include("**/*.java")
-//                include("**/*.kt")
-//            }
-//        }
-//
-//        destinationDirectory.set(layout.buildDirectory.dir("libs"))
-//        archiveBaseName.set(basePluginArchiveName)
-//        archiveClassifier.set("src")
-//    }
-//
 //    tasks {
 //        buildPlugin {
 //            dependsOn(createSourceJar)
@@ -758,15 +606,6 @@ project(":plugin") {
             }
 
             customRunIdeTask(IntellijIdeaUltimate, prop("ideaVersion"), baseTaskName = "Idea")
-//            customRunIdeTask(CLion, clionVersion)
-//            customRunIdeTask(PyCharmCommunity, pycharmVersion, baseTaskName = "PyCharm")
-//            customRunIdeTask(AndroidStudio, studioVersion)
-//            customRunIdeTask(WebStorm)
-//            customRunIdeTask(GoLand)
-//            customRunIdeTask(PhpStorm)
-//            customRunIdeTask(RustRover)
-//            customRunIdeTask(DataSpell)
-//            customRunIdeTask(Rider, riderVersion)
         }
     }
 }
