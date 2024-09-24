@@ -460,50 +460,6 @@ project(":plugin") {
         }
     }
 
-//    tasks {
-//        buildPlugin {
-//            dependsOn(createSourceJar)
-//            from(createSourceJar) { into("lib/src") }
-//            // Set proper name for final plugin zip.
-//            // Otherwise, base name is the same as gradle module name
-//            archiveBaseName.set(basePluginArchiveName)
-//        }
-//
-//        runIde { enabled = true }
-//
-//        prepareSandbox {
-//            finalizedBy(mergePluginJarTask)
-//            enabled = true
-//        }
-//
-//        buildSearchableOptions {
-//            // Force `mergePluginJarTask` be executed before `buildSearchableOptions`
-//            // Otherwise, `buildSearchableOptions` task can't load the plugin and searchable options are not built.
-//            // Should be dropped when jar merging is implemented in `gradle-intellij-plugin` itself
-//            dependsOn(mergePluginJarTask)
-//            enabled = false
-//        }
-//
-//        withType<RunIdeTask> {
-//            // Default args for IDEA installation
-//            jvmArgs("-Xmx768m", "-XX:+UseG1GC", "-XX:SoftRefLRUPolicyMSPerMB=50")
-//            // Disable plugin auto reloading. See `com.intellij.ide.plugins.DynamicPluginVfsListener`
-//            jvmArgs("-Didea.auto.reload.plugins=false")
-//            // Don't show "Tip of the Day" at startup
-//            jvmArgs("-Dide.show.tips.on.startup.default.value=false")
-//            // uncomment if `unexpected exception ProcessCanceledException` prevents you from debugging a running IDE
-//            // jvmArgs("-Didea.ProcessCanceledException=disabled")
-//        }
-//
-//
-//        withType<PublishPluginTask> {
-//            dependsOn("patchChangelog")
-//            token.set(environment("PUBLISH_TOKEN"))
-//            channels.set(properties("pluginVersion").map {
-//                listOf(it.split('-').getOrElse(1) { "default" }.split('.').first())
-//            })
-//        }
-//    }
     tasks {
         val projectName = project.extensionProvider.flatMap { it.projectName }
 
@@ -544,7 +500,7 @@ project(":plugin") {
 
         buildPlugin {
             dependsOn(":plugin:jar")
-            dependsOn(":plugin:sourcesJar")
+//            dependsOn(":plugin:sourcesJar")
             doLast {
                 copyFormatJars()
             }
@@ -574,6 +530,24 @@ project(":plugin") {
                 }
             })
         }
+
+//        signPlugin {
+//            certificateChain.set(environment("CERTIFICATE_CHAIN"))
+//            privateKey.set(environment("PRIVATE_KEY"))
+//            password.set(environment("PRIVATE_KEY_PASSWORD"))
+//        }
+
+        publishPlugin {
+            dependsOn("patchChangelog")
+            token.set(environment("PUBLISH_TOKEN"))
+            // The pluginVersion is based on the SemVer (https://semver.org) and supports pre-release labels, like 2.1.7-alpha.3
+            // Specify pre-release label to publish the plugin in a custom Release Channel automatically. Read more:
+            // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel
+            channels.set(properties("pluginVersion").map {
+                listOf(it.split('-').getOrElse(1) { "default" }.split('.').first())
+            })
+        }
+
 
         intellijPlatformTesting {
             // Generates event scheme for JetBrains Academy plugin FUS events to `build/eventScheme.json`
