@@ -1,11 +1,10 @@
-<idea-plugin allow-bundled-update="true">
+<idea-plugin xmlns:xi="http://www.w3.org/2001/XInclude" allow-bundled-update="true">
     <id>com.phodal.shire</id>
     <name>Shire - AI Coding Agent Language</name>
     <vendor>Phodal Huang</vendor>
     <depends>com.intellij.modules.platform</depends>
     <resource-bundle>messages.ShireMainBundle</resource-bundle>
 
-    <xi:include href="/META-INF/shire-main.xml" xpointer="xpointer(/idea-plugin/*)"/>
     <xi:include href="/com.phodal.shire.json.xml" xpointer="xpointer(/idea-plugin/*)"/>
     <xi:include href="/com.phodal.shirecore.xml" xpointer="xpointer(/idea-plugin/*)"/>
 
@@ -18,18 +17,11 @@
         <module name="com.phodal.shirelang.go"/>
         <module name="com.phodal.shirelang.markdown"/>
 
-        <!--        -->
-        <!--        <module name="com.phodal.shire.json"/>-->
-
         <module name="com.phodal.shire.httpclient"/>
         <module name="com.phodal.shire.terminal"/>
         <module name="com.phodal.shire.database"/>
         <module name="com.phodal.shirelang.git"/>
         <module name="com.phodal.shire.mock"/>
-
-        <!--        <module name="com.phodal.shire.uitest"/>-->
-
-        <!-- experimental features -->
         <module name="com.phodal.shire.sonarqube"/>
     </content>
 

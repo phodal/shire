@@ -542,14 +542,14 @@ project(":") {
                 into("${projectName.get()}/socialmedia")
                 include("**/*.gif")
             }
-            doLast {
+//            doLast {
 //                val kotlinJarRe = """kotlin-(stdlib|reflect|runtime).*\.jar""".toRegex()
 //                val libraryDir = destinationDir.resolve("${projectName.get()}/lib")
 //                val kotlinStdlibJars = libraryDir.listFiles().orEmpty().filter { kotlinJarRe.matches(it.name) }
 //                check(kotlinStdlibJars.isEmpty()) {
 //                    "Plugin shouldn't contain kotlin stdlib jars. Found:\n" + kotlinStdlibJars.joinToString(separator = ",\n") { it.absolutePath }
 //                }
-            }
+//            }
         }
         withType<RunIdeTask> {
             // Disable auto plugin reloading. See `com.intellij.ide.plugins.DynamicPluginVfsListener`
@@ -604,6 +604,10 @@ project(":") {
             })
         }
 
+        buildPlugin {
+            val newName = "intellij-shire-" + properties("pluginVersion").get()
+            archiveBaseName.convention(newName)
+        }
 
         intellijPlatformTesting {
             // Generates event scheme for JetBrains Academy plugin FUS events to `build/eventScheme.json`
