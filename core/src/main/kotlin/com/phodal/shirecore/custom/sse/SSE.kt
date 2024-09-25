@@ -1,4 +1,4 @@
-package com.phodal.shire.custom.sse
+package com.phodal.shirecore.custom.sse
 
 class SSE(val data: String) {
     fun toBytes(): ByteArray {

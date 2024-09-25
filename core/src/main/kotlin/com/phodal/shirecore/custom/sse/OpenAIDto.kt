@@ -1,4 +1,4 @@
-package com.phodal.shire.custom.sse
+package com.phodal.shirecore.custom.sse
 
 import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.annotation.JsonInclude

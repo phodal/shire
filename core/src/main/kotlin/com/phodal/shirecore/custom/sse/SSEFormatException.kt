@@ -1,3 +1,3 @@
-package com.phodal.shire.custom.sse
+package com.phodal.shirecore.custom.sse
 
 class SSEFormatException(msg: String?) : Throwable(msg)

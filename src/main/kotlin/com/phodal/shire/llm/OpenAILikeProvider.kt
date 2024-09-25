@@ -2,9 +2,9 @@ package com.phodal.shire.llm
 
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
-import com.phodal.shire.custom.CustomSSEHandler
-import com.phodal.shire.custom.appendCustomHeaders
-import com.phodal.shire.custom.updateCustomFormat
+import com.phodal.shirecore.custom.CustomSSEHandler
+import com.phodal.shirecore.custom.appendCustomHeaders
+import com.phodal.shirecore.custom.updateCustomFormat
 import com.phodal.shire.settings.ShireSettingsState
 import com.phodal.shirecore.llm.*
 import kotlinx.coroutines.flow.Flow

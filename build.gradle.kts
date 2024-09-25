@@ -161,6 +161,15 @@ project(":core") {
 
         implementation("cc.unitmesh:document:1.0.0")
         implementation("cc.unitmesh:cocoa-core:1.0.0")
+
+        // custom agent deps
+        implementation("com.nfeld.jsonpathkt:jsonpathkt:2.0.1")
+        implementation("com.squareup.okhttp3:okhttp:4.4.1")
+        implementation("com.squareup.okhttp3:okhttp-sse:4.12.0")
+        // open ai deps
+        implementation("io.reactivex.rxjava3:rxjava:3.1.9")
+        implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.2")
+        implementation("com.fasterxml.jackson.core:jackson-databind:2.17.2")
     }
 }
 
@@ -370,7 +379,7 @@ project(":shirelang") {
         implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
 
         implementation(kotlin("reflect"))
-        implementation(project(":"))
+//        implementation(project(":"))
         implementation(project(":core"))
         implementation(project(":languages:shire-json"))
     }

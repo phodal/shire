@@ -2,13 +2,13 @@ package com.phodal.shirelang.run.executor
 
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.application.ApplicationManager
-import com.phodal.shire.custom.CustomAgentSSEExecutor
 import com.phodal.shirecore.agent.CustomAgent
 import com.phodal.shirelang.ShireBundle
 import com.phodal.shirelang.run.flow.ShireConversationService
 import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.config.interaction.PostFunction
 import com.phodal.shirecore.console.cancelWithConsole
+import com.phodal.shirecore.custom.CustomAgentSSEExecutor
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
