@@ -78,6 +78,7 @@ subprojects {
 
     intellijPlatform {
         instrumentCode = false
+        buildSearchableOptions = false
     }
 
     tasks {
@@ -413,7 +414,7 @@ project(":plugin") {
     }
 
     intellijPlatform {
-        projectName = "Shire"
+        projectName = basePluginArchiveName
         pluginConfiguration {
             id = "com.github.phodal.shire"
             name = "shire"
@@ -428,6 +429,7 @@ project(":plugin") {
                 name = "Phodal Huang"
             }
         }
+
         instrumentCode = false
         buildSearchableOptions = false
     }
@@ -500,17 +502,6 @@ project(":plugin") {
             // jvmArgs("-Dfus.internal.test.mode=true")
         }
 
-        buildPlugin {
-            dependsOn(":plugin:jar")
-            doLast {
-                copy {
-                    from("plugin/build/libs/")
-                    into("build/distributions")
-                    include("*.jar")
-                }
-            }
-        }
-
         patchPluginXml {
             pluginDescription.set(provider { file("description.html").readText() })
 
@@ -573,7 +564,6 @@ project(":plugin") {
                 sandboxDirectory = intellijPlatform.sandboxContainer.dir("split-mode-sandbox-$ideaPlatformVersion")
 
                 plugins {
-                    val type = prop("ideaVersion").toTypeWithVersion().type
                     plugins(ideaPlugins)
                 }
             }
@@ -633,7 +623,23 @@ fun IntelliJPlatformTestingExtension.customRunIdeTask(
 /// for customize and business logic
 project(":") {
     intellijPlatform {
+        pluginConfiguration {
+            id = "com.github.phodal.shire"
+            name = "shire"
+            version = prop("pluginVersion")
+
+            ideaVersion {
+                sinceBuild = prop("pluginSinceBuild")
+                untilBuild = prop("pluginUntilBuild")
+            }
+
+            vendor {
+                name = "Phodal Huang"
+            }
+        }
+
         instrumentCode = false
+        buildSearchableOptions = false
     }
 
     dependencies {

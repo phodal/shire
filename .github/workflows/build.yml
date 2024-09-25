@@ -77,14 +77,14 @@ jobs:
 
       # Build plugin
       - name: Build plugin
-        run: ./gradlew :plugin:buildPlugin
+        run: ./gradlew :buildPlugin
 
       # Prepare plugin archive content for creating artifact
       - name: Prepare Plugin Artifact
         id: artifact
         shell: bash
         run: |
-          cd ${{ github.workspace }}/plugin/build/distributions
+          cd ${{ github.workspace }}/build/distributions
           FILENAME=`ls *.zip`
           unzip "$FILENAME" -d content
 
@@ -95,7 +95,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.artifact.outputs.filename }}
-          path: ./plugin/build/distributions/content/*/*
+          path: ./build/distributions/content/*/*
 
   # Run tests and upload a code coverage report
   test:
