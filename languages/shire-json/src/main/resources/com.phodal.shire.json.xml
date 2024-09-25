@@ -6,6 +6,5 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <fileBasedIndex implementation="com.phodal.shire.json.ShireEnvironmentIndex"/>
-
     </extensions>
 </idea-plugin>
