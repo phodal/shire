@@ -54,8 +54,7 @@ class ShireFileChangesProvider(val project: Project) : Disposable {
     }
 }
 
-internal class ShireFileModifcationListener : FileDocumentManagerListener, DocumentListener, ShireFileListener {
-
+internal class ShireFileModificationListener : FileDocumentManagerListener, DocumentListener, ShireFileListener {
     fun onUpdated(document: Document) {
         FileDocumentManager.getInstance().getFile(document).let { onUpdated(it) }
     }
@@ -77,7 +76,6 @@ internal class ShireFileModifcationListener : FileDocumentManagerListener, Docum
 internal class AsyncShireFileListener : AsyncFileListener, ShireFileListener {
 
     override fun prepareChange(events: MutableList<out VFileEvent>): AsyncFileListener.ChangeApplier {
-
         val beforeChangedEvents = mutableListOf<VFileEvent>()
         val afterChangedEvents = mutableListOf<VFileEvent>()
         for (event in events) {

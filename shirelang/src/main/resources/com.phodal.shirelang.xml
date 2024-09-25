@@ -73,9 +73,9 @@
 
         <vfs.asyncListener implementation="com.phodal.shirelang.actions.AsyncShireFileListener"/>
 
-        <fileDocumentManagerListener implementation="com.phodal.shirelang.actions.ShireFileModifcationListener"/>
+        <fileDocumentManagerListener implementation="com.phodal.shirelang.actions.ShireFileModificationListener"/>
 
-        <editorFactoryDocumentListener implementation="com.phodal.shirelang.actions.ShireFileModifcationListener"/>
+        <editorFactoryDocumentListener implementation="com.phodal.shirelang.actions.ShireFileModificationListener"/>
 
     </extensions>
 
