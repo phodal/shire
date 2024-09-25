@@ -51,12 +51,15 @@ val ideaPlugins = listOf(
     "org.jetbrains.plugins.gradle",
     "org.jetbrains.idea.maven",
     "JavaScript",
+    "org.jetbrains.kotlin",
     "com.jetbrains.restClient"
-) + if (ideaPlatformVersion < 243) {
-    listOf("org.jetbrains.kotlin")
+) + if (ideaPlatformVersion == 243) {
+    listOf(prop("jsonPlugin"))
 } else {
-    listOf(prop("jsonPlugin"), "org.jetbrains.kotlin")
+    emptyList()
 }
+
+println(ideaPlugins)
 
 // Configure project's dependencies
 repositories {
@@ -148,6 +151,8 @@ project(":core") {
         intellijPlatform {
             intellijIde(prop("ideaVersion"))
             intellijPlugins(ideaPlugins)
+
+            pluginModule(implementation(project(":languages:shire-json")))
 
             testFramework(TestFrameworkType.Platform)
         }
@@ -264,7 +269,7 @@ project(":languages:shire-json") {
     kotlin {
         sourceSets {
             main {
-                kotlin.srcDirs("src/$ideaPlatformVersion/main/kotlin")
+                kotlin.srcDirs("src/main/kotlin", "src/$ideaPlatformVersion/main/kotlin")
             }
             test {
                 kotlin.srcDirs("src/$ideaPlatformVersion/test/kotlin")
@@ -524,7 +529,7 @@ project(":") {
             pluginModule(implementation(project(":languages:shire-kotlin")))
             pluginModule(implementation(project(":languages:shire-go")))
             pluginModule(implementation(project(":languages:shire-markdown")))
-            pluginModule(implementation(project(":languages:shire-json")))
+//            pluginModule(implementation(project(":languages:shire-json")))
             pluginModule(implementation(project(":toolsets:git")))
             pluginModule(implementation(project(":toolsets:httpclient")))
             pluginModule(implementation(project(":toolsets:terminal")))

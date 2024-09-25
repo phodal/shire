@@ -24,7 +24,7 @@ object ShireEnvReader {
         scope: GlobalSearchScope,
         project: Project,
     ): JsonFile? {
-        return FileBasedIndex.getInstance().getContainingFiles(SHIRE_ENV_ID, envName, scope)
+        return FileBasedIndex.getInstance().getContainingFiles(ShireEnvironmentIndex.id(), envName, scope)
             .firstOrNull()
             ?.let {
                 (PsiManager.getInstance(project).findFile(it) as? JsonFile)
@@ -51,7 +51,7 @@ object ShireEnvReader {
 
     fun fetchEnvironmentVariables(envName: String, scope: GlobalSearchScope): List<Set<String>> {
         return FileBasedIndex.getInstance().getValues(
-            SHIRE_ENV_ID,
+            ShireEnvironmentIndex.id(),
             envName,
             scope
         )
@@ -60,9 +60,9 @@ object ShireEnvReader {
     fun getAllEnvironments(project: Project, scope: GlobalSearchScope): Collection<String> {
         val index = FileBasedIndex.getInstance()
 
-        return index.getAllKeys(SHIRE_ENV_ID, project).stream()
+        return index.getAllKeys(ShireEnvironmentIndex.id(), project).stream()
             .filter {
-                it != MODEL_LIST && index.getContainingFiles(SHIRE_ENV_ID, it, scope).isNotEmpty()
+                it != ShireEnvironmentIndex.MODEL_LIST && index.getContainingFiles(ShireEnvironmentIndex.id(), it, scope).isNotEmpty()
             }
             .toList()
     }

@@ -7,12 +7,18 @@ import com.intellij.util.io.DataExternalizer
 import com.intellij.util.io.EnumeratorStringDescriptor
 import com.intellij.util.io.KeyDescriptor
 
-val SHIRE_ENV_ID: ID<String, Set<String>> = ID.create("shire.environment")
-
-val MODEL_TITLE = "title"
-val MODEL_LIST = "models"
 
 class ShireEnvironmentIndex : FileBasedIndexExtension<String, Set<String>>() {
+    companion object {
+        val SHIRE_ENV_ID: ID<String, Set<String>> = ID.create("shire.environment")
+        const val MODEL_TITLE = "title"
+        const val MODEL_LIST = "models"
+
+        fun id(): ID<String, Set<String>> {
+            return SHIRE_ENV_ID
+        }
+    }
+
     override fun getValueExternalizer(): DataExternalizer<Set<String>> = ShireStringsExternalizer()
     override fun getVersion(): Int = 2
     override fun getInputFilter(): FileBasedIndex.InputFilter = ShireEnvironmentInputFilter()
