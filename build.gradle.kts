@@ -502,9 +502,12 @@ project(":plugin") {
 
         buildPlugin {
             dependsOn(":plugin:jar")
-//            dependsOn(":plugin:sourcesJar")
             doLast {
-                copyFormatJars()
+                copy {
+                    from("plugin/build/libs/")
+                    into("build/distributions")
+                    include("*.jar")
+                }
             }
         }
 
@@ -532,12 +535,6 @@ project(":plugin") {
                 }
             })
         }
-
-//        signPlugin {
-//            certificateChain.set(environment("CERTIFICATE_CHAIN"))
-//            privateKey.set(environment("PRIVATE_KEY"))
-//            password.set(environment("PRIVATE_KEY_PASSWORD"))
-//        }
 
         publishPlugin {
             dependsOn("patchChangelog")
@@ -824,13 +821,5 @@ fun DependencyHandler.implementationWithoutKotlin(dependencyNotation: Provider<*
 fun DependencyHandler.testImplementationWithoutKotlin(dependencyNotation: Provider<*>) {
     testImplementation(dependencyNotation) {
         excludeKotlinDeps()
-    }
-}
-
-fun copyFormatJars() {
-    copy {
-        from("plugin/build/libs/")
-        into("build/distributions")
-        include("*.jar")
     }
 }
