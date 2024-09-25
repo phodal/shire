@@ -74,7 +74,6 @@ internal class GitRepositoryCommitter(val repository: GitRepository, private val
         }
     }
 
-
     @Throws(VcsException::class)
     fun commitStaged(messageFile: File) {
         val gpgProblemDetector = GitGpgProblemDetector()

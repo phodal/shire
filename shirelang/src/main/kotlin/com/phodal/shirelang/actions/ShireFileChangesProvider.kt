@@ -15,6 +15,7 @@ import com.intellij.openapi.vfs.newvfs.events.VFileDeleteEvent
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent
 import com.intellij.openapi.vfs.newvfs.events.VFileMoveEvent
 import com.intellij.psi.PsiManager
+import com.intellij.testFramework.LightVirtualFile
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.psi.ShireFile
 
@@ -113,7 +114,9 @@ internal class AsyncShireFileListener : AsyncFileListener, ShireFileListener {
  */
 interface ShireFileListener {
     fun onUpdated(file: VirtualFile?) {
-        if (file == null || !file.isValid) return
+        if (file == null || !file.isValid || file.isDirectory) return
+        if (file is LightVirtualFile) return
+
         ShireUpdater.publisher.onUpdated {
             PsiManager.getInstance(it).findFile(file) as? ShireFile
         }
