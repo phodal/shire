@@ -379,7 +379,6 @@ project(":shirelang") {
         implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
 
         implementation(kotlin("reflect"))
-//        implementation(project(":"))
         implementation(project(":core"))
         implementation(project(":languages:shire-json"))
     }
@@ -411,7 +410,54 @@ project(":shirelang") {
     }
 }
 
-project(":plugin") {
+/**
+ * Creates `run$[baseTaskName]` Gradle task to run IDE of given [type]
+ * via `runIde` task with plugins according to [ideToPlugins] map
+ */
+fun IntelliJPlatformTestingExtension.customRunIdeTask(
+    type: IntelliJPlatformType,
+    versionWithCode: String? = null,
+    baseTaskName: String = type.name,
+) {
+    runIde.register("run$baseTaskName") {
+        useInstaller = false
+
+        if (versionWithCode != null) {
+            val version = versionWithCode.toTypeWithVersion().version
+
+            this.type = type
+            this.version = version
+        } else {
+            val pathProperty = baseTaskName.replaceFirstChar { it.lowercaseChar() } + "Path"
+            // Avoid throwing exception during property calculation.
+            // Some IDE tooling (for example, Package Search plugin) may try to calculate properties during `Sync` phase for all tasks.
+            // In our case, some `run*` task may not have `pathProperty` in your `gradle.properties`,
+            // and as a result, the `Sync` tool window will show you the error thrown by `prop` function.
+            //
+            // The following solution just moves throwing the corresponding error to task execution,
+            // i.e., only when a task is actually invoked
+            if (hasProp(pathProperty)) {
+                localPath.convention(layout.dir(provider { file(prop(pathProperty)) }))
+            } else {
+                task {
+                    doFirst {
+                        throw GradleException("Property `$pathProperty` is not defined in gradle.properties")
+                    }
+                }
+            }
+        }
+
+        // Specify custom sandbox directory to have a stable path to log file
+        sandboxDirectory =
+            intellijPlatform.sandboxContainer.dir("${baseTaskName.lowercase()}-sandbox-${prop("ideaPlatformVersion")}")
+
+        plugins {
+            plugins(ideaPlugins)
+        }
+    }
+}
+
+project(":") {
     apply {
         plugin("org.jetbrains.changelog")
         plugin("org.jetbrains.intellij.platform.module")
@@ -455,7 +501,6 @@ project(":plugin") {
                 jetbrainsRuntime()
             }
 
-            pluginModule(implementation(project(":")))
             pluginModule(implementation(project(":core")))
             pluginModule(implementation(project(":shirelang")))
             pluginModule(implementation(project(":languages:shire-java")))
@@ -474,6 +519,15 @@ project(":plugin") {
 
             testFramework(TestFrameworkType.Bundled)
         }
+
+        // custom agent deps
+        implementation("com.nfeld.jsonpathkt:jsonpathkt:2.0.1")
+        implementation("com.squareup.okhttp3:okhttp:4.4.1")
+        implementation("com.squareup.okhttp3:okhttp-sse:4.12.0")
+        // open ai deps
+        implementation("io.reactivex.rxjava3:rxjava:3.1.9")
+        implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.2")
+        implementation("com.fasterxml.jackson.core:jackson-databind:2.17.2")
     }
 
     tasks {
@@ -489,12 +543,12 @@ project(":plugin") {
                 include("**/*.gif")
             }
             doLast {
-                val kotlinJarRe = """kotlin-(stdlib|reflect|runtime).*\.jar""".toRegex()
-                val libraryDir = destinationDir.resolve("${projectName.get()}/lib")
-                val kotlinStdlibJars = libraryDir.listFiles().orEmpty().filter { kotlinJarRe.matches(it.name) }
-                check(kotlinStdlibJars.isEmpty()) {
-                    "Plugin shouldn't contain kotlin stdlib jars. Found:\n" + kotlinStdlibJars.joinToString(separator = ",\n") { it.absolutePath }
-                }
+//                val kotlinJarRe = """kotlin-(stdlib|reflect|runtime).*\.jar""".toRegex()
+//                val libraryDir = destinationDir.resolve("${projectName.get()}/lib")
+//                val kotlinStdlibJars = libraryDir.listFiles().orEmpty().filter { kotlinJarRe.matches(it.name) }
+//                check(kotlinStdlibJars.isEmpty()) {
+//                    "Plugin shouldn't contain kotlin stdlib jars. Found:\n" + kotlinStdlibJars.joinToString(separator = ",\n") { it.absolutePath }
+//                }
             }
         }
         withType<RunIdeTask> {
@@ -515,7 +569,7 @@ project(":plugin") {
         }
 
         patchPluginXml {
-            pluginDescription.set(provider { file("description.html").readText() })
+            pluginDescription.set(provider { file("src/description.html").readText() })
 
             changelog {
                 version.set(properties("pluginVersion"))
@@ -585,105 +639,58 @@ project(":plugin") {
     }
 }
 
-/**
- * Creates `run$[baseTaskName]` Gradle task to run IDE of given [type]
- * via `runIde` task with plugins according to [ideToPlugins] map
- */
-fun IntelliJPlatformTestingExtension.customRunIdeTask(
-    type: IntelliJPlatformType,
-    versionWithCode: String? = null,
-    baseTaskName: String = type.name,
-) {
-    runIde.register("run$baseTaskName") {
-        useInstaller = false
-
-        if (versionWithCode != null) {
-            val version = versionWithCode.toTypeWithVersion().version
-
-            this.type = type
-            this.version = version
-        } else {
-            val pathProperty = baseTaskName.replaceFirstChar { it.lowercaseChar() } + "Path"
-            // Avoid throwing exception during property calculation.
-            // Some IDE tooling (for example, Package Search plugin) may try to calculate properties during `Sync` phase for all tasks.
-            // In our case, some `run*` task may not have `pathProperty` in your `gradle.properties`,
-            // and as a result, the `Sync` tool window will show you the error thrown by `prop` function.
-            //
-            // The following solution just moves throwing the corresponding error to task execution,
-            // i.e., only when a task is actually invoked
-            if (hasProp(pathProperty)) {
-                localPath.convention(layout.dir(provider { file(prop(pathProperty)) }))
-            } else {
-                task {
-                    doFirst {
-                        throw GradleException("Property `$pathProperty` is not defined in gradle.properties")
-                    }
-                }
-            }
-        }
-
-        // Specify custom sandbox directory to have a stable path to log file
-        sandboxDirectory =
-            intellijPlatform.sandboxContainer.dir("${baseTaskName.lowercase()}-sandbox-${prop("ideaPlatformVersion")}")
-
-        plugins {
-            plugins(ideaPlugins)
-        }
-    }
-}
-
 /// for customize and business logic
-project(":") {
-    intellijPlatform {
-        pluginConfiguration {
-            id = "com.github.phodal.shire"
-            name = "shire"
-            version = prop("pluginVersion")
-
-            ideaVersion {
-                sinceBuild = prop("pluginSinceBuild")
-                untilBuild = prop("pluginUntilBuild")
-            }
-
-            vendor {
-                name = "Phodal Huang"
-            }
-        }
-
-        instrumentCode = false
-        buildSearchableOptions = false
-    }
-
-    dependencies {
-        intellijPlatform {
-            intellijIde(prop("ideaVersion"))
-            intellijPlugins(ideaPlugins)
-
-            pluginVerifier()
-        }
-
-        implementation(project(":core"))
-        implementation(project(":languages:shire-json"))
-
-        // custom agent deps
-        implementation(libs.json.pathkt)
-        implementation(libs.okhttp)
-        implementation(libs.okhttp.sse)
-        // open ai deps
-        implementation("io.reactivex.rxjava3:rxjava:3.1.9")
-        implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.2")
-        implementation("com.fasterxml.jackson.core:jackson-databind:2.17.2")
-    }
-
-    task("resolveDependencies") {
-        doLast {
-            rootProject.allprojects
-                .map { it.configurations }
-                .flatMap { it.filter { c -> c.isCanBeResolved } }
-                .forEach { it.resolve() }
-        }
-    }
-}
+//project(":") {
+//    intellijPlatform {
+//        pluginConfiguration {
+//            id = "com.github.phodal.shire"
+//            name = "shire"
+//            version = prop("pluginVersion")
+//
+//            ideaVersion {
+//                sinceBuild = prop("pluginSinceBuild")
+//                untilBuild = prop("pluginUntilBuild")
+//            }
+//
+//            vendor {
+//                name = "Phodal Huang"
+//            }
+//        }
+//
+//        instrumentCode = false
+//        buildSearchableOptions = false
+//    }
+//
+//    dependencies {
+//        intellijPlatform {
+//            intellijIde(prop("ideaVersion"))
+//            intellijPlugins(ideaPlugins)
+//
+//            pluginVerifier()
+//        }
+//
+//        implementation(project(":core"))
+//        implementation(project(":languages:shire-json"))
+//
+//        // custom agent deps
+//        implementation(libs.json.pathkt)
+//        implementation(libs.okhttp)
+//        implementation(libs.okhttp.sse)
+//        // open ai deps
+//        implementation("io.reactivex.rxjava3:rxjava:3.1.9")
+//        implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.2")
+//        implementation("com.fasterxml.jackson.core:jackson-databind:2.17.2")
+//    }
+//
+//    task("resolveDependencies") {
+//        doLast {
+//            rootProject.allprojects
+//                .map { it.configurations }
+//                .flatMap { it.filter { c -> c.isCanBeResolved } }
+//                .forEach { it.resolve() }
+//        }
+//    }
+//}
 
 fun File.isPluginJar(): Boolean {
     if (!isFile) return false

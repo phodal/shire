@@ -3,7 +3,6 @@ rootProject.name = "intellij-shire"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 include(
-    "plugin",
     "core",
     "shirelang",
 )
