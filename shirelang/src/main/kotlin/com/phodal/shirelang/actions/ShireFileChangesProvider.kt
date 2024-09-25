@@ -114,7 +114,6 @@ internal class AsyncShireFileListener : AsyncFileListener, ShireFileListener {
  * Only handle events related to shire file
  */
 interface ShireFileListener {
-
     fun onUpdated(file: VirtualFile?) {
         if (file == null || !file.isValid) return
         ShireUpdater.publisher.onUpdated {

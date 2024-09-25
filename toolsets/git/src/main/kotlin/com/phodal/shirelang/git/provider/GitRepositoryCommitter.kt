@@ -3,29 +3,29 @@ package com.phodal.shirelang.git.provider
 
 import com.intellij.execution.process.ProcessOutputTypes
 import com.intellij.notification.NotificationAction
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.help.HelpManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Key
 import com.intellij.openapi.vcs.VcsException
 import com.intellij.openapi.vcs.changes.CommitContext
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.util.ThrowableConsumer
 import com.intellij.vcs.commit.CommitExceptionWithActions
 import com.intellij.vcs.commit.isAmendCommitMode
 import com.intellij.vcs.commit.isCleanupCommitMessage
 import com.intellij.vcs.log.VcsUser
-import git4idea.checkin.GitCheckinEnvironment.COMMIT_DATE_FORMAT
-import git4idea.checkin.GitCheckinEnvironment.runWithMessageFile
-import git4idea.checkin.commitAuthor
-import git4idea.checkin.commitAuthorDate
-import git4idea.checkin.isSignOffCommit
-import git4idea.checkin.isSkipHooks
+import git4idea.checkin.*
 import git4idea.commands.Git
 import git4idea.commands.GitCommand
 import git4idea.commands.GitLineHandler
 import git4idea.commands.GitLineHandlerListener
 import git4idea.i18n.GitBundle
 import git4idea.repo.GitRepository
+import org.jetbrains.annotations.NonNls
 import java.io.File
+import java.io.IOException
+import java.text.SimpleDateFormat
 import java.util.*
 
 data class GitCommitOptions(
@@ -34,110 +34,131 @@ data class GitCommitOptions(
   val isSkipHooks: Boolean = false,
   val commitAuthor: VcsUser? = null,
   val commitAuthorDate: Date? = null,
-  val isCleanupCommitMessage: Boolean = false
+  val isCleanupCommitMessage: Boolean = false,
 ) {
-  constructor(context: CommitContext) : this(
-    context.isAmendCommitMode,
-    context.isSignOffCommit,
-    context.isSkipHooks,
-    context.commitAuthor,
-    context.commitAuthorDate,
-    context.isCleanupCommitMessage
-  )
+    constructor(context: CommitContext) : this(
+        context.isAmendCommitMode,
+        context.isSignOffCommit,
+        context.isSkipHooks,
+        context.commitAuthor,
+        context.commitAuthorDate,
+        context.isCleanupCommitMessage
+    )
 }
 
 internal class GitRepositoryCommitter(val repository: GitRepository, private val commitOptions: GitCommitOptions) {
-  val project: Project get() = repository.project
-  val root: VirtualFile get() = repository.root
+    val project: Project get() = repository.project
+    val root: VirtualFile get() = repository.root
 
-  @Throws(VcsException::class)
-  fun commitStaged(commitMessage: String) {
-    runWithMessageFile(project, root, commitMessage) { messageFile -> commitStaged(messageFile) }
-  }
-
-  @Throws(VcsException::class)
-  fun commitStaged(messageFile: File) {
-    val gpgProblemDetector = GitGpgProblemDetector()
-    val emptyCommitProblemDetector = GitEmptyCommitProblemDetector()
-    val handler = GitLineHandler(project, root, GitCommand.COMMIT)
-    handler.setStdoutSuppressed(false)
-    handler.addLineListener(gpgProblemDetector)
-    handler.addLineListener(emptyCommitProblemDetector)
-
-    handler.setCommitMessage(messageFile)
-    handler.setCommitOptions(commitOptions)
-    handler.endOptions()
-
-    val command = Git.getInstance().runCommand(handler)
-
-    try {
-      command.throwOnError()
+    @Throws(VcsException::class)
+    fun commitStaged(commitMessage: String) {
+        runWithMessageFile(project, root, commitMessage) { messageFile -> commitStaged(messageFile) }
     }
-    catch (e: VcsException) {
-      if (gpgProblemDetector.isDetected) {
-        throw GitGpgCommitException(e)
-      }
-      if (emptyCommitProblemDetector.isDetected) {
-        throw VcsException(GitBundle.message("git.commit.nothing.to.commit.error.message"))
-      }
-      throw e
+
+    private fun runWithMessageFile(
+      project: Project, root: VirtualFile, message: @NonNls String,
+      task: ThrowableConsumer<in File, out VcsException>,
+    ) {
+        val messageFile = try {
+            GitCheckinEnvironment.createCommitMessageFile(project, root, message)
+        } catch (ex: IOException) {
+            throw VcsException(GitBundle.message("error.commit.cant.create.message.file"), ex)
+        }
+
+        try {
+            task.consume(messageFile)
+        } finally {
+            if (!messageFile.delete()) {
+                logger<GitRepositoryCommitter>().warn("Failed to remove temporary file: $messageFile")
+            }
+        }
     }
-  }
+
+
+    @Throws(VcsException::class)
+    fun commitStaged(messageFile: File) {
+        val gpgProblemDetector = GitGpgProblemDetector()
+        val emptyCommitProblemDetector = GitEmptyCommitProblemDetector()
+        val handler = GitLineHandler(project, root, GitCommand.COMMIT)
+        handler.setStdoutSuppressed(false)
+        handler.addLineListener(gpgProblemDetector)
+        handler.addLineListener(emptyCommitProblemDetector)
+
+        handler.setCommitMessage(messageFile)
+        handler.setCommitOptions(commitOptions)
+        handler.endOptions()
+
+        val command = Git.getInstance().runCommand(handler)
+
+        try {
+            command.throwOnError()
+        } catch (e: VcsException) {
+            if (gpgProblemDetector.isDetected) {
+                throw GitGpgCommitException(e)
+            }
+            if (emptyCommitProblemDetector.isDetected) {
+                throw VcsException(GitBundle.message("git.commit.nothing.to.commit.error.message"))
+            }
+            throw e
+        }
+    }
 }
 
-private fun GitLineHandler.setCommitOptions(options: GitCommitOptions) {
-  if (options.isAmend) addParameters("--amend")
-  if (options.isSignOff) addParameters("--signoff")
-  if (options.isSkipHooks) addParameters("--no-verify")
-  if (options.isCleanupCommitMessage) addParameters("--cleanup=strip")
+val COMMIT_DATE_FORMAT: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
-  options.commitAuthor?.let { addParameters("--author=$it") }
-  options.commitAuthorDate?.let { addParameters("--date", COMMIT_DATE_FORMAT.format(it)) }
+private fun GitLineHandler.setCommitOptions(options: GitCommitOptions) {
+    if (options.isAmend) addParameters("--amend")
+    if (options.isSignOff) addParameters("--signoff")
+    if (options.isSkipHooks) addParameters("--no-verify")
+    if (options.isCleanupCommitMessage) addParameters("--cleanup=strip")
+
+    options.commitAuthor?.let { addParameters("--author=$it") }
+    options.commitAuthorDate?.let { addParameters("--date", COMMIT_DATE_FORMAT.format(it)) }
 }
 
 private fun GitLineHandler.setCommitMessage(messageFile: File) {
-  addParameters("-F")
-  addAbsoluteFile(messageFile)
+    addParameters("-F")
+    addAbsoluteFile(messageFile)
 }
 
 private class GitGpgProblemDetector : GitLineHandlerListener {
-  var isDetected = false
-    private set
+    var isDetected = false
+        private set
 
-  override fun onLineAvailable(line: String, outputType: Key<*>) {
-    if (outputType === ProcessOutputTypes.STDERR && line.contains(PATTERN)) {
-      isDetected = true
+    override fun onLineAvailable(line: String, outputType: Key<*>) {
+        if (outputType === ProcessOutputTypes.STDERR && line.contains(PATTERN)) {
+            isDetected = true
+        }
     }
-  }
 
-  companion object {
-    private const val PATTERN = "gpg failed to sign the data"
-  }
+    companion object {
+        private const val PATTERN = "gpg failed to sign the data"
+    }
 }
 
 private class GitEmptyCommitProblemDetector : GitLineHandlerListener {
-  var isDetected = false
-    private set
+    var isDetected = false
+        private set
 
-  override fun onLineAvailable(line: String, outputType: Key<*>) {
-    if (outputType === ProcessOutputTypes.STDOUT && PATTERNS.any { line.startsWith(it, ignoreCase = true) }) {
-      isDetected = true
+    override fun onLineAvailable(line: String, outputType: Key<*>) {
+        if (outputType === ProcessOutputTypes.STDOUT && PATTERNS.any { line.startsWith(it, ignoreCase = true) }) {
+            isDetected = true
+        }
     }
-  }
 
-  companion object {
-    private val PATTERNS = listOf(
-      "No changes",
-      "no changes added to commit",
-      "nothing added to commit",
-      "nothing to commit"
-    )
-  }
+    companion object {
+        private val PATTERNS = listOf(
+            "No changes",
+            "no changes added to commit",
+            "nothing added to commit",
+            "nothing to commit"
+        )
+    }
 }
 
 private class GitGpgCommitException(cause: VcsException) : VcsException(cause), CommitExceptionWithActions {
-  override val actions: List<NotificationAction>
-    get() = listOf(NotificationAction.createSimple(GitBundle.message("gpg.error.see.documentation.link.text")) {
-      HelpManager.getInstance().invokeHelp(GitBundle.message("gpg.jb.manual.link"))
-    })
+    override val actions: List<NotificationAction>
+        get() = listOf(NotificationAction.createSimple(GitBundle.message("gpg.error.see.documentation.link.text")) {
+            HelpManager.getInstance().invokeHelp(GitBundle.message("gpg.jb.manual.link"))
+        })
 }
