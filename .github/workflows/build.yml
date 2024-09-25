@@ -77,7 +77,7 @@ jobs:
 
       # Build plugin
       - name: Build plugin
-        run: ./gradlew :plugin:buildPlugin -Dorg.gradle.daemon.performance.enable-monitoring=false -Dorg.gradle.jvmargs=-Xmx1g
+        run: ./gradlew :plugin:buildPlugin
 
       # Prepare plugin archive content for creating artifact
       - name: Prepare Plugin Artifact
