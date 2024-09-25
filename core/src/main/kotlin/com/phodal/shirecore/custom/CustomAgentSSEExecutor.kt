@@ -56,8 +56,8 @@ class CustomAgentSSEExecutor(val project: Project) : CustomSSEHandler() {
         }
 
         client = client.newBuilder()
-            .connectTimeout(agent.defaultTimeout, TimeUnit.SECONDS)
-            .readTimeout(agent.defaultTimeout, TimeUnit.SECONDS).build()
+            .connectTimeout(agent.defaultTimeout, TimeUnit.MINUTES)
+            .readTimeout(agent.defaultTimeout, TimeUnit.MINUTES).build()
 
         val call = client.newCall(builder.url(agent.url).post(body).build())
 
