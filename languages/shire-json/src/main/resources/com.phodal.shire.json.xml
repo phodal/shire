@@ -1,7 +1,8 @@
 <idea-plugin package="com.phodal.shire.json">
-<!--    <dependencies>-->
-<!--        <plugin id="com.intellij.modules.lang"/>-->
-<!--    </dependencies>-->
+    <!--suppress PluginXmlValidity -->
+    <dependencies>
+        <plugin id="com.intellij.modules.json"/>
+    </dependencies>
 
     <extensions defaultExtensionNs="com.intellij">
         <fileBasedIndex implementation="com.phodal.shire.json.ShireEnvironmentIndex"/>

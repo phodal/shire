@@ -254,6 +254,10 @@ project(":languages:shire-json") {
     dependencies {
         intellijPlatform {
             intellijIde(prop("ideaVersion"))
+            if (ideaPlatformVersion == 243) {
+                plugins(prop("jsonPlugin"))
+            }
+
             intellijPlugins(ideaPlugins + if (ideaPlatformVersion == 243) "com.intellij.modules.json" else "")
         }
     }
