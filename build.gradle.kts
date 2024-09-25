@@ -537,20 +537,6 @@ project(":") {
             archiveBaseName.convention(projectName)
         }
 
-        withType<PrepareSandboxTask> {
-            from("socialmedia") {
-                into("${projectName.get()}/socialmedia")
-                include("**/*.gif")
-            }
-//            doLast {
-//                val kotlinJarRe = """kotlin-(stdlib|reflect|runtime).*\.jar""".toRegex()
-//                val libraryDir = destinationDir.resolve("${projectName.get()}/lib")
-//                val kotlinStdlibJars = libraryDir.listFiles().orEmpty().filter { kotlinJarRe.matches(it.name) }
-//                check(kotlinStdlibJars.isEmpty()) {
-//                    "Plugin shouldn't contain kotlin stdlib jars. Found:\n" + kotlinStdlibJars.joinToString(separator = ",\n") { it.absolutePath }
-//                }
-//            }
-        }
         withType<RunIdeTask> {
             // Disable auto plugin reloading. See `com.intellij.ide.plugins.DynamicPluginVfsListener`
             // To enable dynamic reloading, change value to `true` and disable `EduDynamicPluginListener`
@@ -642,59 +628,6 @@ project(":") {
         }
     }
 }
-
-/// for customize and business logic
-//project(":") {
-//    intellijPlatform {
-//        pluginConfiguration {
-//            id = "com.github.phodal.shire"
-//            name = "shire"
-//            version = prop("pluginVersion")
-//
-//            ideaVersion {
-//                sinceBuild = prop("pluginSinceBuild")
-//                untilBuild = prop("pluginUntilBuild")
-//            }
-//
-//            vendor {
-//                name = "Phodal Huang"
-//            }
-//        }
-//
-//        instrumentCode = false
-//        buildSearchableOptions = false
-//    }
-//
-//    dependencies {
-//        intellijPlatform {
-//            intellijIde(prop("ideaVersion"))
-//            intellijPlugins(ideaPlugins)
-//
-//            pluginVerifier()
-//        }
-//
-//        implementation(project(":core"))
-//        implementation(project(":languages:shire-json"))
-//
-//        // custom agent deps
-//        implementation(libs.json.pathkt)
-//        implementation(libs.okhttp)
-//        implementation(libs.okhttp.sse)
-//        // open ai deps
-//        implementation("io.reactivex.rxjava3:rxjava:3.1.9")
-//        implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.2")
-//        implementation("com.fasterxml.jackson.core:jackson-databind:2.17.2")
-//    }
-//
-//    task("resolveDependencies") {
-//        doLast {
-//            rootProject.allprojects
-//                .map { it.configurations }
-//                .flatMap { it.filter { c -> c.isCanBeResolved } }
-//                .forEach { it.resolve() }
-//        }
-//    }
-//}
 
 fun File.isPluginJar(): Boolean {
     if (!isFile) return false
