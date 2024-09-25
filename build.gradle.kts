@@ -474,7 +474,7 @@ project(":") {
     intellijPlatform {
         projectName = basePluginArchiveName
         pluginConfiguration {
-            id = "com.github.phodal.shire"
+            id = "com.phodal.shire"
             name = "shire"
             version = prop("pluginVersion")
 
