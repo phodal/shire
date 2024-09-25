@@ -65,7 +65,11 @@ repositories {
     }
 }
 
-subprojects {
+configure(
+    subprojects
+            - project(":languages")
+            - project(":toolsets")
+) {
     apply {
         plugin("org.jetbrains.intellij.platform.module")
     }
@@ -263,7 +267,6 @@ project(":toolsets:git") {
             intellijIde(prop("ideaVersion"))
             intellijPlugins(ideaPlugins + "Git4Idea")
         }
-
 
         implementation(project(":core"))
 
@@ -646,6 +649,8 @@ project(":") {
         intellijPlatform {
             intellijIde(prop("ideaVersion"))
             intellijPlugins(ideaPlugins)
+
+            pluginVerifier()
         }
 
         implementation(project(":core"))
