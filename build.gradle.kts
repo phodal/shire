@@ -8,6 +8,7 @@ import org.jetbrains.intellij.platform.gradle.extensions.IntelliJPlatformDepende
 import org.jetbrains.intellij.platform.gradle.extensions.IntelliJPlatformTestingExtension
 import org.jetbrains.intellij.platform.gradle.tasks.PrepareSandboxTask
 import org.jetbrains.intellij.platform.gradle.tasks.RunIdeTask
+import org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginTask
 import org.jetbrains.intellij.platform.gradle.utils.extensionProvider
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.util.*
@@ -54,7 +55,7 @@ val ideaPlugins = listOf(
 ) + if (ideaPlatformVersion < 243) {
     listOf("org.jetbrains.kotlin")
 } else {
-    emptyList()
+    listOf(prop("jsonPlugin"), "org.jetbrains.kotlin")
 }
 
 // Configure project's dependencies
@@ -146,6 +147,8 @@ project(":core") {
     dependencies {
         intellijPlatform {
             intellijIde(prop("ideaVersion"))
+            intellijPlugins(ideaPlugins)
+
             testFramework(TestFrameworkType.Platform)
         }
 
@@ -485,6 +488,19 @@ project(":") {
 
             vendor {
                 name = "Phodal Huang"
+            }
+        }
+
+        pluginVerification {
+            freeArgs = listOf("-mute", "TemplateWordInPluginId,ForbiddenPluginIdPrefix")
+            failureLevel = listOf(
+                VerifyPluginTask.FailureLevel.MISSING_DEPENDENCIES
+            )
+            ides {
+                select {
+                    sinceBuild = prop("pluginSinceBuild")
+                    untilBuild = prop("pluginUntilBuild")
+                }
             }
         }
 
