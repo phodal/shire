@@ -494,6 +494,7 @@ project(":") {
 
     dependencies {
         intellijPlatform {
+            pluginVerifier()
             intellijIde(prop("ideaVersion"))
             if (hasProp("jbrVersion")) {
                 jetbrainsRuntime(prop("jbrVersion"))
