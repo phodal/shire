@@ -6,9 +6,7 @@ import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType.*
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 import org.jetbrains.intellij.platform.gradle.extensions.IntelliJPlatformDependenciesExtension
 import org.jetbrains.intellij.platform.gradle.extensions.IntelliJPlatformTestingExtension
-import org.jetbrains.intellij.platform.gradle.tasks.PrepareSandboxTask
 import org.jetbrains.intellij.platform.gradle.tasks.RunIdeTask
-import org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginTask
 import org.jetbrains.intellij.platform.gradle.utils.extensionProvider
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.util.*
@@ -505,8 +503,10 @@ project(":") {
 //            failureLevel = listOf(VerifyPluginTask.FailureLevel.MISSING_DEPENDENCIES)
             ides {
                 select {
-                    sinceBuild = prop("pluginSinceBuild")
-                    untilBuild = prop("pluginUntilBuild")
+                    sinceBuild = "242"
+                    untilBuild = "243"
+//                    sinceBuild = prop("pluginSinceBuild")
+//                    untilBuild = prop("pluginUntilBuild")
                 }
             }
         }
