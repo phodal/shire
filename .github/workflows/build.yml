@@ -75,8 +75,6 @@ jobs:
           echo "$CHANGELOG" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
-          ./gradlew listProductsReleases # prepare list of IDEs for Plugin Verifier
-
       # Build plugin
       - name: Build plugin
         run: ./gradlew :plugin:buildPlugin -Dorg.gradle.daemon.performance.enable-monitoring=false -Dorg.gradle.jvmargs=-Xmx1g
