@@ -1,4 +1,4 @@
-package com.phodal.shirelang.git
+package com.phodal.shire.git
 
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.logger

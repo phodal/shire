@@ -20,7 +20,7 @@
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
 
-package com.phodal.shirelang.git
+package com.phodal.shire.git
 
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.project.Project

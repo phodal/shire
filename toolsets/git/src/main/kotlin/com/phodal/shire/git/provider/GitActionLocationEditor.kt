@@ -1,4 +1,4 @@
-package com.phodal.shirelang.git.provider
+package com.phodal.shire.git.provider
 
 import com.intellij.openapi.application.invokeAndWaitIfNeeded
 import com.intellij.openapi.application.runWriteAction

@@ -1,0 +1,18 @@
+<idea-plugin package="com.phodal.shirelang.git">
+    <!--suppress PluginXmlValidity -->
+    <dependencies>
+        <plugin id="Git4Idea"/>
+    </dependencies>
+
+    <extensions defaultExtensionNs="com.phodal">
+        <shireRevisionProvider implementation="com.phodal.shire.git.provider.GitRevisionProvider"/>
+
+        <shireToolchainVariableProvider implementation="com.phodal.shire.git.provider.GitToolchainVariableProvider"/>
+
+        <shireToolchainFunctionProvider implementation="com.phodal.shire.git.provider.GitFunctionProvider"/>
+
+        <shireActionLocationEditor implementation="com.phodal.shire.git.provider.GitActionLocationEditor"/>
+
+        <shireQLDataProvider implementation="com.phodal.shire.git.provider.GitQLDataProvider"/>
+    </extensions>
+</idea-plugin>

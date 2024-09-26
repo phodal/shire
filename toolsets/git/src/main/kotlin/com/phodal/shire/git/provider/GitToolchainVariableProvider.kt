@@ -1,4 +1,4 @@
-package com.phodal.shirelang.git.provider
+package com.phodal.shire.git.provider
 
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.editor.Editor
@@ -15,7 +15,7 @@ import com.intellij.vcs.log.visible.filters.VcsLogFilterObject
 import com.phodal.shirecore.provider.variable.ToolchainVariableProvider
 import com.phodal.shirecore.provider.variable.model.ToolchainVariable
 import com.phodal.shirecore.provider.variable.model.toolchain.VcsToolchainVariable
-import com.phodal.shirelang.git.VcsPrompting
+import com.phodal.shire.git.VcsPrompting
 import java.awt.EventQueue.invokeAndWait
 
 

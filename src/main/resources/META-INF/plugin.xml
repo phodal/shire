@@ -5,7 +5,6 @@
     <depends>com.intellij.modules.platform</depends>
     <resource-bundle>messages.ShireMainBundle</resource-bundle>
 
-    <xi:include href="/com.phodal.shire.json.xml" xpointer="xpointer(/idea-plugin/*)"/>
     <xi:include href="/com.phodal.shirecore.xml" xpointer="xpointer(/idea-plugin/*)"/>
 
     <content>
@@ -17,10 +16,13 @@
         <module name="com.phodal.shirelang.go"/>
         <module name="com.phodal.shirelang.markdown"/>
 
+        <!-- Config Firle -->
+        <module name="com.phodal.shire.json"/>
+
         <module name="com.phodal.shire.httpclient"/>
         <module name="com.phodal.shire.terminal"/>
         <module name="com.phodal.shire.database"/>
-        <module name="com.phodal.shirelang.git"/>
+        <module name="com.phodal.shire.git"/>
         <module name="com.phodal.shire.mock"/>
         <module name="com.phodal.shire.sonarqube"/>
     </content>

@@ -1,4 +1,4 @@
-package com.phodal.shirelang.git.provider
+package com.phodal.shire.git.provider
 
 import com.intellij.ide.DataManager
 import com.intellij.openapi.vcs.VcsDataKeys

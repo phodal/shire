@@ -1,4 +1,4 @@
-package com.phodal.shirelang.git.provider
+package com.phodal.shire.git.provider
 
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
