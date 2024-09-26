@@ -13,15 +13,27 @@ jobs:
   release:
     name: Publish Plugin
     runs-on: ubuntu-latest
-    environment: JetBrains
+    strategy:
+      fail-fast: true
+      matrix:
+        platform-version: [ 241, 243 ]
+    env:
+      ORG_GRADLE_PROJECT_platformVersion: ${{ matrix.platform-version }}
+
     permissions:
       contents: write
       pull-requests: write
     steps:
+      # Free GitHub Actions Environment Disk Space
+      - name: Maximize Build Space
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: false
+          large-packages: false
 
       # Check out current repository
       - name: Fetch Sources
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
         with:
           submodules: 'true'
           ref: ${{ github.event.release.tag_name }}
@@ -59,7 +71,7 @@ jobs:
         env:
           CHANGELOG: ${{ steps.properties.outputs.changelog }}
         run: |
-          ./gradlew :patchChangelog --release-note="$CHANGELOG"
+          ./gradlew patchChangelog --release-note="$CHANGELOG"
 
       # Publish the plugin to JetBrains Marketplace
       - name: Publish Plugin
@@ -75,31 +87,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh release upload ${{ github.event.release.tag_name }} ./build/distributions/*
-
-      # Create a pull request
-#      - name: Create Pull Request
-#        if: ${{ steps.properties.outputs.changelog != '' }}
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        run: |
-#          VERSION="${{ github.event.release.tag_name }}"
-#          BRANCH="changelog-update-$VERSION"
-#          LABEL="release changelog"
-#
-#          git config user.email "action@github.com"
-#          git config user.name "GitHub Action"
-#
-#          git checkout -b $BRANCH
-#          git commit -am "Changelog update - $VERSION"
-#          git push --set-upstream origin $BRANCH
-#
-#          gh label create "$LABEL" \
-#            --description "Pull requests with release changelog update" \
-#            --force \
-#            || true
-#
-#          gh pr create \
-#            --title "Changelog update - \`$VERSION\`" \
-#            --body "Current pull request contains patched \`CHANGELOG.md\` file for the \`$VERSION\` version." \
-#            --label "$LABEL" \
-#            --head $BRANCH
