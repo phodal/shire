@@ -98,6 +98,7 @@ allprojects {
         plugin("idea")
         plugin("kotlin")
         plugin("org.jetbrains.kotlinx.kover")
+        plugin("org.jetbrains.intellij.platform.module")
     }
 
     repositories {
