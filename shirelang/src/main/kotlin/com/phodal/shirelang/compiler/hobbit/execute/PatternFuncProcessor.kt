@@ -377,7 +377,12 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                 JsonPathFunction.parse(jsonStr, action) ?: jsonStr
             }
 
-            is PatternActionFunc.Destroy -> TODO()
+            is PatternActionFunc.Destroy -> {
+                TODO()
+            }
+            is PatternActionFunc.Tokenizer -> {
+                TokenizerProcessor.execute(myProject, action)
+            }
         }
     }
 

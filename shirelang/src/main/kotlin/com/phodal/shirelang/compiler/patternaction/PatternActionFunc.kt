@@ -182,6 +182,8 @@ sealed class PatternActionFunc(val type: PatternActionFuncType) {
 
     class Batch(val fileName: String, val inputs: List<String>, val batchSize: Int = 1) : PatternActionFunc(PatternActionFuncType.BATCH)
 
+    class Tokenizer(val text: String, val tokType: String) : PatternActionFunc(PatternActionFuncType.TOKENIZER)
+
     /**
      * User Custom Functions
      */
@@ -336,6 +338,13 @@ sealed class PatternActionFunc(val type: PatternActionFuncType) {
                     Destroy()
                 }
                 PatternActionFuncType.TOOLCHAIN_FUNCTION -> ToolchainFunction(funcName, args)
+                PatternActionFuncType.TOKENIZER -> {
+                    if (args.isEmpty()) {
+                        logger.error("parsePatternAction, tokenizer requires at least 1 argument")
+                        return null
+                    }
+                    Tokenizer(args[0], args.getOrNull(1) ?: "word")
+                }
                 else -> {
                     ToolchainFunction(funcName, args)
                 }

@@ -348,7 +348,22 @@ enum class PatternActionFuncType(val funcName: String, val description: String) 
         | 
         | For more goto: [https://shire.phodal.com/shire/shire-toolchain-function](https://shire.phodal.com/shire/shire-toolchain-function)
         """.trimMargin()
-    );
+    ),
+
+    TOKENIZER(
+        "tokenizer", """
+        | Tokenizer function is used to tokenize the text. Support type for : word, sentence, paragraph, line
+        |
+        | Example:
+        | ```shire
+        | ---
+        | variables:
+        |   "story": /.*.java/ { tokenizer("word") | print }
+        | ---
+        | ```
+        """.trimMargin()
+    )
+    ;
 
     override fun toString(): String = description
 }
