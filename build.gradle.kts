@@ -57,9 +57,6 @@ val ideaPlugins = listOf(
     emptyList()
 }
 
-println(ideaPlugins)
-
-// Configure project's dependencies
 repositories {
     intellijPlatform {
         defaultRepositories()
@@ -74,12 +71,6 @@ configure(
 ) {
     apply {
         plugin("org.jetbrains.intellij.platform.module")
-    }
-
-    repositories {
-        intellijPlatform {
-            defaultRepositories()
-        }
     }
 
     intellijPlatform {
@@ -111,6 +102,10 @@ allprojects {
 
     repositories {
         mavenCentral()
+
+        intellijPlatform {
+            defaultRepositories()
+        }
     }
 
     dependencies {
@@ -131,14 +126,6 @@ allprojects {
 project(":core") {
     apply {
         plugin("org.jetbrains.kotlin.plugin.serialization")
-    }
-
-    repositories {
-        mavenCentral()
-
-        intellijPlatform {
-            defaultRepositories()
-        }
     }
 
     intellijPlatform {
