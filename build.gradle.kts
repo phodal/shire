@@ -462,7 +462,6 @@ fun IntelliJPlatformTestingExtension.customRunIdeTask(
 project(":") {
     apply {
         plugin("org.jetbrains.changelog")
-        plugin("org.jetbrains.intellij.platform.module")
         plugin("org.jetbrains.intellij.platform")
     }
 
