@@ -1,4 +1,4 @@
-<idea-plugin package="com.phodal.shirelang.git">
+<idea-plugin package="com.phodal.shire.git">
     <!--suppress PluginXmlValidity -->
     <dependencies>
         <plugin id="Git4Idea"/>
