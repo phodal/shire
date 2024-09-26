@@ -516,6 +516,8 @@ project(":") {
                 jetbrainsRuntime()
             }
 
+            plugin(prop("jsonPlugin"))
+
             pluginModule(implementation(project(":core")))
             pluginModule(implementation(project(":shirelang")))
             pluginModule(implementation(project(":languages:shire-java")))
@@ -544,6 +546,14 @@ project(":") {
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.2")
         implementation("com.fasterxml.jackson.core:jackson-databind:2.17.2")
     }
+
+//    kotlin {
+//        sourceSets {
+//            main {
+//                resources.srcDirs("src/$ideaPlatformVersion/main/resources")
+//            }
+//        }
+//    }
 
     tasks {
         val projectName = project.extensionProvider.flatMap { it.projectName }
@@ -594,6 +604,8 @@ project(":") {
             })
         }
 
+        val newName = "intellij-shire-" + prop("ideaVersion") + "-" + prop("pluginVersion")
+
         publishPlugin {
             dependsOn("patchChangelog")
             token = environment("PUBLISH_TOKEN")
@@ -603,10 +615,11 @@ project(":") {
             channels.set(properties("pluginVersion").map {
                 listOf(it.split('-').getOrElse(1) { "default" }.split('.').first())
             })
+
+            archiveFile = file("build/distributions/$newName.zip")
         }
 
         buildPlugin {
-            val newName = "intellij-shire-" + properties("pluginVersion").get()
             archiveBaseName.convention(newName)
         }
 
