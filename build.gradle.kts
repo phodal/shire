@@ -93,7 +93,11 @@ configure(
     }
 }
 
-allprojects {
+configure(
+    allprojects
+            - project(":languages")
+            - project(":toolsets")
+) {
     apply {
         plugin("idea")
         plugin("kotlin")
