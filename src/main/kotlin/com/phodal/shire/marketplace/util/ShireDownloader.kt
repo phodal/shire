@@ -2,10 +2,12 @@
 package com.phodal.shire.marketplace.util
 
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.project.guessProjectDir
 import com.intellij.openapi.util.Computable
 import com.intellij.openapi.util.io.FileUtil
 import com.intellij.util.download.DownloadableFileService
@@ -49,7 +51,13 @@ class ShireDownloader(val project: Project, val item: ShirePackage) {
         downloadLock.writeLock().lock()
         try {
             val pluginDir: File = getPluginDir()
-            return downloadWithProgress { doDownload(pluginDir, downloader) }
+            return downloadWithProgress {
+                doDownload(pluginDir, downloader).apply {
+                    invokeLater {
+                        project.guessProjectDir()?.refresh(true, true)
+                    }
+                }
+            }
         } finally {
             downloadLock.writeLock().unlock()
         }
