@@ -52,10 +52,6 @@ class ShireMarketplaceTableView(val project: Project) {
                             ShireDownloader(project, item).downloadAndUnzip()
                             ShirelangNotifications.info(project, "Success Downloaded ${item.title}")
 
-                            invokeLater {
-                                project.guessProjectDir()?.refresh(true, true)
-                            }
-
                             fireEditingStopped()
                         }
                     }

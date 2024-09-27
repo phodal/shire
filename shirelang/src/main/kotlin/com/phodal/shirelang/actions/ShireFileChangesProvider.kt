@@ -11,6 +11,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.AsyncFileListener
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.newvfs.events.VFileCopyEvent
+import com.intellij.openapi.vfs.newvfs.events.VFileCreateEvent
 import com.intellij.openapi.vfs.newvfs.events.VFileDeleteEvent
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent
 import com.intellij.openapi.vfs.newvfs.events.VFileMoveEvent
@@ -81,7 +82,7 @@ internal class AsyncShireFileListener : AsyncFileListener, ShireFileListener {
         val afterChangedEvents = mutableListOf<VFileEvent>()
         for (event in events) {
             if (event is VFileDeleteEvent) beforeChangedEvents.add(event)
-            if (event is VFileCopyEvent || event is VFileMoveEvent) afterChangedEvents.add(event)
+            if (event is VFileCopyEvent || event is VFileMoveEvent || event is VFileCreateEvent) afterChangedEvents.add(event)
         }
 
         return object : AsyncFileListener.ChangeApplier {
