@@ -1,8 +1,35 @@
-# [](https://github.com/phodal/shire/compare/v0.8.2...v) (2024-09-23)
+# [](https://github.com/phodal/shire/compare/v0.8.3...v) (2024-09-27)
 
 ## [Unreleased]
 
-## [0.8.2](https://github.com/phodal/shire/compare/v0.8.1...v[0.8.2]) (2024-09-22)
+## [0.8.3] - 2024-09-27
+
+### Bug Fixes
+
+- **actions:** The shire file downloaded from the marketplace has not been dynamically updated ([4a0aa6f](https://github.com/phodal/shire/commit/4a0aa6f57306d693cf78a7098e826f87de1179cc))
+- **build:** comment out failureLevel in pluginVerification [#100](https://github.com/phodal/shire/issues/100) ([e260a10](https://github.com/phodal/shire/commit/e260a1055c6b6a93acd0fa938e5e06c400aa0843))
+- **github-actions:** correct gradle task paths in release workflow [#100](https://github.com/phodal/shire/issues/100) ([4d5a39d](https://github.com/phodal/shire/commit/4d5a39dbe22ea76845a34ccbadf61c994045643f))
+- **shirelang:** correct typo in ShireFileModificationListener class name ([8baad36](https://github.com/phodal/shire/commit/8baad367cae909fa19ce542f64041c1be05e65b7))
+
+### Features
+
+- **build.gradle.kts:** import Changelog and update PatchPluginXmlTask ([cd7df2c](https://github.com/phodal/shire/commit/cd7df2c4ea3769aec3681e5418a683015558b37b))
+- **build:** configure specific subprojects in build.gradle.kts [#100](https://github.com/phodal/shire/issues/100) ([e7db461](https://github.com/phodal/shire/commit/e7db4611e96e523bc774040857c40d3b04345f71))
+- **build:** optimize GitHub Actions build space ([0f3a6f9](https://github.com/phodal/shire/commit/0f3a6f9f6c991619c3fa3be990d0ea0f5211b820))
+- **build:** try to resize verify range for reduce size of disk in GitHub Action [#100](https://github.com/phodal/shire/issues/100) ([e127f88](https://github.com/phodal/shire/commit/e127f88b628448dea3d80cbf3befa951c9011e73))
+- **build:** update Gradle setup and plugin verification tasks ([b779cd0](https://github.com/phodal/shire/commit/b779cd0be31599f8e05e45ae634fdec0689fbe04))
+- **build:** update Gradle version and enable PatchPluginXmlTask [#100](https://github.com/phodal/shire/issues/100) ([8044084](https://github.com/phodal/shire/commit/804408437ab7b3e6fb9c6e6d15d7dc566b4a4e90))
+- **gradle:** update IntelliJ IDEA version and add plugin verification [#100](https://github.com/phodal/shire/issues/100) ([c5b58a1](https://github.com/phodal/shire/commit/c5b58a1d4d9fbb96788b72634ca216caa10b8448))
+- **gradle:** update IntelliJ platform version and add shire-json language support [#100](https://github.com/phodal/shire/issues/100) ([da4f120](https://github.com/phodal/shire/commit/da4f1206e70922bfd10960981123e9d4d1c8771b))
+- **IDEA-243:** add deps plugins [#100](https://github.com/phodal/shire/issues/100) ([276f391](https://github.com/phodal/shire/commit/276f391c617265d67e562616787322db3c3fa123))
+- init tokenizer function for [#104](https://github.com/phodal/shire/issues/104) ([1ae89ed](https://github.com/phodal/shire/commit/1ae89ed7c39a4f4421f6946fb24e14d232596f59))
+- **json-plugin:** add dependency on IntelliJ JSON plugin [#100](https://github.com/phodal/shire/issues/100) ([ce0bbad](https://github.com/phodal/shire/commit/ce0bbadaebd310307f29409c324803ad2d8e9a7d))
+- **shire-json:** move JSON related functionalities from core to shire-json module [#100](https://github.com/phodal/shire/issues/100) ([3f3a77a](https://github.com/phodal/shire/commit/3f3a77a4399a6e66c7b400d452cb1509f2fb674d))
+- **ShireFileListener:** ignore directories and LightVirtualFiles in onUpdated method ([086ed79](https://github.com/phodal/shire/commit/086ed79e9064c56d4eef15b2dee41110fa886c2f))
+- timeout ([c02f7b2](https://github.com/phodal/shire/commit/c02f7b29ef0f0389b3a9e5adac72ff7a6415bfb5))
+- **tokenizer:** add multiple tokenizer types support in TokenizerProcessor [#100](https://github.com/phodal/shire/issues/100) ([9575b14](https://github.com/phodal/shire/commit/9575b141109b81ad87157bbe2546908960e53868))
+
+## [0.8.2](https://github.com/phodal/shire/compare/v0.8.1...v[0.8.2]) (2024-09-23)
 
 ### Bug Fixes
 
@@ -588,7 +615,8 @@
 - **shell:** add shell language support plugin file ([bdc1c90](https://github.com/phodal/shire/commit/bdc1c90f10d7c2c4fb8f7157db343dd756c11352))
 - **shire:** add Shire context action group and location support ([e3df86d](https://github.com/phodal/shire/commit/e3df86d16d0c9985fec787a8e76ce553be9a9a45))
 
-[Unreleased]: https://github.com/phodal/shire/compare/v0.8.2...HEAD
+[Unreleased]: https://github.com/phodal/shire/compare/v0.8.3...HEAD
+[0.8.3]: https://github.com/phodal/shire/compare/v0.8.2...v0.8.3
 [0.8.2]: https://github.com/phodal/shire/compare/v0.8.1...v0.8.2
 [0.8.1]: https://github.com/phodal/shire/compare/v0.7.4...v0.8.1
 [0.7.4]: https://github.com/phodal/shire/compare/v0.7.2...v0.7.4
