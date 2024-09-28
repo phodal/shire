@@ -166,7 +166,7 @@ project(":core") {
         implementation("com.squareup.okhttp3:okhttp-sse:4.12.0")
         // open ai deps
         implementation("io.reactivex.rxjava3:rxjava:3.1.9")
-        implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.2")
+        implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.18.0")
         implementation("com.fasterxml.jackson.core:jackson-databind:2.18.0")
     }
 }
@@ -301,7 +301,7 @@ project(":toolsets:httpclient") {
         implementation("com.squareup.okhttp3:okhttp-sse:4.12.0")
         // open ai deps
         implementation("io.reactivex.rxjava3:rxjava:3.1.9")
-        implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.2")
+        implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.18.0")
         implementation("com.fasterxml.jackson.core:jackson-databind:2.18.0")
     }
 }
@@ -543,7 +543,7 @@ project(":") {
         implementation("com.squareup.okhttp3:okhttp-sse:4.12.0")
         // open ai deps
         implementation("io.reactivex.rxjava3:rxjava:3.1.9")
-        implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.2")
+        implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.18.0")
         implementation("com.fasterxml.jackson.core:jackson-databind:2.18.0")
     }
 
