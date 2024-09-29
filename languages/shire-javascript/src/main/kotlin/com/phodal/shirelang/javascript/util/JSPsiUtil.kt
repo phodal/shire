@@ -244,7 +244,7 @@ object JSPsiUtil {
     /**
      * Todo: since in JavaScript has different test framework, we need to find the test directory by the framework.
      */
-    private fun suggestTestDirectory(element: PsiElement): PsiDirectory? =
+    fun suggestTestDirectory(element: PsiElement): PsiDirectory? =
         ReadAction.compute<PsiDirectory?, Throwable> {
             val project: Project = element.project
             val elementDirectory = element.containingFile
@@ -261,7 +261,7 @@ object JSPsiUtil {
             return@compute psiManager.findDirectory(createChildDirectory)
         }
 
-    private fun generateUniqueTestFile(
+    fun generateUniqueTestFile(
         elementName: String?,
         containingFile: PsiFile,
         testDirectory: PsiDirectory,

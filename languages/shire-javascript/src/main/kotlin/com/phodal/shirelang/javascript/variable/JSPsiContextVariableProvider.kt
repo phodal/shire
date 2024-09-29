@@ -65,8 +65,10 @@ class JSPsiContextVariableProvider : PsiContextVariableProvider {
 
             RELATED_CLASSES -> JSRelevantUtil.lookupRelevantClass(underTestElement)
             SIMILAR_TEST_CASE -> ""
-            IMPORTS -> PsiTreeUtil.findChildrenOfType(sourceFile, JSImportStatement::class.java)
-                .map { it.text }
+            IMPORTS -> {
+                PsiTreeUtil.findChildrenOfType(sourceFile, JSImportStatement::class.java)
+                    .map { it.text }
+            }
 
             IS_NEED_CREATE_FILE -> TODO()
             TARGET_TEST_FILE_NAME -> JSPsiUtil.getTestFilePath(psiElement) ?: ""
