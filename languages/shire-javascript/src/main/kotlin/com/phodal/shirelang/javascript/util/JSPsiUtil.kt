@@ -204,6 +204,9 @@ object JSPsiUtil {
      * ```
      */
     fun getElementToTest(psiElement: PsiElement): PsiElement? {
+        if (psiElement is JSFile) return psiElement
+        if (psiElement is JSClass) return psiElement
+
         val jsFunc = PsiTreeUtil.getParentOfType(psiElement, JSFunction::class.java, false)
         val jsVarStatement = PsiTreeUtil.getParentOfType(psiElement, JSVarStatement::class.java, false)
         val jsClazz = PsiTreeUtil.getParentOfType(psiElement, JSClass::class.java, false)
@@ -218,9 +221,9 @@ object JSPsiUtil {
         if (elementForTests == null) return null
 
         return when {
-            JSPsiUtil.isExportedClassPublicMethod(elementForTests) -> elementForTests
-            JSPsiUtil.isExportedFileFunction(elementForTests) -> elementForTests
-            JSPsiUtil.isExportedClass(elementForTests) -> elementForTests
+            isExportedClassPublicMethod(elementForTests) -> elementForTests
+            isExportedFileFunction(elementForTests) -> elementForTests
+            isExportedClass(elementForTests) -> elementForTests
             else -> {
                 null
             }

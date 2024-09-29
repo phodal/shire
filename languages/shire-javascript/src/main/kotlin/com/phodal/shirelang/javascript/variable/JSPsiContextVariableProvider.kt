@@ -1,5 +1,8 @@
 package com.phodal.shirelang.javascript.variable
 
+import com.intellij.lang.ecmascript6.psi.ES6ImportDeclaration
+import com.intellij.lang.ecmascript6.psi.ES6ImportSpecifier
+import com.intellij.lang.ecmascript6.psi.ES6ImportSpecifierAlias
 import com.intellij.lang.javascript.JavascriptLanguage
 import com.intellij.lang.javascript.psi.JSFile
 import com.intellij.lang.javascript.psi.JSFunction
@@ -66,7 +69,12 @@ class JSPsiContextVariableProvider : PsiContextVariableProvider {
             RELATED_CLASSES -> JSRelevantUtil.lookupRelevantClass(underTestElement)
             SIMILAR_TEST_CASE -> ""
             IMPORTS -> {
-                PsiTreeUtil.findChildrenOfType(sourceFile, JSImportStatement::class.java)
+                return PsiTreeUtil.findChildrenOfAnyType(sourceFile,
+                    JSImportStatement::class.java,
+                    ES6ImportDeclaration::class.java,
+                    ES6ImportSpecifier::class.java,
+                    ES6ImportSpecifierAlias::class.java
+                )
                     .map { it.text }
             }
 
