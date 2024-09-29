@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="plugin/src/main/resources/META-INF/pluginIcon.svg" width="160px" height="160px"  alt="logo" />
+  <img src="src/main/resources/META-INF/pluginIcon.svg" width="160px" height="160px"  alt="logo" />
 </p>
 <h1 align="center">the Shire - AI Coding Agent Language</h1>
 <p align="center">
