@@ -25,7 +25,7 @@ class JavaScriptMethodStructureProvider : MethodStructureProvider {
             if (gatherUsages) JavaScriptClassStructureProvider.findUsages(psiElement as PsiNameIdentifierOwner) else emptyList()
 
         return MethodStructure(
-            psiElement, psiElement.text, psiElement.name!!, functionSignature, containingClass, languageDisplayName,
+            psiElement, psiElement.text, psiElement.name!!, psiElement.name + functionSignature, containingClass, languageDisplayName,
             returnTypeText, parameterNames, includeClassContext, usages
         )
     }
