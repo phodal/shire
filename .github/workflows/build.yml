@@ -99,7 +99,6 @@ jobs:
     needs: [ build ]
     runs-on: ubuntu-latest
     steps:
-
       # Check out the current repository
       - name: Fetch Sources
         uses: actions/checkout@v4
@@ -114,6 +113,8 @@ jobs:
       # Setup Gradle
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-home-cache-cleanup: true
 
       # Run tests
       - name: Run Tests
@@ -133,51 +134,12 @@ jobs:
         with:
           files: ${{ github.workspace }}/build/reports/kover/report.xml
 
-  # Run Qodana inspections and provide report
-#  inspectCode:
-#    name: Inspect code
-#    needs: [ build ]
-#    runs-on: ubuntu-latest
-#    permissions:
-#      contents: write
-#      checks: write
-#      pull-requests: write
-#    steps:
-#
-#      # Free GitHub Actions Environment Disk Space
-#      - name: Maximize Build Space
-#        uses: jlumbroso/free-disk-space@main
-#        with:
-#          tool-cache: false
-#          large-packages: false
-#
-#      # Check out the current repository
-#      - name: Fetch Sources
-#        uses: actions/checkout@v4
-#        with:
-#          ref: ${{ github.event.pull_request.head.sha }}  # to check out the actual pull request commit, not the merge commit
-#          fetch-depth: 0  # a full history is required for pull request analysis
-#
-#      # Set up Java environment for the next steps
-#      - name: Setup Java
-#        uses: actions/setup-java@v4
-#        with:
-#          distribution: zulu
-#          java-version: 17
-#
-#      # Run Qodana inspections
-#      - name: Qodana - Code Inspection
-#        uses: JetBrains/qodana-action@v2024.2
-#        with:
-#          cache-default-branch-only: true
-
   # Run plugin structure verification along with IntelliJ Plugin Verifier
   verify:
     name: Verify plugin
     needs: [ build ]
     runs-on: ubuntu-latest
     steps:
-
       # Free GitHub Actions Environment Disk Space
       - name: Maximize Build Space
         uses: jlumbroso/free-disk-space@main
@@ -199,6 +161,8 @@ jobs:
       # Setup Gradle
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-home-cache-cleanup: true
 
       # Cache Plugin Verifier IDEs
       - name: Setup Plugin Verifier IDEs Cache
