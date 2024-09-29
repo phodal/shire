@@ -197,27 +197,7 @@ class JSAutoTestingService : TestingService() {
          * ```
          */
         fun getElementToTest(psiElement: PsiElement): PsiElement? {
-            val jsFunc = PsiTreeUtil.getParentOfType(psiElement, JSFunction::class.java, false)
-            val jsVarStatement = PsiTreeUtil.getParentOfType(psiElement, JSVarStatement::class.java, false)
-            val jsClazz = PsiTreeUtil.getParentOfType(psiElement, JSClass::class.java, false)
-
-            val elementForTests: PsiElement? = when {
-                jsFunc != null -> jsFunc
-                jsVarStatement != null -> jsVarStatement
-                jsClazz != null -> jsClazz
-                else -> null
-            }
-
-            if (elementForTests == null) return null
-
-            return when {
-                JSPsiUtil.isExportedClassPublicMethod(elementForTests) -> elementForTests
-                JSPsiUtil.isExportedFileFunction(elementForTests) -> elementForTests
-                JSPsiUtil.isExportedClass(elementForTests) -> elementForTests
-                else -> {
-                    null
-                }
-            }
+            return JSPsiUtil.getElementToTest(psiElement)
         }
 
         fun getTestFilePath(element: PsiElement): Path? {
