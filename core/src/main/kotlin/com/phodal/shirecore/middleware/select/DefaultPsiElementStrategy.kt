@@ -24,6 +24,17 @@ open class DefaultPsiElementStrategy : PsiElementStrategy {
         val element = PsiUtilBase.getElementAtCaret(editor) ?: return null
         val psiFile = element.containingFile
 
+        val selectionModel = editor.selectionModel
+        if (selectionModel.hasSelection()) {
+            val startOffset = selectionModel.selectionStart
+            val endOffset = selectionModel.selectionEnd
+
+            val startElement = PsiUtilBase.getElementAtOffset(psiFile, startOffset)
+            val endElement = PsiUtilBase.getElementAtOffset(psiFile, endOffset)
+
+            if (startElement == endElement) return startElement
+        }
+
         if (InjectedLanguageManager.getInstance(project).isInjectedFragment(psiFile)) return psiFile
 
         val identifierOwner = PsiTreeUtil.getParentOfType(element, PsiNameIdentifierOwner::class.java)
