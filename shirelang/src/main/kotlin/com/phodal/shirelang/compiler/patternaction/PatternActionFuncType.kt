@@ -78,7 +78,7 @@ enum class PatternActionFuncType(val funcName: String, val description: String, 
     """.trimMargin()
     ),
     EXECUTE(
-        "execute", "`execute` will execute a new shire script.",
+        "execute", "`execute` will execute a new script，like `shell`, `bash`, `python`, `ruby` and `javascript`.",
         """
         | ```shire
         | ---
