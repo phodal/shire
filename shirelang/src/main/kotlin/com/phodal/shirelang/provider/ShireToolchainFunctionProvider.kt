@@ -46,11 +46,23 @@ class ShireToolchainFunctionProvider : ToolchainFunctionProvider {
                 val type = args.first() as String
                 return when (ShireProvideType.fromString(type)) {
                     ShireProvideType.Variables -> {
-                        CompositeVariableProvider.all()
+                        /// name and description to markdown table
+                        var result = "| Name | Description |"
+                        CompositeVariableProvider.all().forEach {
+                            result += "\n| ${it.name} | ${it.description} |"
+                        }
+
+                        result
                     }
 
                     ShireProvideType.Functions -> {
-                        PatternActionFunc.all()
+                        /// funcName and example to markdown table
+                        var result = "| Function | Description | Example |"
+                        PatternActionFunc.all().forEach {
+                            result += "\n| ${it.funcName} | ${it.description} | ${it.example} |"
+                        }
+
+                        result
                     }
 
                     ShireProvideType.Lifecycle -> {
