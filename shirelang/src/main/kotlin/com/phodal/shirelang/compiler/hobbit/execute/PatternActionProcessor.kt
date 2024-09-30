@@ -29,8 +29,7 @@ class PatternActionProcessor(
         }
 
         var input: Any = ""
-        // todo: update rules for input type
-        if (actionTransform.pattern.isNotBlank()) {
+        if (actionTransform.pattern.isNotBlank() && actionTransform.pattern != "any" && actionTransform.pattern != "null") {
             input = PatternSearcher.findFilesByRegex(myProject, actionTransform.pattern)
                 .map { it.path }
                 .toTypedArray()
