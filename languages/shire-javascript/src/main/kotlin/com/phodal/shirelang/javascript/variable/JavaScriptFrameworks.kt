@@ -1,6 +1,11 @@
 package com.phodal.shirelang.javascript.variable
 
-enum class JsWebFrameworks(val presentation: String, val packageName: String) {
+interface Framework {
+    val presentation: String
+    val packageName: String
+}
+
+enum class JsWebFrameworks(override val presentation: String, override val packageName: String) : Framework {
     React("React", "react"),
     Vue("Vue", "vue"),
     Angular("Angular", "@angular/core"),
@@ -14,7 +19,7 @@ enum class JsWebFrameworks(val presentation: String, val packageName: String) {
     Nuxt("Nuxt", "nuxt"),
 }
 
-enum class JsTestFrameworks(val presentation: String, val packageName: String) {
+enum class JsTestFrameworks(override val presentation: String, override val packageName: String) : Framework {
     Jest("Jest", "jest"),
     Mocha("Mocha", "mocha"),
     Jasmine("Jasmine", "jasmine"),
