@@ -87,4 +87,8 @@ class ShireParsingTest : ParsingTestCase("parser", "shire", ShireParserDefinitio
     fun testAfterStream() {
         doTest(true)
     }
+
+    fun testMarkdownCompatible() {
+        doTest(true)
+    }
 }

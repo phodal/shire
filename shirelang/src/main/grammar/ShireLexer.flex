@@ -32,7 +32,6 @@ import java.util.regex.Pattern;
 %s COMMAND_VALUE_BLOCK
 
 %s EXPR_BLOCK
-%s VELOCITY_BLOCK
 
 %s CODE_BLOCK
 %s COMMENT_BLOCK
@@ -483,6 +482,9 @@ AFTER_STREAMING          =afterStreaming
   {IDENTIFIER}         { return IDENTIFIER; }
   {QUOTE_STRING}       { return QUOTE_STRING; }
   {WHITE_SPACE}        { return TokenType.WHITE_SPACE; }
+
+  // FOR Markdown Header
+  "#"                  { yybegin(YYUSED); return SHARP; }
   [^]                  { yypushback(yylength()); if (isInsideShireTemplate) { yybegin(CODE_BLOCK); }  else if (isInsideFunctionBlock) { yybegin(FUNCTION_DECL_BLOCK);} else { yybegin(YYINITIAL); } }
 }
 
