@@ -1,9 +1,11 @@
 package com.phodal.shirelang.javascript.variable
 
+import com.intellij.javascript.nodejs.PackageJsonDependency
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.provider.context.LanguageToolchainProvider
 import com.phodal.shirecore.provider.context.ToolchainContextItem
 import com.phodal.shirecore.provider.context.ToolchainPrepareContext
+import com.phodal.shirelang.javascript.util.JsDependenciesSnapshot
 import com.phodal.shirelang.javascript.util.LanguageApplicableUtil
 
 class JavaScriptLanguageToolchainProvider : LanguageToolchainProvider {
@@ -11,16 +13,81 @@ class JavaScriptLanguageToolchainProvider : LanguageToolchainProvider {
         return LanguageApplicableUtil.isWebChatCreationContextSupported(creationContext.sourceFile)
     }
 
-    override suspend fun collect(project: Project, creationContext: ToolchainPrepareContext): List<ToolchainContextItem> {
-        val preferType = if (LanguageApplicableUtil.isPreferTypeScript(creationContext)) {
-            "TypeScript"
-        } else {
-            "JavaScript"
+    override suspend fun collect(
+        project: Project,
+        creationContext: ToolchainPrepareContext
+    ): List<ToolchainContextItem> {
+        val results = mutableListOf<ToolchainContextItem>()
+        val snapshot = JsDependenciesSnapshot.create(project, creationContext.sourceFile)
+
+        val preferType = if (LanguageApplicableUtil.isPreferTypeScript(creationContext)) "TypeScript" else "JavaScript"
+
+        results.add(
+            ToolchainContextItem(
+                JavaScriptLanguageToolchainProvider::class,
+                "Prefer $preferType language if the used language and toolset are not defined below or in the user messages"
+            )
+        )
+
+        if (preferType == "TypeScript") {
+            getTypeScriptLanguageContext(snapshot)?.let { results.add(it) }
         }
 
+        getMostPopularPackagesContext(snapshot)?.let { results.add(it) }
+        getJsWebFrameworksContext(snapshot)?.let { results.add(it) }
+        getTestFrameworksContext(snapshot)?.let { results.add(it) }
+
+        return results
+    }
+
+    private fun getTypeScriptLanguageContext(snapshot: JsDependenciesSnapshot): ToolchainContextItem? {
+        val packageJson = snapshot.packages["typescript"] ?: return null
+        val version = packageJson.parseVersion()
         return ToolchainContextItem(
             JavaScriptLanguageToolchainProvider::class,
-            "Prefer $preferType language if the used language and toolset are not defined below or in the user messages"
-        ).let { listOf(it) }
+            "The project uses TypeScript language" + (version?.let { ", version: $version" } ?: "")
+        )
+    }
+
+    private fun getMostPopularPackagesContext(snapshot: JsDependenciesSnapshot): ToolchainContextItem? {
+        val dependencies = snapshot.mostPopularFrameworks()
+        return dependencies.takeIf { it.isNotEmpty() }?.let {
+            ToolchainContextItem(
+                JavaScriptLanguageToolchainProvider::class,
+                "The project uses the following JavaScript packages: ${it.joinToString(", ")}"
+            )
+        }
+    }
+
+    private fun getJsWebFrameworksContext(snapshot: JsDependenciesSnapshot): ToolchainContextItem? {
+        val frameworks = collectFrameworks(snapshot, JsWebFrameworks.entries)
+        return frameworks.takeIf { it.isNotEmpty() }?.let {
+            ToolchainContextItem(
+                JavaScriptLanguageToolchainProvider::class,
+                "The project uses the following JavaScript component frameworks: $it"
+            )
+        }
+    }
+
+    private fun getTestFrameworksContext(snapshot: JsDependenciesSnapshot): ToolchainContextItem? {
+        val frameworks = collectFrameworks(snapshot, JsTestFrameworks.entries)
+        return frameworks.takeIf { it.isNotEmpty() }?.let {
+            ToolchainContextItem(
+                JavaScriptLanguageToolchainProvider::class,
+                "The project uses $it to test."
+            )
+        }
+    }
+
+    private fun collectFrameworks(
+        snapshot: JsDependenciesSnapshot,
+        frameworks: List<Framework>
+    ): Map<String, Boolean> {
+        return snapshot.packages.filter { (_, entry) ->
+            entry.dependencyType == PackageJsonDependency.dependencies ||
+                    entry.dependencyType == PackageJsonDependency.devDependencies
+        }.mapNotNull { (name, _) ->
+            frameworks.find { name.startsWith(it.packageName) || name == it.packageName }?.packageName
+        }.associateWith { true }
     }
 }
