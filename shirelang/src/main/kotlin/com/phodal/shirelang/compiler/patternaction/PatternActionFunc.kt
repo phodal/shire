@@ -180,7 +180,8 @@ sealed class PatternActionFunc(val type: PatternActionFuncType) {
 
     class Destroy : PatternActionFunc(PatternActionFuncType.DESTROY)
 
-    class Batch(val fileName: String, val inputs: List<String>, val batchSize: Int = 1) : PatternActionFunc(PatternActionFuncType.BATCH)
+    class Batch(val fileName: String, val inputs: List<String>, val batchSize: Int = 1) :
+        PatternActionFunc(PatternActionFuncType.BATCH)
 
     class Tokenizer(var text: String, val tokType: String) : PatternActionFunc(PatternActionFuncType.TOKENIZER)
 
@@ -198,7 +199,13 @@ sealed class PatternActionFunc(val type: PatternActionFuncType) {
         private val logger = logger<PatternActionFunc>()
 
         fun findDocByName(funcName: String?): String? {
-            return PatternActionFuncType.entries.find { it.funcName == funcName }?.description
+            val actionFuncType = PatternActionFuncType.entries.find { it.funcName == funcName } ?: return null
+            return """
+                | ${actionFuncType.description}
+                | 
+                | Example:
+                | ${actionFuncType.example}
+            """.trimMargin()
         }
 
         fun all(): List<PatternActionFuncType> {
@@ -338,9 +345,11 @@ sealed class PatternActionFunc(val type: PatternActionFuncType) {
                 PatternActionFuncType.BATCH -> {
                     Batch(args[0], args.drop(1))
                 }
+
                 PatternActionFuncType.DESTROY -> {
                     Destroy()
                 }
+
                 PatternActionFuncType.TOOLCHAIN_FUNCTION -> ToolchainFunction(funcName, args)
                 PatternActionFuncType.TOKENIZER -> {
                     if (args.isEmpty()) {
@@ -349,6 +358,7 @@ sealed class PatternActionFunc(val type: PatternActionFuncType) {
                     }
                     Tokenizer(args[0], args.getOrNull(1) ?: "word")
                 }
+
                 else -> {
                     ToolchainFunction(funcName, args)
                 }

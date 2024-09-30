@@ -1,17 +1,12 @@
 package com.phodal.shirelang.compiler.patternaction
 
-import org.intellij.lang.annotations.Language
-
 /**
  * `PatternActionFuncType` was for show documentation when user hovers on the function.
  */
-enum class PatternActionFuncType(val funcName: String, val description: String) {
+enum class PatternActionFuncType(val funcName: String, val description: String, val example: String) {
     GREP(
-        "grep", """
-        | Grep subclass for searching with one or more regex patterns.
-        | 
-        | Example:
-        | 
+        "grep", "`grep` function searches any given input files, selecting lines that match one or more patterns.",
+        """
         | ```shire
         | ---
         | variables:
@@ -21,11 +16,8 @@ enum class PatternActionFuncType(val funcName: String, val description: String) 
         """.trimMargin()
     ),
     FIND(
-        "find", """
-        | Find subclass for searching with text.
-        | 
-        | Example:
-        | 
+        "find", "`find` will find the first occurrence of a pattern in a file.",
+        """
         | ```shire
         | ---
         | variables:
@@ -35,11 +27,8 @@ enum class PatternActionFuncType(val funcName: String, val description: String) 
         """.trimMargin()
     ),
     SED(
-        "sed", """
-        | Sed subclass for find and replace operations. 
-        | 
-        | Example:
-        | 
+        "sed", "`sed` will replace text in a file.",
+        """ 
         | ```shire
         | ---
         | variables:
@@ -49,11 +38,8 @@ enum class PatternActionFuncType(val funcName: String, val description: String) 
     """.trimMargin()
     ),
     PRINT(
-        "print", """
-        | `print` function is used to print text or last output. 
-        | 
-        | Last output Example:
-        | 
+        "print", "`print` will print text or last output.",
+        """ 
         | ```shire
         | ---
         | variables:
@@ -72,17 +58,12 @@ enum class PatternActionFuncType(val funcName: String, val description: String) 
     """.trimMargin()
     ),
     CAT(
-        "cat", """
-        | `cat` function is used to concatenate one or more files.
-        | 
-        | Paths can be absolute or relative to the current working directory.
-        | 
-        | Last output Example:
-        | 
+        "cat", "`cat` will concatenate one or more files.",
+        """
         | ```shire
         | ---
         | variables:
-        |   "story": /BlogController\.java/ { cat }
+        |   "story": /BlogController\.java/ { cat } // Paths can be absolute or relative to the current working directory.
         | ---
         | ```
         | 
@@ -97,11 +78,8 @@ enum class PatternActionFuncType(val funcName: String, val description: String) 
     """.trimMargin()
     ),
     EXECUTE(
-        "execute", """
-        | `execute` function is used to execute a shire script.
-        | 
-        | Example:
-        | 
+        "execute", "`execute` will execute a new shire script.",
+        """
         | ```shire
         | ---
         | name: "Search"
@@ -112,12 +90,8 @@ enum class PatternActionFuncType(val funcName: String, val description: String) 
     """.trimMargin()
     ),
     NOTIFY(
-        "notify",
+        "notify", "`notify` will use IDEA's notification system to display a message.",
         """
-        | `notify` function is used to send a notification.
-        | 
-        | Example:
-        | 
         | ```shire
         | ---
         | name: "Search"
@@ -127,12 +101,10 @@ enum class PatternActionFuncType(val funcName: String, val description: String) 
         | 
     """.trimMargin()
     ),
-    CASE_MATCH("switch", "Case Match."),
+    CASE_MATCH("switch", "TODO, not implemented yet.", ""),
     SPLITTING(
-        "splitting", """
-        | `splitting` function is used to split the file into chunks.
-        | 
-        | Example:
+        "splitting", "`splitting` (RAG function) will split the file into chunks.",
+        """
         | ```shire
         | ---
         | variables:
@@ -144,10 +116,8 @@ enum class PatternActionFuncType(val funcName: String, val description: String) 
         """.trimMargin()
     ),
     EMBEDDING(
-        "embedding", """
-        | `embedding` function is used to embedding text.
-        | 
-        | Example:
+        "embedding", "`embedding` (RAG function) will embedding text.",
+        """
         | ```shire
         | ---
         | variables:
@@ -157,10 +127,8 @@ enum class PatternActionFuncType(val funcName: String, val description: String) 
     """.trimMargin()
     ),
     SEARCHING(
-        "searching", """
-        | `searching` function is used to search embedding text.
-        | 
-        | Example:
+        "searching", " `searching` (RAG function) will search embedding text.",
+        """
         | ```shire
         | ---
         | variables:
@@ -179,10 +147,9 @@ enum class PatternActionFuncType(val funcName: String, val description: String) 
         """.trimMargin()
     ),
     CACHING(
-        "caching", """
-        | `caching` function is used to cache the semantic. support "disk" and "memory", default is "memory".
-        | 
-        | Example:
+        "caching",
+        """`caching` (RAG function) will cache the semantic. support "disk" and "memory", default is "memory".""",
+        """
         | ```shire
         | ---
         | variables:
@@ -194,10 +161,9 @@ enum class PatternActionFuncType(val funcName: String, val description: String) 
     """.trimMargin()
     ),
     RERANKING(
-        "reranking", """
-        | `reranking` function is used to rerank the result. current only support "Lost In Middle" pattern
-        | 
-        | Example:
+        "reranking",
+        "`reranking` (RAG function) will rerank the result. current only support \"Lost In Middle\" pattern",
+        """
         | ```shire
         | ---
         | variables:
@@ -208,10 +174,8 @@ enum class PatternActionFuncType(val funcName: String, val description: String) 
     """.trimMargin()
     ),
     REDACT(
-        "redact", """
-        | `redact` class is designed for handling sensitive data by applying a specified redaction strategy.
-        | 
-        | Example:
+        "redact", "`redact` will handling sensitive data by applying a specified redaction strategy.",
+        """
         | ```shire
         | ---
         | variables:
@@ -222,10 +186,8 @@ enum class PatternActionFuncType(val funcName: String, val description: String) 
     """.trimMargin()
     ),
     CRAWL(
-        "crawl", """
-        | `crawl` function is used to crawl a list of urls, get markdown from html and save it to a file.
-        | 
-        | Example: 
+        "crawl", "`crawl` will crawl a list of urls, get markdown from html and save it to a file.",
+        """
         | ```shire
         | ---
         | variables:
@@ -238,10 +200,8 @@ enum class PatternActionFuncType(val funcName: String, val description: String) 
     """.trimMargin()
     ),
     CAPTURE(
-        "capture", """
-        | `capture` function used to capture url link by NodeType, support Markdown only for now.
-        | 
-        | Example: 
+        "capture", "`capture` function used to capture url link by NodeType, support Markdown only for now.",
+        """
         | ```shire
         | ---
         | variables:
@@ -254,12 +214,8 @@ enum class PatternActionFuncType(val funcName: String, val description: String) 
     """.trimMargin()
     ),
     THREAD(
-        "thread",
-        """
-        | `thread` function will run the function in a new thread
-        | 
-        | Example:
-        | 
+        "thread", "`thread` will run the function in a new thread",
+        """ 
         | ```shire
         | ---
         | variables:
@@ -269,10 +225,8 @@ enum class PatternActionFuncType(val funcName: String, val description: String) 
         """.trimMargin()
     ),
     JSONPATH(
-        "jsonpath", """
-        | The `jsonpath` function will parse the json and get the value by jsonpath.
-        | 
-        | Example:
+        "jsonpath", "`jsonpath` function will parse the json and get the value by jsonpath.",
+        """
         | ```shire
         | ---
         | variables:
@@ -290,14 +244,11 @@ enum class PatternActionFuncType(val funcName: String, val description: String) 
         | 
         | """.trimMargin()
     ),
-    SORT("sort", "Sort subclass for sorting with one or more arguments."),
-    UNIQ("uniq", "Uniq subclass for removing duplicates based on one or more arguments."),
+    SORT("sort", "`sort` will sorting with one or more arguments.", ""),
+    UNIQ("uniq", "`uniq` will removing duplicates based on one or more arguments.", ""),
     HEAD(
-        "head", """
-        | Head subclass for retrieving the first few lines.
-        | 
-        | Example:
-        | 
+        "head", "`head` will retrieving the first few lines.",
+        """
         | ```shire
         | ---
         | variables:
@@ -306,17 +257,14 @@ enum class PatternActionFuncType(val funcName: String, val description: String) 
         | ```
         """.trimMargin()
     ),
-    TAIL("tail", "Tail subclass for retrieving the last few lines."),
-    XARGS("xargs", "Xargs subclass for processing one or more variables."),
-    FROM("from", "Select subclass for selecting one or more elements."),
-    WHERE("where", "Where subclass for filtering elements."),
-    SELECT("select", "OrderBy subclass for ordering elements."),
+    TAIL("tail", "`tail` will retrieving the last few lines.", ""),
+    XARGS("xargs", "`xargs` will processing one or more variables.", ""),
+    FROM("from", "`select` (ShireQL) will selecting one or more elements.", ""),
+    WHERE("where", "`where` (ShireQL) will filtering elements.", ""),
+    SELECT("select", "`select` (ShireQL) will select element.", ""),
     BATCH(
-        "batch", """
-        | Batch for some specific tasks. Since the limit of your LLM providers, the default batch size is 1.
-        | 
-        | Example:
-        | 
+        "batch", "`batch` will execute a batch Shire script.",
+        """
         | ```shire
         | ---
         | name: "Generate Swagger Doc"
@@ -329,13 +277,13 @@ enum class PatternActionFuncType(val funcName: String, val description: String) 
         """.trimMargin()
     ),
 
-    /// destroy the current context
-    DESTROY("destroy", "Destroy the current task."),
+    DESTROY("destroy", "Destroy the current task.", ""),
 
     TOOLCHAIN_FUNCTION(
-        "toolchain", """
-        | the Toolchain functions are define by the different IDEA plugins.
-        | for example, the Database plugin, the Shell plugin, etc.
+        "toolchain",
+        "Toolchain functions are define by the different IDEA plugins.for example, the Database plugin, the Shell plugin, etc.",
+        """
+        | 
         | 
         | Database Plugin Example:
         | 
@@ -351,10 +299,8 @@ enum class PatternActionFuncType(val funcName: String, val description: String) 
     ),
 
     TOKENIZER(
-        "tokenizer", """
-        | Tokenizer function tokenizes text using traditional NLP methods. Support type for : `word`, `naming`, `stopwords`
-        |
-        | Example:
+        "tokenizer", "`tokenizer` function tokenizes text using traditional NLP methods. Support type for : `word`, `naming`, `stopwords`",
+        """
         | ```shire
         | ---
         | variables:
