@@ -1,5 +1,7 @@
 ---
 name: "Gandalf" // comment 2
+variables:
+  "codepath": /BlogController\.java/ { print } // comments 3
 ---
 
 [flow]:flowable.devin

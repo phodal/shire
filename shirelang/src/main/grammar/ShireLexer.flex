@@ -55,7 +55,7 @@ STRING                   = [a-zA-Z0-9][_\-a-zA-Z0-9]*
 LANGUAGE_IDENTIFIER      = [a-zA-Z][_\-a-zA-Z0-9 .]*
 
 EOL=\R
-INDENT                   = "  "
+INDENT                   = [ \t][ \t]+
 WHITE_SPACE              = [ \t]+
 COMMENTS                 = "//"[^\r\n]*
 CONTENT_COMMENTS         = \[ ([^\]]+)? \] [^\t\r\n]*
@@ -258,6 +258,8 @@ AFTER_STREAMING          =afterStreaming
 }
 
 <FRONT_MATTER_VAL_OBJECT> {
+  {COMMENTS}              { return COMMENTS; }
+  {NEWLINE}               { return NEWLINE; }
   {QUOTE_STRING}          { return QUOTE_STRING; }
   ":"                     { yybegin(FRONT_MATTER_VALUE_BLOCK); return COLON; }
   [^]                     { yypushback(yylength()); yybegin(FRONT_MATTER_BLOCK); }
@@ -299,7 +301,7 @@ AFTER_STREAMING          =afterStreaming
   ","                    { return COMMA; }
   "("                    { return LPAREN; }
   ")"                    { return RPAREN; }
-  {WHITE_SPACE}          {
+  {INDENT}               {
           if (patternActionBraceStart && patternActionBraceLevel == 0) {
               patternActionBraceStart = false;
               yybegin(FRONT_MATTER_VAL_OBJECT);
@@ -308,7 +310,7 @@ AFTER_STREAMING          =afterStreaming
               return TokenType.WHITE_SPACE;
           }
       }
-
+  {WHITE_SPACE}          { return TokenType.WHITE_SPACE; }
   {NEWLINE}              { return NEWLINE; }
 
   // keywords
@@ -472,6 +474,8 @@ AFTER_STREAMING          =afterStreaming
   "."                  { return DOT; }
   "("                  { return LPAREN; }
   ")"                  { return RPAREN; }
+
+  {COMMENTS}           { return COMMENTS; }
   [^]                  { yypushback(yylength()); yybegin(YYINITIAL); }
 }
 

@@ -17,7 +17,6 @@
   tokens=[
     COMMENTS             = 'regexp://[^\r\n]*'
     BLOCK_COMMENT        = 'regexp:/[*][^*]*[*]+([^/*][^*]*[*]+)*/'
-//    CONTENT_COMMENTS         = \[ ([^\]]+)? \] [^\t\r\n]*
     CONTENT_COMMENTS     = 'regexp:X?\[([^\]]+)?\][^\t\r\n]*'
     CODE_BLOCK_START     = "regexp:X?```[a-zA-Z]*"
     CODE_BLOCK_END       = "regexp:X?```"
@@ -97,7 +96,8 @@ frontMatterArray ::= "[" (frontMatterValue (COMMA frontMatterValue)*) "]"
 
 frontMatterId ::= IDENTIFIER
 
-objectKeyValue ::= (INDENT keyValue NEWLINE?)*
+objectKeyValue ::= (INDENT keyValue)*
+
 keyValue ::= frontMatterEntry
 
 patternAction ::= pattern actionBlock
