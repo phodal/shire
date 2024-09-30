@@ -54,10 +54,10 @@ class ShireToolchainFunctionProvider : ToolchainFunctionProvider {
                     }
 
                     ShireProvideType.Lifecycle -> {
-                        emptyList()
+                        emptyList<String>()
                     }
 
-                    null -> TODO()
+                    null -> ""
                 }
             }
         }
