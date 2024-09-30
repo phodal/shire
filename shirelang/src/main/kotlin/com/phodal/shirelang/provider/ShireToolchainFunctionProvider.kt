@@ -49,6 +49,7 @@ class ShireToolchainFunctionProvider : ToolchainFunctionProvider {
                     ShireProvideType.Variables -> {
                         /// name and description to markdown table
                         var result = "| Name | Description |"
+                        result += "\n| --- | --- |"
                         CompositeVariableProvider.all().forEach {
                             result += "\n| ${it.name} | ${it.description} |"
                         }
@@ -59,6 +60,7 @@ class ShireToolchainFunctionProvider : ToolchainFunctionProvider {
                     ShireProvideType.Functions -> {
                         /// funcName and example to markdown table
                         var result = "| Function | Description |"
+                        result += "\n| --- | --- |"
                         PatternActionFunc.all().forEach {
                             result += "\n| ${it.funcName} | ${it.description} |"
                         }
