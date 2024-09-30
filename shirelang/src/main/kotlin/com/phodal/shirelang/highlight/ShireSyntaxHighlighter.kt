@@ -66,6 +66,8 @@ class ShireSyntaxHighlighter : SyntaxHighlighter {
             ATTRIBUTES[ShireTypes.COMMAND_PROP] = DefaultLanguageHighlighterColors.STRING
 
             ATTRIBUTES[ShireTypes.SHARP] = DefaultLanguageHighlighterColors.CONSTANT
+            ATTRIBUTES[ShireTypes.MARKDOWN_HEADER] = DefaultLanguageHighlighterColors.CONSTANT
+
             ATTRIBUTES[ShireTypes.LINE_INFO] = DefaultLanguageHighlighterColors.NUMBER
 
             ATTRIBUTES[ShireTypes.CODE_BLOCK_START] = DefaultLanguageHighlighterColors.KEYWORD

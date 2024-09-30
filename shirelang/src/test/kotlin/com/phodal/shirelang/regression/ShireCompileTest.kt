@@ -6,7 +6,9 @@ import com.phodal.shirelang.compiler.ShireSyntaxAnalyzer
 import com.phodal.shirelang.compiler.ShireTemplateCompiler
 import com.phodal.shirelang.psi.ShireFile
 import kotlinx.coroutines.runBlocking
+import org.apache.velocity.app.Velocity
 import org.intellij.lang.annotations.Language
+import java.util.*
 
 class ShireCompileTest : BasePlatformTestCase() {
     val javaHelloController = """
@@ -152,4 +154,37 @@ public class HelloController {
                 "    }\n" +
                 "}", context.compiledVariables["controllers"])
     }
+
+//    fun testShouldCompileMarkdownHeader() {
+//
+//        @Language("Shire")
+//        val code = """
+//            ## Header
+//
+//            Body
+//        """.trimIndent()
+//
+//        val p: Properties = Properties()
+//        p.setProperty("resource.loader", "class")
+//        p.setProperty("class.resource.loader.description", "Velocity Classpath Resource Loader")
+//        p.setProperty(
+//            "class.resource.loader.class",
+//            "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader"
+//        )
+//        try {
+//            Velocity.init(p);
+//        } catch (e: Exception) {
+////            e.printStackTrace()
+//        }
+//
+//        val file = myFixture.configureByText("test.shire", code)
+//        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
+//
+//        val result = runBlocking {
+//            val templateCompiler = ShireTemplateCompiler(project, compile.config, compile.variableTable, code)
+//            templateCompiler.compile()
+//        }
+//
+//        assertEquals("", result)
+//    }
 }

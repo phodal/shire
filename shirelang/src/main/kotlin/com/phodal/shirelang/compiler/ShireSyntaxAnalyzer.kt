@@ -20,6 +20,7 @@ import com.phodal.shirelang.completion.dataprovider.BuiltinCommand
 import com.phodal.shirelang.completion.dataprovider.CustomCommand
 import com.phodal.shirelang.parser.CodeBlockElement
 import com.phodal.shirelang.psi.*
+import com.phodal.shirelang.psi.ShireTypes.MARKDOWN_HEADER
 import kotlinx.coroutines.runBlocking
 
 
@@ -103,6 +104,10 @@ class ShireSyntaxAnalyzer(
                 WHITE_SPACE, DUMMY_BLOCK -> output.append(psiElement.text)
                 ShireTypes.VELOCITY_EXPR -> {
                     logger.info("Velocity expression found: ${psiElement.text}")
+                }
+
+                MARKDOWN_HEADER -> {
+                    output.append(psiElement.text)
                 }
 
                 else -> {
