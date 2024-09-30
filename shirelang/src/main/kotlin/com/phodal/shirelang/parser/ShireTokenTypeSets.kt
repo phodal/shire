@@ -8,5 +8,5 @@ object ShireTokenTypeSets {
     // ShireTypes.NEWLINE
     val WHITESPACES: TokenSet = TokenSet.create(TokenType.WHITE_SPACE)
 
-    val SHIRE_COMMENTS = TokenSet.create(ShireTypes.COMMENT, ShireTypes.COMMENTS, ShireTypes.BLOCK_COMMENT)
+    val SHIRE_COMMENTS = TokenSet.create(ShireTypes.CONTENT_COMMENTS, ShireTypes.COMMENTS, ShireTypes.BLOCK_COMMENT)
 }

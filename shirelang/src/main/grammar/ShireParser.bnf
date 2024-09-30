@@ -15,8 +15,10 @@
   extends(".*Expr") = expr
 
   tokens=[
-    COMMENT              = 'regexp://[^\r\n]*'
+    COMMENTS             = 'regexp://[^\r\n]*'
     BLOCK_COMMENT        = 'regexp:/[*][^*]*[*]+([^/*][^*]*[*]+)*/'
+//    CONTENT_COMMENTS         = \[ ([^\]]+)? \] [^\t\r\n]*
+    CONTENT_COMMENTS     = 'regexp:X?\[([^\]]+)?\][^\t\r\n]*'
     CODE_BLOCK_START     = "regexp:X?```[a-zA-Z]*"
     CODE_BLOCK_END       = "regexp:X?```"
     SINGLE_QUOTED_STRING = "regexp:X?'(''|[^'])*'"
@@ -77,14 +79,15 @@
   ]
 }
 
-ShireFile ::= frontMatterHeader? (used | code | velocityExpr | markdownHeader | TEXT_SEGMENT | NEWLINE | COMMENTS)*
+ShireFile ::= frontMatterHeader? (used | code | velocityExpr | markdownHeader | TEXT_SEGMENT | NEWLINE | CONTENT_COMMENTS)*
 
 frontMatterHeader ::= FRONTMATTER_START NEWLINE frontMatterEntries FRONTMATTER_END
 
 frontMatterEntries ::= frontMatterEntry*
 frontMatterEntry ::=
-    lifecycleId COLON (functionStatement | conditionExpr) NEWLINE?
-    | frontMatterKey COLON (frontMatterValue | patternAction | functionStatement) NEWLINE?
+    lifecycleId COLON (functionStatement | conditionExpr) COMMENTS? NEWLINE?
+    | frontMatterKey COLON (frontMatterValue | patternAction | functionStatement) COMMENTS? NEWLINE?
+    | COMMENTS NEWLINE
 
 lifecycleId ::= "when" | "onStreaming" | "beforeStreaming" | "onStreamingEnd" | "afterStreaming"
 

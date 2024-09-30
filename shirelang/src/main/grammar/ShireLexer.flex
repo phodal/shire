@@ -29,12 +29,13 @@ import java.util.regex.Pattern;
 %s VARIABLE_BLOCK
 
 %s COMMAND_BLOCK
+%s SINGLE_COMMNET_BLOCK
 %s COMMAND_VALUE_BLOCK
 
 %s EXPR_BLOCK
 
 %s CODE_BLOCK
-%s COMMENT_BLOCK
+%s CONTENT_COMMENT_BLOCK
 %s LINE_BLOCK
 %s FRONT_MATTER_BLOCK
 %s FRONT_MATTER_VALUE_BLOCK
@@ -56,7 +57,8 @@ LANGUAGE_IDENTIFIER      = [a-zA-Z][_\-a-zA-Z0-9 .]*
 EOL=\R
 INDENT                   = "  "
 WHITE_SPACE              = [ \t]+
-COMMENT                  = "//"[^\r\n]*
+COMMENTS                 = "//"[^\r\n]*
+CONTENT_COMMENTS         = \[ ([^\]]+)? \] [^\t\r\n]*
 BLOCK_COMMENT            = [/][*][^*]*[*]+([^/*][^*]*[*]+)*[/]
 EscapedChar              = "\\" [^\n]
 RegexWord                = [^\r\n\\\"' \t$`()] | {EscapedChar}
@@ -79,7 +81,6 @@ QUOTE_STRING             = {DOUBLE_QUOTED_STRING}|{SINGLE_QUOTED_STRING}
 LINE_INFO                = L[0-9]+(C[0-9]+)?(-L[0-9]+(C[0-9]+)?)?
 COMMAND_PROP             = [^\ \t\r\n]*
 CODE_CONTENT             = [^\n]+
-COMMENTS                 = \[ ([^\]]+)? \] [^\t\r\n]*
 NEWLINE                  = \n | \r | \r\n
 
 COLON                    =:
@@ -156,7 +157,7 @@ AFTER_STREAMING          =afterStreaming
             return CODE_CONTENT;
         } else {
             if (text.startsWith("[")) {
-                yybegin(COMMENT_BLOCK);
+                yybegin(CONTENT_COMMENT_BLOCK);
                 return comment();
             }
 
@@ -170,7 +171,7 @@ AFTER_STREAMING          =afterStreaming
     private IElementType comment() {
         String text = yytext().toString();
         if (text.contains("[") && text.contains("]")) {
-            return COMMENTS;
+            return CONTENT_COMMENTS;
         } else {
             return TEXT_SEGMENT;
         }
@@ -230,9 +231,8 @@ AFTER_STREAMING          =afterStreaming
 
   {CODE_CONTENT}          { return content(); }
   {NEWLINE}               { return NEWLINE;  }
-  "["                     { yypushback(yylength()); yybegin(COMMENT_BLOCK);  }
+  "["                     { yypushback(yylength()); yybegin(CONTENT_COMMENT_BLOCK);  }
 
-  {COMMENT}               { return COMMENT; }
   {BLOCK_COMMENT}         { return BLOCK_COMMENT; }
   {COMMENTS}              { return COMMENTS; }
   [^]                     { yypushback(yylength()); return TEXT_SEGMENT; }
@@ -287,6 +287,7 @@ AFTER_STREAMING          =afterStreaming
   "("                     { return LPAREN; }
   ")"                     { return RPAREN; }
 
+  {COMMENTS}              { return COMMENTS; }
   {WHITE_SPACE}           { return TokenType.WHITE_SPACE; }
   [^]                     { yypushback(yylength()); yybegin(FRONT_MATTER_BLOCK); }
 }
@@ -336,8 +337,8 @@ AFTER_STREAMING          =afterStreaming
   [^]                    { patternActionBraceStart = false; yypushback(yylength()); yybegin(FRONT_MATTER_VALUE_BLOCK); }
 }
 
-<COMMENT_BLOCK> {
-  {COMMENTS}              { return comment(); }
+<CONTENT_COMMENT_BLOCK> {
+  {CONTENT_COMMENTS}      { return comment(); }
   [^]                     { yypushback(yylength()); yybegin(YYINITIAL); return TEXT_SEGMENT; }
 }
 
@@ -391,7 +392,7 @@ AFTER_STREAMING          =afterStreaming
   ")"                     { return RPAREN; }
   "|"                     { return PIPE; }
 
-  {COMMENT}               { return COMMENT; }
+  {COMMENTS}              { return COMMENTS; }
   {BLOCK_COMMENT}         { return BLOCK_COMMENT; }
   {COMMA}                 { return COMMA; }
 
@@ -416,6 +417,7 @@ AFTER_STREAMING          =afterStreaming
 
 <YYUSED> {
   "@"                     { yybegin(AGENT_BLOCK);    return AGENT_START; }
+  "//"  {TEXT_SEGMENT}    { yybegin(SINGLE_COMMNET_BLOCK); return COMMENTS; }
   "/"                     { yybegin(COMMAND_BLOCK);  return COMMAND_START; }
   "$"                     { yybegin(VARIABLE_BLOCK); return VARIABLE_START; }
 
@@ -432,6 +434,18 @@ AFTER_STREAMING          =afterStreaming
   {IDENTIFIER}            { return IDENTIFIER; }
   {COLON}                 { yybegin(COMMAND_VALUE_BLOCK); return COLON; }
   [^]                     { yypushback(1); yybegin(YYINITIAL); }
+}
+
+<SINGLE_COMMNET_BLOCK> {
+  {NEWLINE}               { return NEWLINE; }
+  [^]                     {
+          yypushback(yylength());
+          if (isInsideFrontMatter) {
+              yybegin(FRONT_MATTER_BLOCK);
+          } else {
+              yybegin(YYINITIAL);
+          }
+      }
 }
 
 <COMMAND_VALUE_BLOCK> {

@@ -52,7 +52,7 @@ class ShireSyntaxHighlighter : SyntaxHighlighter {
             )
 
             ATTRIBUTES[ShireTypes.COMMENTS] = DefaultLanguageHighlighterColors.LINE_COMMENT
-            ATTRIBUTES[ShireTypes.COMMENT] = DefaultLanguageHighlighterColors.LINE_COMMENT
+            ATTRIBUTES[ShireTypes.CONTENT_COMMENTS] = DefaultLanguageHighlighterColors.LINE_COMMENT
             ATTRIBUTES[ShireTypes.BLOCK_COMMENT] = DefaultLanguageHighlighterColors.BLOCK_COMMENT
 
             ATTRIBUTES[ShireTypes.VARIABLE_START] = DefaultLanguageHighlighterColors.KEYWORD
