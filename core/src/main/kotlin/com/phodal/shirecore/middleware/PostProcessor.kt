@@ -69,5 +69,9 @@ interface PostProcessor {
         fun allNames(): List<String> {
             return EP_NAME.extensionList.map { it.processorName }
         }
+
+        fun all(): List<PostProcessor> {
+            return EP_NAME.extensionList
+        }
     }
 }

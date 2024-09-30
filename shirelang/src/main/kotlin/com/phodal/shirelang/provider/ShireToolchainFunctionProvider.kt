@@ -1,6 +1,7 @@
 package com.phodal.shirelang.provider
 
 import com.intellij.openapi.project.Project
+import com.phodal.shirecore.middleware.PostProcessor
 import com.phodal.shirecore.provider.function.ToolchainFunctionProvider
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 import com.phodal.shirelang.compiler.variable.CompositeVariableProvider
@@ -8,7 +9,7 @@ import com.phodal.shirelang.compiler.variable.CompositeVariableProvider
 enum class ShireProvideType(val type: String) {
     Variables("variables"),
     Functions("functions"),
-    Lifecycle("lifecycle")
+    Processor("processors")
     ;
 
     companion object {
@@ -65,8 +66,10 @@ class ShireToolchainFunctionProvider : ToolchainFunctionProvider {
                         result
                     }
 
-                    ShireProvideType.Lifecycle -> {
-                        emptyList<String>()
+                    ShireProvideType.Processor -> {
+                        PostProcessor.all().map {
+                            it.processorName
+                        }
                     }
 
                     null -> ""
