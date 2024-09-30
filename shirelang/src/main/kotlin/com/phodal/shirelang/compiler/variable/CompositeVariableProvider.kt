@@ -17,19 +17,19 @@ object CompositeVariableProvider {
     fun all(): List<VariableDisplay> {
         val results = mutableListOf<VariableDisplay>()
 
-        ContextVariable.values().forEach {
+        ContextVariable.entries.forEach {
             results.add(VariableDisplay(it.variableName, it.description, 99.0))
         }
 
-        PsiContextVariable.values().forEach {
+        PsiContextVariable.entries.forEach {
             results.add(VariableDisplay(it.variableName, it.description ?: "", 90.0))
         }
 
-        VcsToolchainVariable.values().forEach {
+        VcsToolchainVariable.entries.forEach {
             results.add(VariableDisplay(it.variableName, it.description, 80.0))
         }
 
-        DatabaseToolchainVariable.values().forEach {
+        DatabaseToolchainVariable.entries.forEach {
             results.add(VariableDisplay(it.variableName, it.description, 70.0))
         }
 

@@ -198,11 +198,15 @@ sealed class PatternActionFunc(val type: PatternActionFuncType) {
         private val logger = logger<PatternActionFunc>()
 
         fun findDocByName(funcName: String?): String? {
-            return PatternActionFuncType.values().find { it.funcName == funcName }?.description
+            return PatternActionFuncType.entries.find { it.funcName == funcName }?.description
+        }
+
+        fun all(): List<PatternActionFuncType> {
+            return PatternActionFuncType.entries
         }
 
         fun from(funcName: String, args: List<String>): PatternActionFunc? {
-            return when (PatternActionFuncType.values().find { it.funcName == funcName }) {
+            return when (PatternActionFuncType.entries.find { it.funcName == funcName }) {
                 PatternActionFuncType.GREP -> {
                     if (args.isEmpty()) {
                         logger.error("parsePatternAction, grep requires at least 1 argument")

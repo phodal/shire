@@ -2,11 +2,13 @@ package com.phodal.shirelang.provider
 
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.provider.function.ToolchainFunctionProvider
+import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
+import com.phodal.shirelang.compiler.variable.CompositeVariableProvider
 
 enum class ShireProvideType(val type: String) {
     Variable("variable"),
     Function("function"),
-    Process("process")
+    Lifecycle("lifecycle")
     ;
 
     companion object {
@@ -18,7 +20,7 @@ enum class ShireProvideType(val type: String) {
 
 enum class ShireToolchainFunction(val funName: String) {
     /**
-     * The provider function offers, Built-in functions in Shire, Built-in variables in Shire, Built-in processes in Shire
+     * The provider function offers, Built-in functions in Shire, Built-in variables in Shire, lifecycle in Shire
      * for example: `provider("variable")` will return all variables in tables
      */
     Provider("provider");
@@ -44,15 +46,15 @@ class ShireToolchainFunctionProvider : ToolchainFunctionProvider {
                 val type = args.first() as String
                 when (ShireProvideType.fromString(type)) {
                     ShireProvideType.Variable -> {
-                        return allVariables
+                        CompositeVariableProvider.all()
                     }
 
                     ShireProvideType.Function -> {
-                        return emptyList<Any>()
+                        PatternActionFunc.all()
                     }
 
-                    ShireProvideType.Process -> {
-                        return emptyList<Any>()
+                    ShireProvideType.Lifecycle -> {
+                        emptyList()
                     }
 
                     null -> TODO()
