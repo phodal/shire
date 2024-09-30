@@ -352,13 +352,14 @@ enum class PatternActionFuncType(val funcName: String, val description: String) 
 
     TOKENIZER(
         "tokenizer", """
-        | Tokenizer function is used to tokenize the text. Support type for : word, sentence, paragraph, line
+        | Tokenizer function tokenizes text using traditional NLP methods. Support type for : `word`, `naming`, `stopwords`
         |
         | Example:
         | ```shire
         | ---
         | variables:
-        |   "story": /.*.java/ { tokenizer("word") | print }
+        |   "controllers": /.*.java/ { cat }
+        |   "tokens": /any/ { tokenizer(${'$'}controllers, "word") }
         | ---
         | ```
         """.trimMargin()
