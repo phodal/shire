@@ -110,6 +110,7 @@ AFTER_STREAMING          =afterStreaming
     private boolean isInsideShireTemplate = false;
     private boolean isInsideFunctionBlock = false;
     private boolean isInsideFrontMatter = false;
+    private boolean hasFrontMatter = false;
     private boolean patternActionBraceStart = false;
     private int patternActionBraceLevel = 0;
 %}
@@ -217,7 +218,16 @@ AFTER_STREAMING          =afterStreaming
 
 %%
 <YYINITIAL> {
-  "---"                   { isInsideFrontMatter = true; yybegin(FRONT_MATTER_BLOCK); return FRONTMATTER_START; }
+  "---"  {
+          if (hasFrontMatter | isCodeStart) {
+              return CODE_CONTENT;
+          } else {
+              isInsideFrontMatter = true;
+              yybegin(FRONT_MATTER_BLOCK);
+              return FRONTMATTER_START;
+          }
+      }
+
   {CODE_CONTENT}          { return content(); }
   {NEWLINE}               { return NEWLINE;  }
   "["                     { yypushback(yylength()); yybegin(COMMENT_BLOCK);  }
@@ -242,7 +252,8 @@ AFTER_STREAMING          =afterStreaming
 
   {INDENT}                { yybegin(FRONT_MATTER_VAL_OBJECT); return INDENT; }
   {NEWLINE}               { return NEWLINE; }
-  "---"                   { isInsideFrontMatter = false; yybegin(YYINITIAL); return FRONTMATTER_END; }
+
+  "---"                   { isInsideFrontMatter = false; hasFrontMatter = true; yybegin(YYINITIAL); return FRONTMATTER_END; }
   [^]                     { yypushback(yylength()); yybegin(YYINITIAL); }
 }
 

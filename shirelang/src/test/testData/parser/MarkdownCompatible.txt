@@ -25,7 +25,6 @@ ShireFile
       PsiElement(ShireTokenType.NEWLINE)('\n')
       PsiElement(ShireTokenType.CODE_CONTENT)('onStreamingEnd: { parseCode | patch($codepath, $output) }')
       PsiElement(ShireTokenType.NEWLINE)('\n')
-  PsiErrorElement:<used>, ShireTokenType.#, ShireTokenType.CODE_BLOCK_END, ShireTokenType.CODE_BLOCK_START, ShireTokenType.CODE_CONTENT, ShireTokenType.COMMENTS, ShireTokenType.NEWLINE or ShireTokenType.TEXT_SEGMENT expected, got '---'
-    PsiElement(ShireTokenType.FRONTMATTER_START)('---')
-  PsiElement(ShireTokenType.NEWLINE)('\n')
-  PsiElement(ShireTokenType.CODE_BLOCK_END)('```')
+      PsiElement(ShireTokenType.CODE_CONTENT)('---')
+      PsiElement(ShireTokenType.NEWLINE)('\n')
+    PsiElement(ShireTokenType.CODE_BLOCK_END)('```')
