@@ -6,8 +6,8 @@ import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 import com.phodal.shirelang.compiler.variable.CompositeVariableProvider
 
 enum class ShireProvideType(val type: String) {
-    Variable("variable"),
-    Function("function"),
+    Variables("variables"),
+    Functions("functions"),
     Lifecycle("lifecycle")
     ;
 
@@ -38,18 +38,18 @@ class ShireToolchainFunctionProvider : ToolchainFunctionProvider {
     }
 
     override fun execute(project: Project, funcName: String, args: List<Any>, allVariables: Map<String, Any?>): Any {
-        val gitFunc = ShireToolchainFunction.fromString(funcName)
+        val shireFunc = ShireToolchainFunction.fromString(funcName)
             ?: throw IllegalArgumentException("Shire[Toolchain]: Invalid Toolchain function name")
 
-        return when (gitFunc) {
+        when (shireFunc) {
             ShireToolchainFunction.Provider -> {
                 val type = args.first() as String
-                when (ShireProvideType.fromString(type)) {
-                    ShireProvideType.Variable -> {
+                return when (ShireProvideType.fromString(type)) {
+                    ShireProvideType.Variables -> {
                         CompositeVariableProvider.all()
                     }
 
-                    ShireProvideType.Function -> {
+                    ShireProvideType.Functions -> {
                         PatternActionFunc.all()
                     }
 
