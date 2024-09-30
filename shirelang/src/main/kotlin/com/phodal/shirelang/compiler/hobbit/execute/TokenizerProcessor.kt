@@ -20,7 +20,6 @@ class TokenizerProcessor {
                 return tokenizer.tokenize(action.text)
             }
 
-            /// if tokType == "word"
             when (action.tokType) {
                 "word" -> {
                     val tokenizer = WordTokenizer()

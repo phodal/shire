@@ -1,6 +1,5 @@
 package com.phodal.shirelang.compiler.hobbit.execute
 
-import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
@@ -13,9 +12,7 @@ import com.phodal.shirecore.guard.RedactProcessor
 import com.phodal.shirecore.provider.function.ToolchainFunctionProvider
 import com.phodal.shirecore.search.function.ScoredText
 import com.phodal.shirecore.search.function.SemanticService
-import com.phodal.shirelang.ShireActionStartupActivity
 import com.phodal.shirelang.ShireBundle
-import com.phodal.shirelang.actions.ShireRunFileAction
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.ast.FrontMatterType
 import com.phodal.shirelang.compiler.hobbit.ast.Statement
@@ -381,6 +378,10 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                 TODO()
             }
             is PatternActionFunc.Tokenizer -> {
+                if (action.text.startsWith("\$")) {
+                    action.text = variableTable[action.text.substring(1)]?.toString() ?: action.text
+                }
+
                 TokenizerProcessor.execute(myProject, action)
             }
         }

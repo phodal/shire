@@ -182,7 +182,7 @@ sealed class PatternActionFunc(val type: PatternActionFuncType) {
 
     class Batch(val fileName: String, val inputs: List<String>, val batchSize: Int = 1) : PatternActionFunc(PatternActionFuncType.BATCH)
 
-    class Tokenizer(val text: String, val tokType: String) : PatternActionFunc(PatternActionFuncType.TOKENIZER)
+    class Tokenizer(var text: String, val tokType: String) : PatternActionFunc(PatternActionFuncType.TOKENIZER)
 
     /**
      * User Custom Functions

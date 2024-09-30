@@ -1,0 +1,65 @@
+package com.phodal.shirelang.regression
+
+import com.intellij.testFramework.fixtures.BasePlatformTestCase
+import com.phodal.shirecore.middleware.PostProcessorContext
+import com.phodal.shirelang.compiler.ShireSyntaxAnalyzer
+import com.phodal.shirelang.compiler.ShireTemplateCompiler
+import com.phodal.shirelang.psi.ShireFile
+import kotlinx.coroutines.runBlocking
+import org.intellij.lang.annotations.Language
+
+class ShireTokenizerTest : BasePlatformTestCase() {
+    val javaHelloController = """
+            package com.phodal.shirelang.controller;
+            
+            import org.springframework.web.bind.annotation.GetMapping;
+            import org.springframework.web.bind.annotation.RestController;
+            
+            @RestController
+            public class HelloController {
+                @GetMapping("/hello")
+                public String hello() {
+                    return "Hello, World!";
+                }
+            }
+        """.trimIndent()
+
+    fun testShouldReturnControllerCodeWithFindCat() {
+        myFixture.addFileToProject(
+            "HelloController.java",
+            javaHelloController
+        )
+
+        @Language("Shire")
+        val code = """
+            ---
+            name: "类图分析"
+            variables:
+              "controllers": /.*.java/ { cat }
+              "tokens": /any/ { tokenizer(${'$'}controllers, "word") }
+            ---
+            
+            ${'$'}controllers
+        """.trimIndent()
+
+        val file = myFixture.configureByText("test.shire", code)
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
+        val hole = compile.config!!
+
+        val context = PostProcessorContext(
+            genText = "User prompt:\n\n",
+        )
+
+        runBlocking {
+            val templateCompiler = ShireTemplateCompiler(project, hole, compile.variableTable, code)
+            val compiledVariables =
+                templateCompiler.compileVariable(myFixture.editor, mutableMapOf())
+
+            context.compiledVariables = compiledVariables
+        }
+
+        assertEquals(
+            """[package, com, phodal, shirelang, controller, import, org, springframework, web, bind, annotation, GetMapping, import, org, springframework, web, bind, annotation, RestController, RestController, public, class, HelloController, GetMapping, hello, public, String, hello, return, Hello, World]""", context.compiledVariables["tokens"]
+        )
+    }
+}
