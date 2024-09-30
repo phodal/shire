@@ -35,7 +35,7 @@ class ShireTemplateCompiler(
 
     private fun cleanUp(prompt: String) =
         prompt.trim()
-            .replace("\n\n", "\n")
+            .replace("\n\n\n", "\n\n")
 
     private suspend fun doExecuteCompile(): String {
         val currentEditor = VariableTemplateCompiler.defaultEditor(myProject)

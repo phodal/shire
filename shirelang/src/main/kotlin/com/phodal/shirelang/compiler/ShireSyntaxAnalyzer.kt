@@ -107,7 +107,7 @@ class ShireSyntaxAnalyzer(
                 }
 
                 MARKDOWN_HEADER -> {
-                    output.append(psiElement.text)
+                    output.append("#[[${psiElement.text}]]#")
                 }
 
                 else -> {
