@@ -149,5 +149,7 @@
                                   implementationClass="com.phodal.shirelang.provider.ShirePsiVariableProvider"/>
         <shireLanguageToolchainProvider language="Shire"
                                         implementationClass="com.phodal.shirelang.provider.ShireLanguageToolchainProvider"/>
+
+        <shireToolchainFunctionProvider implementation="com.phodal.shirelang.provider.ShireToolchainFunctionProvider"/>
     </extensions>
 </idea-plugin>

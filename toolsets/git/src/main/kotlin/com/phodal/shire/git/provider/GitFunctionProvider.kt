@@ -41,14 +41,14 @@ enum class GitFunction(val funName: String) {
 
     companion object {
         fun fromString(value: String): GitFunction? {
-            return values().firstOrNull { it.funName == value }
+            return entries.firstOrNull { it.funName == value }
         }
     }
 }
 
 class GitFunctionProvider : ToolchainFunctionProvider {
     override fun isApplicable(project: Project, funcName: String): Boolean {
-        return GitFunction.values().any { it.funName == funcName }
+        return GitFunction.entries.any { it.funName == funcName }
     }
 
     override fun execute(project: Project, funcName: String, args: List<Any>, allVariables: Map<String, Any?>): Any {
