@@ -57,9 +57,9 @@ class ShireToolchainFunctionProvider : ToolchainFunctionProvider {
 
                     ShireProvideType.Functions -> {
                         /// funcName and example to markdown table
-                        var result = "| Function | Description | Example |"
+                        var result = "| Function | Description |"
                         PatternActionFunc.all().forEach {
-                            result += "\n| ${it.funcName} | ${it.description} | ${it.example} |"
+                            result += "\n| ${it.funcName} | ${it.description} |"
                         }
 
                         result
