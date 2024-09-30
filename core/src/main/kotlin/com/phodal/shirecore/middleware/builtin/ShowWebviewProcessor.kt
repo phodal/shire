@@ -25,6 +25,8 @@ import java.awt.event.KeyEvent
 
 class ShowWebviewProcessor : PostProcessor {
     override val processorName: String get() = PostProcessorType.ShowWebview.handleName
+    override val description: String get() = "`showWebview` will show the webview for the content if it's html"
+
     private var continueMessage: String = ""
     private var webview: WebViewWindow? = null
 

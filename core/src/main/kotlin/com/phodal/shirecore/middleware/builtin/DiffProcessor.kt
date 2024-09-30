@@ -16,6 +16,8 @@ import com.phodal.shirecore.middleware.PostProcessor
 
 class DiffProcessor : PostProcessor {
     override val processorName: String = PostProcessorType.Diff.handleName
+    override val description: String = "`diff` will show the diff of two texts, default is current code and llm response"
+
     private val diffFactory = DiffContentFactoryEx.getInstanceEx()
 
     override fun isApplicable(context: PostProcessorContext): Boolean {

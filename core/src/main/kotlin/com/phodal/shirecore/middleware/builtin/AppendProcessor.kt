@@ -8,6 +8,7 @@ import com.phodal.shirecore.middleware.PostProcessor
 
 class AppendProcessor : PostProcessor {
     override val processorName: String = PostProcessorType.Append.handleName
+    override val description: String = "`append` will append the text to the generated text"
 
     override fun isApplicable(context: PostProcessorContext): Boolean = true
 

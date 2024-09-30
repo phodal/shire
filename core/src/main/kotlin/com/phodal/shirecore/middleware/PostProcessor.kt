@@ -23,6 +23,7 @@ data class PostProcessorFuncSign(
  */
 interface PostProcessor {
     val processorName: String
+    val description: String
 
     /**
      * This function checks if a given context is applicable for handling post codes.

@@ -9,6 +9,7 @@ import com.phodal.shirecore.middleware.PostProcessor
 
 class InsertCodeProcessor : PostProcessor {
     override val processorName: String = PostProcessorType.InsertCode.handleName
+    override val description: String = "`insertCode` will insert the code to the current file"
 
     override fun isApplicable(context: PostProcessorContext): Boolean = true
 

@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NonNls
 
 class ParseCommentProcessor : PostProcessor {
     override val processorName: String = PostProcessorType.ParseComment.handleName
+    override val description: String = "`parseComment` will parse the comment from the llm response"
 
     override fun isApplicable(context: PostProcessorContext): Boolean = true
 

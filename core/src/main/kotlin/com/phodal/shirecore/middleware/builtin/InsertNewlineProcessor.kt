@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 
 class InsertNewlineProcessor : PostProcessor {
     override val processorName: String = PostProcessorType.InsertNewline.handleName
+    override val description: String = "`insertNewline` will insert a newline at the cursor position"
 
     override fun isApplicable(context: PostProcessorContext): Boolean = true
 

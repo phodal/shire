@@ -17,6 +17,7 @@ import com.phodal.shirecore.middleware.PostProcessor
 
 class PatchProcessor : PostProcessor {
     override val processorName: String = PostProcessorType.Patch.handleName
+    override val description: String = "`patch` will apply the patch to the current file, default will use llm response."
 
     override fun isApplicable(context: PostProcessorContext): Boolean = true
 

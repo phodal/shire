@@ -10,6 +10,7 @@ class TimeMetricProcessor : PostProcessor {
     private var startTime: Long? = null
 
     override val processorName: String = PostProcessorType.TimeMetric.handleName
+    override val description: String = "`timeMetric` will calculate the time metric"
 
     override fun isApplicable(context: PostProcessorContext): Boolean = true
 

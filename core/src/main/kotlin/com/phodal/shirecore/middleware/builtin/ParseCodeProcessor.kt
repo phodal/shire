@@ -9,6 +9,7 @@ import com.phodal.shirecore.middleware.PostProcessor
 
 class ParseCodeProcessor : PostProcessor {
     override val processorName: String = PostProcessorType.ParseCode.handleName
+    override val description: String = "`parseCode` will parse the markdown from llm response."
 
     override fun isApplicable(context: PostProcessorContext): Boolean = true
 

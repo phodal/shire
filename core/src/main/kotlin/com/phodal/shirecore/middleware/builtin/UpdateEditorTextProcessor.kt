@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 
 class UpdateEditorTextProcessor : PostProcessor {
     override val processorName: String = PostProcessorType.UpdateEditorText.handleName
+    override val description: String = "`updateEditorText` will update the editor text from llm response"
 
     override fun isApplicable(context: PostProcessorContext): Boolean = true
 

@@ -18,6 +18,7 @@ import com.phodal.shirecore.middleware.PostProcessor
 
 class SaveFileProcessor : PostProcessor, Disposable {
     override val processorName: String = PostProcessorType.SaveFile.handleName
+    override val description: String = "`saveFile` will save the content / llm response to the file"
 
     override fun isApplicable(context: PostProcessorContext): Boolean = true
 

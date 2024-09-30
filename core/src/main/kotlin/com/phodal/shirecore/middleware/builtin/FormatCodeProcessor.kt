@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 
 class FormatCodeProcessor : PostProcessor {
     override val processorName: String = PostProcessorType.FormatCode.handleName
+    override val description: String = "`formatCode` will format the code of the current file"
 
     override fun isApplicable(context: PostProcessorContext): Boolean = true
 

@@ -14,6 +14,7 @@ import com.phodal.shirecore.middleware.PostProcessor
 
 class OpenFileProcessor : PostProcessor {
     override val processorName: String = PostProcessorType.OpenFile.handleName
+    override val description: String = "`openFile` will open the file in the editor"
 
     override fun isApplicable(context: PostProcessorContext): Boolean = true
 

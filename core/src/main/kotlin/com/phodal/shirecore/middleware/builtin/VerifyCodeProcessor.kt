@@ -21,6 +21,7 @@ import com.phodal.shirecore.middleware.PostProcessor
 
 class VerifyCodeProcessor : PostProcessor {
     override val processorName: String = PostProcessorType.VerifyCode.handleName
+    override val description: String = "`verifyCode` will verify the code syntax and return the errors"
 
     override fun isApplicable(context: PostProcessorContext): Boolean = true
 

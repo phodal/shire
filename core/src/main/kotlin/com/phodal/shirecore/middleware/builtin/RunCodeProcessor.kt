@@ -17,6 +17,7 @@ import com.phodal.shirecore.provider.shire.FileRunService
 
 class RunCodeProcessor : PostProcessor {
     override val processorName: String = PostProcessorType.RunCode.handleName
+    override val description: String = "`runCode` will run the code, default will be test file."
 
     override fun isApplicable(context: PostProcessorContext): Boolean = true
 

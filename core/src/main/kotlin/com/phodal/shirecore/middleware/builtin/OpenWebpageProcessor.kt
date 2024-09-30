@@ -22,6 +22,7 @@ import com.phodal.shirecore.middleware.PostProcessorType
 
 class OpenWebpageProcessor : PostProcessor {
     override val processorName: String get() = PostProcessorType.OpenWebpage.handleName
+    override val description: String get() = "`openWebpage` will open the generated HTML in the browser"
 
     override fun isApplicable(context: PostProcessorContext): Boolean {
         return context.genText?.contains("<html") ?: false

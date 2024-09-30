@@ -69,9 +69,13 @@ class ShireToolchainFunctionProvider : ToolchainFunctionProvider {
                     }
 
                     ShireProvideType.Processor -> {
+                        var result = "| Processor | Description |"
+                        result += "\n| --- | --- |"
                         PostProcessor.all().map {
-                            it.processorName
+                            result += "\n| ${it.processorName} | ${it.description} |"
                         }
+
+                        result
                     }
 
                     null -> ""
