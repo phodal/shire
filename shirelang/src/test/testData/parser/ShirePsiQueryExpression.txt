@@ -37,7 +37,7 @@ ShireFile
                             PsiWhiteSpace(' ')
                             PsiElement(ShireTokenType.IDENTIFIER)('clazz')
                           PsiWhiteSpace(' ')
-                          PsiComment(ShireTokenType.COMMENT)('// the class')
+                          PsiComment(ShireTokenType.COMMENTS)('// the class')
                           PsiElement(ShireTokenType.NEWLINE)('\n')
                         PsiWhiteSpace('    ')
                         PsiElement(ShireTokenType.})('}')

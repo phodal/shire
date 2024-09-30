@@ -33,7 +33,7 @@ ShireFile
     PsiElement(ShireTokenType.FRONTMATTER_END)('---')
   PsiElement(ShireTokenType.NEWLINE)('\n')
   PsiElement(ShireTokenType.NEWLINE)('\n')
-  PsiComment(ShireTokenType.COMMENTS)('[interaction: OnPaste]')
+  PsiComment(ShireTokenType.CONTENT_COMMENTS)('[interaction: OnPaste]')
   PsiElement(ShireTokenType.NEWLINE)('\n')
   PsiElement(ShireTokenType.NEWLINE)('\n')
   PsiElement(ShireTokenType.TEXT_SEGMENT)('代码生成。根据当前的代码上下文（光标前后），对用户粘贴的代码，生成新的代码。')
