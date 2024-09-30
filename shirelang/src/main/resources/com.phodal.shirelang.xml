@@ -42,7 +42,8 @@
         <configurationType implementation="com.phodal.shirelang.run.ShireConfigurationType"/>
         <programRunner implementation="com.phodal.shirelang.run.ShireProgramRunner"/>
 
-        <runConfigurationBeforeRunProviderDelegate implementation="com.phodal.shirelang.run.ShireBeforeRunProviderDelegate"/>
+        <runConfigurationBeforeRunProviderDelegate
+                implementation="com.phodal.shirelang.run.ShireBeforeRunProviderDelegate"/>
         <runConfigurationProducer implementation="com.phodal.shirelang.run.ShireRunConfigurationProducer"/>
         <runLineMarkerContributor language="Shire"
                                   implementationClass="com.phodal.shirelang.run.ShireRunLineMarkersProvider"/>
@@ -52,7 +53,6 @@
 
 
         <gotoDeclarationHandler implementation="com.phodal.shirelang.navigation.ShireGotoDeclarationHandler"/>
-<!--        <gotoSymbolContributor implementation="com.phodal.shirelang.navigation.ShireGotoSymbolContributor"/>-->
 
         <lang.documentationProvider language="Shire"
                                     id="shireDocumentationProvider"
@@ -100,9 +100,9 @@
 
         <!-- When multiple commit menu -->
         <group id="ShireVcsActionGroup"
-                class="com.phodal.shirelang.actions.vcs.ShireVcsActionGroup"
-                icon="com.phodal.shirelang.ShireIcons.DEFAULT"
-                description="Shire VCS Action">
+               class="com.phodal.shirelang.actions.vcs.ShireVcsActionGroup"
+               icon="com.phodal.shirelang.ShireIcons.DEFAULT"
+               description="Shire VCS Action">
 
             <add-to-group group-id="Vcs.MessageActionGroup"/>
         </group>
@@ -144,5 +144,10 @@
 
     <extensions defaultExtensionNs="com.phodal">
         <shireFileRunService implementation="com.phodal.shirelang.runner.ShellFileRunService"/>
+
+        <shirePsiVariableProvider language="Shire"
+                                  implementationClass="com.phodal.shirelang.provider.ShirePsiVariableProvider"/>
+        <shireLanguageToolchainProvider language="Shire"
+                                        implementationClass="com.phodal.shirelang.provider.ShireLanguageToolchainProvider"/>
     </extensions>
 </idea-plugin>

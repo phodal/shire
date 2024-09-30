@@ -19,7 +19,10 @@ class GoLanguageProvider : LanguageToolchainProvider {
     }
 
     override suspend fun collect(project: Project, context: ToolchainPrepareContext): List<ToolchainContextItem> {
-        val psiElement = context.element ?: return emptyList()
+        if (context.element == null) {
+            return emptyList()
+        }
+
         val sourceFile = context.sourceFile ?: return emptyList()
 
         return ReadAction.compute<List<ToolchainContextItem>, Throwable> {
