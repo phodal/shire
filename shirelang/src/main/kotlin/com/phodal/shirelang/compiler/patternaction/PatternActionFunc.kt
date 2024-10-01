@@ -216,7 +216,7 @@ sealed class PatternActionFunc(val type: PatternActionFuncType) {
             return when (PatternActionFuncType.entries.find { it.funcName == funcName }) {
                 PatternActionFuncType.GREP -> {
                     if (args.isEmpty()) {
-                        logger.error("parsePatternAction, grep requires at least 1 argument")
+                        logger.error("PatternActionFun,`grep` func requires at least 1 argument")
                         return null
                     }
                     Grep(*args.toTypedArray())
@@ -226,7 +226,7 @@ sealed class PatternActionFunc(val type: PatternActionFuncType) {
 
                 PatternActionFuncType.FIND -> {
                     if (args.isEmpty()) {
-                        logger.error("parsePatternAction, find requires at least 1 argument")
+                        logger.error("PatternActionFun,`find` func requires at least 1 argument")
                         return null
                     }
                     Find(args[0])
@@ -234,7 +234,7 @@ sealed class PatternActionFunc(val type: PatternActionFuncType) {
 
                 PatternActionFuncType.SED -> {
                     if (args.size < 2) {
-                        logger.error("parsePatternAction, sed requires at least 2 arguments")
+                        logger.error("PatternActionFun,`sed` func requires at least 2 arguments")
                         return null
                     }
                     if (args[0].startsWith("/") && args[0].endsWith("/")) {
@@ -304,7 +304,7 @@ sealed class PatternActionFunc(val type: PatternActionFuncType) {
 
                 PatternActionFuncType.CAPTURE -> {
                     if (args.size < 2) {
-                        logger.error("parsePatternAction, capture requires at least 2 arguments")
+                        logger.error("PatternActionFun,`capture` func requires at least 2 arguments")
                         return null
                     }
                     Capture(args[0], args[1])
@@ -312,7 +312,7 @@ sealed class PatternActionFunc(val type: PatternActionFuncType) {
 
                 PatternActionFuncType.THREAD -> {
                     if (args.isEmpty()) {
-                        logger.error("parsePatternAction, thread requires at least 1 argument")
+                        logger.error("PatternActionFun,`thread` func requires at least 1 argument")
                         return null
                     }
                     val rest = args.drop(1).toTypedArray()
@@ -321,7 +321,7 @@ sealed class PatternActionFunc(val type: PatternActionFuncType) {
 
                 PatternActionFuncType.JSONPATH -> {
                     if (args.isEmpty()) {
-                        logger.error("parsePatternAction, jsonpath requires at least 1 argument")
+                        logger.error("PatternActionFun,`jsonpath` func requires at least 1 argument")
                         return null
                     }
                     if (args.size < 2) {
@@ -353,7 +353,7 @@ sealed class PatternActionFunc(val type: PatternActionFuncType) {
                 PatternActionFuncType.TOOLCHAIN_FUNCTION -> ToolchainFunction(funcName, args)
                 PatternActionFuncType.TOKENIZER -> {
                     if (args.isEmpty()) {
-                        logger.error("parsePatternAction, tokenizer requires at least 1 argument")
+                        logger.error("PatternActionFun,`tokenizer` func requires at least 1 argument")
                         return null
                     }
                     Tokenizer(args[0], args.getOrNull(1) ?: "word")
