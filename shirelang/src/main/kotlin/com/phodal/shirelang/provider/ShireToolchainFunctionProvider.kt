@@ -45,6 +45,8 @@ class ShireToolchainFunctionProvider : ToolchainFunctionProvider {
         when (shireFunc) {
             ShireToolchainFunction.Provider -> {
                 val type = args.first() as String
+                val withExample = args.getOrNull(1) as? Boolean ?: false
+
                 return when (ShireProvideType.fromString(type)) {
                     ShireProvideType.Variables -> {
                         /// name and description to markdown table
@@ -63,6 +65,9 @@ class ShireToolchainFunctionProvider : ToolchainFunctionProvider {
                         result += "\n| --- | --- |"
                         PatternActionFunc.all().forEach {
                             result += "\n| ${it.funcName} | ${it.description} |"
+                            if (withExample) {
+                                result += "Example: `${it.example}` |"
+                            }
                         }
 
                         result
