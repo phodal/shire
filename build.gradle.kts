@@ -375,7 +375,11 @@ project(":shirelang") {
         implementation("com.nfeld.jsonpathkt:jsonpathkt:2.0.1")
         implementation("org.apache.velocity:velocity-engine-core:2.4")
 
+        // https://mvnrepository.com/artifact/com.huaban/jieba-analysis
+        implementation("com.huaban:jieba-analysis:1.0.2")
+
         implementation("cc.unitmesh:cocoa-core:1.0.0")
+
 
         // for ShireQL Schema
         implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")

@@ -5,6 +5,7 @@ import com.phodal.shirecore.middleware.PostProcessorContext
 import com.phodal.shirelang.compiler.ShireSyntaxAnalyzer
 import com.phodal.shirelang.compiler.ShireTemplateCompiler
 import com.phodal.shirelang.psi.ShireFile
+import junit.framework.TestCase
 import kotlinx.coroutines.runBlocking
 import org.intellij.lang.annotations.Language
 
@@ -37,6 +38,7 @@ class ShireTokenizerTest : BasePlatformTestCase() {
             variables:
               "controllers": /.*.java/ { cat }
               "tokens": /any/ { tokenizer(${'$'}controllers, "word") }
+              "chinese": /any/ { tokenizer("孩子上了幼儿园 安全防拐教育要做好", "jieba") }
             ---
             
             ${'$'}controllers
@@ -59,7 +61,12 @@ class ShireTokenizerTest : BasePlatformTestCase() {
         }
 
         assertEquals(
-            """[package, com, phodal, shirelang, controller, import, org, springframework, web, bind, annotation, GetMapping, import, org, springframework, web, bind, annotation, RestController, RestController, public, class, HelloController, GetMapping, hello, public, String, hello, return, Hello, World]""", context.compiledVariables["tokens"]
+            """[package, com, phodal, shirelang, controller, import, org, springframework, web, bind, annotation, GetMapping, import, org, springframework, web, bind, annotation, RestController, RestController, public, class, HelloController, GetMapping, hello, public, String, hello, return, Hello, World]""",
+            context.compiledVariables["tokens"]
+        )
+        assertEquals(
+            listOf("孩子", "上", "了", "幼儿园",  "安全", "防拐", "教育", "要", "做好").toString(),
+            context.compiledVariables["chinese"].toString()
         )
     }
 }

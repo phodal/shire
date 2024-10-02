@@ -1,5 +1,7 @@
 package com.phodal.shirelang.compiler.hobbit.execute
 
+import com.huaban.analysis.jieba.JiebaSegmenter
+import com.huaban.analysis.jieba.JiebaSegmenter.SegMode
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.search.tokenizer.*
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
@@ -33,6 +35,15 @@ class TokenizerProcessor {
 
                 "stopwords" -> {
                     return StopwordsBasedTokenizer.instance().tokenize(action.text)
+                }
+
+                "jieba" -> {
+                    return JiebaSegmenter().process(action.text, SegMode.SEARCH).mapNotNull {
+                        val result = it.word.trim()
+                        result.ifEmpty {
+                            null
+                        }
+                    }
                 }
 
                 else -> {
