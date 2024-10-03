@@ -7,6 +7,7 @@ import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 import org.jetbrains.intellij.platform.gradle.extensions.IntelliJPlatformDependenciesExtension
 import org.jetbrains.intellij.platform.gradle.extensions.IntelliJPlatformTestingExtension
 import org.jetbrains.intellij.platform.gradle.tasks.RunIdeTask
+import org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginTask
 import org.jetbrains.intellij.platform.gradle.utils.extensionProvider
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.util.*
@@ -480,7 +481,7 @@ project(":") {
         projectName = basePluginArchiveName
         pluginConfiguration {
             id = "com.phodal.shire"
-            name = "shire"
+            name = "Shire - AI Coding Agent Language"
             version = prop("pluginVersion")
 
             ideaVersion {
@@ -495,7 +496,7 @@ project(":") {
 
         pluginVerification {
             freeArgs = listOf("-mute", "TemplateWordInPluginId,ForbiddenPluginIdPrefix")
-//            failureLevel = listOf(VerifyPluginTask.FailureLevel.MISSING_DEPENDENCIES)
+            failureLevel = listOf(VerifyPluginTask.FailureLevel.MISSING_DEPENDENCIES)
             ides {
                 select {
                     sinceBuild = "242"
