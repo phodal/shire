@@ -299,7 +299,7 @@ enum class PatternActionFuncType(val funcName: String, val description: String, 
     ),
 
     TOKENIZER(
-        "tokenizer", "`tokenizer` function tokenizes text using traditional NLP methods. Support type for : `word`, `naming`, `stopwords`",
+        "tokenizer", "`tokenizer` function tokenizes text using traditional NLP methods. Support type for : " + "`word`, `naming`, `stopwords`，`jieba`.",
         """
         | ```shire
         | ---
@@ -308,6 +308,9 @@ enum class PatternActionFuncType(val funcName: String, val description: String, 
         |   "tokens": /any/ { tokenizer(${'$'}controllers, "word") }
         | ---
         | ```
+        | 
+        | Output Example: package, com, phodal, shirelang, controller, import, org, springframework, web, bind, ...
+        | 
         """.trimMargin()
     )
     ;

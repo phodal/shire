@@ -61,7 +61,7 @@ class ShireTokenizerTest : BasePlatformTestCase() {
         }
 
         assertEquals(
-            """[package, com, phodal, shirelang, controller, import, org, springframework, web, bind, annotation, GetMapping, import, org, springframework, web, bind, annotation, RestController, RestController, public, class, HelloController, GetMapping, hello, public, String, hello, return, Hello, World]""",
+            """[package, com, phodal, shirelang, controller, import, org, springframework, web, bind, annotation, GetMapping, RestController, public, class, HelloController, hello, String, return, Hello, World]""",
             context.compiledVariables["tokens"]
         )
         assertEquals(

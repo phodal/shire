@@ -30,13 +30,15 @@ open class RegexpTokenizer(opts: RegexTokenizerOptions? = null) : Tokenizer {
     override fun tokenize(input: String): List<String> {
         val results: List<String>
 
-        if (_gaps == true) {
+        val output = if (_gaps == true) {
             results = input.split(whitespacePattern)
-            return if (discardEmpty) without(results, "", " ") else results
+            if (discardEmpty) without(results, "", " ") else results
         } else {
             results = whitespacePattern.findAll(input).map { it.value }.toList()
-            return results.ifEmpty { emptyList() }
+            results.ifEmpty { emptyList() }
         }
+
+        return output.distinct()
     }
 
     fun without(arr: List<String>, vararg values: String): List<String> {
