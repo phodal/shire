@@ -10,7 +10,6 @@ import com.phodal.shirelang.compiler.hobbit.*
 import com.phodal.shirelang.compiler.hobbit.ast.*
 import com.phodal.shirelang.compiler.hobbit.ast.action.RuleBasedPatternAction
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
-import com.phodal.shirelang.compiler.patternaction.PatternActionFuncType
 import com.phodal.shirelang.psi.*
 
 object HobbitHoleParser {

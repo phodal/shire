@@ -5,7 +5,11 @@ import com.huaban.analysis.jieba.JiebaSegmenter.SegMode
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.search.tokenizer.*
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
+import com.phodal.shirelang.compiler.patternaction.PatternActionFuncDef
 
+/**
+ * For [PatternActionFuncDef.TOKENIZER]
+ */
 class TokenizerProcessor {
     companion object {
         fun execute(project: Project, action: PatternActionFunc.Tokenizer): Any {

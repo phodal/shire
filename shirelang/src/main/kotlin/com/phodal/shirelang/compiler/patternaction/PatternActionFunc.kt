@@ -11,7 +11,7 @@ import com.phodal.shirelang.compiler.hobbit.ast.VariableElement
  *
  * @property funcName The name of the function.
  */
-sealed class PatternActionFunc(val type: PatternActionFuncType) {
+sealed class PatternActionFunc(val type: PatternActionFuncDef) {
     open val funcName: String = type.funcName
 
     /**
@@ -19,13 +19,13 @@ sealed class PatternActionFunc(val type: PatternActionFuncType) {
      *
      * @property patterns The patterns to search for.
      */
-    class Grep(vararg val patterns: String) : PatternActionFunc(PatternActionFuncType.GREP)
+    class Grep(vararg val patterns: String) : PatternActionFunc(PatternActionFuncDef.GREP)
 
     /**
      * Find subclass for searching with text
      * @property text The text to search for.
      */
-    class Find(val text: String) : PatternActionFunc(PatternActionFuncType.FIND)
+    class Find(val text: String) : PatternActionFunc(PatternActionFuncDef.FIND)
 
     /**
      * Sed subclass for find and replace operations.
@@ -36,125 +36,125 @@ sealed class PatternActionFunc(val type: PatternActionFuncType) {
      * For example, `sed("foo", "bar")` would replace all instances of "foo" with "bar".
      */
     class Sed(val pattern: String, val replacements: String, val isRegex: Boolean = true) :
-        PatternActionFunc(PatternActionFuncType.SED)
+        PatternActionFunc(PatternActionFuncDef.SED)
 
     /**
      * Sort subclass for sorting with one or more arguments.
      *
      * @property arguments The arguments to use for sorting.
      */
-    class Sort(vararg val arguments: String) : PatternActionFunc(PatternActionFuncType.SORT)
+    class Sort(vararg val arguments: String) : PatternActionFunc(PatternActionFuncDef.SORT)
 
     /**
      * Uniq subclass for removing duplicates based on one or more arguments.
      *
      * @property texts The texts to process for uniqueness.
      */
-    class Uniq(vararg val texts: String) : PatternActionFunc(PatternActionFuncType.UNIQ)
+    class Uniq(vararg val texts: String) : PatternActionFunc(PatternActionFuncDef.UNIQ)
 
     /**
      * Head subclass for retrieving the first few lines.
      *
      * @property number The number of lines to retrieve from the start.
      */
-    class Head(val number: Number) : PatternActionFunc(PatternActionFuncType.HEAD)
+    class Head(val number: Number) : PatternActionFunc(PatternActionFuncDef.HEAD)
 
     /**
      * Tail subclass for retrieving the last few lines.
      *
      * @property number The number of lines to retrieve from the end.
      */
-    class Tail(val number: Number) : PatternActionFunc(PatternActionFuncType.TAIL)
+    class Tail(val number: Number) : PatternActionFunc(PatternActionFuncDef.TAIL)
 
     /**
      * Xargs subclass for processing one or more variables.
      *
      * @property variables The variables to process.
      */
-    class Xargs(vararg val variables: String) : PatternActionFunc(PatternActionFuncType.XARGS)
+    class Xargs(vararg val variables: String) : PatternActionFunc(PatternActionFuncDef.XARGS)
 
     /**
      * Print subclass for printing one or more texts.
      *
      * @property texts The texts to be printed.
      */
-    class Print(vararg val texts: String) : PatternActionFunc(PatternActionFuncType.PRINT)
+    class Print(vararg val texts: String) : PatternActionFunc(PatternActionFuncDef.PRINT)
 
     /**
      * Cat subclass for concatenating one or more files.
      * Paths can be absolute or relative to the current working directory.
      */
-    class Cat(vararg val paths: String) : PatternActionFunc(PatternActionFuncType.CAT)
+    class Cat(vararg val paths: String) : PatternActionFunc(PatternActionFuncDef.CAT)
 
     /**
      * Select subclass for selecting one or more elements.
      */
-    class From(val variables: List<VariableElement>) : PatternActionFunc(PatternActionFuncType.FROM)
+    class From(val variables: List<VariableElement>) : PatternActionFunc(PatternActionFuncDef.FROM)
 
     /**
      * Where subclass for filtering elements.
      */
-    class Where(val statement: Statement) : PatternActionFunc(PatternActionFuncType.WHERE)
+    class Where(val statement: Statement) : PatternActionFunc(PatternActionFuncDef.WHERE)
 
     /**
      * OrderBy subclass for ordering elements.
      */
-    class Select(val statements: List<Statement>) : PatternActionFunc(PatternActionFuncType.SELECT)
+    class Select(val statements: List<Statement>) : PatternActionFunc(PatternActionFuncDef.SELECT)
 
     /**
      * Execute a shire script
      */
     class Execute(val filename: String, val variableNames: Array<String>) :
-        PatternActionFunc(PatternActionFuncType.EXECUTE)
+        PatternActionFunc(PatternActionFuncDef.EXECUTE)
 
     /**
      * Use IDE Notify
      */
-    class Notify(val message: String) : PatternActionFunc(PatternActionFuncType.NOTIFY)
+    class Notify(val message: String) : PatternActionFunc(PatternActionFuncDef.NOTIFY)
 
     /**
      * Case Match
      */
-    class CaseMatch(val keyValue: List<CaseKeyValue>) : PatternActionFunc(PatternActionFuncType.CASE_MATCH)
+    class CaseMatch(val keyValue: List<CaseKeyValue>) : PatternActionFunc(PatternActionFuncDef.CASE_MATCH)
 
     /**
      * Splitting
      */
-    class Splitting(val paths: Array<String>) : PatternActionFunc(PatternActionFuncType.SPLITTING)
+    class Splitting(val paths: Array<String>) : PatternActionFunc(PatternActionFuncDef.SPLITTING)
 
     /**
      * Embedding text
      */
-    class Embedding(val entries: Array<String>) : PatternActionFunc(PatternActionFuncType.EMBEDDING)
+    class Embedding(val entries: Array<String>) : PatternActionFunc(PatternActionFuncDef.EMBEDDING)
 
     /**
      * Searching text
      */
-    class Searching(val text: String, val threshold: Double = 0.5) : PatternActionFunc(PatternActionFuncType.SEARCHING)
+    class Searching(val text: String, val threshold: Double = 0.5) : PatternActionFunc(PatternActionFuncDef.SEARCHING)
 
     /**
      * Caching semantic
      */
-    class Caching(val text: String) : PatternActionFunc(PatternActionFuncType.CACHING)
+    class Caching(val text: String) : PatternActionFunc(PatternActionFuncDef.CACHING)
 
     /**
      * Reranking the result
      */
-    class Reranking(val strategy: String) : PatternActionFunc(PatternActionFuncType.RERANKING)
+    class Reranking(val strategy: String) : PatternActionFunc(PatternActionFuncDef.RERANKING)
 
     /**
      * The Redact class is designed for handling sensitive data by applying a specified redaction strategy.
      *
      * @param strategy The redaction strategy to be used. This string defines how the sensitive data will be handled or obscured.
      */
-    class Redact(val strategy: String) : PatternActionFunc(PatternActionFuncType.REDACT)
+    class Redact(val strategy: String) : PatternActionFunc(PatternActionFuncDef.REDACT)
 
     /**
      * The Crawl function is used to crawl a list of urls, get markdown from html and save it to a file.
      *
      * @param urls The urls to crawl.
      */
-    class Crawl(vararg val urls: String) : PatternActionFunc(PatternActionFuncType.CRAWL)
+    class Crawl(vararg val urls: String) : PatternActionFunc(PatternActionFuncDef.CRAWL)
 
     /**
      * The capture function used to capture file by NodeType
@@ -162,7 +162,7 @@ sealed class PatternActionFunc(val type: PatternActionFuncType) {
      * @param fileName The file name to save the capture to.
      * @param nodeType The node type to capture.
      */
-    class Capture(val fileName: String, val nodeType: String) : PatternActionFunc(PatternActionFuncType.CAPTURE)
+    class Capture(val fileName: String, val nodeType: String) : PatternActionFunc(PatternActionFuncDef.CAPTURE)
 
     /**
      * The thread function will run the function in a new thread
@@ -170,26 +170,26 @@ sealed class PatternActionFunc(val type: PatternActionFuncType) {
      * @param fileName The file name to run
      */
     class Thread(val fileName: String, val variableNames: Array<String>) :
-        PatternActionFunc(PatternActionFuncType.THREAD)
+        PatternActionFunc(PatternActionFuncDef.THREAD)
 
     /**
      * The jsonpath function will parse the json and get the value by jsonpath
      */
     class JsonPath(val obj: String?, val path: String, val sseMode: Boolean = false) :
-        PatternActionFunc(PatternActionFuncType.JSONPATH)
+        PatternActionFunc(PatternActionFuncDef.JSONPATH)
 
-    class Destroy : PatternActionFunc(PatternActionFuncType.DESTROY)
+    class Destroy : PatternActionFunc(PatternActionFuncDef.DESTROY)
 
     class Batch(val fileName: String, val inputs: List<String>, val batchSize: Int = 1) :
-        PatternActionFunc(PatternActionFuncType.BATCH)
+        PatternActionFunc(PatternActionFuncDef.BATCH)
 
-    class Tokenizer(var text: String, val tokType: String) : PatternActionFunc(PatternActionFuncType.TOKENIZER)
+    class Tokenizer(var text: String, val tokType: String) : PatternActionFunc(PatternActionFuncDef.TOKENIZER)
 
     /**
      * User Custom Functions
      */
     class ToolchainFunction(override val funcName: String, val args: List<String>) :
-        PatternActionFunc(PatternActionFuncType.TOOLCHAIN_FUNCTION) {
+        PatternActionFunc(PatternActionFuncDef.TOOLCHAIN_FUNCTION) {
         override fun toString(): String {
             return "$funcName(${args.joinToString(", ")})"
         }
@@ -199,7 +199,7 @@ sealed class PatternActionFunc(val type: PatternActionFuncType) {
         private val logger = logger<PatternActionFunc>()
 
         fun findDocByName(funcName: String?): String? {
-            val actionFuncType = PatternActionFuncType.entries.find { it.funcName == funcName } ?: return null
+            val actionFuncType = PatternActionFuncDef.entries.find { it.funcName == funcName } ?: return null
             return """
                 | ${actionFuncType.description}
                 | 
@@ -208,13 +208,13 @@ sealed class PatternActionFunc(val type: PatternActionFuncType) {
             """.trimMargin()
         }
 
-        fun all(): List<PatternActionFuncType> {
-            return PatternActionFuncType.entries
+        fun all(): List<PatternActionFuncDef> {
+            return PatternActionFuncDef.entries
         }
 
         fun from(funcName: String, args: List<String>): PatternActionFunc? {
-            return when (PatternActionFuncType.entries.find { it.funcName == funcName }) {
-                PatternActionFuncType.GREP -> {
+            return when (PatternActionFuncDef.entries.find { it.funcName == funcName }) {
+                PatternActionFuncDef.GREP -> {
                     if (args.isEmpty()) {
                         logger.error("PatternActionFun,`grep` func requires at least 1 argument")
                         return null
@@ -222,9 +222,9 @@ sealed class PatternActionFunc(val type: PatternActionFuncType) {
                     Grep(*args.toTypedArray())
                 }
 
-                PatternActionFuncType.SORT -> Sort(*args.toTypedArray())
+                PatternActionFuncDef.SORT -> Sort(*args.toTypedArray())
 
-                PatternActionFuncType.FIND -> {
+                PatternActionFuncDef.FIND -> {
                     if (args.isEmpty()) {
                         logger.error("PatternActionFun,`find` func requires at least 1 argument")
                         return null
@@ -232,7 +232,7 @@ sealed class PatternActionFunc(val type: PatternActionFuncType) {
                     Find(args[0])
                 }
 
-                PatternActionFuncType.SED -> {
+                PatternActionFuncDef.SED -> {
                     if (args.size < 2) {
                         logger.error("PatternActionFun,`sed` func requires at least 2 arguments")
                         return null
@@ -244,11 +244,11 @@ sealed class PatternActionFunc(val type: PatternActionFuncType) {
                     }
                 }
 
-                PatternActionFuncType.XARGS -> Xargs(*args.toTypedArray())
+                PatternActionFuncDef.XARGS -> Xargs(*args.toTypedArray())
 
-                PatternActionFuncType.UNIQ -> Uniq(*args.toTypedArray())
+                PatternActionFuncDef.UNIQ -> Uniq(*args.toTypedArray())
 
-                PatternActionFuncType.HEAD -> {
+                PatternActionFuncDef.HEAD -> {
                     if (args.isEmpty()) {
                         Head(10)
                     } else {
@@ -256,7 +256,7 @@ sealed class PatternActionFunc(val type: PatternActionFuncType) {
                     }
                 }
 
-                PatternActionFuncType.TAIL -> {
+                PatternActionFuncDef.TAIL -> {
                     if (args.isEmpty()) {
                         Tail(10)
                     } else {
@@ -264,45 +264,45 @@ sealed class PatternActionFunc(val type: PatternActionFuncType) {
                     }
                 }
 
-                PatternActionFuncType.PRINT -> Print(*args.toTypedArray())
+                PatternActionFuncDef.PRINT -> Print(*args.toTypedArray())
 
-                PatternActionFuncType.CAT -> Cat(*args.toTypedArray())
+                PatternActionFuncDef.CAT -> Cat(*args.toTypedArray())
 
-                PatternActionFuncType.EXECUTE -> {
+                PatternActionFuncDef.EXECUTE -> {
                     val first = args.firstOrNull() ?: ""
                     val rest = args.drop(1).toTypedArray()
                     Execute(first, rest)
                 }
 
-                PatternActionFuncType.NOTIFY -> Notify(args[0])
+                PatternActionFuncDef.NOTIFY -> Notify(args[0])
 
-                PatternActionFuncType.EMBEDDING -> Embedding(args.toTypedArray())
+                PatternActionFuncDef.EMBEDDING -> Embedding(args.toTypedArray())
 
-                PatternActionFuncType.SPLITTING -> Splitting(args.toTypedArray())
+                PatternActionFuncDef.SPLITTING -> Splitting(args.toTypedArray())
 
-                PatternActionFuncType.SEARCHING -> Searching(
+                PatternActionFuncDef.SEARCHING -> Searching(
                     args[0],
                     args.getOrNull(1)?.toDouble() ?: 0.5
                 )
 
-                PatternActionFuncType.RERANKING -> {
+                PatternActionFuncDef.RERANKING -> {
                     val first = args.firstOrNull() ?: "default"
                     Reranking(first)
                 }
 
-                PatternActionFuncType.CACHING -> Caching(args[0])
+                PatternActionFuncDef.CACHING -> Caching(args[0])
 
-                PatternActionFuncType.REDACT -> {
+                PatternActionFuncDef.REDACT -> {
                     val first = args.firstOrNull() ?: "default"
                     Redact(first)
                 }
 
-                PatternActionFuncType.CRAWL -> {
+                PatternActionFuncDef.CRAWL -> {
                     val urls: List<String> = args.filter { it.trim().isNotEmpty() }
                     Crawl(*urls.toTypedArray())
                 }
 
-                PatternActionFuncType.CAPTURE -> {
+                PatternActionFuncDef.CAPTURE -> {
                     if (args.size < 2) {
                         logger.error("PatternActionFun,`capture` func requires at least 2 arguments")
                         return null
@@ -310,7 +310,7 @@ sealed class PatternActionFunc(val type: PatternActionFuncType) {
                     Capture(args[0], args[1])
                 }
 
-                PatternActionFuncType.THREAD -> {
+                PatternActionFuncDef.THREAD -> {
                     if (args.isEmpty()) {
                         logger.error("PatternActionFun,`thread` func requires at least 1 argument")
                         return null
@@ -319,7 +319,7 @@ sealed class PatternActionFunc(val type: PatternActionFuncType) {
                     Thread(args.first(), rest)
                 }
 
-                PatternActionFuncType.JSONPATH -> {
+                PatternActionFuncDef.JSONPATH -> {
                     if (args.isEmpty()) {
                         logger.error("PatternActionFun,`jsonpath` func requires at least 1 argument")
                         return null
@@ -334,24 +334,24 @@ sealed class PatternActionFunc(val type: PatternActionFuncType) {
                     }
                 }
 
-                PatternActionFuncType.FROM,
-                PatternActionFuncType.WHERE,
-                PatternActionFuncType.SELECT,
-                PatternActionFuncType.CASE_MATCH,
+                PatternActionFuncDef.FROM,
+                PatternActionFuncDef.WHERE,
+                PatternActionFuncDef.SELECT,
+                PatternActionFuncDef.CASE_MATCH,
                     -> {
                     ToolchainFunction(funcName, args)
                 }
 
-                PatternActionFuncType.BATCH -> {
+                PatternActionFuncDef.BATCH -> {
                     Batch(args[0], args.drop(1))
                 }
 
-                PatternActionFuncType.DESTROY -> {
+                PatternActionFuncDef.DESTROY -> {
                     Destroy()
                 }
 
-                PatternActionFuncType.TOOLCHAIN_FUNCTION -> ToolchainFunction(funcName, args)
-                PatternActionFuncType.TOKENIZER -> {
+                PatternActionFuncDef.TOOLCHAIN_FUNCTION -> ToolchainFunction(funcName, args)
+                PatternActionFuncDef.TOKENIZER -> {
                     if (args.isEmpty()) {
                         logger.error("PatternActionFun,`tokenizer` func requires at least 1 argument")
                         return null

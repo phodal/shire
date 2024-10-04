@@ -3,7 +3,7 @@ package com.phodal.shirelang.compiler.patternaction
 /**
  * `PatternActionFuncType` was for show documentation when user hovers on the function.
  */
-enum class PatternActionFuncType(val funcName: String, val description: String, val example: String) {
+enum class PatternActionFuncDef(val funcName: String, val description: String, val example: String) {
     GREP(
         "grep", "`grep` function searches any given input files, selecting lines that match one or more patterns.",
         """
