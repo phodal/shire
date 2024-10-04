@@ -34,9 +34,12 @@ interface LlmProvider {
      * Checks if the given project is applicable for some operation.
      *
      * @param project the project to check for applicability
+     * @param llmConfig This llmConfig is used to verify if llmProvider is available.
+     * For example, it may be an unsaved configuration that can be used to test LLM connection.
+     *
      * @return true if the project is applicable, false otherwise
      */
-    fun isApplicable(project: Project): Boolean
+    fun isApplicable(project: Project, llmConfig: LlmConfig? = null): Boolean
 
     /**
      * Streams chat completion responses from the service.
@@ -80,10 +83,12 @@ interface LlmProvider {
          * Returns an instance of LlmProvider based on the given Project.
          *
          * @param project the Project for which to find a suitable LlmProvider
+         * @param llmConfig provide llmConfig as a condition for finding a suitable LlmProvider.
+         *
          * @return an instance of LlmProvider if a suitable provider is found, null otherwise
          */
-        fun provider(project: Project): LlmProvider? {
-            val providers = EP_NAME.extensions.filter { it.isApplicable(project) }
+        fun provider(project: Project, llmConfig: LlmConfig? = null): LlmProvider? {
+            val providers = EP_NAME.extensions.filter { it.isApplicable(project, llmConfig) }
             return if (providers.isEmpty()) {
                 ShirelangNotifications.error(project, ShireCoreBundle.message("shire.llm.notfound"))
                 null
