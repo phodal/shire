@@ -19,22 +19,22 @@ class TokenizerProcessor {
                     }
                 )
 
-                return tokenizer.tokenize(action.text)
+                return tokenizer.tokenize(action.text).distinct()
             }
 
             when (action.tokType) {
                 "word" -> {
                     val tokenizer = WordTokenizer()
-                    return tokenizer.tokenize(action.text)
+                    return tokenizer.tokenize(action.text).distinct()
                 }
 
                 "naming" -> {
                     val tokenizer = CodeNamingTokenizer()
-                    return tokenizer.tokenize(action.text)
+                    return tokenizer.tokenize(action.text).distinct()
                 }
 
                 "stopwords" -> {
-                    return StopwordsBasedTokenizer.instance().tokenize(action.text)
+                    return StopwordsBasedTokenizer.instance().tokenize(action.text).distinct()
                 }
 
                 "jieba" -> {
@@ -48,7 +48,7 @@ class TokenizerProcessor {
 
                 else -> {
                     val tokenizer = WordTokenizer()
-                    return tokenizer.tokenize(action.text)
+                    return tokenizer.tokenize(action.text).distinct()
                 }
             }
         }

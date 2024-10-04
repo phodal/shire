@@ -38,7 +38,7 @@ open class RegexpTokenizer(opts: RegexTokenizerOptions? = null) : Tokenizer {
             results.ifEmpty { emptyList() }
         }
 
-        return output.distinct()
+        return output
     }
 
     fun without(arr: List<String>, vararg values: String): List<String> {
