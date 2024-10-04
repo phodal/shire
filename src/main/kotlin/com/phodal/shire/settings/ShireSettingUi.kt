@@ -132,20 +132,23 @@ class ShireSettingUi : ConfigurableUi<ShireSettingsState> {
             testResultField.text = throwable.message ?: "Unknown error"
         }) {
             val flowString: Flow<String> =
-                LlmProvider.provider(project)
-                    ?.stream(
-                        promptText = "hi",
-                        systemPrompt = "",
-                        keepHistory = false,
-                        llmConfig = LlmConfig(
-                            model = modelName.text,
-                            apiKey = engineToken.text,
-                            apiBase = apiHost.text,
-                            temperature = temperatureField.text.toDoubleOrNull() ?: 0.0,
-                            title = modelName.text,
+                LlmConfig(
+                    model = modelName.text,
+                    apiKey = engineToken.text,
+                    apiBase = apiHost.text,
+                    temperature = temperatureField.text.toDoubleOrNull() ?: 0.0,
+                    title = modelName.text,
+                ).let {
+                    LlmProvider.provider(project, it)
+                        ?.stream(
+                            promptText = "hi",
+                            systemPrompt = "",
+                            keepHistory = false,
+                            llmConfig = it
                         )
-                    )
-                    ?: throw Exception(ShireCoreBundle.message("shire.llm.notfound"))
+                        ?: throw Exception(ShireCoreBundle.message("shire.llm.notfound"))
+                }
+
             flowString.collect {
                 testResultField.text += it
             }

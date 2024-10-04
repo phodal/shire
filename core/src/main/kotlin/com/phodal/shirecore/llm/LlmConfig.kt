@@ -16,6 +16,9 @@ class LlmConfig(
     val responseFormat: String = "\$.choices[0].delta.content",
     val messageKeys: Map<String, String> = mapOf(),
 ) {
+
+    fun checkAvailable(): Boolean = apiKey.isNotBlank() && model.isNotBlank()
+
     companion object {
         fun fromJson(modelConfig: JsonObject): LlmConfig? {
             val title = modelConfig.findString("title") ?: return null

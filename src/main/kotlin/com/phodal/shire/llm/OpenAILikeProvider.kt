@@ -43,7 +43,10 @@ class OpenAILikeProvider : CustomSSEHandler(), LlmProvider {
     override var project: Project? = null
     override fun clearMessage() = messages.clear()
 
-    override fun isApplicable(project: Project): Boolean {
+    override fun isApplicable(project: Project, llmConfig: LlmConfig?): Boolean {
+        if (llmConfig != null) return llmConfig.checkAvailable()
+        // If the configRunLlm configuration exists, it is also available
+        if (configRunLlm().let { it?.checkAvailable() == true }) return true
         this.project = project
         // dynamic check for the API key and model name
         return ShireSettingsState.getInstance().apiToken.isNotEmpty()
@@ -66,7 +69,7 @@ class OpenAILikeProvider : CustomSSEHandler(), LlmProvider {
         llmConfig: LlmConfig?
     ): Flow<String> {
         (llmConfig ?: configRunLlm()).let {
-            if (it != null) {
+            if (it != null && it.checkAvailable()) {
                 modelName = it.model
                 temperature = it.temperature.toFloat()
                 key = it.apiKey
