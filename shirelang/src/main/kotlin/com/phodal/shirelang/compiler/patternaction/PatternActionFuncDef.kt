@@ -281,7 +281,7 @@ enum class PatternActionFuncDef(val funcName: String, val description: String, v
 
     TOOLCHAIN_FUNCTION(
         "toolchain",
-        "Toolchain functions are define by the different IDEA plugins.for example, the Database plugin, the Shell plugin, etc.",
+        "Toolchain functions are defined by the different IDEA plugins. Supports JetBrains' plugin: Database, Shell Script plugin etc, Community plugin: SonarLint etc.",
         """
         | 
         | 
@@ -299,7 +299,8 @@ enum class PatternActionFuncDef(val funcName: String, val description: String, v
     ),
 
     TOKENIZER(
-        "tokenizer", "`tokenizer` function tokenizes text using traditional NLP methods. Support type for : " + "`word`, `naming`, `stopwords`，`jieba`.",
+        "tokenizer",
+        "`tokenizer` tokenizes text using traditional NLP methods. Support type for : " + "`word`, `naming`, `stopwords`，`jieba`.",
         """
         | ```shire
         | ---
