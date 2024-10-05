@@ -22,8 +22,8 @@ Custom Variable 的三种实现方式：
 ```shire
 ---
 variables:
-  "var1": "demo"
-  "var2": /.*.java/ { find("error.log") | sort | xargs("rm")}
+  "var1": "demo" // Value
+  "var2": /.*.java/ { find("error.log") | sort | xargs("rm")} // Pattern-Action
   "var3": /.*.log/ {
     case "$0" {
       "error" { find("ERROR") | sort | xargs("notify_admin") }
@@ -34,6 +34,22 @@ variables:
   }
 ---
 ```
+
+多变量示例：
+
+```shire
+---
+name: "类图分析"
+variables:
+  "controllers": /.*.java/ { cat }
+  "tokens": /any/ { tokenizer($controllers, "word") }
+  "chinese": /any/ { tokenizer("孩子上了幼儿园 安全防拐教育要做好", "jieba") }
+---
+
+$controllers
+```
+
+在这个示例中，我们在 tokens 变量中使用了 controllers 变量的值，这样就可以在变量之间传递数据。
 
 ## Shire 常规自定义变量
 
