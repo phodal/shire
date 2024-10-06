@@ -1,4 +1,5 @@
 ---
 functions:
   aFunc: "defaultMain.py"(string)
+  aFunc: "multipleOutput.py"(string, number) -> content
 ---

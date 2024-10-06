@@ -66,9 +66,6 @@ RegexWord                = [^\r\n\\\"' \t$`()] | {EscapedChar}
 REGEX                    = \/{RegexWord}+\/
 PATTERN_EXPR             = \/{RegexWord}+\/
 
-ACCESS                   = '::'
-PROCESS                  = '->'
-
 LPAREN                   = \(
 RPAREN                   = \)
 PIPE                     = \|
@@ -92,6 +89,8 @@ SHARP                    =#
 LBRACKET                 =\[
 RBRACKET                 =\]
 COMMA                    =,
+ACCESS                   =::
+PROCESS                  =->
 
 DEFAULT                  =default
 CASE                     =case

@@ -36,7 +36,7 @@
     LBRACKET             = "["
     RBRACKET             = "]"
     INDENT               = "INDENT"
-    ARROW                = "regexp:X?->"
+    ARROW                = "regexp:X?=>"
     OPEN_BRACE           = "{"
     CLOSE_BRACE          = "}"
     LPAREN               = "("
@@ -78,7 +78,7 @@
     PIPE                 = '|'
 
     ACCESS               = '::'
-    PROCESS              = '->'
+    PROCESS              = "regexp:X?->"
   ]
 }
 
@@ -88,14 +88,17 @@ frontMatterHeader ::= FRONTMATTER_START NEWLINE frontMatterEntries FRONTMATTER_E
 
 frontMatterEntries ::= frontMatterEntry*
 frontMatterEntry ::=
+    // life_cycle
     lifecycleId COLON (functionStatement | conditionExpr) COMMENTS? NEWLINE?
-    | frontMatterKey COLON (frontMatterValue | patternAction | functionStatement) COMMENTS? NEWLINE?
+    // normal declaration
+    | frontMatterKey COLON (functionAccess | frontMatterValue | patternAction | functionStatement) COMMENTS? NEWLINE?
+    // handle for comments in code
     | COMMENTS NEWLINE
 
 lifecycleId       ::= "when" | "onStreaming" | "beforeStreaming" | "onStreamingEnd" | "afterStreaming"
 
 frontMatterKey    ::= frontMatterId | QUOTE_STRING | pattern | FUNCTIONS
-frontMatterValue  ::= (NEWLINE objectKeyValue) | frontMatterArray | functionAccess | IDENTIFIER | QUOTE_STRING | NUMBER | DATE | BOOLEAN
+frontMatterValue  ::= (NEWLINE objectKeyValue) | frontMatterArray | IDENTIFIER | QUOTE_STRING | NUMBER | DATE | BOOLEAN
 frontMatterArray  ::= "[" (frontMatterValue (COMMA frontMatterValue)*) "]"
 
 frontMatterId     ::= IDENTIFIER
@@ -105,7 +108,7 @@ keyValue          ::= frontMatterEntry
 
 /// changed pipelineArgs to types
 functionAccess    ::= funcPath (ACCESS funcName)? "(" pipelineArgs ")" (PROCESS outputVar)?
-outputVar         ::= IDENTIFIER
+outputVar         ::= IDENTIFIER (COMMA IDENTIFIER)*
 funcPath          ::= QUOTE_STRING
 
 patternAction     ::= pattern actionBlock
