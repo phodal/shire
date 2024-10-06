@@ -2,7 +2,7 @@
 layout: default
 title: Condition Visible
 parent: Shire Language
-nav_order: 8
+nav_order: 9
 ---
 
 Activate Menu 是一类 `Condition Visible` 用于定义一个条件，当条件为真时，将显示对应的 Action。

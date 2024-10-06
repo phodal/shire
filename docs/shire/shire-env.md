@@ -2,7 +2,7 @@
 layout: default
 title: Shire Environment
 parent: Shire Language
-nav_order: 9
+nav_order: 10
 ---
 
 Shire Environment 用于定义 Shire 的环境变量，用于存储一些敏感信息。 使用方式 `.shireEnv.json` 文件来存储环境变量，Shire
