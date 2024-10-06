@@ -107,9 +107,13 @@ objectKeyValue    ::= (INDENT keyValue)*
 keyValue          ::= frontMatterEntry
 
 /// changed pipelineArgs to types
-functionAccess    ::= funcPath (ACCESS funcName)? "(" pipelineArgs ")" (PROCESS outputVar)?
-outputVar         ::= IDENTIFIER (COMMA IDENTIFIER)*
+functionAccess    ::= funcPath (ACCESS extFuncName)? "(" (extType (COMMA extType)*)? ")" (PROCESS outputVars)?
+outputVars        ::= outputVar (COMMA outputVar)*
+outputVar         ::= IDENTIFIER
+
 funcPath          ::= QUOTE_STRING
+extType           ::= IDENTIFIER
+extFuncName       ::= IDENTIFIER
 
 patternAction     ::= pattern actionBlock
 actionBlock       ::=  blockStart (actionBody) blockEnd

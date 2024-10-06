@@ -105,6 +105,11 @@ object HobbitHoleParser {
                         }
                     }
 
+
+                    ShireTypes.FUNCTION_ACCESS -> {
+                        /// don nothing
+                    }
+
                     else -> {
                         logger.warn("processFrontMatter, Unknown FrontMatter type: ${child.elementType}, value: $child")
                     }

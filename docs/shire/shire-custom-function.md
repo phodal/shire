@@ -14,8 +14,8 @@ nav_order: 8
 ---
 functions:
   aFunc: "defaultOutput.py"(string)
-  aFunc: "multipleOutput.py"("data.txt") -> content, size
-  bFunc: "path/access.py"($1, $2) -> analysisResult
-  cFunc: "accessFunctionIfSupport.py"::resize("photo.jpg", 800, 600) -> image
+  aFunc: "multipleOutput.py"(type) -> content, size
+  bFunc: "path/access.py"(string, string) -> analysisResult
+  cFunc: "accessFunctionIfSupport.py"::resize(string, number, number) -> image
 ---
 ```
