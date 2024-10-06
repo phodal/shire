@@ -43,6 +43,7 @@ import java.util.regex.Pattern;
 %s PATTERN_ACTION_BLOCK
 %s CONDITION_EXPR_BLOCK
 %s FUNCTION_DECL_BLOCK
+%s EXT_FUNCTION_BLOCK
 
 %s LANG_ID
 
@@ -64,6 +65,9 @@ EscapedChar              = "\\" [^\n]
 RegexWord                = [^\r\n\\\"' \t$`()] | {EscapedChar}
 REGEX                    = \/{RegexWord}+\/
 PATTERN_EXPR             = \/{RegexWord}+\/
+
+ACCESS                   = '::'
+PROCESS                  = '->'
 
 LPAREN                   = \(
 RPAREN                   = \)
@@ -93,6 +97,7 @@ DEFAULT                  =default
 CASE                     =case
 ARROW                    ==>
 WHEN                     =when
+FUNCTIONS                =functions
 CONDITION                =condition
 IF                       =if
 ELSE                     =else
@@ -244,10 +249,11 @@ AFTER_STREAMING          =afterStreaming
   {BEFORE_STREAMING}      { return BEFORE_STREAMING; }
   {ON_STREAMING_END}      { return ON_STREAMING_END; }
   {AFTER_STREAMING}       { return AFTER_STREAMING; }
+  {FUNCTIONS}             { return FUNCTIONS; }
 
   {IDENTIFIER}            { return IDENTIFIER; }
   {PATTERN_EXPR}          { return PATTERN_EXPR; }
-  ":"                     { yybegin(FRONT_MATTER_VALUE_BLOCK);return COLON; }
+  ":"                     { yybegin(FRONT_MATTER_VALUE_BLOCK); return COLON; }
   "{"                     { patternActionBraceLevel++; yybegin(FUNCTION_DECL_BLOCK); return OPEN_BRACE; }
 
   {INDENT}                { yybegin(FRONT_MATTER_VAL_OBJECT); return INDENT; }
@@ -261,6 +267,7 @@ AFTER_STREAMING          =afterStreaming
   {COMMENTS}              { return COMMENTS; }
   {NEWLINE}               { return NEWLINE; }
   {QUOTE_STRING}          { return QUOTE_STRING; }
+
   ":"                     { yybegin(FRONT_MATTER_VALUE_BLOCK); return COLON; }
   [^]                     { yypushback(yylength()); yybegin(FRONT_MATTER_BLOCK); }
 }
@@ -272,6 +279,10 @@ AFTER_STREAMING          =afterStreaming
   {IDENTIFIER}            { return IDENTIFIER; }
   {QUOTE_STRING}          { return QUOTE_STRING; }
   {PATTERN_EXPR}          { yybegin(PATTERN_ACTION_BLOCK); return PATTERN_EXPR; }
+
+  {ACCESS}                { return ACCESS; }
+  {PROCESS}               { return PROCESS; }
+
   "["                     { return LBRACKET; }
   "]"                     { return RBRACKET; }
   ","                     { return COMMA; }

@@ -13,8 +13,9 @@ nav_order: 8
 ```shire
 ---
 functions:
-  aFunc: { "fileHandler.py"::read("data.txt") -> content }
-  bFunc: { "analytics/dataAnalyzer.py"::analyzeData($1, $2) -> analysisResult }
-  cFunc: { "imageEditor.py"::resize("photo.jpg", 800, 600) -> image }
+  aFunc: "defaultOutput.py"(string)
+  aFunc: "multipleOutput.py"("data.txt") -> content, size
+  bFunc: "path/access.py"($1, $2) -> analysisResult
+  cFunc: "accessFunctionIfSupport.py"::resize("photo.jpg", 800, 600) -> image
 ---
 ```

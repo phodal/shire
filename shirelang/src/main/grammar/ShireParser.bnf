@@ -59,6 +59,7 @@
     BEFORE_STREAMING     = "beforeStreaming"
     ON_STREAMING_END     = "onStreamingEnd"
     AFTER_STREAMING      = "afterStreaming"
+    FUNCTIONS            = "functions"
 
     // operators
     DASH                 = "-"
@@ -75,6 +76,9 @@
     NOT                  = '!'
     COMMA                = ','
     PIPE                 = '|'
+
+    ACCESS               = '::'
+    PROCESS              = '->'
   ]
 }
 
@@ -88,30 +92,34 @@ frontMatterEntry ::=
     | frontMatterKey COLON (frontMatterValue | patternAction | functionStatement) COMMENTS? NEWLINE?
     | COMMENTS NEWLINE
 
-lifecycleId ::= "when" | "onStreaming" | "beforeStreaming" | "onStreamingEnd" | "afterStreaming"
+lifecycleId       ::= "when" | "onStreaming" | "beforeStreaming" | "onStreamingEnd" | "afterStreaming"
 
-frontMatterKey ::= frontMatterId | QUOTE_STRING | pattern
-frontMatterValue ::= IDENTIFIER | NUMBER | QUOTE_STRING | DATE | BOOLEAN | frontMatterArray | (NEWLINE objectKeyValue)
-frontMatterArray ::= "[" (frontMatterValue (COMMA frontMatterValue)*) "]"
+frontMatterKey    ::= frontMatterId | QUOTE_STRING | pattern | FUNCTIONS
+frontMatterValue  ::= (NEWLINE objectKeyValue) | frontMatterArray | functionAccess | IDENTIFIER | QUOTE_STRING | NUMBER | DATE | BOOLEAN
+frontMatterArray  ::= "[" (frontMatterValue (COMMA frontMatterValue)*) "]"
 
-frontMatterId ::= IDENTIFIER
+frontMatterId     ::= IDENTIFIER
 
-objectKeyValue ::= (INDENT keyValue)*
+objectKeyValue    ::= (INDENT keyValue)*
+keyValue          ::= frontMatterEntry
 
-keyValue ::= frontMatterEntry
+/// changed pipelineArgs to types
+functionAccess    ::= funcPath (ACCESS funcName)? "(" pipelineArgs ")" (PROCESS outputVar)?
+outputVar         ::= IDENTIFIER
+funcPath          ::= QUOTE_STRING
 
-patternAction ::= pattern actionBlock
-actionBlock ::=  blockStart (actionBody) blockEnd
+patternAction     ::= pattern actionBlock
+actionBlock       ::=  blockStart (actionBody) blockEnd
 
-actionBody ::= (actionExpr PIPE)* actionExpr
-actionExpr ::= funcCall | caseBody
+actionBody        ::= (actionExpr PIPE)* actionExpr
+actionExpr        ::= funcCall | caseBody
 
-funcCall ::= funcName ("(" pipelineArgs? ")")?
-funcName ::= IDENTIFIER
-pipelineArgs ::= (pipelineArg (COMMA pipelineArg)*)?
-pipelineArg ::= NUMBER | IDENTIFIER | QUOTE_STRING | variableStart variableId
+funcCall          ::= funcName ("(" pipelineArgs? ")")?
+funcName          ::= IDENTIFIER
+pipelineArgs      ::= (pipelineArg (COMMA pipelineArg)*)?
+pipelineArg       ::= NUMBER | IDENTIFIER | QUOTE_STRING | variableStart variableId
 
-caseBody ::= conditionFlag? CASE NEWLINE* ('condition' | QUOTE_STRING) blockStart casePatternAction* blockEnd
+caseBody          ::= conditionFlag? CASE NEWLINE* ('condition' | QUOTE_STRING) blockStart casePatternAction* blockEnd
 casePatternAction ::= caseCondition blockStart actionBody blockEnd
 caseCondition ::= DEFAULT | pattern | QUOTE_STRING
 

@@ -91,4 +91,8 @@ class ShireParsingTest : ParsingTestCase("parser", "shire", ShireParserDefinitio
     fun testMarkdownCompatible() {
         doTest(true)
     }
+
+    fun testCustomFunctions() {
+        doTest(true)
+    }
 }

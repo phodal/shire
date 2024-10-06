@@ -1,0 +1,4 @@
+---
+functions:
+  aFunc: "defaultMain.py"(string)
+---
