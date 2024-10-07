@@ -91,7 +91,7 @@ frontMatterEntry ::=
     // life_cycle
     lifecycleId COLON (functionStatement | conditionExpr) COMMENTS? NEWLINE?
     // normal declaration
-    | frontMatterKey COLON (functionAccess | frontMatterValue | patternAction | functionStatement) COMMENTS? NEWLINE?
+    | frontMatterKey COLON (foreignFunction | frontMatterValue | patternAction | functionStatement) COMMENTS? NEWLINE?
     // handle for comments in code
     | COMMENTS NEWLINE
 
@@ -107,13 +107,13 @@ objectKeyValue    ::= (INDENT keyValue)*
 keyValue          ::= frontMatterEntry
 
 /// changed pipelineArgs to types
-functionAccess    ::= funcPath (ACCESS extFuncName)? "(" (extType (COMMA extType)*)? ")" (PROCESS outputVars)?
+foreignFunction    ::= funcPath (ACCESS foreignFuncName)? "(" (foreignType (COMMA foreignType)*)? ")" (PROCESS outputVars)?
 outputVars        ::= outputVar (COMMA outputVar)*
 outputVar         ::= IDENTIFIER
 
 funcPath          ::= QUOTE_STRING
-extType           ::= IDENTIFIER
-extFuncName       ::= IDENTIFIER
+foreignType           ::= IDENTIFIER
+foreignFuncName   ::= IDENTIFIER
 
 patternAction     ::= pattern actionBlock
 actionBlock       ::=  blockStart (actionBody) blockEnd

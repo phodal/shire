@@ -24,11 +24,11 @@ import com.phodal.shirelang.compiler.hobbit.ast.action.PatternAction
 import com.phodal.shirelang.compiler.hobbit.ast.TaskRoutes
 import com.phodal.shirelang.compiler.hobbit.ast.action.DirectAction
 import com.phodal.shirelang.compiler.hobbit.execute.FunctionStatementProcessor
+import com.phodal.shirelang.compiler.hobbit.function.ForeignFunction
 import com.phodal.shirelang.compiler.patternaction.VariableTransform
 import com.phodal.shirelang.psi.ShireFile
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 /**
  * Hobbit Hole 用于定义 IDE 交互逻辑与用户数据的流处理。
@@ -215,6 +215,11 @@ open class HobbitHole(
     val model: String? = null,
 
     /**
+     * Custom Functions for the action.
+     */
+    val functions: List<ForeignFunction> = emptyList(),
+
+    /**
      * The rest of the data.
      */
     val userData: Map<String, FrontMatterType> = mutableMapOf(),
@@ -321,9 +326,10 @@ open class HobbitHole(
 
         private const val DESCRIPTION = "description"
         private const val VARIABLES = "variables"
+        private const val FUNCTIONS = "functions"
 
-        const val WHEN = "when"
-        const val SHORTCUT = "shortcut"
+        private const val WHEN = "when"
+        private const val SHORTCUT = "shortcut"
 
         fun from(file: ShireFile): HobbitHole? {
             return HobbitHoleParser.parse(file)
@@ -345,6 +351,7 @@ open class HobbitHole(
 
                 STRATEGY_SELECTION to "The strategy to select the element to apply the action",
                 VARIABLES to "The list of variables to apply for the action",
+                FUNCTIONS to "The list of custom functions for the action",
 
                 ON_STREAMING to "TBD ",
                 ON_STREAMING_END to "After Streaming end middleware actions, like Logging, Metrics, CodeVerify, RunCode, ParseCode etc.",
@@ -384,6 +391,10 @@ open class HobbitHole(
                 buildVariableTransformations(it.toValue())
             } ?: mutableMapOf()
 
+            val functions: List<ForeignFunction> = (frontMatterMap[FUNCTIONS] as? FrontMatterType.OBJECT)?.let {
+                ForeignFunction.from(it.toValue())
+            } ?: emptyList()
+
             val beforeStreaming: DirectAction? = if (frontMatterMap[BEFORE_STREAMING] != null) {
                 DirectAction.from(frontMatterMap[BEFORE_STREAMING]!!)
             } else {
@@ -408,6 +419,7 @@ open class HobbitHole(
                 actionLocation = ShireActionLocation.from(actionLocation),
                 selectionStrategy = selectionStrategy,
                 variables = variables,
+                functions = functions,
                 userData = data,
                 when_ = whenCondition,
                 beforeStreaming = beforeStreaming,

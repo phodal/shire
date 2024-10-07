@@ -6,7 +6,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.TokenType.WHITE_SPACE
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.elementType
-import com.phodal.shirelang.compiler.hobbit.*
+import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.ast.*
 import com.phodal.shirelang.compiler.hobbit.ast.action.RuleBasedPatternAction
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
@@ -105,9 +105,10 @@ object HobbitHoleParser {
                         }
                     }
 
-
-                    ShireTypes.FUNCTION_ACCESS -> {
-                        /// don nothing
+                    ShireTypes.FOREIGN_FUNCTION -> {
+                        parseForeignFunc(lastKey, child as ShireForeignFunction)?.let {
+                            frontMatter[lastKey] = FrontMatterType.EXPRESSION(it)
+                        }
                     }
 
                     else -> {
@@ -118,6 +119,15 @@ object HobbitHoleParser {
         }
 
         return frontMatter
+    }
+
+    private fun parseForeignFunc(fmKey: String, function: ShireForeignFunction): Statement {
+        val funcPath = function.funcPath.quoteString.text.removeSurrounding("\"")
+        val accessFuncName = function.foreignFuncName?.text ?: ""
+        val inputTypes = function.foreignTypeList.map { it.text }
+        val returnVars = function.outputVars?.children?.associate { it.text to "" } ?: emptyMap()
+
+        return ForeignFunctionStmt(fmKey, funcPath, accessFuncName, inputTypes, returnVars)
     }
 
     private fun parseFunction(statement: ShireFunctionStatement): FrontMatterType {

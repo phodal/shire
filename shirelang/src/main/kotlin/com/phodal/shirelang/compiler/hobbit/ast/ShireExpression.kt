@@ -1,6 +1,7 @@
 package com.phodal.shirelang.compiler.hobbit.ast
 
 import com.intellij.openapi.diagnostic.logger
+import com.phodal.shirelang.compiler.hobbit.function.ForeignFunction
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 import java.util.regex.Pattern
 
@@ -29,7 +30,7 @@ abstract class Statement {
 
                 val dotWithTarget = if (this.methodName is FrontMatterType.EMPTY) {
                     ""
-                } else if(this.methodName is FrontMatterType.IDENTIFIER) {
+                } else if (this.methodName is FrontMatterType.IDENTIFIER) {
                     if (this.methodName.value == "") {
                         ""
                     } else {
@@ -41,6 +42,7 @@ abstract class Statement {
 
                 "${this.objectName.display()}${dotWithTarget}$formattedParameters"
             }
+
             is Value -> this.value.display()
             is Processor -> this.processors.joinToString(" | ") { it.toString() }
             else -> throw IllegalArgumentException("Unsupported statement type: $this")
@@ -336,7 +338,7 @@ data class MethodCall(
 }
 
 data class Processor(
-    val processors: List<PatternActionFunc>
+    val processors: List<PatternActionFunc>,
 ) : Statement() {
     override fun evaluate(variables: Map<String, String>): List<PatternActionFunc> {
         return processors
@@ -349,6 +351,18 @@ data class CaseKeyValue(
 ) : Statement() {
     override fun evaluate(variables: Map<String, String>): Any {
         return key.display() to value
+    }
+}
+
+data class ForeignFunctionStmt(
+    val funcName: String,
+    val funcPath: String,
+    val accessFuncName: String,
+    val inputTypes: List<String>,
+    val returnVars: Map<String, Any>,
+) : Statement() {
+    override fun evaluate(variables: Map<String, String>): ForeignFunction {
+        return ForeignFunction(funcName, funcPath, accessFuncName, inputTypes, returnVars)
     }
 }
 

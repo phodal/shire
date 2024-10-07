@@ -1,11 +1,11 @@
 ---
 layout: default
-title: Shire Custom Function
+title: Shire Foreign Function
 parent: Shire Language
 nav_order: 8
 ---
 
-# Custom Function
+# Foreign Function
 
 {: .note }
 注意：在 `0.9` 版本后支持
