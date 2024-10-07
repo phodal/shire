@@ -18,12 +18,18 @@ class ForeignFunctionProcessor {
                 project.findFile(filename)
             } ?: return "$SHIRE_ERROR: File not found: $filename"
 
-//            val runService = FileRunService.provider(project, virtualFile)
-//            // runInCli
-//            return runService?.runFile(project, virtualFile, null)
-//                ?: "$SHIRE_ERROR: [ForeignFunctionProcessor] No run service found for file: $filename"
 
-            return FileRunService.runInCli(project, virtualFile)
+            /// last args will be file path, should be skip
+            val args: List<String> = args.dropLast(1).map {
+                // handle for arrayList and map type
+                when (it) {
+                    is List<*> -> it.joinToString(",")
+                    is Map<*, *> -> it.entries.joinToString(",") { (k, v) -> "$k=$v" }
+                    else -> it.toString()
+                }
+            }
+
+            return FileRunService.runInCli(project, virtualFile, args)
                 ?: "$SHIRE_ERROR: [ForeignFunctionProcessor] No run service found for file: $filename"
         }
     }

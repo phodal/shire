@@ -18,3 +18,25 @@ functions:
   special: "accessFunctionIfSupport.py"::resize(string, number, number) -> image
 ---
 ```
+
+## Quick Start
+
+The Shire code:
+
+```shire
+---
+functions:
+  normal: ".shire/ffi/hello.js"(string)
+variables:
+  "text": /.*ple.shire/ { normal("world") }
+---
+
+hello, $text
+```
+
+hello.js:
+
+```javascript
+const args = process.argv.slice(2);
+console.log(args[0]);
+```

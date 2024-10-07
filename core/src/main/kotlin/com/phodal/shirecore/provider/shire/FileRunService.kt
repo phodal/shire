@@ -139,7 +139,7 @@ interface FileRunService {
             }
         }
 
-        fun runInCli(project: Project, psiFile: PsiFile): String? {
+        fun runInCli(project: Project, psiFile: PsiFile, args: List<String>? = null): String? {
             val commandLine = when (psiFile.language.displayName.lowercase()) {
                 "python" -> GeneralCommandLine("python", psiFile.virtualFile.path)
                 "javascript" -> GeneralCommandLine("node", psiFile.virtualFile.path)
@@ -147,6 +147,10 @@ interface FileRunService {
                 "ruby" -> GeneralCommandLine("ruby", psiFile.virtualFile.path)
                 else -> null
             } ?: return null
+
+            if (args != null) {
+                commandLine.addParameters(args)
+            }
 
             commandLine.setWorkDirectory(project.basePath)
             return try {
@@ -158,11 +162,11 @@ interface FileRunService {
             }
         }
 
-        fun runInCli(project: Project, virtualFile: VirtualFile): String? {
+        fun runInCli(project: Project, virtualFile: VirtualFile, args: List<String>? = null): String? {
             val psiFile = runReadAction {
                 PsiManager.getInstance(project).findFile(virtualFile)
             } ?: return null
-            return runInCli(project, psiFile)
+            return runInCli(project, psiFile, args)
         }
     }
 }
