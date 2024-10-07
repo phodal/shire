@@ -30,6 +30,10 @@ class JSFileRunService : FileRunService {
             configuration
         }
 
-        return configurationSetting.configuration
+        val runConfiguration = configurationSetting.configuration as NodeJsRunConfiguration
+        runConfiguration.name = virtualFile.nameWithoutExtension
+        runConfiguration.mainScriptFilePath = virtualFile.path
+
+        return runConfiguration
     }
 }

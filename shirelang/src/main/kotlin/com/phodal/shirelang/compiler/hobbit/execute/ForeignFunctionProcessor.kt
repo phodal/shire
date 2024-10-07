@@ -1,5 +1,6 @@
 package com.phodal.shirelang.compiler.hobbit.execute
 
+import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.findFile
 import com.phodal.shirecore.provider.shire.FileRunService
@@ -13,7 +14,9 @@ class ForeignFunctionProcessor {
         ): Any {
             val filename = func.funcPath
 
-            val virtualFile = project.findFile(filename) ?: return "$SHIRE_ERROR: File not found: $filename"
+            val virtualFile = runReadAction {
+                project.findFile(filename)
+            } ?: return "$SHIRE_ERROR: File not found: $filename"
 
             val runService = FileRunService.provider(project, virtualFile)
 
