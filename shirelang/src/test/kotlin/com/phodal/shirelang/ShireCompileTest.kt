@@ -439,6 +439,16 @@ Summary webpage: ${'$'}fileName""", results["var2"].toString()
     }
 
     fun testShouldSupportForeignFunction() {
+        @Language("JavaScript")
+        val jsMainWithArgs = """
+            const args = process.argv.slice(2);
+            console.log(args[0]);
+            
+            process.exit(0);
+        """.trimIndent()
+
+        myFixture.addFileToProject("hello.js", jsMainWithArgs)
+
         @Language("Shire")
         val code = """
             ---
@@ -446,7 +456,7 @@ Summary webpage: ${'$'}fileName""", results["var2"].toString()
             description: "Generate Summary"
             interaction: AppendCursor
             functions:
-              normal: "hello.py"(string)
+              normal: "hello.js"(string)
             variables:
               "var2": /.*ple.shire/ { normal }
             ---
@@ -454,11 +464,6 @@ Summary webpage: ${'$'}fileName""", results["var2"].toString()
             Summary webpage: ${'$'}fileName
         """.trimIndent()
         val file = myFixture.addFileToProject("sample.shire", code)
-
-        @Language("Python")
-        val pythonHello = """print('hello world')"""
-        val helloPy = myFixture.addFileToProject("hello.py", pythonHello)
-
         myFixture.openFileInEditor(file.virtualFile)
 
         val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
@@ -470,6 +475,6 @@ Summary webpage: ${'$'}fileName""", results["var2"].toString()
             }
         }
 
-        assertEquals("<ShireError>: File not found: hello.py", results["var2"].toString())
+        assertEquals("<ShireError>: [ForeignFunctionProcessor] No run service found for file: hello.js", results["var2"].toString())
     }
 }
