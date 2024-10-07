@@ -233,8 +233,8 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                     }
                 }
 
-                if (hole.functions.containsKey(action.funcName)) {
-                    val func = hole.functions[action.funcName]!!
+                if (hole.foreignFunctions.containsKey(action.funcName)) {
+                    val func = hole.foreignFunctions[action.funcName]!!
                     return ForeignFunctionProcessor.execute(myProject, action.funcName, result, variableTable, func)
                 }
 

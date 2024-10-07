@@ -17,19 +17,19 @@ class HobbitHoleParserTest : BasePlatformTestCase() {
         """.trimIndent()
 
         val file = myFixture.configureByText("test.shire", code)
-        val hobbitHole = HobbitHoleParser.parse(file as ShireFile)
+        val hobbitHole = HobbitHoleParser.parse(file as ShireFile)!!
 
-        assertEquals(3, hobbitHole!!.functions.size)
-        val firstFunc = hobbitHole.functions[0]
+        assertEquals(3, hobbitHole.foreignFunctions.size)
+        val firstFunc = hobbitHole.foreignFunctions["normal"]!!
         assertEquals("normal", firstFunc.funcName)
         assertEquals("defaultOutput.py", firstFunc.funcPath)
 
-        val secondFunc = hobbitHole.functions[1]
+        val secondFunc = hobbitHole.foreignFunctions["output"]!!
         assertEquals("output", secondFunc.funcName)
         assertEquals("multipleOutput.py", secondFunc.funcPath)
         assertEquals(listOf("content", "size"), secondFunc.returnVars.keys.toList())
 
-        val thirdFunc = hobbitHole.functions[2]
+        val thirdFunc = hobbitHole.foreignFunctions["special"]!!
         assertEquals("special", thirdFunc.funcName)
         assertEquals("accessFunctionIfSupport.py", thirdFunc.funcPath)
         assertEquals(listOf("image"), thirdFunc.returnVars.keys.toList())

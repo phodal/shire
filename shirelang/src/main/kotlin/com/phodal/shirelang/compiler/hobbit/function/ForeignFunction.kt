@@ -4,9 +4,6 @@ import com.phodal.shirelang.compiler.hobbit.ast.ForeignFunctionStmt
 import com.phodal.shirelang.compiler.hobbit.ast.FrontMatterType
 
 data class ForeignFunction(
-    /**
-     * use for shire
-     */
     val funcName: String,
     val funcPath: String,
     val accessFuncName: String,

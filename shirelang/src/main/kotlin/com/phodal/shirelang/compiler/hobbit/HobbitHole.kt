@@ -217,7 +217,7 @@ open class HobbitHole(
     /**
      * Custom Functions for the action.
      */
-    val functions: MutableMap<String, ForeignFunction> = mutableMapOf(),
+    val foreignFunctions: MutableMap<String, ForeignFunction> = mutableMapOf(),
 
     /**
      * The rest of the data.
@@ -391,7 +391,7 @@ open class HobbitHole(
                 buildVariableTransformations(it.toValue())
             } ?: mutableMapOf()
 
-            val functions: MutableMap<String, ForeignFunction> =
+            val foreignFunctions: MutableMap<String, ForeignFunction> =
                 (frontMatterMap[FUNCTIONS] as? FrontMatterType.OBJECT)?.let {
                     ForeignFunction.from(it.toValue())
                 }.orEmpty().associateBy { it.funcName }.toMutableMap()
@@ -420,7 +420,7 @@ open class HobbitHole(
                 actionLocation = ShireActionLocation.from(actionLocation),
                 selectionStrategy = selectionStrategy,
                 variables = variables,
-                functions = functions,
+                foreignFunctions = foreignFunctions,
                 userData = data,
                 when_ = whenCondition,
                 beforeStreaming = beforeStreaming,

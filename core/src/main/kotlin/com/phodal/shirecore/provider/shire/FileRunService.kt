@@ -148,7 +148,10 @@ interface FileRunService {
                 "shell script" -> GeneralCommandLine("sh", psiFile.virtualFile.path)
                 // kotlin script, `kotlinc -script hello.kts`
                 "kotlin" -> GeneralCommandLine("kotlinc", "-script", psiFile.virtualFile.path)
-                else -> throw IllegalArgumentException("Unsupported language: ${psiFile.language.displayName}")
+                else -> {
+                    logger<FileRunService>().warn("Unsupported language: ${psiFile.language.displayName}")
+                    return null
+                }
             }
 
             if (args != null) {

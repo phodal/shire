@@ -107,12 +107,12 @@ objectKeyValue    ::= (INDENT keyValue)*
 keyValue          ::= frontMatterEntry
 
 /// changed pipelineArgs to types
-foreignFunction    ::= funcPath (ACCESS foreignFuncName)? "(" (foreignType (COMMA foreignType)*)? ")" (PROCESS outputVars)?
-outputVars        ::= outputVar (COMMA outputVar)*
+foreignFunction   ::= foreignPath (ACCESS foreignFuncName)? "(" (foreignType (COMMA foreignType)*)? ")" (PROCESS foreignOutput)?
+foreignOutput     ::= outputVar (COMMA outputVar)*
 outputVar         ::= IDENTIFIER
 
-funcPath          ::= QUOTE_STRING
-foreignType           ::= IDENTIFIER
+foreignPath       ::= QUOTE_STRING
+foreignType       ::= IDENTIFIER
 foreignFuncName   ::= IDENTIFIER
 
 patternAction     ::= pattern actionBlock

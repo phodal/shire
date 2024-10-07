@@ -122,10 +122,10 @@ object HobbitHoleParser {
     }
 
     private fun parseForeignFunc(fmKey: String, function: ShireForeignFunction): Statement {
-        val funcPath = function.funcPath.quoteString.text.removeSurrounding("\"")
+        val funcPath = function.foreignPath.quoteString.text.removeSurrounding("\"")
         val accessFuncName = function.foreignFuncName?.text ?: ""
         val inputTypes = function.foreignTypeList.map { it.text }
-        val returnVars = function.outputVars?.children?.associate { it.text to "" } ?: emptyMap()
+        val returnVars = function.foreignOutput?.children?.associate { it.text to "" } ?: emptyMap()
 
         return ForeignFunctionStmt(fmKey, funcPath, accessFuncName, inputTypes, returnVars)
     }
