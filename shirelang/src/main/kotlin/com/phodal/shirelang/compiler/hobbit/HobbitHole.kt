@@ -217,7 +217,7 @@ open class HobbitHole(
     /**
      * Custom Functions for the action.
      */
-    val functions: List<ForeignFunction> = emptyList(),
+    val functions: MutableMap<String, ForeignFunction> = mutableMapOf(),
 
     /**
      * The rest of the data.
@@ -391,9 +391,10 @@ open class HobbitHole(
                 buildVariableTransformations(it.toValue())
             } ?: mutableMapOf()
 
-            val functions: List<ForeignFunction> = (frontMatterMap[FUNCTIONS] as? FrontMatterType.OBJECT)?.let {
-                ForeignFunction.from(it.toValue())
-            } ?: emptyList()
+            val functions: MutableMap<String, ForeignFunction> =
+                (frontMatterMap[FUNCTIONS] as? FrontMatterType.OBJECT)?.let {
+                    ForeignFunction.from(it.toValue())
+                }.orEmpty().associateBy { it.funcName }.toMutableMap()
 
             val beforeStreaming: DirectAction? = if (frontMatterMap[BEFORE_STREAMING] != null) {
                 DirectAction.from(frontMatterMap[BEFORE_STREAMING]!!)

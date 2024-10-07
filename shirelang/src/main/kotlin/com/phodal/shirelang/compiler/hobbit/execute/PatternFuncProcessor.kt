@@ -201,6 +201,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             }
 
             is PatternActionFunc.ToolchainFunction -> {
+                /// maybe User custom functions
                 val args: MutableList<Any> = action.args.toMutableList()
                 /// add lastResult at args first
                 when (lastResult) {
@@ -230,6 +231,11 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                         is String -> it.fillVariable(variableTable)
                         else -> it
                     }
+                }
+
+                if (hole.functions.containsKey(action.funcName)) {
+                    val func = hole.functions[action.funcName]!!
+                    return ForeignFunctionProcessor.execute(myProject, action.funcName, result, variableTable, func)
                 }
 
                 ToolchainFunctionProvider.provide(myProject, action.funcName)

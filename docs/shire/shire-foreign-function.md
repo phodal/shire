@@ -13,9 +13,8 @@ nav_order: 8
 ```shire
 ---
 functions:
-  aFunc: "defaultOutput.py"(string)
-  aFunc: "multipleOutput.py"(type) -> content, size
-  bFunc: "path/access.py"(string, string) -> analysisResult
-  cFunc: "accessFunctionIfSupport.py"::resize(string, number, number) -> image
+  normal: "defaultOutput.py"(string)
+  output: "multipleOutput.py"(string) -> content, size
+  special: "accessFunctionIfSupport.py"::resize(string, number, number) -> image
 ---
 ```

@@ -437,4 +437,39 @@ Summary webpage: ${'$'}fileName""", results["var2"].toString()
 
         assertEquals(results["sourceCode"], "src/main/resources/sampleTest.shire")
     }
+
+    fun testShouldSupportForeignFunction() {
+        @Language("Shire")
+        val code = """
+            ---
+            name: Summary
+            description: "Generate Summary"
+            interaction: AppendCursor
+            functions:
+              normal: "hello.py"(string)
+            variables:
+              "var2": /.*ple.shire/ { normal }
+            ---
+            
+            Summary webpage: ${'$'}fileName
+        """.trimIndent()
+        val file = myFixture.addFileToProject("sample.shire", code)
+
+        @Language("Python")
+        val pythonHello = """print('hello world')"""
+        val helloPy = myFixture.addFileToProject("hello.py", pythonHello)
+
+        myFixture.openFileInEditor(file.virtualFile)
+
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
+        val hole = compile.config!!
+
+        val results = runBlocking {
+            hole.variables.mapValues {
+                PatternActionProcessor(project, hole, mutableMapOf()).execute(it.value)
+            }
+        }
+
+        assertEquals("<ShireError>: File not found: hello.py", results["var2"].toString())
+    }
 }
