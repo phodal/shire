@@ -22,9 +22,7 @@ import com.phodal.shirelang.python.util.PyTestUtil
 
 class ShirePythonAutoTesting : TestingService() {
     override fun isApplicable(element: PsiElement): Boolean = element.language.displayName == "Python"
-    override fun isApplicable(project: Project, file: VirtualFile): Boolean {
-        return file.extension == "py"
-    }
+    override fun isApplicable(project: Project, file: VirtualFile): Boolean = file.extension == "py"
 
     override fun runConfigurationClass(project: Project): Class<out RunProfile> = PythonRunConfiguration::class.java
 

@@ -16,6 +16,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
+import com.intellij.psi.PsiManager
 import com.phodal.shirecore.runner.RunServiceTask
 
 interface FileRunService {
@@ -53,7 +54,11 @@ interface FileRunService {
      * @param virtualFile The virtual file for which the configuration should be created.
      * @return The created or found run configuration settings, or `null` if no suitable configuration could be
      */
-    fun createRunSettings(project: Project, virtualFile: VirtualFile, testElement: PsiElement?): RunnerAndConfigurationSettings? {
+    fun createRunSettings(
+        project: Project,
+        virtualFile: VirtualFile,
+        testElement: PsiElement?,
+    ): RunnerAndConfigurationSettings? {
         if (testElement != null) {
             val settings = createDefaultTestConfigurations(project, testElement)
             if (settings != null) {
@@ -95,7 +100,10 @@ interface FileRunService {
         return settings
     }
 
-    private fun createDefaultTestConfigurations(project: Project, element: PsiElement): RunnerAndConfigurationSettings? {
+    private fun createDefaultTestConfigurations(
+        project: Project,
+        element: PsiElement,
+    ): RunnerAndConfigurationSettings? {
         return runReadAction {
             ConfigurationContext(element).configurationsFromContext?.firstOrNull()?.configurationSettings
         }
@@ -135,9 +143,10 @@ interface FileRunService {
             val commandLine = when (psiFile.language.displayName.lowercase()) {
                 "python" -> GeneralCommandLine("python", psiFile.virtualFile.path)
                 "javascript" -> GeneralCommandLine("node", psiFile.virtualFile.path)
+                "ecmascript 6" -> GeneralCommandLine("node", psiFile.virtualFile.path)
                 "ruby" -> GeneralCommandLine("ruby", psiFile.virtualFile.path)
-                else -> return null
-            }
+                else -> null
+            } ?: return null
 
             commandLine.setWorkDirectory(project.basePath)
             return try {
@@ -147,6 +156,13 @@ interface FileRunService {
                 e.printStackTrace()
                 null
             }
+        }
+
+        fun runInCli(project: Project, virtualFile: VirtualFile): String? {
+            val psiFile = runReadAction {
+                PsiManager.getInstance(project).findFile(virtualFile)
+            } ?: return null
+            return runInCli(project, psiFile)
         }
     }
 }

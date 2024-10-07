@@ -33,6 +33,8 @@ class JSFileRunService : FileRunService {
         val runConfiguration = configurationSetting.configuration as NodeJsRunConfiguration
         runConfiguration.name = virtualFile.nameWithoutExtension
         runConfiguration.mainScriptFilePath = virtualFile.path
+        runConfiguration.workingDirectory = virtualFile.parent.path
+        runConfiguration.nodeOptions = "--harmony"
 
         return runConfiguration
     }

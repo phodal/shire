@@ -18,9 +18,12 @@ class ForeignFunctionProcessor {
                 project.findFile(filename)
             } ?: return "$SHIRE_ERROR: File not found: $filename"
 
-            val runService = FileRunService.provider(project, virtualFile)
+//            val runService = FileRunService.provider(project, virtualFile)
+//            // runInCli
+//            return runService?.runFile(project, virtualFile, null)
+//                ?: "$SHIRE_ERROR: [ForeignFunctionProcessor] No run service found for file: $filename"
 
-            return runService?.runFile(project, virtualFile, null)
+            return FileRunService.runInCli(project, virtualFile)
                 ?: "$SHIRE_ERROR: [ForeignFunctionProcessor] No run service found for file: $filename"
         }
     }
