@@ -145,8 +145,11 @@ interface FileRunService {
                 "javascript" -> GeneralCommandLine("node", psiFile.virtualFile.path)
                 "ecmascript 6" -> GeneralCommandLine("node", psiFile.virtualFile.path)
                 "ruby" -> GeneralCommandLine("ruby", psiFile.virtualFile.path)
-                else -> null
-            } ?: return null
+                "shell script" -> GeneralCommandLine("sh", psiFile.virtualFile.path)
+                // kotlin script, `kotlinc -script hello.kts`
+                "kotlin" -> GeneralCommandLine("kotlinc", "-script", psiFile.virtualFile.path)
+                else -> throw IllegalArgumentException("Unsupported language: ${psiFile.language.displayName}")
+            }
 
             if (args != null) {
                 commandLine.addParameters(args)
