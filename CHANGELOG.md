@@ -1,14 +1,21 @@
-# [](https://github.com/phodal/shire/compare/v0.8.3...v) (2024-09-27)
+# [](https://github.com/phodal/shire/compare/v0.9.0...v) (2024-10-07)
 
 ## [Unreleased]
 
-## [0.8.3] - 2024-09-27
+## [0.9.0] - 2024-10-07
 
 ### Bug Fixes
 
 - **actions:** The shire file downloaded from the marketplace has not been dynamically updated ([4a0aa6f](https://github.com/phodal/shire/commit/4a0aa6f57306d693cf78a7098e826f87de1179cc))
 - **build:** comment out failureLevel in pluginVerification [#100](https://github.com/phodal/shire/issues/100) ([e260a10](https://github.com/phodal/shire/commit/e260a1055c6b6a93acd0fa938e5e06c400aa0843))
+- fix for json module outside project issue [#112](https://github.com/phodal/shire/issues/112) ([ed12724](https://github.com/phodal/shire/commit/ed12724e2fc460e2a511a9becfa0b8f402ed3fb6))
+- fix plugin group error issue ([acbdeca](https://github.com/phodal/shire/commit/acbdeca7cd2bc22953cea47eaac37b7c44e06506))
 - **github-actions:** correct gradle task paths in release workflow [#100](https://github.com/phodal/shire/issues/100) ([4d5a39d](https://github.com/phodal/shire/commit/4d5a39dbe22ea76845a34ccbadf61c994045643f))
+- **javascript:** fix for siganture issue ([94ebee5](https://github.com/phodal/shire/commit/94ebee5af25aa07864175a351780595ffc08df34))
+- **javascript:** update variable resolution in JSPsiContextVariableProvider ([8e2a7e9](https://github.com/phodal/shire/commit/8e2a7e91b2344bef5ab9f57aae432f72fdd833ac))
+- **lexer:** make sure front-matter parse success [#112](https://github.com/phodal/shire/issues/112) ([a9c3770](https://github.com/phodal/shire/commit/a9c3770fdcf0d52ad412e3a1a157de83e36f13be))
+- **logging:** improve error messages for PatternActionFunc arguments ([844dcd8](https://github.com/phodal/shire/commit/844dcd813d069be62d7f6cddb057f1e2d4ef0a58))
+- **settings:** Test connection failed without applying settings ([e883e38](https://github.com/phodal/shire/commit/e883e383a540368f26295ce3504d5253f637b294))
 - **shirelang:** correct typo in ShireFileModificationListener class name ([8baad36](https://github.com/phodal/shire/commit/8baad367cae909fa19ce542f64041c1be05e65b7))
 
 ### Features
@@ -19,15 +26,35 @@
 - **build:** try to resize verify range for reduce size of disk in GitHub Action [#100](https://github.com/phodal/shire/issues/100) ([e127f88](https://github.com/phodal/shire/commit/e127f88b628448dea3d80cbf3befa951c9011e73))
 - **build:** update Gradle setup and plugin verification tasks ([b779cd0](https://github.com/phodal/shire/commit/b779cd0be31599f8e05e45ae634fdec0689fbe04))
 - **build:** update Gradle version and enable PatchPluginXmlTask [#100](https://github.com/phodal/shire/issues/100) ([8044084](https://github.com/phodal/shire/commit/804408437ab7b3e6fb9c6e6d15d7dc566b4a4e90))
+- **compiler:** enable support for custom foreign functions [#116](https://github.com/phodal/shire/issues/116) ([c4e51fc](https://github.com/phodal/shire/commit/c4e51fcc4a64356910723673c2a3c52cdd51b57f))
+- **compiler:** implement foreign function support [#116](https://github.com/phodal/shire/issues/116) ([61059cd](https://github.com/phodal/shire/commit/61059cd8982c6383b6a09584d5caf78fd4769724))
+- **compiler:** refine input type rules in PatternActionProcessor [#112](https://github.com/phodal/shire/issues/112) ([db58a87](https://github.com/phodal/shire/commit/db58a874035ef8c5a202e22f85959e146093f091))
+- **docs, shirelang:** update function parameters and syntax highlighting [#116](https://github.com/phodal/shire/issues/116) ([b6c6e9d](https://github.com/phodal/shire/commit/b6c6e9d98f58c11cedb0f1164f86dd43be777a52))
 - **gradle:** update IntelliJ IDEA version and add plugin verification [#100](https://github.com/phodal/shire/issues/100) ([c5b58a1](https://github.com/phodal/shire/commit/c5b58a1d4d9fbb96788b72634ca216caa10b8448))
 - **gradle:** update IntelliJ platform version and add shire-json language support [#100](https://github.com/phodal/shire/issues/100) ([da4f120](https://github.com/phodal/shire/commit/da4f1206e70922bfd10960981123e9d4d1c8771b))
 - **IDEA-243:** add deps plugins [#100](https://github.com/phodal/shire/issues/100) ([276f391](https://github.com/phodal/shire/commit/276f391c617265d67e562616787322db3c3fa123))
 - init tokenizer function for [#104](https://github.com/phodal/shire/issues/104) ([1ae89ed](https://github.com/phodal/shire/commit/1ae89ed7c39a4f4421f6946fb24e14d232596f59))
+- **javascript:** enhance JavaScriptLanguageToolchainProvider for detailed context collection ([d4341e4](https://github.com/phodal/shire/commit/d4341e44abd263c0c932ff86e729c26c9aa1c747))
+- **javascript:** fix for import issues ([c646e4c](https://github.com/phodal/shire/commit/c646e4c568803e3e7b34ed3dff4904a059e3c0b7))
 - **json-plugin:** add dependency on IntelliJ JSON plugin [#100](https://github.com/phodal/shire/issues/100) ([ce0bbad](https://github.com/phodal/shire/commit/ce0bbadaebd310307f29409c324803ad2d8e9a7d))
+- **markdown:** add support for markdown headers in ShireCompileTest [#112](https://github.com/phodal/shire/issues/112) ([b1d96f6](https://github.com/phodal/shire/commit/b1d96f6c18568766c1213911944a7a41929ccd2f))
+- **parser:** add process and output for parser [#116](https://github.com/phodal/shire/issues/116) ([5b9bbd9](https://github.com/phodal/shire/commit/5b9bbd995ee4f10259eb3198458e6e74843c9a50))
+- **parser:** Support Markdown headers in ShireParser [#112](https://github.com/phodal/shire/issues/112) ([f3e2e09](https://github.com/phodal/shire/commit/f3e2e0936e8a2dc9cdddf5e211f4065ec359d33f))
+- **patternaction:** add tokenizer function and refactor PatternActionFuncType to PatternActionFuncDef ([37ece32](https://github.com/phodal/shire/commit/37ece322421625f46b90ed96615bced0792ca36e))
+- **patternaction:** enhance function documentation and formatting [#112](https://github.com/phodal/shire/issues/112) ([1dfd2a9](https://github.com/phodal/shire/commit/1dfd2a9d553e8ff905249c1ab994bb3a8b57c080))
+- **plugin:** update plugin name and improve markdown table formatting ([05aa38a](https://github.com/phodal/shire/commit/05aa38a5a5440514429c08da1fcb1c878d7be2a3))
+- **post-processors:** Add descriptions and list view for processors [#112](https://github.com/phodal/shire/issues/112) ([4535863](https://github.com/phodal/shire/commit/4535863463b322b2c9619432d4180250c9e43f3b))
 - **shire-json:** move JSON related functionalities from core to shire-json module [#100](https://github.com/phodal/shire/issues/100) ([3f3a77a](https://github.com/phodal/shire/commit/3f3a77a4399a6e66c7b400d452cb1509f2fb674d))
 - **ShireFileListener:** ignore directories and LightVirtualFiles in onUpdated method ([086ed79](https://github.com/phodal/shire/commit/086ed79e9064c56d4eef15b2dee41110fa886c2f))
+- **shirelang:** add example option to ShireToolchainFunctionProvider [#112](https://github.com/phodal/shire/issues/112) ([4c16e36](https://github.com/phodal/shire/commit/4c16e3668540b95a544e00c55583e83f66602645))
+- **shirelang:** add ShireToolchainFunctionProvider and update GitFunctionProvider [#112](https://github.com/phodal/shire/issues/112) ([90a962f](https://github.com/phodal/shire/commit/90a962f762f81537416aba7abe310e72864193dc))
+- **shirelang:** add support for custom functions and update lexer and parser [#116](https://github.com/phodal/shire/issues/116) ([14ef5a0](https://github.com/phodal/shire/commit/14ef5a0ee6e4c30355d8833233b098cc666c475c))
+- **shirelang:** enhance foreign function execution with args support ([f9658ea](https://github.com/phodal/shire/commit/f9658ea65d4a7453985c7327d6f43422c4c227f4)), closes [#119](https://github.com/phodal/shire/issues/119)
 - timeout ([c02f7b2](https://github.com/phodal/shire/commit/c02f7b29ef0f0389b3a9e5adac72ff7a6415bfb5))
+- **tokenizer:** add Jieba Chinese tokenizer support [#112](https://github.com/phodal/shire/issues/112) ([2f73edf](https://github.com/phodal/shire/commit/2f73edf38b6ce0124d37ab99f26de8a931d0098c))
 - **tokenizer:** add multiple tokenizer types support in TokenizerProcessor [#100](https://github.com/phodal/shire/issues/100) ([9575b14](https://github.com/phodal/shire/commit/9575b141109b81ad87157bbe2546908960e53868))
+- **tokenizer:** add variable substitution in tokenizer and related test [#104](https://github.com/phodal/shire/issues/104) ([30c40c5](https://github.com/phodal/shire/commit/30c40c52b1cef465d49339aeb3b9c1b59764cb45))
+- **tokenizer:** ensure distinct tokenization results ([09746ca](https://github.com/phodal/shire/commit/09746cafce7766ffe2a8a6d8b9f866def8a98d21))
 
 ## [0.8.2](https://github.com/phodal/shire/compare/v0.8.1...v[0.8.2]) (2024-09-23)
 
@@ -615,8 +642,8 @@
 - **shell:** add shell language support plugin file ([bdc1c90](https://github.com/phodal/shire/commit/bdc1c90f10d7c2c4fb8f7157db343dd756c11352))
 - **shire:** add Shire context action group and location support ([e3df86d](https://github.com/phodal/shire/commit/e3df86d16d0c9985fec787a8e76ce553be9a9a45))
 
-[Unreleased]: https://github.com/phodal/shire/compare/v0.8.3...HEAD
-[0.8.3]: https://github.com/phodal/shire/compare/v0.8.2...v0.8.3
+[Unreleased]: https://github.com/phodal/shire/compare/v0.9.0...HEAD
+[0.9.0]: https://github.com/phodal/shire/compare/v0.8.2...v0.9.0
 [0.8.2]: https://github.com/phodal/shire/compare/v0.8.1...v0.8.2
 [0.8.1]: https://github.com/phodal/shire/compare/v0.7.4...v0.8.1
 [0.7.4]: https://github.com/phodal/shire/compare/v0.7.2...v0.7.4
