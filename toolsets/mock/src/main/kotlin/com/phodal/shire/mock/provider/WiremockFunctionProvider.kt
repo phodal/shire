@@ -9,17 +9,6 @@ import com.intellij.psi.PsiManager
 import com.phodal.shirecore.provider.function.ToolchainFunctionProvider
 import com.phodal.shirecore.runner.ConfigurationRunner
 
-enum class WiremockFunction(val funName: String) {
-    Mock("mock")
-    ;
-
-    companion object {
-        fun fromString(value: String): WiremockFunction? {
-            return values().firstOrNull { it.funName == value }
-        }
-    }
-}
-
 
 class WiremockFunctionProvider : ToolchainFunctionProvider, ConfigurationRunner {
     override fun isApplicable(project: Project, funcName: String): Boolean {

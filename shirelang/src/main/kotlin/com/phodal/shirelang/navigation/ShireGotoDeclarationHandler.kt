@@ -10,11 +10,21 @@ import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.intellij.psi.util.elementType
 import com.phodal.shirecore.findFile
 import com.phodal.shirecore.lookupFile
+import com.phodal.shirecore.middleware.PostProcessorType
+import com.phodal.shirelang.compiler.patternaction.PatternActionFuncDef
 import com.phodal.shirelang.psi.ShireFuncCall
 import com.phodal.shirelang.psi.ShireTypes
 
 class ShireGotoDeclarationHandler : GotoDeclarationHandlerBase(), GotoDeclarationHandler {
-    private val validFunctionNames = setOf("execute", "thread", "saveFile", "batch", "mock")
+    //    private val validFunctionNames = setOf("execute", "thread", "saveFile", "batch", "mock")
+    private val validFunctionNames = setOf(
+        PatternActionFuncDef.EXECUTE.funcName,
+        PatternActionFuncDef.THREAD.funcName,
+        PatternActionFuncDef.BATCH.funcName,
+        PostProcessorType.SaveFile.handleName,
+        "mock"
+    )
+
 
     override fun getGotoDeclarationTarget(element: PsiElement?, editor: Editor?): PsiElement? {
         if (element !is LeafPsiElement) return null
