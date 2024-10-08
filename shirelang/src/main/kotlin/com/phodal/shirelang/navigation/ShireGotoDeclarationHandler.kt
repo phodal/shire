@@ -8,13 +8,13 @@ import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.impl.source.tree.LeafPsiElement
+import com.intellij.psi.util.PsiTreeUtil.getChildrenOfTypeAsList
 import com.intellij.psi.util.elementType
 import com.phodal.shirecore.findFile
 import com.phodal.shirecore.lookupFile
 import com.phodal.shirecore.middleware.PostProcessorType
 import com.phodal.shirelang.compiler.patternaction.PatternActionFuncDef
-import com.phodal.shirelang.psi.ShireFuncCall
-import com.phodal.shirelang.psi.ShireTypes
+import com.phodal.shirelang.psi.*
 
 class ShireGotoDeclarationHandler : GotoDeclarationHandlerBase(), GotoDeclarationHandler {
     private val validFunctionNames = setOf(
@@ -25,14 +25,30 @@ class ShireGotoDeclarationHandler : GotoDeclarationHandlerBase(), GotoDeclaratio
         "mock"
     )
 
-
     override fun getGotoDeclarationTarget(element: PsiElement?, editor: Editor?): PsiElement? {
         if (element !is LeafPsiElement) return null
         val project = element.project
 
         handleForGotoFile(element, project)
 
-        return null
+        val psiFile = element.containingFile
+        // handle for foreign function
+        val func = element.parent as? ShireFuncName ?: return null
+        val header = getChildrenOfTypeAsList(psiFile, ShireFrontMatterHeader::class.java).firstOrNull()
+        val functionsNode = header?.frontMatterEntries?.frontMatterEntryList?.firstOrNull {
+            it.firstChild.text == "functions"
+        } ?: return null
+
+        val functionEntries: List<ShireFrontMatterEntry> =
+            functionsNode.frontMatterValue?.objectKeyValue?.keyValueList?.filter {
+                it.frontMatterEntry.foreignFunction != null
+            }?.map {
+                it.frontMatterEntry
+            } ?: return null
+
+        val funcName = func.text
+        val foreignFunc = functionEntries.find { it.frontMatterKey?.text == funcName } ?: return null
+        return foreignFunc
     }
 
     private fun handleForGotoFile(
