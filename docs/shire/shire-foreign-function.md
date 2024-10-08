@@ -16,8 +16,8 @@ nav_order: 8
 ---
 functions:
   normal: "defaultOutput.py"(string)
-  output: "multipleOutput.py"(string) -> content, size
-  special: "accessFunctionIfSupport.py"::resize(string, number, number) -> image
+  output: "multipleOutput.py"(string) -> content, size // TODO, No Implemented
+  special: "accessFunctionIfSupport.py"::resize(string, number, number) -> image // TODO, No Implemented
 ---
 ```
 
