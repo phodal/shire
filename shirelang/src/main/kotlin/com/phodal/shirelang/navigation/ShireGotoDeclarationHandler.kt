@@ -5,6 +5,7 @@ import com.intellij.codeInsight.navigation.actions.GotoDeclarationHandlerBase
 import com.intellij.openapi.application.runInEdt
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.fileEditor.FileEditorManager
+import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.intellij.psi.util.elementType
@@ -16,7 +17,6 @@ import com.phodal.shirelang.psi.ShireFuncCall
 import com.phodal.shirelang.psi.ShireTypes
 
 class ShireGotoDeclarationHandler : GotoDeclarationHandlerBase(), GotoDeclarationHandler {
-    //    private val validFunctionNames = setOf("execute", "thread", "saveFile", "batch", "mock")
     private val validFunctionNames = setOf(
         PatternActionFuncDef.EXECUTE.funcName,
         PatternActionFuncDef.THREAD.funcName,
@@ -28,23 +28,30 @@ class ShireGotoDeclarationHandler : GotoDeclarationHandlerBase(), GotoDeclaratio
 
     override fun getGotoDeclarationTarget(element: PsiElement?, editor: Editor?): PsiElement? {
         if (element !is LeafPsiElement) return null
-        if (element.elementType != ShireTypes.QUOTE_STRING) return null
-        if (element.parent?.elementType != ShireTypes.PIPELINE_ARG) return null
-
         val project = element.project
 
-        val funcCall = element.parent?.parent?.parent as? ShireFuncCall ?: return null
+        handleForGotoFile(element, project)
+
+        return null
+    }
+
+    private fun handleForGotoFile(
+        element: LeafPsiElement,
+        project: Project,
+    ) {
+        if (element.elementType != ShireTypes.QUOTE_STRING) return
+        if (element.parent?.elementType != ShireTypes.PIPELINE_ARG) return
+
+        val funcCall = element.parent?.parent?.parent as? ShireFuncCall ?: return
         val funcName = funcCall.funcName.text
 
-        if (funcName !in validFunctionNames) return null
+        if (funcName !in validFunctionNames) return
 
         val fileName = element.text.removeSurrounding("\"")
-        val file = project.lookupFile(fileName) ?: project.findFile(fileName) ?: return null
+        val file = project.lookupFile(fileName) ?: project.findFile(fileName) ?: return
 
         runInEdt {
             FileEditorManager.getInstance(project).openFile(file, true)
         }
-
-        return null
     }
 }
