@@ -7,6 +7,8 @@ import com.intellij.openapi.ui.popup.JBPopup
 import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.ui.dsl.builder.panel
 import com.intellij.util.ui.JBUI
+import java.awt.event.InputEvent
+import java.awt.event.KeyEvent
 import java.util.concurrent.CompletableFuture
 import javax.swing.JButton
 import javax.swing.JComponent
@@ -94,7 +96,7 @@ class PendingApprovalPanel : JPanel() {
             {
                 popup.closeOk(null)
                 approveButton.doClick()
-            }, KeyStroke.getKeyStroke("ctrl ENTER"), JComponent.WHEN_IN_FOCUSED_WINDOW
+            }, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_DOWN_MASK), JComponent.WHEN_IN_FOCUSED_WINDOW
         )
 
         rejectButton.addActionListener(reject)
@@ -102,7 +104,7 @@ class PendingApprovalPanel : JPanel() {
             {
                 popup.closeOk(null)
                 rejectButton.doClick()
-            }, KeyStroke.getKeyStroke("ctrl DELETE"), JComponent.WHEN_IN_FOCUSED_WINDOW
+            }, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, InputEvent.CTRL_DOWN_MASK), JComponent.WHEN_IN_FOCUSED_WINDOW
         )
     }
 }
