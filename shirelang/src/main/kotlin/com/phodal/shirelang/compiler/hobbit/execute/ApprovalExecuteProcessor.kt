@@ -70,24 +70,25 @@ class PendingApprovalPanel : JPanel() {
     init {
         val layoutBuilder = panel {
             row {
-                if (System.getProperty("os.name").contains("Mac")) {
-                    label("⌘ + ↵ ")
-                } else {
-                    label("Ctrl + ↵ ")
-                }
+                label(getShortcutLabel("⌘ + ↵", "Ctrl + ↵"))
                 cell(approveButton)
 
-                if (System.getProperty("os.name").contains("Mac")) {
-                    label("⌘ + ⌦")
-                } else {
-                    label("Ctrl + Del")
-                }
+                label(getShortcutLabel("⌘ + ⌦", "Ctrl + Del"))
                 cell(rejectButton)
             }
         }
 
+
         layoutBuilder.border = JBUI.Borders.empty(0, 10)
         this.add(layoutBuilder)
+    }
+
+    private fun getShortcutLabel(shortcutForMac: String, shortcutForOthers: String): String {
+        return if (System.getProperty("os.name").contains("Mac")) {
+            shortcutForMac
+        } else {
+            shortcutForOthers
+        }
     }
 
     fun setupKeyShortcuts(popup: JBPopup, approve: (Any) -> Unit, reject: (Any) -> Unit) {
