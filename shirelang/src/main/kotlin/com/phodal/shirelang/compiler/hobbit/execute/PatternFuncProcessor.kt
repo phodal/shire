@@ -340,6 +340,18 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                 ExecuteProcessor.execute(myProject, action.filename, variableNames, variableTable)
             }
 
+            is PatternActionFunc.ApprovalExecute -> {
+                val variableNames: Array<String> = action.variableNames.map {
+                    if (it.startsWith("\$")) {
+                        it.substring(1)
+                    } else {
+                        it
+                    }
+                }.toTypedArray()
+
+                ApprovalExecuteProcessor.execute(myProject, action.filename, variableNames, variableTable)
+            }
+
             is PatternActionFunc.Batch -> {
                 val inputs: List<String> = action.inputs.map { input ->
                     if (input.startsWith("\$")) {

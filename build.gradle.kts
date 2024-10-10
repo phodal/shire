@@ -25,7 +25,6 @@ changelog {
 
 /// maybe refs: https://github.com/HaxeFoundation/intellij-haxe/blob/develop/build.gradle.kts
 /// and https://github.com/JetBrains/educational-plugin
-
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     id("java") // Java support

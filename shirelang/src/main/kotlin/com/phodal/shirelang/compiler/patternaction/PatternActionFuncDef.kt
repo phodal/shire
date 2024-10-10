@@ -89,6 +89,18 @@ enum class PatternActionFuncDef(val funcName: String, val description: String, v
         | 
     """.trimMargin()
     ),
+    APPROVAL_EXECUTE(
+        "approvalExecute", "`approvalExecute` will show a dialog to confirm is execute to next job.",
+        """
+        | ```shire
+        | ---
+        | name: "Search"
+        | afterStreaming: { approvalExecute("search.shire") }
+        | ---
+        | ```
+        | 
+    """.trimMargin()
+    ),
     NOTIFY(
         "notify", "`notify` will use IDEA's notification system to display a message.",
         """

@@ -108,6 +108,12 @@ sealed class PatternActionFunc(val type: PatternActionFuncDef) {
         PatternActionFunc(PatternActionFuncDef.EXECUTE)
 
     /**
+     * Approval Execution
+     */
+    class ApprovalExecute(val filename: String, val variableNames: Array<String>) :
+        PatternActionFunc(PatternActionFuncDef.APPROVAL_EXECUTE)
+
+    /**
      * Use IDE Notify
      */
     class Notify(val message: String) : PatternActionFunc(PatternActionFuncDef.NOTIFY)
@@ -272,6 +278,12 @@ sealed class PatternActionFunc(val type: PatternActionFuncDef) {
                     val first = args.firstOrNull() ?: ""
                     val rest = args.drop(1).toTypedArray()
                     Execute(first, rest)
+                }
+
+                PatternActionFuncDef.APPROVAL_EXECUTE -> {
+                    val first = args.firstOrNull() ?: ""
+                    val rest = args.drop(1).toTypedArray()
+                    ApprovalExecute(first, rest)
                 }
 
                 PatternActionFuncDef.NOTIFY -> Notify(args[0])
