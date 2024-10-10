@@ -69,7 +69,7 @@ class ShireActionStartupActivity : ProjectActivity {
             return projectShire + loadGlobalShire(project)
         }
 
-        fun obtainProjectShires(project: Project): List<VirtualFile> {
+        private fun obtainProjectShires(project: Project): List<VirtualFile> {
             val scope = ProjectScope.getContentScope(project)
             val projectShire = FileTypeIndex.getFiles(ShireFileType.INSTANCE, scope).mapNotNull {
                 it
@@ -78,16 +78,9 @@ class ShireActionStartupActivity : ProjectActivity {
             return projectShire
         }
 
-
         fun findShireFile(project: Project, filename: String): ShireFile? {
-            val scope = ProjectScope.getContentScope(project)
-            // filter
-            val projectShire = FileTypeIndex.getFiles(ShireFileType.INSTANCE, scope).filter {
+            return obtainShireFiles(project).firstOrNull {
                 it.name == filename
-            }
-
-            return projectShire.firstOrNull()?.let {
-                PsiManager.getInstance(project).findFile(it) as? ShireFile
             }
         }
 
