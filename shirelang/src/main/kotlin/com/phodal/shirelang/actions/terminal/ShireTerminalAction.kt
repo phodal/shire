@@ -34,7 +34,7 @@ class ShireTerminalAction : DumbAwareAction() {
     private val ERROR_VALUE = "error"
 
     private fun shireActionConfigs() =
-        DynamicShireActionService.getInstance().getAction(ShireActionLocation.TERMINAL_MENU)
+        DynamicShireActionService.getInstance().getActions(ShireActionLocation.TERMINAL_MENU)
 
     override fun update(e: AnActionEvent) {
         val shireActionConfigs = shireActionConfigs()

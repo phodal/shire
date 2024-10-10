@@ -57,7 +57,7 @@ class ShireFileModifier(val project: Project, val afterUpdater: ((HobbitHole, Sh
                         if (!file.isPhysical) return@forEach
                         try {
                             HobbitHoleParser.parse(file)?.let {
-                                dynamicShireActionService.putAction(file, DynamicShireActionConfig(it.name, it, file))
+                                dynamicShireActionService.updateAction(file, DynamicShireActionConfig(it.name, it, file))
                                 afterUpdater?.invoke(it, file)
                                 logger.debug("Shire action[${it.name}] is loaded")
                             }

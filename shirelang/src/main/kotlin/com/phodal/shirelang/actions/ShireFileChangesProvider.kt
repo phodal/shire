@@ -44,7 +44,6 @@ class ShireFileChangesProvider(val project: Project) : Disposable {
     }
 
     companion object {
-
         fun getInstance(project: Project): ShireFileChangesProvider {
             return project.getService(ShireFileChangesProvider::class.java)
         }
@@ -76,7 +75,6 @@ internal class ShireFileModificationListener : FileDocumentManagerListener, Docu
 }
 
 internal class AsyncShireFileListener : AsyncFileListener, ShireFileListener {
-
     override fun prepareChange(events: MutableList<out VFileEvent>): AsyncFileListener.ChangeApplier {
         val beforeChangedEvents = mutableListOf<VFileEvent>()
         val afterChangedEvents = mutableListOf<VFileEvent>()

@@ -26,7 +26,7 @@ class ShireIntentionAction(private val hobbitHole: HobbitHole?, val file: PsiFil
 
     override fun invoke(project: Project, editor: Editor?, file: PsiFile?) {
         val config = DynamicShireActionService.getInstance()
-            .getAction(ShireActionLocation.INTENTION_MENU)
+            .getActions(ShireActionLocation.INTENTION_MENU)
             .firstOrNull { it.hole == hobbitHole } ?: return
 
         ShireRunFileAction.executeShireFile(project, config, null)

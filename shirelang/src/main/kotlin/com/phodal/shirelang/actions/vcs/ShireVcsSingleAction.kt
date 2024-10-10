@@ -12,7 +12,7 @@ class ShireVcsSingleAction : DumbAwareAction() {
     override fun getActionUpdateThread() = ActionUpdateThread.EDT
 
     private fun shireActionConfigs() =
-        DynamicShireActionService.getInstance().getAction(ShireActionLocation.COMMIT_MENU)
+        DynamicShireActionService.getInstance().getActions(ShireActionLocation.COMMIT_MENU)
 
     override fun update(e: AnActionEvent) {
         val isOnlyOneConfig = shireActionConfigs().size == 1

@@ -21,7 +21,6 @@ import java.io.File
 
 
 class ShireActionStartupActivity : ProjectActivity {
-
     override suspend fun execute(project: Project) {
         bindingShireActions(project)
     }

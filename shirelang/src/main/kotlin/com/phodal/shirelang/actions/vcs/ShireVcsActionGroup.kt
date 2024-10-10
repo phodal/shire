@@ -27,7 +27,7 @@ class ShireVcsActionGroup : ActionGroup() {
     }
 
     private fun shireActionConfigs() =
-        DynamicShireActionService.getInstance().getAction(ShireActionLocation.COMMIT_MENU)
+        DynamicShireActionService.getInstance().getActions(ShireActionLocation.COMMIT_MENU)
 }
 
 class ShireVcsAction(val config: DynamicShireActionConfig) :

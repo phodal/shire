@@ -6,26 +6,37 @@ import com.intellij.openapi.actionSystem.KeyboardShortcut
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.keymap.KeymapManager
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.vfs.VirtualFile
 import com.phodal.shirecore.config.ShireActionLocation
+import com.phodal.shirecore.project.isInProject
 import com.phodal.shirelang.psi.ShireFile
 import java.util.*
 
 @Service(Service.Level.APP)
 class DynamicShireActionService {
-    private val actionCache = WeakHashMap<ShireFile, DynamicShireActionConfig>()
+    private val actionCache = WeakHashMap<VirtualFile, DynamicShireActionConfig>()
 
-    fun putAction(key: ShireFile, action: DynamicShireActionConfig) {
-        actionCache[key] = action
+    fun updateAction(key: ShireFile, action: DynamicShireActionConfig) {
+        actionCache[key.containingFile.virtualFile] = action
     }
 
-    fun removeAction(key: ShireFile) = actionCache.keys.removeIf{ key === it }
+    fun removeAction(key: ShireFile) = actionCache.keys.removeIf {
+        it == key.containingFile.virtualFile
+    }
 
-    fun getAllActions(): List<DynamicShireActionConfig> = actionCache.values.toList()
+    fun getAllActions(project: Project): List<DynamicShireActionConfig> {
+        return this.actionCache.filterKeys {
+            it.isValid && project.isInProject(it)
+        }.values
+            .toList()
+            .distinctBy { it.name }
+    }
 
-    fun getAction(location: ShireActionLocation): List<DynamicShireActionConfig> {
+    fun getActions(location: ShireActionLocation): List<DynamicShireActionConfig> {
         return actionCache.values.filter {
             it.hole?.actionLocation == location && it.hole.enabled
-        }
+        }.distinctBy { it.name }
     }
 
     /**
