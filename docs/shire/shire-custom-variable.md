@@ -139,30 +139,36 @@ onStreamingEnd: { parseCode | patch($filePath, $output) }
 
 ## Pattern Function
 
-| 函数类别      | 功能描述                       | 参数                                                                          | 示例                                          |
-|-----------|----------------------------|-----------------------------------------------------------------------------|---------------------------------------------|
-| find      | 基于文本搜索                     | `text`: 要搜索的文本                                                              | `find("error")`                             |
-| grep      | 使用模式进行搜索                   | `patterns`: 要搜索的模式                                                          | `grep("[a-zA-Z]+Controller")`               |
-| sed       | 查找和替换操作                    | `pattern`: 要查找的模式<br>`replacements`: 替换的字符串<br>`isRegex`: 是否为正则表达式          | `sed("s/old/new/g")`                        |
-| sort      | 排序操作                       | `arguments`: 排序所需的参数                                                        | `sort`                                      |
-| uniq      | 去除重复行                      | `texts`: 要处理的文本                                                             | `uniq("line1", "line2", "line1")`           |
-| head      | 获取文件的前几行                   | `number`: 要获取的行数                                                            | `head(10)`                                  |
-| tail      | 获取文件的末尾几行                  | `number`: 要获取的行数                                                            | `tail(5)`                                   |
-| xargs     | 处理变量                       | `variables`: 要处理的变量                                                         | `xargs("arg1", "arg2")`                     |
-| print     | 打印文本                       | `texts`: 要打印的文本                                                             | `print("Hello", "World")`                   |
-| cat       | 连接文件                       | `paths`: 要连接的文件路径                                                           | `cat("file1.txt", "file2.txt")`             |
-| execute   | 异步执行 Shire 脚本、GradleTask 等 | `string`: 要执行的脚本内容                                                          | `execute("next-script.shire")`              |
-| notify    | 使用 IDE 通知                  | `message`: 要显示的通知消息                                                         | `notify("Process completed successfully.")` |
-| splitting | 分割文本或文件                    | `paths`: 要分割的文本或文件路径                                                        | `splitting("file.txt", "file2.txt")`        |
-| embedding | 嵌入文本                       | `entries`: 要嵌入的文本条目                                                         | `embedding("entry1", "entry2")`             |
-| searching | 搜索文本                       | `text`: 要搜索的文本, threshold: 置信度阈值（string, 默认 0.5）                            | `searching("pattern")`                      |
-| reranking | 重新排序                       | `type`: 重排类型，默认  lostInTheMiddle                                            | `reranking("pattern")`                      |
-| caching   | 缓存语义                       | `text`: 要缓存的文本                                                              | `caching("data")`                           |
-| redact    | 屏蔽敏感数据                     |                                                                             | `redact()`                                  |
-| thread    | 线程执行（异步）                   | `path`: 要执行的脚本路径                                                            | `thread("script.shire")`                    |
-| jsonpath  | 使用 JsonPath 选择数据           | `jsonPath`: JsonPath 表达式,其中 jsonString 为可选                                  | `jsonpath(jsonString, "$.store.*")`         |
-| batch     | 批处理操作                      | `fileName`: Shire  文件名，: paths`: 要处理的文件路径                                   | `batch("file1.shire", "file2.txt")`         |
-| tokenizer | 分词操作                       | `text`: 待分词的文本, type: 分词类型（`word`, `naming`, `stopwords`，`jieba`，默认 `word`） | `tokenizer("text") `                        |
+| 函数类别      | 功能描述             | 参数                                                                          | 示例                                          |
+|-----------|------------------|-----------------------------------------------------------------------------|---------------------------------------------|
+| find      | 基于文本搜索           | `text`: 要搜索的文本                                                              | `find("error")`                             |
+| grep      | 使用模式进行搜索         | `patterns`: 要搜索的模式                                                          | `grep("[a-zA-Z]+Controller")`               |
+| sed       | 查找和替换操作          | `pattern`: 要查找的模式<br>`replacements`: 替换的字符串<br>`isRegex`: 是否为正则表达式          | `sed("s/old/new/g")`                        |
+| sort      | 排序操作             | `arguments`: 排序所需的参数                                                        | `sort`                                      |
+| uniq      | 去除重复行            | `texts`: 要处理的文本                                                             | `uniq("line1", "line2", "line1")`           |
+| head      | 获取文件的前几行         | `number`: 要获取的行数                                                            | `head(10)`                                  |
+| tail      | 获取文件的末尾几行        | `number`: 要获取的行数                                                            | `tail(5)`                                   |
+| xargs     | 处理变量             | `variables`: 要处理的变量                                                         | `xargs("arg1", "arg2")`                     |
+| print     | 打印文本             | `texts`: 要打印的文本                                                             | `print("Hello", "World")`                   |
+| cat       | 连接文件             | `paths`: 要连接的文件路径                                                           | `cat("file1.txt", "file2.txt")`             |
+| notify    | 使用 IDE 通知        | `message`: 要显示的通知消息                                                         | `notify("Process completed successfully.")` |
+| splitting | 分割文本或文件          | `paths`: 要分割的文本或文件路径                                                        | `splitting("file.txt", "file2.txt")`        |
+| embedding | 嵌入文本             | `entries`: 要嵌入的文本条目                                                         | `embedding("entry1", "entry2")`             |
+| searching | 搜索文本             | `text`: 要搜索的文本, threshold: 置信度阈值（string, 默认 0.5）                            | `searching("pattern")`                      |
+| reranking | 重新排序             | `type`: 重排类型，默认  lostInTheMiddle                                            | `reranking("pattern")`                      |
+| caching   | 缓存语义             | `text`: 要缓存的文本                                                              | `caching("data")`                           |
+| redact    | 屏蔽敏感数据           |                                                                             | `redact()`                                  |
+| jsonpath  | 使用 JsonPath 选择数据 | `jsonPath`: JsonPath 表达式,其中 jsonString 为可选                                  | `jsonpath(jsonString, "$.store.*")`         |
+| batch     | 批处理操作            | `fileName`: Shire  文件名，: paths`: 要处理的文件路径                                   | `batch("file1.shire", "file2.txt")`         |
+| tokenizer | 分词操作             | `text`: 待分词的文本, type: 分词类型（`word`, `naming`, `stopwords`，`jieba`，默认 `word`） | `tokenizer("text") `                        |
+
+编排函数
+
+| 函数类别           | 功能描述                       | 参数                 | 示例                               |
+|----------------|----------------------------|--------------------|----------------------------------|
+| execute        | 异步执行 Shire 脚本、GradleTask 等 | `string`: 要执行的脚本内容 | `execute("next-script.shire")`   |
+| thread         | 线程执行（异步）                   | `path`: 要执行的脚本路径   | `thread("script.shire")`         |
+| approveExecute | 等待确认再执行                    | `path`: 要执行的脚本路径   | `approveExecute("script.shire")` |
 
 Execute
 
