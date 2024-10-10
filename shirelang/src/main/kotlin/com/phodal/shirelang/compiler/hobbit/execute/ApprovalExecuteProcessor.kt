@@ -19,7 +19,7 @@ object ApprovalExecuteProcessor {
         filename: Any,
         variableNames: Array<String>,
         variableTable: MutableMap<String, Any?>,
-        approve: (Any) -> Unit,
+        approve: ((Any) -> Unit)? = null,
         reject: (() -> Unit?)? = null
     ): Any {
         val dataContext = DataManager.getInstance().dataContextFromFocusAsync.blockingGet(10000)
@@ -45,12 +45,13 @@ object ApprovalExecuteProcessor {
             panel.setupKeyShortcuts(popup,
                 {
                     popup.closeOk(null)
-                    future.complete(approve(it))
+                    approve?.invoke("")
+                    future.complete("")
                 },
                 {
                     popup.cancel()
                     reject?.invoke()
-                    future.complete(null)
+                    future.complete("")
                 })
 
             popup.showInBestPositionFor(dataContext)

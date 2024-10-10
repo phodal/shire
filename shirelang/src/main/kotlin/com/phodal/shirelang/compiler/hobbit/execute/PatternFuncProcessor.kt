@@ -1,5 +1,6 @@
 package com.phodal.shirelang.compiler.hobbit.execute
 
+import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
@@ -12,12 +13,15 @@ import com.phodal.shirecore.guard.RedactProcessor
 import com.phodal.shirecore.provider.function.ToolchainFunctionProvider
 import com.phodal.shirecore.search.function.ScoredText
 import com.phodal.shirecore.search.function.SemanticService
+import com.phodal.shirecore.workerThread
 import com.phodal.shirelang.ShireBundle
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.ast.FrontMatterType
 import com.phodal.shirelang.compiler.hobbit.ast.Statement
 import com.phodal.shirelang.compiler.hobbit.execute.function.JsonPathFunction
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import java.io.File
 
 open class PatternFuncProcessor(open val myProject: Project, open val hole: HobbitHole) {
@@ -351,7 +355,9 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
 
                 ApprovalExecuteProcessor.execute(myProject, action.filename, variableNames, variableTable,
                     approve = {
-                        ExecuteProcessor.execute(myProject, action.filename, variableNames, variableTable)
+                        CoroutineScope(workerThread).launch {
+                            ExecuteProcessor.execute(myProject, action.filename, variableNames, variableTable)
+                        }
                     })
             }
 
