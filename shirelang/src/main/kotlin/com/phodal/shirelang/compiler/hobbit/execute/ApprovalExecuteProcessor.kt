@@ -1,11 +1,15 @@
 package com.phodal.shirelang.compiler.hobbit.execute
 
 import com.intellij.ide.DataManager
+import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.application.runInEdt
 import com.intellij.openapi.keymap.KeymapManager
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.popup.JBPopup
 import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.ui.dsl.builder.panel
+import com.intellij.util.ui.JBUI
+import java.util.concurrent.CompletableFuture
 import javax.swing.JButton
 import javax.swing.JComponent
 import javax.swing.JPanel
@@ -21,73 +25,92 @@ object ApprovalExecuteProcessor {
         val dataContext = DataManager.getInstance().dataContextFromFocusAsync.blockingGet(10000)
             ?: throw IllegalStateException("No data context")
 
-        /// show a panel like webview?
-        runInEdt {
-            val panel = createPendingApprovalPanel()
+        val panel = PendingApprovalPanel()
 
-            // show panel
+        val future = CompletableFuture<Any>()
+
+        runInEdt {
             val popup = JBPopupFactory.getInstance()
                 .createComponentPopupBuilder(panel, null)
                 .setResizable(true)
                 .setMovable(true)
-                .setTitle("Preview")
                 .setFocusable(true)
                 .setRequestFocus(true)
+                .setCancelOnClickOutside(false)
+                .setCancelOnOtherWindowOpen(false)
+                .setCancelOnWindowDeactivation(false)
+                .setKeyboardActions(listOf())
                 .createPopup()
+
+            panel.setupKeyShortcuts(popup,
+                {
+                    popup.closeOk(null)
+                    invokeLater {
+                        val result = ExecuteProcessor.execute(myProject, filename, variableNames, variableTable)
+                        future.complete(result)
+                    }
+                },
+                {
+                    popup.cancel()
+                    future.complete("")
+                })
 
             popup.showInBestPositionFor(dataContext)
         }
 
-        return ""
+        return future.get()
     }
 }
 
-fun createPendingApprovalPanel(): JPanel {
-    val approveButton = JButton("Approve")
-    val rejectButton = JButton("Reject")
+class PendingApprovalPanel : JPanel() {
+    private val approveButton = JButton("Approve")
 
-    return panel {
-        row {
-            label("Pending Approval")
-        }
+    //        .apply {
+//        addActionListener { approve(it) }
+//    }
+    private val rejectButton = JButton("Reject")
+//        .apply {
+//        addActionListener { reject(it) }
+//    }
 
-        row {
-            label("Use Command/Ctrl + Enter or Mouse to Approve")
-        }
+    init {
+        val layoutBuilder = panel {
+            row {
+                if (System.getProperty("os.name").contains("Mac")) {
+                    label("⌘ + ↵ ")
+                } else {
+                    label("Ctrl + ↵ ")
+                }
+                cell(approveButton)
 
-        row {
-            approveButton.addActionListener {
-                // Approve logic here
-                println("Approved")
+                if (System.getProperty("os.name").contains("Mac")) {
+                    label("⌘ + ⌦")
+                } else {
+                    label("Ctrl + Del")
+                }
+                cell(rejectButton)
             }
-            cell(approveButton)
         }
 
-        row {
-            label("Use Command/Ctrl + Delete or Mouse to Reject")
-        }
-
-        row {
-            rejectButton.addActionListener {
-                // Reject logic here
-                println("Rejected")
-            }
-            cell(rejectButton)
-        }
-
-        // Adding keyboard shortcuts
-        installShortcuts(approveButton, rejectButton)
+        layoutBuilder.border = JBUI.Borders.empty(0, 10)
+        this.add(layoutBuilder)
     }
-}
 
-fun installShortcuts(approveButton: JButton, rejectButton: JButton) {
-    val approveShortcut = KeymapManager.getInstance().activeKeymap.getShortcuts("Approve")
-    approveButton.registerKeyboardAction(
-        { approveButton.doClick() }, KeyStroke.getKeyStroke("ctrl ENTER"), JComponent.WHEN_IN_FOCUSED_WINDOW
-    )
+    fun setupKeyShortcuts(popup: JBPopup, approve: (Any) -> Unit, reject: (Any) -> Unit) {
+        approveButton.addActionListener(approve)
+        approveButton.registerKeyboardAction(
+            {
+                popup.closeOk(null)
+                approveButton.doClick()
+            }, KeyStroke.getKeyStroke("ctrl ENTER"), JComponent.WHEN_IN_FOCUSED_WINDOW
+        )
 
-    val rejectShortcut = KeymapManager.getInstance().activeKeymap.getShortcuts("Reject")
-    rejectButton.registerKeyboardAction(
-        { rejectButton.doClick() }, KeyStroke.getKeyStroke("ctrl DELETE"), JComponent.WHEN_IN_FOCUSED_WINDOW
-    )
+        rejectButton.addActionListener(reject)
+        rejectButton.registerKeyboardAction(
+            {
+                popup.closeOk(null)
+                rejectButton.doClick()
+            }, KeyStroke.getKeyStroke("ctrl DELETE"), JComponent.WHEN_IN_FOCUSED_WINDOW
+        )
+    }
 }
