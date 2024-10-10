@@ -10,6 +10,7 @@ import com.phodal.shirelang.ShireActionStartupActivity
 import com.phodal.shirelang.actions.ShireRunFileAction
 import com.phodal.shirelang.compiler.SHIRE_ERROR
 import com.phodal.shirelang.compiler.exec.RunShireCommand
+import com.phodal.shirelang.psi.ShireFile
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -48,9 +49,7 @@ object ExecuteProcessor {
     ): String {
         try {
             val file = runReadAction {
-                ShireActionStartupActivity.obtainShireFiles(myProject).find {
-                    it.name == filename
-                }
+                ShireActionStartupActivity.findShireFile(myProject, filename.toString())
             }
 
             if (file == null) {

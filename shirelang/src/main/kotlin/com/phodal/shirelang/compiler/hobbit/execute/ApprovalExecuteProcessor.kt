@@ -1,9 +1,7 @@
 package com.phodal.shirelang.compiler.hobbit.execute
 
 import com.intellij.ide.DataManager
-import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.application.runInEdt
-import com.intellij.openapi.keymap.KeymapManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.JBPopup
 import com.intellij.openapi.ui.popup.JBPopupFactory
@@ -21,6 +19,8 @@ object ApprovalExecuteProcessor {
         filename: Any,
         variableNames: Array<String>,
         variableTable: MutableMap<String, Any?>,
+        approve: (Any) -> Unit,
+        reject: (() -> Unit?)? = null
     ): Any {
         val dataContext = DataManager.getInstance().dataContextFromFocusAsync.blockingGet(10000)
             ?: throw IllegalStateException("No data context")
@@ -45,14 +45,12 @@ object ApprovalExecuteProcessor {
             panel.setupKeyShortcuts(popup,
                 {
                     popup.closeOk(null)
-                    invokeLater {
-                        val result = ExecuteProcessor.execute(myProject, filename, variableNames, variableTable)
-                        future.complete(result)
-                    }
+                    future.complete(approve(it))
                 },
                 {
                     popup.cancel()
-                    future.complete("")
+                    reject?.invoke()
+                    future.complete(null)
                 })
 
             popup.showInBestPositionFor(dataContext)
@@ -64,14 +62,7 @@ object ApprovalExecuteProcessor {
 
 class PendingApprovalPanel : JPanel() {
     private val approveButton = JButton("Approve")
-
-    //        .apply {
-//        addActionListener { approve(it) }
-//    }
     private val rejectButton = JButton("Reject")
-//        .apply {
-//        addActionListener { reject(it) }
-//    }
 
     init {
         val layoutBuilder = panel {

@@ -349,7 +349,10 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                     }
                 }.toTypedArray()
 
-                ApprovalExecuteProcessor.execute(myProject, action.filename, variableNames, variableTable)
+                ApprovalExecuteProcessor.execute(myProject, action.filename, variableNames, variableTable,
+                    approve = {
+                        ExecuteProcessor.execute(myProject, action.filename, variableNames, variableTable)
+                    })
             }
 
             is PatternActionFunc.Batch -> {
@@ -395,6 +398,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
             is PatternActionFunc.Destroy -> {
                 TODO()
             }
+
             is PatternActionFunc.Tokenizer -> {
                 if (action.text.startsWith("\$")) {
                     action.text = variableTable[action.text.substring(1)]?.toString() ?: action.text

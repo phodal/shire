@@ -7,9 +7,11 @@ import com.intellij.openapi.application.smartReadAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.ProjectActivity
 import com.intellij.openapi.vfs.LocalFileSystem
+import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.intellij.psi.search.FileTypeIndex
-import com.intellij.psi.search.GlobalSearchScope
+import com.intellij.psi.search.ProjectScope
 import com.phodal.shirecore.config.InteractionType
 import com.phodal.shirelang.actions.ShireFileChangesProvider
 import com.phodal.shirelang.actions.copyPaste.PasteManagerService
@@ -58,16 +60,35 @@ class ShireActionStartupActivity : ProjectActivity {
     }
 
     companion object {
-        fun obtainShireFiles(project: Project): List<ShireFile> {
+        private fun obtainShireFiles(project: Project): List<ShireFile> {
             ApplicationManager.getApplication().assertReadAccessAllowed()
-            val allScope = GlobalSearchScope.allScope(project)
-            val filesScope = GlobalSearchScope.getScopeRestrictedByFileTypes(allScope, ShireFileType.INSTANCE)
-
-            val projectShire = FileTypeIndex.getFiles(ShireFileType.INSTANCE, filesScope).mapNotNull {
-                PsiManager.getInstance(project).findFile(it) as? ShireFile
+            val projectShire = obtainProjectShires(project).map {
+                PsiManager.getInstance(project).findFile(it) as ShireFile
             }
 
             return projectShire + loadGlobalShire(project)
+        }
+
+        fun obtainProjectShires(project: Project): List<VirtualFile> {
+            val scope = ProjectScope.getContentScope(project)
+            val projectShire = FileTypeIndex.getFiles(ShireFileType.INSTANCE, scope).mapNotNull {
+                it
+            }
+
+            return projectShire
+        }
+
+
+        fun findShireFile(project: Project, filename: String): ShireFile? {
+            val scope = ProjectScope.getContentScope(project)
+            // filter
+            val projectShire = FileTypeIndex.getFiles(ShireFileType.INSTANCE, scope).filter {
+                it.name == filename
+            }
+
+            return projectShire.firstOrNull()?.let {
+                PsiManager.getInstance(project).findFile(it) as? ShireFile
+            }
         }
 
         private fun loadGlobalShire(project: Project): List<ShireFile> {

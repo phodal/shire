@@ -5,20 +5,19 @@ import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.phodal.shirelang.ShireActionStartupActivity
 import com.phodal.shirelang.actions.ShireRunFileAction
+import com.phodal.shirelang.psi.ShireFile
 
 class BatchProcessor {
     companion object {
         fun execute(
             myProject: Project,
-            fileName: String,
+            filename: String,
             inputs: List<String>,
             batchSize: Int,
             variableTable: MutableMap<String, Any?>,
         ): Any {
             val file = runReadAction {
-                ShireActionStartupActivity.obtainShireFiles(myProject).find {
-                    it.name == fileName
-                }
+                ShireActionStartupActivity.findShireFile(myProject, filename.toString())
             }
 
             if (file == null) {
