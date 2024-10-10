@@ -21,7 +21,12 @@ class RunCodeProcessor : PostProcessor {
 
     override fun isApplicable(context: PostProcessorContext): Boolean = true
 
-    override fun execute(project: Project, context: PostProcessorContext, console: ConsoleView?, args: List<Any>): String {
+    override fun execute(
+        project: Project,
+        context: PostProcessorContext,
+        console: ConsoleView?,
+        args: List<Any>,
+    ): String {
         when (val code = context.pipeData["output"]) {
             is VirtualFile -> {
                 LocalFileSystem.getInstance().refreshAndFindFileByPath(code.path)
@@ -38,11 +43,24 @@ class RunCodeProcessor : PostProcessor {
             is String -> {
                 val ext = context.genTargetLanguage?.associatedFileType?.defaultExtension ?: "txt"
                 ApplicationManager.getApplication().invokeAndWait {
-                    PsiFileFactory.getInstance(project).createFileFromText("temp.$ext", code).let { psiFile ->
-                        if (psiFile.virtualFile == null) {
-                            console?.print("Failed to create file for run\n", ERROR_OUTPUT)
-                        } else {
-                            doExecute(console, project, psiFile.virtualFile, psiFile)
+                    if (code.contains("\n")) {
+                        PsiFileFactory.getInstance(project).createFileFromText("temp.$ext", code).let { psiFile ->
+                            if (psiFile.virtualFile == null) {
+                                console?.print("Failed to create file for run\n", ERROR_OUTPUT)
+                            } else {
+                                doExecute(console, project, psiFile.virtualFile, psiFile)
+                            }
+                        }
+                    } else {
+                        val file = LocalFileSystem.getInstance().refreshAndFindFileByPath(code)
+                        if (file != null) {
+                            val psiFile = ReadAction.compute<PsiFile?, Throwable> {
+                                PsiManager.getInstance(project).findFile(file)
+                            }
+
+                            psiFile?.let {
+                                doExecute(console, project, file, psiFile)
+                            }
                         }
                     }
                 }
