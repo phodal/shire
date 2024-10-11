@@ -14,11 +14,12 @@ class ShireContextMenuActionGroup : ActionGroup() {
 
     override fun update(e: AnActionEvent) {
         val project = e.project ?: return
-        e.presentation.isPopupGroup = DynamicShireActionService.getInstance().getAllActions(project).size > 1
+        e.presentation.isPopupGroup = DynamicShireActionService.getInstance(project).getAllActions().size > 1
     }
 
     override fun getChildren(e: AnActionEvent?): Array<AnAction> {
-        val actionService = DynamicShireActionService.getInstance()
+        val project = e?.project ?: return emptyArray()
+        val actionService = DynamicShireActionService.getInstance(project)
 
         return actionService.getActions(ShireActionLocation.CONTEXT_MENU).mapNotNull { actionConfig ->
             if (actionConfig.hole == null) return@mapNotNull null

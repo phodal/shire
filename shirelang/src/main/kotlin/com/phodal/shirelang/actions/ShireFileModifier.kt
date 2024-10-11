@@ -3,12 +3,11 @@ package com.phodal.shirelang.actions
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.diagnostic.logger
-import com.intellij.openapi.project.Project
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.util.messages.MessageBusConnection
 import com.intellij.util.messages.Topic
-import com.phodal.shirecore.ShireCoroutineScope
+import com.phodal.shirelang.actions.base.DynamicActionService
 import com.phodal.shirelang.actions.base.DynamicShireActionConfig
-import com.phodal.shirelang.actions.base.DynamicShireActionService
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.parser.HobbitHoleParser
 import com.phodal.shirelang.psi.ShireFile
@@ -23,9 +22,16 @@ import java.util.concurrent.TimeUnit
  *
  * @author lk
  */
-class ShireFileModifier(val project: Project, val afterUpdater: ((HobbitHole, ShireFile) -> Unit)?) {
+class ShireFileModifier(val context: ShireFileModificationContext) {
 
-    private val dynamicShireActionService: DynamicShireActionService = DynamicShireActionService.getInstance()
+    private val dynamicActionService: DynamicActionService
+
+    private val scope: CoroutineScope
+
+    init {
+        dynamicActionService = context.dynamicActionService
+        scope = context.scope
+    }
 
     private val queue: MutableSet<ShireFile> = mutableSetOf()
 
@@ -39,8 +45,8 @@ class ShireFileModifier(val project: Project, val afterUpdater: ((HobbitHole, Sh
     @Volatile
     var connect: MessageBusConnection? = null
 
-    fun modify(afterUpdater: ((HobbitHole, ShireFile) -> Unit)?) {
-        ShireCoroutineScope.scope(project).launch(dispatcher) {
+    private fun modify(afterUpdater: ((HobbitHole, ShireFile) -> Unit)?) {
+        scope.launch(dispatcher) {
             delay(delayTime)
             synchronized(queue) {
                 waitingUpdateQueue.addAll(queue)
@@ -50,20 +56,14 @@ class ShireFileModifier(val project: Project, val afterUpdater: ((HobbitHole, Sh
                 runReadAction {
                     waitingUpdateQueue.forEach { file ->
                         if (!file.isValid) {
-                            dynamicShireActionService.removeAction(file)
+                            dynamicActionService.removeAction(file)
                             logger.debug("Shire file[${file.name}] is deleted")
+                            file.virtualFile.takeIf { it.isValid }?.run { context.convertor.invoke(this)?.let { println("reload.")
+                                loadShireAction(it, afterUpdater) } }
                             return@forEach
                         }
                         if (!file.isPhysical) return@forEach
-                        try {
-                            HobbitHoleParser.parse(file)?.let {
-                                dynamicShireActionService.updateAction(file, DynamicShireActionConfig(it.name, it, file))
-                                afterUpdater?.invoke(it, file)
-                                logger.debug("Shire action[${it.name}] is loaded")
-                            }
-                        } catch (e: Exception) {
-                            logger.warn("An error occurred while parsing shire file: ${file.virtualFile.path}", e)
-                        }
+                        loadShireAction(file, afterUpdater)
                     }
                 }
                 waitingUpdateQueue.clear()
@@ -71,18 +71,30 @@ class ShireFileModifier(val project: Project, val afterUpdater: ((HobbitHole, Sh
         }
     }
 
-    fun startup() {
+    private fun loadShireAction(file: ShireFile, afterUpdater: ((HobbitHole, ShireFile) -> Unit)?) {
+        try {
+            HobbitHoleParser.parse(file).let {
+                dynamicActionService.putAction(file, DynamicShireActionConfig(it?.name ?: file.name, it, file))
+                if (it != null) afterUpdater?.invoke(it, file)
+                logger.debug("Shire file[${file.virtualFile.path}] is loaded")
+            }
+        } catch (e: Exception) {
+            logger.error("An error occurred while parsing shire file: ${file.virtualFile.path}", e)
+        }
+    }
+
+    fun startup(predicate: (VirtualFile) -> Boolean) {
         connect ?: synchronized(this) {
-            connect ?: ShireUpdater.register { it.invoke(project)?.let { add(it) } }.also { connect = it }
+            connect ?: ShireUpdater.register { it.takeIf(predicate)?.let(context.convertor)?.let { add(it) } }.also { connect = it }
         }
 
     }
 
-    fun add(file: ShireFile) {
+    private fun add(file: ShireFile) {
         synchronized(queue) {
             queue.add(file)
         }
-        modify(afterUpdater)
+        modify(context.afterUpdater)
     }
 
     fun dispose() {
@@ -99,7 +111,7 @@ class ShireFileModifier(val project: Project, val afterUpdater: ((HobbitHole, Sh
 
 fun interface ShireUpdater {
 
-    fun onUpdated(processor: (Project) -> ShireFile?)
+    fun onUpdated(file: VirtualFile)
 
     companion object {
 
@@ -116,3 +128,10 @@ fun interface ShireUpdater {
         }
     }
 }
+
+data class ShireFileModificationContext(
+    val dynamicActionService: DynamicActionService,
+    val afterUpdater: ((HobbitHole, ShireFile) -> Unit)?,
+    val scope: CoroutineScope,
+    val convertor: (VirtualFile) -> ShireFile?
+)

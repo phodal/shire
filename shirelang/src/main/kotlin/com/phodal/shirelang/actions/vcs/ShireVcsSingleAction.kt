@@ -3,6 +3,7 @@ package com.phodal.shirelang.actions.vcs
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.DumbAwareAction
+import com.intellij.openapi.project.Project
 import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirecore.variable.template.VariableActionEventDataHolder
 import com.phodal.shirelang.actions.ShireRunFileAction
@@ -11,13 +12,14 @@ import com.phodal.shirelang.actions.base.DynamicShireActionService
 class ShireVcsSingleAction : DumbAwareAction() {
     override fun getActionUpdateThread() = ActionUpdateThread.EDT
 
-    private fun shireActionConfigs() =
-        DynamicShireActionService.getInstance().getActions(ShireActionLocation.COMMIT_MENU)
+    private fun shireActionConfigs(project: Project) =
+        DynamicShireActionService.getInstance(project).getActions(ShireActionLocation.COMMIT_MENU)
 
     override fun update(e: AnActionEvent) {
-        val isOnlyOneConfig = shireActionConfigs().size == 1
+        val project = e.project ?: return
+        val isOnlyOneConfig = shireActionConfigs(project).size == 1
 
-        val hobbitHole = shireActionConfigs().firstOrNull()?.hole
+        val hobbitHole = shireActionConfigs(project).firstOrNull()?.hole
         e.presentation.isVisible = isOnlyOneConfig
         e.presentation.isEnabled = hobbitHole != null && hobbitHole.enabled
         if (hobbitHole != null) {
@@ -30,7 +32,7 @@ class ShireVcsSingleAction : DumbAwareAction() {
 
         VariableActionEventDataHolder.putData(VariableActionEventDataHolder(e.dataContext))
 
-        val config = shireActionConfigs().firstOrNull() ?: return
+        val config = shireActionConfigs(project).firstOrNull() ?: return
         ShireRunFileAction.executeShireFile(project, config, null)
     }
 }
