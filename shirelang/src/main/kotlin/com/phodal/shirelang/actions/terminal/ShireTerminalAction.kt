@@ -38,13 +38,13 @@ class ShireTerminalAction : DumbAwareAction() {
         DynamicShireActionService.getInstance(project).getActions(ShireActionLocation.TERMINAL_MENU)
 
     override fun update(e: AnActionEvent) {
-        val shireActionConfigs = e.project?.let { shireActionConfigs(it) } ?: return
-        val firstHole = shireActionConfigs.firstOrNull()?.hole ?: return
+        val shireActionConfigs = e.project?.let { shireActionConfigs(it) }
+        val firstHole = shireActionConfigs?.firstOrNull()?.hole
 
-        e.presentation.isVisible = shireActionConfigs.size == 1 && firstHole.enabled
-        e.presentation.isEnabled = shireActionConfigs.size == 1 && firstHole.enabled
+        e.presentation.isVisible = shireActionConfigs?.size == 1 && firstHole?.enabled == true
+        e.presentation.isEnabled = shireActionConfigs?.size == 1 && firstHole?.enabled == true
 
-        e.presentation.text = firstHole.description ?: ""
+        e.presentation.text = firstHole?.description ?: "AutoDev Placeholder (Bug)"
     }
 
     override fun actionPerformed(e: AnActionEvent) {
