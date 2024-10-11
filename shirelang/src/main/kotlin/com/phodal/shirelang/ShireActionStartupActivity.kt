@@ -6,18 +6,17 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.smartReadAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.ProjectActivity
-import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.ProjectScope
 import com.phodal.shirecore.config.InteractionType
+import com.phodal.shirelang.actions.GlobalShireFileChangesProvider
 import com.phodal.shirelang.actions.ShireFileChangesProvider
+import com.phodal.shirelang.actions.base.DynamicShireActionService
 import com.phodal.shirelang.actions.copyPaste.PasteManagerService
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.psi.ShireFile
-import java.io.File
 
 
 class ShireActionStartupActivity : ProjectActivity {
@@ -26,6 +25,7 @@ class ShireActionStartupActivity : ProjectActivity {
     }
 
     private suspend fun bindingShireActions(project: Project) {
+        GlobalShireFileChangesProvider.getInstance().startup(::attachCopyPasteAction)
         val changesProvider = ShireFileChangesProvider.getInstance(project)
         smartReadAction(project) {
             changesProvider.startup(::attachCopyPasteAction)
@@ -65,7 +65,7 @@ class ShireActionStartupActivity : ProjectActivity {
                 PsiManager.getInstance(project).findFile(it) as ShireFile
             }
 
-            return projectShire + loadGlobalShire(project)
+            return projectShire
         }
 
         private fun obtainProjectShires(project: Project): List<VirtualFile> {
@@ -78,19 +78,10 @@ class ShireActionStartupActivity : ProjectActivity {
         }
 
         fun findShireFile(project: Project, filename: String): ShireFile? {
-            return obtainShireFiles(project).firstOrNull {
+            return DynamicShireActionService.getInstance(project).getAllActions().map {
+                it.shireFile
+            }.firstOrNull {
                 it.name == filename
-            }
-        }
-
-        private fun loadGlobalShire(project: Project): List<ShireFile> {
-            val home = System.getProperty("user.home")
-            val homeShire = File(home, ".shire")
-
-            val parent = LocalFileSystem.getInstance().findFileByIoFile(homeShire) ?: return emptyList()
-
-            return parent.children.mapNotNull {
-                PsiManager.getInstance(project).findFile(it) as? ShireFile
             }
         }
 

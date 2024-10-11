@@ -23,11 +23,12 @@ import javax.swing.AbstractAction
 class ShireInputBoxAction : DumbAwareAction() {
     override fun getActionUpdateThread() = ActionUpdateThread.EDT
 
-    private fun shireActionConfigs() =
-        DynamicShireActionService.getInstance().getActions(ShireActionLocation.INPUT_BOX)
+    private fun shireActionConfigs(project: Project) =
+        DynamicShireActionService.getInstance(project).getActions(ShireActionLocation.INPUT_BOX)
 
     override fun update(e: AnActionEvent) {
-        val hobbitHole = shireActionConfigs().firstOrNull()?.hole ?: return
+        val project = e.project ?: return
+        val hobbitHole = shireActionConfigs(project).firstOrNull()?.hole ?: return
 
         e.presentation.isEnabled = hobbitHole.enabled
         e.presentation.text = hobbitHole?.description ?: ""
@@ -39,8 +40,8 @@ class ShireInputBoxAction : DumbAwareAction() {
         val offset = editor.caretModel.offset
         val project = dataContext.getData(CommonDataKeys.PROJECT) ?: return
 
-        val instance = DynamicShireActionService.getInstance()
-        val config = shireActionConfigs().firstOrNull() ?: return
+        val instance = DynamicShireActionService.getInstance(project)
+        val config = shireActionConfigs(project).firstOrNull() ?: return
 
         if (config.hole?.shortcut != null) {
             instance.bindShortcutToAction(this, config.hole.shortcut)

@@ -4,6 +4,7 @@ import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.AnActionHolder
 import com.intellij.openapi.project.DumbAwareAction
+import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.Balloon
 import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.ui.popup.JBPopupListener
@@ -33,11 +34,11 @@ class ShireTerminalAction : DumbAwareAction() {
     private val OUTLINE_PROPERTY = "JComponent.outline"
     private val ERROR_VALUE = "error"
 
-    private fun shireActionConfigs() =
-        DynamicShireActionService.getInstance().getActions(ShireActionLocation.TERMINAL_MENU)
+    private fun shireActionConfigs(project: Project) =
+        DynamicShireActionService.getInstance(project).getActions(ShireActionLocation.TERMINAL_MENU)
 
     override fun update(e: AnActionEvent) {
-        val shireActionConfigs = shireActionConfigs()
+        val shireActionConfigs = e.project?.let { shireActionConfigs(it) } ?: return
         val firstHole = shireActionConfigs.firstOrNull()?.hole ?: return
 
         e.presentation.isVisible = shireActionConfigs.size == 1 && firstHole.enabled
@@ -49,7 +50,7 @@ class ShireTerminalAction : DumbAwareAction() {
     override fun actionPerformed(e: AnActionEvent) {
         val project = e.project ?: return
 
-        val config = shireActionConfigs().firstOrNull() ?: return
+        val config = shireActionConfigs(project).firstOrNull() ?: return
 
         TerminalLocationExecutor.provide(project)?.getComponent(e)?.let { component ->
             showInputBoxPopup(component, getPreferredPopupPoint(e)) { userInput ->

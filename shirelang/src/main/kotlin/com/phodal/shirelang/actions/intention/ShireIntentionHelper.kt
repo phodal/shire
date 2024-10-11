@@ -47,7 +47,8 @@ class ShireIntentionHelper : IntentionAction, Iconable {
 
     companion object {
         fun getAiAssistantIntentions(file: PsiFile, event: AnActionEvent?): List<IntentionAction> {
-            val shireActionConfigs = DynamicShireActionService.getInstance().getActions(ShireActionLocation.INTENTION_MENU)
+            val project = event?.project ?: return emptyList()
+            val shireActionConfigs = DynamicShireActionService.getInstance(project).getActions(ShireActionLocation.INTENTION_MENU)
 
             return shireActionConfigs.map { actionConfig ->
                 ShireIntentionAction(actionConfig.hole, file, event)
