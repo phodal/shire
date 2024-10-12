@@ -96,9 +96,9 @@ class OpenRewriteFileRunService : FileRunService {
             if (configuration.javaClass.name == "com.intellij.openRewrite.run.OpenRewriteRunConfiguration") {
                 val directoryMethod =
                     configuration::class.java.getMethod("setWorkingDirectory", String::class.java)
-                directoryMethod.invoke(configuration, workingPath)
+                val projectRoot = project.basePath ?: ""
+                directoryMethod.invoke(configuration, projectRoot)
 
-                // setConfigLocation /Users/phodal/IdeaProjects/shire-demo/docs/rewrite.yml filepath
                 val setConfigLocationMethod =
                     configuration::class.java.getMethod("setConfigLocation", String::class.java)
                 setConfigLocationMethod.invoke(configuration, virtualFile.path)
