@@ -54,33 +54,45 @@ class OpenRewriteFileRunService : FileRunService {
 
         val workingPath = virtualFile.parent.path
 
-        var settings = allSettings.firstOrNull { it ->
-            val config = it.configuration
-            val configClass = config::class.java
+        var settings = allSettings.firstOrNull {
+            try {
+                val config = it.configuration
+                val configClass = config::class.java
 
-            if (configClass.name == "com.intellij.openRewrite.run.OpenRewriteRunConfiguration") {
-                val getExpandedWorkingDirectoryMethod = configClass.getMethod("getExpandedWorkingDirectory")
-                val workingDirectory = getExpandedWorkingDirectoryMethod.invoke(config) as? String
-                workingDirectory == workingPath
-            } else {
+                if (configClass.name == "com.intellij.openRewrite.run.OpenRewriteRunConfiguration") {
+                    val getExpandedWorkingDirectoryMethod = configClass.getMethod("getExpandedWorkingDirectory")
+                    val workingDirectory = getExpandedWorkingDirectoryMethod.invoke(config) as? String
+                    workingDirectory == workingPath
+                } else {
+                    false
+                }
+            } catch (e: Exception) {
                 false
             }
         }
 
-        val list = getRecipeDescriptors(project, virtualFile) ?: return null
+        val list = try {
+            getRecipeDescriptors(project, virtualFile) ?: return null
+        } catch (e: Exception) {
+            return null
+        }
         if (list.isEmpty()) return null
 
         if (settings == null) {
-            val configurationType = ConfigurationTypeUtil.findConfigurationType("OpenRewriteRunConfigurationType")!!
-            settings = runManager.createConfiguration("", configurationType.configurationFactories[0])
-            val configuration = settings.configuration
+            try {
+                val configurationType = ConfigurationTypeUtil.findConfigurationType("OpenRewriteRunConfigurationType")!!
+                settings = runManager.createConfiguration("", configurationType.configurationFactories[0])
+                val configuration = settings.configuration
 
-            if (configuration.javaClass.name == "com.intellij.openRewrite.run.OpenRewriteRunConfiguration") {
-                configureOpenRewrite(configuration, project, virtualFile, list)
+                if (configuration.javaClass.name == "com.intellij.openRewrite.run.OpenRewriteRunConfiguration") {
+                    configureOpenRewrite(configuration, project, virtualFile, list)
+                }
+
+                runManager.setUniqueNameIfNeeded(settings)
+                runManager.setTemporaryConfiguration(settings)
+            } catch (e: Exception) {
+                return null
             }
-
-            runManager.setUniqueNameIfNeeded(settings)
-            runManager.setTemporaryConfiguration(settings)
         }
 
         val builder = ExecutionEnvironmentBuilder.createOrNull(DefaultRunExecutor.getRunExecutorInstance(), settings)
