@@ -60,7 +60,7 @@ interface FileRunService {
         testElement: PsiElement?,
     ): RunnerAndConfigurationSettings? {
         if (testElement != null) {
-            val settings = createDefaultTestConfigurations(project, testElement)
+            val settings = createDefaultConfigurations(project, testElement)
             if (settings != null) {
                 return settings
             }
@@ -100,7 +100,7 @@ interface FileRunService {
         return settings
     }
 
-    private fun createDefaultTestConfigurations(
+    fun createDefaultConfigurations(
         project: Project,
         element: PsiElement,
     ): RunnerAndConfigurationSettings? {
@@ -173,6 +173,27 @@ interface FileRunService {
                 PsiManager.getInstance(project).findFile(virtualFile)
             } ?: return null
             return runInCli(project, psiFile, args)
+        }
+
+        /**
+         * We will handle Shire un-supported file type here
+         */
+        fun retryRun(project: Project, virtualFile: VirtualFile, args: List<String>? = null): String? {
+            val defaultRunService = object: FileRunService {
+                override fun isApplicable(project: Project, file: VirtualFile): Boolean = true
+                override fun runConfigurationClass(project: Project): Class<out RunProfile>? = null
+            }
+
+            val file = runReadAction {
+                PsiManager.getInstance(project).findFile(virtualFile)
+            }
+
+            val createRunSettings = defaultRunService.createRunSettings(project, virtualFile, file)
+            if (createRunSettings != null) {
+                return defaultRunService.runFile(project, virtualFile, null)
+            }
+
+            return null
         }
     }
 }

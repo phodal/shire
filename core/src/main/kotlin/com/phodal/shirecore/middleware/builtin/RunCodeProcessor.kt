@@ -85,6 +85,12 @@ class RunCodeProcessor : PostProcessor {
                 return
             }
 
+
+            FileRunService.retryRun(project, file)?.let {
+                console?.print(it, NORMAL_OUTPUT)
+                return
+            }
+
             console?.print("RunCode: No run service found for file: $file\n", ERROR_OUTPUT)
             return
         }
