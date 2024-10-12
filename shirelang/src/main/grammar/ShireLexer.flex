@@ -224,7 +224,7 @@ AFTER_STREAMING          =afterStreaming
 %%
 <YYINITIAL> {
   "---"  {
-          if (hasFrontMatter && isInsideFrontMatter == false && isCodeStart) {
+          if (isCodeStart) {
               return CODE_CONTENT;
           } else {
               isInsideFrontMatter = true;
@@ -433,7 +433,16 @@ AFTER_STREAMING          =afterStreaming
   "/"                     { yybegin(COMMAND_BLOCK);  return COMMAND_START; }
   "$"                     { yybegin(VARIABLE_BLOCK); return VARIABLE_START; }
 
-  "```" {IDENTIFIER}?     { yybegin(LANG_ID); if (isCodeStart == true) { isCodeStart = false; return CODE_BLOCK_END; } else { isCodeStart = true; }; yypushback(yylength()); }
+  "```" {IDENTIFIER}?     {
+          yybegin(LANG_ID);
+          if (isCodeStart == true) {
+              isCodeStart = false;
+              return CODE_BLOCK_END;
+          } else {
+              isCodeStart = true;
+          };
+          yypushback(yylength());
+      }
 
   {NEWLINE}               { return NEWLINE; }
   {TEXT_SEGMENT}          { return TEXT_SEGMENT; }
