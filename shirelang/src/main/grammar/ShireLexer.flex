@@ -224,7 +224,7 @@ AFTER_STREAMING          =afterStreaming
 %%
 <YYINITIAL> {
   "---"  {
-          if (hasFrontMatter | isCodeStart) {
+          if (hasFrontMatter && isInsideFrontMatter == false && isCodeStart) {
               return CODE_CONTENT;
           } else {
               isInsideFrontMatter = true;
