@@ -21,6 +21,11 @@
 
         <highlightErrorFilter implementation="com.phodal.shirelang.highlight.ShireErrorFilter"/>
 
+        <braceMatcher filetype="Shire" implementationClass="com.phodal.shirelang.highlight.braces.ShireBraceMatcher"/>
+        <quoteHandler fileType="Markdown" className="com.phodal.shirelang.highlight.braces.ShireQuoteHandler"/>
+
+        <annotator language="Shire" implementationClass="com.phodal.shirelang.highlight.ShireHighlightingAnnotator"/>
+
         <lang.ast.factory language="Shire"
                           implementationClass="com.phodal.shirelang.ShireAstFactory"/>
 
