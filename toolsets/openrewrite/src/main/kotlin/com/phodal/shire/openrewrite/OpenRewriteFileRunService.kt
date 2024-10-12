@@ -34,7 +34,6 @@ class OpenRewriteFileRunService : FileRunService {
 
             isRecipeMethod.isAccessible = true
 
-            // 调用 isRecipe 方法
             val result = isRecipeMethod.invoke(fileService, psiFile) as Boolean
             return result
         } catch (e: Exception) {
@@ -57,41 +56,14 @@ class OpenRewriteFileRunService : FileRunService {
             val configClass = config::class.java
 
             if (configClass.name == "com.intellij.openRewrite.run.OpenRewriteRunConfiguration") {
-//                val expandedWorkingDirectoryField = configClass.getDeclaredField("getExpandedWorkingDirectory()")
-//                // method
-//                val expandedWorkingDirectoryMethod = configClass.getDeclaredMethod("setExpandedWorkingDirectory")
-//                expandedWorkingDirectoryMethod.isAccessible = true
-//
-//
-//                expandedWorkingDirectory?.let {
-//                    if (it == virtualFile.parent.path) {
-//                        return@firstOrNull true
-//                    }
-//                }
-
                 return@firstOrNull true
             } else {
                 return@firstOrNull false
             }
-        } ?: return ""
-//            ?: run {
-//            val newSettings = runManager.createConfiguration(
-//                "", OpenRewriteRunConfigurationType.openRewriteRunConfigurationType().configurationFactories[0]
-//            )
-//            val config = newSettings.configuration as OpenRewriteRunConfiguration
-//            config.apply {
-//                activeRecipes = descriptor.name
-//                generatedName = ""
-//                workingDirectory = virtualFile.parent.path
-//            }
-//            runManager.setUniqueNameIfNeeded(newSettings)
-//            runManager.setTemporaryConfiguration(newSettings)
-//            newSettings
-//        }
+        }
 
         if (settings == null) {
             throw RuntimeException("No OpenRewrite configuration found")
-            return ""
         }
 
         val builder = ExecutionEnvironmentBuilder.createOrNull(DefaultRunExecutor.getRunExecutorInstance(), settings)
