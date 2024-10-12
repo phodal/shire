@@ -6,6 +6,7 @@ import com.intellij.execution.configurations.ConfigurationTypeUtil
 import com.intellij.execution.configurations.RunProfile
 import com.intellij.execution.executors.DefaultRunExecutor
 import com.intellij.execution.runners.ExecutionEnvironmentBuilder
+import com.intellij.openRewrite.recipe.OpenRewriteType
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
@@ -68,6 +69,25 @@ class OpenRewriteFileRunService : FileRunService {
             }
         }
 
+        // use relfect to get .com.intellij.openRewrite.recipeOpenRewriteRecipeService access getInstance(project)
+        val clazz = Class.forName("com.intellij.openRewrite.recipe.OpenRewriteRecipeService")
+        val getInstanceMethod = clazz.getDeclaredMethod("getInstance", Project::class.java)
+        val openRewriteRecipeService = getInstanceMethod.invoke(null, project)
+        // call getLocalDescriptors in openRewriteRecipeService getLocalDescriptors(psiFile, OpenRewriteType.RECIPE)
+        val getLocalDescriptorsMethod = clazz.getDeclaredMethod("getLocalDescriptors", PsiFile::class.java, OpenRewriteType::class.java)
+        getLocalDescriptorsMethod.isAccessible = true
+
+        val psiFile = runReadAction {
+            PsiManager.getInstance(project).findFile(virtualFile)
+        } ?: return ""
+
+        val list = runReadAction {
+            getLocalDescriptorsMethod.invoke(openRewriteRecipeService, psiFile, OpenRewriteType.RECIPE) as LinkedHashMap<*, *>
+        }
+        if (list.isEmpty()) {
+            return ""
+        }
+
         if (settings == null) {
             // ConfigurationType.CONFIGURATION_TYPE_EP.extensionList
             val configurationType = ConfigurationTypeUtil.findConfigurationType("OpenRewriteRunConfigurationType")!!
@@ -82,6 +102,11 @@ class OpenRewriteFileRunService : FileRunService {
                 val setConfigLocationMethod =
                     configuration::class.java.getMethod("setConfigLocation", String::class.java)
                 setConfigLocationMethod.invoke(configuration, virtualFile.path)
+
+                // setActiveRecipes(string) from lists.first
+                val setActiveRecipesMethod =
+                    configuration::class.java.getMethod("setActiveRecipes", String::class.java)
+                setActiveRecipesMethod.invoke(configuration, list.keys.first())
 
                 val nameMethod = configuration::class.java.getMethod("setGeneratedName")
                 nameMethod.invoke(configuration)
