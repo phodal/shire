@@ -2,6 +2,7 @@ package com.phodal.shire.openrewrite
 
 import com.intellij.execution.ExecutionManager
 import com.intellij.execution.RunManager
+import com.intellij.execution.configurations.ConfigurationTypeUtil
 import com.intellij.execution.configurations.RunProfile
 import com.intellij.execution.executors.DefaultRunExecutor
 import com.intellij.execution.runners.ExecutionEnvironmentBuilder
@@ -12,6 +13,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.phodal.shirecore.provider.shire.FileRunService
+
 
 class OpenRewriteFileRunService : FileRunService {
     override fun isApplicable(project: Project, file: VirtualFile): Boolean {
@@ -43,7 +45,7 @@ class OpenRewriteFileRunService : FileRunService {
 
     override fun runConfigurationClass(project: Project): Class<out RunProfile>? = null
 
-    override fun runFile(project: Project, virtualFile: VirtualFile, psiElement: PsiElement?): String? {
+    override fun runFile(project: Project, virtualFile: VirtualFile, psiElement: PsiElement?): String {
         if (!isOpenWriteFile(project, virtualFile)) {
             return ""
         }
@@ -53,7 +55,7 @@ class OpenRewriteFileRunService : FileRunService {
 
         val workingPath = virtualFile.parent.path
 
-        val settings = allSettings.firstOrNull { it ->
+        var settings = allSettings.firstOrNull { it ->
             val config = it.configuration
             val configClass = config::class.java
 
@@ -67,7 +69,25 @@ class OpenRewriteFileRunService : FileRunService {
         }
 
         if (settings == null) {
-            throw RuntimeException("No OpenRewrite configuration found")
+            // ConfigurationType.CONFIGURATION_TYPE_EP.extensionList
+            val configurationType = ConfigurationTypeUtil.findConfigurationType("OpenRewriteRunConfigurationType")!!
+            settings = runManager.createConfiguration("", configurationType.configurationFactories[0])
+            val configuration = settings.configuration
+            if (configuration.javaClass.name == "com.intellij.openRewrite.run.OpenRewriteRunConfiguration") {
+                val directoryMethod =
+                    configuration::class.java.getMethod("setWorkingDirectory", String::class.java)
+                directoryMethod.invoke(configuration, workingPath)
+
+                // setConfigLocation /Users/phodal/IdeaProjects/shire-demo/docs/rewrite.yml filepath
+                val setConfigLocationMethod =
+                    configuration::class.java.getMethod("setConfigLocation", String::class.java)
+                setConfigLocationMethod.invoke(configuration, virtualFile.path)
+
+                val nameMethod = configuration::class.java.getMethod("setGeneratedName")
+                nameMethod.invoke(configuration)
+            }
+            runManager.setUniqueNameIfNeeded(settings)
+            runManager.setTemporaryConfiguration(settings)
         }
 
         val builder = ExecutionEnvironmentBuilder.createOrNull(DefaultRunExecutor.getRunExecutorInstance(), settings)
