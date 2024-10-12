@@ -23,6 +23,6 @@ include(
     "toolsets:plantuml",
     "toolsets:database",
     "toolsets:mock",
-    "toolsets:openwrite",
+    "toolsets:openrewrite",
 //    "toolsets:uitest",
 )

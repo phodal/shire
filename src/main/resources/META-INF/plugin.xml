@@ -25,6 +25,7 @@
         <module name="com.phodal.shire.git"/>
         <module name="com.phodal.shire.mock"/>
         <module name="com.phodal.shire.sonarqube"/>
+        <module name="com.phodal.shire.openrewrite"/>
     </content>
 
     <extensions defaultExtensionNs="com.intellij">

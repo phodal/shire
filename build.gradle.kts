@@ -361,7 +361,7 @@ project(":toolsets:database") {
     }
 }
 
-project(":toolsets:openwrite") {
+project(":toolsets:openrewrite") {
     dependencies {
         intellijPlatform {
             intellijIde(prop("ideaVersion"))
@@ -563,6 +563,7 @@ project(":") {
             pluginModule(implementation(project(":toolsets:sonarqube")))
             pluginModule(implementation(project(":toolsets:database")))
             pluginModule(implementation(project(":toolsets:mock")))
+            pluginModule(implementation(project(":toolsets:openrewrite")))
 
             testFramework(TestFrameworkType.Bundled)
         }
