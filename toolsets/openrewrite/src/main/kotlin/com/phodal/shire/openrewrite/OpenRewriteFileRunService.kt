@@ -51,14 +51,18 @@ class OpenRewriteFileRunService : FileRunService {
         val runManager = RunManager.getInstance(project)
         val allSettings = runManager.allSettings
 
+        val workingPath = virtualFile.parent.path
+
         val settings = allSettings.firstOrNull { it ->
             val config = it.configuration
             val configClass = config::class.java
 
             if (configClass.name == "com.intellij.openRewrite.run.OpenRewriteRunConfiguration") {
-                return@firstOrNull true
+                val getExpandedWorkingDirectoryMethod = configClass.getMethod("getExpandedWorkingDirectory")
+                val expandedWorkingDirectory = getExpandedWorkingDirectoryMethod.invoke(config) as? String
+                expandedWorkingDirectory == workingPath
             } else {
-                return@firstOrNull false
+                false
             }
         }
 
