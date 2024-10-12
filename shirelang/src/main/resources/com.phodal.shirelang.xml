@@ -19,6 +19,8 @@
         <lang.syntaxHighlighterFactory language="Shire"
                                        implementationClass="com.phodal.shirelang.highlight.ShireSyntaxHighlighterFactory"/>
 
+        <highlightErrorFilter implementation="com.phodal.shirelang.highlight.ShireErrorFilter"/>
+
         <lang.ast.factory language="Shire"
                           implementationClass="com.phodal.shirelang.ShireAstFactory"/>
 
