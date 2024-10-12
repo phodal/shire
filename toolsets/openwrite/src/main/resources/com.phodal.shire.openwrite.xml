@@ -1,0 +1,10 @@
+<idea-plugin package="com.phodal.shire.openrewrite">
+    <!--suppress PluginXmlValidity -->
+    <dependencies>
+        <plugin id="com.intellij.openRewrite"/>
+    </dependencies>
+
+    <extensions defaultExtensionNs="com.phodal">
+        <shireFileRunService implementation="com.phodal.shire.openrewrite.OpenRewriteFileRunService"/>
+    </extensions>
+</idea-plugin>

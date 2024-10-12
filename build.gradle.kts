@@ -361,6 +361,17 @@ project(":toolsets:database") {
     }
 }
 
+project(":toolsets:openwrite") {
+    dependencies {
+        intellijPlatform {
+            intellijIde(prop("ideaVersion"))
+            intellijPlugins(ideaPlugins + "com.intellij.openRewrite")
+        }
+
+        implementation(project(":core"))
+    }
+}
+
 project(":shirelang") {
     apply {
         plugin("org.jetbrains.grammarkit")

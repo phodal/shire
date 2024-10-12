@@ -6,7 +6,7 @@ enum class WiremockFunction(val funName: String) {
 
     companion object {
         fun fromString(value: String): WiremockFunction? {
-            return values().firstOrNull { it.funName == value }
+            return entries.firstOrNull { it.funName == value }
         }
     }
 }

@@ -85,7 +85,6 @@ class RunCodeProcessor : PostProcessor {
                 return
             }
 
-
             FileRunService.retryRun(project, file)?.let {
                 console?.print(it, NORMAL_OUTPUT)
                 return
