@@ -4,6 +4,7 @@ package com.phodal.shirelang
 import com.intellij.codeInsight.AutoPopupController
 import com.intellij.codeInsight.editorActions.TypedHandlerDelegate
 import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.fileTypes.FileType
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiFile
@@ -40,5 +41,13 @@ class ShireTypedHandler : TypedHandlerDelegate() {
                 Result.CONTINUE
             }
         }
+    }
+
+
+    override fun beforeCharTyped(c: Char, project: Project, editor: Editor, file: PsiFile, fileType: FileType): Result {
+        if (file.fileType != ShireFileType.INSTANCE) return Result.CONTINUE
+//        if (AppMode.isRemoteDevHost()) return Result.CONTINUE
+
+        return Result.CONTINUE
     }
 }
