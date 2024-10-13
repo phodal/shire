@@ -10,11 +10,11 @@ import com.intellij.psi.tree.TokenSet
 import com.phodal.shirelang.lexer.ShireLexerAdapter
 import com.phodal.shirelang.psi.ShireTypes
 
-class ShireSyntaxHighlighter : SyntaxHighlighter {
+class ShireSyntaxHighlighter : SyntaxHighlighterBase() {
     override fun getHighlightingLexer(): Lexer = ShireLexerAdapter()
 
     override fun getTokenHighlights(tokenType: IElementType?): Array<TextAttributesKey> {
-        return SyntaxHighlighterBase.pack(ATTRIBUTES[tokenType])
+        return pack(ATTRIBUTES[tokenType])
     }
 
     companion object {
@@ -45,7 +45,7 @@ class ShireSyntaxHighlighter : SyntaxHighlighter {
         )
 
         init {
-            SyntaxHighlighterBase.fillMap(
+            fillMap(
                 ATTRIBUTES,
                 KEYWORDS,
                 DefaultLanguageHighlighterColors.KEYWORD
