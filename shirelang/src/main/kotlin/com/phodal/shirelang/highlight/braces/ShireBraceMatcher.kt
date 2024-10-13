@@ -5,12 +5,11 @@ import com.intellij.lang.BracePair
 import com.intellij.lang.PairedBraceMatcher
 import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IElementType
+import com.phodal.shirelang.ShireLanguage
 import com.phodal.shirelang.psi.ShireTypes
-import org.intellij.plugins.markdown.lang.MarkdownLanguage
-import org.intellij.plugins.markdown.lang.MarkdownTokenTypes
 
 class ShireBraceMatcher : PairedBraceMatcherAdapter(
-    MyPairedBraceMatcher(), MarkdownLanguage.INSTANCE
+    MyPairedBraceMatcher(), ShireLanguage.INSTANCE
 ) {
     class MyPairedBraceMatcher : PairedBraceMatcher {
         override fun getPairs(): Array<BracePair> {
@@ -23,7 +22,7 @@ class ShireBraceMatcher : PairedBraceMatcherAdapter(
         }
 
         override fun isPairedBracesAllowedBeforeType(lbraceType: IElementType, type: IElementType?): Boolean {
-            return type == null || type === MarkdownTokenTypes.WHITE_SPACE || type === MarkdownTokenTypes.EOL || type === MarkdownTokenTypes.RPAREN || type === MarkdownTokenTypes.RBRACKET || type === MarkdownTokenTypes.GT
+            return type == null || type === ShireTypes.RPAREN || type === ShireTypes.RBRACKET || type === ShireTypes.GT
         }
 
         override fun getCodeConstructStart(file: PsiFile, openingBraceOffset: Int): Int {
