@@ -36,7 +36,7 @@ with integrated development environments (IDEs) to achieve automated programming
 
 PS：the Shire 一词来自于《魔戒》(LOTR）中的（夏尔）Shire，是霍比特人（Hobbit）的家园。
 
-Shire 提供了一种简便 AI 编码智能体语言，能够让大型语言模型（LLM）与控制集成开发环境（IDE）之间自由对话，以实现自动化编程。
+Shire 提供了一种简便 AI 编码智能体语言，能够让大型语言模型（LLM）与控制集成开发环境（IDE）之间自由、自动通信，以实现自动化编程。
 
 > Shire 的概念起源于 [AutoDev](https://github.com/unit-mesh/auto-dev)，这是 [UnitMesh](https://unitmesh.cc/) 的一个子项目。在
 AutoDev 中，我们设计了一个面向开发者的 AI 驱动集成开发环境（IDE），其中包括 Shire 的前身 DevIns。DevIns 旨在让用户能够为他们自己的
