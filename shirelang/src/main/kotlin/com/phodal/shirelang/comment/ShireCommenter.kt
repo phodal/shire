@@ -1,4 +1,4 @@
-package com.phodal.shirelang
+package com.phodal.shirelang.comment
 
 import com.intellij.application.options.CodeStyle
 import com.intellij.codeInsight.generation.CommenterDataHolder
@@ -9,6 +9,7 @@ import com.intellij.openapi.editor.Document
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiFile
 import com.intellij.util.text.CharArrayUtil
+import com.phodal.shirelang.ShireLanguage
 
 data class CommentHolder(val file: PsiFile) : CommenterDataHolder() {
     fun useSpaceAfterLineComment(): Boolean = CodeStyle.getLanguageSettings(file, ShireLanguage.INSTANCE).LINE_COMMENT_ADD_SPACE

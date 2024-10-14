@@ -42,7 +42,7 @@
 
         <lang.foldingBuilder language="Shire"
                              implementationClass="com.phodal.shirelang.folding.ShireFoldingBuilder"/>
-        <lang.commenter language="Shire" implementationClass="com.phodal.shirelang.ShireCommenter"/>
+        <lang.commenter language="Shire" implementationClass="com.phodal.shirelang.comment.ShireCommenter"/>
 <!--        <lang.formatter language="Shire" implementationClass="com.phodal.shirelang.formatter.ShireFormattingModelBuilder"/>-->
 
         <languageInjector implementation="com.phodal.shirelang.ShireLanguageInjector"/>
