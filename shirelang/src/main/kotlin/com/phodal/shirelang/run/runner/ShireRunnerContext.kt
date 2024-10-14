@@ -1,7 +1,7 @@
 package com.phodal.shirelang.run.runner
 
 import com.intellij.openapi.editor.Editor
-import com.phodal.shirelang.compiler.ShireParsedResult
+import com.phodal.shirelang.compiler.parser.ShireParsedResult
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 
 class ShireRunnerContext(

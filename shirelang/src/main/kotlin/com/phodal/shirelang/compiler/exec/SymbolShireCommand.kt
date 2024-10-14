@@ -1,6 +1,6 @@
 package com.phodal.shirelang.compiler.exec
 
-import com.phodal.shirelang.compiler.SHIRE_ERROR
+import com.phodal.shirelang.compiler.parser.SHIRE_ERROR
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.provider.shire.ShireSymbolProvider
 

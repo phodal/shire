@@ -1,7 +1,7 @@
 package com.phodal.shirelang.run.flow
 
 import com.phodal.shirecore.llm.ChatMessage
-import com.phodal.shirelang.compiler.ShireParsedResult
+import com.phodal.shirelang.compiler.parser.ShireParsedResult
 
 /**
  * The `ShireProcessContext` class represents the context of a Shire process.

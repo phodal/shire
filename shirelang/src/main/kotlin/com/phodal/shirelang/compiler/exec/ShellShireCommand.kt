@@ -1,7 +1,7 @@
 package com.phodal.shirelang.compiler.exec
 
 import com.intellij.execution.RunnerAndConfigurationSettings
-import com.phodal.shirelang.compiler.SHIRE_ERROR
+import com.phodal.shirelang.compiler.parser.SHIRE_ERROR
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiManager

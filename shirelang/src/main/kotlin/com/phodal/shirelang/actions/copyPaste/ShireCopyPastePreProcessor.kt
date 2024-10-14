@@ -12,7 +12,7 @@ import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.markdown.CodeFence
 import com.phodal.shirecore.middleware.PostProcessorContext
-import com.phodal.shirelang.compiler.ShireTemplateCompiler
+import com.phodal.shirelang.compiler.template.ShireTemplateCompiler
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.precompile.preAnalysisSyntax

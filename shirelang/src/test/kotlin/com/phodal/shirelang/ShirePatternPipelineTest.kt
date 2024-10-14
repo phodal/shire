@@ -2,8 +2,8 @@ package com.phodal.shirelang
 
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.phodal.shirecore.middleware.PostProcessorContext
-import com.phodal.shirelang.compiler.ShireSyntaxAnalyzer
-import com.phodal.shirelang.compiler.ShireTemplateCompiler
+import com.phodal.shirelang.compiler.parser.ShireSyntaxAnalyzer
+import com.phodal.shirelang.compiler.template.ShireTemplateCompiler
 import com.phodal.shirelang.compiler.hobbit.execute.PatternActionProcessor
 import com.phodal.shirelang.psi.ShireFile
 import kotlinx.coroutines.runBlocking

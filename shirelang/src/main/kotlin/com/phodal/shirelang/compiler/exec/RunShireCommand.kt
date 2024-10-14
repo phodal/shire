@@ -6,7 +6,7 @@ import com.intellij.psi.PsiManager
 import com.phodal.shirecore.lookupFile
 import com.phodal.shirecore.provider.TestingService
 import com.phodal.shirecore.provider.shire.ProjectRunService
-import com.phodal.shirelang.compiler.SHIRE_ERROR
+import com.phodal.shirelang.compiler.parser.SHIRE_ERROR
 
 /**
  * The `RunAutoCommand` class is responsible for executing an auto command on a given project.

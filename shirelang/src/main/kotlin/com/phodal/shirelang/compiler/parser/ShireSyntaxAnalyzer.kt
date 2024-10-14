@@ -1,4 +1,4 @@
-package com.phodal.shirelang.compiler
+package com.phodal.shirelang.compiler.parser
 
 import com.intellij.lang.parser.GeneratedParserUtilBase.DUMMY_BLOCK
 import com.intellij.openapi.diagnostic.logger
@@ -14,7 +14,6 @@ import com.intellij.psi.util.elementType
 import com.phodal.shirecore.agent.CustomAgent
 import com.phodal.shirelang.compiler.template.VariableTemplateCompiler
 import com.phodal.shirelang.compiler.exec.*
-import com.phodal.shirelang.compiler.parser.HobbitHoleParser
 import com.phodal.shirelang.compiler.variable.VariableTable
 import com.phodal.shirelang.completion.dataprovider.BuiltinCommand
 import com.phodal.shirelang.completion.dataprovider.CustomCommand

@@ -15,7 +15,7 @@ import com.phodal.shirecore.ShirelangNotifications
 import com.phodal.shirecore.console.cancelWithConsole
 import com.phodal.shirecore.middleware.select.SelectElementStrategy
 import com.phodal.shirelang.ShireLanguage
-import com.phodal.shirelang.compiler.ShireSyntaxAnalyzer
+import com.phodal.shirelang.compiler.parser.ShireSyntaxAnalyzer
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.psi.ShireVisitor
 import com.phodal.shirelang.run.ShireConsoleView

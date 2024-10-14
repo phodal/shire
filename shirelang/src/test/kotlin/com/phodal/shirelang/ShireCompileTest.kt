@@ -4,7 +4,7 @@ import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirecore.config.InteractionType
 import com.phodal.shirelang.compiler.parser.HobbitHoleParser
-import com.phodal.shirelang.compiler.ShireSyntaxAnalyzer
+import com.phodal.shirelang.compiler.parser.ShireSyntaxAnalyzer
 import com.phodal.shirelang.compiler.hobbit.ast.LogicalExpression
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 import com.phodal.shirelang.compiler.hobbit.execute.PatternActionProcessor

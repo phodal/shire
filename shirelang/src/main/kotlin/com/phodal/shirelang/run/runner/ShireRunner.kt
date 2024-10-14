@@ -16,9 +16,9 @@ import com.phodal.shirecore.provider.action.TerminalLocationExecutor
 import com.phodal.shirecore.provider.context.ActionLocationEditor
 import com.phodal.shirecore.workerThread
 import com.phodal.shirelang.ShireBundle
-import com.phodal.shirelang.compiler.SHIRE_ERROR
-import com.phodal.shirelang.compiler.ShireParsedResult
-import com.phodal.shirelang.compiler.ShireTemplateCompiler
+import com.phodal.shirelang.compiler.parser.SHIRE_ERROR
+import com.phodal.shirelang.compiler.parser.ShireParsedResult
+import com.phodal.shirelang.compiler.template.ShireTemplateCompiler
 import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.ShireConfiguration

@@ -8,7 +8,7 @@ import com.phodal.shirecore.provider.shire.FileRunService
 import com.phodal.shirecore.workerThread
 import com.phodal.shirelang.ShireActionStartupActivity
 import com.phodal.shirelang.actions.ShireRunFileAction
-import com.phodal.shirelang.compiler.SHIRE_ERROR
+import com.phodal.shirelang.compiler.parser.SHIRE_ERROR
 import com.phodal.shirelang.compiler.exec.RunShireCommand
 import com.phodal.shirelang.compiler.patternaction.PatternActionFuncDef
 import com.phodal.shirelang.compiler.patternaction.PatternProcessor

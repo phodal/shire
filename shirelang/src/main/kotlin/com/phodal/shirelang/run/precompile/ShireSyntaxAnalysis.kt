@@ -2,8 +2,8 @@ package com.phodal.shirelang.run.precompile
 
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.provider.context.ActionLocationEditor
-import com.phodal.shirelang.compiler.ShireParsedResult
-import com.phodal.shirelang.compiler.ShireSyntaxAnalyzer
+import com.phodal.shirelang.compiler.parser.ShireParsedResult
+import com.phodal.shirelang.compiler.parser.ShireSyntaxAnalyzer
 import com.phodal.shirelang.psi.ShireFile
 
 fun preAnalysisSyntax(shireFile: ShireFile, project: Project): ShireParsedResult {
