@@ -1,4 +1,4 @@
-package com.phodal.shirelang.compiler.hobbit.execute
+package com.phodal.shirelang.compiler.hobbit.execute.processor
 
 import com.huaban.analysis.jieba.JiebaSegmenter
 import com.huaban.analysis.jieba.JiebaSegmenter.SegMode
@@ -6,11 +6,14 @@ import com.intellij.openapi.project.Project
 import com.phodal.shirecore.search.tokenizer.*
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 import com.phodal.shirelang.compiler.patternaction.PatternActionFuncDef
+import com.phodal.shirelang.compiler.patternaction.PatternProcessor
 
 /**
  * For [PatternActionFuncDef.TOKENIZER]
  */
-class TokenizerProcessor {
+class TokenizerProcessor : PatternProcessor {
+    override val type: PatternActionFuncDef = PatternActionFuncDef.TOKENIZER
+
     companion object {
         fun execute(project: Project, action: PatternActionFunc.Tokenizer): Any {
             if (action.tokType.startsWith("/") && action.tokType.endsWith("/")) {

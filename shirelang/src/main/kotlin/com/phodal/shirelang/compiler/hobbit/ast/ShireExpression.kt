@@ -1,7 +1,6 @@
 package com.phodal.shirelang.compiler.hobbit.ast
 
 import com.intellij.openapi.diagnostic.logger
-import com.phodal.shirelang.compiler.hobbit.function.ForeignFunction
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 import java.util.regex.Pattern
 

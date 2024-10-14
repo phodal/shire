@@ -1,7 +1,4 @@
-package com.phodal.shirelang.compiler.hobbit.function
-
-import com.phodal.shirelang.compiler.hobbit.ast.ForeignFunctionStmt
-import com.phodal.shirelang.compiler.hobbit.ast.FrontMatterType
+package com.phodal.shirelang.compiler.hobbit.ast
 
 data class ForeignFunction(
     val funcName: String,

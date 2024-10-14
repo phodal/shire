@@ -1,4 +1,4 @@
-package com.phodal.shirelang.compiler.hobbit.execute
+package com.phodal.shirelang.compiler.hobbit.execute.processor
 
 import com.intellij.ide.DataManager
 import com.intellij.openapi.application.runInEdt
@@ -7,6 +7,8 @@ import com.intellij.openapi.ui.popup.JBPopup
 import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.ui.dsl.builder.panel
 import com.intellij.util.ui.JBUI
+import com.phodal.shirelang.compiler.patternaction.PatternActionFuncDef
+import com.phodal.shirelang.compiler.patternaction.PatternProcessor
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import java.util.concurrent.CompletableFuture
@@ -15,7 +17,9 @@ import javax.swing.JComponent
 import javax.swing.JPanel
 import javax.swing.KeyStroke
 
-object ApprovalExecuteProcessor {
+object ApprovalExecuteProcessor: PatternProcessor {
+    override val type: PatternActionFuncDef = PatternActionFuncDef.APPROVAL_EXECUTE
+
     fun execute(
         myProject: Project,
         filename: Any,

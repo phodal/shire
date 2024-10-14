@@ -234,6 +234,15 @@ enum class PatternActionFuncDef(val funcName: String, val description: String, v
         |   "story": /any/ { thread(".shire/shell/dify-epic-story.curl.sh") | jsonpath("${'$'}.answer", true) }
         | ---
         | ```
+        | 
+        | With shire file Example:
+        | 
+        | ```shire
+        | ---
+        | variables:
+        |  "story": /any/ { thread("dify-epic-story.shire") }
+        | ---
+        | ```  
         """.trimMargin()
     ),
     JSONPATH(

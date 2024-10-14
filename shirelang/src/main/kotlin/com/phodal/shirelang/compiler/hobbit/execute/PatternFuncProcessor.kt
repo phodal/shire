@@ -1,6 +1,5 @@
 package com.phodal.shirelang.compiler.hobbit.execute
 
-import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
@@ -19,6 +18,7 @@ import com.phodal.shirelang.compiler.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.hobbit.ast.FrontMatterType
 import com.phodal.shirelang.compiler.hobbit.ast.Statement
 import com.phodal.shirelang.compiler.hobbit.execute.function.JsonPathFunction
+import com.phodal.shirelang.compiler.hobbit.execute.processor.*
 import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch

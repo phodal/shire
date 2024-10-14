@@ -1,4 +1,4 @@
-package com.phodal.shirelang.compiler.hobbit.execute
+package com.phodal.shirelang.compiler.hobbit.execute.processor
 
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.diagnostic.logger
@@ -10,11 +10,14 @@ import com.phodal.shirelang.ShireActionStartupActivity
 import com.phodal.shirelang.actions.ShireRunFileAction
 import com.phodal.shirelang.compiler.SHIRE_ERROR
 import com.phodal.shirelang.compiler.exec.RunShireCommand
-import com.phodal.shirelang.psi.ShireFile
+import com.phodal.shirelang.compiler.patternaction.PatternActionFuncDef
+import com.phodal.shirelang.compiler.patternaction.PatternProcessor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-object ExecuteProcessor {
+object ExecuteProcessor : PatternProcessor {
+    override val type: PatternActionFuncDef = PatternActionFuncDef.EXECUTE
+
     private val logger = logger<ExecuteProcessor>()
 
     fun execute(

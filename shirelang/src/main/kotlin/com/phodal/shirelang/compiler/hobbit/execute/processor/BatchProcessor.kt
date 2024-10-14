@@ -1,13 +1,17 @@
-package com.phodal.shirelang.compiler.hobbit.execute
+package com.phodal.shirelang.compiler.hobbit.execute.processor
 
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.phodal.shirelang.ShireActionStartupActivity
 import com.phodal.shirelang.actions.ShireRunFileAction
-import com.phodal.shirelang.psi.ShireFile
+import com.phodal.shirelang.compiler.hobbit.execute.FunctionStatementProcessor
+import com.phodal.shirelang.compiler.patternaction.PatternActionFuncDef
+import com.phodal.shirelang.compiler.patternaction.PatternProcessor
 
-class BatchProcessor {
+class BatchProcessor : PatternProcessor {
+    override val type: PatternActionFuncDef = PatternActionFuncDef.BATCH
+
     companion object {
         fun execute(
             myProject: Project,

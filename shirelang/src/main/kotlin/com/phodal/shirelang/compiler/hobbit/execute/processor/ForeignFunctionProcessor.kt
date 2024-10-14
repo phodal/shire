@@ -1,11 +1,11 @@
-package com.phodal.shirelang.compiler.hobbit.execute
+package com.phodal.shirelang.compiler.hobbit.execute.processor
 
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.findFile
 import com.phodal.shirecore.provider.shire.FileRunService
 import com.phodal.shirelang.compiler.SHIRE_ERROR
-import com.phodal.shirelang.compiler.hobbit.function.ForeignFunction
+import com.phodal.shirelang.compiler.hobbit.ast.ForeignFunction
 
 class ForeignFunctionProcessor {
     companion object {

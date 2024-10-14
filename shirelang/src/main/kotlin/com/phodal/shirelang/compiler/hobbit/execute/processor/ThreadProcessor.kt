@@ -1,4 +1,4 @@
-package com.phodal.shirelang.compiler.hobbit.execute
+package com.phodal.shirelang.compiler.hobbit.execute.processor
 
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ReadAction
@@ -14,11 +14,16 @@ import com.phodal.shirecore.provider.http.HttpHandlerType
 import com.phodal.shirecore.provider.shire.FileRunService
 import com.phodal.shirelang.actions.ShireRunFileAction
 import com.phodal.shirelang.compiler.SHIRE_ERROR
+import com.phodal.shirelang.compiler.hobbit.execute.ShireShellRunner
+import com.phodal.shirelang.compiler.patternaction.PatternActionFuncDef
+import com.phodal.shirelang.compiler.patternaction.PatternProcessor
 import com.phodal.shirelang.psi.ShireFile
 import java.util.concurrent.CompletableFuture
 
 
-object ThreadProcessor {
+object ThreadProcessor: PatternProcessor {
+    override val type: PatternActionFuncDef = PatternActionFuncDef.THREAD
+
     fun execute(
         myProject: Project, fileName: String, variablesName: Array<String>, variableTable: MutableMap<String, Any?>,
     ): String {
@@ -108,6 +113,5 @@ object ThreadProcessor {
         val executeResult = ShireRunFileAction.suspendExecuteFile(myProject, variables, variableTable, psiFile)
         return executeResult
     }
-
 }
 

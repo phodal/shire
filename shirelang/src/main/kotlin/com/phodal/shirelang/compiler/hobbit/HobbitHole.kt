@@ -24,7 +24,7 @@ import com.phodal.shirelang.compiler.hobbit.ast.action.PatternAction
 import com.phodal.shirelang.compiler.hobbit.ast.TaskRoutes
 import com.phodal.shirelang.compiler.hobbit.ast.action.DirectAction
 import com.phodal.shirelang.compiler.hobbit.execute.FunctionStatementProcessor
-import com.phodal.shirelang.compiler.hobbit.function.ForeignFunction
+import com.phodal.shirelang.compiler.hobbit.ast.ForeignFunction
 import com.phodal.shirelang.compiler.patternaction.VariableTransform
 import com.phodal.shirelang.psi.ShireFile
 import kotlinx.coroutines.CoroutineScope
