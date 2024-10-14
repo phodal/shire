@@ -1,8 +1,26 @@
-# [](https://github.com/phodal/shire/compare/v0.9.0...v) (2024-10-07)
+# [](https://github.com/phodal/shire/compare/v1.0.0...v) (2024-10-14)
 
 ## [Unreleased]
 
-## [0.9.0] - 2024-10-07
+## [1.0.0] - 2024-10-14
+
+### Bug Fixes
+
+- **hobbit:** refine key bindings for approval processor ([d402baa](https://github.com/phodal/shire/commit/d402baa9192e7f16a7bb3b45a3a0cc1c38be5bd4))
+- **openrewrite:** improve run configuration setup [#119](https://github.com/phodal/shire/issues/119) ([eecd294](https://github.com/phodal/shire/commit/eecd294277565db875ec21c8f756b5f1d80219e2))
+- **openrewrite:** update working directory for configuration [#119](https://github.com/phodal/shire/issues/119) ([35600e3](https://github.com/phodal/shire/commit/35600e368289e06bb52f68a3db4fbac0b8987913))
+
+### Features
+
+- **brace-matching:** enhance ShireBraceMatcher with improved pairs and conditions ([65f500e](https://github.com/phodal/shire/commit/65f500e1d1cdf72b71bf6235edd55691f1664d84))
+- **navigation:** add APPROVAL_EXECUTE pattern and refactor goto declaration handling ([f856236](https://github.com/phodal/shire/commit/f856236edf01eda761d4de1ef396a976e3cbbc18))
+- **openwrite:** try to add OpenRewrite support and integration [#119](https://github.com/phodal/shire/issues/119) ([b1cc797](https://github.com/phodal/shire/commit/b1cc7978be1a0fbec4e03ae340f18f1431b6acc0))
+- **shirelang:** add formatter support for Shire language files ([a37bf9d](https://github.com/phodal/shire/commit/a37bf9dad6ec86f3a11a5c7c7b683f306e87feaa))
+- **shirelang:** add highlight error filter for improved syntax highlighting ([c743528](https://github.com/phodal/shire/commit/c743528ddd01b1900fd63e52985f4e533ec533a6))
+- **shirelang:** implement beforeCharTyped override for custom handling ([ee12c7f](https://github.com/phodal/shire/commit/ee12c7f9cd1eb6dda9df4ec5790f1182e3841b89))
+- **shirelang:** implement highlighting, brace matching, and quote handling ([ced541f](https://github.com/phodal/shire/commit/ced541fa5bba0b55a8d532984928546afbddbd9a))
+
+## [0.9.1](https://github.com/phodal/shire/compare/v0.9.0...v[0.9.1]) (2024-10-10)
 
 ### Bug Fixes
 
@@ -642,8 +660,9 @@
 - **shell:** add shell language support plugin file ([bdc1c90](https://github.com/phodal/shire/commit/bdc1c90f10d7c2c4fb8f7157db343dd756c11352))
 - **shire:** add Shire context action group and location support ([e3df86d](https://github.com/phodal/shire/commit/e3df86d16d0c9985fec787a8e76ce553be9a9a45))
 
-[Unreleased]: https://github.com/phodal/shire/compare/v0.9.0...HEAD
-[0.9.0]: https://github.com/phodal/shire/compare/v0.8.2...v0.9.0
+[Unreleased]: https://github.com/phodal/shire/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/phodal/shire/compare/v0.9.1...v1.0.0
+[0.9.1]: https://github.com/phodal/shire/compare/v0.8.2...v0.9.1
 [0.8.2]: https://github.com/phodal/shire/compare/v0.8.1...v0.8.2
 [0.8.1]: https://github.com/phodal/shire/compare/v0.7.4...v0.8.1
 [0.7.4]: https://github.com/phodal/shire/compare/v0.7.2...v0.7.4
