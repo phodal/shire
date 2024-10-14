@@ -129,21 +129,17 @@ class OpenRewriteFileRunService : FileRunService {
     private fun getRecipeDescriptors(project: Project, virtualFile: VirtualFile): java.util.LinkedHashMap<*, *>? {
         val clazz = Class.forName("com.intellij.openRewrite.recipe.OpenRewriteRecipeService")
         val getInstanceMethod = clazz.getDeclaredMethod("getInstance", Project::class.java)
-        val openRewriteRecipeService = getInstanceMethod.invoke(null, project)
-        val getLocalDescriptorsMethod =
+        val recipeService = getInstanceMethod.invoke(null, project)
+        val method =
             clazz.getDeclaredMethod("getLocalDescriptors", PsiFile::class.java, OpenRewriteType::class.java)
-        getLocalDescriptorsMethod.isAccessible = true
+        method.isAccessible = true
 
         val psiFile = runReadAction {
             PsiManager.getInstance(project).findFile(virtualFile)
         } ?: return null
 
         val list = runReadAction {
-            getLocalDescriptorsMethod.invoke(
-                openRewriteRecipeService,
-                psiFile,
-                OpenRewriteType.RECIPE
-            ) as LinkedHashMap<*, *>
+            method.invoke(recipeService, psiFile, OpenRewriteType.RECIPE) as LinkedHashMap<*, *>
         }
 
         return list
