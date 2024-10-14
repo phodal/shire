@@ -22,6 +22,7 @@ class ShireGotoDeclarationHandler : GotoDeclarationHandlerBase(), GotoDeclaratio
         PatternActionFuncDef.THREAD.funcName,
         PatternActionFuncDef.BATCH.funcName,
         PostProcessorType.SaveFile.handleName,
+        PatternActionFuncDef.APPROVAL_EXECUTE.funcName,
         "mock"
     )
 
@@ -29,8 +30,12 @@ class ShireGotoDeclarationHandler : GotoDeclarationHandlerBase(), GotoDeclaratio
         if (element !is LeafPsiElement) return null
         val project = element.project
 
-        handleForGotoFile(element, project)
+        gotoSourceFile(element, project)
 
+        return gotoToFunctionDecl(element)
+    }
+
+    private fun gotoToFunctionDecl(element: LeafPsiElement): ShireFrontMatterEntry? {
         val psiFile = element.containingFile
         // handle for foreign function
         val func = element.parent as? ShireFuncName ?: return null
@@ -51,7 +56,7 @@ class ShireGotoDeclarationHandler : GotoDeclarationHandlerBase(), GotoDeclaratio
         return foreignFunc
     }
 
-    private fun handleForGotoFile(
+    private fun gotoSourceFile(
         element: LeafPsiElement,
         project: Project,
     ) {
