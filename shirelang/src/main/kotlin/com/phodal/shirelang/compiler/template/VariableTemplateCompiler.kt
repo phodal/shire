@@ -1,4 +1,4 @@
-package com.phodal.shirelang.compile
+package com.phodal.shirelang.compiler.template
 
 import com.intellij.lang.Language
 import com.intellij.openapi.application.ReadAction
