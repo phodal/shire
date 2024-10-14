@@ -7,7 +7,6 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.codeStyle.CodeStyleSettings
 import com.intellij.psi.formatter.DocumentBasedFormattingModel
 import com.intellij.psi.formatter.common.AbstractBlock
-import com.intellij.psi.templateLanguages.OuterLanguageElement
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.util.PsiUtilCore
 import com.intellij.util.SmartList
@@ -58,43 +57,13 @@ class ShireFormattingBlock(private val myContext: ShireFormattingContext, val my
             } else if (ShireTypes.QUOTE_STRING === subNodeType) {
                 res.addAll(buildSubBlocks(context, subNode))
             } else if (ShireElementType.CONTAINERS.contains(subNodeType)) {
-                res.addAll(
-                    substituteInjectedBlocks(
-                        context.mySettings,
-                        buildSubBlocks(context, subNode),
-                        subNode, wrap, context.computeAlignment(subNode)
-                    )
-                )
+                //
             } else {
                 res.add(ShireFormattingModelBuilder.createBlock(context, subNode))
             }
             subNode = subNode.treeNext
         }
         return res
-    }
-
-    internal fun substituteInjectedBlocks(
-        settings: CodeStyleSettings,
-        rawSubBlocks: List<Block>,
-        injectionHost: ASTNode,
-        wrap: Wrap?,
-        alignment: Alignment?,
-    ): List<Block> {
-        val injectedBlocks = SmartList<Block>().apply {
-            val outerBLocks = rawSubBlocks.filter { (it as? ASTBlock)?.node is OuterLanguageElement }
-            val fixedIndent =
-                IndentImpl(Indent.Type.SPACES, false, 2, false, false)
-//            YamlInjectedLanguageBlockBuilder(settings, outerBLocks).addInjectedBlocks(this, injectionHost, wrap, alignment, fixedIndent)
-        }
-        if (injectedBlocks.isEmpty()) return rawSubBlocks
-
-        injectedBlocks.addAll(
-            0,
-            rawSubBlocks.filter(injectedBlocks.first().textRange.startOffset.let { start -> { it.textRange.endOffset <= start } })
-        )
-        injectedBlocks.addAll(rawSubBlocks.filter(injectedBlocks.last().textRange.endOffset.let { end -> { it.textRange.startOffset >= end } }))
-
-        return injectedBlocks
     }
 }
 
