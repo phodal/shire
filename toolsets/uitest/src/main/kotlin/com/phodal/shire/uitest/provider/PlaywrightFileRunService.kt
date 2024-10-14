@@ -25,7 +25,7 @@ class PlaywrightFileRunService : FileRunService {
     }
 
     override fun runConfigurationClass(project: Project): Class<out RunProfile>? {
-//        return PlaywrightRunConfiguration::class.java
+        return PlaywrightRunConfiguration::class.java
         return null
     }
 
