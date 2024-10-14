@@ -1,5 +1,7 @@
 # WireMock
 
+Start WireMock with IntelliJ IDEA:
+
 ```bash
 "/Users/phodal/Applications/IntelliJ IDEA Ultimate.app/Contents/jbr/Contents/Home/bin/java"
  -jar "/Users/phodal/Library/Application Support/JetBrains/IntelliJIdea2024.2/plugins/wiremock/server/wiremock-standalone-rt.jar"
