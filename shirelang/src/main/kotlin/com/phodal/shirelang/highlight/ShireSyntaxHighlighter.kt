@@ -95,6 +95,9 @@ class ShireSyntaxHighlighter : SyntaxHighlighterBase() {
             ATTRIBUTES[ShireTypes.LBRACKET] = DefaultLanguageHighlighterColors.BRACKETS
             ATTRIBUTES[ShireTypes.RBRACKET] = DefaultLanguageHighlighterColors.BRACKETS
 
+            ATTRIBUTES[ShireTypes.OPEN_BRACE] = DefaultLanguageHighlighterColors.BRACES
+            ATTRIBUTES[ShireTypes.CLOSE_BRACE] = DefaultLanguageHighlighterColors.BRACES
+
             ATTRIBUTES[ShireTypes.LPAREN] = DefaultLanguageHighlighterColors.PARENTHESES
             ATTRIBUTES[ShireTypes.RPAREN] = DefaultLanguageHighlighterColors.PARENTHESES
         }
