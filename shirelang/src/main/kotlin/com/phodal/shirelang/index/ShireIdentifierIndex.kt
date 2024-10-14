@@ -6,7 +6,7 @@ import com.intellij.util.io.DataExternalizer
 import com.intellij.util.io.EnumeratorStringDescriptor
 import com.intellij.util.io.KeyDescriptor
 import com.phodal.shirelang.ShireFileType
-import com.phodal.shirelang.compiler.hobbit.HobbitHole
+import com.phodal.shirelang.compiler.ast.hobbit.HobbitHole
 import com.phodal.shirelang.psi.ShireFrontMatterKey
 import com.phodal.shirelang.psi.ShireVisitor
 import java.io.DataInput

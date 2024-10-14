@@ -2,8 +2,8 @@ package com.phodal.shirelang.actions.base.validator
 
 import com.intellij.psi.PsiFile
 import com.phodal.shirecore.provider.variable.model.ConditionPsiVariable
-import com.phodal.shirelang.compiler.hobbit.ast.FrontMatterType
-import com.phodal.shirelang.compiler.hobbit.ast.Statement
+import com.phodal.shirelang.compiler.ast.FrontMatterType
+import com.phodal.shirelang.compiler.ast.Statement
 
 object WhenConditionValidator {
     private fun buildPsiVariable(file: PsiFile): Map<String, String> {

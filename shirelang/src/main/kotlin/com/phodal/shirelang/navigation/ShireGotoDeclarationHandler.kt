@@ -13,7 +13,7 @@ import com.intellij.psi.util.elementType
 import com.phodal.shirecore.findFile
 import com.phodal.shirecore.lookupFile
 import com.phodal.shirecore.middleware.PostProcessorType
-import com.phodal.shirelang.compiler.patternaction.PatternActionFuncDef
+import com.phodal.shirelang.compiler.ast.patternaction.PatternActionFuncDef
 import com.phodal.shirelang.psi.*
 
 class ShireGotoDeclarationHandler : GotoDeclarationHandlerBase(), GotoDeclarationHandler {

@@ -1,6 +1,6 @@
 package com.phodal.shirelang.compiler.variable.resolver
 
-import com.phodal.shirelang.compiler.hobbit.execute.PatternActionProcessor
+import com.phodal.shirelang.compiler.execute.PatternActionProcessor
 import com.phodal.shirelang.compiler.variable.base.VariableResolver
 import com.phodal.shirelang.compiler.variable.base.VariableResolverContext
 

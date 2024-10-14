@@ -1,7 +1,7 @@
 package com.phodal.shirelang.compiler.parser
 
 import com.phodal.shirecore.agent.CustomAgent
-import com.phodal.shirelang.compiler.hobbit.HobbitHole
+import com.phodal.shirelang.compiler.ast.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.variable.VariableTable
 import com.phodal.shirelang.psi.ShireFile
 

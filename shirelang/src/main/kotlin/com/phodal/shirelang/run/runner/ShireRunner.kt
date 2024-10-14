@@ -19,7 +19,7 @@ import com.phodal.shirelang.ShireBundle
 import com.phodal.shirelang.compiler.parser.SHIRE_ERROR
 import com.phodal.shirelang.compiler.parser.ShireParsedResult
 import com.phodal.shirelang.compiler.template.ShireTemplateCompiler
-import com.phodal.shirelang.compiler.hobbit.HobbitHole
+import com.phodal.shirelang.compiler.ast.hobbit.HobbitHole
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.ShireConfiguration
 import com.phodal.shirelang.run.ShireConsoleView

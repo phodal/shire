@@ -8,7 +8,7 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.util.ProcessingContext
 import com.phodal.shirelang.ShireIcons
 import com.phodal.shirecore.provider.variable.model.ConditionPsiVariable
-import com.phodal.shirelang.compiler.hobbit.ast.ExpressionBuiltInMethod
+import com.phodal.shirelang.compiler.ast.ExpressionBuiltInMethod
 
 class WhenConditionCompletionProvider : CompletionProvider<CompletionParameters>() {
     override fun addCompletions(

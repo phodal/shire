@@ -20,7 +20,7 @@ import com.intellij.testFramework.LightVirtualFile
 import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirelang.ShireFileType
 import com.phodal.shirelang.actions.base.DynamicShireActionService
-import com.phodal.shirelang.compiler.hobbit.HobbitHole
+import com.phodal.shirelang.compiler.ast.hobbit.HobbitHole
 import com.phodal.shirelang.psi.ShireFile
 
 /**

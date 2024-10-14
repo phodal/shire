@@ -13,7 +13,7 @@ import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.markdown.CodeFence
 import com.phodal.shirecore.middleware.PostProcessorContext
 import com.phodal.shirelang.compiler.template.ShireTemplateCompiler
-import com.phodal.shirelang.compiler.hobbit.HobbitHole
+import com.phodal.shirelang.compiler.ast.hobbit.HobbitHole
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.precompile.preAnalysisSyntax
 import kotlinx.coroutines.flow.Flow

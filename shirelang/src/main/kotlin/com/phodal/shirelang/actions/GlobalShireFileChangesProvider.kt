@@ -17,7 +17,7 @@ import com.intellij.openapi.vfs.newvfs.impl.VfsData
 import com.intellij.psi.PsiManager
 import com.phodal.shirecore.workerThread
 import com.phodal.shirelang.actions.base.GlobalShireActionService
-import com.phodal.shirelang.compiler.hobbit.HobbitHole
+import com.phodal.shirelang.compiler.ast.hobbit.HobbitHole
 import com.phodal.shirelang.psi.ShireFile
 import kotlinx.coroutines.CoroutineScope
 import java.nio.file.Paths

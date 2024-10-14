@@ -10,7 +10,7 @@ import com.phodal.shirelang.ShireBundle
 import com.phodal.shirelang.actions.ShireRunFileAction
 import com.phodal.shirelang.actions.base.DynamicShireActionService
 import com.phodal.shirelang.actions.base.validator.WhenConditionValidator
-import com.phodal.shirelang.compiler.hobbit.HobbitHole
+import com.phodal.shirelang.compiler.ast.hobbit.HobbitHole
 import kotlin.collections.firstOrNull
 
 class ShireIntentionAction(private val hobbitHole: HobbitHole?, val file: PsiFile, private val event: AnActionEvent?) :

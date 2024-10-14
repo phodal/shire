@@ -5,9 +5,9 @@ import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirecore.config.InteractionType
 import com.phodal.shirelang.compiler.parser.HobbitHoleParser
 import com.phodal.shirelang.compiler.parser.ShireSyntaxAnalyzer
-import com.phodal.shirelang.compiler.hobbit.ast.LogicalExpression
-import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
-import com.phodal.shirelang.compiler.hobbit.execute.PatternActionProcessor
+import com.phodal.shirelang.compiler.ast.LogicalExpression
+import com.phodal.shirelang.compiler.ast.patternaction.PatternActionFunc
+import com.phodal.shirelang.compiler.execute.PatternActionProcessor
 import com.phodal.shirelang.psi.ShireFile
 import junit.framework.TestCase
 import kotlinx.coroutines.runBlocking

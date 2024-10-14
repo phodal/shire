@@ -8,7 +8,7 @@ import com.intellij.util.messages.MessageBusConnection
 import com.intellij.util.messages.Topic
 import com.phodal.shirelang.actions.base.DynamicActionService
 import com.phodal.shirelang.actions.base.DynamicShireActionConfig
-import com.phodal.shirelang.compiler.hobbit.HobbitHole
+import com.phodal.shirelang.compiler.ast.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.parser.HobbitHoleParser
 import com.phodal.shirelang.psi.ShireFile
 import kotlinx.coroutines.*

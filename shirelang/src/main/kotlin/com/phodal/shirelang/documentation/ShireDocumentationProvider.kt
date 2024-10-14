@@ -9,7 +9,7 @@ import com.phodal.shirelang.psi.ShireTypes
 import com.phodal.shirecore.agent.CustomAgent
 import com.phodal.shirecore.markdown.MarkdownUtil
 import com.phodal.shirelang.ShireLanguage
-import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
+import com.phodal.shirelang.compiler.ast.patternaction.PatternActionFunc
 import com.phodal.shirelang.completion.dataprovider.BuiltinCommand
 import com.phodal.shirelang.compiler.variable.CompositeVariableProvider
 

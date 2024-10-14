@@ -15,7 +15,7 @@ import com.phodal.shirelang.actions.GlobalShireFileChangesProvider
 import com.phodal.shirelang.actions.ShireFileChangesProvider
 import com.phodal.shirelang.actions.base.DynamicShireActionService
 import com.phodal.shirelang.actions.copyPaste.PasteManagerService
-import com.phodal.shirelang.compiler.hobbit.HobbitHole
+import com.phodal.shirelang.compiler.ast.hobbit.HobbitHole
 import com.phodal.shirelang.psi.ShireFile
 
 

@@ -1,7 +1,7 @@
 package com.phodal.shirelang.compiler.hobbit.execute
 
-import com.phodal.shirelang.compiler.hobbit.execute.function.JsonPathFunction
-import com.phodal.shirelang.compiler.patternaction.PatternActionFunc
+import com.phodal.shirelang.compiler.ast.patternaction.PatternActionFunc
+import com.phodal.shirelang.compiler.execute.function.JsonPathFunction
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNull
 import org.junit.Test

@@ -5,7 +5,7 @@ import com.intellij.execution.ui.ConsoleView
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.config.interaction.PostFunction
-import com.phodal.shirelang.compiler.hobbit.HobbitHole
+import com.phodal.shirelang.compiler.ast.hobbit.HobbitHole
 import com.phodal.shirelang.run.ShireConfiguration
 
 data class ShireLlmExecutorContext(

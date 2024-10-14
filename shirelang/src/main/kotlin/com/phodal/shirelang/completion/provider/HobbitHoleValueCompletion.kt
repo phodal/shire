@@ -13,7 +13,7 @@ import com.phodal.shirecore.config.InteractionType
 import com.phodal.shirecore.middleware.PostProcessor
 import com.phodal.shirecore.middleware.select.SelectElementStrategy
 import com.phodal.shirelang.ShireIcons
-import com.phodal.shirelang.compiler.hobbit.HobbitHole
+import com.phodal.shirelang.compiler.ast.hobbit.HobbitHole
 
 class HobbitHoleValueCompletion : CompletionProvider<CompletionParameters>() {
     private val HOBBIT = "hobbit"

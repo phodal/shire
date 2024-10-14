@@ -1,6 +1,9 @@
 package com.phodal.shirelang.compiler.parser
 
-import com.phodal.shirelang.compiler.hobbit.ast.*
+import com.phodal.shirelang.compiler.ast.FrontMatterType
+import com.phodal.shirelang.compiler.ast.ShirePsiQueryStatement
+import com.phodal.shirelang.compiler.ast.Statement
+import com.phodal.shirelang.compiler.ast.VariableElement
 import com.phodal.shirelang.psi.ShireFromClause
 import com.phodal.shirelang.psi.ShireQueryStatement
 import com.phodal.shirelang.psi.ShireSelectClause
