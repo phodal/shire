@@ -1,4 +1,4 @@
-package com.phodal.shirelang.compiler.execute
+package com.phodal.shirelang.compiler.execute.processor.shell
 
 import com.intellij.execution.configurations.GeneralCommandLine
 import com.intellij.execution.process.CapturingProcessHandler

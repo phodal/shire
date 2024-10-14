@@ -1,4 +1,4 @@
-package com.phodal.shirelang.compiler.execute.schema
+package com.phodal.shirelang.compiler.execute.shireql
 
 import kotlinx.datetime.*
 import kotlinx.datetime.TimeZone

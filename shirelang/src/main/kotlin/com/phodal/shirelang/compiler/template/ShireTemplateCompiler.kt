@@ -7,7 +7,7 @@ import com.intellij.psi.PsiManager
 import com.phodal.shirelang.compiler.ast.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.variable.VariableTable
 import com.phodal.shirelang.compiler.variable.resolver.CompositeVariableResolver
-import com.phodal.shirelang.compiler.variable.base.VariableResolverContext
+import com.phodal.shirelang.compiler.variable.resolver.base.VariableResolverContext
 
 /**
  * The `ShireTemplateCompiler` class is responsible for compiling templates in a Kotlin project.

@@ -9,7 +9,7 @@ import com.phodal.shirecore.workerThread
 import com.phodal.shirelang.ShireActionStartupActivity
 import com.phodal.shirelang.actions.ShireRunFileAction
 import com.phodal.shirelang.compiler.parser.SHIRE_ERROR
-import com.phodal.shirelang.compiler.command.RunShireCommand
+import com.phodal.shirelang.compiler.execute.command.RunShireCommand
 import com.phodal.shirelang.compiler.ast.patternaction.PatternActionFuncDef
 import com.phodal.shirelang.compiler.ast.patternaction.PatternProcessor
 import kotlinx.coroutines.CoroutineScope

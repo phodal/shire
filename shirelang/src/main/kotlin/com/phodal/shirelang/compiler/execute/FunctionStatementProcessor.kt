@@ -10,8 +10,8 @@ import com.phodal.shirecore.variable.vcs.ShireGitCommit
 import com.phodal.shirelang.compiler.ast.*
 import com.phodal.shirelang.compiler.ast.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.ast.*
-import com.phodal.shirelang.compiler.execute.schema.ShireDateSchema
-import com.phodal.shirelang.compiler.execute.schema.ShireQLSchema
+import com.phodal.shirelang.compiler.execute.shireql.ShireDateSchema
+import com.phodal.shirelang.compiler.execute.shireql.ShireQLSchema
 import com.phodal.shirelang.compiler.execute.variable.ShireQLVariableBuilder
 import com.phodal.shirelang.compiler.execute.variable.VariableContainerManager
 import com.phodal.shirelang.compiler.ast.patternaction.PatternActionFunc

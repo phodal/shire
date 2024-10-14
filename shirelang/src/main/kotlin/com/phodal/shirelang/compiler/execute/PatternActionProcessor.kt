@@ -3,8 +3,8 @@ package com.phodal.shirelang.compiler.execute
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.middleware.PostProcessorContext
 import com.phodal.shirelang.compiler.ast.hobbit.HobbitHole
-import com.phodal.shirelang.compiler.execute.searcher.PatternSearcher
 import com.phodal.shirelang.compiler.ast.patternaction.VariableTransform
+import com.phodal.shirelang.compiler.execute.shireql.ShireQLProcessor
 
 
 class PatternActionProcessor(
@@ -25,7 +25,7 @@ class PatternActionProcessor(
         }
 
         if (actionTransform.isQueryStatement) {
-            return com.phodal.shirelang.compiler.execute.ShireQLProcessor(myProject, hole).execute(actionTransform)
+            return ShireQLProcessor(myProject, hole).execute(actionTransform)
         }
 
         var input: Any = ""

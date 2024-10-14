@@ -1,4 +1,4 @@
-package com.phodal.shirelang.compiler.command
+package com.phodal.shirelang.compiler.execute.command
 
 import com.phodal.shirelang.compiler.parser.SHIRE_ERROR
 import com.phodal.shirelang.compiler.ast.LineInfo

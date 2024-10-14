@@ -1,4 +1,4 @@
-package com.phodal.shirelang.compiler.variable.value
+package com.phodal.shirelang.compiler.variable
 
 enum class ContextVariable(val variableName: String, val description: String) {
     SELECTION("selection", "User selection code/element's in text"),

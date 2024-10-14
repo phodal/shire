@@ -17,7 +17,7 @@ import com.phodal.shirelang.ShireBundle
 import com.phodal.shirelang.compiler.ast.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.ast.FrontMatterType
 import com.phodal.shirelang.compiler.ast.Statement
-import com.phodal.shirelang.compiler.execute.function.JsonPathFunction
+import com.phodal.shirelang.compiler.execute.processor.JsonPathProcessor
 import com.phodal.shirelang.compiler.execute.processor.*
 import com.phodal.shirelang.compiler.ast.patternaction.PatternActionFunc
 import kotlinx.coroutines.CoroutineScope
@@ -398,7 +398,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                 var jsonStr = action.obj ?: lastResult as String
                 jsonStr = jsonStr.fillVariable(variableTable)
 
-                JsonPathFunction.parse(jsonStr, action) ?: jsonStr
+                JsonPathProcessor.execute(jsonStr, action) ?: jsonStr
             }
 
             is PatternActionFunc.Destroy -> {

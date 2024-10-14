@@ -3,8 +3,8 @@ package com.phodal.shirelang.compiler.variable.resolver
 import com.intellij.openapi.application.ReadAction
 import com.intellij.psi.PsiElement
 import com.phodal.shirecore.middleware.select.SelectElementStrategy
-import com.phodal.shirelang.compiler.variable.base.VariableResolver
-import com.phodal.shirelang.compiler.variable.base.VariableResolverContext
+import com.phodal.shirelang.compiler.variable.resolver.base.VariableResolver
+import com.phodal.shirelang.compiler.variable.resolver.base.VariableResolverContext
 
 class CompositeVariableResolver(
    private val context: VariableResolverContext

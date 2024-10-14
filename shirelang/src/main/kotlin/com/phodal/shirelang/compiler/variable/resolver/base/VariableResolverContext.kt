@@ -1,4 +1,4 @@
-package com.phodal.shirelang.compiler.variable.base
+package com.phodal.shirelang.compiler.variable.resolver.base
 
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project

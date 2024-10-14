@@ -2,10 +2,10 @@ package com.phodal.shirelang.compiler.variable.resolver
 
 import com.intellij.openapi.application.ReadAction
 import com.intellij.psi.PsiNameIdentifierOwner
-import com.phodal.shirelang.compiler.variable.base.VariableResolver
-import com.phodal.shirelang.compiler.variable.base.VariableResolverContext
-import com.phodal.shirelang.compiler.variable.value.ContextVariable
-import com.phodal.shirelang.compiler.variable.value.ContextVariable.*
+import com.phodal.shirelang.compiler.variable.resolver.base.VariableResolver
+import com.phodal.shirelang.compiler.variable.resolver.base.VariableResolverContext
+import com.phodal.shirelang.compiler.variable.ContextVariable
+import com.phodal.shirelang.compiler.variable.ContextVariable.*
 
 class ContextVariableResolver(
     private val context: VariableResolverContext,

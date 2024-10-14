@@ -27,14 +27,14 @@ object PatternSearcher {
      * @return A list of VirtualFile objects that match the specified regular expression. If no matching files are found, an empty list is returned.
      */
     fun findFilesByRegex(project: Project, regex: String): List<VirtualFile> {
-        if (com.phodal.shirelang.compiler.execute.searcher.PatternSearcher.cache.containsKey(regex)) {
-            return com.phodal.shirelang.compiler.execute.searcher.PatternSearcher.cache[regex]!!
+        if (PatternSearcher.cache.containsKey(regex)) {
+            return PatternSearcher.cache[regex]!!
         }
 
         val pattern: Pattern = try {
             Pattern.compile(regex)
         } catch (e: Exception) {
-            logger<com.phodal.shirelang.compiler.execute.searcher.PatternSearcher>().error("Invalid regex: $regex")
+            logger<PatternSearcher>().error("Invalid regex: $regex")
             return emptyList()
         }
 

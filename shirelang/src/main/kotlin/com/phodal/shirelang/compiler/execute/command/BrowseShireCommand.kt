@@ -1,4 +1,4 @@
-package com.phodal.shirelang.compiler.command
+package com.phodal.shirelang.compiler.execute.command
 
 import com.phodal.shirecore.agent.agenttool.browse.BrowseTool
 import com.intellij.openapi.application.runInEdt

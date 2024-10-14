@@ -14,7 +14,7 @@ import com.phodal.shirecore.provider.http.HttpHandlerType
 import com.phodal.shirecore.provider.shire.FileRunService
 import com.phodal.shirelang.actions.ShireRunFileAction
 import com.phodal.shirelang.compiler.parser.SHIRE_ERROR
-import com.phodal.shirelang.compiler.execute.ShireShellRunner
+import com.phodal.shirelang.compiler.execute.processor.shell.ShireShellRunner
 import com.phodal.shirelang.compiler.ast.patternaction.PatternActionFuncDef
 import com.phodal.shirelang.compiler.ast.patternaction.PatternProcessor
 import com.phodal.shirelang.psi.ShireFile

@@ -1,4 +1,4 @@
-package com.phodal.shirelang.compiler.command
+package com.phodal.shirelang.compiler.execute.command
 
 import com.intellij.lang.Language
 import com.intellij.openapi.fileEditor.FileDocumentManager

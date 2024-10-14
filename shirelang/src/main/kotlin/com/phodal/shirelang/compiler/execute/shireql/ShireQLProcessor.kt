@@ -1,17 +1,18 @@
-package com.phodal.shirelang.compiler.execute
+package com.phodal.shirelang.compiler.execute.shireql
 
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.phodal.shirecore.provider.variable.PsiQLInterpreter
-import com.phodal.shirelang.compiler.ast.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.ast.MethodCall
+import com.phodal.shirelang.compiler.ast.hobbit.HobbitHole
+import com.phodal.shirelang.compiler.execute.FunctionStatementProcessor
 import java.lang.reflect.Method
 import java.util.*
 
 class ShireQLProcessor(override val myProject: Project, hole: HobbitHole) :
-    com.phodal.shirelang.compiler.execute.FunctionStatementProcessor(myProject, hole) {
+    FunctionStatementProcessor(myProject, hole) {
 
     override fun <T : Any> invokeMethodOrField(methodCall: MethodCall, element: T): Any? {
         val methodName = methodCall.methodName.display()
@@ -86,7 +87,7 @@ class ShireQLProcessor(override val myProject: Project, hole: HobbitHole) :
         val supportMethodNames: List<String> = allMethods.map { it.name }
         val supportFieldNames: List<String> = element.javaClass.fields.map { it.name }
 
-        logger<com.phodal.shirelang.compiler.execute.ShireQLProcessor>().error(
+        logger<ShireQLProcessor>().error(
             """
             method or field not found: $objectName.$methodName
             supported methods: $supportMethodNames

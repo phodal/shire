@@ -8,8 +8,8 @@ import com.intellij.psi.PsiManager
 import com.phodal.shirecore.provider.variable.PsiContextVariableProvider
 import com.phodal.shirecore.provider.variable.impl.DefaultPsiContextVariableProvider
 import com.phodal.shirecore.provider.variable.model.PsiContextVariable
-import com.phodal.shirelang.compiler.variable.base.VariableResolver
-import com.phodal.shirelang.compiler.variable.base.VariableResolverContext
+import com.phodal.shirelang.compiler.variable.resolver.base.VariableResolver
+import com.phodal.shirelang.compiler.variable.resolver.base.VariableResolverContext
 
 /**
  * Include ToolchainVariableProvider and PsiContextVariableProvider

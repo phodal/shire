@@ -1,4 +1,4 @@
-package com.phodal.shirelang.compiler.command
+package com.phodal.shirelang.compiler.execute.command
 
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.provider.shire.RevisionProvider

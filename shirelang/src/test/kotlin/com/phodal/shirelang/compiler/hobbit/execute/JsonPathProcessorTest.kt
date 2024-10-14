@@ -1,12 +1,12 @@
 package com.phodal.shirelang.compiler.hobbit.execute
 
 import com.phodal.shirelang.compiler.ast.patternaction.PatternActionFunc
-import com.phodal.shirelang.compiler.execute.function.JsonPathFunction
+import com.phodal.shirelang.compiler.execute.processor.JsonPathProcessor
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNull
 import org.junit.Test
 
-class JsonPathFunctionTest {
+class JsonPathProcessorTest {
 
     @Test
     fun `should parse JSON string with valid JSON path`() {
@@ -15,7 +15,7 @@ class JsonPathFunctionTest {
         val action = PatternActionFunc.JsonPath(null, "key")
 
         // when
-        val result = JsonPathFunction.parse(jsonStr, action)
+        val result = JsonPathProcessor.execute(jsonStr, action)
 
         // then
         assertEquals("value", result)
@@ -28,7 +28,7 @@ class JsonPathFunctionTest {
         val action = PatternActionFunc.JsonPath(null, "invalidKey")
 
         // when
-        val result = JsonPathFunction.parse(jsonStr, action)
+        val result = JsonPathProcessor.execute(jsonStr, action)
 
         // then
         assertNull(result)
@@ -41,7 +41,7 @@ class JsonPathFunctionTest {
         val jsonPath = "answer"
 
         // when
-        val result = JsonPathFunction.parseSSEResult(sseInput, jsonPath)
+        val result = JsonPathProcessor.parseSSEResult(sseInput, jsonPath)
 
         // then
         assertEquals("The", result)
@@ -54,7 +54,7 @@ class JsonPathFunctionTest {
         val jsonPath = "invalidKey"
 
         // when
-        val result = JsonPathFunction.parseSSEResult(sseInput, jsonPath)
+        val result = JsonPathProcessor.parseSSEResult(sseInput, jsonPath)
 
         // then
         assertEquals("", result)
@@ -68,7 +68,7 @@ class JsonPathFunctionTest {
         val jsonPath = "$.event"
 
         // when
-        val result = JsonPathFunction.parseSSEResult(sseInput, jsonPath)
+        val result = JsonPathProcessor.parseSSEResult(sseInput, jsonPath)
 
         // then
         assertEquals("agent_messagemessage_end", result)

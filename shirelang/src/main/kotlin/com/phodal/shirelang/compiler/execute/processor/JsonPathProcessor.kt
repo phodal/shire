@@ -1,13 +1,17 @@
-package com.phodal.shirelang.compiler.execute.function
+package com.phodal.shirelang.compiler.execute.processor
 
 import com.intellij.openapi.diagnostic.logger
 import com.nfeld.jsonpathkt.JsonPath
 import com.nfeld.jsonpathkt.extension.read
 import com.phodal.shirelang.compiler.execute.FunctionStatementProcessor
 import com.phodal.shirelang.compiler.ast.patternaction.PatternActionFunc
+import com.phodal.shirelang.compiler.ast.patternaction.PatternActionFuncDef
+import com.phodal.shirelang.compiler.ast.patternaction.PatternProcessor
 
-object JsonPathFunction {
-    fun parse(
+object JsonPathProcessor : PatternProcessor {
+    override val type: PatternActionFuncDef = PatternActionFuncDef.JSONPATH
+
+    fun execute(
         jsonStr: String,
         action: PatternActionFunc.JsonPath,
     ): String? {
