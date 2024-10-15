@@ -1,13 +1,13 @@
-package com.phodal.shirecore.custom
+package com.phodal.shirecore.sse
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.intellij.openapi.diagnostic.logger
 import com.nfeld.jsonpathkt.JsonPath
 import com.nfeld.jsonpathkt.extension.read
-import com.phodal.shirecore.custom.sse.ChatCompletionResult
-import com.phodal.shirecore.custom.sse.JSONBodyResponseCallback
-import com.phodal.shirecore.custom.sse.ResponseBodyCallback
-import com.phodal.shirecore.custom.sse.SSE
+import com.phodal.shirecore.sse.io.ChatCompletionResult
+import com.phodal.shirecore.sse.io.JSONBodyResponseCallback
+import com.phodal.shirecore.sse.io.ResponseBodyCallback
+import com.phodal.shirecore.sse.io.SSE
 import com.phodal.shirecore.console.CustomFlowWrapper
 import com.phodal.shirecore.llm.ChatMessage
 import com.phodal.shirecore.llm.ChatRole

@@ -8,7 +8,7 @@ import com.phodal.shirelang.run.flow.ShireConversationService
 import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.config.interaction.PostFunction
 import com.phodal.shirecore.console.cancelWithConsole
-import com.phodal.shirecore.custom.CustomAgentSSEExecutor
+import com.phodal.shirecore.sse.CustomAgentSSEExecutor
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking

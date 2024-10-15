@@ -1,4 +1,4 @@
-package com.phodal.shirecore.custom.sse
+package com.phodal.shirecore.sse.io
 
 class ShireHttpException(val error: String, private val statusCode: Int) : RuntimeException(error) {
     override fun toString(): String {
