@@ -13,7 +13,7 @@ import com.intellij.psi.codeStyle.CodeStyleManager
 import com.phodal.shirecore.ShireCoreBundle
 import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.llm.LlmProvider
-import com.phodal.shirecore.markdown.CodeFence
+import com.phodal.shirecore.utils.markdown.CodeFence
 import com.phodal.shirecore.config.interaction.dto.CodeCompletionRequest
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow

@@ -7,7 +7,7 @@ import com.intellij.psi.InjectedLanguagePlaces
 import com.intellij.psi.LanguageInjector
 import com.intellij.psi.PsiLanguageInjectionHost
 import com.intellij.psi.util.elementType
-import com.phodal.shirecore.markdown.CodeFence.Companion.findLanguage
+import com.phodal.shirecore.utils.markdown.CodeFence.Companion.findLanguage
 import com.phodal.shirelang.parser.CodeBlockElement
 import com.phodal.shirelang.parser.PatternElement
 import com.phodal.shirelang.psi.ShireTypes

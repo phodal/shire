@@ -15,7 +15,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.phodal.shirecore.ShireCoreBundle
 import com.phodal.shirecore.config.interaction.PostFunction
 import com.phodal.shirecore.llm.LlmProvider
-import com.phodal.shirecore.markdown.CodeFence
+import com.phodal.shirecore.utils.markdown.CodeFence
 import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.runBlocking
 import java.nio.file.Path

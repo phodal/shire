@@ -15,7 +15,7 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.phodal.shirecore.lookupFile
 import com.phodal.shirelang.psi.ShireUsed
-import com.phodal.shirecore.markdown.CodeFence
+import com.phodal.shirecore.utils.markdown.CodeFence
 
 class WriteShireCommand(val myProject: Project, val argument: String, val content: String, private val used: ShireUsed) :
     ShireCommand {

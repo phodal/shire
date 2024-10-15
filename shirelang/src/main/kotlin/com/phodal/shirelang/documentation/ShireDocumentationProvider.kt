@@ -7,7 +7,7 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.util.elementType
 import com.phodal.shirelang.psi.ShireTypes
 import com.phodal.shirecore.agent.CustomAgent
-import com.phodal.shirecore.markdown.MarkdownUtil
+import com.phodal.shirecore.utils.markdown.MarkdownUtil
 import com.phodal.shirelang.ShireLanguage
 import com.phodal.shirelang.compiler.ast.patternaction.PatternActionFunc
 import com.phodal.shirelang.completion.dataprovider.BuiltinCommand

@@ -19,7 +19,7 @@ import com.phodal.shirelang.compiler.parser.ShireSyntaxAnalyzer
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.psi.ShireVisitor
 import com.phodal.shirelang.run.ShireConsoleView
-import com.phodal.shirecore.markdown.CodeFence
+import com.phodal.shirecore.utils.markdown.CodeFence
 import kotlinx.coroutines.runBlocking
 
 @Service(Service.Level.PROJECT)

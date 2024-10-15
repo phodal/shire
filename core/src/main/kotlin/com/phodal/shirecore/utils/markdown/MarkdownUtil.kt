@@ -1,5 +1,5 @@
 // Copyright 2000-2021 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
-package com.phodal.shirecore.markdown
+package com.phodal.shirecore.utils.markdown
 
 import org.intellij.markdown.IElementType
 import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
