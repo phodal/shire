@@ -1,4 +1,4 @@
-package com.phodal.shirecore.dag
+package com.phodal.shirecore.task
 
 data class Node(val id: Int, val name: String)
 
