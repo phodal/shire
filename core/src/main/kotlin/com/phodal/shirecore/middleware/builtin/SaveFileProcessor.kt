@@ -10,7 +10,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.vfs.VirtualFile
-import com.phodal.shirecore.markdown.CodeFence
+import com.phodal.shirecore.utils.markdown.CodeFence
 import com.phodal.shirecore.SHIRE_TEMP_OUTPUT
 import com.phodal.shirecore.middleware.PostProcessorType
 import com.phodal.shirecore.middleware.PostProcessorContext

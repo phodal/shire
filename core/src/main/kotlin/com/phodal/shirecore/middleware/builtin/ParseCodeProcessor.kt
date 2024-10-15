@@ -2,7 +2,7 @@ package com.phodal.shirecore.middleware.builtin
 
 import com.intellij.execution.ui.ConsoleView
 import com.intellij.openapi.project.Project
-import com.phodal.shirecore.markdown.CodeFence
+import com.phodal.shirecore.utils.markdown.CodeFence
 import com.phodal.shirecore.middleware.PostProcessorType
 import com.phodal.shirecore.middleware.PostProcessorContext
 import com.phodal.shirecore.middleware.PostProcessor

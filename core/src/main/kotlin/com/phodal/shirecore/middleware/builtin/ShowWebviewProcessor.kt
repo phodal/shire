@@ -10,13 +10,13 @@ import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.ui.components.JBTextArea
 import com.intellij.ui.dsl.builder.*
 import com.phodal.shirecore.ShireCoroutineScope
-import com.phodal.shirecore.console.cancelHandler
 import com.phodal.shirecore.llm.LlmProvider
-import com.phodal.shirecore.markdown.CodeFence
+import com.phodal.shirecore.utils.markdown.CodeFence
 import com.phodal.shirecore.middleware.PostProcessor
 import com.phodal.shirecore.middleware.PostProcessorContext
 import com.phodal.shirecore.middleware.PostProcessorType
 import com.phodal.shirecore.middleware.builtin.ui.WebViewWindow
+import com.phodal.shirecore.runner.console.cancelHandler
 import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
