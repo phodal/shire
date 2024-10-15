@@ -1,103 +1,100 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="657px" height="318px" viewBox="0 0 657 318" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="738px" height="354px" viewBox="0 0 738 354" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Generator: Sketch 62 (91390) - https://sketch.com -->
     <title>Group</title>
     <desc>Created with Sketch.</desc>
-    <defs>
-        <rect id="path-1" x="0" y="0" width="423" height="318"></rect>
-    </defs>
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Group">
-            <g id="Rectangle" stroke-dasharray="8,4" transform="translate(147.000000, 0.000000)">
-                <g id="path-1-Clipped">
-                    <mask id="mask-2" fill="white">
-                        <use xlink:href="#path-1"></use>
-                    </mask>
-                    <g id="path-1"></g>
-                    <path d="M0,0 L423,0 L423,318 L0,318 L0,0 Z" id="path-1" stroke="#CC850A" stroke-width="4" mask="url(#mask-2)"></path>
-                </g>
-            </g>
-            <rect id="Rectangle" fill="#DA4167" fill-rule="nonzero" x="137" y="20" width="5" height="57"></rect>
-            <rect id="Rectangle" fill="#DA4167" fill-rule="nonzero" x="137" y="88" width="5" height="57"></rect>
+        <g id="Group" transform="translate(0.000000, 2.000000)">
+            <polygon id="rectange" stroke="#CC850A" stroke-width="4" points="149 0 572 0 572 350 149 350"></polygon>
+            <rect id="Rectangle" fill="#DA4167" fill-rule="nonzero" x="139" y="20" width="5" height="47"></rect>
+            <rect id="Rectangle" fill="#DA4167" fill-rule="nonzero" x="139" y="71" width="5" height="50"></rect>
+            <rect id="Rectangle" fill="#DA4167" fill-rule="nonzero" x="139" y="126" width="5" height="82"></rect>
             <text id="Behavior" fill="#DA4167" font-family="NotoSerifSC-Bold, Noto Serif SC" font-size="16" font-weight="bold">
-                <tspan x="0" y="56">Behavior</tspan>
+                <tspan x="2" y="48">Behavior</tspan>
             </text>
-            <text id="Abstract-APIs" fill="#DA4167" font-family="NotoSerifSC-Bold, Noto Serif SC" font-size="16" font-weight="bold">
-                <tspan x="1" y="124">Context APIs</tspan>
+            <text id="Context-APIs" fill="#DA4167" font-family="NotoSerifSC-Bold, Noto Serif SC" font-size="16" font-weight="bold">
+                <tspan x="2" y="103">Context </tspan>
+                <tspan x="68.992" y="103">APIs</tspan>
             </text>
-            <text id="AI-Agents" fill="#861094" font-family="NotoSerifSC-Bold, Noto Serif SC" font-size="16" font-weight="bold">
-                <tspan x="3" y="177">AI Agents</tspan>
+            <text id="Workflow/-Shire-Life" fill="#DA4167" font-family="NotoSerifSC-Bold, Noto Serif SC" font-size="16" font-weight="bold">
+                <tspan x="0" y="158">Workflow/</tspan>
+                <tspan x="0" y="181">Shire Lifecycle</tspan>
             </text>
-            <text id="Command" fill="#0032B3" font-family="NotoSerifSC-Bold, Noto Serif SC" font-size="16" font-weight="bold">
-                <tspan x="3" y="297">Command</tspan>
+            <text id="Remote-AI-Agent" fill="#861094" font-family="NotoSerifSC-Bold, Noto Serif SC" font-size="16" font-weight="bold">
+                <tspan x="601.25" y="89">Remote AI Agent</tspan>
+            </text>
+            <text id="Local-AI-Agent" fill="#861094" font-family="NotoSerifSC-Bold, Noto Serif SC" font-size="16" font-weight="bold">
+                <tspan x="606.25" y="154">Local AI Agent</tspan>
             </text>
             <text id="Variable" fill="#CC850A" font-family="NotoSerifSC-Bold, Noto Serif SC" font-size="16" font-weight="bold">
-                <tspan x="589.25" y="248">Variable</tspan>
+                <tspan x="2" y="236">Variable</tspan>
             </text>
-            <polygon id="Line" fill="#861094" fill-rule="nonzero" points="130.123886 166.974537 130.556614 167.225029 138.500454 171.823444 139.269749 172.268762 138.489694 172.694953 130.434752 177.095852 129.995972 177.335584 129.516507 176.458023 129.955288 176.218291 136.335 172.732 130.255998 172.65752 97.2438276 172.249962 96.7438657 172.24379 96.7562105 171.243866 97.2561724 171.250038 130.268343 171.657596 136.347 171.732 130.055631 168.090486 129.622903 167.839994"></polygon>
-            <polygon id="Line" fill="#0032B3" fill-rule="nonzero" points="130.123886 285.974537 130.556614 286.225029 138.500454 290.823444 139.269749 291.268762 138.489694 291.694953 130.434752 296.095852 129.995972 296.335584 129.516507 295.458023 129.955288 295.218291 136.335 291.732 130.255998 291.65752 97.2438276 291.249962 96.7438657 291.24379 96.7562105 290.243866 97.2561724 290.250038 130.268343 290.657596 136.347 290.732 130.055631 287.090486 129.622903 286.839994"></polygon>
-            <polygon id="Line" fill="#CC850A" fill-rule="nonzero" points="582.225571 241.974412 582.275588 242.973029 581.800425 242.999309 353.833161 255.607288 348.083658 255.925 354.283637 259.15152 354.710038 259.373407 354.287723 260.269546 353.861322 260.047658 346.033635 255.974349 345.275588 255.579882 345.990041 255.103978 353.367574 250.189727 353.769453 249.922031 354.278955 250.766634 353.877075 251.03433 348.032269 254.926 353.783143 254.608671 581.750408 242.000691"></polygon>
-            <text id="----name:-&quot;AutoTest&quot;" font-family="NotoSerifSC-Bold, Noto Serif SC" font-size="12" font-weight="bold">
-                <tspan x="155" y="22" fill="#011C32">---</tspan>
-                <tspan x="155" y="39" fill="#861094">name</tspan>
-                <tspan x="189.092" y="39" fill="#011C32">: </tspan>
-                <tspan x="196.124" y="39" fill="#087D18">"AutoTest"</tspan>
-                <tspan x="257.6" y="39" fill="#011C32"></tspan>
-                <tspan x="155" y="56" fill="#861094">description</tspan>
-                <tspan x="224.852" y="56" fill="#011C32">: </tspan>
-                <tspan x="231.884" y="56" fill="#087D18">"AutoTest"</tspan>
-                <tspan x="293.36" y="56" fill="#011C32"></tspan>
-                <tspan x="155" y="73" fill="#861094">actionLocation</tspan>
-                <tspan x="246.428" y="73" fill="#011C32">: </tspan>
-                <tspan x="253.46" y="73" fill="#6B9E78">ContextMenu</tspan>
-                <tspan x="335.432" y="73" fill="#011C32"></tspan>
-                <tspan x="155" y="90" fill="#861094">interaction</tspan>
-                <tspan x="222.608" y="90" fill="#011C32">: </tspan>
-                <tspan x="229.64" y="90" fill="#48A178">AppendCursor</tspan>
-                <tspan x="318.596" y="90" fill="#011C32"></tspan>
-                <tspan x="155" y="107" fill="#861094">when</tspan>
-                <tspan x="188.396" y="107" fill="#011C32">: </tspan>
-                <tspan x="195.428" y="107" fill="#CC850A">$fileName</tspan>
-                <tspan x="256.928" y="107" fill="#011C32">.contains(</tspan>
-                <tspan x="317.576" y="107" fill="#087D18">".java"</tspan>
-                <tspan x="354.332" y="107" fill="#011C32">) &amp;&amp; </tspan>
-                <tspan x="384.404" y="107" fill="#CC850A">$filePath</tspan>
-                <tspan x="438.452" y="107" fill="#011C32">.contains(</tspan>
-                <tspan x="499.1" y="107" fill="#087D18">"src/</tspan>
-                <tspan x="155" y="124" fill="#087D18">main/java"</tspan>
-                <tspan x="219.896" y="124" fill="#011C32">)</tspan>
-                <tspan x="155" y="141" fill="#861094">onStreamingEnd</tspan>
-                <tspan x="257.228" y="141" fill="#011C32">: { </tspan>
-                <tspan x="271.832" y="141" fill="#013D4F">parseCode</tspan>
-                <tspan x="336.116" y="141" fill="#011C32"> </tspan>
-                <tspan x="339.128" y="141" fill="#0032B3">|</tspan>
-                <tspan x="342.632" y="141" fill="#011C32"> </tspan>
-                <tspan x="345.644" y="141" fill="#013D4F">saveFile</tspan>
-                <tspan x="394.46" y="141" fill="#011C32"> </tspan>
-                <tspan x="397.472" y="141" fill="#0032B3">|</tspan>
-                <tspan x="400.976" y="141" fill="#011C32"> </tspan>
-                <tspan x="403.988" y="141" fill="#013D4F">verifyCode</tspan>
-                <tspan x="470.18" y="141" fill="#011C32"> </tspan>
-                <tspan x="473.192" y="141" fill="#0032B3">|</tspan>
-                <tspan x="476.696" y="141" fill="#011C32"> </tspan>
-                <tspan x="479.708" y="141" fill="#013D4F">runCode</tspan>
-                <tspan x="532.46" y="141" fill="#011C32"> } </tspan>
-                <tspan x="155" y="158" fill="#0032B3">---</tspan>
-                <tspan x="168.176" y="158" fill="#011C32"></tspan>
-                <tspan x="155" y="175" fill="#011C32"></tspan>
-                <tspan x="155" y="192" fill="#861094">@ext-context.autotest</tspan>
-                <tspan x="155" y="209" fill="#011C32"></tspan>
-                <tspan x="155" y="226" fill="#011C32">Write unit test for following </tspan>
-                <tspan x="327.032" y="226" fill="#CC850A">${context.language}</tspan>
-                <tspan x="447.224" y="226" fill="#011C32"> code.</tspan>
-                <tspan x="155" y="243" fill="#861094"></tspan>
-                <tspan x="155" y="260" fill="#CC850A">${context.frameworkContext}</tspan>
-                <tspan x="155" y="277" fill="#0032B3"></tspan>
-                <tspan x="155" y="294" fill="#0032B3">/file:</tspan>
-                <tspan x="183.212" y="294" fill="#087D18">src/main/kotlin/com/phodal/blog/controller/</tspan>
-                <tspan x="155" y="311" fill="#087D18">UserController.kt</tspan>
-                <tspan x="261.164" y="311" fill="#861094"></tspan>
+            <text id="----name:-&quot;设计-SQL&quot;-a" font-family="NotoSerifSC-Bold, Noto Serif SC" font-size="12" font-weight="bold">
+                <tspan x="153" y="16" fill="#0032B3">---</tspan>
+                <tspan x="166.176" y="16" fill="#861094"></tspan>
+                <tspan x="153" y="33" fill="#000000">name:</tspan>
+                <tspan x="191.112" y="33" fill="#861094"> </tspan>
+                <tspan x="194.124" y="33" fill="#087D18">"设计 SQL"</tspan>
+                <tspan x="153" y="50" fill="#000000" fill-opacity="0.85">actionLocation:</tspan>
+                <tspan x="248.448" y="50" fill="#087D18"> ContextMenu</tspan>
+                <tspan x="153" y="67" fill="#000000" fill-opacity="0.85">interaction:</tspan>
+                <tspan x="224.628" y="67" fill="#087D18"> AppendCursor</tspan>
+                <tspan x="316.596" y="67" fill="#861094"></tspan>
+                <tspan x="153" y="84" fill="#000000">variables:</tspan>
+                <tspan x="212.76" y="84" fill="#861094"></tspan>
+                <tspan x="153" y="101" fill="#861094">  </tspan>
+                <tspan x="159.024" y="101" fill="#087D18">"story"</tspan>
+                <tspan x="200.184" y="101" fill="#000000">: /any/</tspan>
+                <tspan x="237.264" y="101" fill="#861094"> </tspan>
+                <tspan x="240.276" y="101" fill="#000000">{ </tspan>
+                <tspan x="247.848" y="101" fill="#861094">thread</tspan>
+                <tspan x="288.096" y="101" fill="#000000">(</tspan>
+                <tspan x="292.872" y="101" fill="#087D18">".shire/shell/github-issue.curl.sh"</tspan>
+                <tspan x="494.964" y="101" fill="#000000">) |</tspan>
+                <tspan x="506.256" y="101" fill="#861094"> </tspan>
+                <tspan x="153" y="118" fill="#000000">jsonpath(</tspan>
+                <tspan x="210.96" y="118" fill="#087D18">"$.body"</tspan>
+                <tspan x="262.68" y="118" fill="#000000">) }</tspan>
+                <tspan x="153" y="135" fill="#CC850A">afterStreaming</tspan>
+                <tspan x="244.992" y="135" fill="#861094">: </tspan>
+                <tspan x="252.024" y="135" fill="#000000">{</tspan>
+                <tspan x="256.584" y="135" fill="#861094"></tspan>
+                <tspan x="153" y="152" fill="#861094">  </tspan>
+                <tspan x="159.024" y="152" fill="#CC850A">case</tspan>
+                <tspan x="185.544" y="152" fill="#861094"> </tspan>
+                <tspan x="188.556" y="152" fill="#000000">condition {</tspan>
+                <tspan x="254.868" y="152" fill="#861094"></tspan>
+                <tspan x="153" y="169" fill="#861094">    </tspan>
+                <tspan x="165.048" y="169" fill="#CC850A">default</tspan>
+                <tspan x="208.344" y="169" fill="#861094"> </tspan>
+                <tspan x="211.356" y="169" fill="#000000" fill-opacity="0.85">{ </tspan>
+                <tspan x="218.928" y="169" fill="#861094">execute</tspan>
+                <tspan x="265.848" y="169" fill="#000000" fill-opacity="0.85">(</tspan>
+                <tspan x="270.624" y="169" fill="#087D18">"gen-sql.shire"</tspan>
+                <tspan x="357.408" y="169" fill="#000000" fill-opacity="0.85">, </tspan>
+                <tspan x="364.44" y="169" fill="#CC850A">$</tspan>
+                <tspan x="371.448" y="169" fill="#000000" fill-opacity="0.85">story, </tspan>
+                <tspan x="408.312" y="169" fill="#CC850A">$</tspan>
+                <tspan x="415.32" y="169" fill="#000000" fill-opacity="0.85">output) }</tspan>
+                <tspan x="153" y="186" fill="#000000" fill-opacity="0.85">  }</tspan>
+                <tspan x="153" y="203" fill="#000000" fill-opacity="0.85">}</tspan>
+                <tspan x="153" y="220" fill="#0032B3">---</tspan>
+                <tspan x="166.176" y="220" fill="#861094"></tspan>
+                <tspan x="153" y="237" fill="#000000">You are a professional Database Administrator.</tspan>
+                <tspan x="153" y="254" fill="#000000">According to the user's requirements, you should choose the best </tspan>
+                <tspan x="153" y="271" fill="#000000">Tables for the user in List.</tspan>
+                <tspan x="311.232" y="271" fill="#861094"></tspan>
+                <tspan x="153" y="288" fill="#861094"></tspan>
+                <tspan x="153" y="305" fill="#000000">- User use database: </tspan>
+                <tspan x="276.612" y="305" fill="#CC850A">$databaseInfo</tspan>
+                <tspan x="362.952" y="305" fill="#861094"></tspan>
+                <tspan x="153" y="322" fill="#000000">- User tables: </tspan>
+                <tspan x="235.164" y="322" fill="#CC850A">$tables</tspan>
+                <tspan x="153" y="339" fill="#861094"></tspan>
             </text>
+            <path id="Line" d="M594.568472,82.3466987 L594.903301,84.3184719 L593.917415,84.4858866 L525.421408,96.1172838 L517.442,97.472 L526.8087,100.829967 L527.750052,101.167395 L527.075197,103.050098 L526.133846,102.71267 L513.173158,98.0669126 L511.499644,97.4670416 L512.881329,96.3483634 L523.581918,87.6846526 L524.359116,87.0553961 L525.617629,88.6097915 L524.840431,89.239048 L517.105,95.5 L525.086579,94.1455107 L593.582585,82.5141134 L594.568472,82.3466987 Z" fill="#861094" fill-rule="nonzero"></path>
+            <path id="Line" d="M598.061635,143.841877 L598.408123,145.811635 L597.423244,145.984879 L504.668611,162.300754 L496.694,163.703 L506.081137,167.00561 L507.024468,167.337462 L506.360762,169.224125 L505.417431,168.892272 L492.429488,164.323264 L490.752455,163.733303 L492.127498,162.606471 L502.77665,153.879613 L503.550112,153.24577 L504.817798,154.792693 L504.044336,155.426536 L496.348,161.733 L504.322124,160.330996 L597.076756,144.015121 L598.061635,143.841877 Z" fill="#861094" fill-rule="nonzero"></path>
+            <path id="Line" d="M78.316681,231.761826 L79.2774275,232.039253 L244.244437,279.675531 L252.079,281.937 L245.101421,274.845252 L244.40007,274.132436 L245.825702,272.729734 L246.527053,273.44255 L256.183376,283.256719 L257.430222,284.523948 L255.699778,284.931446 L242.298183,288.087355 L241.324808,288.316573 L240.866372,286.369822 L241.839748,286.140604 L251.525,283.859 L243.689582,281.597024 L78.7225725,233.960747 L77.7618259,233.683319 L78.316681,231.761826 Z" fill="#CC850A" fill-rule="nonzero"></path>
         </g>
     </g>
 </svg>
