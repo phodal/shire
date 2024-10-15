@@ -8,7 +8,7 @@ import com.phodal.shirecore.sse.io.ChatCompletionResult
 import com.phodal.shirecore.sse.io.JSONBodyResponseCallback
 import com.phodal.shirecore.sse.io.ResponseBodyCallback
 import com.phodal.shirecore.sse.io.SSE
-import com.phodal.shirecore.console.CustomFlowWrapper
+import com.phodal.shirecore.runner.console.CustomFlowWrapper
 import com.phodal.shirecore.llm.ChatMessage
 import com.phodal.shirecore.llm.ChatRole
 import com.phodal.shirecore.llm.CustomRequest

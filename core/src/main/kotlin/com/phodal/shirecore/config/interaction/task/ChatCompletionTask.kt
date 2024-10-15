@@ -11,7 +11,7 @@ import com.intellij.openapi.project.DumbAwareAction
 import com.phodal.shirecore.ShireCoreBundle
 import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.config.interaction.dto.CodeCompletionRequest
-import com.phodal.shirecore.console.cancelHandler
+import com.phodal.shirecore.runner.console.cancelHandler
 import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.markdown.CodeFence
 import kotlinx.coroutines.cancel

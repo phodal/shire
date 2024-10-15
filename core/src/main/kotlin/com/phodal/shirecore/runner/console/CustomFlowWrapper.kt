@@ -1,4 +1,4 @@
-package com.phodal.shirecore.console
+package com.phodal.shirecore.runner.console
 
 import com.intellij.execution.ui.ConsoleView
 import kotlinx.coroutines.flow.Flow

@@ -21,7 +21,7 @@ import com.intellij.openapi.util.Key
 import com.intellij.ui.components.panels.NonOpaquePanel
 import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.config.ShireActionLocation
-import com.phodal.shirecore.console.ShireConsoleViewBase
+import com.phodal.shirecore.runner.console.ShireConsoleViewBase
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.precompile.preAnalysisSyntax
 import com.phodal.shirelang.run.runner.ShireRunner

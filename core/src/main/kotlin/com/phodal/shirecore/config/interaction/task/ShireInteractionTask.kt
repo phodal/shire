@@ -4,7 +4,7 @@ import com.intellij.execution.ui.ConsoleView
 import com.intellij.openapi.progress.Task.Backgroundable
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.config.interaction.PostFunction
-import com.phodal.shirecore.console.addCancelCallback
+import com.phodal.shirecore.runner.console.addCancelCallback
 import java.util.concurrent.CompletableFuture
 
 /**
