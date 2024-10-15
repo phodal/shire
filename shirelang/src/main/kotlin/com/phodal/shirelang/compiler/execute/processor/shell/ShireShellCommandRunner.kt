@@ -13,7 +13,7 @@ import com.phodal.shire.json.ShireEnvVariableFiller
 import java.io.File
 import java.nio.charset.StandardCharsets
 
-object ShireShellRunner {
+object ShireShellCommandRunner {
     private const val DEFAULT_TIMEOUT: Int = 30000
 
     fun fill(project: Project, file: VirtualFile, processVariables: Map<String, String>): String {
@@ -53,7 +53,7 @@ object ShireShellRunner {
         }
 
         tempFile.delete()
-        logger<ShireShellRunner>().info("delete temp file: ${tempFile.path}")
+        logger<ShireShellCommandRunner>().info("delete temp file: ${tempFile.path}")
         return processOutput.stdout
     }
 }

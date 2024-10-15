@@ -14,7 +14,7 @@ import com.phodal.shirecore.provider.http.HttpHandlerType
 import com.phodal.shirecore.provider.shire.FileRunService
 import com.phodal.shirelang.actions.ShireRunFileAction
 import com.phodal.shirelang.compiler.parser.SHIRE_ERROR
-import com.phodal.shirelang.compiler.execute.processor.shell.ShireShellRunner
+import com.phodal.shirelang.compiler.execute.processor.shell.ShireShellCommandRunner
 import com.phodal.shirelang.compiler.ast.patternaction.PatternActionFuncDef
 import com.phodal.shirelang.compiler.ast.patternaction.PatternProcessor
 import com.phodal.shirelang.psi.ShireFile
@@ -96,7 +96,7 @@ object ThreadProcessor: PatternProcessor {
         val future = CompletableFuture<String>()
         ApplicationManager.getApplication().invokeLater {
             if (shRunner.isAvailable(myProject)) {
-                val output = ShireShellRunner.runShellCommand(virtualFile, myProject, processVariables)
+                val output = ShireShellCommandRunner.runShellCommand(virtualFile, myProject, processVariables)
                 future.complete(output)
             }
         }

@@ -1,6 +1,7 @@
 package com.phodal.shirelang.compiler.hobbit.execute
 
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
+import com.phodal.shirelang.compiler.execute.processor.shell.ShireShellCommandRunner
 import org.intellij.lang.annotations.Language
 
 class ShireShellRunnerTest: BasePlatformTestCase() {
@@ -23,7 +24,7 @@ class ShireShellRunnerTest: BasePlatformTestCase() {
 
         val file = myFixture.addFileToProject("demo.seh", content)
 
-        val fill = ShireShellRunner.fill(
+        val fill = ShireShellCommandRunner.fill(
             project, file.virtualFile, mapOf(
                 "myName" to "Shire"
             )
