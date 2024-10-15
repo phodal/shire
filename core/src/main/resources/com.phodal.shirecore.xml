@@ -71,7 +71,7 @@
         <extensionPoint qualifiedName="com.phodal.shirePsiQLInterpreter"
                         beanClass="com.intellij.lang.LanguageExtensionPoint" dynamic="true">
             <with attribute="implementationClass"
-                  implements="com.phodal.shirecore.provider.variable.PsiQLInterpreter"/>
+                  implements="com.phodal.shirecore.provider.variable.ShireQLInterpreter"/>
         </extensionPoint>
 
         <!-- Code Editor -->

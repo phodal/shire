@@ -4,7 +4,7 @@ import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
-import com.phodal.shirecore.provider.variable.PsiQLInterpreter
+import com.phodal.shirecore.provider.variable.ShireQLInterpreter
 import com.phodal.shirelang.compiler.ast.MethodCall
 import com.phodal.shirelang.compiler.ast.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.execute.FunctionStatementProcessor
@@ -20,7 +20,7 @@ class ShireQLProcessor(override val myProject: Project, hole: HobbitHole) :
 
         val methodArgs = methodCall.arguments
         if (element is PsiElement) {
-            PsiQLInterpreter.provide(element.language)?.let { psiQLInterpreter ->
+            ShireQLInterpreter.provide(element.language)?.let { psiQLInterpreter ->
                 val hasPqlInterpreter = psiQLInterpreter.supportsMethod(element.language, methodName).any {
                     it == methodName
                 }

@@ -8,7 +8,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.findFile
 import com.intellij.openapi.vfs.readText
 import com.phodal.shirecore.ShirelangNotifications
-import com.phodal.shirecore.guard.RedactProcessor
+import com.phodal.shirelang.compiler.execute.processor.RedactProcessor
 import com.phodal.shirecore.provider.function.ToolchainFunctionProvider
 import com.phodal.shirecore.search.function.ScoredText
 import com.phodal.shirecore.search.function.SemanticService

@@ -37,7 +37,7 @@ class JavaPsiQLInterpreterTest: BasePlatformTestCase() {
         val psiFile = myFixture.addFileToProject("TestClass.java", javaClassCode) as PsiJavaFile
         val psiClass = psiFile.classes[0]
 
-        val interpreter = JavaPsiQLInterpreter()
+        val interpreter = JavaShireQLInterpreter()
         val result = interpreter.resolveCall(psiClass, "getName", emptyList())
         val extendsClasses = interpreter.resolveCall(psiClass, "extends", emptyList())
         // implements
@@ -70,7 +70,7 @@ class JavaPsiQLInterpreterTest: BasePlatformTestCase() {
 
         val psiClass = psiFile.classes[0]
 
-        val interpreter = JavaPsiQLInterpreter()
+        val interpreter = JavaShireQLInterpreter()
         val result = interpreter.resolveCall(psiClass, "superclassOf", listOf("TestClass"))
         // extendsOf
         val extendsClasses = interpreter.resolveOfTypedCall(project, "subclassesOf", listOf("ShireObject"))

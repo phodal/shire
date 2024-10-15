@@ -8,7 +8,7 @@ import com.intellij.psi.PsiElement
 /**
  * For [com.phodal.shirelang.compiler.hobbit.execute.PsiQueryStatementProcessor]
  */
-interface PsiQLInterpreter {
+interface ShireQLInterpreter {
     fun supportsMethod(language: Language, methodName: String): List<String>
 
     /**
@@ -22,10 +22,10 @@ interface PsiQLInterpreter {
     fun resolveOfTypedCall(project: Project, methodName: String, arguments: List<Any>): Any
 
     companion object {
-        private val languageExtension: LanguageExtension<PsiQLInterpreter> =
+        private val languageExtension: LanguageExtension<ShireQLInterpreter> =
             LanguageExtension("com.phodal.shirePsiQLInterpreter")
 
-        fun provide(language: Language): PsiQLInterpreter? {
+        fun provide(language: Language): ShireQLInterpreter? {
             return languageExtension.forLanguage(language)
         }
     }

@@ -1,4 +1,4 @@
-package com.phodal.shirecore.guard
+package com.phodal.shirelang.compiler.execute.processor
 
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.guard.scanner.SecretPatternsScanner

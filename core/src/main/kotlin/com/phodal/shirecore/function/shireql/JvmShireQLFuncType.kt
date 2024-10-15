@@ -1,6 +1,6 @@
-package com.phodal.shirecore.psi
+package com.phodal.shirecore.function.shireql
 
-enum class JvmPsiPqlMethod(val methodName: String, val description: String) {
+enum class JvmShireQLFuncType(val methodName: String, val description: String) {
     GET_NAME("getName", "Get class name"),
     NAME("name", "Get class name"),
     EXTENDS("extends", "Get class extends"),

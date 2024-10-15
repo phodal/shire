@@ -50,6 +50,6 @@
                                     implementationClass="com.phodal.shirelang.java.impl.JavaPsiElementDataBuilder"/>
 
         <shirePsiQLInterpreter language="JAVA"
-                               implementationClass="com.phodal.shirelang.java.impl.JavaPsiQLInterpreter"/>
+                               implementationClass="com.phodal.shirelang.java.impl.JavaShireQLInterpreter"/>
     </extensions>
 </idea-plugin>

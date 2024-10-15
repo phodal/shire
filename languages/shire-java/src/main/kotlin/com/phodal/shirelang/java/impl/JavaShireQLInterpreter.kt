@@ -9,15 +9,15 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.search.searches.AnnotatedElementsSearch
 import com.intellij.psi.search.searches.ClassInheritorsSearch
-import com.phodal.shirecore.provider.variable.PsiQLInterpreter
-import com.phodal.shirecore.psi.JvmPsiPqlMethod
+import com.phodal.shirecore.provider.variable.ShireQLInterpreter
+import com.phodal.shirecore.function.shireql.JvmShireQLFuncType
 
 
-class JavaPsiQLInterpreter : PsiQLInterpreter {
+class JavaShireQLInterpreter : ShireQLInterpreter {
     override fun supportsMethod(language: Language, methodName: String): List<String> {
         if (language.id != "JAVA") return emptyList()
 
-        return JvmPsiPqlMethod.values().map { it.methodName }
+        return JvmShireQLFuncType.entries.map { it.methodName }
     }
 
     /**
@@ -33,21 +33,21 @@ class JavaPsiQLInterpreter : PsiQLInterpreter {
             is PsiClass -> {
 
                 when (methodName) {
-                    JvmPsiPqlMethod.GET_NAME.methodName -> element.name!!
-                    JvmPsiPqlMethod.NAME.methodName -> element.name!!
-                    JvmPsiPqlMethod.EXTENDS.methodName -> element
+                    JvmShireQLFuncType.GET_NAME.methodName -> element.name!!
+                    JvmShireQLFuncType.NAME.methodName -> element.name!!
+                    JvmShireQLFuncType.EXTENDS.methodName -> element
                         .extendsList?.referencedTypes?.map { it.resolve() }
                         ?: emptyList<PsiClass>()
 
-                    JvmPsiPqlMethod.IMPLEMENTS.methodName -> element
+                    JvmShireQLFuncType.IMPLEMENTS.methodName -> element
                         .implementsList?.referencedTypes?.map { it.resolve() }
                         ?: emptyList<PsiClass>()
 
-                    JvmPsiPqlMethod.METHOD_CODE_BY_NAME.methodName -> element
+                    JvmShireQLFuncType.METHOD_CODE_BY_NAME.methodName -> element
                         .methods
                         .filter { it.name == arguments.first() }
 
-                    JvmPsiPqlMethod.FIELD_CODE_BY_NAME.methodName -> element
+                    JvmShireQLFuncType.FIELD_CODE_BY_NAME.methodName -> element
                         .fields
                         .filter { it.name == arguments.first() }
 
@@ -63,17 +63,17 @@ class JavaPsiQLInterpreter : PsiQLInterpreter {
         // get first argument for infer type
         val firstArgument = arguments.firstOrNull().toString()
         if (firstArgument.isBlank()) {
-            logger<JavaPsiQLInterpreter>().warn("Cannot find first argument")
+            logger<JavaShireQLInterpreter>().warn("Cannot find first argument")
             return ""
         }
 
         return when (methodName) {
-            JvmPsiPqlMethod.SUBCLASSES_OF.methodName -> {
+            JvmShireQLFuncType.SUBCLASSES_OF.methodName -> {
                 val facade = JavaPsiFacade.getInstance(project)
 
                 val psiClass = facade.findClass(firstArgument, GlobalSearchScope.projectScope(project))
                 if (psiClass == null) {
-                    logger<JavaPsiQLInterpreter>().warn("Cannot find class: $firstArgument")
+                    logger<JavaShireQLInterpreter>().warn("Cannot find class: $firstArgument")
                     return ""
                 }
 
@@ -82,13 +82,13 @@ class JavaPsiQLInterpreter : PsiQLInterpreter {
                 map
             }
 
-            JvmPsiPqlMethod.ANNOTATED_OF.methodName -> {
+            JvmShireQLFuncType.ANNOTATED_OF.methodName -> {
                 val facade = JavaPsiFacade.getInstance(project)
                 val annotationClass =
                     facade.findClass(firstArgument, GlobalSearchScope.allScope(project))
 
                 if (annotationClass == null) {
-                    logger<JavaPsiQLInterpreter>().warn("Cannot find annotation class: $firstArgument")
+                    logger<JavaShireQLInterpreter>().warn("Cannot find annotation class: $firstArgument")
                     return ""
                 }
 
@@ -99,18 +99,18 @@ class JavaPsiQLInterpreter : PsiQLInterpreter {
                 classes.toList()
             }
 
-            JvmPsiPqlMethod.SUPERCLASS_OF.methodName -> {
+            JvmShireQLFuncType.SUPERCLASS_OF.methodName -> {
                 val psiClass = searchClass(project, firstArgument) ?: return ""
                 psiClass.superClass ?: ""
             }
 
-            JvmPsiPqlMethod.IMPLEMENTS_OF.methodName -> {
+            JvmShireQLFuncType.IMPLEMENTS_OF.methodName -> {
                 val psiClass = searchClass(project, firstArgument) ?: return emptyList<String>()
                 psiClass.implementsList?.referencedTypes ?: emptyList<String>()
             }
 
             else -> {
-                logger<JavaPsiQLInterpreter>().error("Cannot find method: $methodName")
+                logger<JavaShireQLInterpreter>().error("Cannot find method: $methodName")
             }
         }
     }
