@@ -10,9 +10,9 @@ import com.phodal.shirelang.compiler.variable.ContextVariable.*
 class ContextVariableResolver(
     private val context: VariableResolverContext,
 ) : VariableResolver {
-    fun all(): List<ContextVariable> = values().toList()
+    fun all(): List<ContextVariable> = entries
 
-    override suspend fun resolve(variables: Map<String, Any>): Map<String, String> = ReadAction.compute<Map<String, String>, Throwable> {
+    override suspend fun resolve(initVariables: Map<String, Any>): Map<String, String> = ReadAction.compute<Map<String, String>, Throwable> {
         val file = context.element?.containingFile
         val caretModel = context.editor.caretModel
 

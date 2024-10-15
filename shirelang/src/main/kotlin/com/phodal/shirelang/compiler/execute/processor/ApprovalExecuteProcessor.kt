@@ -3,19 +3,11 @@ package com.phodal.shirelang.compiler.execute.processor
 import com.intellij.ide.DataManager
 import com.intellij.openapi.application.runInEdt
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.ui.popup.JBPopup
 import com.intellij.openapi.ui.popup.JBPopupFactory
-import com.intellij.ui.dsl.builder.panel
-import com.intellij.util.ui.JBUI
 import com.phodal.shirelang.compiler.ast.patternaction.PatternActionFuncDef
 import com.phodal.shirelang.compiler.ast.patternaction.PatternProcessor
-import java.awt.event.InputEvent
-import java.awt.event.KeyEvent
+import com.phodal.shirelang.compiler.execute.processor.ui.PendingApprovalPanel
 import java.util.concurrent.CompletableFuture
-import javax.swing.JButton
-import javax.swing.JComponent
-import javax.swing.JPanel
-import javax.swing.KeyStroke
 
 object ApprovalExecuteProcessor: PatternProcessor {
     override val type: PatternActionFuncDef = PatternActionFuncDef.APPROVAL_EXECUTE
@@ -67,49 +59,3 @@ object ApprovalExecuteProcessor: PatternProcessor {
     }
 }
 
-class PendingApprovalPanel : JPanel() {
-    private val approveButton = JButton("Approve")
-    private val rejectButton = JButton("Reject")
-
-    init {
-        val layoutBuilder = panel {
-            row {
-                label(getShortcutLabel("⌘ + ↵", "Ctrl + ↵"))
-                cell(approveButton)
-
-                label(getShortcutLabel("⌘ + ⌦", "Ctrl + Del"))
-                cell(rejectButton)
-            }
-        }
-
-
-        layoutBuilder.border = JBUI.Borders.empty(0, 10)
-        this.add(layoutBuilder)
-    }
-
-    private fun getShortcutLabel(shortcutForMac: String, shortcutForOthers: String): String {
-        return if (System.getProperty("os.name").contains("Mac")) {
-            shortcutForMac
-        } else {
-            shortcutForOthers
-        }
-    }
-
-    fun setupKeyShortcuts(popup: JBPopup, approve: (Any) -> Unit, reject: (Any) -> Unit) {
-        approveButton.addActionListener(approve)
-        approveButton.registerKeyboardAction(
-            {
-                popup.closeOk(null)
-                approveButton.doClick()
-            }, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_DOWN_MASK), JComponent.WHEN_IN_FOCUSED_WINDOW
-        )
-
-        rejectButton.addActionListener(reject)
-        rejectButton.registerKeyboardAction(
-            {
-                popup.closeOk(null)
-                rejectButton.doClick()
-            }, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, InputEvent.CTRL_DOWN_MASK), JComponent.WHEN_IN_FOCUSED_WINDOW
-        )
-    }
-}

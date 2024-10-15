@@ -9,34 +9,31 @@ import com.phodal.shirelang.compiler.execute.FunctionStatementProcessor
 import com.phodal.shirelang.compiler.ast.patternaction.PatternActionFuncDef
 import com.phodal.shirelang.compiler.ast.patternaction.PatternProcessor
 
-class BatchProcessor : PatternProcessor {
+object BatchProcessor : PatternProcessor {
     override val type: PatternActionFuncDef = PatternActionFuncDef.BATCH
+    fun execute(
+        myProject: Project,
+        filename: String,
+        inputs: List<String>,
+        batchSize: Int,
+        variableTable: MutableMap<String, Any?>,
+    ): Any {
+        val file = runReadAction {
+            ShireActionStartupActivity.findShireFile(myProject, filename.toString())
+        }
 
-    companion object {
-        fun execute(
-            myProject: Project,
-            filename: String,
-            inputs: List<String>,
-            batchSize: Int,
-            variableTable: MutableMap<String, Any?>,
-        ): Any {
-            val file = runReadAction {
-                ShireActionStartupActivity.findShireFile(myProject, filename.toString())
-            }
+        if (file == null) {
+            logger<FunctionStatementProcessor>().error("execute shire error: file not found")
+            return ""
+        }
 
-            if (file == null) {
-                logger<FunctionStatementProcessor>().warn("execute shire error: file not found")
-                return ""
-            }
-
-            return inputs.forEach { chunk: String ->
-                try {
-                    val variableNames = arrayOf("input")
-                    variableTable["input"] = chunk
-                    ShireRunFileAction.suspendExecuteFile(myProject, variableNames, variableTable, file) ?: ""
-                } catch (e: Exception) {
-                    logger<FunctionStatementProcessor>().warn("execute shire error: $e")
-                }
+        return inputs.forEach { chunk: String ->
+            try {
+                val variableNames = arrayOf("input")
+                variableTable["input"] = chunk
+                ShireRunFileAction.suspendExecuteFile(myProject, variableNames, variableTable, file) ?: ""
+            } catch (e: Exception) {
+                logger<FunctionStatementProcessor>().error("execute shire error: $e")
             }
         }
     }
