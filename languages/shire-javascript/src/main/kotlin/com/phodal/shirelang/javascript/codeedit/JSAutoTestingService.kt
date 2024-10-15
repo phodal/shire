@@ -21,7 +21,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.intellij.psi.util.PsiTreeUtil
-import com.phodal.shirecore.codemodel.model.ClassStructure
+import com.phodal.shirecore.provider.codemodel.model.ClassStructure
 import com.phodal.shirecore.provider.TestingService
 import com.phodal.shirecore.variable.toolchain.unittest.AutoTestingPromptContext
 import com.phodal.shirelang.javascript.codemodel.JavaScriptClassStructureProvider

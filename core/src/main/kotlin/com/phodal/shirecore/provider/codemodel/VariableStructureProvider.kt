@@ -1,9 +1,9 @@
-package com.phodal.shirecore.codemodel
+package com.phodal.shirecore.provider.codemodel
 
 import com.intellij.lang.Language
 import com.intellij.lang.LanguageExtension
 import com.intellij.psi.PsiElement
-import com.phodal.shirecore.codemodel.model.VariableStructure
+import com.phodal.shirecore.provider.codemodel.model.VariableStructure
 
 interface VariableStructureProvider {
     fun build(

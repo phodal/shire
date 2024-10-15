@@ -6,8 +6,8 @@ import com.intellij.openapi.util.NlsSafe
 import com.intellij.psi.*
 import com.intellij.psi.impl.source.PsiClassReferenceType
 import com.intellij.psi.search.GlobalSearchScope
-import com.phodal.shirecore.codemodel.ClassStructureProvider
-import com.phodal.shirecore.codemodel.model.ClassStructure
+import com.phodal.shirecore.provider.codemodel.ClassStructureProvider
+import com.phodal.shirecore.provider.codemodel.model.ClassStructure
 import com.phodal.shirecore.provider.psi.PsiElementDataBuilder
 import com.phodal.shirelang.java.util.JavaContextCollection
 

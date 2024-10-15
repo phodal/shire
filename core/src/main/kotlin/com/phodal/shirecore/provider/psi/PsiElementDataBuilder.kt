@@ -4,7 +4,7 @@ import com.intellij.lang.Language
 import com.intellij.lang.LanguageExtension
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
-import com.phodal.shirecore.codemodel.model.ClassStructure
+import com.phodal.shirecore.provider.codemodel.model.ClassStructure
 
 /**
  * The `PsiElementDataBuilder` interface provides methods for generating test data for a given Kotlin language class.

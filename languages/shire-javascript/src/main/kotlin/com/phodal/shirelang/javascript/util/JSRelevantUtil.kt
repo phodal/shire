@@ -8,7 +8,7 @@ import com.intellij.lang.javascript.psi.util.JSStubBasedPsiTreeUtil
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.psi.PsiElement
-import com.phodal.shirecore.codemodel.model.ClassStructure
+import com.phodal.shirecore.provider.codemodel.model.ClassStructure
 import com.phodal.shirelang.javascript.codemodel.JavaScriptClassStructureProvider
 
 object JSRelevantUtil {

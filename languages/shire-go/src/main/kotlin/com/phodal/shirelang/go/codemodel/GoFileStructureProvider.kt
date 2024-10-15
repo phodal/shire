@@ -5,8 +5,8 @@ import com.goide.psi.GoFunctionOrMethodDeclaration
 import com.goide.psi.GoType
 import com.intellij.psi.PsiFile
 import com.intellij.psi.util.PsiTreeUtil
-import com.phodal.shirecore.codemodel.FileStructureProvider
-import com.phodal.shirecore.codemodel.model.FileStructure
+import com.phodal.shirecore.provider.codemodel.FileStructureProvider
+import com.phodal.shirecore.provider.codemodel.model.FileStructure
 
 class GoFileStructureProvider : FileStructureProvider {
     override fun build(psiFile: PsiFile): FileStructure? {

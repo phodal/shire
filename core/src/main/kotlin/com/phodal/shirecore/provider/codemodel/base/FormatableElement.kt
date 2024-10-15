@@ -1,4 +1,4 @@
-package com.phodal.shirecore.codemodel.base
+package com.phodal.shirecore.provider.codemodel.base
 
 import com.intellij.psi.PsiElement
 

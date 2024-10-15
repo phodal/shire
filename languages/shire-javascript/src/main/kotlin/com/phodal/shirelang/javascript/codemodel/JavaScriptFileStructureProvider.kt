@@ -6,8 +6,8 @@ import com.intellij.lang.javascript.psi.ecmal4.JSClass
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.util.PsiTreeUtil
-import com.phodal.shirecore.codemodel.FileStructureProvider
-import com.phodal.shirecore.codemodel.model.FileStructure
+import com.phodal.shirecore.provider.codemodel.FileStructureProvider
+import com.phodal.shirecore.provider.codemodel.model.FileStructure
 
 class JavaScriptFileStructureProvider : FileStructureProvider {
     override fun build(psiFile: PsiFile): FileStructure? {

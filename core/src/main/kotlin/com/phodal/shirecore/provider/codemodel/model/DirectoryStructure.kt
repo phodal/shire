@@ -1,9 +1,9 @@
-package com.phodal.shirecore.codemodel.model
+package com.phodal.shirecore.provider.codemodel.model
 
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiNameIdentifierOwner
-import com.phodal.shirecore.codemodel.base.FormatableElement
+import com.phodal.shirecore.provider.codemodel.base.FormatableElement
 
 class DirectoryStructure(
     override val root: PsiFile,

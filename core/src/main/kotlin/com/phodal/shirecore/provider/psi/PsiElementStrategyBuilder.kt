@@ -6,7 +6,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiNameIdentifierOwner
-import com.phodal.shirecore.codemodel.model.ClassStructure
+import com.phodal.shirecore.provider.codemodel.model.ClassStructure
 
 interface PsiElementStrategyBuilder {
 

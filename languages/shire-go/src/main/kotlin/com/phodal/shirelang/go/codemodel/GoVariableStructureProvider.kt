@@ -2,8 +2,8 @@ package com.phodal.shirelang.go.codemodel
 
 import com.goide.psi.GoVarOrConstDefinition
 import com.intellij.psi.PsiElement
-import com.phodal.shirecore.codemodel.VariableStructureProvider
-import com.phodal.shirecore.codemodel.model.VariableStructure
+import com.phodal.shirecore.provider.codemodel.VariableStructureProvider
+import com.phodal.shirecore.provider.codemodel.model.VariableStructure
 
 class GoVariableStructureProvider : VariableStructureProvider {
     override fun build(

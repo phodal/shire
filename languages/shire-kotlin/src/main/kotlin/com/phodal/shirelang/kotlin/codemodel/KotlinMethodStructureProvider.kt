@@ -2,8 +2,8 @@ package com.phodal.shirelang.kotlin.codemodel
 
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiNameIdentifierOwner
-import com.phodal.shirecore.codemodel.MethodStructureProvider
-import com.phodal.shirecore.codemodel.model.MethodStructure
+import com.phodal.shirecore.provider.codemodel.MethodStructureProvider
+import com.phodal.shirecore.provider.codemodel.model.MethodStructure
 import com.phodal.shirelang.kotlin.KotlinPsiUtil
 import org.jetbrains.kotlin.idea.quickfix.createFromUsage.callableBuilder.getReturnTypeReference
 import org.jetbrains.kotlin.psi.KtNamedFunction

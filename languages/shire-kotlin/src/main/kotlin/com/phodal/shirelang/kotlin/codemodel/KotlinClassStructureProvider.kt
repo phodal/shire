@@ -2,8 +2,8 @@ package com.phodal.shirelang.kotlin.codemodel
 
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiNameIdentifierOwner
-import com.phodal.shirecore.codemodel.ClassStructureProvider
-import com.phodal.shirecore.codemodel.model.ClassStructure
+import com.phodal.shirecore.provider.codemodel.ClassStructureProvider
+import com.phodal.shirecore.provider.codemodel.model.ClassStructure
 import com.phodal.shirelang.kotlin.KotlinPsiUtil
 import org.jetbrains.kotlin.psi.KtClassOrObject
 import org.jetbrains.kotlin.psi.KtParameter

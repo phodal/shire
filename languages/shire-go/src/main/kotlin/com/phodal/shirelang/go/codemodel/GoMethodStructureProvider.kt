@@ -4,8 +4,8 @@ import com.goide.psi.GoFunctionDeclaration
 import com.goide.psi.GoFunctionOrMethodDeclaration
 import com.goide.psi.GoMethodDeclaration
 import com.intellij.psi.PsiElement
-import com.phodal.shirecore.codemodel.MethodStructureProvider
-import com.phodal.shirecore.codemodel.model.MethodStructure
+import com.phodal.shirecore.provider.codemodel.MethodStructureProvider
+import com.phodal.shirecore.provider.codemodel.model.MethodStructure
 
 class GoMethodStructureProvider : MethodStructureProvider {
     override fun build(psiElement: PsiElement, includeClassContext: Boolean, gatherUsages: Boolean): MethodStructure? {

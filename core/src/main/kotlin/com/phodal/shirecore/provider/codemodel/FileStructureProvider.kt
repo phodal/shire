@@ -1,9 +1,9 @@
-package com.phodal.shirecore.codemodel
+package com.phodal.shirecore.provider.codemodel
 
 import com.intellij.lang.Language
 import com.intellij.lang.LanguageExtension
 import com.intellij.psi.PsiFile
-import com.phodal.shirecore.codemodel.model.FileStructure
+import com.phodal.shirecore.provider.codemodel.model.FileStructure
 
 interface FileStructureProvider {
     fun build(psiFile: PsiFile): FileStructure?

@@ -4,8 +4,8 @@ import com.intellij.openapi.application.runReadAction
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiMethod
 import com.intellij.psi.PsiNameIdentifierOwner
-import com.phodal.shirecore.codemodel.MethodStructureProvider
-import com.phodal.shirecore.codemodel.model.MethodStructure
+import com.phodal.shirecore.provider.codemodel.MethodStructureProvider
+import com.phodal.shirecore.provider.codemodel.model.MethodStructure
 import com.phodal.shirelang.java.util.JavaTypeResolver
 
 class JavaMethodStructureProvider : MethodStructureProvider {
@@ -41,7 +41,8 @@ class JavaMethodStructureProvider : MethodStructureProvider {
             includeClassContext,
             usagesList,
             ios
-        )}
+        )
+        }
     }
 
     private fun processReturnTypeText(returnType: String?): String? {

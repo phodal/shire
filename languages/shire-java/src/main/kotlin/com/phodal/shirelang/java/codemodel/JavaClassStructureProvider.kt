@@ -6,8 +6,8 @@ import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.search.SearchScope
 import com.intellij.psi.search.searches.MethodReferencesSearch
 import com.intellij.psi.search.searches.ReferencesSearch
-import com.phodal.shirecore.codemodel.ClassStructureProvider
-import com.phodal.shirecore.codemodel.model.ClassStructure
+import com.phodal.shirecore.provider.codemodel.ClassStructureProvider
+import com.phodal.shirecore.provider.codemodel.model.ClassStructure
 
 class JavaClassStructureProvider : ClassStructureProvider {
     override fun build(psiElement: PsiElement, gatherUsages: Boolean): ClassStructure? {

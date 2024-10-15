@@ -4,8 +4,8 @@ import com.intellij.openapi.application.runReadAction
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiNameIdentifierOwner
 import com.intellij.psi.PsiVariable
-import com.phodal.shirecore.codemodel.VariableStructureProvider
-import com.phodal.shirecore.codemodel.model.VariableStructure
+import com.phodal.shirecore.provider.codemodel.VariableStructureProvider
+import com.phodal.shirecore.provider.codemodel.model.VariableStructure
 import com.phodal.shirelang.java.util.getContainingClass
 import com.phodal.shirelang.java.util.getContainingMethod
 
@@ -33,6 +33,7 @@ class JavaVariableStructureProvider : VariableStructureProvider {
             references,
             withMethodContext,
             withClassContext
-        )}
+        )
+        }
     }
 }

@@ -3,8 +3,8 @@ package com.phodal.shirelang.kotlin.codemodel
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiNameIdentifierOwner
 import com.intellij.psi.util.PsiTreeUtil
-import com.phodal.shirecore.codemodel.VariableStructureProvider
-import com.phodal.shirecore.codemodel.model.VariableStructure
+import com.phodal.shirecore.provider.codemodel.VariableStructureProvider
+import com.phodal.shirecore.provider.codemodel.model.VariableStructure
 import com.phodal.shirelang.kotlin.KotlinPsiUtil
 import org.jetbrains.kotlin.psi.KtNamedFunction
 import org.jetbrains.kotlin.psi.KtParameter

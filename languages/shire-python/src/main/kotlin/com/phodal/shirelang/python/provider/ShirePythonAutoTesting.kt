@@ -15,7 +15,7 @@ import com.jetbrains.python.PythonLanguage
 import com.jetbrains.python.psi.PyFile
 import com.jetbrains.python.run.PythonRunConfiguration
 import com.jetbrains.python.run.PythonRunConfigurationProducer
-import com.phodal.shirecore.codemodel.model.ClassStructure
+import com.phodal.shirecore.provider.codemodel.model.ClassStructure
 import com.phodal.shirecore.provider.TestingService
 import com.phodal.shirecore.variable.toolchain.unittest.AutoTestingPromptContext
 import com.phodal.shirelang.python.util.PyTestUtil

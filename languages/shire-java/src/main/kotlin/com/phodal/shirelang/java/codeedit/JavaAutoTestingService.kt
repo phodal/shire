@@ -25,8 +25,8 @@ import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.psi.*
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.messages.MessageBusConnection
-import com.phodal.shirecore.codemodel.ClassStructureProvider
-import com.phodal.shirecore.codemodel.model.ClassStructure
+import com.phodal.shirecore.provider.codemodel.ClassStructureProvider
+import com.phodal.shirecore.provider.codemodel.model.ClassStructure
 import com.phodal.shirecore.provider.TestingService
 import com.phodal.shirecore.variable.toolchain.unittest.AutoTestingPromptContext
 import com.phodal.shirelang.java.util.JavaTypeResolver

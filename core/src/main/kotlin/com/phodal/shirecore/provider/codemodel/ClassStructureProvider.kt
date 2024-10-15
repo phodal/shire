@@ -1,10 +1,10 @@
-package com.phodal.shirecore.codemodel
+package com.phodal.shirecore.provider.codemodel
 
 import com.intellij.lang.Language
 import com.intellij.lang.LanguageExtension
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.psi.PsiElement
-import com.phodal.shirecore.codemodel.model.ClassStructure
+import com.phodal.shirecore.provider.codemodel.model.ClassStructure
 
 /**
  * The ClassContextBuilder interface provides a method to retrieve the class context for a given PsiElement.

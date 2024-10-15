@@ -10,7 +10,7 @@ import com.intellij.psi.PsiErrorElement
 import com.intellij.psi.PsiFile
 import com.intellij.serviceContainer.LazyExtensionInstance
 import com.intellij.util.xmlb.annotations.Attribute
-import com.phodal.shirecore.codemodel.model.ClassStructure
+import com.phodal.shirecore.provider.codemodel.model.ClassStructure
 import com.phodal.shirecore.middleware.builtin.VerifyCodeProcessor
 import com.phodal.shirecore.provider.shire.FileRunService
 import com.phodal.shirecore.variable.toolchain.unittest.AutoTestingPromptContext

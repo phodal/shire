@@ -2,8 +2,8 @@ package com.phodal.shirelang.java.codemodel
 
 import com.intellij.psi.*
 import com.intellij.psi.util.PsiTreeUtil.getChildrenOfTypeAsList
-import com.phodal.shirecore.codemodel.FileStructureProvider
-import com.phodal.shirecore.codemodel.model.FileStructure
+import com.phodal.shirecore.provider.codemodel.FileStructureProvider
+import com.phodal.shirecore.provider.codemodel.model.FileStructure
 
 class JavaFileStructureProvider : FileStructureProvider {
     override fun build(psiFile: PsiFile): FileStructure {

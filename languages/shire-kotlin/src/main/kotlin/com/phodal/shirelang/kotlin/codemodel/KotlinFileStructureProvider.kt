@@ -2,8 +2,8 @@ package com.phodal.shirelang.kotlin.codemodel
 
 import com.intellij.psi.PsiFile
 import com.intellij.psi.util.PsiTreeUtil
-import com.phodal.shirecore.codemodel.FileStructureProvider
-import com.phodal.shirecore.codemodel.model.FileStructure
+import com.phodal.shirecore.provider.codemodel.FileStructureProvider
+import com.phodal.shirecore.provider.codemodel.model.FileStructure
 import org.jetbrains.kotlin.psi.KtClassOrObject
 import org.jetbrains.kotlin.psi.KtImportList
 import org.jetbrains.kotlin.psi.KtNamedFunction

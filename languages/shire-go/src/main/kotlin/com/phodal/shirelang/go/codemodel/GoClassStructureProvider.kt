@@ -4,8 +4,8 @@ import com.goide.psi.GoMethodDeclaration
 import com.goide.psi.GoTypeDeclaration
 import com.goide.psi.GoTypeSpec
 import com.intellij.psi.PsiElement
-import com.phodal.shirecore.codemodel.ClassStructureProvider
-import com.phodal.shirecore.codemodel.model.ClassStructure
+import com.phodal.shirecore.provider.codemodel.ClassStructureProvider
+import com.phodal.shirecore.provider.codemodel.model.ClassStructure
 import com.phodal.shirelang.go.util.GoPsiUtil
 
 class GoClassStructureProvider : ClassStructureProvider {
