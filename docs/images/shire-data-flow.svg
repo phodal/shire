@@ -27,7 +27,7 @@
                 <rect id="Rectangle" fill="#861094" x="0" y="0" width="120" height="40"></rect>
                 <text id="Variable-IDE-Abstrac" font-family="NotoSerifSC-Bold, Noto Serif SC" font-size="12" font-weight="bold" fill="#FFFFFF">
                     <tspan x="35.036" y="17">Variable</tspan>
-                    <tspan x="5.234" y="34"> IDE Abstract APIs</tspan>
+                    <tspan x="5.234" y="34"> IDE Context APIs</tspan>
                 </text>
             </g>
             <g id="Group-5" transform="translate(489.500000, 125.000000)">

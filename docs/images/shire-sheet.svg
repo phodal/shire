@@ -23,7 +23,7 @@
                 <tspan x="0" y="56">Behavior</tspan>
             </text>
             <text id="Abstract-APIs" fill="#DA4167" font-family="NotoSerifSC-Bold, Noto Serif SC" font-size="16" font-weight="bold">
-                <tspan x="1" y="124">Abstract APIs</tspan>
+                <tspan x="1" y="124">Context APIs</tspan>
             </text>
             <text id="AI-Agents" fill="#861094" font-family="NotoSerifSC-Bold, Noto Serif SC" font-size="16" font-weight="bold">
                 <tspan x="3" y="177">AI Agents</tspan>
