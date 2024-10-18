@@ -4,8 +4,6 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.*
 import com.intellij.testIntegration.TestFinderHelper
-import com.phodal.shirecore.provider.context.LanguageToolchainProvider
-import com.phodal.shirecore.provider.context.ToolchainPrepareContext
 import com.phodal.shirecore.provider.variable.impl.CodeSmellBuilder
 import com.phodal.shirecore.provider.variable.model.PsiContextVariable
 import com.phodal.shirecore.provider.variable.PsiContextVariableProvider
@@ -15,13 +13,12 @@ import com.phodal.shirelang.java.codemodel.JavaClassStructureProvider
 import com.phodal.shirelang.java.util.JavaTestHelper
 import com.phodal.shirelang.java.util.getContainingClass
 import com.phodal.shirelang.java.variable.provider.JavaRelatedClassesProvider
-import kotlinx.coroutines.runBlocking
 
 class JavaPsiContextVariableProvider : PsiContextVariableProvider {
     override fun resolve(variable: PsiContextVariable, project: Project, editor: Editor, psiElement: PsiElement?): Any {
         if (psiElement?.language?.id != "JAVA") return ""
 
-        val clazz: PsiClass? = psiElement.getContainingClass()
+        val clazz: PsiClass? = psiElement as? PsiClass ?: psiElement.getContainingClass()
         val sourceFile: PsiJavaFile = psiElement.containingFile as PsiJavaFile
 
         return when (variable) {

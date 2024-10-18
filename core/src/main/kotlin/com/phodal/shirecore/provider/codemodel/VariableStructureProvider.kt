@@ -1,6 +1,5 @@
 package com.phodal.shirecore.provider.codemodel
 
-import com.intellij.lang.Language
 import com.intellij.lang.LanguageExtension
 import com.intellij.psi.PsiElement
 import com.phodal.shirecore.provider.codemodel.model.VariableStructure
@@ -16,12 +15,7 @@ interface VariableStructureProvider {
     companion object {
         private val languageExtension =
             LanguageExtension<VariableStructureProvider>("com.phodal.variableStructureProvider")
-        private val providers: List<VariableStructureProvider>
-
-        init {
-            val registeredLanguages = Language.getRegisteredLanguages()
-            providers = registeredLanguages.mapNotNull(languageExtension::forLanguage)
-        }
+        private val providers: Map<String, VariableStructureProvider> = StructureProvider.loadProviders(languageExtension)
 
         fun from(
             psiElement: PsiElement,
@@ -29,14 +23,8 @@ interface VariableStructureProvider {
             includeClassContext: Boolean = false,
             gatherUsages: Boolean = false,
         ): VariableStructure {
-            for (provider in providers) {
-                val variableStructure =
-                    provider.build(psiElement, includeMethodContext, includeClassContext, gatherUsages) ?: continue
-
-                return variableStructure
-            }
-
-            return VariableStructure(psiElement, psiElement.text, null)
+            return providers[psiElement.language.id]?.build(psiElement, includeMethodContext, includeClassContext, gatherUsages)
+                ?: VariableStructure(psiElement, psiElement.text, null)
         }
     }
 

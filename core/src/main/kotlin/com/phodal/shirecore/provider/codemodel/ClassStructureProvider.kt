@@ -1,6 +1,5 @@
 package com.phodal.shirecore.provider.codemodel
 
-import com.intellij.lang.Language
 import com.intellij.lang.LanguageExtension
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.psi.PsiElement
@@ -23,23 +22,15 @@ interface ClassStructureProvider {
 
     companion object {
         private val languageExtension = LanguageExtension<ClassStructureProvider>("com.phodal.classStructureProvider")
-        private val providers: List<ClassStructureProvider>
+        private val providers: Map<String, ClassStructureProvider> = StructureProvider.loadProviders(languageExtension)
         private val logger = logger<ClassStructureProvider>()
 
-        init {
-            val registeredLanguages = Language.getRegisteredLanguages()
-            providers = registeredLanguages.mapNotNull(languageExtension::forLanguage)
-        }
-
         fun from(psiElement: PsiElement, gatherUsages: Boolean = false): ClassStructure? {
-            for (provider in providers) {
-                try {
-                    return provider.build(psiElement, gatherUsages)
-                } catch (e: Exception) {
-                    logger.error("Error while getting class context from $provider", e)
-                }
+            try {
+                return providers[psiElement.language.id]?.build(psiElement, gatherUsages)
+            } catch (e: Exception) {
+                logger.error("Error while getting class context from", e)
             }
-
             return null
         }
     }
