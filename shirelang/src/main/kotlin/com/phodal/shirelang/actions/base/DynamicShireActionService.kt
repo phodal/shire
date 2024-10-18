@@ -30,7 +30,6 @@ class DynamicShireActionService: DynamicActionService {
     override fun getAllActions(): List<DynamicShireActionConfig> {
         return (actionCache.values.toList() + dynamicActionService.getAllActions())
             .distinctBy { it.shireFile.virtualFile }
-            .distinctBy { it.name }
     }
 
     fun getActions(location: ShireActionLocation): List<DynamicShireActionConfig> {
