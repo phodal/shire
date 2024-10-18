@@ -40,7 +40,7 @@ fun <T> Flow<T>.cancelWithConsole(consoleView: ConsoleView?): Flow<T> =
     cancelHandler { consoleView?.addCancelCallback(it) }
 
 /**
- * Please use [CustomFlowWrapper] to call it and it won't work if it's CancellableFlow,
+ * Please use [CustomFlowWrapper] to call it, and it won't work if it's CancellableFlow,
  * so you need to call it before calling [cancellable]
  */
 fun <T> Flow<T>.cancelHandler(handle: ((String) -> Unit) -> Unit): Flow<T> =
