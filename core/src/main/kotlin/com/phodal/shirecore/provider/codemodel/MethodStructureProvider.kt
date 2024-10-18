@@ -1,6 +1,5 @@
 package com.phodal.shirecore.provider.codemodel
 
-import com.intellij.lang.Language
 import com.intellij.lang.LanguageExtension
 import com.intellij.psi.PsiElement
 import com.phodal.shirecore.provider.codemodel.model.MethodStructure
@@ -15,24 +14,11 @@ interface MethodStructureProvider {
 
     companion object {
         private val languageExtension = LanguageExtension<MethodStructureProvider>("com.phodal.methodStructureProvider")
-        private val providers: List<MethodStructureProvider>
-
-        init {
-            val registeredLanguages = Language.getRegisteredLanguages()
-            providers = registeredLanguages.mapNotNull(languageExtension::forLanguage)
-        }
+        private val providers: Map<String, MethodStructureProvider> = StructureProvider.loadProviders(languageExtension)
 
         fun from(psiElement: PsiElement, includeClassContext: Boolean = false, gatherUsages: Boolean = false): MethodStructure? {
-            val iterator = providers.iterator()
-            while (iterator.hasNext()) {
-                val provider = iterator.next()
-                val methodContext = provider.build(psiElement, includeClassContext, gatherUsages)
-                if (methodContext != null) {
-                    return methodContext
-                }
-            }
-
-            return MethodStructure(psiElement, psiElement.text, null)
+            return providers[psiElement.language.id]?.build(psiElement, includeClassContext, gatherUsages)
+                ?: MethodStructure(psiElement, psiElement.text, null)
         }
     }
 }
