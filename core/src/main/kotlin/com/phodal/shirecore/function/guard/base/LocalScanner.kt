@@ -1,4 +1,4 @@
-package com.phodal.shirecore.guard.base
+package com.phodal.shirecore.function.guard.base
 
 /**
  * GuardScanner is an interface for scanning user input for security vulnerabilities.

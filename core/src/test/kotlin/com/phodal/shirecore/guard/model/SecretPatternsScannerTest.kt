@@ -1,7 +1,8 @@
 package com.phodal.shirecore.guard.model
 
 import com.intellij.testFramework.LightPlatformTestCase
-import com.phodal.shirecore.guard.scanner.SecretPatternsScanner
+import com.phodal.shirecore.function.guard.model.SecretPattern
+import com.phodal.shirecore.function.guard.scanner.SecretPatternsScanner
 import junit.framework.TestCase.*
 import org.junit.Test
 

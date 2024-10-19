@@ -1,4 +1,4 @@
-package com.phodal.shirecore.guard.model
+package com.phodal.shirecore.function.guard.model
 
 import com.intellij.openapi.diagnostic.logger
 import kotlinx.serialization.Contextual

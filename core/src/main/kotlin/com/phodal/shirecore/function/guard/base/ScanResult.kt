@@ -1,4 +1,4 @@
-package com.phodal.shirecore.guard.base
+package com.phodal.shirecore.function.guard.base
 
 /**
  * ScanResult is a data class that encapsulates the result of a scan.
