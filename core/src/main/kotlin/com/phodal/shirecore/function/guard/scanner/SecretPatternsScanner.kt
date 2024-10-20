@@ -9,6 +9,7 @@ import com.phodal.shirecore.schema.SECRET_PATTERN_EXTENSION
 import com.phodal.shirecore.function.guard.base.LocalScanner
 import com.phodal.shirecore.function.guard.base.ScanResult
 import com.phodal.shirecore.function.guard.model.SecretPattern
+import com.phodal.shirecore.function.guard.model.SecretPatternItem
 import com.phodal.shirecore.function.guard.model.SecretPatterns
 import java.net.URL
 
@@ -30,9 +31,7 @@ class SecretPatternsScanner(val project: Project) : LocalScanner {
         val content = file.readText()
 
         val patterns = Yaml.default.decodeFromString(SecretPatterns.serializer(), content)
-        return patterns.patterns.map {
-            it.pattern
-        }
+        return patterns.patterns.map(SecretPatternItem::pattern)
     }
 
     private fun loadFromProject(project: Project): List<SecretPattern> {
@@ -45,10 +44,8 @@ class SecretPatternsScanner(val project: Project) : LocalScanner {
                     logger<SecretPatternsScanner>().error("Failed to load custom agent configuration", e)
                     null
                 }
-            }.flatMap { secretPatterns ->
-                secretPatterns.patterns.map {
-                    it.pattern
-                }
+            }.flatMap {
+                it.patterns.map(SecretPatternItem::pattern)
             }
     }
 
@@ -60,7 +57,7 @@ class SecretPatternsScanner(val project: Project) : LocalScanner {
         patterns = patterns - pattern
     }
 
-    fun mask(text: String): String {
+    fun maskInput(text: String): String {
         var newText = text
         patterns.forEach {
             newText = it.mask(newText)
