@@ -371,7 +371,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                             else -> listOf()
                         }
                     } else {
-                        listOf(input.toString())
+                        listOf(input)
                     }
                 }.flatten()
 

@@ -27,7 +27,14 @@ object BatchProcessor : PatternProcessor {
             return ""
         }
 
-        return inputs.forEach { chunk: String ->
+        var files = inputs
+        /// maybe inputs ["a.txt\nb.txt", "c.txt\nd.txt"] or ["a.txt", "b.txt", "c.txt", "d.txt"] we need to split it
+        if (inputs.size == 1) {
+            files = inputs[0].split("\n")
+        }
+
+
+        return files.forEach { chunk: String ->
             try {
                 val variableNames = arrayOf("input")
                 variableTable["input"] = chunk
