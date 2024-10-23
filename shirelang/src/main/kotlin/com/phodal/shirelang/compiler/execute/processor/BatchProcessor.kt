@@ -19,7 +19,7 @@ object BatchProcessor : PatternProcessor {
         variableTable: MutableMap<String, Any?>,
     ): Any {
         val file = runReadAction {
-            ShireActionStartupActivity.findShireFile(myProject, filename.toString())
+            ShireActionStartupActivity.findShireFile(myProject, filename)
         }
 
         if (file == null) {
