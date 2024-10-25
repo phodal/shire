@@ -6,7 +6,10 @@ import com.intellij.openapi.application.runInEdt
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.editor.colors.EditorFontType
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.popup.JBPopup
 import com.intellij.openapi.ui.popup.JBPopupFactory
+import com.intellij.openapi.ui.popup.JBPopupListener
+import com.intellij.openapi.ui.popup.LightweightWindowEvent
 import com.intellij.ui.components.JBTextArea
 import com.intellij.ui.dsl.builder.*
 import com.phodal.shirecore.ShireCoroutineScope
@@ -40,12 +43,12 @@ class ShowWebviewProcessor : PostProcessor {
         val dataContext = DataManager.getInstance().dataContextFromFocusAsync.blockingGet(10000)
             ?: throw IllegalStateException("No data context")
 
-        class WebviewKeyAdapter(val textarea: JBTextArea) : KeyAdapter() {
-            private var cancelCallback: ((String) -> Unit)? = null
+        class WebviewKeyAdapter(val textarea: JBTextArea, val currentWebview: WebViewWindow?) : KeyAdapter() {
+            var popup: JBPopup? = null
             override fun keyPressed(e: KeyEvent) {
                 if (e.keyCode == KeyEvent.VK_ENTER) {
                     textarea.isEditable = false
-                    webview?.loadHtml("Processing...")
+                    currentWebview?.loadHtml("Processing...")
                     var result = ""
 
                     ShireCoroutineScope.scope(project).launch {
@@ -59,18 +62,28 @@ class ShowWebviewProcessor : PostProcessor {
                                 false
                             )!!
 
+                        var popupListener: JBPopupListener? = null
+
                         runBlocking {
-                            flow.cancelHandler { cancelCallback = it }.cancellable().collect {
+                            flow.cancelHandler {
+                                if (popup?.isDisposed == true) it.invoke("This popup has been disposed")
+                                else popup?.addListener(object : JBPopupListener {
+                                    override fun onClosed(event: LightweightWindowEvent) {
+                                        it.invoke("This popup has been closed")
+                                    }
+                                }.also { popupListener = it })
+                            }.cancellable().collect {
                                 result += it
                             }
 
+                            popupListener?.run { popup?.removeListener(this) }
                             textarea.isEditable = true
                         }
 
                         val newHtml = CodeFence.parse(result).text
                         logger<ShowWebviewProcessor>().info("Result: $result")
                         runInEdt {
-                            webview?.loadHtml(newHtml)
+                            currentWebview?.loadHtml(newHtml)
                         }
 
                         html = newHtml
@@ -80,6 +93,8 @@ class ShowWebviewProcessor : PostProcessor {
                 }
             }
         }
+
+        var keyAdapter: WebviewKeyAdapter? = null
 
         runInEdt {
             webview = WebViewWindow()
@@ -95,7 +110,7 @@ class ShowWebviewProcessor : PostProcessor {
                         .bindText(::continueMessage)
                         .applyToComponent {
                             font = EditorFontType.getGlobalPlainFont()
-                            addKeyListener(WebviewKeyAdapter(this))
+                            addKeyListener(WebviewKeyAdapter(this, webview).also { keyAdapter = it })
                         }
                 }
             }
@@ -108,6 +123,7 @@ class ShowWebviewProcessor : PostProcessor {
                 .setFocusable(true)
                 .setRequestFocus(true)
                 .createPopup()
+                .also { keyAdapter?.popup = it }
 
             popup.showInBestPositionFor(dataContext)
         }
