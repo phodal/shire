@@ -286,7 +286,10 @@ sealed class PatternActionFunc(val type: PatternActionFuncDef) {
                     ApprovalExecute(first, rest)
                 }
 
-                PatternActionFuncDef.NOTIFY -> Notify(args[0])
+                PatternActionFuncDef.NOTIFY -> {
+                    val first = args.firstOrNull() ?: ""
+                    Notify(first)
+                }
 
                 PatternActionFuncDef.EMBEDDING -> Embedding(args.toTypedArray())
 
