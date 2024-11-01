@@ -12,6 +12,7 @@ import com.intellij.execution.runners.showRunContent
 import com.intellij.execution.ui.RunContentDescriptor
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.util.Disposer
 import java.util.concurrent.atomic.AtomicReference
 
 class ShireProgramRunner : GenericProgramRunner<RunnerSettings>(), Disposable {
@@ -20,6 +21,10 @@ class ShireProgramRunner : GenericProgramRunner<RunnerSettings>(), Disposable {
     private val connection = ApplicationManager.getApplication().messageBus.connect(this)
 
     private var isSubscribed = false
+
+    init {
+        Disposer.register(ShirePluginDisposable.getInstance(), this)
+    }
 
     override fun getRunnerId(): String = RUNNER_ID
 
