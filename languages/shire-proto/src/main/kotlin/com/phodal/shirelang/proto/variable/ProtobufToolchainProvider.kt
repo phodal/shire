@@ -1,7 +1,7 @@
 package com.phodal.shirelang.proto.variable
 
 import com.intellij.openapi.project.Project
-import com.intellij.protobuf.lang.ProtoBaseLanguage
+import com.intellij.protobuf.lang.PbLanguage
 import com.intellij.protobuf.lang.psi.PbFile
 import com.phodal.shirecore.provider.context.LanguageToolchainProvider
 import com.phodal.shirecore.provider.context.ToolchainContextItem
@@ -9,7 +9,7 @@ import com.phodal.shirecore.provider.context.ToolchainPrepareContext
 
 class ProtobufToolchainProvider : LanguageToolchainProvider {
     override fun isApplicable(project: Project, context: ToolchainPrepareContext): Boolean {
-        return context.sourceFile?.language is ProtoBaseLanguage
+        return context.sourceFile?.language is PbLanguage
     }
 
     override suspend fun collect(project: Project, context: ToolchainPrepareContext): List<ToolchainContextItem> {

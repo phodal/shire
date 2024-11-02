@@ -2,11 +2,9 @@ package com.phodal.shirelang.proto.provider
 
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
-import com.intellij.protobuf.lang.ProtoBaseLanguage
+import com.intellij.protobuf.lang.PbLanguage
 import com.intellij.protobuf.lang.psi.*
-import com.intellij.protobuf.lang.psi.util.PbPsiUtil
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiMethod
 import com.phodal.shirecore.provider.variable.PsiContextVariableProvider
 import com.phodal.shirecore.provider.variable.impl.CodeSmellBuilder
 import com.phodal.shirecore.provider.variable.model.PsiContextVariable
@@ -15,7 +13,7 @@ import com.phodal.shirelang.proto.codemodel.ProtoFileStructureProvider
 
 class ShireProtoPsiVariableProvider : PsiContextVariableProvider {
     override fun resolve(variable: PsiContextVariable, project: Project, editor: Editor, psiElement: PsiElement?): Any {
-        if (psiElement?.language !is ProtoBaseLanguage) return ""
+        if (psiElement?.language !is PbLanguage) return ""
 
         val containingFile: PbFile = psiElement.containingFile as? PbFile ?: return ""
 
@@ -39,8 +37,11 @@ class ShireProtoPsiVariableProvider : PsiContextVariableProvider {
             }
 
             PsiContextVariable.CURRENT_METHOD_CODE -> return psiElement.text
-            PsiContextVariable.RELATED_CLASSES -> TODO()
-            PsiContextVariable.SIMILAR_TEST_CASE -> TODO()
+            PsiContextVariable.RELATED_CLASSES -> {
+                // todo anlysis the related classes
+                ""
+            }
+            PsiContextVariable.SIMILAR_TEST_CASE -> ""
             PsiContextVariable.IMPORTS -> {
                 return containingFile.importStatements.joinToString("\n") { it.text }
             }
