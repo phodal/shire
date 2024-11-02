@@ -240,6 +240,18 @@ project(":languages:shire-go") {
     }
 }
 
+project(":languages:shire-proto") {
+    dependencies {
+        intellijPlatform {
+            intellijIde(prop("ideaVersion"))
+            intellijPlugins(ideaPlugins)
+            intellijPlugins(prop("protoPlugin"))
+        }
+
+        implementation(project(":core"))
+    }
+}
+
 project(":languages:shire-json") {
     dependencies {
         intellijPlatform {
@@ -556,6 +568,8 @@ project(":") {
             pluginModule(implementation(project(":languages:shire-kotlin")))
             pluginModule(implementation(project(":languages:shire-go")))
             pluginModule(implementation(project(":languages:shire-markdown")))
+            pluginModule(implementation(project(":languages:shire-proto")))
+
 //            pluginModule(implementation(project(":languages:shire-json")))
             pluginModule(implementation(project(":toolsets:git")))
             pluginModule(implementation(project(":toolsets:httpclient")))

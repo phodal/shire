@@ -15,6 +15,7 @@ include(
     "languages:shire-go",
     "languages:shire-markdown",
     "languages:shire-json",
+    "languages:shire-proto",
 
     "toolsets:git",
     "toolsets:httpclient",

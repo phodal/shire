@@ -1,0 +1,11 @@
+<idea-plugin package="com.phodal.shirelang.proto">
+    <!--suppress PluginXmlValidity -->
+    <dependencies>
+        <plugin id="idea.plugin.protoeditor"/>
+    </dependencies>
+
+    <extensions defaultExtensionNs="com.phodal">
+        <shirePsiVariableProvider language="protobuf"
+                                  implementationClass="com.phodal.shirelang.proto.provider.ShireProtoPsiVariableProvider"/>
+    </extensions>
+</idea-plugin>
