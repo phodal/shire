@@ -249,13 +249,13 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
 
             is PatternActionFunc.Notify -> {
                 // action.message is empty get lastResult
-                var message = if (action.message.isEmpty()) {
+                val message = action.message.ifEmpty {
                     lastResult.toString()
-                } else {
-                    action.message
                 }
 
                 ShirelangNotifications.info(myProject, message)
+                // return last result for next step
+                lastResult
             }
 
             is PatternActionFunc.From,
