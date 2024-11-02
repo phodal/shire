@@ -181,6 +181,7 @@ used ::= (
     agentStart agentId
     | commandStart commandId (COLON COMMAND_PROP (SHARP LINE_INFO)?)?
     | variableStart (variableId | varAccess)
+    | '#' variableStart expr
 )
 
 agentStart ::= '@'
@@ -206,7 +207,6 @@ velocityExpr ::=
     | '#' 'end'
     | '#' 'endif'
     // for example, the commit id will be #$storyId
-    | '#' variableStart expr
 
 markdownHeader ::= SHARP SHARP* TEXT_SEGMENT
 

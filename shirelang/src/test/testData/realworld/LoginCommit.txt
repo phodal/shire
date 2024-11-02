@@ -93,7 +93,7 @@ ShireFile
   PsiElement(ShireTokenType.NEWLINE)('\n')
   PsiElement(ShireTokenType.NEWLINE)('\n')
   PsiElement(ShireTokenType.TEXT_SEGMENT)('- fix(authentication): 修复密码正则表达式模式问题 ')
-  ShireVelocityExprImpl(VELOCITY_EXPR)
+  ShireUsedImpl(USED)
     PsiElement(ShireTokenType.#)('#')
     ShireVariableStartImpl(VARIABLE_START)
       PsiElement(VARIABLE_START)('$')

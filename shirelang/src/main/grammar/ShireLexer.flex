@@ -235,11 +235,9 @@ AFTER_STREAMING          =afterStreaming
 
   {CODE_CONTENT}          { return content(); }
   {NEWLINE}               { return NEWLINE;  }
-  "["                     { yypushback(yylength()); yybegin(CONTENT_COMMENT_BLOCK);  }
 
   {BLOCK_COMMENT}         { return BLOCK_COMMENT; }
   {COMMENTS}              { return COMMENTS; }
-  [^]                     { yypushback(yylength()); return TEXT_SEGMENT; }
 }
 
 <FRONT_MATTER_BLOCK> {
