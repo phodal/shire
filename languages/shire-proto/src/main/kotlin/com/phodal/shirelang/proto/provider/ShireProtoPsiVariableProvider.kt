@@ -6,6 +6,7 @@ import com.intellij.protobuf.lang.ProtoBaseLanguage
 import com.intellij.protobuf.lang.psi.*
 import com.intellij.protobuf.lang.psi.util.PbPsiUtil
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiMethod
 import com.phodal.shirecore.provider.variable.PsiContextVariableProvider
 import com.phodal.shirecore.provider.variable.impl.CodeSmellBuilder
 import com.phodal.shirecore.provider.variable.model.PsiContextVariable
@@ -56,13 +57,10 @@ class ShireProtoPsiVariableProvider : PsiContextVariableProvider {
 
             PsiContextVariable.METHOD_CALLER -> ""
             PsiContextVariable.CALLED_METHOD -> {
-                return when (psiElement) {
-                    is PbServiceDefinition -> {
-//                        PbPsiUtil.resolveRefToType()
-                        ""
-                    }
-                    else -> ""
-                }
+                if (psiElement !is PbServiceDefinition) return ""
+                /// lookup the input and output in the service
+//                ShireProtoUtils.findCallees(psiElement).joinToString("\n") { it.text }
+                ""
             }
             PsiContextVariable.SIMILAR_CODE -> ""
             PsiContextVariable.STRUCTURE -> when (psiElement) {
