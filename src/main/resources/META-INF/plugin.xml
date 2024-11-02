@@ -16,6 +16,7 @@
         <module name="com.phodal.shirelang.kotlin"/>
         <module name="com.phodal.shirelang.go"/>
         <module name="com.phodal.shirelang.markdown"/>
+        <module name="com.phodal.shirelang.proto"/>
 
 <!--        <module name="com.phodal.shire.json"/>-->
 
