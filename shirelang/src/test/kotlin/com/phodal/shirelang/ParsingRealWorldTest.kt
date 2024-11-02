@@ -3,7 +3,7 @@ package com.phodal.shirelang
 import com.intellij.testFramework.ParsingTestCase
 import com.phodal.shirelang.parser.ShireParserDefinition
 
-class RealWorldShireParsingTest : ParsingTestCase("realworld", "shire", ShireParserDefinition()) {
+class ParsingRealWorldTest : ParsingTestCase("realworld", "shire", ShireParserDefinition()) {
     override fun getTestDataPath(): String {
         return "src/test/testData"
     }
@@ -33,6 +33,10 @@ class RealWorldShireParsingTest : ParsingTestCase("realworld", "shire", ShirePar
     }
 
     fun testOnPaste() {
+        doTest(true)
+    }
+
+    fun testLoginCommit() {
         doTest(true)
     }
 }

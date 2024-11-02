@@ -205,6 +205,8 @@ velocityExpr ::=
     | '#' 'elseif' '(' variableStart? expr ')'
     | '#' 'end'
     | '#' 'endif'
+    // for example, the commit id will be #$storyId
+    | '#' variableStart expr
 
 markdownHeader ::= SHARP SHARP* TEXT_SEGMENT
 

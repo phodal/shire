@@ -3,7 +3,7 @@ package com.phodal.shirelang
 import com.intellij.testFramework.ParsingTestCase
 import com.phodal.shirelang.parser.ShireParserDefinition
 
-class ShireParsingTest : ParsingTestCase("parser", "shire", ShireParserDefinition()) {
+class ParsingNormalTest : ParsingTestCase("parser", "shire", ShireParserDefinition()) {
     override fun getTestDataPath(): String {
         return "src/test/testData"
     }
