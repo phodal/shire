@@ -39,7 +39,9 @@ class ShireProtoPsiVariableProvider : PsiContextVariableProvider {
             PsiContextVariable.CURRENT_METHOD_CODE -> return psiElement.text
             PsiContextVariable.RELATED_CLASSES -> {
                 if (psiElement !is PbServiceDefinition) return ""
-                ShireProtoUtils.findCallees(psiElement, project)
+                ShireProtoUtils.lookupDependenceMessages(psiElement, project).map {
+                    it.text ?: ""
+                }
             }
             PsiContextVariable.SIMILAR_TEST_CASE -> ""
             PsiContextVariable.IMPORTS -> {
@@ -60,7 +62,9 @@ class ShireProtoPsiVariableProvider : PsiContextVariableProvider {
             PsiContextVariable.CALLED_METHOD -> {
                 if (psiElement !is PbServiceDefinition) return ""
                 /// lookup the input and output in the service
-                ShireProtoUtils.findCallees(psiElement, project)
+                ShireProtoUtils.lookupDependenceMessages(psiElement, project).map {
+                    it.text ?: ""
+                }
             }
             PsiContextVariable.SIMILAR_CODE -> ""
             PsiContextVariable.STRUCTURE -> when (psiElement) {
