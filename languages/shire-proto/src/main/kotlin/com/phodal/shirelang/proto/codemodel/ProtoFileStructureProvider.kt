@@ -1,4 +1,4 @@
-package com.phodal.shirelang.protobuf.codemodel
+package com.phodal.shirelang.proto.codemodel
 
 import com.intellij.protobuf.lang.psi.PbImportStatement
 import com.intellij.protobuf.lang.psi.PbMessageDefinition

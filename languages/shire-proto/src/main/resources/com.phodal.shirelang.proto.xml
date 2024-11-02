@@ -6,7 +6,10 @@
 
     <extensions defaultExtensionNs="com.phodal">
         <fileStructureProvider language="protobuf"
-                               implementationClass="com.phodal.shirelang.protobuf.codemodel.ProtoFileStructureProvider"/>
+                               implementationClass="com.phodal.shirelang.proto.codemodel.ProtoFileStructureProvider"/>
+
+        <classStructureProvider language="protobuf"
+                                implementationClass="com.phodal.shirelang.proto.codemodel.ProtoClassStructureProvider"/>
 
         <shirePsiVariableProvider language="protobuf"
                                   implementationClass="com.phodal.shirelang.proto.provider.ShireProtoPsiVariableProvider"/>
