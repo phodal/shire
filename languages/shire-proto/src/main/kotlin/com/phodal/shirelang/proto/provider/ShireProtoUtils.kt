@@ -1,13 +1,16 @@
 package com.phodal.shirelang.proto.provider
 
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.NlsSafe
+import com.intellij.protobuf.ide.gutter.findImplementations
+import com.intellij.protobuf.lang.findusages.PbFindUsagesProvider
 import com.intellij.protobuf.lang.psi.PbMessageDefinition
 import com.intellij.protobuf.lang.psi.PbMessageTypeName
 import com.intellij.protobuf.lang.psi.PbNamedElement
 import com.intellij.protobuf.lang.psi.PbServiceDefinition
+import com.intellij.protobuf.lang.resolve.PbSymbolLookupElement
 import com.intellij.protobuf.lang.resolve.ProtoSymbolPathReference
 import com.intellij.protobuf.lang.stub.index.QualifiedNameIndex
+import com.intellij.psi.PsiElement
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.stubs.StubIndex
 
@@ -27,7 +30,6 @@ object ShireProtoUtils {
 
         val messages = type.distinct()
 
-        /// lookup messages and resolve typed
         val secondLevels = messages.mapNotNull {
             it.body?.simpleFieldList?.mapNotNull { field ->
                 field.typeName.symbolPath.reference?.resolve() as? PbMessageDefinition
@@ -43,13 +45,31 @@ object ShireProtoUtils {
     private fun getItemsByName(
         project: Project,
         name: String,
-    ): List<@NlsSafe String> {
+    ): List<PbNamedElement> {
         val projectScope = GlobalSearchScope.projectScope(project)
         val results: MutableCollection<PbNamedElement> = StubIndex.getElements(
             QualifiedNameIndex.KEY, name, project, projectScope,
             PbNamedElement::class.java
         )
 
-        return results.mapNotNull { it.text }
+        return results.toList().toList()
+    }
+
+    fun lookupUsage(psiElement: PsiElement, project: Project): List<PsiElement> {
+        if (!PbFindUsagesProvider().canFindUsagesFor(psiElement)) {
+            return listOf()
+        }
+
+        return when (psiElement) {
+            is PbMessageDefinition -> {
+                return getItemsByName(project, psiElement.name!!)
+            }
+
+            is PbServiceDefinition -> {
+                findImplementations(psiElement).toList()
+            }
+
+            else -> listOf()
+        }
     }
 }

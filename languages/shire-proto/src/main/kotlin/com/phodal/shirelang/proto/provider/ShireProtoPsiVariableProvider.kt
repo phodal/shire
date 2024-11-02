@@ -43,30 +43,24 @@ class ShireProtoPsiVariableProvider : PsiContextVariableProvider {
                     it.text ?: ""
                 }
             }
-            PsiContextVariable.SIMILAR_TEST_CASE -> ""
             PsiContextVariable.IMPORTS -> {
                 return containingFile.importStatements.joinToString("\n") { it.text }
             }
-
-            PsiContextVariable.IS_NEED_CREATE_FILE -> ""
-            PsiContextVariable.TARGET_TEST_FILE_NAME -> ""
-            PsiContextVariable.UNDER_TEST_METHOD_CODE -> ""
             PsiContextVariable.FRAMEWORK_CONTEXT -> return collectFrameworkContext(psiElement, project)
             PsiContextVariable.CODE_SMELL -> return CodeSmellBuilder.collectElementProblemAsSting(
                 psiElement,
                 project,
                 editor
             )
-
-            PsiContextVariable.METHOD_CALLER -> ""
+            PsiContextVariable.METHOD_CALLER -> ShireProtoUtils.lookupUsage(psiElement, project).map {
+                it.text ?: ""
+            }
             PsiContextVariable.CALLED_METHOD -> {
                 if (psiElement !is PbServiceDefinition) return ""
-                /// lookup the input and output in the service
                 ShireProtoUtils.lookupDependenceMessages(psiElement, project).map {
                     it.text ?: ""
                 }
             }
-            PsiContextVariable.SIMILAR_CODE -> ""
             PsiContextVariable.STRUCTURE -> when (psiElement) {
                 is PbFile -> ProtoFileStructureProvider().build(psiElement)?.toString() ?: ""
                 is PbMessageDefinition,
@@ -75,6 +69,12 @@ class ShireProtoPsiVariableProvider : PsiContextVariableProvider {
 
                 else -> null
             } ?: ""
+
+            PsiContextVariable.SIMILAR_CODE -> ""
+            PsiContextVariable.SIMILAR_TEST_CASE -> ""
+            PsiContextVariable.IS_NEED_CREATE_FILE -> ""
+            PsiContextVariable.TARGET_TEST_FILE_NAME -> ""
+            PsiContextVariable.UNDER_TEST_METHOD_CODE -> ""
         }
     }
 }
