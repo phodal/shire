@@ -7,5 +7,9 @@
     <extensions defaultExtensionNs="com.phodal">
         <shirePsiVariableProvider language="protobuf"
                                   implementationClass="com.phodal.shirelang.proto.provider.ShireProtoPsiVariableProvider"/>
+
+        <shireLanguageToolchainProvider
+                language="protobuf"
+                implementationClass="com.phodal.shirelang.proto.variable.ProtobufToolchainProvider"/>
     </extensions>
 </idea-plugin>
