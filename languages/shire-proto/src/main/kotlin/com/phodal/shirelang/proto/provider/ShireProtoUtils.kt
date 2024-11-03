@@ -62,7 +62,7 @@ object ShireProtoUtils {
 
         return when (psiElement) {
             is PbMessageDefinition -> {
-                return getItemsByName(project, psiElement.name!!)
+                return getItemsByName(project, psiElement.name!!) + findImplementations(psiElement).toList()
             }
 
             is PbServiceDefinition -> {

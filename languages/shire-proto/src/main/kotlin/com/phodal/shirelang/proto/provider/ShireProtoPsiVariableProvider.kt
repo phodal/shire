@@ -53,6 +53,7 @@ class ShireProtoPsiVariableProvider : PsiContextVariableProvider {
                 editor
             )
             PsiContextVariable.METHOD_CALLER -> ShireProtoUtils.lookupUsage(psiElement, project).map {
+                /// todo: Try use strcuture to simplify code ?
                 it.text ?: ""
             }
             PsiContextVariable.CALLED_METHOD -> {
