@@ -21,6 +21,7 @@ changelog {
     groups.empty()
     path.set(rootProject.file("CHANGELOG.md").toString())
     repositoryUrl.set(properties("pluginRepositoryUrl"))
+    itemPrefix.set("*")
 }
 
 /// maybe refs: https://github.com/HaxeFoundation/intellij-haxe/blob/develop/build.gradle.kts
@@ -514,6 +515,19 @@ project(":") {
             vendor {
                 name = "Phodal Huang"
             }
+
+            val changelog = project.changelog // local variable for configuration cache compatibility
+            // Get the latest available change notes from the changelog file
+            changeNotes = providers.gradleProperty("pluginVersion").map { pluginVersion ->
+                with(changelog) {
+                    renderItem(
+                        (getOrNull(pluginVersion) ?: getUnreleased())
+                            .withHeader(false)
+                            .withEmptySections(false),
+                        Changelog.OutputType.HTML,
+                    )
+                }
+            }
         }
 
         pluginVerification {
@@ -531,8 +545,6 @@ project(":") {
 
         instrumentCode = false
         buildSearchableOptions = false
-
-
 
         signing {
             certificateChain = providers.environmentVariable("CERTIFICATE_CHAIN")
