@@ -52,10 +52,7 @@ class ShireProtoPsiVariableProvider : PsiContextVariableProvider {
                 project,
                 editor
             )
-            PsiContextVariable.METHOD_CALLER -> ShireProtoUtils.lookupUsage(psiElement, project).map {
-                /// todo: Try use strcuture to simplify code ?
-                it.text ?: ""
-            }
+            PsiContextVariable.METHOD_CALLER -> ShireProtoUtils.lookupUsage(psiElement, project).map { it }
             PsiContextVariable.CALLED_METHOD -> {
                 if (psiElement !is PbServiceDefinition) return ""
                 ShireProtoUtils.lookupDependenceMessages(psiElement, project).map {

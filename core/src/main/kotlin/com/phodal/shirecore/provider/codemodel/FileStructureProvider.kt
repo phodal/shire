@@ -11,9 +11,8 @@ interface FileStructureProvider {
         private val languageExtension = LanguageExtension<FileStructureProvider>("com.phodal.fileStructureProvider")
         private val providers: Map<String, FileStructureProvider> = StructureProvider.loadProviders(languageExtension)
 
-        fun from(psiFile: PsiFile): FileStructure {
+        fun from(psiFile: PsiFile): FileStructure? {
             return providers[psiFile.language.id]?.build(psiFile)
-                ?: FileStructure(psiFile, psiFile.name, psiFile.virtualFile.path)
         }
     }
 }
