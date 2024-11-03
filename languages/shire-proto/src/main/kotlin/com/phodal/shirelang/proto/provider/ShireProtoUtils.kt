@@ -52,7 +52,7 @@ object ShireProtoUtils {
             PbNamedElement::class.java
         )
 
-        return results.toList().toList()
+        return results.toList()
     }
 
     fun lookupUsage(psiElement: PsiElement, project: Project): List<PsiElement> {
