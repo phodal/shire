@@ -84,7 +84,9 @@ object ShireProtoUtils {
 
     private fun formatElement(psiElement: PsiElement): String? {
         return when {
-            psiElement is PsiFile -> FileStructureProvider.from(psiElement)?.format()
+            psiElement is PsiFile -> {
+                FileStructureProvider.from(psiElement)?.format()
+            }
             else -> ClassStructureProvider.from(psiElement, false)?.format()
                 ?: MethodStructureProvider.from(psiElement, false)?.format()
         }

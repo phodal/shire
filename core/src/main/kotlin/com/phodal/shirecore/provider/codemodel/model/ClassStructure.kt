@@ -39,8 +39,8 @@ class ClassStructure(
         }
         val methodSignatures = getMethodSignatures()
             .filter { it.isNotBlank() }
-            .joinToString(separator = "\n  ") { method ->
-                "+ $method"
+            .joinToString(separator = "\n  ") { signature ->
+                "+ $signature"
             }
 
         val filePath = displayName ?: runReadAction { root.containingFile?.virtualFile?.path }
