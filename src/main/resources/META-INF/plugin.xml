@@ -3,6 +3,8 @@
     <name>Shire - AI Coding Agent Language</name>
     <vendor>Phodal Huang</vendor>
     <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.json</depends>
+
     <resource-bundle>messages.ShireMainBundle</resource-bundle>
 
     <xi:include href="/com.phodal.shirecore.xml" xpointer="xpointer(/idea-plugin/*)"/>
