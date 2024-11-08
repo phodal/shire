@@ -95,4 +95,8 @@ class ParsingNormalTest : ParsingTestCase("parser", "shire", ShireParserDefiniti
     fun testCustomFunctions() {
         doTest(true)
     }
+
+    fun testIfExpression() {
+        doTest(true)
+    }
 }

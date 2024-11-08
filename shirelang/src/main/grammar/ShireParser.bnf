@@ -201,11 +201,18 @@ code ::= CODE_BLOCK_START (languageId | variableStart expr)? NEWLINE? code_conte
 code_contents ::= (NEWLINE | CODE_CONTENT)*
 
 velocityExpr ::=
-     '#' 'if' '('variableStart? expr ')'
-    | '#' 'else'
-    | '#' 'elseif' '(' variableStart? expr ')'
-    | '#' 'end'
-    | '#' 'endif'
+    ifExpr NEWLINE*
+
+velocityBlock ::= (used | code | velocityExpr | markdownHeader | TEXT_SEGMENT | NEWLINE | CONTENT_COMMENTS)*
+
+ifExpr ::= ifClause elseifClause* elseClause? '#' 'end'
+
+ifClause ::= '#' 'if' '(' expr ')' velocityBlock
+
+elseifClause ::= '#' 'elseif' '(' expr ')' velocityBlock
+
+elseClause ::= '#' 'else' velocityBlock
+
     // for example, the commit id will be #$storyId
 
 markdownHeader ::= SHARP SHARP* TEXT_SEGMENT

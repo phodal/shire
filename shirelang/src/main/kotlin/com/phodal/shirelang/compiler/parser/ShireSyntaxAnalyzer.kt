@@ -102,6 +102,7 @@ class ShireSyntaxAnalyzer(
 
                 WHITE_SPACE, DUMMY_BLOCK -> output.append(psiElement.text)
                 ShireTypes.VELOCITY_EXPR -> {
+                    output.append(psiElement.text)
                     logger.info("Velocity expression found: ${psiElement.text}")
                 }
 
