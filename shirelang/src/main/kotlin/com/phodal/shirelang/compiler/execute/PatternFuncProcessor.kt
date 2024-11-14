@@ -405,7 +405,7 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                 var jsonStr = action.obj ?: lastResult as String
                 jsonStr = jsonStr.fillVariable(variableTable)
 
-                JsonPathProcessor.execute(jsonStr, action) ?: jsonStr
+                JsonPathProcessor.execute(myProject, jsonStr, action) ?: jsonStr
             }
 
             is PatternActionFunc.Destroy -> {

@@ -1,17 +1,22 @@
 package com.phodal.shirelang.compiler.execute.processor
 
+import com.intellij.execution.console.ConsoleViewWrapperBase
+import com.intellij.execution.ui.ConsoleViewContentType
+import com.intellij.execution.ui.RunContentManager
 import com.intellij.openapi.diagnostic.logger
+import com.intellij.openapi.project.Project
 import com.nfeld.jsonpathkt.JsonPath
 import com.nfeld.jsonpathkt.extension.read
-import com.phodal.shirelang.compiler.execute.FunctionStatementProcessor
 import com.phodal.shirelang.compiler.ast.patternaction.PatternActionFunc
 import com.phodal.shirelang.compiler.ast.patternaction.PatternActionFuncDef
 import com.phodal.shirelang.compiler.ast.patternaction.PatternProcessor
+import com.phodal.shirelang.compiler.execute.FunctionStatementProcessor
 
 object JsonPathProcessor : PatternProcessor {
     override val type: PatternActionFuncDef = PatternActionFuncDef.JSONPATH
 
     fun execute(
+        project: Project,
         jsonStr: String,
         action: PatternActionFunc.JsonPath,
     ): String? {
@@ -22,16 +27,23 @@ object JsonPathProcessor : PatternProcessor {
         val result: String = try {
             JsonPath.parse(jsonStr)?.read<Any>(action.path.trim()).toString()
         } catch (e: Exception) {
-            logger<FunctionStatementProcessor>().warn("jsonpath error: $e")
+            console(project,"jsonpath error: $e")
             return null
         }
 
         if (result == "null") {
-            logger<FunctionStatementProcessor>().warn("jsonpath error: $result for $jsonStr")
+            console(project,"jsonpath error: $result for $jsonStr")
             return null
         }
 
         return result
+    }
+
+    fun console(project: Project, str: String) {
+        val contentManager = RunContentManager.getInstance(project)
+        val console = contentManager.selectedContent?.executionConsole as? ConsoleViewWrapperBase ?: return
+
+        console.print(str, ConsoleViewContentType.ERROR_OUTPUT)
     }
 
 
