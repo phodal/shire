@@ -535,8 +535,8 @@ project(":") {
             failureLevel = listOf(VerifyPluginTask.FailureLevel.MISSING_DEPENDENCIES)
             ides {
                 select {
-                    sinceBuild = "242"
-                    untilBuild = "243"
+                    sinceBuild = "243"
+                    untilBuild = "244"
 //                    sinceBuild = prop("pluginSinceBuild")
 //                    untilBuild = prop("pluginUntilBuild")
                 }
