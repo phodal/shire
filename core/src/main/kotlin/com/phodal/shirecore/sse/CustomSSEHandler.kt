@@ -86,6 +86,10 @@ open class CustomSSEHandler {
 
                                     // new JsonPath lib caught the exception, so we need to handle when it is null
                                     if (chunk == null) {
+                                        if (sse.data == "[DONE]") {
+                                            return@blockingForEach
+                                        }
+
                                         parseFailedResponses.add(sse.data)
                                         logger.warn("Failed to parse response.origin response is: ${sse.data}, response format: $responseFormat")
                                     } else {
