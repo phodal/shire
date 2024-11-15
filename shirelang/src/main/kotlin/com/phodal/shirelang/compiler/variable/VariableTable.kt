@@ -22,6 +22,12 @@ class VariableTable {
         }
     }
 
+    fun addVariable(variableTable: VariableTable) {
+        variableTable.getAllVariables().forEach {
+            table[it.key] = it.value
+        }
+    }
+
     fun getVariable(name: String): VariableInfo {
         return table[name] ?: throw Exception("Variable $name not found.")
     }
