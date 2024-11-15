@@ -21,6 +21,7 @@ import com.phodal.shirelang.parser.CodeBlockElement
 import com.phodal.shirelang.psi.*
 import com.phodal.shirelang.psi.ShireTypes.MARKDOWN_HEADER
 import kotlinx.coroutines.runBlocking
+import java.util.*
 
 
 val CACHED_COMPILE_RESULT = mutableMapOf<String, ShireParsedResult>()
@@ -102,7 +103,7 @@ class ShireSyntaxAnalyzer(
 
                 WHITE_SPACE, DUMMY_BLOCK -> output.append(psiElement.text)
                 ShireTypes.VELOCITY_EXPR -> {
-                    output.append(psiElement.text)
+                    processVelocityExpr(psiElement as ShireVelocityExpr)
                     logger.info("Velocity expression found: ${psiElement.text}")
                 }
 
@@ -122,6 +123,71 @@ class ShireSyntaxAnalyzer(
 
         CACHED_COMPILE_RESULT[file.name] = result
         return result
+    }
+
+    private fun processVelocityExpr(velocityExpr: ShireVelocityExpr) {
+        handleNextSiblingForChild(velocityExpr) { next ->
+            if (next is ShireIfExpr) {
+                handleNextSiblingForChild(next) {
+                    when (it) {
+                        is ShireIfClause, is ShireElseifClause, is ShireElseClause -> {
+                            handleNextSiblingForChild(it, ::processIfClause)
+                        }
+                        else -> output.append(it.text)
+                    }
+                }
+            } else {
+                output.append(next.text)
+            }
+        }
+    }
+
+    private fun processIfClause(clauseContent: PsiElement) {
+        when (clauseContent) {
+            is ShireExpr -> {
+                addVariable(clauseContent)
+                if (!result.hasError) output.append(clauseContent.text)
+            }
+
+            is ShireVelocityBlock -> {
+                ShireFile.fromString(myProject, clauseContent.text).let { file ->
+                    ShireSyntaxAnalyzer(myProject, file).parse().let {
+                        output.append(it.shireOutput)
+                        variableTable.addVariable(it.variableTable)
+                        result.hasError = it.hasError
+                    }
+                }
+
+            }
+
+            else -> {
+                output.append(clauseContent.text)
+            }
+        }
+    }
+
+    private fun addVariable(psiElement: PsiElement?) {
+        if (psiElement == null) return
+        val queue = LinkedList<PsiElement>()
+        queue.push(psiElement)
+        while (!queue.isEmpty() && !result.hasError) {
+            val e = queue.pop()
+            if (e.firstChild.elementType == ShireTypes.VARIABLE_START) {
+                processVariable(e.firstChild)
+            } else {
+                e.children.forEach {
+                    queue.push(it)
+                }
+            }
+        }
+    }
+
+    private fun handleNextSiblingForChild(element: PsiElement?, handle: (PsiElement) -> Unit) {
+        var child: PsiElement? = element?.firstChild
+        while (child != null && !result.hasError) {
+            handle(child)
+            child = child.nextSibling
+        }
     }
 
     private fun processUsed(used: ShireUsed) {
@@ -180,28 +246,8 @@ class ShireSyntaxAnalyzer(
             }
 
             ShireTypes.VARIABLE_START -> {
-                val variableId = id?.text
-
-                val currentEditor = editor ?: VariableTemplateCompiler.defaultEditor(myProject)
-                val currentElement = element ?: VariableTemplateCompiler.defaultElement(myProject, currentEditor)
-
-                if (currentElement == null) {
-                    output.append("$SHIRE_ERROR No element found for variable: ${used.text}")
-                    result.hasError = true
-                    return
-                }
-
-                val lineNo = try {
-                    val containingFile = currentElement.containingFile
-                    val document: Document? =
-                        PsiDocumentManager.getInstance(firstChild!!.project).getDocument(containingFile)
-                    document?.getLineNumber(firstChild.textRange.startOffset) ?: 0
-                } catch (e: Exception) {
-                    0
-                }
-
-                variableTable.addVariable(variableId ?: "", VariableTable.VariableType.String, lineNo)
-                output.append(used.text)
+                processVariable(firstChild)
+                if (!result.hasError) output.append(used.text)
             }
 
             else -> {
@@ -209,6 +255,34 @@ class ShireSyntaxAnalyzer(
                 output.append(used.text)
             }
         }
+    }
+
+    private fun processVariable(variableStart: PsiElement) {
+        if (variableStart.elementType != ShireTypes.VARIABLE_START) {
+            logger.warn("Illegal type: ${variableStart.elementType}")
+            return
+        }
+        val variableId = variableStart.nextSibling?.text
+
+        val currentEditor = editor ?: VariableTemplateCompiler.defaultEditor(myProject)
+        val currentElement = element ?: VariableTemplateCompiler.defaultElement(myProject, currentEditor)
+
+        if (currentElement == null) {
+            output.append("$SHIRE_ERROR No element found for variable: ${variableStart.text}")
+            result.hasError = true
+            return
+        }
+
+        val lineNo = try {
+            val containingFile = currentElement.containingFile
+            val document: Document? =
+                PsiDocumentManager.getInstance(variableStart.project).getDocument(containingFile)
+            document?.getLineNumber(variableStart.textRange.startOffset) ?: 0
+        } catch (e: Exception) {
+            0
+        }
+
+        variableTable.addVariable(variableId ?: "", VariableTable.VariableType.String, lineNo)
     }
 
     private fun processingCommand(commandNode: BuiltinCommand, prop: String, used: ShireUsed, fallbackText: String) {
