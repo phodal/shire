@@ -10,6 +10,7 @@ import com.intellij.psi.PsiElement
 import com.phodal.shirelang.ShireBundle
 import com.phodal.shirelang.ShireLanguage
 import com.phodal.shirelang.psi.ShireFile
+import com.intellij.psi.PsiComment
 
 class ShireRunLineMarkersProvider : RunLineMarkerContributor(), DumbAware {
     override fun getInfo(element: PsiElement): Info? {
@@ -21,6 +22,20 @@ class ShireRunLineMarkersProvider : RunLineMarkerContributor(), DumbAware {
         return Info(
             AllIcons.RunConfigurations.TestState.Run,
             { ShireBundle.message("shire.line.marker.run.0", psiFile.containingFile.name) },
+            *actions
+        )
+    }
+
+    private fun getCommentInfo(element: PsiElement): Info? {
+        if (element !is PsiComment) return null
+        val commentText = element.text
+        if (!commentText.contains("```shire")) return null
+
+        val actions = arrayOf<AnAction>(ActionManager.getInstance().getAction(ShireRunFileAction.ID))
+
+        return Info(
+            AllIcons.RunConfigurations.TestState.Run,
+            { ShireBundle.message("shire.line.marker.run.comment") },
             *actions
         )
     }
