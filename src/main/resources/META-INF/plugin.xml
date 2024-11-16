@@ -3,7 +3,7 @@
     <name>Shire - AI Coding Agent Language</name>
     <vendor>Phodal Huang</vendor>
     <depends>com.intellij.modules.platform</depends>
-    <depends>com.intellij.modules.json</depends>
+    <depends optional="true" config-file="json-contrib.xml">com.intellij.modules.json</depends>
 
     <resource-bundle>messages.ShireMainBundle</resource-bundle>
 

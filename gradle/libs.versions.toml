@@ -4,7 +4,7 @@
 # plugins
 kotlin = "2.0.21"
 changelog = "2.2.1"
-gradleIntelliJPlugin = "2.0.1"
+gradleIntelliJPlugin = "2.1.0"
 qodana = "2024.2.6"
 kover = "0.8.3"
 
