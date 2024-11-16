@@ -90,5 +90,19 @@ enum class PostProcessorType(var handleName: String) {
 
     // showWebView
     ShowWebview("showWebView"),
-    ;
+
+    /**
+     * Metric change count.
+     */
+    ChangeCountMetric("changeCountMetric"),
+
+    /**
+     * Metric line count.
+     */
+    LineCountMetric("lineCountMetric"),
+
+    /**
+     * Metric complexity count.
+     */
+    ComplexityMetric("complexityMetric"),
 }

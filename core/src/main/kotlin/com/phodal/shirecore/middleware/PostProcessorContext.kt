@@ -56,6 +56,21 @@ class PostProcessorContext(
     var compiledVariables: Map<String, Any?> = mapOf(),
 
     val llmModelName: String? = null,
+
+    /**
+     * The number of changes made
+     */
+    var changeCount: Int = 0,
+
+    /**
+     * The number of lines in the code
+     */
+    var lineCount: Int = 0,
+
+    /**
+     * The complexity of the code
+     */
+    var complexityCount: Int = 0,
 ) {
     companion object {
         private val DATA_KEY: Key<PostProcessorContext> = Key.create(PostProcessorContext::class.java.name)

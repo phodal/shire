@@ -37,6 +37,9 @@ interface PostProcessor {
      * Some init tasks, like metric for time, etc.
      */
     fun setup(context: PostProcessorContext): Any {
+        context.changeCount = 0
+        context.lineCount = 0
+        context.complexityCount = 0
         return ""
     }
 
@@ -54,6 +57,7 @@ interface PostProcessor {
      * Clean up tasks, like metric for time, etc.
      */
     fun finish(context: PostProcessorContext): Any? {
+        // Implement logic to finalize changeCount, lineCount, and complexityCount metrics
         return ""
     }
 
