@@ -534,12 +534,12 @@ project(":") {
             freeArgs = listOf("-mute", "TemplateWordInPluginId,ForbiddenPluginIdPrefix")
             failureLevel = listOf(VerifyPluginTask.FailureLevel.MISSING_DEPENDENCIES)
             ides {
-//                select {
-//                    sinceBuild = "242"
-//                    untilBuild = "243."
+                select {
+                    sinceBuild = "242"
+                    untilBuild = "243"
 ////                    sinceBuild = prop("pluginSinceBuild")
 ////                    untilBuild = prop("pluginUntilBuild")
-//                }
+                }
             }
         }
 
