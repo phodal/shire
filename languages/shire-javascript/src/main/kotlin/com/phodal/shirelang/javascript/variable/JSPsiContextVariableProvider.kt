@@ -102,7 +102,24 @@ class JSPsiContextVariableProvider : PsiContextVariableProvider {
                     else -> null
                 } ?: ""
             }
+            CHANGE_COUNT -> calculateChangeCount(psiElement)
+            LINE_COUNT -> calculateLineCount(psiElement)
+            COMPLEXITY_COUNT -> calculateComplexityCount(psiElement)
         }
     }
 
+    private fun calculateChangeCount(psiElement: PsiElement?): String {
+        // Placeholder implementation for change count
+        return "0"
+    }
+
+    private fun calculateLineCount(psiElement: PsiElement?): String {
+        // Placeholder implementation for line count
+        return psiElement?.containingFile?.text?.lines()?.size.toString()
+    }
+
+    private fun calculateComplexityCount(psiElement: PsiElement?): String {
+        // Placeholder implementation for complexity count
+        return "0"
+    }
 }

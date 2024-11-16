@@ -14,7 +14,6 @@ import org.intellij.markdown.MarkdownElementTypes
 import org.intellij.markdown.MarkdownTokenTypes
 import org.intellij.markdown.ast.ASTNode
 import org.intellij.markdown.flavours.gfm.GFMElementTypes
-import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
 import org.intellij.markdown.flavours.gfm.GFMTokenTypes
 import org.intellij.markdown.parser.MarkdownParser
 
@@ -32,9 +31,32 @@ class MarkdownPsiContextVariableProvider : PsiContextVariableProvider {
             PsiContextVariable.STRUCTURE -> {
                 toHtml(markdownText)
             }
-
+            PsiContextVariable.CHANGE_COUNT -> {
+                calculateChangeCount(psiElement)
+            }
+            PsiContextVariable.LINE_COUNT -> {
+                calculateLineCount(psiElement)
+            }
+            PsiContextVariable.COMPLEXITY_COUNT -> {
+                calculateComplexityCount(psiElement)
+            }
             else -> ""
         }
+    }
+
+    private fun calculateChangeCount(psiElement: PsiElement?): String {
+        // Placeholder implementation for change count
+        return "0"
+    }
+
+    private fun calculateLineCount(psiElement: PsiElement?): String {
+        // Placeholder implementation for line count
+        return psiElement?.containingFile?.text?.lines()?.size.toString()
+    }
+
+    private fun calculateComplexityCount(psiElement: PsiElement?): String {
+        // Placeholder implementation for complexity count
+        return "0"
     }
 
     fun toHtml(markdownText: @NlsSafe String): String {

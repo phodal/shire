@@ -76,7 +76,22 @@ enum class PsiContextVariable(
 
     SIMILAR_CODE("similarCode", "Recently 20 files similar code based on the tf-idf search"),
 
-    STRUCTURE("structure", "The structure of the current class, for programming language will be in UML format.")
+    STRUCTURE("structure", "The structure of the current class, for programming language will be in UML format."),
+
+    /**
+     * Represents the number of changes in the current file.
+     */
+    CHANGE_COUNT("changeCount", "The number of changes in the current file"),
+
+    /**
+     * Represents the number of lines in the current file.
+     */
+    LINE_COUNT("lineCount", "The number of lines in the current file"),
+
+    /**
+     * Represents the complexity of the current file.
+     */
+    COMPLEXITY_COUNT("complexityCount", "The complexity of the current file")
     ;
 
     companion object {

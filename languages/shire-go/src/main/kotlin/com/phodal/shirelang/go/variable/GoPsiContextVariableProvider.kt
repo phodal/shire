@@ -121,7 +121,25 @@ class GoPsiContextVariableProvider : PsiContextVariableProvider {
                     else -> ""
                 }
             }
+            PsiContextVariable.CHANGE_COUNT -> calculateChangeCount(psiElement)
+            PsiContextVariable.LINE_COUNT -> calculateLineCount(psiElement)
+            PsiContextVariable.COMPLEXITY_COUNT -> calculateComplexityCount(psiElement)
         } ?: ""
+    }
+
+    private fun calculateChangeCount(psiElement: PsiElement?): String {
+        // Placeholder implementation for change count
+        return "0"
+    }
+
+    private fun calculateLineCount(psiElement: PsiElement?): String {
+        // Placeholder implementation for line count
+        return psiElement?.containingFile?.text?.lines()?.size.toString()
+    }
+
+    private fun calculateComplexityCount(psiElement: PsiElement?): String {
+        // Placeholder implementation for complexity count
+        return "0"
     }
 
     private fun toTestFileName(underTestFileName: String): String = underTestFileName + "_test.go"
@@ -145,4 +163,3 @@ class GoPsiContextVariableProvider : PsiContextVariableProvider {
         return parent
     }
 }
-
