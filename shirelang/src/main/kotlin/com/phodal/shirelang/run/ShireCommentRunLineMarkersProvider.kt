@@ -8,20 +8,19 @@ import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.project.DumbAware
 import com.intellij.psi.PsiElement
 import com.phodal.shirelang.ShireBundle
-import com.phodal.shirelang.ShireLanguage
-import com.phodal.shirelang.psi.ShireFile
-import com.intellij.psi.PsiComment
+import com.intellij.psi.PsiDocCommentBase
 
-class ShireRunLineMarkersProvider : RunLineMarkerContributor(), DumbAware {
+class ShireCommentRunLineMarkersProvider : RunLineMarkerContributor(), DumbAware {
     override fun getInfo(element: PsiElement): Info? {
-        if (element.language !is ShireLanguage) return null
-        val psiFile = element as? ShireFile ?: return null
+        if (element !is PsiDocCommentBase) return null
+        val commentText = element.text
+        if (!commentText.contains("```shire")) return null
 
         val actions = arrayOf<AnAction>(ActionManager.getInstance().getAction(ShireRunFileAction.ID))
 
         return Info(
             AllIcons.RunConfigurations.TestState.Run,
-            { ShireBundle.message("shire.line.marker.run.0", psiFile.containingFile.name) },
+            { ShireBundle.message("shire.line.marker.run.comment") },
             *actions
         )
     }
