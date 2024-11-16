@@ -106,14 +106,4 @@ class ShireCommenter : Commenter, SelfManagingCommenter<CommentHolder> {
         document: Document,
         file: PsiFile
     ): CommentHolder = CommentHolder(file)
-
-    fun extractShireCodeFromComment(comment: String): String {
-        val codeBlockStart = comment.indexOf("```shire")
-        if (codeBlockStart == -1) return ""
-
-        val codeBlockEnd = comment.indexOf("```", codeBlockStart + 7)
-        if (codeBlockEnd == -1) return ""
-
-        return comment.substring(codeBlockStart + 7, codeBlockEnd).trim()
-    }
 }

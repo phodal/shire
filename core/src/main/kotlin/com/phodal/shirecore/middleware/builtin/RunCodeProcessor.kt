@@ -67,22 +67,7 @@ class RunCodeProcessor : PostProcessor {
             }
         }
 
-        val shireCode = context.pipeData["shireCode"] as? String
-        if (shireCode != null) {
-            val ext = context.genTargetLanguage?.associatedFileType?.defaultExtension ?: "txt"
-            ApplicationManager.getApplication().invokeAndWait {
-                PsiFileFactory.getInstance(project).createFileFromText("temp.$ext", shireCode).let { psiFile ->
-                    if (psiFile.virtualFile == null) {
-                        console?.print("Failed to create file for run\n", ERROR_OUTPUT)
-                    } else {
-                        doExecute(console, project, psiFile.virtualFile, psiFile)
-                    }
-                }
-            }
-        } else {
-            console?.print("No code to run\n", ERROR_OUTPUT)
-        }
-
+        console?.print("No code to run\n", ERROR_OUTPUT)
         return ""
     }
 

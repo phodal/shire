@@ -42,27 +42,12 @@ class ParseCommentProcessor : PostProcessor {
     private fun getDocFromOutput(context: PostProcessorContext) =
         preHandleDoc(context.pipeData["output"] as String? ?: context.genText ?: "")
 
-    private fun extractShireCodeFromComment(comment: String): String {
-        val codeBlockStart = comment.indexOf("```shire")
-        if (codeBlockStart == -1) return ""
-
-        val codeBlockEnd = comment.indexOf("```", codeBlockStart + 7)
-        if (codeBlockEnd == -1) return ""
-
-        return comment.substring(codeBlockStart + 7, codeBlockEnd).trim()
-    }
-
     override fun execute(project: Project, context: PostProcessorContext, console: ConsoleView?, args: List<Any>): String {
         val defaultComment: String = getDocFromOutput(context)
         val currentFile = context.currentFile ?: return defaultComment
 
         val comment = PsiElementDataBuilder.provide(currentFile.language)
             ?.parseComment(project, defaultComment) ?: return defaultComment
-
-        val shireCode = extractShireCodeFromComment(comment)
-        if (shireCode.isNotEmpty()) {
-            context.pipeData["shireCode"] = shireCode
-        }
 
         return comment
     }
