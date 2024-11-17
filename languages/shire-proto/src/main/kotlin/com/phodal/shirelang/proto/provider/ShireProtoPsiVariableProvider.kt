@@ -73,6 +73,9 @@ class ShireProtoPsiVariableProvider : PsiContextVariableProvider {
             PsiContextVariable.IS_NEED_CREATE_FILE -> ""
             PsiContextVariable.TARGET_TEST_FILE_NAME -> ""
             PsiContextVariable.UNDER_TEST_METHOD_CODE -> ""
+            PsiContextVariable.CHANGE_COUNT -> calculateChangeCount(psiElement)
+            PsiContextVariable.LINE_COUNT -> calculateLineCount(psiElement)
+            PsiContextVariable.COMPLEXITY_COUNT -> ""
         }
     }
 }

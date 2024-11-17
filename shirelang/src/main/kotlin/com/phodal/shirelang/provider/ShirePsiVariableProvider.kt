@@ -31,6 +31,9 @@ class ShirePsiVariableProvider : PsiContextVariableProvider {
             PsiContextVariable.CALLED_METHOD -> ""
             PsiContextVariable.SIMILAR_CODE -> ""
             PsiContextVariable.STRUCTURE -> ""
+            PsiContextVariable.CHANGE_COUNT -> calculateChangeCount(psiElement)
+            PsiContextVariable.LINE_COUNT -> calculateLineCount(psiElement)
+            PsiContextVariable.COMPLEXITY_COUNT -> ""
         }
     }
 }

@@ -40,6 +40,19 @@ interface PsiContextVariableProvider : VariableProvider<PsiContextVariable> {
         return future.get()
     }
 
+    /// try to load from git
+    fun calculateChangeCount(psiElement: PsiElement?): String {
+        return "0"
+    }
+
+    fun calculateLineCount(psiElement: PsiElement?): String {
+        return psiElement?.containingFile?.text?.lines()?.size.toString()
+    }
+
+    fun calculateComplexityCount(psiElement: PsiElement?): String {
+        return "0"
+    }
+
     companion object {
         private val languageExtension: LanguageExtension<PsiContextVariableProvider> =
             LanguageExtension("com.phodal.shirePsiVariableProvider")

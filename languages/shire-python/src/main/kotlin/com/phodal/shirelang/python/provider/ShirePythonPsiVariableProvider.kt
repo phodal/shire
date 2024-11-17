@@ -108,6 +108,9 @@ class ShirePythonPsiVariableProvider : PsiContextVariableProvider {
 
             PsiContextVariable.SIMILAR_CODE -> TODO()
             PsiContextVariable.STRUCTURE -> TODO()
+            PsiContextVariable.CHANGE_COUNT -> calculateChangeCount(psiElement)
+            PsiContextVariable.LINE_COUNT -> calculateLineCount(psiElement)
+            PsiContextVariable.COMPLEXITY_COUNT -> ""
         }
     }
 }
