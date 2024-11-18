@@ -152,6 +152,13 @@
         <extensionPoint qualifiedName="com.phodal.shireHttpHandler"
                         interface="com.phodal.shirecore.provider.http.HttpHandler"
                         dynamic="true"/>
+
+        <!-- Code Complexity -->
+        <extensionPoint qualifiedName="com.phodal.complexityProvider"
+                        beanClass="com.intellij.lang.LanguageExtensionPoint" dynamic="true">
+            <with attribute="implementationClass"
+                  implements="com.phodal.shirecore.provider.complexity.ComplexityProvider"/>
+        </extensionPoint>
     </extensionPoints>
 
     <extensions defaultExtensionNs="JavaScript.JsonSchema">
