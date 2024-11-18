@@ -2,16 +2,13 @@ package com.phodal.shirecore.provider
 
 import com.intellij.lang.LanguageExtension
 import com.intellij.openapi.diagnostic.logger
-import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiErrorElement
 import com.intellij.psi.PsiFile
-import com.intellij.serviceContainer.LazyExtensionInstance
-import com.intellij.util.xmlb.annotations.Attribute
+import com.phodal.shirecore.ast.PsiSyntaxCheckingVisitor
 import com.phodal.shirecore.provider.codemodel.model.ClassStructure
-import com.phodal.shirecore.middleware.builtin.VerifyCodeProcessor
 import com.phodal.shirecore.provider.shire.FileRunService
 import com.phodal.shirecore.variable.toolchain.unittest.AutoTestingPromptContext
 
@@ -85,7 +82,7 @@ abstract class TestingService : FileRunService {
 
         fun PsiFile.collectPsiError(): MutableList<String> {
             val errors = mutableListOf<String>()
-            val visitor = object : VerifyCodeProcessor.PsiSyntaxCheckingVisitor() {
+            val visitor = object : PsiSyntaxCheckingVisitor() {
                 override fun visitElement(element: PsiElement) {
                     if (element is PsiErrorElement) {
                         errors.add("Syntax error at position ${element.textRange.startOffset}: ${element.errorDescription}")

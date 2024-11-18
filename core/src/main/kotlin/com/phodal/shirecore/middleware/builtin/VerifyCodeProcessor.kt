@@ -15,6 +15,7 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.*
 import com.intellij.util.messages.MessageBusConnection
+import com.phodal.shirecore.ast.PsiSyntaxCheckingVisitor
 import com.phodal.shirecore.middleware.PostProcessorType
 import com.phodal.shirecore.middleware.PostProcessorContext
 import com.phodal.shirecore.middleware.PostProcessor
@@ -162,11 +163,4 @@ class VerifyCodeProcessor : PostProcessor {
         return errors
     }
 
-    abstract class PsiSyntaxCheckingVisitor : PsiElementVisitor() {
-        override fun visitElement(element: PsiElement) {
-            runReadAction {
-                element.children.forEach { it.accept(this) }
-            }
-        }
-    }
 }
