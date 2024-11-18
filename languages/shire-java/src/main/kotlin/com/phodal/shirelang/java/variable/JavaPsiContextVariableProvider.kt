@@ -51,7 +51,7 @@ class JavaPsiContextVariableProvider : PsiContextVariableProvider {
             FRAMEWORK_CONTEXT -> return collectFrameworkContext(psiElement, project)
             PsiContextVariable.CHANGE_COUNT -> calculateChangeCount(psiElement)
             PsiContextVariable.LINE_COUNT -> calculateLineCount(psiElement)
-            PsiContextVariable.COMPLEXITY_COUNT -> ""
+            PsiContextVariable.COMPLEXITY_COUNT -> calculateComplexityCount(psiElement)
         }
     }
 }

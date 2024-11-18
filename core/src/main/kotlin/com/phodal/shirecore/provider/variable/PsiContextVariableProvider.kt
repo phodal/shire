@@ -5,6 +5,7 @@ import com.intellij.lang.LanguageExtension
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
+import com.phodal.shirecore.provider.complexity.ComplexityProvider
 import com.phodal.shirecore.provider.context.LanguageToolchainProvider
 import com.phodal.shirecore.provider.context.ToolchainPrepareContext
 import com.phodal.shirecore.provider.variable.impl.DefaultPsiContextVariableProvider
@@ -50,7 +51,11 @@ interface PsiContextVariableProvider : VariableProvider<PsiContextVariable> {
     }
 
     fun calculateComplexityCount(psiElement: PsiElement?): String {
-        return "0"
+        if (psiElement?.language == null) {
+            return "0"
+        }
+
+        return ComplexityProvider.provide(psiElement.language)?.process(psiElement).toString()
     }
 
     companion object {
@@ -58,7 +63,7 @@ interface PsiContextVariableProvider : VariableProvider<PsiContextVariable> {
             LanguageExtension("com.phodal.shirePsiVariableProvider")
 
         fun provide(language: Language): PsiContextVariableProvider {
-            return languageExtension.forLanguage(language)  ?: DefaultPsiContextVariableProvider()
+            return languageExtension.forLanguage(language) ?: DefaultPsiContextVariableProvider()
         }
     }
 }
