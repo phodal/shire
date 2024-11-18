@@ -14,6 +14,7 @@ import com.intellij.openapi.vcs.changes.Change
 import com.intellij.openapi.vcs.changes.ChangeListManager
 import com.intellij.openapi.vcs.changes.CommitContext
 import com.intellij.openapi.vcs.changes.LocalChangeList
+import com.intellij.psi.PsiElement
 import com.intellij.vcs.commit.ChangeListCommitState
 import com.intellij.vcs.commit.LocalChangesCommitter
 import com.phodal.shirecore.ShireCoreBundle
@@ -105,5 +106,17 @@ class GitRevisionProvider : RevisionProvider {
         }
 
         return "Committing..."
+    }
+
+    override fun countHistoryChange(project: Project, element: PsiElement): Int {
+        val file = element.containingFile.virtualFile ?: return 0
+        val repository = GitRepositoryManager.getInstance(project).getRepositoryForFileQuick(file) ?: return 0
+
+        return try {
+            GitHistoryUtils.history(project, repository.root, file.path).size
+        } catch (e: Exception) {
+            logger.error("Failed to count history changes for file: ${file.path}", e)
+            0
+        }
     }
 }

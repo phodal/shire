@@ -8,6 +8,7 @@ import com.intellij.psi.PsiElement
 import com.phodal.shirecore.provider.complexity.ComplexityProvider
 import com.phodal.shirecore.provider.context.LanguageToolchainProvider
 import com.phodal.shirecore.provider.context.ToolchainPrepareContext
+import com.phodal.shirecore.provider.shire.RevisionProvider
 import com.phodal.shirecore.provider.variable.impl.DefaultPsiContextVariableProvider
 import com.phodal.shirecore.provider.variable.model.PsiContextVariable
 import kotlinx.coroutines.runBlocking
@@ -41,9 +42,8 @@ interface PsiContextVariableProvider : VariableProvider<PsiContextVariable> {
         return future.get()
     }
 
-    /// try to load from git
     fun calculateChangeCount(psiElement: PsiElement?): String {
-        return "0"
+        return RevisionProvider.provide()?.countHistoryChange(psiElement?.project!!, psiElement).toString()
     }
 
     fun calculateLineCount(psiElement: PsiElement?): String {

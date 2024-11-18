@@ -123,7 +123,7 @@ class GoPsiContextVariableProvider : PsiContextVariableProvider {
             }
             PsiContextVariable.CHANGE_COUNT -> calculateChangeCount(psiElement)
             PsiContextVariable.LINE_COUNT -> calculateLineCount(psiElement)
-            PsiContextVariable.COMPLEXITY_COUNT -> ""
+            PsiContextVariable.COMPLEXITY_COUNT -> calculateComplexityCount(psiElement)
         } ?: ""
     }
 

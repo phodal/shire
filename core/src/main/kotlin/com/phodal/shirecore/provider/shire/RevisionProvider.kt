@@ -3,6 +3,7 @@ package com.phodal.shirecore.provider.shire
 import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.project.Project
+import com.intellij.psi.PsiElement
 
 interface RevisionProvider {
     /**
@@ -18,6 +19,8 @@ interface RevisionProvider {
     fun fetchCompletions(project: Project, result: CompletionResultSet)
 
     fun commitCode(project: Project, commitMessage: String): String
+
+    fun countHistoryChange(project: Project, element: PsiElement): Int
 
     companion object {
         private val EP_NAME: ExtensionPointName<RevisionProvider> =

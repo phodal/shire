@@ -75,7 +75,7 @@ class ShireProtoPsiVariableProvider : PsiContextVariableProvider {
             PsiContextVariable.UNDER_TEST_METHOD_CODE -> ""
             PsiContextVariable.CHANGE_COUNT -> calculateChangeCount(psiElement)
             PsiContextVariable.LINE_COUNT -> calculateLineCount(psiElement)
-            PsiContextVariable.COMPLEXITY_COUNT -> ""
+            PsiContextVariable.COMPLEXITY_COUNT -> calculateComplexityCount(psiElement)
         }
     }
 }

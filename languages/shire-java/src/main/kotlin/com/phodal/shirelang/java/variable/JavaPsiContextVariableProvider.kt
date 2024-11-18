@@ -1,12 +1,16 @@
 package com.phodal.shirelang.java.variable
 
+import com.intellij.lang.java.JavaLanguage
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
-import com.intellij.psi.*
+import com.intellij.psi.PsiClass
+import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiJavaFile
+import com.intellij.psi.PsiMethod
 import com.intellij.testIntegration.TestFinderHelper
+import com.phodal.shirecore.provider.variable.PsiContextVariableProvider
 import com.phodal.shirecore.provider.variable.impl.CodeSmellBuilder
 import com.phodal.shirecore.provider.variable.model.PsiContextVariable
-import com.phodal.shirecore.provider.variable.PsiContextVariableProvider
 import com.phodal.shirecore.provider.variable.model.PsiContextVariable.*
 import com.phodal.shirecore.search.similar.SimilarChunksSearch
 import com.phodal.shirelang.java.codemodel.JavaClassStructureProvider
@@ -16,7 +20,7 @@ import com.phodal.shirelang.java.variable.provider.JavaRelatedClassesProvider
 
 class JavaPsiContextVariableProvider : PsiContextVariableProvider {
     override fun resolve(variable: PsiContextVariable, project: Project, editor: Editor, psiElement: PsiElement?): Any {
-        if (psiElement?.language?.id != "JAVA") return ""
+        if (psiElement?.language != JavaLanguage.INSTANCE) return ""
 
         val clazz: PsiClass? = psiElement as? PsiClass ?: psiElement.getContainingClass()
         val sourceFile: PsiJavaFile = psiElement.containingFile as PsiJavaFile
@@ -49,9 +53,9 @@ class JavaPsiContextVariableProvider : PsiContextVariableProvider {
             } ?: ""
 
             FRAMEWORK_CONTEXT -> return collectFrameworkContext(psiElement, project)
-            PsiContextVariable.CHANGE_COUNT -> calculateChangeCount(psiElement)
-            PsiContextVariable.LINE_COUNT -> calculateLineCount(psiElement)
-            PsiContextVariable.COMPLEXITY_COUNT -> calculateComplexityCount(psiElement)
+            CHANGE_COUNT -> calculateChangeCount(psiElement)
+            LINE_COUNT -> calculateLineCount(psiElement)
+            COMPLEXITY_COUNT -> calculateComplexityCount(psiElement)
         }
     }
 }
