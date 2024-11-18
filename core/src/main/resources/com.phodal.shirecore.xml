@@ -154,7 +154,7 @@
                         dynamic="true"/>
 
         <!-- Code Complexity -->
-        <extensionPoint qualifiedName="com.phodal.complexityProvider"
+        <extensionPoint qualifiedName="com.phodal.shireComplexityProvider"
                         beanClass="com.intellij.lang.LanguageExtensionPoint" dynamic="true">
             <with attribute="implementationClass"
                   implements="com.phodal.shirecore.provider.complexity.ComplexityProvider"/>

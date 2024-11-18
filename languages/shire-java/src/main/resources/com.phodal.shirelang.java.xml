@@ -51,5 +51,8 @@
 
         <shirePsiQLInterpreter language="JAVA"
                                implementationClass="com.phodal.shirelang.java.impl.JavaShireQLInterpreter"/>
+
+        <shireComplexityProvider language="JAVA"
+                                 implementationClass="com.phodal.shirelang.java.complexity.JavaComplexityProvider"/>
     </extensions>
 </idea-plugin>
