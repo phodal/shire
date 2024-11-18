@@ -7,7 +7,10 @@ import com.phodal.shirecore.provider.complexity.ComplexityProvider
 
 class JavaComplexityProvider : ComplexityProvider {
     override fun process(element: PsiElement): Int {
-        return 0
+        val sink = ComplexitySink()
+        val visitor = visitor(sink)
+        element.accept(visitor)
+        return sink.getComplexity()
     }
 
     override fun visitor(sink: ComplexitySink): ComplexityVisitor {
