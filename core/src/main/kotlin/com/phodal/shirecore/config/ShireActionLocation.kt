@@ -19,7 +19,7 @@ enum class ShireActionLocation(val location: String, val description: String) {
                 "CommitMenu" -> COMMIT_MENU
                 "RunPanel" -> RUN_PANEL
                 "InputBox" -> INPUT_BOX
-                "DatabaseMenu" -> RUN_PANEL
+                "DatabaseMenu" -> DATABASE_MENU
                 else -> RUN_PANEL
             }
         }

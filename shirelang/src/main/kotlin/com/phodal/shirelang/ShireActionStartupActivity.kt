@@ -1,6 +1,7 @@
 package com.phodal.shirelang
 
 import com.intellij.openapi.actionSystem.ActionManager
+import com.intellij.openapi.actionSystem.Constraints
 import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.smartReadAction
@@ -34,6 +35,7 @@ class ShireActionStartupActivity : ProjectActivity {
             }
 
             attachTerminalAction()
+            attachDatabaseAction(project)
         }
     }
 
@@ -55,6 +57,16 @@ class ShireActionStartupActivity : ProjectActivity {
         val action = actionManager.getAction("ShireTerminalAction")
         if (!toolsMenu.containsAction(action)) {
             toolsMenu.add(action)
+        }
+    }
+
+    private fun attachDatabaseAction(project: Project) {
+        val actionManager = ActionManager.getInstance()
+        val toolsMenu = actionManager.getAction("DatabaseViewPopupMenu") as? DefaultActionGroup ?: return
+
+        val action = actionManager.getAction("ShireDatabaseAction")
+        if (!toolsMenu.containsAction(action)) {
+            toolsMenu.add(action, Constraints.LAST)
         }
     }
 

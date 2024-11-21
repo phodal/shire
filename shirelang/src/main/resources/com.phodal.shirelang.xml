@@ -156,9 +156,8 @@
                 class="com.phodal.shirelang.actions.database.ShireDatabaseAction"
                 icon="com.phodal.shirelang.ShireIcons.DEFAULT"
                 text="Database Action"
-                description="Shire VCS Action">
+                description="Shire database action">
 
-            <add-to-group group-id="DatabaseViewPopupMenu" relative-to-action="DatabaseView.Refresh" anchor="after"/>
         </action>
     </actions>
 
