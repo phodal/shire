@@ -50,12 +50,12 @@ interface PsiContextVariableProvider : VariableProvider<PsiContextVariable> {
         return psiElement?.containingFile?.text?.lines()?.size.toString()
     }
 
-    fun calculateComplexityCount(psiElement: PsiElement?): Int {
+    fun calculateComplexityCount(psiElement: PsiElement?): String {
         if (psiElement?.language == null) {
-            return 0
+            return "0"
         }
 
-        return ComplexityProvider.provide(psiElement.language)?.process(psiElement) ?: 0
+        return ComplexityProvider.provide(psiElement.language)?.process(psiElement).toString()
     }
 
     companion object {
