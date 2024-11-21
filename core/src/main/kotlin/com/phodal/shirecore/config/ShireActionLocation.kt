@@ -24,7 +24,7 @@ enum class ShireActionLocation(val location: String, val description: String) {
             }
         }
 
-        fun all(): Array<ShireActionLocation> = values()
+        fun all(): Array<ShireActionLocation> = entries.toTypedArray()
 
         fun default(): String = RUN_PANEL.location
     }
