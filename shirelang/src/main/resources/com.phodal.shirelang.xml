@@ -151,6 +151,15 @@
 
             <add-to-group group-id="ShowIntentionsGroup" relative-to-action="ShowIntentionActions" anchor="after"/>
         </group>
+
+        <action id="ShireDatabaseAction"
+                class="com.phodal.shirelang.actions.database.ShireDatabaseAction"
+                icon="com.phodal.shirelang.ShireIcons.DEFAULT"
+                text="Database Action"
+                description="Shire VCS Action">
+
+            <add-to-group group-id="DatabaseViewPopupMenu" relative-to-action="DatabaseView.Refresh" anchor="after"/>
+        </action>
     </actions>
 
     <extensions defaultExtensionNs="com.phodal">
