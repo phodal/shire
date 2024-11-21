@@ -10,6 +10,7 @@ import com.intellij.openapi.progress.Task
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator
 import com.intellij.openapi.progress.runBlockingCancellable
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.vcs.FilePath
 import com.intellij.openapi.vcs.changes.Change
 import com.intellij.openapi.vcs.changes.ChangeListManager
 import com.intellij.openapi.vcs.changes.CommitContext
@@ -17,17 +18,20 @@ import com.intellij.openapi.vcs.changes.LocalChangeList
 import com.intellij.psi.PsiElement
 import com.intellij.vcs.commit.ChangeListCommitState
 import com.intellij.vcs.commit.LocalChangesCommitter
+import com.intellij.vcsUtil.VcsUtil
+import com.phodal.shire.git.VcsPrompting
 import com.phodal.shirecore.ShireCoreBundle
 import com.phodal.shirecore.provider.shire.RevisionProvider
-import com.phodal.shire.git.VcsPrompting
 import git4idea.GitCommit
 import git4idea.GitRevisionNumber
 import git4idea.changes.GitCommittedChangeListProvider
+import git4idea.history.GitFileHistory
 import git4idea.history.GitHistoryUtils
 import git4idea.repo.GitRepositoryManager
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.runBlocking
 import java.util.concurrent.CompletableFuture
+
 
 class GitRevisionProvider : RevisionProvider {
     private val logger = logger<GitRevisionProvider>()
@@ -110,10 +114,10 @@ class GitRevisionProvider : RevisionProvider {
 
     override fun countHistoryChange(project: Project, element: PsiElement): Int {
         val file = element.containingFile.virtualFile ?: return 0
-        val repository = GitRepositoryManager.getInstance(project).getRepositoryForFileQuick(file) ?: return 0
+        val filePath: FilePath = VcsUtil.getFilePath(file)
 
         return try {
-            GitHistoryUtils.history(project, repository.root, file.path).size
+            GitFileHistory.collectHistory(project, filePath).size
         } catch (e: Exception) {
             logger.error("Failed to count history changes for file: ${file.path}", e)
             0
