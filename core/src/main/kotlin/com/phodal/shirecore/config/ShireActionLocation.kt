@@ -11,17 +11,12 @@ enum class ShireActionLocation(val location: String, val description: String) {
     ;
 
     companion object {
-        fun from(actionLocation: String): ShireActionLocation {
-            return when (actionLocation) {
-                "ContextMenu" -> CONTEXT_MENU
-                "IntentionMenu" -> INTENTION_MENU
-                "TerminalMenu" -> TERMINAL_MENU
-                "CommitMenu" -> COMMIT_MENU
-                "RunPanel" -> RUN_PANEL
-                "InputBox" -> INPUT_BOX
-                "DatabaseMenu" -> DATABASE_MENU
-                else -> RUN_PANEL
-            }
+        fun from(locationName: String): ShireActionLocation {
+            return fromLocationName(locationName) ?: RUN_PANEL
+        }
+
+        private fun fromLocationName(locationName: String): ShireActionLocation? {
+            return entries.firstOrNull { it.location == locationName }
         }
 
         fun all(): Array<ShireActionLocation> = entries.toTypedArray()
