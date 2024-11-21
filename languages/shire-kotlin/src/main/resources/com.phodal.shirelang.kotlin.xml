@@ -22,5 +22,8 @@
         <shireLanguageToolchainProvider
                 language="kotlin"
                 implementationClass="com.phodal.shirelang.kotlin.variable.KotlinLanguageToolchainProvider"/>
+
+        <shireComplexityProvider language="kotlin"
+                                 implementationClass="com.phodal.shirelang.kotlin.complexity.KotlinComplexityProvider"/>
     </extensions>
 </idea-plugin>
