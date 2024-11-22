@@ -3,18 +3,12 @@ package com.phodal.shirecore.config.interaction.task
 
 import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.diagnostic.logger
-import com.intellij.openapi.editor.Document
 import com.intellij.openapi.progress.ProgressIndicator
-import com.intellij.openapi.progress.Task
-import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.TextRange
-import com.intellij.psi.PsiDocumentManager
-import com.intellij.psi.codeStyle.CodeStyleManager
 import com.phodal.shirecore.ShireCoreBundle
 import com.phodal.shirecore.ShireCoroutineScope
+import com.phodal.shirecore.config.interaction.dto.CodeCompletionRequest
 import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.utils.markdown.CodeFence
-import com.phodal.shirecore.config.interaction.dto.CodeCompletionRequest
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.cancellable
@@ -22,7 +16,7 @@ import kotlinx.coroutines.launch
 
 class CodeCompletionTask(private val request: CodeCompletionRequest) :
     ShireInteractionTask(request.project, ShireCoreBundle.message("intentions.chat.code.complete.name"), request.postExecute) {
-
+    private val logger = logger<CodeCompletionTask>()
     private var isCanceled: Boolean = false
 
     override fun run(indicator: ProgressIndicator) {
@@ -90,29 +84,5 @@ class CodeCompletionTask(private val request: CodeCompletionRequest) :
         val prompt = "complete code for given code: \n$prefix"
 
         return prompt
-    }
-
-
-    companion object {
-        private val logger = logger<CodeCompletionTask>()
-
-        fun insertStringAndSaveChange(
-            project: Project,
-            suggestion: String,
-            document: Document,
-            startOffset: Int,
-            withReformat: Boolean,
-        ) {
-            document.insertString(startOffset, suggestion)
-            PsiDocumentManager.getInstance(project).commitDocument(document)
-
-            if (!withReformat) return
-
-            val psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document)
-            psiFile?.let { file ->
-                val reformatRange = TextRange(startOffset, startOffset + suggestion.length)
-                CodeStyleManager.getInstance(project).reformatText(file, listOf(reformatRange))
-            }
-        }
     }
 }
