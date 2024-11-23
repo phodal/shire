@@ -18,7 +18,9 @@ class VariableTable {
         if (!table.containsKey(varName)) {
             table[varName] = VariableInfo(varType, scope, lineDeclared)
         } else {
-            throw Exception("Variable $varName already declared.")
+            // Ignore duplicate keys to avoid startup failures.
+            // Affected: the lineDeclared value is only valid for the first time, but it is not used anywhere yet.
+//            throw Exception("Variable $varName already declared.")
         }
     }
 
