@@ -1,13 +1,19 @@
 package com.phodal.shirelang
 
 import com.intellij.openapi.actionSystem.ActionManager
+import com.intellij.openapi.actionSystem.ActionToolbar
 import com.intellij.openapi.actionSystem.Constraints
 import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.smartReadAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.ProjectActivity
+import com.intellij.openapi.ui.SimpleToolWindowPanel
+import com.intellij.openapi.util.Key
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.wm.ToolWindow
+import com.intellij.openapi.wm.ToolWindowManager
+import com.intellij.openapi.wm.ex.ToolWindowManagerListener
 import com.intellij.psi.PsiManager
 import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.ProjectScope
@@ -36,6 +42,7 @@ class ShireActionStartupActivity : ProjectActivity {
 
             attachTerminalAction()
             attachDatabaseAction(project)
+            attachSonarLintAction(project)
         }
     }
 
@@ -70,6 +77,11 @@ class ShireActionStartupActivity : ProjectActivity {
         }
     }
 
+    private fun attachSonarLintAction(project: Project) {
+        project.getMessageBus().connect()
+            .subscribe(ToolWindowManagerListener.TOPIC, SonarLintToolWindowListener(project));
+    }
+
     companion object {
         private fun obtainShireFiles(project: Project): List<ShireFile> {
             ApplicationManager.getApplication().assertReadAccessAllowed()
@@ -97,5 +109,23 @@ class ShireActionStartupActivity : ProjectActivity {
             }
         }
 
+    }
+}
+
+class SonarLintToolWindowListener(private val project: Project) : ToolWindowManagerListener {
+    override fun toolWindowShown(toolWindow: ToolWindow) {
+        if (toolWindow.id != "SonarLint") return
+        val action = ActionManager.getInstance().getAction("ShireSonarLintAction")
+
+        val contentManager = toolWindow.contentManager
+        val content = contentManager.getContent(0) ?: return
+
+        val simpleToolWindowPanel = content.component as? SimpleToolWindowPanel
+        val actionToolbar = simpleToolWindowPanel?.toolbar?.components?.get(0) as? ActionToolbar ?: return
+        val actionGroup = actionToolbar.actionGroup as? DefaultActionGroup
+
+        if (actionGroup?.containsAction(action) == false) {
+            actionGroup?.add(action)
+        }
     }
 }
