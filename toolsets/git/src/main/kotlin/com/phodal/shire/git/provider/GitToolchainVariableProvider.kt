@@ -110,7 +110,7 @@ class GitToolchainVariableProvider : ToolchainVariableProvider {
         val details: List<VcsFullCommitDetails> = vcsLog.selectedDetails.toList()
         val selectList = dataContext.getData(VcsDataKeys.SELECTED_CHANGES).orEmpty().toList()
 
-        val vcsPrompting = project.service<VcsPrompting>()
+        val vcsPrompting = project.getService(VcsPrompting::class.java)
         val fullChangeContent =
             vcsPrompting.buildDiffPrompt(details, selectList.toList(), project)
 
