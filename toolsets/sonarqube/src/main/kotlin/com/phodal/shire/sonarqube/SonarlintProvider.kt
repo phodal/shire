@@ -38,8 +38,13 @@ object SonarlintProvider {
                 it.findings.issuesPerFile.forEach { (file, issues) ->
                     result.append("File: $file\n")
                     issues.forEach { issue ->
-                        result.append("  - ${issue.userSeverity}, ${issue.validTextRange}: ${issue.message}\n")
-                        result.append("  - ${issue.quickFixes()}\n")
+                        result.append("  -  ${issue.range}: ${issue.message}\n")
+                        if (issue.quickFixes().isNotEmpty()) {
+                            result.append("    Quick Fixes suggestion: ")
+                            issue.quickFixes().forEach { quickFix ->
+                                result.append("      - ${quickFix.message}\n")
+                            }
+                        }
                     }
                 }
 
