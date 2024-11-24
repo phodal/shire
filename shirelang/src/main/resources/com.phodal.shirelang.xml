@@ -56,8 +56,6 @@
         <runConfigurationProducer implementation="com.phodal.shirelang.run.ShireRunConfigurationProducer"/>
         <runLineMarkerContributor language="Shire"
                                   implementationClass="com.phodal.shirelang.run.ShireRunLineMarkersProvider"/>
-<!--        <runLineMarkerContributor language="Shire"-->
-<!--                                  implementationClass="com.phodal.shirelang.run.ShireCommentRunLineMarkersProvider"/>-->
 
         <codeInsight.lineMarkerProvider language="Shire"
                                         implementationClass="com.phodal.shirelang.run.ShireSyntaxLineMarkerProvider"/>
