@@ -25,6 +25,7 @@ Git 工具链提供以下变量：
 - `currentChanges`，当前分支的当前更改。
 - `currentBranch`，当前分支的名称。
 - `historyCommitMessages`，当前提交的提交消息。
+- `diff`，当前选中 commit 的 diff 信息。
 
 ## SonarQube
 
