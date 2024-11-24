@@ -15,6 +15,8 @@ enum class VcsToolchainVariable(
     CurrentBranch("currentBranch", description = "The name of the current branch"),
 
     HistoryCommitMessages("historyCommitMessages", description = "The commit messages in the history"),
+
+    Diff("diff", description = "The diff of the current changes")
     ;
 
     companion object {

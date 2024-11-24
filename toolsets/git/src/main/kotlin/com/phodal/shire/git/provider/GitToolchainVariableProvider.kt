@@ -1,13 +1,19 @@
 package com.phodal.shire.git.provider
 
+import com.intellij.ide.DataManager
+import com.intellij.openapi.actionSystem.DataContext
+import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.vcs.VcsDataKeys
 import com.intellij.openapi.vcs.changes.Change
 import com.intellij.openapi.vcs.changes.CurrentContentRevision
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
 import com.intellij.vcs.commit.CommitWorkflowUi
+import com.intellij.vcs.log.VcsFullCommitDetails
+import com.intellij.vcs.log.VcsLogDataKeys
 import com.intellij.vcs.log.VcsLogFilterCollection
 import com.intellij.vcs.log.VcsLogProvider
 import com.intellij.vcs.log.impl.VcsProjectLog
@@ -16,6 +22,7 @@ import com.phodal.shirecore.provider.variable.ToolchainVariableProvider
 import com.phodal.shirecore.provider.variable.model.ToolchainVariable
 import com.phodal.shirecore.provider.variable.model.toolchain.VcsToolchainVariable
 import com.phodal.shire.git.VcsPrompting
+import com.phodal.shirecore.variable.template.VariableActionEventDataHolder
 import java.awt.EventQueue.invokeAndWait
 
 
@@ -27,6 +34,7 @@ class GitToolchainVariableProvider : ToolchainVariableProvider {
             VcsToolchainVariable.CurrentChanges -> true
             VcsToolchainVariable.HistoryCommitMessages -> true
             VcsToolchainVariable.CurrentBranch -> true
+            VcsToolchainVariable.Diff -> true
             else -> false
         }
     }
@@ -81,9 +89,32 @@ class GitToolchainVariableProvider : ToolchainVariableProvider {
                     variable.value = exampleCommitMessages
                 }
             }
+
+            VcsToolchainVariable.Diff -> {
+                val dataContext = VariableActionEventDataHolder.getData()?.vcsDataContext
+                variable.value = analysisLog(dataContext, project)
+            }
         }
 
         return variable
+    }
+
+    private fun analysisLog(dataContext: DataContext?, project: Project): String {
+        if (dataContext == null) {
+            return ""
+        }
+
+
+        val vcsLog = dataContext.getData(VcsLogDataKeys.VCS_LOG) ?: return ""
+
+        val details: List<VcsFullCommitDetails> = vcsLog.selectedDetails.toList()
+        val selectList = dataContext.getData(VcsDataKeys.SELECTED_CHANGES).orEmpty().toList()
+
+        val vcsPrompting = project.service<VcsPrompting>()
+        val fullChangeContent =
+            vcsPrompting.buildDiffPrompt(details, selectList.toList(), project)
+
+        return fullChangeContent ?: ""
     }
 
     /**
