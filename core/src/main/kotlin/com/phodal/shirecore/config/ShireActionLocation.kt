@@ -9,6 +9,7 @@ enum class ShireActionLocation(val location: String, val description: String) {
     INPUT_BOX("InputBox", "Show in Input Box"),
     DATABASE_MENU("DatabaseMenu", "Show in Database panel menu bar"),
     CONSOLE_MENU("ConsoleMenu", "Show in Console panel menu bar"),
+    VCS_LOG_MENU("VcsLogMenu", "Show in VCS Log panel menu bar"),
     ;
 
     companion object {

@@ -160,8 +160,16 @@
         <action id="ShireDatabaseAction"
                 class="com.phodal.shirelang.actions.database.ShireDatabaseAction"
                 icon="com.phodal.shirelang.ShireIcons.DEFAULT"
-                text="Database Action"
+                text="Shire Database Action"
                 description="Shire database action">
+
+        </action>
+
+        <action id="ShireVcsLogAction"
+                class="com.phodal.shirelang.actions.vcs.ShireVcsLogAction"
+                icon="com.phodal.shirelang.ShireIcons.DEFAULT"
+                text="Shire Vcs Action"
+                description="Shire vcs action">
 
         </action>
     </actions>
