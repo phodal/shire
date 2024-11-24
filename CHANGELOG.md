@@ -1,14 +1,75 @@
-# [](https://github.com/phodal/shire/compare/v1.0.2...v) (2024-11-03)
+# [](https://github.com/phodal/shire/compare/v1.0.6...v) (2024-11-24)
 
-## [Unreleased]
 
-## [1.0.2](https://github.com/phodal/shire/compare/v1.0.1...v[1.0.2]) (2024-11-03)
+
+## [1.0.6](https://github.com/phodal/shire/compare/v1.0.4-SNAPSHOT...v1.0.6) (2024-11-24)
+
+
+### Bug Fixes
+
+* **core:** return complexity count as String instead of Int ([4cea791](https://github.com/phodal/shire/commit/4cea7917ed2bfc9553ed77c918b26df9a7efa0a6))
+* **runner:** Run fails due to duplicate variables ([430e57a](https://github.com/phodal/shire/commit/430e57a7b375c3709beeb6af6be8b7dbcf0dbe4d))
+
+
+### Features
+
+* **actions:** add ShireConsoleAction and update related configurations ([8ee1a18](https://github.com/phodal/shire/commit/8ee1a18bb43d0762549064b37377c1e9708052ad))
+* **actions:** add ShireDatabaseAction to Database panel menu bar ([19d02df](https://github.com/phodal/shire/commit/19d02dfeefce3b4e6d8fa630a6207a8adfae7c77))
+* **compiler:** Improve the logic of the if expression to handle variables in velocityBlock ([61e3aab](https://github.com/phodal/shire/commit/61e3aab3f0e408d883f4cd90e947e31d751ac0ec))
+* **kotlin:** add complexity analysis for Kotlin language ([412a90d](https://github.com/phodal/shire/commit/412a90d55a2144162a9d49aa3cfb28b5d0d55253)), closes [#139](https://github.com/phodal/shire/issues/139)
+* **provider:** add change count, line count, and complexity count variables [#143](https://github.com/phodal/shire/issues/143) and closed [#139](https://github.com/phodal/shire/issues/139) ([e23687c](https://github.com/phodal/shire/commit/e23687c8a0c31f4b23ea09483e482dd9b3fb53b0))
+* **provider:** add process method to ComplexityProvider interface [#139](https://github.com/phodal/shire/issues/139) ([61a6cad](https://github.com/phodal/shire/commit/61a6cad3a26d1c6f884fe1059d6da98ba93d2f15))
+* **provider:** implement complexity count calculation for PsiVariableProvider [#139](https://github.com/phodal/shire/issues/139) ([8a8f1e8](https://github.com/phodal/shire/commit/8a8f1e8df6171714ab0f6660fd91474b3fb7b769))
+* **shirelang:** add Shire Vcs Log Action and update menu text ([b90f450](https://github.com/phodal/shire/commit/b90f45013defc16685bbe5483af2a71c6c798c0e))
+* **shirelang:** add SonarLint action and tool window integration ([20e7f13](https://github.com/phodal/shire/commit/20e7f1308220d4f5ad24f34614ff8783aac0d9ad))
+* **shirelang:** add Vcs.Log action to ShireActionStartupActivity ([d34a8da](https://github.com/phodal/shire/commit/d34a8da8f1b2eefef80c3789f52e64af93f5b16c))
+* **vcs:** add support for Diff variable in VcsToolchainVariable ([d448e33](https://github.com/phodal/shire/commit/d448e33ee43fd34fb12f7653d84e4421de8f32d7))
+
+
+
+## [1.0.4-SNAPSHOT](https://github.com/phodal/shire/compare/v1.0.2...v1.0.4-SNAPSHOT) (2024-11-13)
+
+
+### Features
+
+* **core:** add ActionableWebView class for enhanced web interaction [#132](https://github.com/phodal/shire/issues/132) ([b65fdc0](https://github.com/phodal/shire/commit/b65fdc02d34cc1065bfcc614fd05993822ac2a39))
+* **grammar:** Add support for if expressions ([d536289](https://github.com/phodal/shire/commit/d536289b7518fbef89f6c41dc08cb3ee4eab8be4))
+
+
+
+## [1.0.2](https://github.com/phodal/shire/compare/v1.0.1...v1.0.2) (2024-11-03)
+
+
+### Bug Fixes
+
+* **actions:** Improve the logic of duplicate names for dynamic actions in the context menu ([0401248](https://github.com/phodal/shire/commit/0401248c78318bbffaa054918a1d32af61145bea))
+* Add ShirePluginDisposable to eliminate warnings about memory leaks ([b1564da](https://github.com/phodal/shire/commit/b1564daf8678670f2864ef7509a20edc64a2a6d9))
+* **runner:** SSE parsing exception caused the shire process to not stop ([d092cc7](https://github.com/phodal/shire/commit/d092cc762df0ba3c01fa7a7f1b5bb103971c9841))
+* **shirelang:** improve notification message handling ([22cbd64](https://github.com/phodal/shire/commit/22cbd64f16f1c354a49a882a62ac1ca9177e7f1d))
+* **ShowWebviewProcessor:** LlmProvider is still working after webview is closed ([3fea10f](https://github.com/phodal/shire/commit/3fea10faf9835a6ceb64fb5e85b567d17c4f50b0))
+* **variables:** Cannot get currentClassName variable when psiElement type is PsiClass ([1eee36e](https://github.com/phodal/shire/commit/1eee36ed75458e3b2bde9969d69722d9416a0600))
+
+
+### Features
+
+* **grammar:** add support # with variable for #$storyId usecase ([bdde1d2](https://github.com/phodal/shire/commit/bdde1d2eb2e7cdd3b1b9a473904585d47a031137))
+* **languages:** add shire-proto plugin and support [#122](https://github.com/phodal/shire/issues/122) ([78b3f39](https://github.com/phodal/shire/commit/78b3f39a3ff5ef2aea91a0472b56fc6f768273fe))
+* **plugin:** add proto module to plugin.xml [#122](https://github.com/phodal/shire/issues/122) ([28f9bdb](https://github.com/phodal/shire/commit/28f9bdb96ac9de9f0fc40c5b7654defbeffc6f96))
+* **shire-proto:** implement ProtoFileStructureProvider for protobuf support [#122](https://github.com/phodal/shire/issues/122) ([c3fa801](https://github.com/phodal/shire/commit/c3fa801e5cab010fd02c296f7dfed50499661f77))
+* **shire-proto:** implement ShireProtoUtils to find callees for PbServiceDefinition [#122](https://github.com/phodal/shire/issues/122) ([e614ced](https://github.com/phodal/shire/commit/e614ced90648bc0dc74c260172cf2cf3e3488209))
+* **toolchain:** add ProtobufToolchainProvider and support for Kotlin [#122](https://github.com/phodal/shire/issues/122) ([e0089ff](https://github.com/phodal/shire/commit/e0089ffc6bc3c7fcd31b088db3593d374c44e5c9))
+
+
+
+# [1.0.0](https://github.com/phodal/shire/compare/v0.9.1...v1.0.0) (2024-10-14)
+
 
 ### Bug Fixes
 
 * **hobbit:** refine key bindings for approval processor ([d402baa](https://github.com/phodal/shire/commit/d402baa9192e7f16a7bb3b45a3a0cc1c38be5bd4))
 * **openrewrite:** improve run configuration setup [#119](https://github.com/phodal/shire/issues/119) ([eecd294](https://github.com/phodal/shire/commit/eecd294277565db875ec21c8f756b5f1d80219e2))
 * **openrewrite:** update working directory for configuration [#119](https://github.com/phodal/shire/issues/119) ([35600e3](https://github.com/phodal/shire/commit/35600e368289e06bb52f68a3db4fbac0b8987913))
+
 
 ### Features
 
@@ -20,7 +81,25 @@
 * **shirelang:** implement beforeCharTyped override for custom handling ([ee12c7f](https://github.com/phodal/shire/commit/ee12c7f9cd1eb6dda9df4ec5790f1182e3841b89))
 * **shirelang:** implement highlighting, brace matching, and quote handling ([ced541f](https://github.com/phodal/shire/commit/ced541fa5bba0b55a8d532984928546afbddbd9a))
 
-## [0.9.1](https://github.com/phodal/shire/compare/v0.9.0...v[0.9.1]) (2024-10-10)
+
+
+## [0.9.1](https://github.com/phodal/shire/compare/v0.9.0...v0.9.1) (2024-10-10)
+
+
+### Bug Fixes
+
+* **actions:** add a simple fix for [#109](https://github.com/phodal/shire/issues/109) ([6087c9b](https://github.com/phodal/shire/commit/6087c9be1b0d90fa679d592c629b13f3a265d941))
+
+
+### Features
+
+* **execute:** Add approval callback to execute processor and update file finding logic [#71](https://github.com/phodal/shire/issues/71) ([5573523](https://github.com/phodal/shire/commit/5573523ec12f202762fb36bbdb4010c1505bb931))
+* **shirelang:** add approval execution feature and dialog UI [#71](https://github.com/phodal/shire/issues/71) ([09c4ee5](https://github.com/phodal/shire/commit/09c4ee521abd11da7fc962abaae427e4f52807eb))
+
+
+
+# [0.9.0](https://github.com/phodal/shire/compare/v0.8.3...v0.9.0) (2024-10-07)
+
 
 ### Bug Fixes
 
@@ -35,6 +114,7 @@
 * **logging:** improve error messages for PatternActionFunc arguments ([844dcd8](https://github.com/phodal/shire/commit/844dcd813d069be62d7f6cddb057f1e2d4ef0a58))
 * **settings:** Test connection failed without applying settings ([e883e38](https://github.com/phodal/shire/commit/e883e383a540368f26295ce3504d5253f637b294))
 * **shirelang:** correct typo in ShireFileModificationListener class name ([8baad36](https://github.com/phodal/shire/commit/8baad367cae909fa19ce542f64041c1be05e65b7))
+
 
 ### Features
 
@@ -74,11 +154,15 @@
 * **tokenizer:** add variable substitution in tokenizer and related test [#104](https://github.com/phodal/shire/issues/104) ([30c40c5](https://github.com/phodal/shire/commit/30c40c52b1cef465d49339aeb3b9c1b59764cb45))
 * **tokenizer:** ensure distinct tokenization results ([09746ca](https://github.com/phodal/shire/commit/09746cafce7766ffe2a8a6d8b9f866def8a98d21))
 
-## [0.8.2](https://github.com/phodal/shire/compare/v0.8.1...v[0.8.2]) (2024-09-23)
+
+
+## [0.8.2](https://github.com/phodal/shire/compare/v0.8.1...v0.8.2) (2024-09-23)
+
 
 ### Bug Fixes
 
 * **middleware:** use <html to replace <html> ([483ab87](https://github.com/phodal/shire/commit/483ab8781e146ba483906394d285c02a217db1bb))
+
 
 ### Features
 
@@ -97,7 +181,43 @@
 * **ShireFileModifier:** wrap file processing in runReadAction ([e8cc6f0](https://github.com/phodal/shire/commit/e8cc6f06fd8238ea7679dc0e31a1c3f976d2f1d0))
 * **UI:** enable off-screen rendering and improve webview popup ([96f3791](https://github.com/phodal/shire/commit/96f37913f889de070c608313481361cb73badce4))
 
-## [0.8.1](https://github.com/phodal/shire/compare/v0.8.0...v[0.8.1]) (2024-09-18)
+
+
+## [0.8.1](https://github.com/phodal/shire/compare/v0.8.0...v0.8.1) (2024-09-18)
+
+
+### Bug Fixes
+
+* **core:** wrap isApplicable check in runReadAction ([67e91a1](https://github.com/phodal/shire/commit/67e91a1442933efff47ddab4145448d29684bcc2))
+* fix configure  must be added before selecting ([25f9cc7](https://github.com/phodal/shire/commit/25f9cc788ac1c6080a024e6b26be92d3353a4260))
+* **settings:** Allow to test llm connection without apply settings. ([02cf784](https://github.com/phodal/shire/commit/02cf784d178383300aec3af40eac955ddf388fb5)), closes [#91](https://github.com/phodal/shire/issues/91)
+
+
+### Features
+
+* add support for shell script in find langauge ([76ed93e](https://github.com/phodal/shire/commit/76ed93e46dc53687d3d0b5444e481a501363c20d))
+* **httpclient:** refactor runFile method and add createConfiguration method ([7a4048f](https://github.com/phodal/shire/commit/7a4048f3ac39975b165304c74acc26f1ce4548f4))
+* **java-testing:** add syntax error collection and auto testing service for Java ([5ee710a](https://github.com/phodal/shire/commit/5ee710aab686c9b6f2be1d2198199f99f211ddb7))
+* **javascript:** add support for JavaScript in shirePsiVariableProvider ([239bbe3](https://github.com/phodal/shire/commit/239bbe3370a872b183a0b05be882b5787902c661))
+* **JSFileRunService:** add JS file validation before configuration ([3878188](https://github.com/phodal/shire/commit/3878188ea93170ab6759fe16a8bf2db7c387da7b))
+* **NodeJS:** add NodeJS plugin and run configuration service ([be2c197](https://github.com/phodal/shire/commit/be2c197b908a77bed81da32de0880ba5057d5b15))
+* **run configuration:** refactor run configuration creation using runReadAction ([977a1d5](https://github.com/phodal/shire/commit/977a1d557983241815e4b03ae207cb2751cddab0))
+* **run-service:** add isApplicable method to FileRunService ([79bbd8f](https://github.com/phodal/shire/commit/79bbd8fac21742984eb81e95ff46ed9046454328))
+* **run-service:** add ShellFileRunService and use runReadAction in FileRunService ([10b14f0](https://github.com/phodal/shire/commit/10b14f09f1bc22200a5940dc73ae5bbbec0138dc))
+* **shire-python:** add automatic testing support for Python ([68d4d2f](https://github.com/phodal/shire/commit/68d4d2f5dc449e1447cc40f5c30a1e0bcf08552d))
+* **shire-python:** add basic related type support ([09c2fee](https://github.com/phodal/shire/commit/09c2fee886f1ae43571ed53b09cf780c0b03003a))
+* **shire-python:** add global search and progress check in method caller resolution ([1ff1d86](https://github.com/phodal/shire/commit/1ff1d86423d94527ab668079d7b9b274a51f24cb))
+* **shire-python:** implement variable providers in ShirePythonPsiVariableProvider ([ea33801](https://github.com/phodal/shire/commit/ea33801e82e4542fa963a5f39b842cc4f26d2d80))
+* **shire-python:** update variable provider and auto testing ([bc9cb89](https://github.com/phodal/shire/commit/bc9cb891b672cf21f3636a5f58927af6c345f3ff))
+* **ShireActionStartupActivity:** comment out OpenDatabaseViewOnStart action ([702ec0f](https://github.com/phodal/shire/commit/702ec0f422fa203aa61b39c20203faac2b80f00e))
+* **testing:** add new test cases and refactor PyTestUtil ([06c5262](https://github.com/phodal/shire/commit/06c5262b2601341861c9d10cc4385ed58203a366))
+* **ui-test:** add Playwright configuration and update JSFileRunService ([c242617](https://github.com/phodal/shire/commit/c2426177a08768d557a3f0a8ecbb79e5884e68b6))
+* **ui-test:** add PlaywrightFileRunService and integrate ui-test toolset ([2df15a1](https://github.com/phodal/shire/commit/2df15a174e1cc4cb115014045b4d1b5b6a2bfa2a))
+
+
+
+# [0.8.0](https://github.com/phodal/shire/compare/v0.7.4...v0.8.0) (2024-09-15)
+
 
 ### Bug Fixes
 
@@ -115,6 +235,7 @@
 * **shirelang:** refactor array handling and add regression test [#83](https://github.com/phodal/shire/issues/83) ([1f4c8fe](https://github.com/phodal/shire/commit/1f4c8fe8d96e65959f3c0d61cb6899febb87edf6))
 * **Wiremock:** 添加文件路径到 Wiremock 错误信息中，以便于调试 ([2a888cd](https://github.com/phodal/shire/commit/2a888cd75703c161bb009e0569276557862eae5e))
 * 在ShireProcessHandler中添加异常日志记录 ([28d6dea](https://github.com/phodal/shire/commit/28d6dea0c4650b6254079ed2fee5af6b78ccfe70))
+
 
 ### Features
 
@@ -160,7 +281,10 @@
 * **variable-provider:** enhance context variable handling in JS and Go ([d344944](https://github.com/phodal/shire/commit/d34494437238f58c06c2e4c6c403be02735faf9a))
 * 添加 LLM 提供者未找到的错误信息 ([fde5a88](https://github.com/phodal/shire/commit/fde5a88f24ce99392ccc67335bc7f81c25d20e6e))
 
-## [0.7.4](https://github.com/phodal/shire/compare/v0.7.3...v[0.7.4]) (2024-09-09)
+
+
+## [0.7.4](https://github.com/phodal/shire/compare/v0.7.3...v0.7.4) (2024-09-09)
+
 
 ### Bug Fixes
 
@@ -169,6 +293,7 @@
 * **runner:** The consoleView is not the original consoleView when processing the exit code of the script ([474b681](https://github.com/phodal/shire/commit/474b6813565e790a832c37f74e7ac4acd6db7696))
 * **runner:** The messageFilter of the console view appends extra data ([a47db5d](https://github.com/phodal/shire/commit/a47db5dd1fe51408409339a4711c7d16a23922d1))
 * **shirelang:** ensure null safety in ShireVcsSingleAction [#78](https://github.com/phodal/shire/issues/78) ([0c4665b](https://github.com/phodal/shire/commit/0c4665b9faf4573b2fb66abb1fabccc484fc3d51))
+
 
 ### Features
 
@@ -183,11 +308,15 @@
 * **navigation:** implement GotoDeclarationHandler for Shire language ([2c7d744](https://github.com/phodal/shire/commit/2c7d7444759e81e9c3661f5ec5633ae7a086f810))
 * **pattern-action:** refactor to use PatternActionFuncType enum ([445b2ac](https://github.com/phodal/shire/commit/445b2ac9e9539cf41468a7c9a0a819b98d63aa7f))
 
-## [0.7.2](https://github.com/phodal/shire/compare/v0.7.1...v[0.7.2]) (2024-09-05)
+
+
+## [0.7.2](https://github.com/phodal/shire/compare/v0.7.1...v0.7.2) (2024-09-05)
+
 
 ### Bug Fixes
 
 * **runtime:** switch to workerThread for terminal UI tasks execution [#72](https://github.com/phodal/shire/issues/72) ([53672d3](https://github.com/phodal/shire/commit/53672d3def0a373de2358a0754a3798c398e8934))
+
 
 ### Features
 
@@ -201,7 +330,48 @@
 * **shirelang:** implement regex pattern support for 'grep' function ([e3bb682](https://github.com/phodal/shire/commit/e3bb6828bfa72e9fba2bb39f954097487c8fa1bb))
 * **testing:** add Shire language annotation to test cases and implement shell script runner ([9c53db9](https://github.com/phodal/shire/commit/9c53db9d4609cb78c026a93fb6b719c4b294a05f))
 
-## [0.7.1](https://github.com/phodal/shire/compare/v0.7.0...v[0.7.1]) (2024-09-02)
+
+
+## [0.7.1](https://github.com/phodal/shire/compare/v0.7.0...v0.7.1) (2024-09-02)
+
+
+### Features
+
+* **shirelang:** implement 'find' action for pattern matching and search ([00dde0d](https://github.com/phodal/shire/commit/00dde0d94d06e9fc05c90b813ab519cbf9e8bfcf))
+* **syntax:** add variable support in variables ([48eb44e](https://github.com/phodal/shire/commit/48eb44ec834ca9cca557da9ece28f15c9c53e9c7))
+
+
+
+# [0.7.0](https://github.com/phodal/shire/compare/v0.6.0...v0.7.0) (2024-08-29)
+
+
+### Bug Fixes
+
+* **database:** handle empty args for table functions ([f377ca4](https://github.com/phodal/shire/commit/f377ca4b47d586c7d7572ffe82a9adf609c6c0fe))
+
+
+### Features
+
+* **core:** add Toolchain Function Provider extension point and interface [#9](https://github.com/phodal/shire/issues/9) ([fc92fa3](https://github.com/phodal/shire/commit/fc92fa3022137f41282d86f25369b0e82ba98c1d))
+* **database:** add database module and dependency [#9](https://github.com/phodal/shire/issues/9) ([2555860](https://github.com/phodal/shire/commit/2555860bb3fb4b2f26d94b15fe0e4a8c4f416870))
+* **database:** implement DatabaseToolchainProvider and related changes [#9](https://github.com/phodal/shire/issues/9) ([5a47b2e](https://github.com/phodal/shire/commit/5a47b2e364e1f3437fa6be5c2c5198f10d996b5d))
+* **paste:** init CopyPastePreProcessor for custom actions [#42](https://github.com/phodal/shire/issues/42) ([4b8408e](https://github.com/phodal/shire/commit/4b8408e25e53f3551258525f7162483d48bd0964))
+* **run-executor:** add OnPaste handling for ShireDefaultLlmExecutor [#42](https://github.com/phodal/shire/issues/42) ([cc73d49](https://github.com/phodal/shire/commit/cc73d49602ffa4077dc4ba1db3fa113b3def353c))
+* **toolsets:** add database plugin and related functionalities [#9](https://github.com/phodal/shire/issues/9) ([d94d0a1](https://github.com/phodal/shire/commit/d94d0a1d8975b2feddc1dd5ec94c1e5b76f0e7b0))
+* **toolsets:** add PlantUML support and toolchain provider [#62](https://github.com/phodal/shire/issues/62) ([3176e6c](https://github.com/phodal/shire/commit/3176e6c1a09c60d5811891af6135df99ab7d850e))
+* **variables:** add database toolchain variables [#9](https://github.com/phodal/shire/issues/9) ([e5e4293](https://github.com/phodal/shire/commit/e5e4293d05c62481df44d727a2f1357dd10cc573))
+
+
+
+# [0.6.0](https://github.com/phodal/shire/compare/v0.5.2...v0.6.0) (2024-08-26)
+
+
+### Bug Fixes
+
+* **executor:** handle exceptions in ShireDefaultLlmExecutor [#60](https://github.com/phodal/shire/issues/60) ([da44e85](https://github.com/phodal/shire/commit/da44e858f32ea9bdb1c68b7b2b5d9f1db671676a))
+* **plugin:** add Kotlin module support ([c3c1ecb](https://github.com/phodal/shire/commit/c3c1ecb98b03418b88415e26eb9742db82da3806))
+* **shirelang:** add exception handling for LlmProvider streaming output [#60](https://github.com/phodal/shire/issues/60) ([a8272b2](https://github.com/phodal/shire/commit/a8272b2341e7770d2109ac666036e02d3d4bf103))
+
 
 ### Features
 
@@ -223,17 +393,39 @@
 * **shirelang:** add crawl functionality and processor support [#59](https://github.com/phodal/shire/issues/59) ([ee5a3ea](https://github.com/phodal/shire/commit/ee5a3ea42b3b2b7feef4974002d5bb8b92817037))
 * **shirelang:** add support for threading function execution [#60](https://github.com/phodal/shire/issues/60) ([0d31f9e](https://github.com/phodal/shire/commit/0d31f9e8636d9fa169eb6359dd9fff1c4ebc61ad))
 
+
+
+## [0.5.2](https://github.com/phodal/shire/compare/v0.5.0...v0.5.2) (2024-08-15)
+
+
 ### Bug Fixes
 
-* **executor:** handle exceptions in ShireDefaultLlmExecutor [#60](https://github.com/phodal/shire/issues/60) ([da44e85](https://github.com/phodal/shire/commit/da44e858f32ea9bdb1c68b7b2b5d9f1db671676a))
-* **plugin:** add Kotlin module support ([c3c1ecb](https://github.com/phodal/shire/commit/c3c1ecb98b03418b88415e26eb9742db82da3806))
-* **shirelang:** add exception handling for LlmProvider streaming output [#60](https://github.com/phodal/shire/issues/60) ([a8272b2](https://github.com/phodal/shire/commit/a8272b2341e7770d2109ac666036e02d3d4bf103))
+* **core:** adjust slice range for input processing in LocalEmbedding.kt [#52](https://github.com/phodal/shire/issues/52) ([6875195](https://github.com/phodal/shire/commit/687519541aab460c107259bf7049ab87b4dfc311))
 
-## [0.5.2](https://github.com/phodal/shire/compare/v0.5.0...v[0.5.2]) (2024-08-15)
+
+### Features
+
+* **compiler:** add ShireDate and ShireQLSchema for date handling and refactor variable builder structure [#50](https://github.com/phodal/shire/issues/50) ([b20e935](https://github.com/phodal/shire/commit/b20e935f5fac8f981d8263abde9bad7b0a1de416))
+* **compiler:** enhance error log with object name [#50](https://github.com/phodal/shire/issues/50) ([b28e9ce](https://github.com/phodal/shire/commit/b28e9ce3709bdb7ed541273d3d4d1d817410513b))
+* **compiler:** enhance null checks and logical operations [#50](https://github.com/phodal/shire/issues/50) ([69924e3](https://github.com/phodal/shire/commit/69924e39e0b8db3b09607835dd4ef3ed88237d6f))
+* **compiler:** enhance null safety in FunctionStatementProcessor [#50](https://github.com/phodal/shire/issues/50) ([6d01851](https://github.com/phodal/shire/commit/6d018515f907b2c03a2e74ae2b8e32ff632a16d2))
+* **date util:** add ShireDate class with date methods && closed [#50](https://github.com/phodal/shire/issues/50) ([3e047cb](https://github.com/phodal/shire/commit/3e047cb0cd148e83752859dd4043b0af44afbf65))
+* **plugin:** add sonarqube module and dependency [#54](https://github.com/phodal/shire/issues/54) ([0e71866](https://github.com/phodal/shire/commit/0e7186637061e2483d96b865389d2b8b58fa452c))
+* **shirelang:** improve multi-variable processing and update date handling [#50](https://github.com/phodal/shire/issues/50) ([e301f48](https://github.com/phodal/shire/commit/e301f48cbab630ccf1bee68bd616dc6f36c83218))
+* **sonarqube:** add CustomSonarLintMenu and extension provider [#54](https://github.com/phodal/shire/issues/54) ([cb2a401](https://github.com/phodal/shire/commit/cb2a4016ee4d9a64d533fc3307d60da0de65284d))
+* **sonarqube:** implement SonarlintProvider for analyzing current file [#54](https://github.com/phodal/shire/issues/54) ([a5a505b](https://github.com/phodal/shire/commit/a5a505b422595738131d65e6bd04f9872091e702))
+* **sonarqube:** implement SonarqubeVariableProvider and add SonarqubeVariable enum [#54](https://github.com/phodal/shire/issues/54) ([4b50a28](https://github.com/phodal/shire/commit/4b50a2879b5001c78633b071cbb8f88967247a88))
+* **toolsets:** add SonarQube plugin and project configuration [#54](https://github.com/phodal/shire/issues/54) ([a487e14](https://github.com/phodal/shire/commit/a487e1436ffb5689cc2c8786658b772ddd5e8284))
+
+
+
+# [0.5.0](https://github.com/phodal/shire/compare/v0.4.8...v0.5.0) (2024-08-05)
+
 
 ### Bug Fixes
 
 * add lost files ([e6f524d](https://github.com/phodal/shire/commit/e6f524dbf661b128270591bf92fe6a24795a9ae6))
+
 
 ### Features
 
@@ -244,15 +436,20 @@
 * **search:** enhance search functionality in SemanticService [#46](https://github.com/phodal/shire/issues/46) ([995331c](https://github.com/phodal/shire/commit/995331c76efafc9bf1deb5224c61044951a576c6))
 * **search:** replace IndexEntry with ScoredEntry and add reranking functionality [#46](https://github.com/phodal/shire/issues/46) ([6a84387](https://github.com/phodal/shire/commit/6a843872b0e185028ae7f92f5aa0226efd3bd92b))
 
+
 ### Reverts
 
 * Revert "refactor(core): update SecretPattern and SecretPatterns classes #47" ([1e1d556](https://github.com/phodal/shire/commit/1e1d5560303bd59dae2b73567c03b853041c33a7)), closes [#47](https://github.com/phodal/shire/issues/47)
 
-## [0.4.8](https://github.com/phodal/shire/compare/v0.4.7...v[0.4.8]) (2024-08-02)
+
+
+## [0.4.8](https://github.com/phodal/shire/compare/v0.4.7...v0.4.8) (2024-08-02)
+
 
 ### Bug Fixes
 
 * **guard:** improve regex pattern validation and update UK phone pattern [#47](https://github.com/phodal/shire/issues/47) ([bcc7e16](https://github.com/phodal/shire/commit/bcc7e162ad328445c707d4df8a0041ac23d391ad))
+
 
 ### Features
 
@@ -267,11 +464,15 @@
 * **security:** implement BanKeywordsScanner and Replacer interface [#47](https://github.com/phodal/shire/issues/47) ([47f2b69](https://github.com/phodal/shire/commit/47f2b697b857c39d76d85f1338b7128288fb4b99))
 * **shirelang:** implement redact function for data masking [#47](https://github.com/phodal/shire/issues/47) ([ed28585](https://github.com/phodal/shire/commit/ed285856f36e443687fc8bc75f3a70084d75723f))
 
-## [0.4.7](https://github.com/phodal/shire/compare/v0.4.6...v[0.4.7]) (2024-07-30)
+
+
+## [0.4.7](https://github.com/phodal/shire/compare/v0.4.6...v0.4.7) (2024-07-30)
+
 
 ### Bug Fixes
 
 * **core:** enhance InsertUtil to validate offset range ([022d8e2](https://github.com/phodal/shire/commit/022d8e249da9b5aaa7e7166cc69de2269ff05e34))
+
 
 ### Features
 
@@ -283,11 +484,15 @@
 * **settings:** add temperature setting and UI component ([264211f](https://github.com/phodal/shire/commit/264211f5937a0d42f10d90a8dfee92aae29035ac))
 * **shirelang:** add VcsStatementProcessor for commit info handling [#41](https://github.com/phodal/shire/issues/41) ([c71fe57](https://github.com/phodal/shire/commit/c71fe57d5dcf73a37298139a2ac1dee34b4f5c91))
 
-## [0.4.6](https://github.com/phodal/shire/compare/v0.4.5...v[0.4.6]) (2024-07-24)
+
+
+## [0.4.6](https://github.com/phodal/shire/compare/v0.4.5...v0.4.6) (2024-07-24)
+
 
 ### Bug Fixes
 
 * **compiler:** handle exceptions when finding files ([e85eb79](https://github.com/phodal/shire/commit/e85eb79923442db4a519c62fa78242862cd16d76))
+
 
 ### Features
 
@@ -307,7 +512,10 @@
 * **ShireRunner:** enhance error handling for detachProcess ([d221082](https://github.com/phodal/shire/commit/d22108282ac9e2fedba2442986708b70b19b35cd))
 * **testing:** add new test case for afterStreamingOnly functionality ([a91be0d](https://github.com/phodal/shire/commit/a91be0d2532bc7540ac3bdfefbcdfc707513622c))
 
-## [0.4.5](https://github.com/phodal/shire/compare/v0.4.3...v[0.4.5]) (2024-07-19)
+
+
+## [0.4.5](https://github.com/phodal/shire/compare/v0.4.3...v0.4.5) (2024-07-19)
+
 
 ### Features
 
@@ -315,11 +523,15 @@
 * **search:** add interface for similarity algorithms ([27c65c1](https://github.com/phodal/shire/commit/27c65c1c0dd85c7c91ddcfd72ba90470c03136f8))
 * **search:** implement BM25 similarity algorithm and refactor SimilarChunkSearcher ([ef32475](https://github.com/phodal/shire/commit/ef3247552446f1218bd6a0ea30857cb952160933))
 
-## [0.4.3](https://github.com/phodal/shire/compare/v0.4.2...v[0.4.3]) (2024-07-14)
+
+
+## [0.4.3](https://github.com/phodal/shire/compare/v0.4.2...v0.4.3) (2024-07-14)
+
 
 ### Bug Fixes
 
 * **actions:** handle null hole in context menu actions ([4a04f35](https://github.com/phodal/shire/commit/4a04f356b16689514bdc4af10df30b8d136b8b6a))
+
 
 ### Features
 
@@ -331,11 +543,15 @@
 * **provider:** add PsiQLMethodCallInterpreter interface ([c9b6606](https://github.com/phodal/shire/commit/c9b6606d127d0a4e4f6df2d1c0229569272f5e25))
 * **shirelang:** extend pipelineArg syntax and add contentTee test [#36](https://github.com/phodal/shire/issues/36) ([42031b7](https://github.com/phodal/shire/commit/42031b7065886b9e399b07497e5157c2d2cd5652))
 
-## [0.4.2](https://github.com/phodal/shire/compare/v0.4.1...v[0.4.2]) (2024-07-09)
+
+
+## [0.4.2](https://github.com/phodal/shire/compare/v0.4.1...v0.4.2) (2024-07-09)
+
 
 ### Bug Fixes
 
 * **git:** handle null data context in GitToolchainVariableProvider ([69c48cd](https://github.com/phodal/shire/commit/69c48cd74e444cebdbeadae31bcf84b71c11a0ed))
+
 
 ### Features
 
@@ -343,7 +559,29 @@
 * **run:** add console message before running configuration ([a27e899](https://github.com/phodal/shire/commit/a27e8993cd2090293d42764fb9215a7955853c84))
 * **search:** add caching support to semantic search ([7ef7287](https://github.com/phodal/shire/commit/7ef7287ecd15b27726d456587942204ccb184005))
 
-## [0.4.1](https://github.com/phodal/shire/compare/v0.3.0...v[0.4.1]) (2024-07-07)
+
+
+## [0.4.1](https://github.com/phodal/shire/compare/v0.3.0...v0.4.1) (2024-07-07)
+
+
+### Bug Fixes
+
+* fix lint ([7f73636](https://github.com/phodal/shire/commit/7f736362e8e71c06dcc3ea95bd4d0c45cee6ff2d))
+* **search:** handle null LocalEmbedding creation ([c330903](https://github.com/phodal/shire/commit/c33090351b944c9e9a6dd13c84845ef66485787e))
+
+
+### Features
+
+* **deps:** add chocolate factory and unitmesh dependencies ([df23f4e](https://github.com/phodal/shire/commit/df23f4e45e9a555bd65dbfd68dde347762eaad65))
+* **embedding:** add LockedSequenceWrapper and DiskSynchronizedEmbeddingSearchIndex [#37](https://github.com/phodal/shire/issues/37) ([1d58c89](https://github.com/phodal/shire/commit/1d58c894665fa49741736ce3e3b0a969f0c87f25))
+* **search:** add file and embedding to IndexEntry ([fbbe199](https://github.com/phodal/shire/commit/fbbe1991b190b2ee291fab5834554a202a9058a4)), closes [#37](https://github.com/phodal/shire/issues/37)
+* **search:** add float array normalization extension function ([e50955e](https://github.com/phodal/shire/commit/e50955e8921bed0fa13fcf7fb5060dd5af4cc039))
+* **search:** add text embedding functionality ([8da838b](https://github.com/phodal/shire/commit/8da838b02dd78baefb4bd58ef69cf02bc7241235))
+
+
+
+# [0.3.0](https://github.com/phodal/shire/compare/v0.0.8...v0.3.0) (2024-07-06)
+
 
 ### Bug Fixes
 
@@ -355,6 +593,7 @@
 * **runner:** detach process handler in ShireRunner ([041c356](https://github.com/phodal/shire/commit/041c35682330af2257c80b8bb63377b0f5b72317))
 * **shirelang:** check for null before adding action to toolsMenu ([289f578](https://github.com/phodal/shire/commit/289f57876eecea204acdabde87dec7016b5d4857))
 * **shirelang:** update line marker provider to support front matter entries ([2e843a9](https://github.com/phodal/shire/commit/2e843a913b19fb201190212f5d35244064495274))
+
 
 ### Features
 
@@ -406,7 +645,10 @@
 * **variables:** add support for similar code search ([5fe7f8f](https://github.com/phodal/shire/commit/5fe7f8f2db96727312d56101e77abff9726e9138))
 * **vcs): add Shirefeat VCS single(vcs:** action ([e982cec](https://github.com/phodal/shire/commit/e982cecd524b786fd0c30d12770587286082e3f4))
 
-## [0.0.8](https://github.com/phodal/shire/compare/v0.0.7...v[0.0.8]) (2024-07-01)
+
+
+## [0.0.8](https://github.com/phodal/shire/compare/v0.0.7...v0.0.8) (2024-07-01)
+
 
 ### Bug Fixes
 
@@ -415,6 +657,7 @@
 * **completion:** fix code fence insertion in completion ([7beb240](https://github.com/phodal/shire/commit/7beb240a2eaafd997e85d82e52330ea5f5fb3cf2))
 * **shirelang:** refine action body parsing in FrontmatterParser kt file ([32776cd](https://github.com/phodal/shire/commit/32776cdf389710c941010a3d117bd5076202d1b1))
 * **shirelang:** update when condition syntax and test evaluation ([2ee436c](https://github.com/phodal/shire/commit/2ee436c73362d06ecb7dd1858c42d094f0205a34))
+
 
 ### Features
 
@@ -471,12 +714,16 @@
 * **vcs:** add ShireVcsActionGroup for dynamic actions ([902bc2a](https://github.com/phodal/shire/commit/902bc2ab24df996bfc1fd7bd47eb5204b5dc916c))
 * wrap code blocks with appropriate application run actions [#24](https://github.com/phodal/shire/issues/24) ([55f7495](https://github.com/phodal/shire/commit/55f7495db0c4a23adb3e736545a61dc2d6555ee4))
 
-## [0.0.7](https://github.com/phodal/shire/compare/v0.0.6...v[0.0.7]) (2024-06-24)
+
+
+## [0.0.7](https://github.com/phodal/shire/compare/v0.0.6...v0.0.7) (2024-06-24)
+
 
 ### Bug Fixes
 
 * **grammar:** update frontMatterArray syntax in ShireParser.bnf [#16](https://github.com/phodal/shire/issues/16) ([428033c](https://github.com/phodal/shire/commit/428033cb0b365e23e2e6fd77981ac38208c732ad))
 * **pattern-searcher:** handle invalid regex and refactor code [#18](https://github.com/phodal/shire/issues/18) ([b00cd54](https://github.com/phodal/shire/commit/b00cd54bc1d9eb82a2dd259e2617f89b33ff6831))
+
 
 ### Features
 
@@ -540,17 +787,22 @@
 * **VariablePatternActionExecutor:** add project, editor, and hole as class properties [#18](https://github.com/phodal/shire/issues/18) ([54da7a6](https://github.com/phodal/shire/commit/54da7a6d47c60b4c1cce75a9d833049b745c24c1))
 * **variable:** refactor PsiVariable to PsiContextVariable [#18](https://github.com/phodal/shire/issues/18) ([6e5e176](https://github.com/phodal/shire/commit/6e5e176ef30e4ae83a93bfba07386dfb4773812d))
 
+
 ### Performance Improvements
 
 * **build:** optimize Gradle build performance in GitHub Actions ([f09254d](https://github.com/phodal/shire/commit/f09254d1bd81a47a47794545d5abb9e0988b78bc))
 
-## [0.0.6](https://github.com/phodal/shire/compare/v0.0.4...v[0.0.6]) (2024-06-16)
+
+
+## [0.0.6](https://github.com/phodal/shire/compare/v0.0.4...v0.0.6) (2024-06-16)
+
 
 ### Bug Fixes
 
 * **java:** fix null check for JavaSdkType in JavaToolchainProvider ([fb8ad5f](https://github.com/phodal/shire/commit/fb8ad5f88d980f14505f8af1eb798de733438b81))
 * **java:** handle null psiElement in resolveVariableValue ([ba34428](https://github.com/phodal/shire/commit/ba34428e95ca67e1373853be6e590d5ed4cf1eb9))
 * **test:** update file patterns in test data ([bfbe463](https://github.com/phodal/shire/commit/bfbe46370b41a4c7f2c10f8d48f3446c97866b47))
+
 
 ### Features
 
@@ -569,7 +821,10 @@
 * **template:** add Shire Action template and action [#14](https://github.com/phodal/shire/issues/14) ([0493d23](https://github.com/phodal/shire/commit/0493d2363006ae25073272d8035d0851aee15824))
 * **tokenizer:** add TermSplitter and StopwordsBasedTokenizer [#14](https://github.com/phodal/shire/issues/14) ([a774f48](https://github.com/phodal/shire/commit/a774f48a17c64553ab417763511b230dfaf73b18))
 
-## [0.0.4](https://github.com/phodal/shire/compare/2b4a6f06733149d0cd9763e2d4719a048fa37ce3...v[0.0.4]) (2024-06-11)
+
+
+## [0.0.4](https://github.com/phodal/shire/compare/2b4a6f06733149d0cd9763e2d4719a048fa37ce3...v0.0.4) (2024-06-11)
+
 
 ### Bug Fixes
 
@@ -578,6 +833,7 @@
 * **parser:** fix filenameRules regex in ShireFmObject test ([85de5bd](https://github.com/phodal/shire/commit/85de5bdf5964886d6568aee24b61a1ff2e873da2))
 * **parser:** fix filenameRules regex in ShireFmObject test ([74783a1](https://github.com/phodal/shire/commit/74783a1d7dfb15b956132f68e5316ba9775c0512))
 * **release:** update gradle task path for patching changelog ([201c458](https://github.com/phodal/shire/commit/201c458e09399435039ade13fac81a0d43d26754))
+
 
 ### Features
 
@@ -660,23 +916,5 @@
 * **shell:** add shell language support plugin file ([bdc1c90](https://github.com/phodal/shire/commit/bdc1c90f10d7c2c4fb8f7157db343dd756c11352))
 * **shire:** add Shire context action group and location support ([e3df86d](https://github.com/phodal/shire/commit/e3df86d16d0c9985fec787a8e76ce553be9a9a45))
 
-[Unreleased]: https://github.com/phodal/shire/compare/v1.0.2...HEAD
-[1.0.2]: https://github.com/phodal/shire/compare/v0.9.1...v1.0.2
-[0.9.1]: https://github.com/phodal/shire/compare/v0.8.2...v0.9.1
-[0.8.2]: https://github.com/phodal/shire/compare/v0.8.1...v0.8.2
-[0.8.1]: https://github.com/phodal/shire/compare/v0.7.4...v0.8.1
-[0.7.4]: https://github.com/phodal/shire/compare/v0.7.2...v0.7.4
-[0.7.2]: https://github.com/phodal/shire/compare/v0.7.1...v0.7.2
-[0.7.1]: https://github.com/phodal/shire/compare/v0.5.2...v0.7.1
-[0.5.2]: https://github.com/phodal/shire/compare/v0.4.8...v0.5.2
-[0.4.8]: https://github.com/phodal/shire/compare/v0.4.7...v0.4.8
-[0.4.7]: https://github.com/phodal/shire/compare/v0.4.6...v0.4.7
-[0.4.6]: https://github.com/phodal/shire/compare/v0.4.5...v0.4.6
-[0.4.5]: https://github.com/phodal/shire/compare/v0.4.3...v0.4.5
-[0.4.3]: https://github.com/phodal/shire/compare/v0.4.2...v0.4.3
-[0.4.2]: https://github.com/phodal/shire/compare/v0.4.1...v0.4.2
-[0.4.1]: https://github.com/phodal/shire/compare/v0.0.8...v0.4.1
-[0.0.8]: https://github.com/phodal/shire/compare/v0.0.7...v0.0.8
-[0.0.7]: https://github.com/phodal/shire/compare/v0.0.6...v0.0.7
-[0.0.6]: https://github.com/phodal/shire/compare/v0.0.4...v0.0.6
-[0.0.4]: https://github.com/phodal/shire/commits/v0.0.4
+
+
