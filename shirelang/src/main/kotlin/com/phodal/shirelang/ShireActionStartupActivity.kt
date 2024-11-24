@@ -78,8 +78,7 @@ class ShireActionStartupActivity : ProjectActivity {
     }
 
     private fun attachSonarLintAction(project: Project) {
-        project.getMessageBus().connect()
-            .subscribe(ToolWindowManagerListener.TOPIC, SonarLintToolWindowListener(project));
+        project.messageBus.connect().subscribe(ToolWindowManagerListener.TOPIC, SonarLintToolWindowListener(project));
     }
 
     companion object {
