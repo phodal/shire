@@ -5,6 +5,12 @@
         <plugin id="org.jetbrains.plugins.gradle"/>
     </dependencies>
 
+    <extensions defaultExtensionNs="com.intellij">
+        <lang.documentationProvider
+                implementationClass="com.phodal.shirelang.java.comment.JavaRunCommentDocumentationProvider"
+                language="JAVA" order="first"/>
+    </extensions>
+
     <extensions defaultExtensionNs="com.phodal">
         <fileStructureProvider language="JAVA"
                                implementationClass="com.phodal.shirelang.java.codemodel.JavaFileStructureProvider"/>
