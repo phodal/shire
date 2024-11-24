@@ -43,10 +43,10 @@
         <lang.foldingBuilder language="Shire"
                              implementationClass="com.phodal.shirelang.folding.ShireFoldingBuilder"/>
         <lang.commenter language="Shire" implementationClass="com.phodal.shirelang.comment.ShireCommenter"/>
-<!--        <lang.formatter language="Shire" implementationClass="com.phodal.shirelang.formatter.ShireFormattingModelBuilder"/>-->
+        <!--        <lang.formatter language="Shire" implementationClass="com.phodal.shirelang.formatter.ShireFormattingModelBuilder"/>-->
 
         <languageInjector implementation="com.phodal.shirelang.ShireLanguageInjector"/>
-<!--        <multiHostInjector implementation="com.phodal.shirelang.ShireInCommentInjector"/>-->
+        <!--        <multiHostInjector implementation="com.phodal.shirelang.ShireInCommentInjector"/>-->
 
         <configurationType implementation="com.phodal.shirelang.run.ShireConfigurationType"/>
         <programRunner implementation="com.phodal.shirelang.run.ShireProgramRunner"/>
@@ -140,7 +140,14 @@
                 text="Terminal Action"
                 icon="com.phodal.shirelang.ShireIcons.DEFAULT"
         >
+        </action>
 
+        <action id="com.phodal.shirelang.actions.console.ShireConsoleAction"
+                class="com.phodal.shirelang.actions.console.ShireConsoleAction"
+                description="Ask AI fix this code"
+                icon="com.phodal.shirelang.ShireIcons.DEFAULT"
+        >
+            <add-to-group group-id="ConsoleEditorPopupMenu" anchor="first"/>
         </action>
 
         <!-- Shire Intentions Action Group -->
