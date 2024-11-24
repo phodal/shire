@@ -125,7 +125,7 @@ class SonarLintToolWindowListener(private val project: Project) : ToolWindowMana
         val actionGroup = actionToolbar.actionGroup as? DefaultActionGroup
 
         if (actionGroup?.containsAction(action) == false) {
-            actionGroup?.add(action)
+            actionGroup.add(action)
         }
     }
 }
