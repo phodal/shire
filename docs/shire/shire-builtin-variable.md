@@ -47,3 +47,9 @@ nav_order: 4
 | calledMethod        | The method that is being called by the current method                              |
 | similarCode         | Recently 20 files similar code based on the tf-idf search                          |
 | structure           | The structure of the current class, for programming language will be in UML format |
+| changeCount         | The number of changes in the current file                                          |
+| lineCount           | The number of lines in the current element                                         |
+| complexityCount     | The complexity of the current element                                              |
+
+{: .note }
+Some languages may not support all the variables, depending on the language support.
