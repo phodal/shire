@@ -2,9 +2,13 @@ package com.phodal.shire.sonarqube
 
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.diagnostic.logger
+import com.intellij.openapi.editor.Document
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.TextRange
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.psi.PsiDocumentManager
+import com.intellij.psi.PsiManager
 import org.sonarlint.intellij.analysis.Analysis
 import org.sonarlint.intellij.analysis.AnalysisCallback
 import org.sonarlint.intellij.analysis.AnalysisResult
@@ -34,11 +38,22 @@ object SonarlintProvider {
     fun analysisResults(project: Project, file: VirtualFile): String? {
         return analysis(file, project) {
             ReadAction.compute<String, Throwable> {
+                val psiFile = PsiManager.getInstance(project).findFile(file) ?: return@compute ""
+                val document = PsiDocumentManager.getInstance(project).getDocument(psiFile) ?: return@compute ""
+
                 val result = StringBuilder()
-                it.findings.issuesPerFile.forEach { (file, issues) ->
+                it.findings.securityHotspotsPerFile.forEach { (file, issues) ->
                     result.append("File: $file\n")
                     issues.forEach { issue ->
-                        result.append("  -  ${issue.range}: ${issue.message}\n")
+                        val range = issue.validTextRange
+                        val lineContent: String = if (range != null) {
+                            val (startLine, endLine) = textRangeToLineNumbers(document, range)
+                            "($startLine-$endLine) ${document.getText(range)}"
+                        } else {
+                            ""
+                        }
+
+                        result.append("  -  ${lineContent} has issue : ${issue.message}\n")
                         if (issue.quickFixes().isNotEmpty()) {
                             result.append("    Quick Fixes suggestion: ")
                             issue.quickFixes().forEach { quickFix ->
@@ -51,6 +66,12 @@ object SonarlintProvider {
                 result.toString()
             }
         }
+    }
+
+    private fun textRangeToLineNumbers(document: Document, textRange: TextRange): Pair<Int, Int> {
+        val startLine = document.getLineNumber(textRange.startOffset) + 1
+        val endLine = document.getLineNumber(textRange.endOffset) + 1
+        return startLine to endLine
     }
 
     private fun analysis(
