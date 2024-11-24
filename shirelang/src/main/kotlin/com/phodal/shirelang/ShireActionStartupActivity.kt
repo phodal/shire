@@ -42,6 +42,7 @@ class ShireActionStartupActivity : ProjectActivity {
 
             attachTerminalAction()
             attachDatabaseAction(project)
+            attachVcsLogAction(project)
             attachSonarLintAction(project)
         }
     }
@@ -74,6 +75,16 @@ class ShireActionStartupActivity : ProjectActivity {
         val action = actionManager.getAction("ShireDatabaseAction")
         if (!toolsMenu.containsAction(action)) {
             toolsMenu.add(action, Constraints.LAST)
+        }
+    }
+
+    private fun attachVcsLogAction(project: Project) {
+        val actionManager = ActionManager.getInstance()
+        val toolsMenu = actionManager.getAction("Vcs.Log.ContextMenu") as? DefaultActionGroup ?: return
+
+        val action = actionManager.getAction("ShireVcsLogAction")
+        if (!toolsMenu.containsAction(action)) {
+            toolsMenu.add(action, Constraints.FIRST)
         }
     }
 
