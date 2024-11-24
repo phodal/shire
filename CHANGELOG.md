@@ -1,6 +1,6 @@
 # [](https://github.com/phodal/shire/compare/v1.0.6...v) (2024-11-24)
 
-
+## Unreleased
 
 ## [1.0.6](https://github.com/phodal/shire/compare/v1.0.4-SNAPSHOT...v1.0.6) (2024-11-24)
 
