@@ -3,13 +3,18 @@ package com.phodal.shirelang.javascript.framework
 import com.intellij.lang.ecmascript6.psi.ES6ExportDeclaration
 import com.intellij.lang.ecmascript6.psi.ES6ExportDefaultAssignment
 import com.intellij.lang.javascript.presentable.JSFormatUtil
-import com.intellij.lang.javascript.psi.*
-import com.intellij.lang.javascript.psi.ecma6.*
+import com.intellij.lang.javascript.psi.JSFile
+import com.intellij.lang.javascript.psi.JSFunctionExpression
+import com.intellij.lang.javascript.psi.JSReferenceExpression
+import com.intellij.lang.javascript.psi.JSVariable
+import com.intellij.lang.javascript.psi.ecma6.TypeScriptClass
+import com.intellij.lang.javascript.psi.ecma6.TypeScriptFunction
+import com.intellij.lang.javascript.psi.ecma6.TypeScriptSingleType
+import com.intellij.lang.javascript.psi.ecma6.TypeScriptVariable
 import com.intellij.lang.javascript.psi.resolve.JSResolveResult
-import com.intellij.openapi.diagnostic.logger
 import com.intellij.psi.PsiNameIdentifierOwner
 import com.intellij.psi.util.PsiTreeUtil
-import com.phodal.shirecore.variable.Component
+import com.phodal.shirecore.variable.frontend.Component
 
 object ReactPsiUtil {
     private fun getExportElements(file: JSFile): List<PsiNameIdentifierOwner> {
@@ -37,11 +42,7 @@ object ReactPsiUtil {
     }
 
     fun tsxComponentToComponent(jsFile: JSFile): List<Component> = getExportElements(jsFile).map { psiElement ->
-        val name = psiElement.name
-        if (name == null) {
-            logger<ReactPsiUtil>().warn("name is null")
-            return@map null
-        }
+        val name = psiElement.name ?: return@map null
 
         val projectPath = jsFile.project.basePath ?: ""
         val path = jsFile.virtualFile.path.removePrefix(projectPath)
@@ -49,14 +50,8 @@ object ReactPsiUtil {
             .removePrefix("/")
 
         return@map when (psiElement) {
-            is TypeScriptFunction -> {
-                Component(name = name, path)
-            }
-
-            is TypeScriptClass -> {
-                Component(name = name, path)
-            }
-
+            is TypeScriptFunction -> Component(name = name, path)
+            is TypeScriptClass -> Component(name = name, path)
             is TypeScriptVariable, is JSVariable -> {
                 val funcExpr = PsiTreeUtil.findChildrenOfType(psiElement, JSFunctionExpression::class.java)
                     .firstOrNull() ?: return@map null
@@ -70,18 +65,14 @@ object ReactPsiUtil {
                             resolve?.text
                         }
 
-                        else -> {
-                            null
-                        }
+                        else -> null
                     }
                 } ?: emptyList()
 
                 Component(name = name, path, props = props, signature = signature)
             }
 
-            else -> {
-                null
-            }
+            else -> null
         }
     }.filterNotNull()
 }

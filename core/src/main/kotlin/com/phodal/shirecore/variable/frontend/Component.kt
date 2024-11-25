@@ -1,4 +1,4 @@
-package com.phodal.shirecore.variable
+package com.phodal.shirecore.variable.frontend
 
 import kotlinx.serialization.Serializable
 

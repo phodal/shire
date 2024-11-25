@@ -13,7 +13,8 @@ import com.intellij.psi.PsiManager
 import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.search.ProjectScope
-import com.phodal.shirecore.variable.Component
+import com.phodal.shirecore.variable.frontend.Component
+import com.phodal.shirecore.variable.frontend.ComponentProvider
 import kotlinx.serialization.json.Json
 
 enum class RouterFile(val filename: String) {
@@ -22,7 +23,7 @@ enum class RouterFile(val filename: String) {
     VITE("vite.config.js"),
 }
 
-class ReactPage(private val project: Project) {
+class ReactPage(private val project: Project): ComponentProvider {
     private val logger = logger<ReactPage>()
     private val routes: MutableMap<RouterFile, JSFile> = mutableMapOf()
     private val pages: MutableList<Component> = mutableListOf()
@@ -70,9 +71,9 @@ class ReactPage(private val project: Project) {
         }
     }
 
-    fun getPages(): List<Component> = pages
+    override fun getPages(): List<Component> = pages
 
-    fun getComponents(): List<Component> = components
+    override fun getComponents(): List<Component> = components
 
     private fun buildComponent(jsFile: JSFile): List<Component>? {
         return when (jsFile.language) {
@@ -93,7 +94,7 @@ class ReactPage(private val project: Project) {
         }
     }
 
-    fun getRoutes(): Map<String, String> {
+    override fun getRoutes(): Map<String, String> {
         return this.routes.map {
             when (it.key) {
                 RouterFile.UMI -> emptyMap()
