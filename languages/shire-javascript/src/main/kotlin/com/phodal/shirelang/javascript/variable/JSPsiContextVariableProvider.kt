@@ -102,9 +102,9 @@ class JSPsiContextVariableProvider : PsiContextVariableProvider {
                     else -> null
                 } ?: ""
             }
-            PsiContextVariable.CHANGE_COUNT -> calculateChangeCount(psiElement)
-            PsiContextVariable.LINE_COUNT -> calculateLineCount(psiElement)
-            PsiContextVariable.COMPLEXITY_COUNT -> calculateComplexityCount(psiElement)
+            CHANGE_COUNT -> calculateChangeCount(psiElement)
+            LINE_COUNT -> calculateLineCount(psiElement)
+            COMPLEXITY_COUNT -> calculateComplexityCount(psiElement)
         }
     }
 

@@ -21,17 +21,17 @@ open class JavaScriptTestCodeModifier : CodeModifier {
     override fun smartInsert(
         sourceFile: VirtualFile,
         project: Project,
-        code: String
+        code: String,
     ): PsiElement? {
-        TODO("Not yet implemented")
-    }
-
-    override fun insertTestCode(sourceFile: VirtualFile, project: Project, code: String): PsiElement? {
-        val isExit = sourceFile as? JSFile
-        if (isExit == null) {
+        if (sourceFile !is JSFile) {
             return insertClass(sourceFile, project, code)
         }
 
+        return insertMethod(sourceFile, project, code)
+    }
+
+    override fun insertTestCode(sourceFile: VirtualFile, project: Project, code: String): PsiElement? {
+        if (sourceFile !is JSFile) return insertClass(sourceFile, project, code)
         return insertMethod(sourceFile, project, code)
     }
 
