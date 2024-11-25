@@ -9,7 +9,7 @@ import com.phodal.shirecore.provider.variable.ToolchainVariableProvider
 import com.phodal.shirecore.provider.variable.model.toolchain.SonarqubeVariable
 import com.phodal.shirecore.provider.variable.model.ToolchainVariable
 
-class SonarqubeVariableProvider : ToolchainVariableProvider {
+class SonarLintVariableProvider : ToolchainVariableProvider {
     override fun isResolvable(variable: ToolchainVariable, psiElement: PsiElement?, project: Project): Boolean {
         return variable is SonarqubeVariable
     }
@@ -20,13 +20,13 @@ class SonarqubeVariableProvider : ToolchainVariableProvider {
                 val file: VirtualFile = FileDocumentManager.getInstance().getFile(editor.document)
                     ?: throw IllegalStateException("No file found for editor")
 
-                SonarlintProvider.analysisFile(project, file) ?: ""
+                SonarLintProvider.analysisFile(project, file) ?: ""
             }
             SonarqubeVariable.Results -> {
                 val file: VirtualFile = FileDocumentManager.getInstance().getFile(editor.document)
                     ?: throw IllegalStateException("No file found for editor")
 
-                SonarlintProvider.analysisResults(project, file) ?: ""
+                SonarLintProvider.analysisResults(project, file) ?: ""
             }
             else -> ""
         }

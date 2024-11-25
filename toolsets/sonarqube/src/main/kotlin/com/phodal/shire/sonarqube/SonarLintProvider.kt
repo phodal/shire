@@ -18,7 +18,7 @@ import org.sonarlint.intellij.trigger.TriggerType
 import java.util.concurrent.CompletableFuture
 import java.util.stream.Stream
 
-object SonarlintProvider {
+object SonarLintProvider {
     fun analysisFile(project: Project, file: VirtualFile): String? {
         return analysis(file, project) {
             ReadAction.compute<String, Throwable> {
@@ -82,7 +82,7 @@ object SonarlintProvider {
         val hasProject = Stream.of(file).anyMatch { f: VirtualFile -> f.path == project.basePath }
         if (hasProject) return null
 
-        logger<SonarlintProvider>().info("Analysis file: ${file.path}")
+        logger<SonarLintProvider>().info("Analysis file: ${file.path}")
         val future = CompletableFuture<String>()
         val analysis = Analysis(project, listOf(file), TriggerType.CURRENT_FILE_ACTION, object : AnalysisCallback {
             override fun onSuccess(analysisResult: AnalysisResult) {
@@ -100,7 +100,7 @@ object SonarlintProvider {
             }
         }
 
-        logger<SonarlintProvider>().info("Analysis file: ${file.path} finished")
+        logger<SonarLintProvider>().info("Analysis file: ${file.path} finished")
         return future.get()
     }
 }

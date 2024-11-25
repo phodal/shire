@@ -49,3 +49,36 @@ Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
 Project project = CommonDataKeys.PROJECT.getData(dataContext);
 VirtualFile file = CommonDataKeys.VIRTUAL_FILE.getData(dataContext);
 ```
+
+### 5. 存储 Event 的 DataContext
+
+在某些情况下，你可能需要在动作执行之前存储 `DataContext`。你可以使用 `VariableActionEventDataHolder` 来存储数据。例如：
+
+```kotlin
+class ShireSonarLintAction : AnAction() {
+    // ...
+    override fun actionPerformed(e: AnActionEvent) {
+        val project = e.project ?: return
+
+        VariableActionEventDataHolder.putData(VariableActionEventDataHolder(e.dataContext))
+
+        val config = shireActionConfigs(project).firstOrNull() ?: return
+        ShireRunFileAction.executeShireFile(project, config, null)
+    }
+}
+```
+
+使用 `VariableActionEventDataHolder` 存储 `DataContext` 后，你可以在动作执行时获取数据。例如：
+
+```kotlin
+fun getCommitWorkflowUi(): CommitWorkflowUi? {
+    VariableActionEventDataHolder.getData()?.vcsDataContext?.let {
+        val commitWorkflowUi = it.getData(VcsDataKeys.COMMIT_WORKFLOW_UI)
+        return commitWorkflowUi as CommitWorkflowUi?
+    }
+
+    val dataContext = DataManager.getInstance().dataContextFromFocus.result
+    val commitWorkflowUi = dataContext?.getData(VcsDataKeys.COMMIT_WORKFLOW_UI)
+    return commitWorkflowUi
+}
+```
