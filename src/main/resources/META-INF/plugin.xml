@@ -37,9 +37,9 @@
                                  displayName="Shire"/>
 
         <projectService serviceImplementation="com.phodal.shire.marketplace.ui.MarketplaceView" client="all"/>
-        <toolWindow id="Shire MarketPlace"
+        <toolWindow id="ShireToolWindow"
                     anchor="right" icon="com.phodal.shire.ShireIdeaIcons.Default"
-                    factoryClass="com.phodal.shire.marketplace.MarketplaceToolWindowFactory"/>
+                    factoryClass="com.phodal.shire.marketplace.ShireToolWindowFactory"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.phodal">

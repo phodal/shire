@@ -34,10 +34,8 @@ class CodeView(
     project: Project,
     text: String,
 ) : JBPanel<CodeView>(), DataProvider, Disposable {
+    private var editor: EditorEx = createCodeViewerEditor(project, text, this)
     init {
-        val disposable = Disposer.newDisposable()
-        val editor = createCodeViewerEditor(project, text, disposable)
-
         val toolbarActionGroup = ActionUtil.getActionGroup("Shire.ToolWindow.Toolbar")
         toolbarActionGroup?.let {
             val toolbar: ActionToolbarImpl =
@@ -53,7 +51,7 @@ class CodeView(
             toolbar.targetComponent = editor.contentComponent
             editor.headerComponent = toolbar
 
-            val connect = project.messageBus.connect(disposable)
+            val connect = project.messageBus.connect(this)
             val topic: Topic<EditorColorsListener> = EditorColorsManager.TOPIC
             connect.subscribe(topic, EditorColorsListener {
                 toolbar.setBackground(editor.backgroundColor)
@@ -64,6 +62,12 @@ class CodeView(
         editor.component.setBorder(JBUI.Borders.empty())
 
         add(editor.component, BorderLayout.CENTER)
+    }
+
+
+    fun appendText(char: String) {
+        val document = editor.document
+        document.insertString(document.textLength, char)
     }
 
     override fun getData(dataId: String): Any? {

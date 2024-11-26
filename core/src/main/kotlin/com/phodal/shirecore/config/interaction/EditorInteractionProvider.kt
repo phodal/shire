@@ -3,8 +3,10 @@ package com.phodal.shirecore.config.interaction
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.application.runReadAction
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator
+import com.intellij.openapi.wm.ToolWindowManager
 import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.ShirelangNotifications
 import com.phodal.shirecore.config.InteractionType
@@ -16,6 +18,7 @@ import com.phodal.shirecore.runner.console.cancelWithConsole
 import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.provider.ide.LocationInteractionContext
 import com.phodal.shirecore.provider.ide.LocationInteractionProvider
+import com.phodal.shirecore.ui.CodeView
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.launch
@@ -95,6 +98,35 @@ class EditorInteractionProvider : LocationInteractionProvider {
 
                         invokeLater {
                             context.console?.print(char, ConsoleViewContentType.NORMAL_OUTPUT)
+                        }
+                    }
+
+                    postExecute.invoke(suggestion.toString(), null)
+                }
+            }
+
+            InteractionType.RightPanel -> {
+                val toolWindowManager = ToolWindowManager.getInstance(context.project).getToolWindow("ShireToolWindow") ?: run {
+                    logger<EditorInteractionProvider>().warn("Tool window not found")
+                    return
+                }
+
+                val contentManager = toolWindowManager.contentManager
+                val codeView = CodeView(context.project, context.prompt)
+                contentManager.factory.createContent(codeView, "Shire", false).let {
+                    contentManager.removeAllContents(false)
+                    contentManager.addContent(it)
+                }
+
+                val flow: Flow<String>? = LlmProvider.provider(context.project)?.stream(context.prompt, "", false)
+                ShireCoroutineScope.scope(context.project).launch {
+                    val suggestion = StringBuilder()
+
+                    flow?.cancelWithConsole(context.console)?.cancellable()?.collect { char ->
+                        suggestion.append(char)
+
+                        invokeLater {
+                            codeView.appendText(char)
                         }
                     }
 
