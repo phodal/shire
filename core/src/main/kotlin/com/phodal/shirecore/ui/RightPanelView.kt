@@ -6,6 +6,7 @@ import com.intellij.openapi.actionSystem.DataProvider
 import com.intellij.openapi.actionSystem.ex.ActionUtil
 import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl
 import com.intellij.openapi.application.ReadAction
+import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.EditorFactory
@@ -23,19 +24,32 @@ import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.testFramework.LightVirtualFile
 import com.intellij.ui.components.JBPanel
+import com.intellij.ui.dsl.builder.AlignX
+import com.intellij.ui.dsl.builder.AlignY
+import com.intellij.ui.dsl.builder.Cell
 import com.intellij.util.concurrency.annotations.RequiresReadLock
 import com.intellij.util.messages.Topic
 import com.intellij.util.ui.JBUI
 import com.phodal.shirecore.utils.markdown.CodeFence
-import java.awt.BorderLayout
 import java.util.concurrent.atomic.AtomicBoolean
+import java.awt.BorderLayout
+import javax.swing.JComponent
 
-class CodeView(
+class RightPanelView(
     project: Project,
     text: String,
-) : JBPanel<CodeView>(), DataProvider, Disposable {
+) : JBPanel<RightPanelView>(BorderLayout()), DataProvider, Disposable {
     private var editor: EditorEx = createCodeViewerEditor(project, text, this)
     init {
+        setupActionForEditor(project)
+
+        editor.scrollPane.setBorder(JBUI.Borders.empty(0, 10))
+        editor.component.setBorder(JBUI.Borders.empty(0, 10))
+
+        add(editor.component, BorderLayout.CENTER)
+    }
+
+    private fun setupActionForEditor(project: Project) {
         val toolbarActionGroup = ActionUtil.getActionGroup("Shire.ToolWindow.Toolbar")
         toolbarActionGroup?.let {
             val toolbar: ActionToolbarImpl =
@@ -57,17 +71,14 @@ class CodeView(
                 toolbar.setBackground(editor.backgroundColor)
             })
         }
-
-        editor.scrollPane.setBorder(JBUI.Borders.empty())
-        editor.component.setBorder(JBUI.Borders.empty())
-
-        add(editor.component, BorderLayout.CENTER)
     }
 
 
-    fun appendText(char: String) {
-        val document = editor.document
-        document.insertString(document.textLength, char)
+    fun appendText(project: Project, char: String) {
+        WriteCommandAction.runWriteCommandAction(project) {
+            val document = editor.document
+            document.insertString(document.textLength, char)
+        }
     }
 
     override fun getData(dataId: String): Any? {
@@ -141,6 +152,15 @@ class CodeView(
         // do nothing
     }
 }
+
+fun <T : JComponent> Cell<T>.fullWidth(): Cell<T> {
+    return this.align(AlignX.FILL)
+}
+
+fun <T : JComponent> Cell<T>.fullHeight(): Cell<T> {
+    return this.align(AlignY.FILL)
+}
+
 
 @RequiresReadLock
 fun VirtualFile.findDocument(): Document? {

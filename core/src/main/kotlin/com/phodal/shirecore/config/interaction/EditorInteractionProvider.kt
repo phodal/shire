@@ -18,7 +18,7 @@ import com.phodal.shirecore.runner.console.cancelWithConsole
 import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.provider.ide.LocationInteractionContext
 import com.phodal.shirecore.provider.ide.LocationInteractionProvider
-import com.phodal.shirecore.ui.CodeView
+import com.phodal.shirecore.ui.RightPanelView
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.launch
@@ -112,21 +112,23 @@ class EditorInteractionProvider : LocationInteractionProvider {
                 }
 
                 val contentManager = toolWindowManager.contentManager
-                val codeView = CodeView(context.project, context.prompt)
-                contentManager.factory.createContent(codeView, "Shire", false).let {
+                val rightPanelView = RightPanelView(context.project, "")
+                contentManager.factory.createContent(rightPanelView, "Shire RightPanel Run", false).let {
                     contentManager.removeAllContents(false)
                     contentManager.addContent(it)
                 }
+
+                toolWindowManager.activate(null)
 
                 val flow: Flow<String>? = LlmProvider.provider(context.project)?.stream(context.prompt, "", false)
                 ShireCoroutineScope.scope(context.project).launch {
                     val suggestion = StringBuilder()
 
-                    flow?.cancelWithConsole(context.console)?.cancellable()?.collect { char ->
+                    flow?.cancellable()?.collect { char ->
                         suggestion.append(char)
 
                         invokeLater {
-                            codeView.appendText(char)
+                            rightPanelView.appendText(context.project, char)
                         }
                     }
 
