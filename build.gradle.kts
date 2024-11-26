@@ -150,7 +150,7 @@ project(":core") {
 
         implementation(project(":languages:shire-json"))
 
-        implementation("com.charleskorn.kaml:kaml:0.63.0")
+        implementation("com.charleskorn.kaml:kaml:0.66.0")
         implementation("org.reflections:reflections:0.10.2")
 
         // chocolate factory
