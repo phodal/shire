@@ -180,6 +180,18 @@
                 description="Shire vcs action">
 
         </action>
+        
+        <group id="Shire.ToolWindow.Toolbar">
+            <action id="Shire.ToolWindow.Toolbar.LanguageLabelAction"
+                    class="com.phodal.shirecore.ui.ShireLanguageLabelAction"/>
+
+            <action id="Shire.ToolWindow.Toolbar.CopyToClipboard"
+                    icon="AllIcons.Actions.Copy"
+                    class="com.phodal.shirecore.ui.ShireCopyToClipboardAction"/>
+            <action id="Shire.ToolWindow.Toolbar.InsertCode"
+                    icon="AllIcons.Actions.CheckOut"
+                    class="com.phodal.shirecore.ui.ShireInsertCodeAction"/>
+        </group>
     </actions>
 
     <extensions defaultExtensionNs="com.phodal">

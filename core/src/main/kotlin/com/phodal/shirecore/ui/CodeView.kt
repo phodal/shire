@@ -1,12 +1,17 @@
 package com.phodal.shirecore.ui
 
 import com.intellij.openapi.Disposable
+import com.intellij.openapi.actionSystem.ActionPlaces
 import com.intellij.openapi.actionSystem.DataProvider
+import com.intellij.openapi.actionSystem.ex.ActionUtil
+import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.EditorFactory
 import com.intellij.openapi.editor.EditorKind
+import com.intellij.openapi.editor.colors.EditorColorsListener
+import com.intellij.openapi.editor.colors.EditorColorsManager
 import com.intellij.openapi.editor.ex.EditorEx
 import com.intellij.openapi.editor.ex.EditorMarkupModel
 import com.intellij.openapi.editor.ex.FocusChangeListener
@@ -19,7 +24,10 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.testFramework.LightVirtualFile
 import com.intellij.ui.components.JBPanel
 import com.intellij.util.concurrency.annotations.RequiresReadLock
+import com.intellij.util.messages.Topic
+import com.intellij.util.ui.JBUI
 import com.phodal.shirecore.utils.markdown.CodeFence
+import java.awt.BorderLayout
 import java.util.concurrent.atomic.AtomicBoolean
 
 class CodeView(
@@ -30,7 +38,32 @@ class CodeView(
         val disposable = Disposer.newDisposable()
         val editor = createCodeViewerEditor(project, text, disposable)
 
-        add(editor.component)
+        val toolbarActionGroup = ActionUtil.getActionGroup("Shire.ToolWindow.Toolbar")
+        toolbarActionGroup?.let {
+            val toolbar: ActionToolbarImpl =
+                object : ActionToolbarImpl(ActionPlaces.MAIN_TOOLBAR, toolbarActionGroup, true) {
+                    override fun updateUI() {
+                        super.updateUI()
+                        editor.component.setBorder(JBUI.Borders.empty())
+                    }
+                }
+
+            toolbar.setBackground(editor.backgroundColor)
+            toolbar.setOpaque(true)
+            toolbar.targetComponent = editor.contentComponent
+            editor.headerComponent = toolbar
+
+            val connect = project.messageBus.connect(disposable)
+            val topic: Topic<EditorColorsListener> = EditorColorsManager.TOPIC
+            connect.subscribe(topic, EditorColorsListener {
+                toolbar.setBackground(editor.backgroundColor)
+            })
+        }
+
+        editor.scrollPane.setBorder(JBUI.Borders.empty())
+        editor.component.setBorder(JBUI.Borders.empty())
+
+        add(editor.component, BorderLayout.CENTER)
     }
 
     override fun getData(dataId: String): Any? {
