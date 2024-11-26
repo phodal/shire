@@ -7,10 +7,7 @@ import com.intellij.openapi.actionSystem.ex.ActionUtil
 import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.command.WriteCommandAction
-import com.intellij.openapi.editor.Document
-import com.intellij.openapi.editor.Editor
-import com.intellij.openapi.editor.EditorFactory
-import com.intellij.openapi.editor.EditorKind
+import com.intellij.openapi.editor.*
 import com.intellij.openapi.editor.colors.EditorColorsListener
 import com.intellij.openapi.editor.colors.EditorColorsManager
 import com.intellij.openapi.editor.ex.EditorEx
@@ -78,6 +75,10 @@ class RightPanelView(
         WriteCommandAction.runWriteCommandAction(project) {
             val document = editor.document
             document.insertString(document.textLength, char)
+
+            // scroll to the end
+            editor.caretModel.moveToOffset(document.textLength)
+            editor.scrollingModel.scrollToCaret(ScrollType.RELATIVE)
         }
     }
 

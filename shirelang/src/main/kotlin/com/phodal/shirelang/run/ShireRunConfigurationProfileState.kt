@@ -20,6 +20,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Key
 import com.intellij.ui.components.panels.NonOpaquePanel
 import com.phodal.shirecore.ShireCoroutineScope
+import com.phodal.shirecore.config.InteractionType
 import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirecore.runner.console.ShireConsoleViewBase
 import com.phodal.shirelang.psi.ShireFile
@@ -77,6 +78,11 @@ open class ShireRunConfigurationProfileState(
 
         val location = parsedResult.config?.actionLocation
         if (location == ShireActionLocation.TERMINAL_MENU || location == ShireActionLocation.COMMIT_MENU) {
+            isShowRunContent = false
+        }
+
+        val interaction = parsedResult.config?.interaction
+        if (interaction == InteractionType.RightPanel) {
             isShowRunContent = false
         }
 
@@ -162,7 +168,6 @@ class ShireProcessAdapter(val configuration: ShireConfiguration, val consoleView
 }
 
 class ShireExecutionConsole(project: Project, viewer: Boolean, var isStopped: Boolean = false): ConsoleViewImpl(project, viewer) {
-
     private val output = StringBuilder()
 
     override fun print(text: String, contentType: ConsoleViewContentType) {
