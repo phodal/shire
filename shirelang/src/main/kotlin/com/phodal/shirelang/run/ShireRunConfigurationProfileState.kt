@@ -1,10 +1,11 @@
 package com.phodal.shirelang.run
 
+import com.intellij.codeWithMe.ClientId
 import com.intellij.execution.DefaultExecutionResult
 import com.intellij.execution.ExecutionResult
 import com.intellij.execution.Executor
+import com.intellij.execution.actions.ClearConsoleAction
 import com.intellij.execution.configurations.RunProfileState
-import com.intellij.execution.console.ConsoleViewWrapperBase
 import com.intellij.execution.impl.ConsoleViewImpl
 import com.intellij.execution.process.ProcessAdapter
 import com.intellij.execution.process.ProcessEvent
@@ -14,8 +15,14 @@ import com.intellij.execution.runners.ProgramRunner
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.ActionManager
+import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.editor.ClientEditorManager
+import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.editor.actions.ScrollToTheEndToolbarAction
+import com.intellij.openapi.editor.actions.ToggleUseSoftWrapsToolbarAction
+import com.intellij.openapi.editor.impl.softwrap.SoftWrapAppliancePlaces
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Key
 import com.intellij.ui.components.panels.NonOpaquePanel
@@ -92,7 +99,10 @@ open class ShireRunConfigurationProfileState(
                 val llmOutput = shireRunner.execute(parsedResult)
                 processAdapter.setLlmOutput(llmOutput)
             } catch (e: Exception) {
-                console!!.print("Failed to run ${configuration.name}: ${e.message}\n", ConsoleViewContentType.ERROR_OUTPUT)
+                console!!.print(
+                    "Failed to run ${configuration.name}: ${e.message}\n",
+                    ConsoleViewContentType.ERROR_OUTPUT
+                )
             }
         }
 
@@ -119,8 +129,12 @@ class ShireConsoleView(private val executionConsole: ShireExecutionConsole) :
         myPanel.add(baseComponent, BorderLayout.CENTER)
 
         val actionGroup = DefaultActionGroup(*executionConsole.createConsoleActions())
+        actionGroup.copyFromGroup(createDefaultTextConsoleToolbar())
+        actionGroup.addSeparator()
+
         val toolbar = ActionManager.getInstance().createActionToolbar("BuildConsole", actionGroup, false)
         toolbar.targetComponent = baseComponent
+
         myPanel.add(toolbar.component, BorderLayout.EAST)
     }
 
@@ -128,6 +142,24 @@ class ShireConsoleView(private val executionConsole: ShireExecutionConsole) :
 
     override fun cancelCallback(callback: (String) -> Unit) {
         shireRunner?.addCancelListener(callback)
+    }
+
+    private fun createDefaultTextConsoleToolbar(): DefaultActionGroup {
+        val textConsoleToolbarActionGroup = DefaultActionGroup()
+        textConsoleToolbarActionGroup.add(object : ToggleUseSoftWrapsToolbarAction(SoftWrapAppliancePlaces.CONSOLE) {
+            override fun getEditor(e: AnActionEvent): Editor? {
+                return getEditor()
+            }
+        })
+        getEditor()?.let { editor ->
+            textConsoleToolbarActionGroup.add(ScrollToTheEndToolbarAction(editor))
+        }
+        textConsoleToolbarActionGroup.add(ClearConsoleAction())
+        return textConsoleToolbarActionGroup
+    }
+
+    fun getEditor(): Editor? {
+        return executionConsole.editor
     }
 
     override fun isCanceled(): Boolean = shireRunner?.isCanceled() ?: super.isCanceled()
@@ -143,7 +175,8 @@ class ShireConsoleView(private val executionConsole: ShireExecutionConsole) :
     }
 }
 
-class ShireProcessAdapter(val configuration: ShireConfiguration, val consoleView: ShireConsoleView?) : ProcessAdapter() {
+class ShireProcessAdapter(val configuration: ShireConfiguration, val consoleView: ShireConsoleView?) :
+    ProcessAdapter() {
     var result = ""
     private var llmOutput: String = ""
 
@@ -167,7 +200,8 @@ class ShireProcessAdapter(val configuration: ShireConfiguration, val consoleView
     }
 }
 
-class ShireExecutionConsole(project: Project, viewer: Boolean, var isStopped: Boolean = false): ConsoleViewImpl(project, viewer) {
+class ShireExecutionConsole(project: Project, viewer: Boolean, var isStopped: Boolean = false) :
+    ConsoleViewImpl(project, viewer) {
     private val output = StringBuilder()
 
     override fun print(text: String, contentType: ConsoleViewContentType) {
