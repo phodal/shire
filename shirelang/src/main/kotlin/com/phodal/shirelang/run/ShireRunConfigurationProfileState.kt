@@ -1,28 +1,29 @@
 package com.phodal.shirelang.run
 
-import com.intellij.codeWithMe.ClientId
+import com.intellij.build.BuildView
+import com.intellij.build.DefaultBuildDescriptor
+import com.intellij.build.events.BuildEvent
 import com.intellij.execution.DefaultExecutionResult
 import com.intellij.execution.ExecutionResult
 import com.intellij.execution.Executor
 import com.intellij.execution.actions.ClearConsoleAction
 import com.intellij.execution.configurations.RunProfileState
 import com.intellij.execution.impl.ConsoleViewImpl
-import com.intellij.execution.process.ProcessAdapter
-import com.intellij.execution.process.ProcessEvent
-import com.intellij.execution.process.ProcessListener
-import com.intellij.execution.process.ProcessTerminatedListener
+import com.intellij.execution.process.*
 import com.intellij.execution.runners.ProgramRunner
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.editor.ClientEditorManager
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.actions.ScrollToTheEndToolbarAction
 import com.intellij.openapi.editor.actions.ToggleUseSoftWrapsToolbarAction
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapAppliancePlaces
+import com.intellij.openapi.externalSystem.model.ProjectSystemId
+import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskId
+import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskType
+import com.intellij.openapi.externalSystem.service.execution.ExternalSystemRunConfigurationViewManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Key
 import com.intellij.ui.components.panels.NonOpaquePanel
@@ -52,7 +53,7 @@ open class ShireRunConfigurationProfileState(
     var isShowRunContent = true
 
     override fun execute(executor: Executor?, runner: ProgramRunner<*>): ExecutionResult {
-        executionConsole = ShireExecutionConsole(myProject, true)
+        executionConsole = ShireExecutionConsole(myProject, true, configuration = configuration)
         console = ShireConsoleView(executionConsole!!)
 
         val processHandler = ShireProcessHandler(configuration.name)
@@ -123,39 +124,51 @@ class ShireConsoleView(private val executionConsole: ShireExecutionConsole) :
     private var myPanel: NonOpaquePanel = NonOpaquePanel(BorderLayout())
 
     private var shireRunner: ShireRunner? = null
+    private val id = ProjectSystemId("Shire")
+    private fun createTaskId() =
+        ExternalSystemTaskId.create(id, ExternalSystemTaskType.RESOLVE_PROJECT, executionConsole.project)
+
+    val task = createTaskId()
+    val buildDescriptor: DefaultBuildDescriptor =
+        DefaultBuildDescriptor(
+            task.id,
+            "Shire",
+            executionConsole.configuration.getScriptPath(),
+            System.currentTimeMillis()
+        )
+
+    val viewManager: ExternalSystemRunConfigurationViewManager =
+        executionConsole.project.getService(ExternalSystemRunConfigurationViewManager::class.java)
+
+    val buildView: BuildView = object : BuildView(
+        executionConsole.project,
+        executionConsole,
+        buildDescriptor,
+        "build.toolwindow.run.selection.state",
+        viewManager
+    ) {
+        override fun onEvent(buildId: Any, event: BuildEvent) {
+            super.onEvent(buildId, event)
+            viewManager.onEvent(buildId, event)
+        }
+    }
 
     init {
-        val baseComponent = delegate.component
-        myPanel.add(baseComponent, BorderLayout.CENTER)
 
-        val actionGroup = DefaultActionGroup(*executionConsole.createConsoleActions())
-        actionGroup.copyFromGroup(createDefaultTextConsoleToolbar())
-        actionGroup.addSeparator()
+        val baseComponent = buildView.component
+        myPanel.add(baseComponent, BorderLayout.EAST)
 
-        val toolbar = ActionManager.getInstance().createActionToolbar("BuildConsole", actionGroup, false)
-        toolbar.targetComponent = baseComponent
+        executionConsole.getProcessHandler()?.let {
+            buildView.attachToProcess(it)
+        }
 
-        myPanel.add(toolbar.component, BorderLayout.EAST)
+        myPanel.add(delegate.component, BorderLayout.CENTER)
     }
 
     fun output(clearAndStop: Boolean = true) = executionConsole.getOutput(clearAndStop)
 
     override fun cancelCallback(callback: (String) -> Unit) {
         shireRunner?.addCancelListener(callback)
-    }
-
-    private fun createDefaultTextConsoleToolbar(): DefaultActionGroup {
-        val textConsoleToolbarActionGroup = DefaultActionGroup()
-        textConsoleToolbarActionGroup.add(object : ToggleUseSoftWrapsToolbarAction(SoftWrapAppliancePlaces.CONSOLE) {
-            override fun getEditor(e: AnActionEvent): Editor? {
-                return getEditor()
-            }
-        })
-        getEditor()?.let { editor ->
-            textConsoleToolbarActionGroup.add(ScrollToTheEndToolbarAction(editor))
-        }
-        textConsoleToolbarActionGroup.add(ClearConsoleAction())
-        return textConsoleToolbarActionGroup
     }
 
     fun getEditor(): Editor? {
@@ -200,9 +213,23 @@ class ShireProcessAdapter(val configuration: ShireConfiguration, val consoleView
     }
 }
 
-class ShireExecutionConsole(project: Project, viewer: Boolean, var isStopped: Boolean = false) :
-    ConsoleViewImpl(project, viewer) {
+class ShireExecutionConsole(
+    project: Project,
+    viewer: Boolean,
+    private var isStopped: Boolean = false,
+    val configuration: ShireConfiguration,
+) : ConsoleViewImpl(project, viewer) {
     private val output = StringBuilder()
+    private var processHandler: ShireProcessHandler? = null
+
+    fun getProcessHandler(): ShireProcessHandler? {
+        return processHandler
+    }
+
+    override fun attachToProcess(processHandler: ProcessHandler) {
+        super.attachToProcess(processHandler)
+        this.processHandler = processHandler as ShireProcessHandler
+    }
 
     override fun print(text: String, contentType: ConsoleViewContentType) {
         super.print(text, contentType)
