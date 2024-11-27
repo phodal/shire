@@ -63,7 +63,8 @@ enum class InteractionType(val description: String) {
     ReplaceCurrentFile("Replace the content of the current file"),
     InsertBeforeSelection("Insert content before the currently selected content"),
     RunPanel("Show Result in Run panel which is the bottom of the IDE"),
-    OnPaste("Copy the content to the clipboard")
+    OnPaste("Copy the content to the clipboard"),
+    RightPanel("Show Result in Right panel which is the right of the IDE")
     ;
 }
 ```
