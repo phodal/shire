@@ -1,6 +1,16 @@
-# [](https://github.com/phodal/shire/compare/v1.0.6...v) (2024-11-24)
+# [](https://github.com/phodal/shire/compare/v1.0.7...v) (2024-11-28)
 
 ## [Unreleased]
+
+## [1.0.7] - 2024-11-28
+
+### Features
+
+* **intellij-plugin:** Add soft wrap and scroll to end actions to console toolbar ([8453f57](https://github.com/phodal/shire/commit/8453f57a38874750a504df56f025f4710a3ae683))
+* **ui:** add CodeView component for code preview ([bc8e07a](https://github.com/phodal/shire/commit/bc8e07a063d42cd26d0f10b52b7726e4842ae437))
+* **ui:** add toolwindow actions for copy, insert code, and language label ([b42962c](https://github.com/phodal/shire/commit/b42962c4e9de0bcfab63a76705935b1340a6444b))
+* **ui:** scroll to end of text on insert and add interaction type check ([4b3ecf8](https://github.com/phodal/shire/commit/4b3ecf8f88ba89ea5b777b35b65644e0131c7500))
+* **variables:** add Component data class and ReactPsiUtil utility ([0300680](https://github.com/phodal/shire/commit/03006808a73caf24d34feb9c9c4686027889d6ed))
 
 ## [1.0.6](https://github.com/phodal/shire/compare/v1.0.4-SNAPSHOT...v[1.0.6]) (2024-11-24)
 
@@ -688,7 +698,8 @@
 * **shell:** add shell language support plugin file ([bdc1c90](https://github.com/phodal/shire/commit/bdc1c90f10d7c2c4fb8f7157db343dd756c11352))
 * **shire:** add Shire context action group and location support ([e3df86d](https://github.com/phodal/shire/commit/e3df86d16d0c9985fec787a8e76ce553be9a9a45))
 
-[Unreleased]: https://github.com/phodal/shire/compare/v1.0.6...HEAD
+[Unreleased]: https://github.com/phodal/shire/compare/v1.0.7...HEAD
+[1.0.7]: https://github.com/phodal/shire/compare/v1.0.6...v1.0.7
 [1.0.6]: https://github.com/phodal/shire/compare/v1.0.4-SNAPSHOT...v1.0.6
 [1.0.4-SNAPSHOT]: https://github.com/phodal/shire/compare/v1.0.2...v1.0.4-SNAPSHOT
 [1.0.2]: https://github.com/phodal/shire/compare/v0.9.1...v1.0.2
