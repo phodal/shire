@@ -150,7 +150,7 @@ interface FileRunService {
 
         fun runInCli(project: Project, psiFile: PsiFile, args: List<String>? = null): String? {
             val commandLine = when (psiFile.language.displayName.lowercase()) {
-                "python" -> GeneralCommandLine("python", psiFile.virtualFile.path)
+                "python" -> GeneralCommandLine("python3", psiFile.virtualFile.path)
                 "javascript" -> GeneralCommandLine("node", psiFile.virtualFile.path)
                 "ecmascript 6" -> GeneralCommandLine("node", psiFile.virtualFile.path)
                 "ruby" -> GeneralCommandLine("ruby", psiFile.virtualFile.path)
@@ -173,7 +173,7 @@ interface FileRunService {
                 output.stdout
             } catch (e: Exception) {
                 e.printStackTrace()
-                null
+                e.message
             }
         }
 
@@ -181,6 +181,7 @@ interface FileRunService {
             val psiFile = runReadAction {
                 PsiManager.getInstance(project).findFile(virtualFile)
             } ?: return null
+
             return runInCli(project, psiFile, args)
         }
 
