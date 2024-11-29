@@ -61,11 +61,7 @@ open class RunServiceTask(
         val executorInstance = DefaultRunExecutor.getRunExecutorInstance()
         val executionEnvironment = ExecutionEnvironmentBuilder
             .createOrNull(executorInstance, settings.configuration)
-            ?.build()
-
-        if (executionEnvironment == null) {
-            throw IllegalStateException("Failed to create execution environment")
-        }
+            ?.build() ?: throw IllegalStateException("Failed to create execution environment")
 
         val processAdapter = object: ProcessAdapter() {
             val stdout = StringBuilder()
