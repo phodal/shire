@@ -18,6 +18,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.phodal.shirecore.runner.RunServiceTask
+import java.util.concurrent.CompletableFuture
 
 interface FileRunService {
     private val logger: Logger get() = logger<FileRunService>()
@@ -72,11 +73,7 @@ interface FileRunService {
             it.name == virtualFile.nameWithoutExtension && (it.javaClass == runConfigureClass)
         }
 
-        var isTemporary = false
-
-        // try to create config if not founds
         if (testConfig == null) {
-            isTemporary = true
             testConfig = createConfiguration(project, virtualFile)
         }
 
@@ -91,10 +88,7 @@ interface FileRunService {
             return null
         }
 
-        if (isTemporary) {
-            settings.isTemporary = true
-        }
-
+        settings.isTemporary = true
         runManager.selectedConfiguration = settings
 
         return settings
@@ -118,15 +112,17 @@ interface FileRunService {
      * @return The result of the run operation, or `null` if an error occurred.
      */
     fun runFile(project: Project, virtualFile: VirtualFile, psiElement: PsiElement?): String? {
+        val future: CompletableFuture<String> = CompletableFuture<String>()
+
         try {
-            val runTask = RunServiceTask(project, virtualFile, psiElement, this)
+            val runTask = RunServiceTask(project, virtualFile, psiElement, this, future = future)
             ProgressManager.getInstance().run(runTask)
         } catch (e: Exception) {
             logger.error("Failed to run file: ${virtualFile.name}", e)
             return e.message
         }
 
-        return null
+        return future.get()
     }
 
     companion object {

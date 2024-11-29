@@ -20,6 +20,7 @@ import com.intellij.util.text.nullize
 import com.phodal.shirecore.ShireCoreBundle
 import com.phodal.shirecore.ShirelangNotifications
 import com.phodal.shirecore.provider.shire.FileRunService
+import java.util.concurrent.CompletableFuture
 
 open class RunServiceTask(
     private val project: Project,
@@ -27,13 +28,15 @@ open class RunServiceTask(
     private val testElement: PsiElement?,
     private val fileRunService: FileRunService,
     private val runner: ProgramRunner<*>? = null,
+    private val future: CompletableFuture<String>? = null,
 ) : ConfigurationRunner, com.intellij.openapi.progress.Task.Backgroundable(
     project, ShireCoreBundle.message("progress.run.task"), true
 ) {
     override fun runnerId() = runner?.runnerId ?: DefaultRunExecutor.EXECUTOR_ID
 
     override fun run(indicator: ProgressIndicator) {
-        runAndCollectTestResults(indicator)
+        val runAndCollectTestResults = runAndCollectTestResults(indicator)
+        future?.complete(runAndCollectTestResults?.status?.name ?: "Failed")
     }
 
     /**
