@@ -118,7 +118,7 @@ class RightPanelView(
             editor.setCaretEnabled(true)
 
             val highlighter = ApplicationManager.getApplication()
-                .service<EditorHighlighterFactory>()
+                .getService(EditorHighlighterFactory::class.java)
                 .createEditorHighlighter(project, file)
 
             editor.highlighter = highlighter
