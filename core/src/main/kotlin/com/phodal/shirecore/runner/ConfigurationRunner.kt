@@ -159,7 +159,12 @@ interface ConfigurationRunner {
         }
 
         runContext.environments.add(env)
-        runner.execute(env)
+        try {
+            runner.execute(env)
+        } catch (e: ExecutionException) {
+            runContext.latch.countDown()
+            throw e
+        }
         return true
     }
 

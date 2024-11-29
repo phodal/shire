@@ -56,7 +56,7 @@ val ideaPlugins = listOf(
     listOf(prop("jsonPlugin"))
 } else {
     emptyList()
-}
+} + prop("platformPlugins").split(",")
 
 repositories {
     intellijPlatform {
@@ -221,8 +221,7 @@ project(":languages:shire-python") {
     dependencies {
         intellijPlatform {
             intellijIde(prop("ideaVersion"))
-            intellijPlugins(ideaPlugins)
-            intellijPlugins(prop("platformPlugins"))
+            intellijPlugins(ideaPlugins + prop("platformPlugins"))
         }
 
         implementation(project(":core"))
@@ -564,6 +563,8 @@ project(":") {
         intellijPlatform {
             pluginVerifier()
             intellijIde(prop("ideaVersion"))
+            intellijPlugins(ideaPlugins)
+
             if (hasProp("jbrVersion")) {
                 jetbrainsRuntime(prop("jbrVersion"))
             } else {
