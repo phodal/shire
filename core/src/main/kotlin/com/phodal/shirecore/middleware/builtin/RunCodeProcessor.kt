@@ -95,7 +95,7 @@ class RunCodeProcessor : PostProcessor {
         }
 
         console?.print("Running code...\n", SYSTEM_OUTPUT)
-        val output = fileRunService.runFile(project, file, psiFile)
+        val output = fileRunService.runFileAsync(project, file, psiFile)
         console?.print(output ?: "", NORMAL_OUTPUT)
     }
 }

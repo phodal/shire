@@ -45,12 +45,12 @@ open class RunServiceTask(
     override fun runnerId() = runner?.runnerId ?: DefaultRunExecutor.EXECUTOR_ID
 
     override fun run(indicator: ProgressIndicator) {
-//        if (future != null) {
-//            runInBackgroundAndCollectToFuture()
-//            return
-//        }
-        val runAndCollectTestResults = runAndCollectTestResults(indicator)
-        future?.complete(runAndCollectTestResults?.status?.name ?: "Failed")
+        if (future != null) {
+            runInBackgroundAndCollectToFuture()
+            return
+        }
+
+        runAndCollectTestResults(indicator)
     }
 
     private fun runInBackgroundAndCollectToFuture() {
@@ -66,22 +66,40 @@ open class RunServiceTask(
         if (executionEnvironment == null) {
             throw IllegalStateException("Failed to create execution environment")
         }
+
+        val processAdapter = object: ProcessAdapter() {
+            val stdout = StringBuilder()
+            override fun onTextAvailable(event: ProcessEvent, outputType: Key<*>) {
+                when (outputType) {
+                    ProcessOutputTypes.STDOUT -> stdout.append(event.text)
+                    ProcessOutputTypes.STDERR -> stdout.append(event.text)
+                    ProcessOutputTypes.SYSTEM -> {
+                        // ignore system output
+                    }
+                    else -> {}
+                }
+            }
+
+            override fun processTerminated(event: ProcessEvent) {
+                future?.complete(stdout.toString())
+            }
+        }
+
         val hintDisposable = Disposer.newDisposable()
         val connection = ApplicationManager.getApplication().messageBus.connect(hintDisposable)
         connection.subscribe(EXECUTION_TOPIC, object : ExecutionListener {
+            override fun processStarting(executorId: String, env: ExecutionEnvironment, handler: ProcessHandler) {
+                handler.addProcessListener(processAdapter)
+            }
+
             override fun processTerminated(
                 executorId: String,
                 env: ExecutionEnvironment,
                 handler: ProcessHandler,
                 exitCode: Int,
             ) {
-                if (handler is ShireProcessHandler) {
-                    future?.complete(exitCode.toString())
-                } else {
-                    future?.complete("")
-                }
-
                 super.processTerminated(executorId, env, handler, exitCode)
+                connection.disconnect()
             }
         })
 

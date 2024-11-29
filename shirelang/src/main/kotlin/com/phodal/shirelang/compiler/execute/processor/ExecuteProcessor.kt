@@ -40,7 +40,7 @@ object ExecuteProcessor : PatternProcessor {
         val virtualFile = myProject.lookupFile(file) ?: return "$SHIRE_ERROR: File not found: $filename"
 
         val runService = FileRunService.provider(myProject, virtualFile)
-        return runService?.runFile(myProject, virtualFile, null)
+        return runService?.runFileAsync(myProject, virtualFile, null)
             ?: "$SHIRE_ERROR: [ExecuteProcessor] No run service found for file: $filename"
     }
 

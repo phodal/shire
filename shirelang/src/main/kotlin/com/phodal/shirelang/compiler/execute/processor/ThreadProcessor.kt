@@ -83,7 +83,7 @@ object ThreadProcessor: PatternProcessor {
                 return executeShFile(psiFile, myProject, processVariables)
             }
 
-            else -> return FileRunService.provider(myProject, file)?.runFile(myProject, file, psiFile)
+            else -> return FileRunService.provider(myProject, file)?.runFileAsync(myProject, file, psiFile)
                 ?: "No run service found for $psiFile, $fileName"
         }
     }

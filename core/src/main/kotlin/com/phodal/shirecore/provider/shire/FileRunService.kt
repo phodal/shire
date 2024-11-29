@@ -105,13 +105,26 @@ interface FileRunService {
 
     /**
      * This function is responsible for running a file within a specified project and virtual file.
-     * It creates a run configuration using the provided parameters and then attempts to execute it using the `ExecutionManager`. The function returns `null` if an error occurs during the configuration creation or execution process.
+     * It creates a run configuration using the provided parameters and then attempts to execute it using
+     * the `ExecutionManager`. The function returns `null` if an error occurs during the configuration creation or execution process.
      *
      * @param project The project within which the file is to be run.
      * @param virtualFile The virtual file that represents the file to be run.
      * @return The result of the run operation, or `null` if an error occurred.
      */
     fun runFile(project: Project, virtualFile: VirtualFile, psiElement: PsiElement?): String? {
+        try {
+            val runTask = RunServiceTask(project, virtualFile, psiElement, this)
+            ProgressManager.getInstance().run(runTask)
+        } catch (e: Exception) {
+            logger.error("Failed to run file: ${virtualFile.name}", e)
+            return e.message
+        }
+
+        return null
+    }
+
+    fun runFileAsync(project: Project, virtualFile: VirtualFile, psiElement: PsiElement?): String? {
         val future: CompletableFuture<String> = CompletableFuture<String>()
 
         try {
