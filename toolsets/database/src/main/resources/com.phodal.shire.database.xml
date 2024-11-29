@@ -13,8 +13,4 @@
 
         <shireToolchainFunctionProvider implementation="com.phodal.shire.database.provider.DatabaseFunctionProvider"/>
     </extensions>
-<!--    <actions>-->
-<!--        <add-to-group group-id="DatabaseViewPopupMenu" relative-to-action="DatabaseView.Refresh" anchor="after"/>-->
-<!--        -->
-<!--    </actions>-->
 </idea-plugin>

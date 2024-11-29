@@ -7,6 +7,24 @@ parent: Development
 
 ## CoroutineScope issue
 
+示例：
+
+```kotlin
+ShireCoroutineScope.scope(context.project).launch {
+    val suggestion = StringBuilder()
+
+    flow?.cancelWithConsole(context.console)?.cancellable()?.collect { char ->
+        suggestion.append(char)
+
+        invokeLater {
+            context.console?.print(char, ConsoleViewContentType.NORMAL_OUTPUT)
+        }
+    }
+
+    postExecute.invoke(suggestion.toString(), null)
+}
+```
+
 ## Data Context
 
 ### 1. 从 AnAction 中获取 DataContext
@@ -82,3 +100,23 @@ fun getCommitWorkflowUi(): CommitWorkflowUi? {
     return commitWorkflowUi
 }
 ```
+
+
+## 自定义 ContextMenu 位置
+
+参考：`ShireActionStartupActivity` 中的实现，如：`attachTerminalAction` 方法
+
+```kotlin
+private fun attachTerminalAction() {
+    val actionManager = ActionManager.getInstance()
+    val toolsMenu = actionManager.getAction("TerminalToolwindowActionGroup") as? DefaultActionGroup ?: return
+
+    val action = actionManager.getAction("ShireTerminalAction")
+    if (!toolsMenu.containsAction(action)) {
+        toolsMenu.add(action)
+    }
+}
+```
+
+1. 从 ActionManager 中获取目标 ActionGroup
+2. 将自定义 Action 添加到目标 ActionGroup 中
