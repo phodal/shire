@@ -5,8 +5,10 @@ import com.intellij.openapi.actionSystem.ActionPlaces
 import com.intellij.openapi.actionSystem.DataProvider
 import com.intellij.openapi.actionSystem.ex.ActionUtil
 import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.command.WriteCommandAction
+import com.intellij.openapi.components.service
 import com.intellij.openapi.editor.*
 import com.intellij.openapi.editor.colors.EditorColorsListener
 import com.intellij.openapi.editor.colors.EditorColorsManager
@@ -28,8 +30,8 @@ import com.intellij.util.concurrency.annotations.RequiresReadLock
 import com.intellij.util.messages.Topic
 import com.intellij.util.ui.JBUI
 import com.phodal.shirecore.utils.markdown.CodeFence
-import java.util.concurrent.atomic.AtomicBoolean
 import java.awt.BorderLayout
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.swing.JComponent
 
 class RightPanelView(
@@ -37,6 +39,7 @@ class RightPanelView(
     text: String,
 ) : JBPanel<RightPanelView>(BorderLayout()), DataProvider, Disposable {
     private var editor: EditorEx = createCodeViewerEditor(project, text, this)
+
     init {
         setupActionForEditor(project)
 
@@ -113,7 +116,10 @@ class RightPanelView(
 
             editor.setFile(file)
             editor.setCaretEnabled(true)
-            val highlighter = EditorHighlighterFactory.getInstance().createEditorHighlighter(project, file)
+
+            val highlighter = ApplicationManager.getApplication()
+                .service<EditorHighlighterFactory>()
+                .createEditorHighlighter(project, file)
 
             editor.highlighter = highlighter
 
