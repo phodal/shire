@@ -2,8 +2,8 @@ package com.phodal.shirelang.compiler.execute.processor.shell
 
 import com.intellij.execution.configurations.GeneralCommandLine
 import com.intellij.execution.process.CapturingProcessHandler
+import com.intellij.execution.process.OSProcessHandler
 import com.intellij.openapi.application.runReadAction
-import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.readText
@@ -46,14 +46,22 @@ object ShireShellCommandRunner {
             .withExePath("sh")
             .withParameters(tempFile.path)
 
+        deleteFileOnTermination(commandLine, tempFile)
+
         val processOutput = CapturingProcessHandler(commandLine).runProcess(DEFAULT_TIMEOUT)
         val exitCode = processOutput.exitCode
         if (exitCode != 0) {
             throw RuntimeException("Cannot execute ${commandLine}: exit code $exitCode, error output: ${processOutput.stderr}")
         }
 
-        tempFile.delete()
-        logger<ShireShellCommandRunner>().info("delete temp file: ${tempFile.path}")
         return processOutput.stdout
+    }
+
+    /**
+     * We need to ensure that the file is deleted after the process is executed.
+     * for example,the file also needs to be deleted when [create-process][OSProcessHandler.startProcess] fails.
+     */
+    private fun deleteFileOnTermination(commandLine: GeneralCommandLine, tempFile: File) {
+        OSProcessHandler.deleteFileOnTermination(commandLine, tempFile)
     }
 }
