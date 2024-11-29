@@ -1,6 +1,5 @@
 package com.phodal.shirelang.javascript.framework
 
-import com.intellij.lang.ecmascript6.JSXHarmonyFileType
 import com.intellij.lang.javascript.JavaScriptFileType
 import com.intellij.lang.javascript.TypeScriptJSXFileType
 import com.intellij.lang.javascript.dialects.ECMA6LanguageDialect
@@ -38,8 +37,8 @@ class ReactPage(private val project: Project): ComponentProvider {
 
         val virtualFiles =
             FileTypeIndex.getFiles(JavaScriptFileType.INSTANCE, searchScope) +
-                    FileTypeIndex.getFiles(TypeScriptJSXFileType.INSTANCE, searchScope) +
-                    FileTypeIndex.getFiles(JSXHarmonyFileType.INSTANCE, searchScope)
+                    FileTypeIndex.getFiles(TypeScriptJSXFileType.INSTANCE, searchScope)
+//                    FileTypeIndex.getFiles(JSXHarmonyFileType.INSTANCE, searchScope)
 
         val root = project.guessProjectDir()!!
 
