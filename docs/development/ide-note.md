@@ -104,6 +104,9 @@ fun getCommitWorkflowUi(): CommitWorkflowUi? {
 
 ## 自定义 ContextMenu 位置
 
+
+### 普通方式
+
 参考：`ShireActionStartupActivity` 中的实现，如：`attachTerminalAction` 方法
 
 ```kotlin
@@ -120,3 +123,39 @@ private fun attachTerminalAction() {
 
 1. 从 ActionManager 中获取目标 ActionGroup
 2. 将自定义 Action 添加到目标 ActionGroup 中
+
+### 动态方式
+
+对于不对外提供的插件，可以尝试监听是否有对应的事件，诸如 Sonarlint 使用的是 Panel，因此可以监听 Panel 的事件，然后动态添加 Action。
+
+```kotlin
+private fun attachSonarLintAction(project: Project) {
+    project.messageBus.connect().subscribe(ToolWindowManagerListener.TOPIC, SonarLintToolWindowListener(project));
+}
+```
+
+对应的 `SonarLintToolWindowListener` 实现如下：
+
+```kotlin
+class SonarLintToolWindowListener(private val project: Project) : ToolWindowManagerListener {
+    override fun toolWindowShown(toolWindow: ToolWindow) {
+        if (toolWindow.id != "SonarLint") return
+
+        val action = ActionManager.getInstance().getAction("ShireSonarLintAction")
+
+        val contentManager = toolWindow.contentManager
+        val content = contentManager.getContent(0) ?: return
+
+        val simpleToolWindowPanel = content.component as? SimpleToolWindowPanel
+        val actionToolbar = simpleToolWindowPanel?.toolbar?.components?.get(0) as? ActionToolbar ?: return
+        val actionGroup = actionToolbar.actionGroup as? DefaultActionGroup
+
+        if (actionGroup?.containsAction(action) == false) {
+            actionGroup.add(action)
+        }
+    }
+}
+```
+
+
+

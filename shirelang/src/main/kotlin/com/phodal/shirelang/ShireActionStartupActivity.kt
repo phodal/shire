@@ -123,6 +123,7 @@ class ShireActionStartupActivity : ProjectActivity {
 class SonarLintToolWindowListener(private val project: Project) : ToolWindowManagerListener {
     override fun toolWindowShown(toolWindow: ToolWindow) {
         if (toolWindow.id != "SonarLint") return
+
         val action = ActionManager.getInstance().getAction("ShireSonarLintAction")
 
         val contentManager = toolWindow.contentManager
