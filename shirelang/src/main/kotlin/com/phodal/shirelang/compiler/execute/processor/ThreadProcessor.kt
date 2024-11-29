@@ -96,8 +96,12 @@ object ThreadProcessor: PatternProcessor {
         val future = CompletableFuture<String>()
         ApplicationManager.getApplication().invokeLater {
             if (shRunner.isAvailable(myProject)) {
-                val output = ShireShellCommandRunner.runShellCommand(virtualFile, myProject, processVariables)
-                future.complete(output)
+                try {
+                    val output = ShireShellCommandRunner.runShellCommand(virtualFile, myProject, processVariables)
+                    future.complete(output)
+                } catch (t: Throwable) {
+                    future.completeExceptionally(t)
+                }
             }
         }
 
