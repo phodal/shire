@@ -1,18 +1,27 @@
 // Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.phodal.shirecore.runner
 
+import com.intellij.execution.ExecutionListener
+import com.intellij.execution.ExecutionManager
+import com.intellij.execution.ExecutionManager.Companion.EXECUTION_TOPIC
 import com.intellij.execution.RunnerAndConfigurationSettings
+import com.intellij.execution.configurations.RunProfile
 import com.intellij.execution.executors.DefaultRunExecutor
-import com.intellij.execution.process.AnsiEscapeDecoder
-import com.intellij.execution.process.ProcessOutputTypes
+import com.intellij.execution.process.*
+import com.intellij.execution.runners.ExecutionEnvironment
+import com.intellij.execution.runners.ExecutionEnvironmentBuilder
 import com.intellij.execution.runners.ProgramRunner
 import com.intellij.execution.testframework.Filter
 import com.intellij.execution.testframework.sm.runner.SMTRunnerEventsAdapter
 import com.intellij.execution.testframework.sm.runner.SMTestProxy
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.invokeAndWaitIfNeeded
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.progress.ProgressIndicator
+import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.Disposer
+import com.intellij.openapi.util.Key
 import com.intellij.openapi.util.NlsSafe
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
@@ -20,6 +29,7 @@ import com.intellij.util.text.nullize
 import com.phodal.shirecore.ShireCoreBundle
 import com.phodal.shirecore.ShirelangNotifications
 import com.phodal.shirecore.provider.shire.FileRunService
+import java.io.OutputStream
 import java.util.concurrent.CompletableFuture
 
 open class RunServiceTask(
@@ -29,14 +39,61 @@ open class RunServiceTask(
     private val fileRunService: FileRunService,
     private val runner: ProgramRunner<*>? = null,
     private val future: CompletableFuture<String>? = null,
-) : ConfigurationRunner, com.intellij.openapi.progress.Task.Backgroundable(
+) : ConfigurationRunner, Task.Backgroundable(
     project, ShireCoreBundle.message("progress.run.task"), true
 ) {
     override fun runnerId() = runner?.runnerId ?: DefaultRunExecutor.EXECUTOR_ID
 
     override fun run(indicator: ProgressIndicator) {
+//        if (future != null) {
+//            runInBackgroundAndCollectToFuture()
+//            return
+//        }
         val runAndCollectTestResults = runAndCollectTestResults(indicator)
         future?.complete(runAndCollectTestResults?.status?.name ?: "Failed")
+    }
+
+    private fun runInBackgroundAndCollectToFuture() {
+        val settings: RunnerAndConfigurationSettings =
+            fileRunService.createRunSettings(project, virtualFile, testElement)
+                ?: throw IllegalStateException("No run configuration found for file: ${virtualFile.path}")
+
+        val executorInstance = DefaultRunExecutor.getRunExecutorInstance()
+        val executionEnvironment = ExecutionEnvironmentBuilder
+            .createOrNull(executorInstance, settings.configuration)
+            ?.build()
+
+        if (executionEnvironment == null) {
+            throw IllegalStateException("Failed to create execution environment")
+        }
+        val hintDisposable = Disposer.newDisposable()
+        val connection = ApplicationManager.getApplication().messageBus.connect(hintDisposable)
+        connection.subscribe(EXECUTION_TOPIC, object : ExecutionListener {
+            override fun processTerminated(
+                executorId: String,
+                env: ExecutionEnvironment,
+                handler: ProcessHandler,
+                exitCode: Int,
+            ) {
+                if (handler is ShireProcessHandler) {
+                    future?.complete(exitCode.toString())
+                } else {
+                    future?.complete("")
+                }
+
+                super.processTerminated(executorId, env, handler, exitCode)
+            }
+        })
+
+        ExecutionManager.getInstance(project).restartRunProfile(
+            project,
+            executorInstance,
+            executionEnvironment.executionTarget,
+            settings,
+            null
+        )
+
+        return
     }
 
     /**

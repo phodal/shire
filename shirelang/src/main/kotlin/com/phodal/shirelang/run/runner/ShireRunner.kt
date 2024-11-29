@@ -23,7 +23,7 @@ import com.phodal.shirelang.compiler.ast.hobbit.HobbitHole
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.ShireConfiguration
 import com.phodal.shirelang.run.ShireConsoleView
-import com.phodal.shirelang.run.ShireProcessHandler
+import com.phodal.shirecore.runner.ShireProcessHandler
 import com.phodal.shirelang.run.executor.CustomRemoteAgentLlmExecutor
 import com.phodal.shirelang.run.executor.ShireDefaultLlmExecutor
 import com.phodal.shirelang.run.executor.ShireLlmExecutor
