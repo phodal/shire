@@ -102,8 +102,9 @@ open class ShireRunConfigurationProfileState(
             } catch (e: Exception) {
                 console!!.print(
                     "Failed to run ${configuration.name}: ${e.message}\n",
-                    ConsoleViewContentType.ERROR_OUTPUT
+                    ConsoleViewContentType.LOG_ERROR_OUTPUT
                 )
+                console!!.print(e.stackTraceToString(), ConsoleViewContentType.ERROR_OUTPUT)
             }
         }
 
