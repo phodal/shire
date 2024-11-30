@@ -211,10 +211,11 @@ open class RunServiceTask(
 
                     if (exitCode != 0) {
                         completableFuture.completeExceptionally(IllegalStateException("Process terminated with non-zero exit code: $exitCode"))
-                    }
-                    val content = runContentManager.getReuseContent(env) ?: return
-                    runInEdt {
-                        runContentManager.removeRunContent(executorInstance, content)
+                    } else {
+                        val content = runContentManager.getReuseContent(env) ?: return
+                        runInEdt {
+                            runContentManager.removeRunContent(executorInstance, content)
+                        }
                     }
                 }
             })
