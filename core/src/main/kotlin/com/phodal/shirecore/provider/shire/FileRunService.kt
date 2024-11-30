@@ -186,24 +186,19 @@ interface FileRunService {
         }
 
         /**
-         * We will handle Shire un-supported file type here
+         * We will handle Shire UnSupported FileType here
          */
         fun retryRun(project: Project, virtualFile: VirtualFile, args: List<String>? = null): String? {
-            val defaultRunService = object: FileRunService {
+            val defaultRunService = object : FileRunService {
                 override fun isApplicable(project: Project, file: VirtualFile): Boolean = true
                 override fun runConfigurationClass(project: Project): Class<out RunProfile>? = null
             }
 
-            val file = runReadAction {
-                PsiManager.getInstance(project).findFile(virtualFile)
-            }
+            val file = runReadAction { PsiManager.getInstance(project).findFile(virtualFile) }
 
-            val createRunSettings = defaultRunService.createRunSettings(project, virtualFile, file)
-            if (createRunSettings != null) {
-                return defaultRunService.runFile(project, virtualFile, null)
-            }
+            defaultRunService.createRunSettings(project, virtualFile, file) ?: return null
 
-            return null
+            return defaultRunService.runFile(project, virtualFile, null)
         }
     }
 }
