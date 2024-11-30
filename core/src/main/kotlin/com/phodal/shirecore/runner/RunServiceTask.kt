@@ -5,7 +5,6 @@ import com.intellij.execution.ExecutionListener
 import com.intellij.execution.ExecutionManager
 import com.intellij.execution.ExecutionManager.Companion.EXECUTION_TOPIC
 import com.intellij.execution.RunnerAndConfigurationSettings
-import com.intellij.execution.configurations.RunProfile
 import com.intellij.execution.executors.DefaultRunExecutor
 import com.intellij.execution.process.*
 import com.intellij.execution.runners.ExecutionEnvironment
@@ -29,7 +28,6 @@ import com.intellij.util.text.nullize
 import com.phodal.shirecore.ShireCoreBundle
 import com.phodal.shirecore.ShirelangNotifications
 import com.phodal.shirecore.provider.shire.FileRunService
-import java.io.OutputStream
 import java.util.concurrent.CompletableFuture
 
 open class RunServiceTask(
@@ -58,56 +56,7 @@ open class RunServiceTask(
             fileRunService.createRunSettings(project, virtualFile, testElement)
                 ?: throw IllegalStateException("No run configuration found for file: ${virtualFile.path}")
 
-        val executorInstance = DefaultRunExecutor.getRunExecutorInstance()
-        val executionEnvironment = ExecutionEnvironmentBuilder
-            .createOrNull(executorInstance, settings.configuration)
-            ?.build() ?: throw IllegalStateException("Failed to create execution environment")
-
-        val processAdapter = object: ProcessAdapter() {
-            val stdout = StringBuilder()
-            override fun onTextAvailable(event: ProcessEvent, outputType: Key<*>) {
-                when (outputType) {
-                    ProcessOutputTypes.STDOUT -> stdout.append(event.text)
-                    ProcessOutputTypes.STDERR -> stdout.append(event.text)
-                    ProcessOutputTypes.SYSTEM -> {
-                        // ignore system output
-                    }
-                    else -> {}
-                }
-            }
-
-            override fun processTerminated(event: ProcessEvent) {
-                future?.complete(stdout.toString())
-            }
-        }
-
-        val hintDisposable = Disposer.newDisposable()
-        val connection = ApplicationManager.getApplication().messageBus.connect(hintDisposable)
-        connection.subscribe(EXECUTION_TOPIC, object : ExecutionListener {
-            override fun processStarting(executorId: String, env: ExecutionEnvironment, handler: ProcessHandler) {
-                handler.addProcessListener(processAdapter)
-            }
-
-            override fun processTerminated(
-                executorId: String,
-                env: ExecutionEnvironment,
-                handler: ProcessHandler,
-                exitCode: Int,
-            ) {
-                super.processTerminated(executorId, env, handler, exitCode)
-                connection.disconnect()
-            }
-        })
-
-        ExecutionManager.getInstance(project).restartRunProfile(
-            project,
-            executorInstance,
-            executionEnvironment.executionTarget,
-            settings,
-            null
-        )
-
-        return
+        runAnCollectStdOutput(settings, project, future!!)
     }
 
     /**
@@ -204,4 +153,60 @@ open class RunServiceTask(
 
     private fun fillWithIncorrect(message: String): String =
         message.nullize(nullizeSpaces = true) ?: "Incorrect"
+
+    companion object {
+        fun runAnCollectStdOutput(
+            settings: RunnerAndConfigurationSettings, project: Project, completableFuture: CompletableFuture<String>,
+        ) {
+            val executorInstance = DefaultRunExecutor.getRunExecutorInstance()
+            val executionEnvironment = ExecutionEnvironmentBuilder
+                .createOrNull(executorInstance, settings.configuration)
+                ?.build() ?: throw IllegalStateException("Failed to create execution environment")
+
+            val processAdapter = object : ProcessAdapter() {
+                val stdout = StringBuilder()
+                override fun onTextAvailable(event: ProcessEvent, outputType: Key<*>) {
+                    when (outputType) {
+                        ProcessOutputTypes.STDOUT -> stdout.append(event.text)
+                        ProcessOutputTypes.STDERR -> stdout.append(event.text)
+                        ProcessOutputTypes.SYSTEM -> {
+                            // ignore system output
+                        }
+
+                        else -> {}
+                    }
+                }
+
+                override fun processTerminated(event: ProcessEvent) {
+                    completableFuture.complete(stdout.toString())
+                }
+            }
+
+            val hintDisposable = Disposer.newDisposable()
+            val connection = ApplicationManager.getApplication().messageBus.connect(hintDisposable)
+            connection.subscribe(EXECUTION_TOPIC, object : ExecutionListener {
+                override fun processStarting(executorId: String, env: ExecutionEnvironment, handler: ProcessHandler) {
+                    handler.addProcessListener(processAdapter)
+                }
+
+                override fun processTerminated(
+                    executorId: String,
+                    env: ExecutionEnvironment,
+                    handler: ProcessHandler,
+                    exitCode: Int,
+                ) {
+                    super.processTerminated(executorId, env, handler, exitCode)
+                    connection.disconnect()
+                }
+            })
+
+            ExecutionManager.getInstance(project).restartRunProfile(
+                project,
+                executorInstance,
+                executionEnvironment.executionTarget,
+                settings,
+                null
+            )
+        }
+    }
 }

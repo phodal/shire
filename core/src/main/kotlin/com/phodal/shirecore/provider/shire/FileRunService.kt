@@ -104,7 +104,9 @@ interface FileRunService {
     }
 
     /**
-     * This function is responsible for running a file within a specified project and virtual file.
+     * This function is responsible for running a file within a specified project and virtual file. It is a synchronous operation.
+     * [runFileAsync] should be used for asynchronous operations.
+     *
      * It creates a run configuration using the provided parameters and then attempts to execute it using
      * the `ExecutionManager`. The function returns `null` if an error occurs during the configuration creation or execution process.
      *
@@ -124,6 +126,13 @@ interface FileRunService {
         return null
     }
 
+    /**
+     * This function is responsible for running a file within a specified project and virtual file asynchronously.
+     *
+     * @param project The project within which the file is to be run.
+     * @param virtualFile The virtual file that represents the file to be run.
+     * @return The result of the run operation, or `null` if an error occurred.
+     */
     fun runFileAsync(project: Project, virtualFile: VirtualFile, psiElement: PsiElement?): String? {
         val future: CompletableFuture<String> = CompletableFuture<String>()
 
@@ -178,10 +187,7 @@ interface FileRunService {
         }
 
         fun runInCli(project: Project, virtualFile: VirtualFile, args: List<String>? = null): String? {
-            val psiFile = runReadAction {
-                PsiManager.getInstance(project).findFile(virtualFile)
-            } ?: return null
-
+            val psiFile = runReadAction { PsiManager.getInstance(project).findFile(virtualFile) } ?: return null
             return runInCli(project, psiFile, args)
         }
 
