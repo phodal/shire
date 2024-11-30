@@ -13,6 +13,8 @@ import com.intellij.execution.runners.ProgramRunner
 import com.intellij.execution.testframework.Filter
 import com.intellij.execution.testframework.sm.runner.SMTRunnerEventsAdapter
 import com.intellij.execution.testframework.sm.runner.SMTestProxy
+import com.intellij.execution.ui.ExecutionUiService
+import com.intellij.execution.ui.RunContentDescriptor
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.invokeAndWaitIfNeeded
 import com.intellij.openapi.diagnostic.logger
@@ -29,6 +31,7 @@ import com.phodal.shirecore.ShireCoreBundle
 import com.phodal.shirecore.ShirelangNotifications
 import com.phodal.shirecore.provider.shire.FileRunService
 import java.util.concurrent.CompletableFuture
+
 
 open class RunServiceTask(
     private val project: Project,
@@ -159,9 +162,12 @@ open class RunServiceTask(
             settings: RunnerAndConfigurationSettings, project: Project, completableFuture: CompletableFuture<String>,
         ) {
             val executorInstance = DefaultRunExecutor.getRunExecutorInstance()
-            val executionEnvironment = ExecutionEnvironmentBuilder
+            val env = ExecutionEnvironmentBuilder
                 .createOrNull(executorInstance, settings.configuration)
                 ?.build() ?: throw IllegalStateException("Failed to create execution environment")
+
+
+            val runContentManager = ExecutionManager.getInstance(project).getContentManager()
 
             val processAdapter = object : ProcessAdapter() {
                 val stdout = StringBuilder()
@@ -182,8 +188,12 @@ open class RunServiceTask(
                 }
             }
 
-            val hintDisposable = Disposer.newDisposable()
-            val connection = ApplicationManager.getApplication().messageBus.connect(hintDisposable)
+            settings.isActivateToolWindowBeforeRun = false
+            settings.isTemporary = true
+            settings.isFocusToolWindowBeforeRun = false
+
+            val disposable = Disposer.newDisposable()
+            val connection = ApplicationManager.getApplication().messageBus.connect(disposable)
             connection.subscribe(EXECUTION_TOPIC, object : ExecutionListener {
                 override fun processStarting(executorId: String, env: ExecutionEnvironment, handler: ProcessHandler) {
                     handler.addProcessListener(processAdapter)
@@ -197,13 +207,16 @@ open class RunServiceTask(
                 ) {
                     super.processTerminated(executorId, env, handler, exitCode)
                     connection.disconnect()
+
+                    val content = runContentManager.getReuseContent(env) ?: return
+                    runContentManager.removeRunContent(executorInstance, content)
                 }
             })
 
             ExecutionManager.getInstance(project).restartRunProfile(
                 project,
                 executorInstance,
-                executionEnvironment.executionTarget,
+                env.executionTarget,
                 settings,
                 null
             )
