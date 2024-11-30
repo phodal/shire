@@ -17,6 +17,7 @@ import com.intellij.execution.ui.ExecutionUiService
 import com.intellij.execution.ui.RunContentDescriptor
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.invokeAndWaitIfNeeded
+import com.intellij.openapi.application.runInEdt
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.Task
@@ -208,8 +209,13 @@ open class RunServiceTask(
                     super.processTerminated(executorId, env, handler, exitCode)
                     connection.disconnect()
 
+                    if (exitCode != 0) {
+                        completableFuture.completeExceptionally(IllegalStateException("Process terminated with non-zero exit code: $exitCode"))
+                    }
                     val content = runContentManager.getReuseContent(env) ?: return
-                    runContentManager.removeRunContent(executorInstance, content)
+                    runInEdt {
+                        runContentManager.removeRunContent(executorInstance, content)
+                    }
                 }
             })
 
