@@ -49,10 +49,9 @@ open class RunServiceTask(
     override fun run(indicator: ProgressIndicator) {
         if (future != null) {
             runInBackgroundAndCollectToFuture()
-            return
+        } else {
+            runAndCollectTestResults(indicator)
         }
-
-        runAndCollectTestResults(indicator)
     }
 
     private fun runInBackgroundAndCollectToFuture() {
@@ -171,9 +170,10 @@ open class RunServiceTask(
 
             val processAdapter = object : ProcessAdapter() {
                 val stdout = StringBuilder()
+                val stderr = StringBuilder()
                 override fun onTextAvailable(event: ProcessEvent, outputType: Key<*>) {
                     when (outputType) {
-                        ProcessOutputTypes.STDOUT -> stdout.append(event.text)
+                        ProcessOutputTypes.STDOUT -> stderr.append(event.text)
                         ProcessOutputTypes.STDERR -> stdout.append(event.text)
                         ProcessOutputTypes.SYSTEM -> {
                             // ignore system output
@@ -184,7 +184,10 @@ open class RunServiceTask(
                 }
 
                 override fun processTerminated(event: ProcessEvent) {
-                    completableFuture.complete(stdout.toString())
+                    when (event.exitCode) {
+                        0 -> completableFuture.complete(stdout.toString())
+                        else -> completableFuture.completeExceptionally(IllegalStateException("Process terminated with non-zero exit code: ${event.exitCode}"))
+                    }
                 }
             }
 
