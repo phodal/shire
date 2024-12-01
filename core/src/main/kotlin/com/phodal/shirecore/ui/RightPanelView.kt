@@ -1,11 +1,10 @@
 package com.phodal.shirecore.ui
 
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.actionSystem.ActionGroup
 import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.ActionPlaces
 import com.intellij.openapi.actionSystem.DataProvider
-import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl
+import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.command.WriteCommandAction
@@ -50,25 +49,23 @@ class RightPanelView(
     }
 
     private fun setupActionForEditor(project: Project) {
-        val toolbarActionGroup = ActionManager.getInstance().getAction("Shire.ToolWindow.Toolbar") as? ActionGroup
+        val toolbarActionGroup = ActionManager.getInstance().getAction("Shire.ToolWindow.Toolbar") as? DefaultActionGroup
         toolbarActionGroup?.let {
-            val toolbar: ActionToolbarImpl =
-                object : ActionToolbarImpl(ActionPlaces.MAIN_TOOLBAR, toolbarActionGroup, true) {
-                    override fun updateUI() {
-                        super.updateUI()
-                        editor.component.setBorder(JBUI.Borders.empty())
-                    }
-                }
+            val toolbar = ActionManager.getInstance().createActionToolbar(
+                ActionPlaces.MAIN_TOOLBAR,
+                toolbarActionGroup,
+                true
+            )
 
-            toolbar.setBackground(editor.backgroundColor)
-            toolbar.setOpaque(true)
+            toolbar.component.setBackground(editor.backgroundColor)
+            toolbar.component.setOpaque(true)
             toolbar.targetComponent = editor.contentComponent
-            editor.headerComponent = toolbar
+            editor.headerComponent = toolbar.component
 
             val connect = project.messageBus.connect(this)
             val topic: Topic<EditorColorsListener> = EditorColorsManager.TOPIC
             connect.subscribe(topic, EditorColorsListener {
-                toolbar.setBackground(editor.backgroundColor)
+                toolbar.component.setBackground(editor.backgroundColor)
             })
         }
     }
