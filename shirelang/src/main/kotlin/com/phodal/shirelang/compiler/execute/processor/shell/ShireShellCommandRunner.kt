@@ -5,6 +5,7 @@ import com.intellij.execution.process.CapturingProcessHandler
 import com.intellij.execution.process.OSProcessHandler
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.readText
 import com.intellij.psi.search.ProjectScope
@@ -46,9 +47,10 @@ object ShireShellCommandRunner {
             .withExePath("sh")
             .withParameters(tempFile.path)
 
+        val processOutput = CapturingProcessHandler(commandLine).runProcess(DEFAULT_TIMEOUT)
+
         deleteFileOnTermination(commandLine, tempFile)
 
-        val processOutput = CapturingProcessHandler(commandLine).runProcess(DEFAULT_TIMEOUT)
         val exitCode = processOutput.exitCode
         if (exitCode != 0) {
             throw RuntimeException("Cannot execute ${commandLine}: exit code $exitCode, error output: ${processOutput.stderr}")
@@ -62,6 +64,11 @@ object ShireShellCommandRunner {
      * for example,the file also needs to be deleted when [create-process][OSProcessHandler.startProcess] fails.
      */
     private fun deleteFileOnTermination(commandLine: GeneralCommandLine, tempFile: File) {
-        OSProcessHandler.deleteFileOnTermination(commandLine, tempFile)
+//        OSProcessHandler.deleteFileOnTermination(commandLine, tempFile)  // is Internal API
+        try {
+            FileUtil.delete(tempFile)
+        } catch (e: Exception) {
+            // ignore
+        }
     }
 }
