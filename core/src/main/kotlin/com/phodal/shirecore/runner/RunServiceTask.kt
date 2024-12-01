@@ -173,8 +173,8 @@ open class RunServiceTask(
                 val stderr = StringBuilder()
                 override fun onTextAvailable(event: ProcessEvent, outputType: Key<*>) {
                     when (outputType) {
-                        ProcessOutputTypes.STDOUT -> stderr.append(event.text)
-                        ProcessOutputTypes.STDERR -> stdout.append(event.text)
+                        ProcessOutputTypes.STDOUT -> stdout.append(event.text)
+                        ProcessOutputTypes.STDERR -> stderr.append(event.text)
                         ProcessOutputTypes.SYSTEM -> {
                             // ignore system output
                         }
@@ -186,7 +186,7 @@ open class RunServiceTask(
                 override fun processTerminated(event: ProcessEvent) {
                     when (event.exitCode) {
                         0 -> completableFuture.complete(stdout.toString())
-                        else -> completableFuture.completeExceptionally(IllegalStateException("Process terminated with non-zero exit code: ${event.exitCode}"))
+                        else -> completableFuture.completeExceptionally(IllegalStateException("$stderr\nProcess terminated with non-zero exit code: ${event.exitCode}"))
                     }
                 }
             }
