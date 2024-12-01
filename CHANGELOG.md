@@ -1,12 +1,20 @@
-# [](https://github.com/phodal/shire/compare/v1.0.7...v) (2024-11-28)
+# [](https://github.com/phodal/shire/compare/v1.1.0...v) (2024-12-01)
 
 ## [Unreleased]
 
-## [1.0.7] - 2024-11-28
+## [1.1.0-SNAPSHOT] - 2024-12-01
+
+### Bug Fixes
+
+* **core:** correctly assign stdout and stderr in RunServiceTask ([c320749](https://github.com/phodal/shire/commit/c32074984d9e757d95625a9103ef16ca46fe4795))
+* **core:** resolve compatibility issues with editor highlighter service ([175e6c9](https://github.com/phodal/shire/commit/175e6c96b86bd7cd5ef54ce13583dcaa5b15ad63))
+* set default python execute to python 3 and update && closed [#146](https://github.com/phodal/shire/issues/146) ([3f57680](https://github.com/phodal/shire/commit/3f57680f93fd8ee35b7352fa0470f94b457f4349))
+* **shire-javascript:** remove deprecated JSXHarmonyFileType reference ([9760487](https://github.com/phodal/shire/commit/9760487a3ead0449dd6297acf1a45edfdeb4d36d))
 
 ### Features
 
 * **intellij-plugin:** Add soft wrap and scroll to end actions to console toolbar ([8453f57](https://github.com/phodal/shire/commit/8453f57a38874750a504df56f025f4710a3ae683))
+* **shell:** improve temp file cleanup in shell command execution ([8a5493d](https://github.com/phodal/shire/commit/8a5493d2320e502775b256e680859bcc39869516))
 * **ui:** add CodeView component for code preview ([bc8e07a](https://github.com/phodal/shire/commit/bc8e07a063d42cd26d0f10b52b7726e4842ae437))
 * **ui:** add toolwindow actions for copy, insert code, and language label ([b42962c](https://github.com/phodal/shire/commit/b42962c4e9de0bcfab63a76705935b1340a6444b))
 * **ui:** scroll to end of text on insert and add interaction type check ([4b3ecf8](https://github.com/phodal/shire/commit/4b3ecf8f88ba89ea5b777b35b65644e0131c7500))
@@ -698,8 +706,8 @@
 * **shell:** add shell language support plugin file ([bdc1c90](https://github.com/phodal/shire/commit/bdc1c90f10d7c2c4fb8f7157db343dd756c11352))
 * **shire:** add Shire context action group and location support ([e3df86d](https://github.com/phodal/shire/commit/e3df86d16d0c9985fec787a8e76ce553be9a9a45))
 
-[Unreleased]: https://github.com/phodal/shire/compare/v1.0.7...HEAD
-[1.0.7]: https://github.com/phodal/shire/compare/v1.0.6...v1.0.7
+[Unreleased]: https://github.com/phodal/shire/compare/v1.1.0-SNAPSHOT...HEAD
+[1.1.0-SNAPSHOT]: https://github.com/phodal/shire/compare/v1.0.6...v1.1.0-SNAPSHOT
 [1.0.6]: https://github.com/phodal/shire/compare/v1.0.4-SNAPSHOT...v1.0.6
 [1.0.4-SNAPSHOT]: https://github.com/phodal/shire/compare/v1.0.2...v1.0.4-SNAPSHOT
 [1.0.2]: https://github.com/phodal/shire/compare/v0.9.1...v1.0.2
