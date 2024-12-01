@@ -41,38 +41,38 @@ object ReactPsiUtil {
         return map + defaultAssignment
     }
 
-    fun tsxComponentToComponent(jsFile: JSFile): List<Component> = getExportElements(jsFile).map { psiElement ->
-        val name = psiElement.name ?: return@map null
-
-        val projectPath = jsFile.project.basePath ?: ""
-        val path = jsFile.virtualFile.path.removePrefix(projectPath)
-            .replace("\\", "/")
-            .removePrefix("/")
-
-        return@map when (psiElement) {
-            is TypeScriptFunction -> Component(name = name, path)
-            is TypeScriptClass -> Component(name = name, path)
-            is TypeScriptVariable, is JSVariable -> {
-                val funcExpr = PsiTreeUtil.findChildrenOfType(psiElement, JSFunctionExpression::class.java)
-                    .firstOrNull() ?: return@map null
-
-                val signature = JSFormatUtil.buildFunctionSignaturePresentation(funcExpr)
-                val props: List<String> = funcExpr.parameterList?.parameters?.mapNotNull { parameter ->
-                    val typeElement = parameter.typeElement ?: return@mapNotNull null
-                    when (typeElement) {
-                        is TypeScriptSingleType -> {
-                            val resolve = typeElement.referenceExpression?.resolve()
-                            resolve?.text
-                        }
-
-                        else -> null
-                    }
-                } ?: emptyList()
-
-                Component(name = name, path, props = props, signature = signature)
-            }
-
-            else -> null
-        }
-    }.filterNotNull()
+//    fun tsxComponentToComponent(jsFile: JSFile): List<Component> = getExportElements(jsFile).map { psiElement ->
+//        val name = psiElement.name ?: return@map null
+//
+//        val projectPath = jsFile.project.basePath ?: ""
+//        val path = jsFile.virtualFile.path.removePrefix(projectPath)
+//            .replace("\\", "/")
+//            .removePrefix("/")
+//
+//        return@map when (psiElement) {
+//            is TypeScriptFunction -> Component(name = name, path)
+//            is TypeScriptClass -> Component(name = name, path)
+//            is TypeScriptVariable, is JSVariable -> {
+//                val funcExpr = PsiTreeUtil.findChildrenOfType(psiElement, JSFunctionExpression::class.java)
+//                    .firstOrNull() ?: return@map null
+//
+//                val signature = JSFormatUtil.buildFunctionSignaturePresentation(funcExpr)
+//                val props: List<String> = funcExpr.parameterList?.parameters?.mapNotNull { parameter ->
+//                    val typeElement = parameter.typeElement ?: return@mapNotNull null
+//                    when (typeElement) {
+//                        is TypeScriptSingleType -> {
+//                            val resolve = typeElement.referenceExpression?.resolve()
+//                            resolve?.text
+//                        }
+//
+//                        else -> null
+//                    }
+//                } ?: emptyList()
+//
+//                Component(name = name, path, props = props, signature = signature)
+//            }
+//
+//            else -> null
+//        }
+//    }.filterNotNull()
 }

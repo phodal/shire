@@ -79,11 +79,12 @@ class ReactPage(private val project: Project): ComponentProvider {
             is TypeScriptJSXLanguageDialect,
             is ECMA6LanguageDialect,
                 -> {
-                val Components = ReactPsiUtil.tsxComponentToComponent(jsFile)
-                if (Components.isEmpty()) {
-                    logger.warn("no component found in ${jsFile.name}")
-                }
-                Components
+//                val Components = ReactPsiUtil.tsxComponentToComponent(jsFile)
+//                if (Components.isEmpty()) {
+//                    logger.warn("no component found in ${jsFile.name}")
+//                }
+//                Components
+                null
             }
 
             else -> {
