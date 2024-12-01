@@ -88,6 +88,11 @@ configure(
     dependencies {
         testOutput(sourceSets.test.get().output.classesDirs)
 
+        if (ideaPlatformVersion == 243) {
+            testImplementation("junit:junit:4.13.2")
+            testImplementation("org.opentest4j:opentest4j:1.3.0")
+        }
+
         intellijPlatform {
             testFramework(TestFrameworkType.Bundled)
         }
@@ -189,6 +194,8 @@ project(":languages:shire-javascript") {
             intellijIde(prop("ideaVersion"))
             intellijPlugins(ideaPlugins)
             intellijPlugins(prop("nodejsPlugin"))
+
+            testFramework(TestFrameworkType.Plugin.JavaScript)
         }
 
         implementation(project(":core"))
