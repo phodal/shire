@@ -17,7 +17,7 @@ class ShireProcessHandler(private val myExecutionName: String) : BuildProcessHan
     init {
         try {
             val pipe = Pipe.open()
-            myProcessInputReader = DiscardingInputStream(BufferedInputStream(Channels.newInputStream(pipe.source())))
+            myProcessInputReader = BufferedInputStream(Channels.newInputStream(pipe.source()))
             myProcessInputWriter = BufferedOutputStream(Channels.newOutputStream(pipe.sink()))
         } catch (_: IOException) {
 
