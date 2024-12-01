@@ -3,7 +3,9 @@ package com.phodal.shirelang.compiler.execute.processor.shell
 import com.intellij.execution.configurations.GeneralCommandLine
 import com.intellij.execution.process.CapturingProcessHandler
 import com.intellij.execution.process.OSProcessHandler
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.runReadAction
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.vfs.VirtualFile
@@ -14,6 +16,7 @@ import com.phodal.shire.json.ShireEnvVariableFiller
 import java.io.File
 import java.nio.charset.StandardCharsets
 
+
 object ShireShellCommandRunner {
     private const val DEFAULT_TIMEOUT: Int = 30000
 
@@ -21,7 +24,8 @@ object ShireShellCommandRunner {
         return runReadAction {
             val scope = ProjectScope.getContentScope(project)
 
-            val envName = ShireEnvReader.getAllEnvironments(project, scope).firstOrNull() ?: ShireEnvReader.DEFAULT_ENV_NAME
+            val envName =
+                ShireEnvReader.getAllEnvironments(project, scope).firstOrNull() ?: ShireEnvReader.DEFAULT_ENV_NAME
             val envObject = ShireEnvReader.getEnvObject(envName, scope, project)
 
             val content = file.readText()
@@ -47,16 +51,23 @@ object ShireShellCommandRunner {
             .withExePath("sh")
             .withParameters(tempFile.path)
 
-        val processOutput = CapturingProcessHandler(commandLine).runProcess(DEFAULT_TIMEOUT)
+        val future = ApplicationManager.getApplication().executeOnPooledThread<String> {
+            val processOutput = CapturingProcessHandler(commandLine).runProcess(DEFAULT_TIMEOUT)
+            deleteFileOnTermination(commandLine, tempFile)
 
-        deleteFileOnTermination(commandLine, tempFile)
-
-        val exitCode = processOutput.exitCode
-        if (exitCode != 0) {
-            throw RuntimeException("Cannot execute ${commandLine}: exit code $exitCode, error output: ${processOutput.stderr}")
+            val exitCode = processOutput.exitCode
+            if (exitCode != 0) {
+                throw RuntimeException("Cannot execute ${commandLine}: exit code $exitCode, error output: ${processOutput.stderr}")
+            }
+            processOutput.stdout
         }
 
-        return processOutput.stdout
+        return try {
+            future.get() // 阻塞获取结果，可以选择添加超时控制
+        } catch (e: Exception) {
+            logger<ShireShellCommandRunner>().error("Command execution failed", e)
+            throw RuntimeException("Execution failed: ${e.message}", e)
+        }
     }
 
     /**
