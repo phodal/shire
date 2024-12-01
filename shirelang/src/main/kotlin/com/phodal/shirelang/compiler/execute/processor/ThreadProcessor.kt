@@ -21,7 +21,7 @@ import com.phodal.shirelang.psi.ShireFile
 import java.util.concurrent.CompletableFuture
 
 
-object ThreadProcessor: PatternProcessor {
+object ThreadProcessor : PatternProcessor {
     override val type: PatternActionFuncDef = PatternActionFuncDef.THREAD
 
     fun execute(
@@ -83,8 +83,13 @@ object ThreadProcessor: PatternProcessor {
                 return executeShFile(psiFile, myProject, processVariables)
             }
 
-            else -> return FileRunService.provider(myProject, file)?.runFileAsync(myProject, file, psiFile)
-                ?: "No run service found for $psiFile, $fileName"
+            else -> {
+                val fileRunService = FileRunService.provider(myProject, file)
+                    ?: return "$SHIRE_ERROR No run service found for $psiFile, $fileName"
+
+                return fileRunService.runFileAsync(myProject, file, psiFile)
+                    ?: "$SHIRE_ERROR Run service failure: $fileName"
+            }
         }
     }
 
@@ -114,8 +119,7 @@ object ThreadProcessor: PatternProcessor {
         variableTable: MutableMap<String, Any?>,
         psiFile: ShireFile,
     ): String? {
-        val executeResult = ShireRunFileAction.suspendExecuteFile(myProject, variables, variableTable, psiFile)
-        return executeResult
+        return ShireRunFileAction.suspendExecuteFile(myProject, variables, variableTable, psiFile)
     }
 }
 
