@@ -167,7 +167,6 @@ open class RunServiceTask(
                 .createOrNull(executorInstance, settings.configuration)
                 ?.build() ?: throw IllegalStateException("Failed to create execution environment")
 
-
             val runContentManager = ExecutionManager.getInstance(project).getContentManager()
 
             val processAdapter = object : ProcessAdapter() {

@@ -141,6 +141,7 @@ interface FileRunService {
             ProgressManager.getInstance().run(runTask)
         } catch (e: Exception) {
             logger.error("Failed to run file: ${virtualFile.name}", e)
+            future.completeExceptionally(e)
             return e.message
         }
 
