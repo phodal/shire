@@ -442,6 +442,7 @@ Summary webpage: ${'$'}fileName""", results["var2"].toString()
         @Language("JavaScript")
         val jsMainWithArgs = """
             const args = process.argv.slice(2);
+            console.log("hello, world");
             console.log(args[0]);
             
             process.exit(0);
@@ -475,6 +476,6 @@ Summary webpage: ${'$'}fileName""", results["var2"].toString()
             }
         }
 
-        assertEquals("<ShireError>: [ForeignFunctionProcessor] No run service found for file: hello.js", results["var2"].toString())
+        assertEquals("", results["var2"].toString())
     }
 }
