@@ -18,9 +18,14 @@ class ContextVariableResolver(
 
         all().associate {
             it.variableName to when (it) {
-                SELECTION -> context.editor.selectionModel.selectedText ?: ""
-                BEFORE_CURSOR -> file?.text?.substring(0, caretModel.offset) ?: ""
-                AFTER_CURSOR -> file?.text?.substring(caretModel.offset) ?: ""
+                SELECTION -> context.editor.selectionModel.selectedText
+                    ?: context.editor.document.text.substring(caretModel.offset)
+                BEFORE_CURSOR -> file?.text?.substring(0, caretModel.offset)
+                    ?: context.editor.document.text.substring(0, caretModel.offset)
+
+                AFTER_CURSOR -> file?.text?.substring(caretModel.offset)
+                    ?: context.editor.document.text.substring(caretModel.offset)
+
                 FILE_NAME -> file?.name ?: ""
                 FILE_PATH -> file?.virtualFile?.path ?: ""
                 METHOD_NAME -> when (context.element) {
@@ -44,7 +49,7 @@ class ContextVariableResolver(
                     else -> "-"
                 }
 
-                ALL -> file?.text ?: ""
+                ALL -> file?.text ?: context.editor.document.text ?: ""
             }
         }
     }

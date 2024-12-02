@@ -1,9 +1,7 @@
 package com.phodal.shirelang.compiler.variable.resolver
 
-import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.diagnostic.logger
-import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.phodal.shirecore.provider.variable.PsiContextVariableProvider
 import com.phodal.shirecore.provider.variable.impl.DefaultPsiContextVariableProvider
@@ -20,8 +18,8 @@ class PsiContextVariableResolver(
     private val variableProvider: PsiContextVariableProvider
 
     init {
-        val psiFile = ReadAction.compute<PsiFile?, Throwable> {
-            PsiManager.getInstance(context.myProject).findFile(context.editor.virtualFile)
+        val psiFile = runReadAction {
+            PsiManager.getInstance(context.myProject).findFile(context.editor.virtualFile ?: return@runReadAction null)
         }
 
         variableProvider = if (psiFile?.language != null) {

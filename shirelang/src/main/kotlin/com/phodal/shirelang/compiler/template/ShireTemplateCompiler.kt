@@ -18,6 +18,7 @@ class ShireTemplateCompiler(
     private val hole: HobbitHole?,
     private val variableTable: VariableTable,
     private val input: String,
+    private val editor: Editor?,
 ) {
     private val customVariables: MutableMap<String, String> = mutableMapOf()
 
@@ -37,7 +38,7 @@ class ShireTemplateCompiler(
             .replace("\n\n\n", "\n\n")
 
     private suspend fun doExecuteCompile(): String {
-        val currentEditor = VariableTemplateCompiler.defaultEditor(myProject)
+        val currentEditor = editor ?: VariableTemplateCompiler.defaultEditor(myProject)
 
         if (currentEditor != null) {
             val additionalMap: Map<String, Any> = compileVariable(currentEditor, customVariables)
@@ -45,10 +46,10 @@ class ShireTemplateCompiler(
             compiledVariables = additionalMap.mapValues { it.value.toString() }
 
             val file = runReadAction {
-                PsiManager.getInstance(myProject).findFile(currentEditor.virtualFile)
-            } ?: return input
+                PsiManager.getInstance(myProject).findFile(currentEditor.virtualFile ?: return@runReadAction null)
+            }
 
-            val templateCompiler = VariableTemplateCompiler(file.language, file)
+            val templateCompiler = VariableTemplateCompiler(file?.language, file)
 
             templateCompiler.putAll(additionalMap)
             templateCompiler.putAll(customVariables)

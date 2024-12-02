@@ -42,7 +42,7 @@ class PasteManagerService {
         val variableTable = compileResult.variableTable
 
         val templateCompiler =
-            ShireTemplateCompiler(project, hobbitHole, variableTable, compileResult.shireOutput)
+            ShireTemplateCompiler(project, hobbitHole, variableTable, compileResult.shireOutput, editor)
         templateCompiler.putCustomVariable("text", text)
 
         val promptText = runBlocking {

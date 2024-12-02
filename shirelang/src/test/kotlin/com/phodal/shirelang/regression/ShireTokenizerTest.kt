@@ -52,7 +52,7 @@ class ShireTokenizerTest : BasePlatformTestCase() {
         )
 
         runBlocking {
-            val templateCompiler = ShireTemplateCompiler(project, hole, compile.variableTable, code)
+            val templateCompiler = ShireTemplateCompiler(project, hole, compile.variableTable, code, myFixture.editor)
             val compiledVariables =
                 templateCompiler.compileVariable(myFixture.editor, mutableMapOf())
 

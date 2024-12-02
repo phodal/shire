@@ -72,7 +72,7 @@ class ShireCompileTest : BasePlatformTestCase() {
         )
 
         runBlocking {
-            val templateCompiler = ShireTemplateCompiler(project, hole, compile.variableTable, code)
+            val templateCompiler = ShireTemplateCompiler(project, hole, compile.variableTable, code, myFixture.editor)
             val compiledVariables =
                 templateCompiler.compileVariable(myFixture.editor, mutableMapOf())
 
@@ -128,7 +128,7 @@ public class HelloController {
         )
 
         runBlocking {
-            val templateCompiler = ShireTemplateCompiler(project, hole, compile.variableTable, code)
+            val templateCompiler = ShireTemplateCompiler(project, hole, compile.variableTable, code, myFixture.editor)
             val compiledVariables =
                 templateCompiler.compileVariable(myFixture.editor, mutableMapOf())
 

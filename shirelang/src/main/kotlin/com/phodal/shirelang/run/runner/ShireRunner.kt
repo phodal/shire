@@ -127,9 +127,10 @@ class ShireRunner(
         compileResult: ShireParsedResult, variableMap: Map<String, String>, processHandler: ShireProcessHandler,
     ): ShireRunnerContext {
         val hobbitHole = compileResult.config
+        val editor = ActionLocationEditor.provide(project, hobbitHole?.actionLocation)
 
         val templateCompiler =
-            ShireTemplateCompiler(project, hobbitHole, compileResult.variableTable, compileResult.shireOutput)
+            ShireTemplateCompiler(project, hobbitHole, compileResult.variableTable, compileResult.shireOutput, editor)
 
         variableMap.forEach { (key, value) ->
             templateCompiler.putCustomVariable(key, value)
@@ -159,7 +160,7 @@ class ShireRunner(
 
         return ShireRunnerContext(
             hobbitHole,
-            editor = ActionLocationEditor.provide(project, hobbitHole?.actionLocation),
+            editor = editor,
             compileResult,
             promptTextTrim,
             hasError,

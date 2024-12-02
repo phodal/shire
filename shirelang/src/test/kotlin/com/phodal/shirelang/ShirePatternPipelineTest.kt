@@ -39,7 +39,7 @@ class ShirePatternPipelineTest : BasePlatformTestCase() {
         )
 
         runBlocking {
-            val shireTemplateCompiler = ShireTemplateCompiler(project, hole, compile.variableTable, code)
+            val shireTemplateCompiler = ShireTemplateCompiler(project, hole, compile.variableTable, code, myFixture.editor)
             val compiledVariables =
                 shireTemplateCompiler.compileVariable(myFixture.editor, mutableMapOf())
 
@@ -90,7 +90,7 @@ class ShirePatternPipelineTest : BasePlatformTestCase() {
         )
 
         runBlocking {
-            val shireTemplateCompiler = ShireTemplateCompiler(project, hole, compile.variableTable, code)
+            val shireTemplateCompiler = ShireTemplateCompiler(project, hole, compile.variableTable, code, myFixture.editor)
             val compiledVariables =
                 shireTemplateCompiler.compileVariable(myFixture.editor, mutableMapOf())
 
@@ -134,7 +134,7 @@ class ShirePatternPipelineTest : BasePlatformTestCase() {
         )
 
         runBlocking {
-            val shireTemplateCompiler = ShireTemplateCompiler(project, hole, compile.variableTable, code)
+            val shireTemplateCompiler = ShireTemplateCompiler(project, hole, compile.variableTable, code, myFixture.editor)
             val compiledVariables =
                 shireTemplateCompiler.compileVariable(myFixture.editor, mutableMapOf())
 

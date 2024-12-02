@@ -14,8 +14,8 @@ import org.apache.velocity.app.Velocity
 import java.io.StringWriter
 
 class VariableTemplateCompiler(
-    val language: Language,
-    val file: PsiFile,
+    val language: Language?,
+    val file: PsiFile?,
 ) {
     private val logger = logger<VariableTemplateCompiler>()
     private val variableMap: MutableMap<String, Any> = mutableMapOf()
