@@ -10,7 +10,7 @@ class SymbolShireCommand(val myProject: Project, private val prop: String) :
         val result = ShireSymbolProvider.all().mapNotNull {
             val found = it.resolveSymbol(myProject, prop)
             if (found.isEmpty()) return@mapNotNull null
-            "```${it.language}\n${found.joinToString("\n")}\n```\n"
+            "```${it.language}\n${found.map { namedElement -> namedElement.name }.joinToString { "\n" }}\n```\n"
         }
 
         if (result.isEmpty()) {

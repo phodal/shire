@@ -1,10 +1,12 @@
 package com.phodal.shirelang.compiler.execute.command
 
+import com.intellij.execution.filters.OpenFileHyperlinkInfo
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.editor.ScrollType
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.lookupFile
+import com.phodal.shirecore.provider.shire.ShireSymbolProvider
 import com.phodal.shirelang.compiler.ast.LineInfo
 import com.phodal.shirelang.compiler.parser.SHIRE_ERROR
 import com.phodal.shirelang.psi.ShireUsed
@@ -22,8 +24,35 @@ import com.phodal.shirelang.psi.ShireUsed
  */
 class GotoShireCommand(val myProject: Project, private val argument: String, val used: ShireUsed) : ShireCommand {
     override suspend fun doExecute(): String {
-        val range: LineInfo? = LineInfo.fromString(used.text)
+        if (argument.contains(".")) {
+            return gotoSymbol()
+        }
 
+        val range: LineInfo? = LineInfo.fromString(used.text)
+        return gotoFile(range)
+    }
+
+    private fun gotoSymbol(): String {
+        val symbols = ShireSymbolProvider.all().map {
+            it.resolveSymbol(myProject, argument)
+        }.flatten()
+
+        if (symbols.isEmpty()) {
+            return "$SHIRE_ERROR: Symbol not found: $argument"
+        }
+
+        /// maybe open in filter
+        // convert to hyperlink
+        val results: List<String> = symbols.map { symbol ->
+            val hyperlinkInfo = OpenFileHyperlinkInfo(myProject, symbol.containingFile.virtualFile, symbol.textOffset)
+            hyperlinkInfo.navigate(myProject)
+            "Navigated to ${symbol.name} in ${symbol.containingFile.name}"
+        }
+
+        return results.joinToString("\n")
+    }
+
+    private fun gotoFile(range: LineInfo?): String {
         val virtualFile = runReadAction { myProject.lookupFile(argument) }
         if (virtualFile == null) {
             return "$SHIRE_ERROR: File not found: $argument"

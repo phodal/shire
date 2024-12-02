@@ -7,6 +7,7 @@ import com.intellij.openapi.fileTypes.PlainTextFileType
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
+import com.intellij.psi.PsiNamedElement
 import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.ProjectScope
 import com.phodal.shirecore.provider.shire.ShireSymbolProvider
@@ -41,7 +42,7 @@ class DefaultShireSymbolProvider : ShireSymbolProvider {
         }
     }
 
-    override fun resolveSymbol(project: Project, symbol: String): List<String> {
+    override fun resolveSymbol(project: Project, symbol: String): List<PsiNamedElement> {
         return emptyList()
     }
 }

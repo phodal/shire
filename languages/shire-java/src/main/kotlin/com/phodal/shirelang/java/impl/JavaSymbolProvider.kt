@@ -9,11 +9,7 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.ide.highlighter.JavaFileType
 import com.intellij.lang.java.JavaLanguage
 import com.intellij.openapi.project.Project
-import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiFile
-import com.intellij.psi.PsiJavaFile
-import com.intellij.psi.PsiManager
-import com.intellij.psi.PsiPackageStatement
+import com.intellij.psi.*
 import com.intellij.psi.impl.file.impl.JavaFileManagerImpl
 import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.GlobalSearchScope
@@ -85,7 +81,7 @@ class JavaSymbolProvider : ShireSymbolProvider {
         }
     }
 
-    override fun resolveSymbol(project: Project, symbol: String): List<String> {
+    override fun resolveSymbol(project: Project, symbol: String): List<PsiNamedElement> {
         val scope = GlobalSearchScope.allScope(project)
 
         if (symbol.isEmpty()) return emptyList()
@@ -94,19 +90,19 @@ class JavaSymbolProvider : ShireSymbolProvider {
         if (symbol.contains(".").not()) {
             val psiClasses = PsiShortNamesCache.getInstance(project).getClassesByName(symbol, scope)
             if (psiClasses.isNotEmpty()) {
-                return psiClasses.map { it.qualifiedName!! }
+                return psiClasses.toList()
             }
         }
 
         // for package name only, like `cc.unitmesh`
         JavaFileManagerImpl(project).findPackage(symbol)?.let { pkg ->
-            return pkg.classes.map { it.qualifiedName!! }
+            return pkg.classes.toList()
         }
 
         // for single class, with function name, like `cc.unitmesh.idea.provider.JavaCustomShireSymbolProvider`
         val clazz = JavaFileManagerImpl(project).findClass(symbol, scope)
         if (clazz != null) {
-            return clazz.methods.map { "${clazz.qualifiedName}#${it.name}" }
+            return clazz.methods.toList()
         }
 
         // for lookup for method
@@ -133,12 +129,12 @@ class JavaSymbolProvider : ShireSymbolProvider {
         clazzName: String,
         scope: GlobalSearchScope,
         methodName: String,
-    ): List<String> {
+    ): List<PsiMethod> {
         val psiClass = JavaFileManagerImpl(project).findClass(clazzName, scope)
         if (psiClass != null) {
             val psiMethod = psiClass.findMethodsByName(methodName, true).firstOrNull()
             if (psiMethod != null) {
-                return listOf(psiMethod.text)
+                return listOf(psiMethod)
             }
         }
 

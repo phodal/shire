@@ -6,6 +6,7 @@ import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiNamedElement
 
 /**
  * The symbol provider for Shire completion and execution
@@ -41,7 +42,7 @@ interface ShireSymbolProvider {
      * - `<package>.<class>#<constructor>`
      *
      */
-    fun resolveSymbol(project: Project, symbol: String): List<String>
+    fun resolveSymbol(project: Project, symbol: String): List<PsiNamedElement>
 
     companion object {
         private val EP_NAME: ExtensionPointName<ShireSymbolProvider> =

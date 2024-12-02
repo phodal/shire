@@ -139,3 +139,9 @@ Go to file:
 ```shire
 /goto:src/main/java/com/example/Controller.java#L1C1
 ```
+
+Go to symbol:
+
+```shire
+/goto:com.phodal.shire.demo.MathHelper.calculateInsurance#L1C1
+```
