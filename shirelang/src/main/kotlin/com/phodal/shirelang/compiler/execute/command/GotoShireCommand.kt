@@ -41,12 +41,10 @@ class GotoShireCommand(val myProject: Project, private val argument: String, val
             return "$SHIRE_ERROR: Symbol not found: $argument"
         }
 
-        /// maybe open in filter
-        // convert to hyperlink
         val results: List<String> = symbols.map { symbol ->
             val hyperlinkInfo = OpenFileHyperlinkInfo(myProject, symbol.containingFile.virtualFile, symbol.textOffset)
             hyperlinkInfo.navigate(myProject)
-            "Navigated to ${symbol.name} in ${symbol.containingFile.name}"
+            String.format("File: %s, Line: %d", symbol.containingFile.name, symbol.textOffset)
         }
 
         return results.joinToString("\n")
@@ -60,15 +58,14 @@ class GotoShireCommand(val myProject: Project, private val argument: String, val
 
         val editor =
             FileEditorManager.getInstance(myProject).selectedTextEditor ?: return "$SHIRE_ERROR: Editor not found"
-        val document = editor?.document
         val line = range?.startLine ?: 0
         val column = range?.startColumn ?: 0
 
         runReadAction {
-            val offset = document?.let {
+            val offset = editor.document.let {
                 val lineStartOffset = it.getLineStartOffset(line.coerceIn(0, it.lineCount - 1))
                 (lineStartOffset + column).coerceAtMost(it.textLength)
-            } ?: return@runReadAction "$SHIRE_ERROR: Unable to calculate offset"
+            }
 
             editor.caretModel.moveToOffset(offset)
             editor.scrollingModel.scrollToCaret(ScrollType.CENTER)
