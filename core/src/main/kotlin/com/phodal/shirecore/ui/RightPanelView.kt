@@ -1,10 +1,10 @@
 package com.phodal.shirecore.ui
 
 import com.intellij.openapi.Disposable
+import com.intellij.openapi.actionSystem.ActionGroup
 import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.ActionPlaces
 import com.intellij.openapi.actionSystem.DataProvider
-import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.command.WriteCommandAction
@@ -49,7 +49,7 @@ class RightPanelView(
     }
 
     private fun setupActionForEditor(project: Project) {
-        val toolbarActionGroup = ActionManager.getInstance().getAction("Shire.ToolWindow.Toolbar") as? DefaultActionGroup
+        val toolbarActionGroup = ActionManager.getInstance().getAction("Shire.ToolWindow.Toolbar") as? ActionGroup
         toolbarActionGroup?.let {
             val toolbar = ActionManager.getInstance().createActionToolbar(
                 ActionPlaces.MAIN_TOOLBAR,
