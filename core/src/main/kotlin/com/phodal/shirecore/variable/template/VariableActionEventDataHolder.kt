@@ -7,7 +7,7 @@ import com.intellij.openapi.util.UserDataHolderBase
 /**
  * Temp class to store data context for VCS variable actions
  */
-data class VariableActionEventDataHolder(val vcsDataContext: DataContext? = null) {
+data class VariableActionEventDataHolder(val dataContext: DataContext? = null) {
     companion object {
         private val DATA_KEY: Key<VariableActionEventDataHolder> = Key.create(VariableActionEventDataHolder::class.java.name)
         private val dataHolder = UserDataHolderBase()

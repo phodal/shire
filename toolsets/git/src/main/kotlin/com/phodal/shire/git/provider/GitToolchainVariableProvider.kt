@@ -1,8 +1,6 @@
 package com.phodal.shire.git.provider
 
-import com.intellij.ide.DataManager
 import com.intellij.openapi.actionSystem.DataContext
-import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
@@ -91,7 +89,7 @@ class GitToolchainVariableProvider : ToolchainVariableProvider {
             }
 
             VcsToolchainVariable.Diff -> {
-                val dataContext = VariableActionEventDataHolder.getData()?.vcsDataContext
+                val dataContext = VariableActionEventDataHolder.getData()?.dataContext
                 variable.value = analysisLog(dataContext, project)
             }
         }

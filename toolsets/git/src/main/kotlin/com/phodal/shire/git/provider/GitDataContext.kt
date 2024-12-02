@@ -6,7 +6,7 @@ import com.intellij.vcs.commit.CommitWorkflowUi
 import com.phodal.shirecore.variable.template.VariableActionEventDataHolder
 
 fun getCommitWorkflowUi(): CommitWorkflowUi? {
-    VariableActionEventDataHolder.getData()?.vcsDataContext?.let {
+    VariableActionEventDataHolder.getData()?.dataContext?.let {
         val commitWorkflowUi = it.getData(VcsDataKeys.COMMIT_WORKFLOW_UI)
         return commitWorkflowUi as CommitWorkflowUi?
     }
