@@ -54,6 +54,7 @@ enum class BuiltinCommand(
         true,
         true
     ),
+    Goto("goto", "Goto the content of a file", AllIcons.Actions.Forward, true, true),
     ;
 
     companion object {

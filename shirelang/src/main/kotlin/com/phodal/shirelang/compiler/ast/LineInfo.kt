@@ -16,9 +16,9 @@ data class LineInfo(
         fun fromString(input: String): LineInfo? {
             val matchResult = regex.find(input) ?: return null
 
-            val startLine = matchResult.groupValues[1].toIntOrNull() ?: return null
+            val startLine = matchResult.groupValues[1].toIntOrNull() ?: 0
             val startColumn = matchResult.groupValues[2].toIntOrNull() ?: 0
-            val endLine = matchResult.groupValues[3].toIntOrNull() ?: return null
+            val endLine = matchResult.groupValues[3].toIntOrNull() ?: startLine // set end line to start line if not found
             val endColumn = matchResult.groupValues[4].toIntOrNull() ?: 0
 
             return LineInfo(startLine, endLine, startColumn, endColumn)

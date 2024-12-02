@@ -17,6 +17,8 @@ We use velocity template to generate code. Here is a simple example:
 
 ## Shire Commands
 
+see in: ShireCommand.kt
+
 - `/file`: read file content, format: `/file:<file-path>`, example: `/file:src/main/java/com/example/Controller.java`.
 - `/write`: write file content, format: `file#L1-L12`, example: `src/main/java/com/example/Controller.java#L1-L12`
 - `/rev`: read git change by git revision.
@@ -28,6 +30,7 @@ We use velocity template to generate code. Here is a simple example:
 - `/shell`: run shell command or shell script, like `ls`, `pwd`, etc.
 - `/browse`: browse web page, like `https://ide.unitmesh.cc`
 - `/refactor`: refactor code, like `rename`, `delete`, `move` etc.
+- `/goto`: go to file, like `src/main/java/com/example/Controller.java#L1C1`
 
 ### File Command
 
@@ -128,3 +131,11 @@ Refactor code:
 ```
 
 It will be handled in local.
+
+### Goto Command
+
+Go to file:
+
+```shire
+/goto:src/main/java/com/example/Controller.java#L1C1
+```

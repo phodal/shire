@@ -355,6 +355,11 @@ class ShireSyntaxAnalyzer(
                 val nextTextSegment = lookupNextTextSegment(used)
                 RefactorShireCommand(myProject, prop, nextTextSegment)
             }
+
+            BuiltinCommand.Goto -> {
+                result.isLocalCommand = true
+                GotoShireCommand(myProject, prop, used)
+            }
         }
 
         val execResult = runBlocking {

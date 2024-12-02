@@ -56,3 +56,8 @@ Builtin plugin: Database
 - `databases`，当前连接的数据库列表。
 - `tables`，当前数据库的表列表。
 - `columns`，当前数据库的表的列列表。
+
+## Protobuf
+
+{: .label .label-red }
+Builtin plugin: [Protocol Buffers](https://plugins.jetbrains.com/plugin/14004-protocol-buffers)
