@@ -44,7 +44,7 @@ class GotoShireCommand(val myProject: Project, private val argument: String, val
         val results: List<String> = symbols.map { symbol ->
             val hyperlinkInfo = OpenFileHyperlinkInfo(myProject, symbol.containingFile.virtualFile, symbol.textOffset)
             hyperlinkInfo.navigate(myProject)
-            String.format("File: %s, Line: %d", symbol.containingFile.name, symbol.textOffset)
+            symbol.containingFile.virtualFile.path
         }
 
         return results.joinToString("\n")
