@@ -51,28 +51,20 @@ object PythonPsiUtil {
     }
 
     fun clearClass(classCopy: PyClass) {
-        // Replace assigned values of instance attributes with ellipsis
         classCopy.instanceAttributes.forEach {
-            (it as PyTargetExpression).findAssignedValue()?.let { assignedValue ->
-                assignedValue.replace(makeEllipsisExpression(classCopy.project))
-            }
+            it.findAssignedValue()?.replace(makeEllipsisExpression(classCopy.project))
         }
 
-        // Replace assigned values of class attributes with ellipsis
         classCopy.classAttributes.forEach {
-            (it as PyTargetExpression).findAssignedValue()?.let { assignedValue ->
-                assignedValue.replace(makeEllipsisExpression(classCopy.project))
-            }
+            it.findAssignedValue()?.replace(makeEllipsisExpression(classCopy.project))
         }
 
-        // Clear statements in methods
         classCopy.methods.forEach { method ->
             method.statementList.statements.forEach { statement ->
                 statement.delete()
             }
         }
 
-        // Recursively clear nested classes
         classCopy.nestedClasses.forEach { nestedClass ->
             clearClass(nestedClass)
         }
