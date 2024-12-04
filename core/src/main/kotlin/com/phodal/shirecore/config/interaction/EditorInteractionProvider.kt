@@ -18,7 +18,7 @@ import com.phodal.shirecore.runner.console.cancelWithConsole
 import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.provider.ide.LocationInteractionContext
 import com.phodal.shirecore.provider.ide.LocationInteractionProvider
-import com.phodal.shirecore.ui.RightPanelView
+import com.phodal.shirecore.ui.ShirePanelView
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.launch
@@ -112,8 +112,8 @@ class EditorInteractionProvider : LocationInteractionProvider {
                 }
 
                 val contentManager = toolWindowManager.contentManager
-                val rightPanelView = RightPanelView(context.project, "")
-                contentManager.factory.createContent(rightPanelView, "Shire RightPanel Run", false).let {
+                val panelView = ShirePanelView(context.project)
+                contentManager.factory.createContent(panelView, "Shire RightPanel Run", false).let {
                     contentManager.removeAllContents(false)
                     contentManager.addContent(it)
                 }
@@ -128,7 +128,7 @@ class EditorInteractionProvider : LocationInteractionProvider {
                         suggestion.append(char)
 
                         invokeLater {
-                            rightPanelView.appendText(context.project, char)
+                            panelView.updateText(suggestion.toString())
                         }
                     }
 
@@ -137,7 +137,9 @@ class EditorInteractionProvider : LocationInteractionProvider {
             }
 
             InteractionType.OnPaste -> {
-                /// already handle in lang
+                /**
+                 *  already handle in [com.phodal.shirelang.actions.copyPaste.ShireCopyPastePreProcessor]
+                 */
             }
         }
     }

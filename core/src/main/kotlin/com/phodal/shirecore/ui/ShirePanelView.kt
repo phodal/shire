@@ -28,8 +28,11 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
         this.background = UIUtil.getListBackground()
     }
 
+    private val lastCodeBlockView: CodeBlockView = CodeBlockView(project, "")
+
     private var panelContent: DialogPanel = panel {
         row { cell(myScrollPane).fullWidth().fullHeight() }.resizableRow()
+        row { cell(lastCodeBlockView).fullWidth() }.resizableRow()
         row { cell(progressBar).fullWidth() }
     }
 
@@ -37,14 +40,25 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
         setContent(panelContent)
     }
 
-    fun updateText(text: String) {
-        val codeFence = CodeFence.parse(text)
-        if (codeFence.isComplete) {
-            val codeBlockView = CodeBlockView(project, codeFence.text)
-            myList.add(codeBlockView)
+    private var alreadyAddedCodeFence: HashSet<CodeFence> = HashSet()
 
-            scrollToBottom()
-        }
+    fun updateText(text: String) {
+//        val codeFence = CodeFence.parseAll(text)
+//        if (codeFence.isNotEmpty()) {
+//            codeFence.forEach {
+//                if (it.isComplete && !alreadyAddedCodeFence.contains(it)) {
+//                    val codeBlockView = CodeBlockView(project, it.text)
+//                    myList.add(codeBlockView)
+//                    alreadyAddedCodeFence.add(it)
+//                } else {
+//                    lastCodeBlockView.updateText(it.text)
+//                }
+//            }
+//
+//            scrollToBottom()
+//        }
+
+        lastCodeBlockView.updateText(text)
     }
 
     private fun scrollToBottom() {

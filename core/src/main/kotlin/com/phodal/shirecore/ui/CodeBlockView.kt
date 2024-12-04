@@ -33,10 +33,10 @@ import java.awt.BorderLayout
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.swing.JComponent
 
-class RightPanelView(
+class CodeBlockView(
     project: Project,
     text: String,
-) : JBPanel<RightPanelView>(BorderLayout()), DataProvider, Disposable {
+) : JBPanel<CodeBlockView>(BorderLayout()), DataProvider, Disposable {
     private var editor: EditorEx = createCodeViewerEditor(project, text, this)
 
     init {
@@ -70,7 +70,6 @@ class RightPanelView(
         }
     }
 
-
     fun appendText(project: Project, char: String) {
         WriteCommandAction.runWriteCommandAction(project) {
             val document = editor.document
@@ -79,6 +78,13 @@ class RightPanelView(
             // scroll to the end
             editor.caretModel.moveToOffset(document.textLength)
             editor.scrollingModel.scrollToCaret(ScrollType.RELATIVE)
+        }
+    }
+
+    fun updateText(text: String) {
+        WriteCommandAction.runWriteCommandAction(editor.project) {
+            val document = editor.document
+            document.setText(text)
         }
     }
 
