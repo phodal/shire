@@ -39,10 +39,7 @@ class HttpClientFileRunService : FileRunService {
             val psiFile = PsiManager.getInstance(project).findFile(virtualFile)
                 ?: return@runReadAction null
 
-            ConfigurationContext(psiFile)
-                .configurationsFromContext
-                ?.firstOrNull()
-                ?.configurationSettings
+            ConfigurationContext(psiFile).configurationsFromContext?.firstOrNull()?.configurationSettings
         } ?: return null
 
         val factory = HttpRequestRunConfigurationType.getInstance().configurationFactories[0]

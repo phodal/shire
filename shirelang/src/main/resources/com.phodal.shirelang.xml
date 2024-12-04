@@ -191,6 +191,10 @@
             <action id="Shire.ToolWindow.Toolbar.InsertCode"
                     icon="AllIcons.Actions.CheckOut"
                     class="com.phodal.shirecore.ui.ShireInsertCodeAction"/>
+
+            <action id="Shire.ToolWindow.Snippet.RunCode"
+                    icon="AllIcons.Actions.Execute"
+                    class="com.phodal.shirecore.ui.ShireRunCodeAction"/>
         </group>
     </actions>
 

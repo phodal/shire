@@ -239,7 +239,7 @@ object JSPsiUtil {
 
         val containingFile: PsiFile = runReadAction { element.containingFile } ?: return null
         val extension = containingFile.virtualFile?.extension ?: return null
-        val elementName = JSPsiUtil.elementName(element) ?: return null
+        val elementName = elementName(element) ?: return null
         val testFile: Path = generateUniqueTestFile(elementName, containingFile, testDirectory, extension).toPath()
         return testFile
     }
