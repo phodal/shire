@@ -17,11 +17,6 @@ fun JsonObject.findString(name: String): String? {
     return property.valueAsString(this)
 }
 
-fun JsonObject.findBoolean(name: String): Boolean? {
-    val property = findProperty(name) ?: return null
-    return JsonUtil.getPropertyValueOfType(this, name, JsonBooleanLiteral::class.java)?.value
-}
-
 fun JsonObject.findNumber(name: String): Number? {
     val property = findProperty(name) ?: return null
     return JsonUtil.getPropertyValueOfType(this, name, JsonNumberLiteral::class.java)?.value
