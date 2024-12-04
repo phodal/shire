@@ -7,7 +7,6 @@ class CodeFence(val ideaLanguage: Language, val text: String, val isComplete: Bo
     companion object {
         fun parse(content: String): CodeFence {
             val regex = Regex("```([\\w#+\\s]*)")
-            // convert content \\n to \n
             val lines = content.replace("\\n", "\n").lines()
 
             var codeStarted = false
@@ -52,7 +51,6 @@ class CodeFence(val ideaLanguage: Language, val text: String, val isComplete: Bo
             val language = findLanguage(languageId ?: "")
             val extension = language.associatedFileType?.defaultExtension ?: lookupFileExt(languageId ?: "txt")
 
-            // if content is not empty, but code is empty, then it's a markdown
             if (trimmedCode.isEmpty()) {
                 return CodeFence(findLanguage("markdown"), content.replace("\\n", "\n"), codeClosed, extension)
             }
@@ -64,6 +62,57 @@ class CodeFence(val ideaLanguage: Language, val text: String, val isComplete: Bo
             return CodeFence(language, trimmedCode, codeClosed, extension)
         }
 
+        private val cache = mutableMapOf<String, CodeFence>()
+
+        fun parseAll(content: String): List<CodeFence> {
+            val codeFences = mutableListOf<CodeFence>()
+            val regex = Regex("```([\\w#+\\s]*)")
+            val lines = content.replace("\\n", "\n").lines()
+
+            var codeStarted = false
+            var languageId: String? = null
+            val codeBuilder = StringBuilder()
+            var startIndex = 0
+
+            for ((index, line) in lines.withIndex()) {
+                if (!codeStarted) {
+                    val matchResult = regex.find(line.trimStart())
+                    if (matchResult != null) {
+                        // 开始代码块
+                        languageId = matchResult.groups[1]?.value
+                        codeStarted = true
+                        startIndex = index
+                    }
+                } else {
+                    if (line.startsWith("```")) {
+                        // 结束代码块
+                        val codeContent = lines.subList(startIndex + 1, index).joinToString("\n")
+                        val cacheKey = "${languageId.orEmpty()}|$codeContent"
+
+                        val codeFence = cache.getOrPut(cacheKey) {
+                            parse("```$languageId\n$codeContent\n```")
+                        }
+                        codeFences.add(codeFence)
+
+                        codeBuilder.clear()
+                        codeStarted = false
+                    }
+                }
+            }
+
+            if (codeStarted) {
+                val codeContent = lines.subList(startIndex + 1, lines.size).joinToString("\n")
+                val cacheKey = "${languageId.orEmpty()}|$codeContent"
+
+                val codeFence = cache.getOrPut(cacheKey) {
+                    parse("```$languageId\n$codeContent")
+                }
+
+                codeFences.add(codeFence)
+            }
+
+            return codeFences
+        }
 
         private fun lookupFileExt(languageId: String): String {
             return when (languageId) {
