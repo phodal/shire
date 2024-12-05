@@ -124,7 +124,6 @@ class CodeBlockView(val project: Project, val text: String, private var ideaLang
             disposable: Disposable,
         ): EditorEx {
             val language = ideaLanguage ?: CodeFenceLanguage.findLanguage("Plain text")
-            logger<CodeBlockView>().info("Creating editor for language: ${language.displayName}")
             val ext = CodeFenceLanguage.lookupFileExt(language.displayName)
             val file = LightVirtualFile("sample.${ext}", language, text)
             val document: Document = file.findDocument() ?: throw IllegalStateException("Document not found")

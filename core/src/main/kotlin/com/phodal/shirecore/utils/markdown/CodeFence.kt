@@ -9,7 +9,6 @@ class CodeFence(
     val extension: String?,
 ) {
     companion object {
-        private val cache = mutableMapOf<String, CodeFence>()
         private var lastTxtBlock: CodeFence? = null
 
         fun parse(content: String): CodeFence {
@@ -43,12 +42,7 @@ class CodeFence(
                 language.associatedFileType?.defaultExtension ?: CodeFenceLanguage.lookupFileExt(languageId ?: "txt")
 
             return if (trimmedCode.isEmpty()) {
-                CodeFence(
-                    CodeFenceLanguage.findLanguage("markdown"),
-                    content.replace("\\n", "\n"),
-                    codeClosed,
-                    extension
-                )
+                CodeFence(language, content.replace("\\n", "\n"), codeClosed, extension)
             } else {
                 CodeFence(language, trimmedCode, codeClosed, extension)
             }
@@ -93,11 +87,7 @@ class CodeFence(
 
                     if (line.startsWith("```")) {
                         val codeContent = codeBuilder.trim().toString()
-                        val cacheKey = "${languageId.orEmpty()}|$codeContent"
-
-                        val codeFence = cache.getOrPut(cacheKey) {
-                            parse("```$languageId\n$codeContent\n```")
-                        }
+                        val codeFence = parse("```$languageId\n$codeContent\n```")
                         codeFences.add(codeFence)
 
                         codeBuilder.clear()
@@ -108,22 +98,21 @@ class CodeFence(
                 }
             }
 
+            val ideaLanguage = CodeFenceLanguage.findLanguage(languageId ?: "markdown")
             if (textBuilder.isNotEmpty()) {
-                val normal =
-                    CodeFence(CodeFenceLanguage.findLanguage("text"), textBuilder.trim().toString(), true, "txt")
-
+                val normal = CodeFence(ideaLanguage, textBuilder.trim().toString(), true, null)
                 codeFences.add(normal)
             }
 
             if (codeStarted) {
                 val codeContent = codeBuilder.trim().toString()
-                val cacheKey = "${languageId.orEmpty()}|$codeContent"
-
-                val codeFence = cache.getOrPut(cacheKey) {
-                    parse("```$languageId\n$codeContent")
+                if (codeContent.isNotEmpty()) {
+                    val codeFence = parse("```$languageId\n$codeContent\n")
+                    codeFences.add(codeFence)
+                } else {
+                    val defaultLanguage = CodeFence(ideaLanguage, codeContent, false, null)
+                    codeFences.add(defaultLanguage)
                 }
-
-                codeFences.add(codeFence)
             }
 
             return codeFences

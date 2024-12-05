@@ -62,10 +62,8 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
         val codeFenceList = CodeFence.parseAll(text)
         codeFenceList.forEachIndexed { index, codeFence ->
             if (index < blockViews.size) {
-                val codeBlockView = blockViews[index]
-
-                codeBlockView.updateLanguage(codeFence.ideaLanguage)
-                codeBlockView.updateText(codeFence.text)
+                blockViews[index].updateLanguage(codeFence.ideaLanguage)
+                blockViews[index].updateText(codeFence.text)
             } else {
                 runInEdt {
                     val codeBlockView = CodeBlockView(project, codeFence.text, PlainTextLanguage.INSTANCE)

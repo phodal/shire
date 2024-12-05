@@ -76,4 +76,37 @@ class CodeFenceTest : BasePlatformTestCase() {
         assertEquals(last.ideaLanguage.displayName, "HTTP Request")
         assertEquals(false, last.isComplete)
     }
+
+    fun testShould_parse_code_for_http_request() {
+        val markdown = """
+            |Java Hello, world
+            |```http request
+            |GET /api
+        """.trimMargin()
+
+        val codeFences = CodeFence.parseAll(markdown)
+
+        assertEquals(codeFences.size, 2)
+
+        val last = codeFences.last()
+        assertEquals(last.text, "GET /api")
+        assertEquals(last.ideaLanguage.displayName, "HTTP Request")
+        assertEquals(false, last.isComplete)
+    }
+
+    fun testShould_parse_code_for_empty_http_request() {
+        val markdown = """
+            |Java Hello, world
+            |```http request
+        """.trimMargin()
+
+        val codeFences = CodeFence.parseAll(markdown)
+
+        assertEquals(codeFences.size, 2)
+
+        val last = codeFences.last()
+        assertEquals(last.text, "")
+        assertEquals(last.ideaLanguage.displayName, "HTTP Request")
+        assertEquals(false, last.isComplete)
+    }
 }
