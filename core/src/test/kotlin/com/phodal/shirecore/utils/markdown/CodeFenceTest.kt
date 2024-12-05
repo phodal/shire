@@ -75,6 +75,6 @@ class CodeFenceTest: BasePlatformTestCase() {
         val last = codeFences.last()
         assertEquals(last.text, "DELETE /api/blog/1\nContent-Type: application/json")
         assertEquals(last.ideaLanguage.displayName, "HTTP Request")
-        assertEquals(false, code.isComplete)
+        assertEquals(false, last.isComplete)
     }
 }

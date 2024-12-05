@@ -6,7 +6,7 @@ import com.intellij.openapi.fileTypes.PlainTextLanguage
 class CodeFence(
     val ideaLanguage: Language,
     val text: String,
-    val isComplete: Boolean,
+    var isComplete: Boolean,
     val extension: String?,
     val isTextBlock: Boolean = false, // 是否为普通文本块
 ) {
@@ -103,7 +103,6 @@ class CodeFence(
                 )
             }
 
-            // 添加未关闭的代码块
             if (codeStarted) {
                 val codeContent = codeBuilder.trim().toString()
                 val cacheKey = "${languageId.orEmpty()}|$codeContent"
@@ -161,6 +160,7 @@ class CodeFence(
                 "cpp" -> "c++"
                 "shell" -> "Shell Script"
                 "sh" -> "Shell Script"
+                "http" -> "HTTP Request"
                 else -> languageName
             }
 
