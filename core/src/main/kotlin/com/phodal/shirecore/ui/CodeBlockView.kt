@@ -30,7 +30,7 @@ import com.intellij.ui.dsl.builder.Cell
 import com.intellij.util.concurrency.annotations.RequiresReadLock
 import com.intellij.util.messages.Topic
 import com.intellij.util.ui.JBUI
-import com.phodal.shirecore.utils.markdown.CodeFence
+import com.phodal.shirecore.utils.markdown.CodeFenceLanguage
 import java.awt.BorderLayout
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.swing.JComponent
@@ -104,7 +104,7 @@ class CodeBlockView(
             ideaLanguage: Language?,
             disposable: Disposable,
         ): EditorEx {
-            val language = ideaLanguage ?: CodeFence.findLanguage("markdown")
+            val language = ideaLanguage ?: CodeFenceLanguage.findLanguage("markdown")
             val file = LightVirtualFile("", language, text)
             val document: Document =
                 file.findDocument() ?: throw IllegalStateException("Document not found")

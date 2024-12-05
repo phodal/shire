@@ -1,9 +1,8 @@
 package com.phodal.shirecore.utils.markdown
 
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
-import junit.framework.TestCase
 
-class CodeFenceTest: BasePlatformTestCase() {
+class CodeFenceTest : BasePlatformTestCase() {
 
     fun testShould_handle_code_not_complete_from_markdown() {
         val markdown = """

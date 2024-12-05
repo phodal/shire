@@ -7,7 +7,7 @@ import com.intellij.psi.InjectedLanguagePlaces
 import com.intellij.psi.LanguageInjector
 import com.intellij.psi.PsiLanguageInjectionHost
 import com.intellij.psi.util.elementType
-import com.phodal.shirecore.utils.markdown.CodeFence.Companion.findLanguage
+import com.phodal.shirecore.utils.markdown.CodeFenceLanguage
 import com.phodal.shirelang.parser.CodeBlockElement
 import com.phodal.shirelang.parser.PatternElement
 import com.phodal.shirelang.psi.ShireTypes
@@ -25,7 +25,7 @@ class ShireLanguageInjector : LanguageInjector {
 
         val args = host.pipelineArgs?.children ?: return
 
-        val language = findLanguage("RegExp")
+        val language = CodeFenceLanguage.findLanguage("RegExp")
         val funcLength = host.funcName.text.length
 
         args.firstOrNull()?.let { element ->
@@ -43,7 +43,7 @@ class ShireLanguageInjector : LanguageInjector {
         if (host !is PatternElement || !host.isValidHost()) return
 
         val text = host.text
-        val language = findLanguage("RegExp")
+        val language = CodeFenceLanguage.findLanguage("RegExp")
 
         val range = TextRange(0, text.length)
         registrar.addPlace(language, range, null, null)
@@ -67,7 +67,7 @@ class ShireLanguageInjector : LanguageInjector {
         val contentList = CodeBlockElement.obtainFenceContent(host) ?: return
         if (contentList.isEmpty()) return
 
-        val language = findLanguage(text)
+        val language = CodeFenceLanguage.findLanguage(text)
         injectAsOnePlace(host, language, registrar)
     }
 
