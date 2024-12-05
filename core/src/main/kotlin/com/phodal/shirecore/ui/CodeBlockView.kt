@@ -84,7 +84,11 @@ class CodeBlockView(
     fun updateText(text: String) {
         WriteCommandAction.runWriteCommandAction(editor.project) {
             val document = editor.document
-            document.setText(text)
+            document.replaceString(0, document.textLength, text)
+
+            // scroll to the end
+            editor.caretModel.moveToOffset(document.textLength)
+            editor.scrollingModel.scrollToCaret(ScrollType.RELATIVE)
         }
     }
 

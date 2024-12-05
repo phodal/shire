@@ -1,5 +1,6 @@
 package com.phodal.shirecore.ui
 
+import com.intellij.openapi.application.runInEdt
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogPanel
 import com.intellij.openapi.ui.NullableComponent
@@ -10,6 +11,7 @@ import com.intellij.ui.dsl.builder.panel
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
 import com.phodal.shirecore.utils.markdown.CodeFence
+import java.awt.BorderLayout
 import javax.swing.JPanel
 import javax.swing.JProgressBar
 import javax.swing.ScrollPaneConstants
@@ -40,25 +42,24 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
         setContent(panelContent)
     }
 
-    private var alreadyAddedCodeFence: HashSet<CodeFence> = HashSet()
-
     fun updateText(text: String) {
-//        val codeFence = CodeFence.parseAll(text)
-//        if (codeFence.isNotEmpty()) {
-//            codeFence.forEach {
-//                if (it.isComplete && !alreadyAddedCodeFence.contains(it)) {
-//                    val codeBlockView = CodeBlockView(project, it.text)
-//                    myList.add(codeBlockView)
-//                    alreadyAddedCodeFence.add(it)
-//                } else {
-//                    lastCodeBlockView.updateText(it.text)
-//                }
-//            }
-//
-//            scrollToBottom()
-//        }
-
         lastCodeBlockView.updateText(text)
+    }
+
+    fun showFinalText(text: String) {
+        runInEdt {
+            panelContent.remove(lastCodeBlockView)
+
+            val codeFence = CodeFence.parseAll(text)
+            if (codeFence.isNotEmpty()) {
+                codeFence.forEach {
+                    val codeBlockView = CodeBlockView(project, it.text)
+                    myList.add(codeBlockView)
+                }
+            }
+
+            scrollToBottom()
+        }
     }
 
     private fun scrollToBottom() {

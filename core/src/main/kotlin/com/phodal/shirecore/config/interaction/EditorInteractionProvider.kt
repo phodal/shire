@@ -132,6 +132,7 @@ class EditorInteractionProvider : LocationInteractionProvider {
                         }
                     }
 
+//                    panelView.showFinalText(suggestion.toString())
                     postExecute.invoke(suggestion.toString(), null)
                 }
             }
