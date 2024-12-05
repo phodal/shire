@@ -44,9 +44,12 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
         setContent(panelContent)
     }
 
+    fun onStart() {
+        progressBar.isIndeterminate = true
+    }
+
     fun onUpdate(text: String) {
         lastCodeBlockView.updateText(text)
-        progressBar.isIndeterminate = true
     }
 
     fun onFinish(text: String) {
