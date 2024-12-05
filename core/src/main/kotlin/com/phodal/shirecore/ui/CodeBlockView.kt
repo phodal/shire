@@ -1,13 +1,15 @@
 package com.phodal.shirecore.ui
 
-import com.intellij.ide.DataManager
 import com.intellij.lang.Language
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.actionSystem.*
+import com.intellij.openapi.actionSystem.ActionGroup
+import com.intellij.openapi.actionSystem.ActionManager
+import com.intellij.openapi.actionSystem.ActionPlaces
+import com.intellij.openapi.actionSystem.DataProvider
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ReadAction
-import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.command.WriteCommandAction
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.editor.*
 import com.intellij.openapi.editor.colors.EditorColorsListener
 import com.intellij.openapi.editor.colors.EditorColorsManager
@@ -29,13 +31,12 @@ import com.intellij.ui.dsl.builder.Cell
 import com.intellij.util.concurrency.annotations.RequiresReadLock
 import com.intellij.util.messages.Topic
 import com.intellij.util.ui.JBUI
-import com.phodal.shirecore.ui.ShireLanguageLabelAction.Companion.SHIRE_LANGUAGE_LABEL_KEY
 import com.phodal.shirecore.utils.markdown.CodeFenceLanguage
 import java.awt.BorderLayout
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.swing.JComponent
 
-class CodeBlockView(val project: Project, text: String, private var ideaLanguage: Language?) :
+class CodeBlockView(val project: Project, val text: String, private var ideaLanguage: Language?) :
     JBPanel<CodeBlockView>(BorderLayout()), DataProvider, Disposable {
 
     private var editor: EditorEx? = null
@@ -43,25 +44,19 @@ class CodeBlockView(val project: Project, text: String, private var ideaLanguage
 
     init {
         if (text.isEmpty() && (ideaLanguage?.displayName != "Markdown" && ideaLanguage != PlainTextLanguage.INSTANCE)) {
-            setupActionForEditor()
+            setupActionForEditor(text)
         }
     }
 
-    private fun setupActionForEditor(text: String = "") {
+    private fun setupActionForEditor(text: String) {
         if (hasSetupAction) return
         hasSetupAction = true
 
         editor = createCodeViewerEditor(project, text, ideaLanguage, this)
-
         add(editor!!.component, BorderLayout.CENTER)
 
         editor!!.scrollPane.setBorder(JBUI.Borders.empty(0, 10))
         editor!!.component.setBorder(JBUI.Borders.empty(0, 10))
-        editor!!.component.putClientProperty(SHIRE_LANGUAGE_LABEL_KEY, ideaLanguage?.displayName ?: "Shire")
-
-        if (ideaLanguage == PlainTextLanguage.INSTANCE) {
-            return
-        }
 
         setupActionBar()
     }
@@ -96,7 +91,7 @@ class CodeBlockView(val project: Project, text: String, private var ideaLanguage
         }
     }
 
-    fun getText(): String {
+    fun getEditorText(): String {
         return editor?.document?.text ?: ""
     }
 
@@ -128,7 +123,8 @@ class CodeBlockView(val project: Project, text: String, private var ideaLanguage
             ideaLanguage: Language?,
             disposable: Disposable,
         ): EditorEx {
-            val language = ideaLanguage ?: CodeFenceLanguage.findLanguage("markdown")
+            val language = ideaLanguage ?: CodeFenceLanguage.findLanguage("Plain text")
+            logger<CodeBlockView>().info("Creating editor for language: ${language.displayName}")
             val ext = CodeFenceLanguage.lookupFileExt(language.displayName)
             val file = LightVirtualFile("sample.${ext}", language, text)
             val document: Document = file.findDocument() ?: throw IllegalStateException("Document not found")

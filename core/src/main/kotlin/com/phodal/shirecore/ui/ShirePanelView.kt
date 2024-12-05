@@ -1,6 +1,5 @@
 package com.phodal.shirecore.ui
 
-import com.intellij.lang.Language
 import com.intellij.openapi.application.runInEdt
 import com.intellij.openapi.fileTypes.PlainTextLanguage
 import com.intellij.openapi.project.Project
@@ -50,7 +49,7 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
 
     private val blockViews: MutableList<CodeBlockView> = mutableListOf()
     private fun initializePreAllocatedBlocks(project: Project) {
-        repeat(100) {
+        repeat(16) {
             runInEdt {
                 val codeBlockView = CodeBlockView(project, "", PlainTextLanguage.INSTANCE)
                 blockViews.add(codeBlockView)
@@ -81,8 +80,10 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
     }
 
     fun onFinish(text: String) {
-        blockViews.filter { it.getText().isEmpty() }.forEach {
-            myList.remove(it)
+        runInEdt {
+            blockViews.filter { it.getEditorText().isEmpty() }.forEach {
+                myList.remove(it)
+            }
         }
 
         progressBar.isIndeterminate = false

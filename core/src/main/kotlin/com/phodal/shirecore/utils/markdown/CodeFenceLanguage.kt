@@ -28,6 +28,7 @@ object CodeFenceLanguage {
             "dart" -> "dart"
             "scala" -> "scala"
             "rust" -> "rs"
+            "Http Request" -> "http"
             else -> languageId
         }
     }
