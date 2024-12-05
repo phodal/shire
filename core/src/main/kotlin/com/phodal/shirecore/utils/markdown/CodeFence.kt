@@ -99,7 +99,7 @@ class CodeFence(
             // 添加最后的普通文本块
             if (textBuilder.isNotEmpty()) {
                 codeFences.add(
-                    CodeFence(findLanguage("markdown"), textBuilder.trim().toString(), true, "txt", true)
+                    CodeFence(findLanguage("text"), textBuilder.trim().toString(), true, "txt", true)
                 )
             }
 

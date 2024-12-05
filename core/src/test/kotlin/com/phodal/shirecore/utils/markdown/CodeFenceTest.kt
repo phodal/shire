@@ -1,6 +1,7 @@
 package com.phodal.shirecore.utils.markdown
 
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
+import junit.framework.TestCase
 
 class CodeFenceTest: BasePlatformTestCase() {
 
@@ -48,16 +49,16 @@ class CodeFenceTest: BasePlatformTestCase() {
             |
             |Python Hello, world
             |
-            |```python
-            |print("Hello, World")
-            |```
+            |```http request
+            |DELETE /api/blog/1
+            |Content-Type: application/json
         """.trimMargin()
 
-        val parseAll = CodeFence.parseAll(markdown)
+        val codeFences = CodeFence.parseAll(markdown)
 
-        assertEquals(parseAll.size, 2)
+        assertEquals(codeFences.size, 4)
 
-        val code = parseAll.first()
+        val code = codeFences[1]
 
         assertEquals(
             code.text, """
@@ -68,6 +69,12 @@ class CodeFenceTest: BasePlatformTestCase() {
             |}
         """.trimMargin()
         )
+
         assertTrue(code.isComplete)
+
+        val last = codeFences.last()
+        assertEquals(last.text, "DELETE /api/blog/1\nContent-Type: application/json")
+        assertEquals(last.ideaLanguage.displayName, "HTTP Request")
+        assertEquals(false, code.isComplete)
     }
 }

@@ -1,5 +1,6 @@
 package com.phodal.shirecore.ui
 
+import com.intellij.lang.Language
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.ActionGroup
 import com.intellij.openapi.actionSystem.ActionManager
@@ -17,6 +18,7 @@ import com.intellij.openapi.editor.ex.FocusChangeListener
 import com.intellij.openapi.editor.ex.MarkupModelEx
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory
 import com.intellij.openapi.fileEditor.FileDocumentManager
+import com.intellij.openapi.fileTypes.PlainTextLanguage
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.vfs.VirtualFile
@@ -36,11 +38,14 @@ import javax.swing.JComponent
 class CodeBlockView(
     project: Project,
     text: String,
+    ideaLanguage: Language?,
 ) : JBPanel<CodeBlockView>(BorderLayout()), DataProvider, Disposable {
-    private var editor: EditorEx = createCodeViewerEditor(project, text, this)
+    private var editor: EditorEx = createCodeViewerEditor(project, text, ideaLanguage, this)
 
     init {
-        setupActionForEditor(project)
+        if (ideaLanguage?.displayName != "Markdown" && ideaLanguage != PlainTextLanguage.INSTANCE) {
+            setupActionForEditor(project)
+        }
 
         editor.scrollPane.setBorder(JBUI.Borders.empty(0, 10))
         editor.component.setBorder(JBUI.Borders.empty(0, 10))
@@ -85,10 +90,6 @@ class CodeBlockView(
         WriteCommandAction.runWriteCommandAction(editor.project) {
             val document = editor.document
             document.replaceString(0, document.textLength, text)
-
-            // scroll to the end
-            editor.caretModel.moveToOffset(document.textLength)
-            editor.scrollingModel.scrollToCaret(ScrollType.RELATIVE)
         }
     }
 
@@ -97,8 +98,13 @@ class CodeBlockView(
     }
 
     companion object {
-        private fun createCodeViewerEditor(project: Project, text: String, disposable: Disposable): EditorEx {
-            val language = CodeFence.findLanguage("markdown")
+        private fun createCodeViewerEditor(
+            project: Project,
+            text: String,
+            ideaLanguage: Language?,
+            disposable: Disposable,
+        ): EditorEx {
+            val language = ideaLanguage ?: CodeFence.findLanguage("markdown")
             val file = LightVirtualFile("", language, text)
             val document: Document =
                 file.findDocument() ?: throw IllegalStateException("Document not found")
