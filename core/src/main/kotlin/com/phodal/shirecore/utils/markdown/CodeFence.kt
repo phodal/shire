@@ -7,7 +7,6 @@ class CodeFence(
     val text: String,
     var isComplete: Boolean,
     val extension: String?,
-    val isTextBlock: Boolean = false, // 是否为普通文本块
 ) {
     companion object {
         private val cache = mutableMapOf<String, CodeFence>()
@@ -75,14 +74,12 @@ class CodeFence(
                                     CodeFenceLanguage.findLanguage("markdown"),
                                     textBuilder.trim().toString(),
                                     true,
-                                    "txt",
-                                    true
+                                    "txt"
                                 )
                             )
                             textBuilder.clear()
                         }
 
-                        // 开始代码块
                         languageId = matchResult.groups[1]?.value
                         codeStarted = true
                     } else {
@@ -90,7 +87,6 @@ class CodeFence(
                     }
                 } else {
                     if (line.startsWith("```")) {
-                        // 结束代码块
                         val codeContent = codeBuilder.trim().toString()
                         val cacheKey = "${languageId.orEmpty()}|$codeContent"
 
@@ -107,11 +103,11 @@ class CodeFence(
                 }
             }
 
-            // 添加最后的普通文本块
             if (textBuilder.isNotEmpty()) {
-                codeFences.add(
-                    CodeFence(CodeFenceLanguage.findLanguage("text"), textBuilder.trim().toString(), true, "txt", true)
-                )
+                val normal =
+                    CodeFence(CodeFenceLanguage.findLanguage("text"), textBuilder.trim().toString(), true, "txt")
+
+                codeFences.add(normal)
             }
 
             if (codeStarted) {
