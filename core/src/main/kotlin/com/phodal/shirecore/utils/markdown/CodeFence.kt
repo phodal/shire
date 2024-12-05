@@ -10,6 +10,7 @@ class CodeFence(
 ) {
     companion object {
         private val cache = mutableMapOf<String, CodeFence>()
+        private var lastTxtBlock: CodeFence? = null
 
         fun parse(content: String): CodeFence {
             val regex = Regex("```([\\w#+\\s]*)")
@@ -67,16 +68,16 @@ class CodeFence(
                 if (!codeStarted) {
                     val matchResult = regex.find(line.trimStart())
                     if (matchResult != null) {
-                        // 添加之前的普通文本块
                         if (textBuilder.isNotEmpty()) {
-                            codeFences.add(
-                                CodeFence(
-                                    CodeFenceLanguage.findLanguage("markdown"),
-                                    textBuilder.trim().toString(),
-                                    true,
-                                    "txt"
-                                )
+                            val textBlock = CodeFence(
+                                CodeFenceLanguage.findLanguage("markdown"),
+                                textBuilder.trim().toString(),
+                                false,
+                                "txt"
                             )
+
+                            lastTxtBlock = textBlock
+                            codeFences.add(textBlock)
                             textBuilder.clear()
                         }
 
@@ -86,6 +87,10 @@ class CodeFence(
                         textBuilder.append(line).append("\n")
                     }
                 } else {
+                    if (lastTxtBlock != null && lastTxtBlock?.isComplete == false) {
+                        lastTxtBlock!!.isComplete = true
+                    }
+
                     if (line.startsWith("```")) {
                         val codeContent = codeBuilder.trim().toString()
                         val cacheKey = "${languageId.orEmpty()}|$codeContent"

@@ -36,24 +36,36 @@ import java.util.concurrent.atomic.AtomicBoolean
 import javax.swing.JComponent
 
 class CodeBlockView(
-    project: Project,
+    val project: Project,
     text: String,
-    ideaLanguage: Language?,
+    var ideaLanguage: Language?,
 ) : JBPanel<CodeBlockView>(BorderLayout()), DataProvider, Disposable {
-    private var editor: EditorEx = createCodeViewerEditor(project, text, ideaLanguage, this)
+    private var editor: EditorEx? = null
+    private var hasSetupAction = false
 
     init {
-        if (ideaLanguage?.displayName != "Markdown" && ideaLanguage != PlainTextLanguage.INSTANCE) {
-            setupActionForEditor(project)
+        if (text.isEmpty() && (ideaLanguage?.displayName != "Markdown" && ideaLanguage != PlainTextLanguage.INSTANCE)) {
+            setupActionForEditor()
         }
-
-        editor.scrollPane.setBorder(JBUI.Borders.empty(0, 10))
-        editor.component.setBorder(JBUI.Borders.empty(0, 10))
-
-        add(editor.component, BorderLayout.CENTER)
     }
 
-    private fun setupActionForEditor(project: Project) {
+    private fun setupActionForEditor(text: String = "") {
+        if (hasSetupAction) {
+            return
+        }
+
+        hasSetupAction = true
+
+        editor = createCodeViewerEditor(project, text, ideaLanguage, this)
+        add(editor!!.component, BorderLayout.CENTER)
+
+        editor!!.scrollPane.setBorder(JBUI.Borders.empty(0, 10))
+        editor!!.component.setBorder(JBUI.Borders.empty(0, 10))
+
+        if (ideaLanguage == PlainTextLanguage.INSTANCE) {
+            return
+        }
+
         val toolbarActionGroup = ActionManager.getInstance().getAction("Shire.ToolWindow.Toolbar") as? ActionGroup
         toolbarActionGroup?.let {
             val toolbar = ActionManager.getInstance().createActionToolbar(
@@ -62,33 +74,45 @@ class CodeBlockView(
                 true
             )
 
-            toolbar.component.setBackground(editor.backgroundColor)
+            toolbar.component.setBackground(editor!!.backgroundColor)
             toolbar.component.setOpaque(true)
-            toolbar.targetComponent = editor.contentComponent
-            editor.headerComponent = toolbar.component
+            toolbar.targetComponent = editor!!.contentComponent
+            editor!!.headerComponent = toolbar.component
 
             val connect = project.messageBus.connect(this)
             val topic: Topic<EditorColorsListener> = EditorColorsManager.TOPIC
             connect.subscribe(topic, EditorColorsListener {
-                toolbar.component.setBackground(editor.backgroundColor)
+                toolbar.component.setBackground(editor!!.backgroundColor)
             })
         }
     }
 
     fun appendText(project: Project, char: String) {
         WriteCommandAction.runWriteCommandAction(project) {
-            val document = editor.document
+            val document = editor!!.document
             document.insertString(document.textLength, char)
 
             // scroll to the end
-            editor.caretModel.moveToOffset(document.textLength)
-            editor.scrollingModel.scrollToCaret(ScrollType.RELATIVE)
+            editor!!.caretModel.moveToOffset(document.textLength)
+            editor!!.scrollingModel.scrollToCaret(ScrollType.RELATIVE)
         }
     }
 
+    fun getText(): String {
+        return editor?.document?.text ?: ""
+    }
+
+    fun updateLanguage(language: Language?) {
+        ideaLanguage = language
+    }
+
     fun updateText(text: String) {
-        WriteCommandAction.runWriteCommandAction(editor.project) {
-            val document = editor.document
+        if (!hasSetupAction) {
+            setupActionForEditor(text)
+        }
+
+        WriteCommandAction.runWriteCommandAction(project) {
+            val document = editor!!.document
             document.replaceString(0, document.textLength, text)
         }
     }

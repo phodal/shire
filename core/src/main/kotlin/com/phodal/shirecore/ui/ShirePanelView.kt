@@ -2,6 +2,7 @@ package com.phodal.shirecore.ui
 
 import com.intellij.lang.Language
 import com.intellij.openapi.application.runInEdt
+import com.intellij.openapi.fileTypes.PlainTextLanguage
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogPanel
 import com.intellij.openapi.ui.NullableComponent
@@ -19,10 +20,8 @@ import javax.swing.SwingUtilities
 
 class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), NullableComponent {
     private var progressBar: JProgressBar = JProgressBar()
-    private val lastCodeBlockView: CodeBlockView = CodeBlockView(project, "", Language.findLanguageByID("Markdown")!!)
 
     private var myList = JPanel(VerticalLayout(JBUI.scale(10))).apply {
-        add(lastCodeBlockView)
         this.isOpaque = true
         this.background = UIUtil.getLabelBackground()
     }
@@ -45,30 +44,52 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
     }
 
     fun onStart() {
+        initializePreAllocatedBlocks(project)
         progressBar.isIndeterminate = true
     }
 
-    fun onUpdate(text: String) {
-        lastCodeBlockView.updateText(text)
+    private val blockViews: MutableList<CodeBlockView> = mutableListOf()
+    private fun initializePreAllocatedBlocks(project: Project) {
+        repeat(100) {
+            runInEdt {
+                val codeBlockView = CodeBlockView(project, "", PlainTextLanguage.INSTANCE)
+                blockViews.add(codeBlockView)
+                myList.add(codeBlockView)
+            }
+        }
     }
 
-    fun onFinish(text: String) {
-        progressBar.isIndeterminate = false
-        progressBar.isVisible = false
+    fun onUpdate(text: String) {
+        val codeFenceList = CodeFence.parseAll(text)
+        codeFenceList.forEachIndexed { index, codeFence ->
+            if (index < blockViews.size) {
+                val codeBlockView = blockViews[index]
 
-        runInEdt {
-            myList.remove(lastCodeBlockView)
-
-            val codeFence = CodeFence.parseAll(text)
-            if (codeFence.isNotEmpty()) {
-                codeFence.forEach {
-                    val codeBlockView = CodeBlockView(project, it.text, it.ideaLanguage)
+                codeBlockView.updateLanguage(codeFence.ideaLanguage)
+                if (codeBlockView.getText() != codeFence.text) {
+                    codeBlockView.updateText(codeFence.text)
+                }
+            } else {
+                runInEdt {
+                    val codeBlockView = CodeBlockView(project, codeFence.text, PlainTextLanguage.INSTANCE)
+                    blockViews.add(codeBlockView)
                     myList.add(codeBlockView)
                 }
             }
-
-            scrollToBottom()
         }
+
+        myList.revalidate()
+        myList.repaint()
+    }
+
+    fun onFinish(text: String) {
+        blockViews.filter { it.getText().isEmpty() }.forEach {
+            myList.remove(it)
+        }
+
+        progressBar.isIndeterminate = false
+        progressBar.isVisible = false
+        scrollToBottom()
     }
 
     private fun scrollToBottom() {
