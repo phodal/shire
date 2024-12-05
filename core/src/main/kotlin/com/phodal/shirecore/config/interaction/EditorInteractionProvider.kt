@@ -128,11 +128,11 @@ class EditorInteractionProvider : LocationInteractionProvider {
                         suggestion.append(char)
 
                         invokeLater {
-                            panelView.updateText(suggestion.toString())
+                            panelView.onUpdate(suggestion.toString())
                         }
                     }
 
-                    panelView.showFinalText(suggestion.toString())
+                    panelView.onFinish(suggestion.toString())
                     postExecute.invoke(suggestion.toString(), null)
                 }
             }
