@@ -14,7 +14,7 @@ class ShireLanguageLabelAction: DumbAwareAction(), CustomComponentAction {
     override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT
 
     override fun createCustomComponent(presentation: Presentation, place: String): JComponent {
-        val languageId = presentation.getClientProperty(LANGUAGE_PRESENTATION_KEY) ?: ""
+        val languageId = presentation.getClientProperty(SHIRE_LANGUAGE_LABEL_KEY) ?: ""
         val label = JBLabel(languageId)
         label.setOpaque(false)
         label.foreground = UIUtil.getLabelInfoForeground()
@@ -24,8 +24,8 @@ class ShireLanguageLabelAction: DumbAwareAction(), CustomComponentAction {
     override fun updateCustomComponent(component: JComponent, presentation: Presentation) {
         if (component !is JBLabel) return
 
-        val languageId = presentation.getClientProperty(LANGUAGE_PRESENTATION_KEY) ?: ""
-        if (languageId.isNotBlank()) {
+        val languageId = presentation.getClientProperty(SHIRE_LANGUAGE_LABEL_KEY) ?: ""
+        if (languageId.isNotBlank() && component.text.isBlank()) {
             component.text = languageId
         }
     }
@@ -37,10 +37,10 @@ class ShireLanguageLabelAction: DumbAwareAction(), CustomComponentAction {
     override fun update(e: AnActionEvent) {
         val editor = e.dataContext.getData(CommonDataKeys.EDITOR) ?: return
         val lightVirtualFile = FileDocumentManager.getInstance().getFile(editor.document) as? LightVirtualFile ?: return
-        e.presentation.putClientProperty(LANGUAGE_PRESENTATION_KEY, lightVirtualFile.language.displayName)
+        e.presentation.putClientProperty(SHIRE_LANGUAGE_LABEL_KEY, lightVirtualFile.language.displayName)
     }
 
     companion object {
-        val LANGUAGE_PRESENTATION_KEY: Key<String> = Key.create("LanguagePresentationKey")
+        val SHIRE_LANGUAGE_LABEL_KEY: Key<String> = Key.create("ShireLanguagePresentationKey")
     }
 }

@@ -1,13 +1,12 @@
 package com.phodal.shirecore.ui
 
+import com.intellij.ide.DataManager
 import com.intellij.lang.Language
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.actionSystem.ActionGroup
-import com.intellij.openapi.actionSystem.ActionManager
-import com.intellij.openapi.actionSystem.ActionPlaces
-import com.intellij.openapi.actionSystem.DataProvider
+import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ReadAction
+import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.editor.*
 import com.intellij.openapi.editor.colors.EditorColorsListener
@@ -30,16 +29,15 @@ import com.intellij.ui.dsl.builder.Cell
 import com.intellij.util.concurrency.annotations.RequiresReadLock
 import com.intellij.util.messages.Topic
 import com.intellij.util.ui.JBUI
+import com.phodal.shirecore.ui.ShireLanguageLabelAction.Companion.SHIRE_LANGUAGE_LABEL_KEY
 import com.phodal.shirecore.utils.markdown.CodeFenceLanguage
 import java.awt.BorderLayout
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.swing.JComponent
 
-class CodeBlockView(
-    val project: Project,
-    text: String,
-    var ideaLanguage: Language?,
-) : JBPanel<CodeBlockView>(BorderLayout()), DataProvider, Disposable {
+class CodeBlockView(val project: Project, text: String, private var ideaLanguage: Language?) :
+    JBPanel<CodeBlockView>(BorderLayout()), DataProvider, Disposable {
+
     private var editor: EditorEx? = null
     private var hasSetupAction = false
 
@@ -50,41 +48,41 @@ class CodeBlockView(
     }
 
     private fun setupActionForEditor(text: String = "") {
-        if (hasSetupAction) {
-            return
-        }
-
+        if (hasSetupAction) return
         hasSetupAction = true
 
         editor = createCodeViewerEditor(project, text, ideaLanguage, this)
+
         add(editor!!.component, BorderLayout.CENTER)
 
         editor!!.scrollPane.setBorder(JBUI.Borders.empty(0, 10))
         editor!!.component.setBorder(JBUI.Borders.empty(0, 10))
+        editor!!.component.putClientProperty(SHIRE_LANGUAGE_LABEL_KEY, ideaLanguage?.displayName ?: "Shire")
 
         if (ideaLanguage == PlainTextLanguage.INSTANCE) {
             return
         }
 
+        setupActionBar()
+    }
+
+    private fun setupActionBar() {
         val toolbarActionGroup = ActionManager.getInstance().getAction("Shire.ToolWindow.Toolbar") as? ActionGroup
-        toolbarActionGroup?.let {
-            val toolbar = ActionManager.getInstance().createActionToolbar(
-                ActionPlaces.MAIN_TOOLBAR,
-                toolbarActionGroup,
-                true
-            )
+            ?: return
 
+        val toolbar = ActionManager.getInstance()
+            .createActionToolbar(ActionPlaces.MAIN_TOOLBAR, toolbarActionGroup, true)
+
+        toolbar.component.setBackground(editor!!.backgroundColor)
+        toolbar.component.setOpaque(true)
+        toolbar.targetComponent = editor!!.contentComponent
+        editor!!.headerComponent = toolbar.component
+
+        val connect = project.messageBus.connect(this)
+        val topic: Topic<EditorColorsListener> = EditorColorsManager.TOPIC
+        connect.subscribe(topic, EditorColorsListener {
             toolbar.component.setBackground(editor!!.backgroundColor)
-            toolbar.component.setOpaque(true)
-            toolbar.targetComponent = editor!!.contentComponent
-            editor!!.headerComponent = toolbar.component
-
-            val connect = project.messageBus.connect(this)
-            val topic: Topic<EditorColorsListener> = EditorColorsManager.TOPIC
-            connect.subscribe(topic, EditorColorsListener {
-                toolbar.component.setBackground(editor!!.backgroundColor)
-            })
-        }
+        })
     }
 
     fun appendText(project: Project, char: String) {
@@ -103,17 +101,19 @@ class CodeBlockView(
     }
 
     fun updateLanguage(language: Language?) {
-        ideaLanguage = language
+        if (ideaLanguage == null || ideaLanguage == PlainTextLanguage.INSTANCE) {
+            ideaLanguage = language
+        }
     }
 
     fun updateText(text: String) {
-        if (!hasSetupAction) {
+        if (!hasSetupAction && text.isNotEmpty()) {
             setupActionForEditor(text)
         }
 
         WriteCommandAction.runWriteCommandAction(project) {
-            val document = editor!!.document
-            document.replaceString(0, document.textLength, text)
+            val document = editor?.document
+            document?.replaceString(0, document.textLength, text)
         }
     }
 
@@ -129,9 +129,9 @@ class CodeBlockView(
             disposable: Disposable,
         ): EditorEx {
             val language = ideaLanguage ?: CodeFenceLanguage.findLanguage("markdown")
-            val file = LightVirtualFile("", language, text)
-            val document: Document =
-                file.findDocument() ?: throw IllegalStateException("Document not found")
+            val ext = CodeFenceLanguage.lookupFileExt(language.displayName)
+            val file = LightVirtualFile("sample.${ext}", language, text)
+            val document: Document = file.findDocument() ?: throw IllegalStateException("Document not found")
 
             return createCodeViewerEditor(project, file, document, disposable)
         }
@@ -143,8 +143,7 @@ class CodeBlockView(
             disposable: Disposable,
         ): EditorEx {
             val editor: EditorEx = ReadAction.compute<EditorEx, Throwable> {
-                EditorFactory.getInstance()
-                    .createViewer(document, project, EditorKind.PREVIEW) as EditorEx
+                EditorFactory.getInstance().createViewer(document, project, EditorKind.PREVIEW) as EditorEx
             }
 
             disposable.whenDisposed(disposable) {
@@ -167,7 +166,7 @@ class CodeBlockView(
                 it.isDndEnabled = false
                 it.isLineNumbersShown = false
                 it.additionalLinesCount = 0
-                it.isLineMarkerAreaShown = false
+                it.isLineMarkerAreaShown = file.language.displayName == "Markdown"
                 it.isFoldingOutlineShown = false
                 it.isRightMarginShown = false
                 it.isShowIntentionBulb = false

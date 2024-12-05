@@ -66,9 +66,7 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
                 val codeBlockView = blockViews[index]
 
                 codeBlockView.updateLanguage(codeFence.ideaLanguage)
-                if (codeBlockView.getText() != codeFence.text) {
-                    codeBlockView.updateText(codeFence.text)
-                }
+                codeBlockView.updateText(codeFence.text)
             } else {
                 runInEdt {
                     val codeBlockView = CodeBlockView(project, codeFence.text, PlainTextLanguage.INSTANCE)
