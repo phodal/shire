@@ -3,8 +3,16 @@ package com.phodal.shirecore.utils.markdown
 import com.intellij.lang.Language
 import com.intellij.openapi.fileTypes.PlainTextLanguage
 
-class CodeFence(val ideaLanguage: Language, val text: String, val isComplete: Boolean, val extension: String?) {
+class CodeFence(
+    val ideaLanguage: Language,
+    val text: String,
+    val isComplete: Boolean,
+    val extension: String?,
+    val isTextBlock: Boolean = false, // 是否为普通文本块
+) {
     companion object {
+        private val cache = mutableMapOf<String, CodeFence>()
+
         fun parse(content: String): CodeFence {
             val regex = Regex("```([\\w#+\\s]*)")
             val lines = content.replace("\\n", "\n").lines()
@@ -30,39 +38,16 @@ class CodeFence(val ideaLanguage: Language, val text: String, val isComplete: Bo
                 }
             }
 
-            var startIndex = 0
-            var endIndex = codeBuilder.length - 1
-
-            while (startIndex <= endIndex) {
-                if (!codeBuilder[startIndex].isWhitespace()) {
-                    break
-                }
-                startIndex++
-            }
-
-            while (endIndex >= startIndex) {
-                if (!codeBuilder[endIndex].isWhitespace()) {
-                    break
-                }
-                endIndex--
-            }
-
-            var trimmedCode = codeBuilder.substring(startIndex, endIndex + 1).toString()
+            val trimmedCode = codeBuilder.trim().toString()
             val language = findLanguage(languageId ?: "")
             val extension = language.associatedFileType?.defaultExtension ?: lookupFileExt(languageId ?: "txt")
 
-            if (trimmedCode.isEmpty()) {
-                return CodeFence(findLanguage("markdown"), content.replace("\\n", "\n"), codeClosed, extension)
+            return if (trimmedCode.isEmpty()) {
+                CodeFence(findLanguage("markdown"), content.replace("\\n", "\n"), codeClosed, extension)
+            } else {
+                CodeFence(language, trimmedCode, codeClosed, extension)
             }
-
-            if (languageId == "shire") {
-                trimmedCode = trimmedCode.replace("\\`\\`\\`", "```")
-            }
-
-            return CodeFence(language, trimmedCode, codeClosed, extension)
         }
-
-        private val cache = mutableMapOf<String, CodeFence>()
 
         fun parseAll(content: String): List<CodeFence> {
             val codeFences = mutableListOf<CodeFence>()
@@ -72,21 +57,30 @@ class CodeFence(val ideaLanguage: Language, val text: String, val isComplete: Bo
             var codeStarted = false
             var languageId: String? = null
             val codeBuilder = StringBuilder()
-            var startIndex = 0
+            val textBuilder = StringBuilder()
 
             for ((index, line) in lines.withIndex()) {
                 if (!codeStarted) {
                     val matchResult = regex.find(line.trimStart())
                     if (matchResult != null) {
+                        // 添加之前的普通文本块
+                        if (textBuilder.isNotEmpty()) {
+                            codeFences.add(
+                                CodeFence(findLanguage("markdown"), textBuilder.trim().toString(), true, "txt", true)
+                            )
+                            textBuilder.clear()
+                        }
+
                         // 开始代码块
                         languageId = matchResult.groups[1]?.value
                         codeStarted = true
-                        startIndex = index
+                    } else {
+                        textBuilder.append(line).append("\n")
                     }
                 } else {
                     if (line.startsWith("```")) {
                         // 结束代码块
-                        val codeContent = lines.subList(startIndex + 1, index).joinToString("\n")
+                        val codeContent = codeBuilder.trim().toString()
                         val cacheKey = "${languageId.orEmpty()}|$codeContent"
 
                         val codeFence = cache.getOrPut(cacheKey) {
@@ -96,12 +90,22 @@ class CodeFence(val ideaLanguage: Language, val text: String, val isComplete: Bo
 
                         codeBuilder.clear()
                         codeStarted = false
+                    } else {
+                        codeBuilder.append(line).append("\n")
                     }
                 }
             }
 
+            // 添加最后的普通文本块
+            if (textBuilder.isNotEmpty()) {
+                codeFences.add(
+                    CodeFence(findLanguage("markdown"), textBuilder.trim().toString(), true, "txt", true)
+                )
+            }
+
+            // 添加未关闭的代码块
             if (codeStarted) {
-                val codeContent = lines.subList(startIndex + 1, lines.size).joinToString("\n")
+                val codeContent = codeBuilder.trim().toString()
                 val cacheKey = "${languageId.orEmpty()}|$codeContent"
 
                 val codeFence = cache.getOrPut(cacheKey) {
@@ -113,6 +117,7 @@ class CodeFence(val ideaLanguage: Language, val text: String, val isComplete: Bo
 
             return codeFences
         }
+
 
         private fun lookupFileExt(languageId: String): String {
             return when (languageId) {
