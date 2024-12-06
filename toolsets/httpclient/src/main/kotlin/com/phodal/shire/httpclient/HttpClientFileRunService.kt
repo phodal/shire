@@ -32,11 +32,11 @@ class HttpClientFileRunService : FileRunService {
 
     override fun runFile(project: Project, virtualFile: VirtualFile, psiElement: PsiElement?): String? {
         val scratchFile = ScratchRootType.getInstance()
-            .createScratchFile(project, "shireRequest.http", HttpRequestLanguage.INSTANCE, virtualFile.readText())
+            .createScratchFile(project, "shire.http", HttpRequestLanguage.INSTANCE, virtualFile.readText())
             ?: return null
 
         val runner: RunnerAndConfigurationSettings = runReadAction {
-            val psiFile = PsiManager.getInstance(project).findFile(virtualFile)
+            val psiFile = PsiManager.getInstance(project).findFile(scratchFile)
                 ?: return@runReadAction null
 
             ConfigurationContext(psiFile).configurationsFromContext?.firstOrNull()?.configurationSettings
@@ -66,11 +66,6 @@ class HttpClientFileRunService : FileRunService {
     }
 
     override fun createConfiguration(project: Project, virtualFile: VirtualFile): RunConfiguration? {
-        /// should be HttpRequestPsiFile
-        val psiFile = runReadAction {
-            PsiManager.getInstance(project).findFile(virtualFile) as? HttpRequestPsiFile
-        } ?: return null
-
         val factory = HttpRequestRunConfigurationType.getInstance().configurationFactories[0]
         val configuration = HttpRequestRunConfiguration(project, factory, "HttpRequest")
         configuration.settings.filePath = virtualFile.path

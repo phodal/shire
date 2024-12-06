@@ -9,7 +9,6 @@ import com.intellij.openapi.actionSystem.DataProvider
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.command.WriteCommandAction
-import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.editor.*
 import com.intellij.openapi.editor.colors.EditorColorsListener
 import com.intellij.openapi.editor.colors.EditorColorsManager
@@ -125,7 +124,7 @@ class CodeBlockView(val project: Project, val text: String, private var ideaLang
         ): EditorEx {
             val language = ideaLanguage ?: CodeFenceLanguage.findLanguage("Plain text")
             val ext = CodeFenceLanguage.lookupFileExt(language.displayName)
-            val file = LightVirtualFile("sample.${ext}", language, text)
+            val file = LightVirtualFile("shire.${ext}", language, text)
             val document: Document = file.findDocument() ?: throw IllegalStateException("Document not found")
 
             return createCodeViewerEditor(project, file, document, disposable)

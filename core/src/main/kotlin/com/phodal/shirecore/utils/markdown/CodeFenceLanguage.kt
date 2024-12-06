@@ -5,7 +5,7 @@ import com.intellij.openapi.fileTypes.PlainTextLanguage
 
 object CodeFenceLanguage {
     fun lookupFileExt(languageId: String): String {
-        return when (languageId) {
+        return when (languageId.lowercase()) {
             "c#" -> "cs"
             "c++" -> "cpp"
             "c" -> "c"
@@ -28,7 +28,7 @@ object CodeFenceLanguage {
             "dart" -> "dart"
             "scala" -> "scala"
             "rust" -> "rs"
-            "Http Request" -> "http"
+            "http request" -> "http"
             else -> languageId
         }
     }
