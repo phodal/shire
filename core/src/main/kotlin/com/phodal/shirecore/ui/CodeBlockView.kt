@@ -160,7 +160,7 @@ class CodeBlockView(val project: Project, val text: String, private var ideaLang
                 it.isDndEnabled = false
                 it.isLineNumbersShown = false
                 it.additionalLinesCount = 0
-                it.isLineMarkerAreaShown = file.language.displayName == "Markdown"
+                it.isLineMarkerAreaShown = false
                 it.isFoldingOutlineShown = false
                 it.isRightMarginShown = false
                 it.isShowIntentionBulb = false

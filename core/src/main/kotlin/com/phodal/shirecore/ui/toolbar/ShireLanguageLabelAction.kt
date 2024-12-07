@@ -1,4 +1,4 @@
-package com.phodal.shirecore.ui
+package com.phodal.shirecore.ui.toolbar
 
 import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction

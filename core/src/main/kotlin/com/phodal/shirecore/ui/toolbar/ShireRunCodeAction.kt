@@ -1,4 +1,4 @@
-package com.phodal.shirecore.ui
+package com.phodal.shirecore.ui.toolbar
 
 import com.intellij.ide.scratch.ScratchRootType
 import com.intellij.openapi.actionSystem.ActionUpdateThread
@@ -16,11 +16,17 @@ class ShireRunCodeAction : DumbAwareAction() {
         val project = e.project ?: return
         val editor = e.getData(com.intellij.openapi.actionSystem.PlatformDataKeys.EDITOR) ?: return
         val document = editor.document
-        val file = FileDocumentManager.getInstance().getFile(document) ?: return
+        val file = FileDocumentManager.getInstance().getFile(document)
 
-        val language = PsiManager.getInstance(project).findFile(file) ?: return
+        if (file != null) {
+            val psiFile = PsiManager.getInstance(project).findFile(file)
+            if (psiFile != null) {
+                e.presentation.isEnabled = FileRunService.provider(project, file) != null
+                return
+            }
+        }
 
-        e.presentation.isEnabled = FileRunService.provider(project, file) != null
+        e.presentation.isEnabled = false
     }
 
     override fun actionPerformed(e: AnActionEvent) {

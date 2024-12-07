@@ -183,18 +183,18 @@
         
         <group id="Shire.ToolWindow.Toolbar">
             <action id="Shire.ToolWindow.Toolbar.LanguageLabelAction"
-                    class="com.phodal.shirecore.ui.ShireLanguageLabelAction"/>
+                    class="com.phodal.shirecore.ui.toolbar.ShireLanguageLabelAction"/>
 
             <action id="Shire.ToolWindow.Toolbar.CopyToClipboard"
                     icon="AllIcons.Actions.Copy"
-                    class="com.phodal.shirecore.ui.ShireCopyToClipboardAction"/>
+                    class="com.phodal.shirecore.ui.toolbar.ShireCopyToClipboardAction"/>
             <action id="Shire.ToolWindow.Toolbar.InsertCode"
                     icon="AllIcons.Actions.CheckOut"
-                    class="com.phodal.shirecore.ui.ShireInsertCodeAction"/>
+                    class="com.phodal.shirecore.ui.toolbar.ShireInsertCodeAction"/>
 
             <action id="Shire.ToolWindow.Snippet.RunCode"
                     icon="AllIcons.Actions.Execute"
-                    class="com.phodal.shirecore.ui.ShireRunCodeAction"/>
+                    class="com.phodal.shirecore.ui.toolbar.ShireRunCodeAction"/>
         </group>
     </actions>
 
