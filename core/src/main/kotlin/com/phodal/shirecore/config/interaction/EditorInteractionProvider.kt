@@ -118,12 +118,14 @@ class EditorInteractionProvider : LocationInteractionProvider {
                     contentManager.addContent(it)
                 }
 
+
                 toolWindowManager.activate(null)
 
                 val flow: Flow<String>? = LlmProvider.provider(context.project)?.stream(context.prompt, "", false)
                 ShireCoroutineScope.scope(context.project).launch {
                     val suggestion = StringBuilder()
                     panelView.onStart()
+                    panelView.addRequestPrompt(context.prompt)
 
                     flow?.cancellable()?.collect { char ->
                         suggestion.append(char)

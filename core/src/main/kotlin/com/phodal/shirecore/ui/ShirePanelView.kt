@@ -12,6 +12,8 @@ import com.intellij.ui.dsl.builder.panel
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
 import com.phodal.shirecore.utils.markdown.CodeFence
+import com.phodal.shirecore.utils.markdown.CodeFenceLanguage
+import java.awt.BorderLayout
 import javax.swing.JPanel
 import javax.swing.JProgressBar
 import javax.swing.ScrollPaneConstants
@@ -25,6 +27,11 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
         this.background = UIUtil.getLabelBackground()
     }
 
+    private var userPrompt: JPanel = JPanel(BorderLayout()).apply {
+        this.isOpaque = true
+        this.background = UIUtil.SIDE_PANEL_BACKGROUND
+    }
+
     private val myScrollPane: JBScrollPane = JBScrollPane(
         myList,
         ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -35,11 +42,12 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
 
     private var panelContent: DialogPanel = panel {
         row { cell(progressBar).fullWidth() }
+        row { cell(userPrompt).fullWidth().fullHeight() }
         row { cell(myScrollPane).fullWidth().fullHeight() }.resizableRow()
     }
 
     init {
-        setContent(panelContent)
+        setContent(JBScrollPane(panelContent))
     }
 
     fun onStart() {
@@ -55,6 +63,19 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
                 blockViews.add(codeBlockView)
                 myList.add(codeBlockView)
             }
+        }
+    }
+
+    fun addRequestPrompt(text: String) {
+        runInEdt {
+            val codeBlockView = CodeBlockView(project, text, CodeFenceLanguage.findLanguage("shire")).apply {
+                initEditor(text)
+            }
+
+            userPrompt.add(codeBlockView, BorderLayout.CENTER)
+
+            this.revalidate()
+            this.repaint()
         }
     }
 

@@ -47,11 +47,11 @@ class CodeBlockView(val project: Project, val text: String, private var ideaLang
 
     init {
         if (text.isEmpty() && (ideaLanguage?.displayName != "Markdown" && ideaLanguage != PlainTextLanguage.INSTANCE)) {
-            setupActionForEditor(text)
+            initEditor(text)
         }
     }
 
-    private fun setupActionForEditor(text: String) {
+    fun initEditor(text: String) {
         if (hasSetupAction) return
         hasSetupAction = true
 
@@ -106,7 +106,7 @@ class CodeBlockView(val project: Project, val text: String, private var ideaLang
 
     fun updateText(text: String) {
         if (!hasSetupAction && text.isNotEmpty()) {
-            setupActionForEditor(text)
+            initEditor(text)
         }
 
         WriteCommandAction.runWriteCommandAction(project) {
