@@ -32,22 +32,22 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
         this.background = UIUtil.SIDE_PANEL_BACKGROUND
     }
 
-    private val myScrollPane: JBScrollPane = JBScrollPane(
-        myList,
+    private var panelContent: DialogPanel = panel {
+        row { cell(progressBar).fullWidth() }
+        row { cell(userPrompt).fullWidth().fullHeight() }
+        row { cell(myList).fullWidth().fullHeight() }
+    }
+
+    private val scrollPanel: JBScrollPane = JBScrollPane(
+        panelContent,
         ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
         ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
     ).apply {
         this.verticalScrollBar.autoscrolls = true
     }
 
-    private var panelContent: DialogPanel = panel {
-        row { cell(progressBar).fullWidth() }
-        row { cell(userPrompt).fullWidth().fullHeight() }
-        row { cell(myScrollPane).fullWidth().fullHeight() }.resizableRow()
-    }
-
     init {
-        setContent(JBScrollPane(panelContent))
+        setContent(scrollPanel)
     }
 
     fun onStart() {
@@ -96,6 +96,8 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
 
         myList.revalidate()
         myList.repaint()
+
+        scrollToBottom()
     }
 
     fun onFinish(text: String) {
@@ -112,7 +114,7 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
 
     private fun scrollToBottom() {
         SwingUtilities.invokeLater {
-            val verticalScrollBar = myScrollPane.verticalScrollBar
+            val verticalScrollBar = scrollPanel.verticalScrollBar
             verticalScrollBar.value = verticalScrollBar.maximum
         }
     }
