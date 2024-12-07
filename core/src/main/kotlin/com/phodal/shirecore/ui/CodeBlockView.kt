@@ -9,7 +9,10 @@ import com.intellij.openapi.actionSystem.DataProvider
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.command.WriteCommandAction
-import com.intellij.openapi.editor.*
+import com.intellij.openapi.editor.Document
+import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.editor.EditorFactory
+import com.intellij.openapi.editor.EditorKind
 import com.intellij.openapi.editor.colors.EditorColorsListener
 import com.intellij.openapi.editor.colors.EditorColorsManager
 import com.intellij.openapi.editor.ex.EditorEx
@@ -23,6 +26,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.testFramework.LightVirtualFile
+import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBPanel
 import com.intellij.ui.dsl.builder.AlignX
 import com.intellij.ui.dsl.builder.AlignY
@@ -52,9 +56,21 @@ class CodeBlockView(val project: Project, val text: String, private var ideaLang
         hasSetupAction = true
 
         editor = createCodeViewerEditor(project, text, ideaLanguage, this)
-        add(editor!!.component, BorderLayout.CENTER)
+
+        val panel = JBPanel<CodeBlockView>(BorderLayout())
+        panel.border = JBUI.Borders.empty(0, 10)
+        panel.add(editor!!.component, BorderLayout.CENTER)
+
+        add(panel, BorderLayout.CENTER)
+
 
         if (ideaLanguage?.displayName != "Markdown" && ideaLanguage != PlainTextLanguage.INSTANCE) {
+            editor!!.component.border =
+                JBUI.Borders.compound(
+                    JBUI.Borders.customLine(JBColor.border(), 1, 0, 0, 0),
+                    JBUI.Borders.empty(5, 0)
+                )
+
             setupActionBar()
         }
     }

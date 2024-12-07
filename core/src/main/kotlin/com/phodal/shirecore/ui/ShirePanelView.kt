@@ -20,7 +20,7 @@ import javax.swing.SwingUtilities
 class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), NullableComponent {
     private var progressBar: JProgressBar = JProgressBar()
 
-    private var myList = JPanel(VerticalLayout(JBUI.scale(10))).apply {
+    private var myList = JPanel(VerticalLayout(JBUI.scale(0))).apply {
         this.isOpaque = true
         this.background = UIUtil.getLabelBackground()
     }
