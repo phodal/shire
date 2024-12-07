@@ -101,9 +101,6 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
             }
         }
 
-//        myList.revalidate()
-//        myList.repaint()
-
         scrollToBottom()
     }
 
