@@ -54,10 +54,9 @@ class CodeBlockView(val project: Project, val text: String, private var ideaLang
         editor = createCodeViewerEditor(project, text, ideaLanguage, this)
         add(editor!!.component, BorderLayout.CENTER)
 
-        editor!!.scrollPane.setBorder(JBUI.Borders.empty(0, 10))
-        editor!!.component.setBorder(JBUI.Borders.empty(0, 10))
-
-        setupActionBar()
+        if (ideaLanguage?.displayName != "Markdown" && ideaLanguage != PlainTextLanguage.INSTANCE) {
+            setupActionBar()
+        }
     }
 
     private fun setupActionBar() {
@@ -77,17 +76,6 @@ class CodeBlockView(val project: Project, val text: String, private var ideaLang
         connect.subscribe(topic, EditorColorsListener {
             toolbar.component.setBackground(editor!!.backgroundColor)
         })
-    }
-
-    fun appendText(project: Project, char: String) {
-        WriteCommandAction.runWriteCommandAction(project) {
-            val document = editor!!.document
-            document.insertString(document.textLength, char)
-
-            // scroll to the end
-            editor!!.caretModel.moveToOffset(document.textLength)
-            editor!!.scrollingModel.scrollToCaret(ScrollType.RELATIVE)
-        }
     }
 
     fun getEditorText(): String {
