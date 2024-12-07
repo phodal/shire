@@ -92,6 +92,8 @@ class CodeFence(
 
                         codeBuilder.clear()
                         codeStarted = false
+
+                        languageId = null
                     } else {
                         codeBuilder.append(line).append("\n")
                     }

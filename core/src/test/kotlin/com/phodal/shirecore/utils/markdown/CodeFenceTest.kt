@@ -109,4 +109,23 @@ class CodeFenceTest : BasePlatformTestCase() {
         assertEquals(last.ideaLanguage.displayName, "HTTP Request")
         assertEquals(false, last.isComplete)
     }
+
+    fun testSupportMultipleLanguage() {
+        val markdown = """
+            |Java Hello, world
+            |```http request
+            |GET /api
+            |```
+            |HELLO
+        """.trimMargin()
+
+        val codeFences = CodeFence.parseAll(markdown)
+
+        assertEquals(codeFences.size, 3)
+
+        val last = codeFences.last()
+        assertEquals(last.text, "HELLO")
+        assertEquals(last.ideaLanguage.displayName, "Markdown")
+        assertEquals(true, last.isComplete)
+    }
 }
