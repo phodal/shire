@@ -31,12 +31,8 @@ class HttpClientFileRunService : FileRunService {
     }
 
     override fun runFile(project: Project, virtualFile: VirtualFile, psiElement: PsiElement?): String? {
-        val scratchFile = ScratchRootType.getInstance()
-            .createScratchFile(project, "shire.http", HttpRequestLanguage.INSTANCE, virtualFile.readText())
-            ?: return null
-
         val runner: RunnerAndConfigurationSettings = runReadAction {
-            val psiFile = PsiManager.getInstance(project).findFile(scratchFile)
+            val psiFile = PsiManager.getInstance(project).findFile(virtualFile)
                 ?: return@runReadAction null
 
             ConfigurationContext(psiFile).configurationsFromContext?.firstOrNull()?.configurationSettings
@@ -46,7 +42,7 @@ class HttpClientFileRunService : FileRunService {
         val configuration = HttpRequestRunConfiguration(project, factory, "HttpRequest")
 
         val runManager: RunManager = RunManager.getInstance(project)
-        configuration.settings.filePath = scratchFile.path
+        configuration.settings.filePath = virtualFile.path
 
         runManager.setUniqueNameIfNeeded(configuration)
         runner.isTemporary = true
