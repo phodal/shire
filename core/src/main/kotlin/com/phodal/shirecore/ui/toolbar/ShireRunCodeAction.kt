@@ -42,10 +42,14 @@ class ShireRunCodeAction : DumbAwareAction() {
             .createScratchFile(project, file.name, psiFile.language, file.readText())
             ?: return
 
-        FileRunService.provider(project, file)?.runFile(
-            project,
-            scratchFile,
-            psiFile,
-        )
+        try {
+            FileRunService.provider(project, file)?.runFile(
+                project,
+                scratchFile,
+                psiFile,
+            )
+        } finally {
+            scratchFile.delete(this)
+        }
     }
 }

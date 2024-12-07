@@ -6,6 +6,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogPanel
 import com.intellij.openapi.ui.NullableComponent
 import com.intellij.openapi.ui.SimpleToolWindowPanel
+import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.components.panels.VerticalLayout
 import com.intellij.ui.dsl.builder.panel
@@ -29,7 +30,8 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
 
     private var userPrompt: JPanel = JPanel(BorderLayout()).apply {
         this.isOpaque = true
-        this.background = UIUtil.SIDE_PANEL_BACKGROUND
+        this.background = JBUI.CurrentTheme.CustomFrameDecorations.titlePaneInactiveBackground()
+        this.border = JBUI.Borders.empty(10, 0)
     }
 
     private var panelContent: DialogPanel = panel {
@@ -68,9 +70,14 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
 
     fun addRequestPrompt(text: String) {
         runInEdt {
-            val codeBlockView = CodeBlockView(project, text, CodeFenceLanguage.findLanguage("shire")).apply {
+            val codeBlockView = CodeBlockView(project, text, CodeFenceLanguage.findLanguage("Markdown")).apply {
                 initEditor(text)
             }
+
+            codeBlockView.editorFragment?.setCollapsed(true)
+            codeBlockView.editorFragment!!.updateExpandCollapseLabel()
+
+            codeBlockView.editorFragment!!.editor.backgroundColor = JBColor(0xF7FAFDF, 0x2d2f30)
 
             userPrompt.add(codeBlockView, BorderLayout.CENTER)
 
@@ -94,8 +101,8 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
             }
         }
 
-        myList.revalidate()
-        myList.repaint()
+//        myList.revalidate()
+//        myList.repaint()
 
         scrollToBottom()
     }

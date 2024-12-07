@@ -42,7 +42,7 @@ import javax.swing.JComponent
 class CodeBlockView(val project: Project, val text: String, private var ideaLanguage: Language?) :
     JBPanel<CodeBlockView>(BorderLayout()), DataProvider, Disposable {
 
-    private var editor: EditorEx? = null
+    var editorFragment: EditorFragment? = null
     private var hasSetupAction = false
 
     init {
@@ -55,22 +55,12 @@ class CodeBlockView(val project: Project, val text: String, private var ideaLang
         if (hasSetupAction) return
         hasSetupAction = true
 
-        editor = createCodeViewerEditor(project, text, ideaLanguage, this)
+        val editor = createCodeViewerEditor(project, text, ideaLanguage, this)
 
-        val panel = JBPanel<CodeBlockView>(BorderLayout())
-        panel.border = JBUI.Borders.empty(0, 10)
-        panel.add(editor!!.component, BorderLayout.CENTER)
-
-        add(panel, BorderLayout.CENTER)
-
+        editorFragment = EditorFragment(editor)
+        add(editorFragment!!.getContent(), BorderLayout.CENTER)
 
         if (ideaLanguage?.displayName != "Markdown" && ideaLanguage != PlainTextLanguage.INSTANCE) {
-            editor!!.component.border =
-                JBUI.Borders.compound(
-                    JBUI.Borders.customLine(JBColor.border(), 1, 0, 0, 0),
-                    JBUI.Borders.empty(5, 0)
-                )
-
             setupActionBar()
         }
     }
@@ -82,20 +72,21 @@ class CodeBlockView(val project: Project, val text: String, private var ideaLang
         val toolbar = ActionManager.getInstance()
             .createActionToolbar(ActionPlaces.MAIN_TOOLBAR, toolbarActionGroup, true)
 
+        val editor = editorFragment?.editor
         toolbar.component.setBackground(editor!!.backgroundColor)
         toolbar.component.setOpaque(true)
-        toolbar.targetComponent = editor!!.contentComponent
-        editor!!.headerComponent = toolbar.component
+        toolbar.targetComponent = editor.contentComponent
+        editor.headerComponent = toolbar.component
 
         val connect = project.messageBus.connect(this)
         val topic: Topic<EditorColorsListener> = EditorColorsManager.TOPIC
         connect.subscribe(topic, EditorColorsListener {
-            toolbar.component.setBackground(editor!!.backgroundColor)
+            toolbar.component.setBackground(editor.backgroundColor)
         })
     }
 
     fun getEditorText(): String {
-        return editor?.document?.text ?: ""
+        return editorFragment?.editor?.document?.text ?: ""
     }
 
     fun updateLanguage(language: Language?) {
@@ -110,7 +101,7 @@ class CodeBlockView(val project: Project, val text: String, private var ideaLang
         }
 
         WriteCommandAction.runWriteCommandAction(project) {
-            val document = editor?.document
+            val document = editorFragment?.editor?.document
             document?.replaceString(0, document.textLength, text)
         }
     }
