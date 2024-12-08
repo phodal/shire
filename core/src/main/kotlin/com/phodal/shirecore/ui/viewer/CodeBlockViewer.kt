@@ -1,4 +1,4 @@
-package com.phodal.shirecore.ui
+package com.phodal.shirecore.ui.viewer
 
 import com.intellij.lang.Language
 import com.intellij.openapi.Disposable
@@ -26,21 +26,20 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.testFramework.LightVirtualFile
-import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBPanel
 import com.intellij.ui.dsl.builder.AlignX
 import com.intellij.ui.dsl.builder.AlignY
 import com.intellij.ui.dsl.builder.Cell
 import com.intellij.util.concurrency.annotations.RequiresReadLock
 import com.intellij.util.messages.Topic
-import com.intellij.util.ui.JBUI
+import com.phodal.shirecore.ui.EditorFragment
 import com.phodal.shirecore.utils.markdown.CodeFenceLanguage
 import java.awt.BorderLayout
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.swing.JComponent
 
-class CodeBlockView(val project: Project, val text: String, private var ideaLanguage: Language?) :
-    JBPanel<CodeBlockView>(BorderLayout()), DataProvider, Disposable {
+class CodeBlockViewer(val project: Project, val text: String, private var ideaLanguage: Language?) :
+    JBPanel<CodeBlockViewer>(BorderLayout()), DataProvider, SketchViewer {
 
     var editorFragment: EditorFragment? = null
     private var hasSetupAction = false
@@ -85,7 +84,7 @@ class CodeBlockView(val project: Project, val text: String, private var ideaLang
         })
     }
 
-    fun getEditorText(): String {
+    override fun getViewText(): String {
         return editorFragment?.editor?.document?.text ?: ""
     }
 
@@ -95,7 +94,7 @@ class CodeBlockView(val project: Project, val text: String, private var ideaLang
         }
     }
 
-    fun updateText(text: String) {
+    override fun updateViewText(text: String) {
         if (!hasSetupAction && text.isNotEmpty()) {
             initEditor(text)
         }

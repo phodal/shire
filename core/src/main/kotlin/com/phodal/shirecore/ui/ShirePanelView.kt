@@ -12,6 +12,9 @@ import com.intellij.ui.components.panels.VerticalLayout
 import com.intellij.ui.dsl.builder.panel
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
+import com.phodal.shirecore.ui.viewer.CodeBlockViewer
+import com.phodal.shirecore.ui.viewer.fullHeight
+import com.phodal.shirecore.ui.viewer.fullWidth
 import com.phodal.shirecore.utils.markdown.CodeFence
 import com.phodal.shirecore.utils.markdown.CodeFenceLanguage
 import java.awt.BorderLayout
@@ -57,29 +60,29 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
         progressBar.isIndeterminate = true
     }
 
-    private val blockViews: MutableList<CodeBlockView> = mutableListOf()
+    private val blockViews: MutableList<CodeBlockViewer> = mutableListOf()
     private fun initializePreAllocatedBlocks(project: Project) {
         repeat(16) {
             runInEdt {
-                val codeBlockView = CodeBlockView(project, "", PlainTextLanguage.INSTANCE)
-                blockViews.add(codeBlockView)
-                myList.add(codeBlockView)
+                val codeBlockViewer = CodeBlockViewer(project, "", PlainTextLanguage.INSTANCE)
+                blockViews.add(codeBlockViewer)
+                myList.add(codeBlockViewer)
             }
         }
     }
 
     fun addRequestPrompt(text: String) {
         runInEdt {
-            val codeBlockView = CodeBlockView(project, text, CodeFenceLanguage.findLanguage("Markdown")).apply {
+            val codeBlockViewer = CodeBlockViewer(project, text, CodeFenceLanguage.findLanguage("Markdown")).apply {
                 initEditor(text)
             }
 
-            codeBlockView.editorFragment?.setCollapsed(true)
-            codeBlockView.editorFragment!!.updateExpandCollapseLabel()
+            codeBlockViewer.editorFragment?.setCollapsed(true)
+            codeBlockViewer.editorFragment!!.updateExpandCollapseLabel()
 
-            codeBlockView.editorFragment!!.editor.backgroundColor = JBColor(0xF7FAFDF, 0x2d2f30)
+            codeBlockViewer.editorFragment!!.editor.backgroundColor = JBColor(0xF7FAFDF, 0x2d2f30)
 
-            userPrompt.add(codeBlockView, BorderLayout.CENTER)
+            userPrompt.add(codeBlockViewer, BorderLayout.CENTER)
 
             this.revalidate()
             this.repaint()
@@ -91,12 +94,12 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
         codeFenceList.forEachIndexed { index, codeFence ->
             if (index < blockViews.size) {
                 blockViews[index].updateLanguage(codeFence.ideaLanguage)
-                blockViews[index].updateText(codeFence.text)
+                blockViews[index].updateViewText(codeFence.text)
             } else {
                 runInEdt {
-                    val codeBlockView = CodeBlockView(project, codeFence.text, PlainTextLanguage.INSTANCE)
-                    blockViews.add(codeBlockView)
-                    myList.add(codeBlockView)
+                    val codeBlockViewer = CodeBlockViewer(project, codeFence.text, PlainTextLanguage.INSTANCE)
+                    blockViews.add(codeBlockViewer)
+                    myList.add(codeBlockViewer)
                 }
             }
         }
@@ -106,7 +109,7 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
 
     fun onFinish(text: String) {
         runInEdt {
-            blockViews.filter { it.getEditorText().isEmpty() }.forEach {
+            blockViews.filter { it.getViewText().isEmpty() }.forEach {
                 myList.remove(it)
             }
         }
