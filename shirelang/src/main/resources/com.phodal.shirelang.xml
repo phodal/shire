@@ -180,11 +180,10 @@
                 description="Shire vcs action">
 
         </action>
-        
+
         <group id="Shire.ToolWindow.Toolbar">
             <action id="Shire.ToolWindow.Toolbar.LanguageLabelAction"
                     class="com.phodal.shirecore.ui.toolbar.ShireLanguageLabelAction"/>
-
             <action id="Shire.ToolWindow.Toolbar.CopyToClipboard"
                     icon="AllIcons.Actions.Copy"
                     class="com.phodal.shirecore.ui.toolbar.ShireCopyToClipboardAction"/>
@@ -195,10 +194,21 @@
             <action id="Shire.ToolWindow.Snippet.RunCode"
                     icon="AllIcons.Actions.Execute"
                     class="com.phodal.shirecore.ui.toolbar.ShireRunCodeAction"/>
+        </group>
 
-<!--            <action id="Shire.ToolWindow.Snippet.DiffCode"-->
-<!--                    icon="AllIcons.Actions.Execute"-->
-<!--                    class="com.phodal.shirecore.ui.toolbar.ShireDiffCodeAction"/>-->
+        <group id="Shire.DiffView.Toolbar">
+            <action id="Shire.ToolWindow.Snippet.AcceptDiff"
+                    icon="AllIcons.Actions.SetDefault"
+                    text="Accept"
+                    class="com.phodal.shirecore.ui.toolbar.diff.ShireAcceptDiffAction"/>
+            <action id="Shire.ToolWindow.Toolbar.RejectDiff"
+                    icon="AllIcons.Actions.Rollback"
+                    text="Reject"
+                    class="com.phodal.shirecore.ui.toolbar.diff.ShireRejectDiffAction"/>
+            <action id="Shire.ToolWindow.Toolbar.ViewDiff"
+                    icon="AllIcons.Actions.ListChanges"
+                    text="View Diff"
+                    class="com.phodal.shirecore.ui.toolbar.diff.ShireViewDiffAction"/>
         </group>
     </actions>
 

@@ -105,6 +105,10 @@ class CodeBlockViewer(val project: Project, val text: String, private var ideaLa
         }
     }
 
+    override fun getComponent(): JComponent {
+        return editorFragment?.getContent() ?: this
+    }
+
     override fun getData(dataId: String): Any? {
         return null
     }
@@ -183,15 +187,6 @@ class CodeBlockViewer(val project: Project, val text: String, private var ideaLa
         // do nothing
     }
 }
-
-fun <T : JComponent> Cell<T>.fullWidth(): Cell<T> {
-    return this.align(AlignX.FILL)
-}
-
-fun <T : JComponent> Cell<T>.fullHeight(): Cell<T> {
-    return this.align(AlignY.FILL)
-}
-
 
 @RequiresReadLock
 fun VirtualFile.findDocument(): Document? {
