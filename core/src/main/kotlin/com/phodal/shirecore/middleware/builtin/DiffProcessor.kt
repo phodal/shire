@@ -6,16 +6,17 @@ import com.intellij.diff.DiffDialogHints
 import com.intellij.diff.DiffManager
 import com.intellij.diff.chains.SimpleDiffRequestChain
 import com.intellij.diff.chains.SimpleDiffRequestProducer
-import com.intellij.diff.contents.DocumentContent
 import com.intellij.diff.requests.SimpleDiffRequest
 import com.intellij.diff.tools.combined.COMBINED_DIFF_MAIN_UI
 import com.intellij.execution.ui.ConsoleView
 import com.intellij.execution.ui.ConsoleViewContentType
+import com.intellij.openapi.application.runInEdt
+import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Key
 import com.intellij.openapi.util.UserDataHolder
 import com.intellij.openapi.util.UserDataHolderBase
-import com.intellij.util.ui.UIUtil
+import com.phodal.shirecore.findFile
 import com.phodal.shirecore.middleware.PostProcessor
 import com.phodal.shirecore.middleware.PostProcessorContext
 import com.phodal.shirecore.middleware.PostProcessorType
@@ -42,19 +43,27 @@ class DiffProcessor : PostProcessor {
             return ""
         }
 
-        val currentDocContent: DocumentContent = diffFactory.create(args[0].toString())
+        val firstArg = args[0].toString()
+        val hasFile = runReadAction { project.findFile(firstArg) }
+        val currentDocContent = if (hasFile != null) {
+            diffFactory.create(project, hasFile)
+        } else {
+            diffFactory.create(firstArg)
+        }
+
         val newDocContent = diffFactory.create(args[1].toString())
 
         val diffRequest =
-            SimpleDiffRequest("Shire Diff", currentDocContent, newDocContent, "Current code", "Llm response")
+            SimpleDiffRequest("Shire Diff Viewer", currentDocContent, newDocContent, "Current code", "AI Generate")
         val producer = SimpleDiffRequestProducer.create("Shire Diff") {
             diffRequest
         }
 
         val chain = SimpleDiffRequestChain.fromProducer(producer)
-        UIUtil.invokeLaterIfNeeded { ->
+        runInEdt {
             DiffManager.getInstance().showDiff(project, chain, DiffDialogHints.DEFAULT)
         }
+
         return ""
     }
 }
