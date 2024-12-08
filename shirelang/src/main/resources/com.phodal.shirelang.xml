@@ -195,6 +195,10 @@
             <action id="Shire.ToolWindow.Snippet.RunCode"
                     icon="AllIcons.Actions.Execute"
                     class="com.phodal.shirecore.ui.toolbar.ShireRunCodeAction"/>
+
+<!--            <action id="Shire.ToolWindow.Snippet.DiffCode"-->
+<!--                    icon="AllIcons.Actions.Execute"-->
+<!--                    class="com.phodal.shirecore.ui.toolbar.ShireDiffCodeAction"/>-->
         </group>
     </actions>
 
