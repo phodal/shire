@@ -44,9 +44,9 @@ class DiffProcessor : PostProcessor {
         }
 
         val firstArg = args[0].toString()
-        val hasFile = runReadAction { project.findFile(firstArg) }
-        val currentDocContent = if (hasFile != null) {
-            diffFactory.create(project, hasFile)
+        val virtualFile = runReadAction { project.findFile(firstArg) }
+        val currentDocContent = if (virtualFile != null) {
+            diffFactory.create(project, virtualFile)
         } else {
             diffFactory.create(firstArg)
         }
@@ -54,8 +54,8 @@ class DiffProcessor : PostProcessor {
         val newDocContent = diffFactory.create(args[1].toString())
 
         val diffRequest =
-            SimpleDiffRequest("Shire Diff Viewer", currentDocContent, newDocContent, "Current code", "AI Generate")
-        val producer = SimpleDiffRequestProducer.create("Shire Diff") {
+            SimpleDiffRequest("Shire Diff Viewer", currentDocContent, newDocContent, "Current code", "AI generated")
+        val producer = SimpleDiffRequestProducer.create(virtualFile!!.path) {
             diffRequest
         }
 
