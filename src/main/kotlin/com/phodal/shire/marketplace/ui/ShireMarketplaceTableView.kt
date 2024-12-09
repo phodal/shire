@@ -106,22 +106,6 @@ class ShireMarketplaceTableView(val project: Project) {
             row {
                 cell(scrollPane).align(Align.FILL)
             }.resizableRow()
-
-            row {
-                val patchContent =
-                        "package com.phodal.shire.demo.controller;\n" +
-                        "\n" +
-                        "import org.springframework.web.bind.annotation.RestController;\n" +
-                        "\n" +
-                        "@RestController\n" +
-                        "public class BlogController {\n" +
-                        "\n" +
-                        "}\n"
-                val file = project.lookupFile("src/main/java/com/phodal/shire/demo/controller/BlogController.java")
-                if (file != null) {
-                    cell(DiffLangSketch(project, file, patchContent).getComponent()).align(Align.FILL)
-                }
-            }.resizableRow()
         }
 
         tableModel.items = makeApiCall()
