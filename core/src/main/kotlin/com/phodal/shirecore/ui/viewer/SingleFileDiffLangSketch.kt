@@ -4,6 +4,7 @@ import com.intellij.icons.AllIcons
 import com.intellij.lang.Language
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.runWriteAction
+import com.intellij.openapi.command.undo.UndoManager
 import com.intellij.openapi.diff.impl.patch.PatchReader
 import com.intellij.openapi.diff.impl.patch.TextFilePatch
 import com.intellij.openapi.fileEditor.FileEditorManager
@@ -17,6 +18,7 @@ import com.intellij.openapi.vcs.changes.ui.RollbackProgressModifier
 import com.intellij.openapi.vcs.impl.projectlevelman.AllVcses
 import com.intellij.openapi.vcs.rollback.RollbackEnvironment
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.sql.change
 import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.panels.VerticalLayout
@@ -125,24 +127,10 @@ class DiffLangSketch(private val myProject: Project, private var patchContent: S
     }
 
     private fun handleRejectAction() {
-        //
-        val instance = AllVcses.getInstance(myProject)
-        val rollbackEnvironment = instance.all.firstOrNull {
-            it is RollbackEnvironment
-        } as? RollbackEnvironment
-
-        val exceptions: MutableList<VcsException> = ArrayList()
-        ApplicationManager.getApplication().invokeAndWait {
-            val indicator =
-                BackgroundableProcessIndicator(
-                    myProject, "", null, null, true
-                )
-            filePatches.forEach { patch ->
-                val originFile = myProject.findFile(patch.beforeFileName!!) ?: return@forEach
-                rollbackEnvironment?.rollbackModifiedWithoutCheckout(
-                    listOf(originFile), exceptions, RollbackProgressModifier(1.0, indicator)
-                )
-            }
+        val undoManager = UndoManager.getInstance(myProject)
+        val fileEditor = FileEditorManager.getInstance(myProject).selectedEditor ?: return
+        if (undoManager.isUndoAvailable(fileEditor)) {
+            undoManager.undo(fileEditor)
         }
     }
 
@@ -172,21 +160,31 @@ class SingleFileDiffLangSketch(private val myProject: Project, private val filep
         val contentPanel = JPanel(BorderLayout())
         val fileIcon = JLabel(filepath.fileType.icon)
 
-        val filepathComponent = JBLabel(filepath.name).apply {
+        val filepathLabel = JBLabel(filepath.name).apply {
             foreground = JBColor(0x888888, 0x888888)
             background = JBColor(0xF5F5F5, 0x333333)
 
             addMouseListener(object : MouseAdapter() {
-                override fun mouseEntered(e: MouseEvent) {
-                    background = JBColor(0x0000FF, 0x0000FF)
-                }
-
                 override fun mouseClicked(e: MouseEvent?) {
                     FileEditorManager.getInstance(myProject).openFile(filepath, true)
                 }
 
                 override fun mouseExited(e: MouseEvent) {
                     foreground = JBColor(0x888888, 0x888888)
+                }
+            })
+        }
+
+        val filepathComponent = JPanel(BorderLayout()).apply {
+            add(filepathLabel, BorderLayout.WEST)
+            addMouseListener(object : MouseAdapter() {
+                override fun mouseEntered(e: MouseEvent) {
+                    foreground = JBColor(0x0000FF, 0x0000FF)
+                    background = JBColor(0x0000FF, 0x0000FF)
+                }
+
+                override fun mouseClicked(e: MouseEvent?) {
+                    FileEditorManager.getInstance(myProject).openFile(filepath, true)
                 }
             })
         }
@@ -213,12 +211,20 @@ class SingleFileDiffLangSketch(private val myProject: Project, private val filep
     }
 
     private fun createActions(): List<JComponent> {
-        val rollback = JLabel(AllIcons.Actions.Rollback).apply {
+        val undoManager = UndoManager.getInstance(myProject)
+        val fileEditor = FileEditorManager.getInstance(myProject).getSelectedEditor(filepath)
+
+        val rollback = JButton(AllIcons.Actions.Rollback).apply {
             toolTipText = ShireCoreBundle.message("sketch.patch.action.rollback.tooltip")
+            isOpaque = true
+            border = BorderFactory.createEmptyBorder()
+            background = JBColor(0xF5F5F5, 0x333333)
+            isEnabled = undoManager.isUndoAvailable(fileEditor)
+
             addMouseListener(object : MouseAdapter() {
                 override fun mouseClicked(e: MouseEvent?) {
-                    runWriteAction {
-                        filepath.setBinaryContent(originContent.toByteArray())
+                    if (undoManager.isUndoAvailable(fileEditor)) {
+                        undoManager.undo(fileEditor)
                     }
                 }
             })
