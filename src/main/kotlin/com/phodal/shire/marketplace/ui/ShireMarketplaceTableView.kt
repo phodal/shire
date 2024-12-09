@@ -2,10 +2,7 @@ package com.phodal.shire.marketplace.ui
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.intellij.icons.AllIcons
-import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.project.guessProjectDir
-import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.dsl.builder.Align
 import com.intellij.ui.dsl.builder.panel
@@ -17,6 +14,8 @@ import com.phodal.shire.ShireMainBundle
 import com.phodal.shire.marketplace.model.ShirePackage
 import com.phodal.shire.marketplace.util.ShireDownloader
 import com.phodal.shirecore.ShirelangNotifications
+import com.phodal.shirecore.lookupFile
+import com.phodal.shirecore.ui.viewer.DiffLangSketch
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -106,6 +105,22 @@ class ShireMarketplaceTableView(val project: Project) {
 
             row {
                 cell(scrollPane).align(Align.FILL)
+            }.resizableRow()
+
+            row {
+                val patchContent =
+                        "package com.phodal.shire.demo.controller;\n" +
+                        "\n" +
+                        "import org.springframework.web.bind.annotation.RestController;\n" +
+                        "\n" +
+                        "@RestController\n" +
+                        "public class BlogController {\n" +
+                        "\n" +
+                        "}\n"
+                val file = project.lookupFile("src/main/java/com/phodal/shire/demo/controller/BlogController.java")
+                if (file != null) {
+                    cell(DiffLangSketch(project, file, patchContent).getComponent()).align(Align.FILL)
+                }
             }.resizableRow()
         }
 

@@ -12,7 +12,7 @@ import com.intellij.ui.components.panels.VerticalLayout
 import com.intellij.ui.dsl.builder.panel
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
-import com.phodal.shirecore.ui.viewer.CodeBlockViewer
+import com.phodal.shirecore.ui.viewer.CodeBlockLang
 import com.phodal.shirecore.ui.viewer.fullHeight
 import com.phodal.shirecore.ui.viewer.fullWidth
 import com.phodal.shirecore.utils.markdown.CodeFence
@@ -60,11 +60,11 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
         progressBar.isIndeterminate = true
     }
 
-    private val blockViews: MutableList<CodeBlockViewer> = mutableListOf()
+    private val blockViews: MutableList<CodeBlockLang> = mutableListOf()
     private fun initializePreAllocatedBlocks(project: Project) {
         repeat(16) {
             runInEdt {
-                val codeBlockViewer = CodeBlockViewer(project, "", PlainTextLanguage.INSTANCE)
+                val codeBlockViewer = CodeBlockLang(project, "", PlainTextLanguage.INSTANCE)
                 blockViews.add(codeBlockViewer)
                 myList.add(codeBlockViewer)
             }
@@ -73,7 +73,7 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
 
     fun addRequestPrompt(text: String) {
         runInEdt {
-            val codeBlockViewer = CodeBlockViewer(project, text, CodeFenceLanguage.findLanguage("Markdown")).apply {
+            val codeBlockViewer = CodeBlockLang(project, text, CodeFenceLanguage.findLanguage("Markdown")).apply {
                 initEditor(text)
             }
 
@@ -97,7 +97,7 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
                 blockViews[index].updateViewText(codeFence.text)
             } else {
                 runInEdt {
-                    val codeBlockViewer = CodeBlockViewer(project, codeFence.text, PlainTextLanguage.INSTANCE)
+                    val codeBlockViewer = CodeBlockLang(project, codeFence.text, PlainTextLanguage.INSTANCE)
                     blockViews.add(codeBlockViewer)
                     myList.add(codeBlockViewer)
                 }

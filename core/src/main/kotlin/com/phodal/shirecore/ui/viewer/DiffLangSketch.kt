@@ -32,11 +32,11 @@ import java.awt.event.MouseEvent
 import javax.swing.*
 
 
-class DiffPatchViewer(
+class DiffLangSketch(
     private val myProject: Project,
     private val filepath: VirtualFile,
     private val patchContent: String,
-) : SketchViewer {
+) : LangSketch {
     private val mainPanel: JPanel = JPanel(VerticalLayout(5))
     private val myHeaderPanel: JPanel = JPanel(BorderLayout())
     private val shelfExecutor = ApplyPatchDefaultExecutor(myProject)
@@ -47,7 +47,6 @@ class DiffPatchViewer(
             ShirelangNotifications.error(myProject, "Failed to parse patch: ${e.message}")
         }
     }
-
 
     init {
         myHeaderPanel.add(createHeaderAction(), BorderLayout.EAST)
@@ -114,7 +113,7 @@ class DiffPatchViewer(
             toolTipText = ShireCoreBundle.message("sketch.patch.action.viewDiff.tooltip")
             icon = AllIcons.Actions.ListChanges
             addActionListener {
-                handleViewDiffAction()
+                handleViewDiffAction(filepath)
             }
         }
 
@@ -151,12 +150,12 @@ class DiffPatchViewer(
         println("Reject action triggered")
     }
 
-    private fun handleViewDiffAction() {
-        val content: String = filepath.contentsToByteArray().toString(Charsets.UTF_8)
+    private fun handleViewDiffAction(virtualFile: VirtualFile) {
+        val content: String = virtualFile.contentsToByteArray().toString(Charsets.UTF_8)
         val contentFactory = DiffContentFactory.getInstance()
 
-        val oldContent: DocumentContent = contentFactory.create(content, filepath)
-        val newContent: DocumentContent = contentFactory.create(patchContent, filepath)
+        val oldContent: DocumentContent = contentFactory.create(content, virtualFile)
+        val newContent: DocumentContent = contentFactory.create(patchContent, virtualFile)
 
         val request = SimpleDiffRequest(null, oldContent, newContent, "Before", "After")
 

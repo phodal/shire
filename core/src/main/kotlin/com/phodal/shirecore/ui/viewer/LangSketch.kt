@@ -6,7 +6,7 @@ import com.intellij.ui.dsl.builder.AlignY
 import com.intellij.ui.dsl.builder.Cell
 import javax.swing.JComponent
 
-interface SketchViewer: Disposable {
+interface LangSketch: Disposable {
     fun getViewText(): String
     fun updateViewText(text: String)
     fun getComponent(): JComponent

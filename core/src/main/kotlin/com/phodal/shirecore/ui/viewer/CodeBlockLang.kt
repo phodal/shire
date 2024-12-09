@@ -27,9 +27,6 @@ import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.testFramework.LightVirtualFile
 import com.intellij.ui.components.JBPanel
-import com.intellij.ui.dsl.builder.AlignX
-import com.intellij.ui.dsl.builder.AlignY
-import com.intellij.ui.dsl.builder.Cell
 import com.intellij.util.concurrency.annotations.RequiresReadLock
 import com.intellij.util.messages.Topic
 import com.phodal.shirecore.ui.EditorFragment
@@ -38,8 +35,8 @@ import java.awt.BorderLayout
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.swing.JComponent
 
-class CodeBlockViewer(val project: Project, val text: String, private var ideaLanguage: Language?) :
-    JBPanel<CodeBlockViewer>(BorderLayout()), DataProvider, SketchViewer {
+class CodeBlockLang(val project: Project, val text: String, private var ideaLanguage: Language?) :
+    JBPanel<CodeBlockLang>(BorderLayout()), DataProvider, LangSketch {
 
     var editorFragment: EditorFragment? = null
     private var hasSetupAction = false
