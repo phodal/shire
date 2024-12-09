@@ -35,8 +35,8 @@ import java.awt.BorderLayout
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.swing.JComponent
 
-class CodeBlockLang(val project: Project, val text: String, private var ideaLanguage: Language?) :
-    JBPanel<CodeBlockLang>(BorderLayout()), DataProvider, LangSketch {
+class CodeHighlightSketch(val project: Project, val text: String, private var ideaLanguage: Language?) :
+    JBPanel<CodeHighlightSketch>(BorderLayout()), DataProvider, LangSketch {
 
     var editorFragment: EditorFragment? = null
     private var hasSetupAction = false
@@ -85,7 +85,7 @@ class CodeBlockLang(val project: Project, val text: String, private var ideaLang
         return editorFragment?.editor?.document?.text ?: ""
     }
 
-    fun updateLanguage(language: Language?) {
+    override fun updateLanguage(language: Language?) {
         if (ideaLanguage == null || ideaLanguage == PlainTextLanguage.INSTANCE) {
             ideaLanguage = language
         }
@@ -102,13 +102,9 @@ class CodeBlockLang(val project: Project, val text: String, private var ideaLang
         }
     }
 
-    override fun getComponent(): JComponent {
-        return editorFragment?.getContent() ?: this
-    }
+    override fun getComponent(): JComponent = this
 
-    override fun getData(dataId: String): Any? {
-        return null
-    }
+    override fun getData(dataId: String): Any? = null
 
     companion object {
         private fun createCodeViewerEditor(

@@ -61,7 +61,7 @@ class DiffProcessor : PostProcessor {
 
         val chain = SimpleDiffRequestChain.fromProducer(producer)
         runInEdt {
-            DiffManager.getInstance().showDiff(project, chain, DiffDialogHints.DEFAULT)
+            DiffManager.getInstance().showDiff(project, chain, DiffDialogHints.FRAME)
         }
 
         return ""

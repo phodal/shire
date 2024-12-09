@@ -12,9 +12,7 @@ import com.intellij.ui.components.panels.VerticalLayout
 import com.intellij.ui.dsl.builder.panel
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
-import com.phodal.shirecore.ui.viewer.CodeBlockLang
-import com.phodal.shirecore.ui.viewer.fullHeight
-import com.phodal.shirecore.ui.viewer.fullWidth
+import com.phodal.shirecore.ui.viewer.*
 import com.phodal.shirecore.utils.markdown.CodeFence
 import com.phodal.shirecore.utils.markdown.CodeFenceLanguage
 import java.awt.BorderLayout
@@ -60,11 +58,11 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
         progressBar.isIndeterminate = true
     }
 
-    private val blockViews: MutableList<CodeBlockLang> = mutableListOf()
+    private val blockViews: MutableList<LangSketch> = mutableListOf()
     private fun initializePreAllocatedBlocks(project: Project) {
         repeat(16) {
             runInEdt {
-                val codeBlockViewer = CodeBlockLang(project, "", PlainTextLanguage.INSTANCE)
+                val codeBlockViewer = CodeHighlightSketch(project, "", PlainTextLanguage.INSTANCE)
                 blockViews.add(codeBlockViewer)
                 myList.add(codeBlockViewer)
             }
@@ -73,7 +71,7 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
 
     fun addRequestPrompt(text: String) {
         runInEdt {
-            val codeBlockViewer = CodeBlockLang(project, text, CodeFenceLanguage.findLanguage("Markdown")).apply {
+            val codeBlockViewer = CodeHighlightSketch(project, text, CodeFenceLanguage.findLanguage("Markdown")).apply {
                 initEditor(text)
             }
 
@@ -93,11 +91,27 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
         val codeFenceList = CodeFence.parseAll(text)
         codeFenceList.forEachIndexed { index, codeFence ->
             if (index < blockViews.size) {
-                blockViews[index].updateLanguage(codeFence.ideaLanguage)
-                blockViews[index].updateViewText(codeFence.text)
+                when (codeFence.originLanguage) {
+                    "diff" -> {
+                        if(codeFence.isComplete && blockViews[index] !is DiffLangSketch) {
+                            blockViews[index] = DiffLangSketch(project, codeFence.text)
+                            myList.remove(index)
+                            myList.add(blockViews[index].getComponent(), index)
+                            myList.revalidate() // 刷新布局
+                            myList.repaint() // 重绘界面
+                        } else {
+                            blockViews[index].updateLanguage(codeFence.ideaLanguage)
+                            blockViews[index].updateViewText(codeFence.text)
+                        }
+                    }
+                    else -> {
+                        blockViews[index].updateLanguage(codeFence.ideaLanguage)
+                        blockViews[index].updateViewText(codeFence.text)
+                    }
+                }
             } else {
                 runInEdt {
-                    val codeBlockViewer = CodeBlockLang(project, codeFence.text, PlainTextLanguage.INSTANCE)
+                    val codeBlockViewer = CodeHighlightSketch(project, codeFence.text, PlainTextLanguage.INSTANCE)
                     blockViews.add(codeBlockViewer)
                     myList.add(codeBlockViewer)
                 }
@@ -110,7 +124,7 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
     fun onFinish(text: String) {
         runInEdt {
             blockViews.filter { it.getViewText().isEmpty() }.forEach {
-                myList.remove(it)
+                myList.remove(it.getComponent())
             }
         }
 

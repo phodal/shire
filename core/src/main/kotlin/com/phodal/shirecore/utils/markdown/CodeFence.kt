@@ -7,6 +7,7 @@ class CodeFence(
     val text: String,
     var isComplete: Boolean,
     val extension: String?,
+    val originLanguage: String? = null
 ) {
     companion object {
         private var lastTxtBlock: CodeFence? = null
@@ -42,9 +43,9 @@ class CodeFence(
                 language.associatedFileType?.defaultExtension ?: CodeFenceLanguage.lookupFileExt(languageId ?: "txt")
 
             return if (trimmedCode.isEmpty()) {
-                CodeFence(language, content.replace("\\n", "\n"), codeClosed, extension)
+                CodeFence(language, content.replace("\\n", "\n"), codeClosed, extension, languageId)
             } else {
-                CodeFence(language, trimmedCode, codeClosed, extension)
+                CodeFence(language, trimmedCode, codeClosed, extension, languageId)
             }
         }
 
@@ -102,7 +103,7 @@ class CodeFence(
 
             val ideaLanguage = CodeFenceLanguage.findLanguage(languageId ?: "markdown")
             if (textBuilder.isNotEmpty()) {
-                val normal = CodeFence(ideaLanguage, textBuilder.trim().toString(), true, null)
+                val normal = CodeFence(ideaLanguage, textBuilder.trim().toString(), true, null, languageId)
                 codeFences.add(normal)
             }
 
@@ -112,7 +113,7 @@ class CodeFence(
                     val codeFence = parse("```$languageId\n$codeContent\n")
                     codeFences.add(codeFence)
                 } else {
-                    val defaultLanguage = CodeFence(ideaLanguage, codeContent, false, null)
+                    val defaultLanguage = CodeFence(ideaLanguage, codeContent, false, null, languageId)
                     codeFences.add(defaultLanguage)
                 }
             }
