@@ -1,9 +1,6 @@
 package com.phodal.shirecore.ui.viewer
 
 import com.intellij.icons.AllIcons
-import com.intellij.openapi.actionSystem.ActionGroup
-import com.intellij.openapi.actionSystem.ActionManager
-import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl
 import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.panels.VerticalLayout
@@ -14,24 +11,20 @@ import java.awt.BorderLayout
 import javax.swing.*
 
 
-class DiffPatchViewer : SketchViewer {
+class DiffPatchViewer(filepath: String) : SketchViewer {
     private val mainPanel: JPanel = JPanel(VerticalLayout(5))
     private val myHeaderPanel: JPanel = JPanel(BorderLayout())
 
     init {
-        setupUI()
-    }
-
-    private fun setupUI() {
         myHeaderPanel.add(createHeaderAction(), BorderLayout.EAST)
 
         val contentPanel = JPanel(BorderLayout())
         val langaugeIcon = getFileIcon()
 
-        val filePathLabel = JBLabel("src/main/java/cc/unitmesh/untitled/demo...").apply {
+        val filePathLabel = JBLabel(filepath).apply {
             foreground = JBColor(0x888888, 0x888888)
             background = JBColor(0xF5F5F5, 0x333333)
-            /// hover
+
             addMouseListener(object : java.awt.event.MouseAdapter() {
                 override fun mouseEntered(e: java.awt.event.MouseEvent) {
                     foreground = JBColor(0x333333, 0x111111)
