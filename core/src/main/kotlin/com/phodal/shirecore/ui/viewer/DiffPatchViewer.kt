@@ -11,16 +11,12 @@ import com.intellij.ui.dsl.builder.AlignX
 import com.intellij.ui.dsl.builder.panel
 import com.intellij.util.ui.JBUI
 import java.awt.BorderLayout
-import javax.swing.JComponent
-import javax.swing.JLabel
-import javax.swing.JPanel
-import javax.swing.UIManager
+import javax.swing.*
 
 
 class DiffPatchViewer : SketchViewer {
     private val mainPanel: JPanel = JPanel(VerticalLayout(5))
     private val myHeaderPanel: JPanel = JPanel(BorderLayout())
-    private val myPropertyChangeSupport = java.beans.PropertyChangeSupport(this)
 
     init {
         setupUI()
@@ -85,14 +81,51 @@ class DiffPatchViewer : SketchViewer {
     }
 
     private fun createHeaderAction(): JComponent {
-        val actionGroup = ActionManager.getInstance().getAction("Shire.DiffView.Toolbar") as ActionGroup
+        val acceptButton = JButton("Accept").apply {
+            icon = AllIcons.Actions.SetDefault
+            toolTipText = "Accept"
+            addActionListener {
+                handleAcceptAction()
+            }
+        }
 
-        val toolbar = ActionManager.getInstance()
-            .createActionToolbar("CustomHeaderToolbar", actionGroup, true) as ActionToolbarImpl
+        val rejectButton = JButton("Reject").apply {
+            icon = AllIcons.Actions.Rollback
+            toolTipText = "Reject"
+            addActionListener {
+                handleRejectAction()
+            }
+        }
 
-        toolbar.background = JBColor(0xF5F5F5, 0x333333)
+        val viewDiffButton = JButton("View Diff").apply {
+            toolTipText = "View Diff"
+            icon = AllIcons.Actions.ListChanges
+            addActionListener {
+                handleViewDiffAction()
+            }
+        }
 
-        return toolbar.component
+        val panel = JPanel()
+        panel.layout = BoxLayout(panel, BoxLayout.X_AXIS)
+        panel.add(acceptButton)
+        panel.add(rejectButton)
+        panel.add(viewDiffButton)
+
+        panel.background = JBColor(0xF5F5F5, 0x333333)
+
+        return panel
+    }
+
+    private fun handleAcceptAction() {
+        println("Accept action triggered")
+    }
+
+    private fun handleRejectAction() {
+        println("Reject action triggered")
+    }
+
+    private fun handleViewDiffAction() {
+        println("View Diff action triggered")
     }
 
     override fun getComponent(): JPanel {
