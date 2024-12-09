@@ -6,10 +6,15 @@ import com.intellij.diff.contents.DocumentContent
 import com.intellij.diff.requests.SimpleDiffRequest
 import com.intellij.diff.util.DiffUserDataKeys
 import com.intellij.icons.AllIcons
+import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.diff.impl.patch.FilePatch
 import com.intellij.openapi.diff.impl.patch.PatchReader
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
+import com.intellij.openapi.vcs.changes.patch.AbstractFilePatchInProgress
+import com.intellij.openapi.vcs.changes.patch.ApplyPatchDefaultExecutor
+import com.intellij.openapi.vcs.changes.patch.MatchPatchPaths
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.IdeBorderFactory
 import com.intellij.ui.JBColor
@@ -17,10 +22,12 @@ import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.panels.VerticalLayout
 import com.intellij.ui.dsl.builder.AlignX
 import com.intellij.ui.dsl.builder.panel
+import com.intellij.util.containers.MultiMap
 import com.intellij.util.ui.JBUI
 import com.phodal.shirecore.ShireCoreBundle
 import com.phodal.shirecore.ShirelangNotifications
 import java.awt.BorderLayout
+import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.*
 
@@ -32,8 +39,8 @@ class DiffPatchViewer(
 ) : SketchViewer {
     private val mainPanel: JPanel = JPanel(VerticalLayout(5))
     private val myHeaderPanel: JPanel = JPanel(BorderLayout())
-
-    val myReader = PatchReader(patchContent).also {
+    private val shelfExecutor = ApplyPatchDefaultExecutor(myProject)
+    private val myReader = PatchReader(patchContent).also {
         try {
             it.parseAllPatches()
         } catch (e: Exception) {
@@ -46,14 +53,14 @@ class DiffPatchViewer(
         myHeaderPanel.add(createHeaderAction(), BorderLayout.EAST)
 
         val contentPanel = JPanel(BorderLayout())
-        val langaugeIcon = getFileIcon()
+        val fileIcon = JLabel(filepath.fileType.icon)
 
         val filepathComponent = JBLabel(filepath.name).apply {
             foreground = JBColor(0x888888, 0x888888)
             background = JBColor(0xF5F5F5, 0x333333)
 
-            addMouseListener(object : java.awt.event.MouseAdapter() {
-                override fun mouseEntered(e: java.awt.event.MouseEvent) {
+            addMouseListener(object : MouseAdapter() {
+                override fun mouseEntered(e: MouseEvent) {
                     foreground = JBColor(0x0000FF, 0x0000FF)
                 }
 
@@ -61,23 +68,18 @@ class DiffPatchViewer(
                     FileEditorManager.getInstance(myProject).openFile(filepath, true)
                 }
 
-                override fun mouseExited(e: java.awt.event.MouseEvent) {
+                override fun mouseExited(e: MouseEvent) {
                     foreground = JBColor(0x888888, 0x888888)
                 }
             })
         }
 
-        val actions = JLabel(
-            AllIcons.Actions.Rollback
-        ).apply {
-            foreground = UIManager.getColor("Label.foreground")
-        }
+        val actions = JLabel(AllIcons.Actions.Rollback)
 
         val filePanel = panel {
             row {
-                cell(langaugeIcon).align(AlignX.LEFT)
+                cell(fileIcon).align(AlignX.LEFT)
                 cell(filepathComponent).align(AlignX.LEFT)
-
                 cell(actions).align(AlignX.RIGHT)
             }
         }.also {
@@ -89,15 +91,6 @@ class DiffPatchViewer(
 
         mainPanel.add(myHeaderPanel)
         mainPanel.add(contentPanel)
-    }
-
-    /**
-     * [com.intellij.util.IconUtil.getIcon]
-     */
-    private fun getFileIcon(): JLabel {
-        val fileType = filepath.fileType
-        val langaugeIcon = JLabel(fileType.icon)
-        return langaugeIcon
     }
 
     private fun createHeaderAction(): JComponent {
@@ -137,6 +130,21 @@ class DiffPatchViewer(
     }
 
     private fun handleAcceptAction() {
+        val filePatches: MutableList<FilePatch> = myReader.allPatches
+        ApplicationManager.getApplication().invokeAndWait {
+            val patchGroups = MultiMap<VirtualFile, AbstractFilePatchInProgress<*>>()
+            MatchPatchPaths(myProject).execute(filePatches, true).forEach { patchInProgress ->
+                patchGroups.putValue(patchInProgress.base, patchInProgress)
+            }
+
+            if (filePatches.isEmpty()) {
+                ShirelangNotifications.error(myProject, "PatchProcessor: no patches found")
+                return@invokeAndWait
+            }
+
+            val additionalInfo = myReader.getAdditionalInfo(ApplyPatchDefaultExecutor.pathsFromGroups(patchGroups))
+            shelfExecutor.apply(filePatches, patchGroups, null, filepath.name, additionalInfo)
+        }
     }
 
     private fun handleRejectAction() {
@@ -144,20 +152,6 @@ class DiffPatchViewer(
     }
 
     private fun handleViewDiffAction() {
-//        val patchFile = LightVirtualFile("patch.diff", patchContent)
-//        val diffRequestFactory = DiffRequestFactory.getInstance()
-//        val createFromFiles: ContentDiffRequest = diffRequestFactory.createFromFiles(myProject, filepath, patchFile)
-//
-//        val request = diffRequestFactory.createMergeRequestFromFiles(
-//            myProject,
-//            filepath,
-//            listOf(filepath, patchFile)
-//        ) {
-//            println("Merge request created: $it")
-//        }
-//
-//        request.putUserData(DiffUserDataKeys.HELP_ID, "cvs.merge")
-//        DiffManager.getInstance().showMerge(myProject, request)
         val content: String = filepath.contentsToByteArray().toString(Charsets.UTF_8)
         val contentFactory = DiffContentFactory.getInstance()
 
