@@ -1,21 +1,16 @@
 package com.phodal.shirecore.middleware.builtin
 
 import com.intellij.diff.DiffContentFactoryEx
-import com.intellij.diff.DiffContext
 import com.intellij.diff.DiffDialogHints
 import com.intellij.diff.DiffManager
 import com.intellij.diff.chains.SimpleDiffRequestChain
 import com.intellij.diff.chains.SimpleDiffRequestProducer
 import com.intellij.diff.requests.SimpleDiffRequest
-import com.intellij.diff.tools.combined.COMBINED_DIFF_MAIN_UI
 import com.intellij.execution.ui.ConsoleView
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.application.runInEdt
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.Key
-import com.intellij.openapi.util.UserDataHolder
-import com.intellij.openapi.util.UserDataHolderBase
 import com.phodal.shirecore.findFile
 import com.phodal.shirecore.middleware.PostProcessor
 import com.phodal.shirecore.middleware.PostProcessorContext
@@ -65,26 +60,5 @@ class DiffProcessor : PostProcessor {
         }
 
         return ""
-    }
-}
-
-class ShireDiffContext(private val project: Project) : DiffContext() {
-    private val mainUi get() = getUserData(COMBINED_DIFF_MAIN_UI)
-
-    private val ownContext: UserDataHolder = UserDataHolderBase()
-
-    override fun getProject() = project
-    override fun isFocusedInWindow(): Boolean = mainUi?.isFocusedInWindow() ?: false
-    override fun isWindowFocused(): Boolean = mainUi?.isWindowFocused() ?: false
-    override fun requestFocusInWindow() {
-        mainUi?.requestFocusInWindow()
-    }
-
-    override fun <T> getUserData(key: Key<T>): T? {
-        return ownContext.getUserData(key)
-    }
-
-    override fun <T> putUserData(key: Key<T>, value: T?) {
-        ownContext.putUserData(key, value)
     }
 }
