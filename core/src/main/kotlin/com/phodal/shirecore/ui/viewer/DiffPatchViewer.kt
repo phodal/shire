@@ -95,12 +95,8 @@ class DiffPatchViewer(
      * [com.intellij.util.IconUtil.getIcon]
      */
     private fun getFileIcon(): JLabel {
-        val langaugeIcon = JLabel(
-            AllIcons.FileTypes.Java
-        ).apply {
-            foreground = UIManager.getColor("Label.foreground")
-        }
-
+        val fileType = filepath.fileType
+        val langaugeIcon = JLabel(fileType.icon)
         return langaugeIcon
     }
 
