@@ -9,17 +9,19 @@ import com.intellij.openapi.ui.SimpleToolWindowPanel
 import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.components.panels.VerticalLayout
+import com.intellij.ui.dsl.builder.AlignX
+import com.intellij.ui.dsl.builder.AlignY
+import com.intellij.ui.dsl.builder.Cell
 import com.intellij.ui.dsl.builder.panel
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
-import com.phodal.shirecore.ui.viewer.*
+import com.phodal.shirecore.ui.viewer.CodeHighlightSketch
+import com.phodal.shirecore.ui.viewer.DiffLangSketch
+import com.phodal.shirecore.ui.viewer.LangSketch
 import com.phodal.shirecore.utils.markdown.CodeFence
 import com.phodal.shirecore.utils.markdown.CodeFenceLanguage
 import java.awt.BorderLayout
-import javax.swing.JPanel
-import javax.swing.JProgressBar
-import javax.swing.ScrollPaneConstants
-import javax.swing.SwingUtilities
+import javax.swing.*
 
 class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), NullableComponent {
     private var progressBar: JProgressBar = JProgressBar()
@@ -143,4 +145,12 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
     override fun isNull(): Boolean {
         return !isVisible
     }
+}
+
+fun <T : JComponent> Cell<T>.fullWidth(): Cell<T> {
+    return this.align(AlignX.FILL)
+}
+
+fun <T : JComponent> Cell<T>.fullHeight(): Cell<T> {
+    return this.align(AlignY.FILL)
 }
