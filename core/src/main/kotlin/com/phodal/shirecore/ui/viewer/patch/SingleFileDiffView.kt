@@ -91,6 +91,10 @@ class SingleFileDiffView(private val myProject: Project, private val virtualFile
             isEnabled = undoManager.isUndoAvailable(fileEditor)
 
             addMouseListener(object : MouseAdapter() {
+                override fun mouseEntered(e: MouseEvent?) {
+                    isOpaque = false
+                }
+
                 override fun mouseClicked(e: MouseEvent?) {
                     if (undoManager.isUndoAvailable(fileEditor)) {
                         undoManager.undo(fileEditor)

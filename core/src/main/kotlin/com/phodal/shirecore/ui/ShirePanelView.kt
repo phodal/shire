@@ -84,7 +84,17 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
 
             codeBlockViewer.editorFragment!!.editor.backgroundColor = JBColor(0xF7FAFDF, 0x2d2f30)
 
-            userPrompt.add(codeBlockViewer, BorderLayout.CENTER)
+            /// add margin top 10, bottom 10
+            val panel = panel {
+                row {
+                    cell(codeBlockViewer).fullWidth()
+                }
+            }.also {
+                it.border = JBUI.Borders.empty(10, 0)
+            }
+
+            userPrompt.add(panel, BorderLayout.CENTER)
+
 
             this.revalidate()
             this.repaint()
