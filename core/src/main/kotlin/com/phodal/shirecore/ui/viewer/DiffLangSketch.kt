@@ -43,7 +43,6 @@ class DiffLangSketch(private val myProject: Project, private var patchContent: S
     init {
         val createHeaderAction = createHeaderAction()
         myHeaderPanel.add(createHeaderAction, BorderLayout.EAST)
-
         mainPanel.add(myHeaderPanel)
 
         ApplicationManager.getApplication().invokeAndWait {
@@ -131,11 +130,7 @@ class DiffLangSketch(private val myProject: Project, private var patchContent: S
         MyApplyPatchFromClipboardDialog(myProject, patchContent).show()
     }
 
-    override fun getExtensionName(): String {
-        return "diff"
-    }
-
-
+    override fun getExtensionName(): String = "diff"
     override fun getViewText(): String = patchContent
     override fun updateViewText(text: String) {
         this.patchContent = text

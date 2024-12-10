@@ -43,28 +43,19 @@ class MermaidSketch(private val project: Project, private val virtualFile: Virtu
     }
 
     private fun getEditorProvider(): FileEditorProvider =
-        FileEditorProvider.EP_FILE_EDITOR_PROVIDER.extensionList.filter {
+        FileEditorProvider.EP_FILE_EDITOR_PROVIDER.extensionList.firstOrNull {
             it.javaClass.simpleName == "MermaidEditorWithPreviewProvider"
-        }.firstOrNull() ?: TextEditorProvider.getInstance()
+        } ?: TextEditorProvider.getInstance()
 
-    override fun getExtensionName(): String {
-        return "mermaid"
-    }
+    override fun getExtensionName(): String = "mermaid"
 
-    override fun getViewText(): String {
-        return virtualFile.readText()
-    }
+    override fun getViewText(): String = virtualFile.readText()
 
-    override fun updateViewText(text: String) {
-    }
+    override fun updateViewText(text: String) {}
 
-    override fun getComponent(): JComponent {
-        return mainPanel
-    }
+    override fun getComponent(): JComponent = mainPanel
 
-    override fun updateLanguage(language: Language?) {
-    }
+    override fun updateLanguage(language: Language?) {}
 
-    override fun dispose() {
-    }
+    override fun dispose() {}
 }
