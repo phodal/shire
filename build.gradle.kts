@@ -391,6 +391,17 @@ project(":toolsets:openrewrite") {
     }
 }
 
+project(":toolsets:mermaid") {
+    dependencies {
+        intellijPlatform {
+            intellijIde(prop("ideaVersion"))
+            intellijPlugins(ideaPlugins + prop("mermaidPlugin"))
+        }
+
+        implementation(project(":core"))
+    }
+}
+
 project(":shirelang") {
     apply {
         plugin("org.jetbrains.grammarkit")
@@ -598,6 +609,7 @@ project(":") {
             pluginModule(implementation(project(":toolsets:database")))
             pluginModule(implementation(project(":toolsets:mock")))
             pluginModule(implementation(project(":toolsets:openrewrite")))
+            pluginModule(implementation(project(":toolsets:mermaid")))
 
             testFramework(TestFrameworkType.Bundled)
         }

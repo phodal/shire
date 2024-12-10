@@ -23,6 +23,7 @@
             <option value="$PROJECT_DIR$/toolsets/database" />
             <option value="$PROJECT_DIR$/toolsets/git" />
             <option value="$PROJECT_DIR$/toolsets/httpclient" />
+            <option value="$PROJECT_DIR$/toolsets/mermaid" />
             <option value="$PROJECT_DIR$/toolsets/mock" />
             <option value="$PROJECT_DIR$/toolsets/openrewrite" />
             <option value="$PROJECT_DIR$/toolsets/plantuml" />

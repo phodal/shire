@@ -1,0 +1,10 @@
+<idea-plugin package="com.phodal.shire.mermaid">
+    <!--suppress PluginXmlValidity -->
+    <dependencies>
+        <plugin id="com.intellij.mermaid"/>
+    </dependencies>
+
+    <extensions defaultExtensionNs="com.phodal">
+        <shireLangSketchProvider implementation="com.phodal.shire.mermaid.provider.MermaidSketchProvider"/>
+    </extensions>
+</idea-plugin>

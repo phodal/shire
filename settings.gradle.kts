@@ -25,5 +25,6 @@ include(
     "toolsets:database",
     "toolsets:mock",
     "toolsets:openrewrite",
+    "toolsets:mermaid",
 //    "toolsets:uitest",
 )
