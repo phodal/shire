@@ -9,4 +9,5 @@ interface LangSketch: Disposable {
     fun updateViewText(text: String)
     fun getComponent(): JComponent
     fun updateLanguage(language: Language?)
+    fun doneUpdateText(text: String) { }
 }

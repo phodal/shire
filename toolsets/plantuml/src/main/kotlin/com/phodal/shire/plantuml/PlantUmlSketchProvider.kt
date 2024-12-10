@@ -32,15 +32,20 @@ class PlantUmlSketchProvider : LanguageSketchProvider {
 
 class PlantUmlSketch(private val project: Project, private val virtualFile: VirtualFile) : LangSketch {
     private var mainPanel: JPanel = JPanel()
+    private var umlPreviewEditor: PlantUmlPreviewEditor
 
     init {
         val editor = TextEditorProvider.getInstance().createEditor(project, virtualFile) as TextEditor
-        val umlPreviewEditor = PlantUmlPreviewEditor(virtualFile, project)
+        umlPreviewEditor = PlantUmlPreviewEditor(virtualFile, project)
         umlPreviewEditor.editor = editor.editor
         val splitEditor = PlantUmlSplitEditor(editor, umlPreviewEditor)
 
         mainPanel.add(splitEditor.component, BorderLayout.CENTER)
+
         PlantUmlSettings.getInstance().previewSettings.splitEditorLayout = SplitFileEditor.SplitEditorLayout.SECOND
+    }
+
+    override fun doneUpdateText(text: String) {
         (umlPreviewEditor.component as PlantUmlPreviewPanel).processRequest(LazyApplicationPoolExecutor.Delay.NOW, RenderCommand.Reason.FILE_SWITCHED)
     }
 

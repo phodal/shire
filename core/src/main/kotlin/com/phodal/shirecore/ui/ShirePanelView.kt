@@ -114,17 +114,21 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
                                 }
                             }
                         }
+
                         else -> {
                             var langSketch: LangSketch? = null
-                            if (codeFence.originLanguage != null) {
+                            if (codeFence.originLanguage != null && codeFence.isComplete) {
                                 langSketch = LanguageSketchProvider.provide(codeFence.originLanguage)
                                     ?.createSketch(project, codeFence.text)
                             }
 
                             if (langSketch != null) {
+                                val oldComponent = blockViews[index]
                                 blockViews[index] = langSketch
                                 myList.remove(index)
                                 myList.add(langSketch.getComponent(), index)
+
+                                oldComponent.dispose()
                             } else {
                                 blockViews[index].apply {
                                     updateLanguage(codeFence.ideaLanguage)
@@ -155,6 +159,10 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
 
     fun onFinish(text: String) {
         runInEdt {
+            blockViews.filter { it.getViewText().isNotEmpty() }.forEach {
+                it.doneUpdateText(text)
+            }
+
             blockViews.filter { it.getViewText().isEmpty() }.forEach {
                 myList.remove(it.getComponent())
             }
