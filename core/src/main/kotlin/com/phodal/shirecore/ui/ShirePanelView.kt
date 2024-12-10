@@ -16,8 +16,8 @@ import com.intellij.ui.dsl.builder.panel
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
 import com.phodal.shirecore.provider.sketch.ExtensionLangSketch
-import com.phodal.shirecore.ui.viewer.CodeHighlightSketch
-import com.phodal.shirecore.ui.viewer.LangSketch
+import com.phodal.shirecore.sketch.highlight.CodeHighlightSketch
+import com.phodal.shirecore.sketch.LangSketch
 import com.phodal.shirecore.utils.markdown.CodeFence
 import com.phodal.shirecore.utils.markdown.CodeFenceLanguage
 import com.phodal.shirecore.provider.sketch.LanguageSketchProvider

@@ -1,4 +1,4 @@
-package com.phodal.shirecore.ui.viewer.patch
+package com.phodal.shirecore.sketch.patch
 
 import com.intellij.icons.AllIcons
 import com.intellij.lang.Language
@@ -14,7 +14,7 @@ import com.intellij.ui.dsl.builder.AlignX
 import com.intellij.ui.dsl.builder.panel
 import com.intellij.util.ui.JBUI
 import com.phodal.shirecore.ShireCoreBundle
-import com.phodal.shirecore.ui.viewer.LangSketch
+import com.phodal.shirecore.sketch.LangSketch
 import java.awt.BorderLayout
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent

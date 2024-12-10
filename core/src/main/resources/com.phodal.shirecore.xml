@@ -197,7 +197,7 @@
         <!--   LocationInteractionProvider-->
         <shireLocationInteraction implementation="com.phodal.shirecore.config.interaction.EditorInteractionProvider"/>
 
-        <shireLangSketchProvider implementation="com.phodal.shirecore.ui.viewer.DiffLangSketchProvider" />
+        <shireLangSketchProvider implementation="com.phodal.shirecore.sketch.patch.DiffLangSketchProvider" />
 
         <!-- Markdown Impl -->
         <shirePsiVariableProvider

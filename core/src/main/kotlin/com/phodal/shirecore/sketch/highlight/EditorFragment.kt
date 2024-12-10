@@ -1,4 +1,4 @@
-package com.phodal.shirecore.ui
+package com.phodal.shirecore.sketch.highlight
 
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.editor.Editor

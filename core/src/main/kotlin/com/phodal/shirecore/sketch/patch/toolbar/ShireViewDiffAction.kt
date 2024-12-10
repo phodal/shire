@@ -1,4 +1,4 @@
-package com.phodal.shirecore.ui.toolbar.diff
+package com.phodal.shirecore.sketch.patch.toolbar
 
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent

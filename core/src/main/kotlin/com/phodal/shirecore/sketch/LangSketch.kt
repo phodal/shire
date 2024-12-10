@@ -1,4 +1,4 @@
-package com.phodal.shirecore.ui.viewer
+package com.phodal.shirecore.sketch
 
 import com.intellij.lang.Language
 import com.intellij.openapi.Disposable

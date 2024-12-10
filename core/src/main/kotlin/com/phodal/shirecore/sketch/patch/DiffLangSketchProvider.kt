@@ -1,4 +1,4 @@
-package com.phodal.shirecore.ui.viewer
+package com.phodal.shirecore.sketch.patch
 
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.provider.sketch.ExtensionLangSketch

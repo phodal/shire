@@ -1,4 +1,4 @@
-package com.phodal.shirecore.ui.toolbar
+package com.phodal.shirecore.sketch.highlight.toolbar
 
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnActionEvent

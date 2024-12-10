@@ -1,4 +1,4 @@
-package com.phodal.shirecore.ui.viewer
+package com.phodal.shirecore.sketch.highlight
 
 import com.intellij.lang.Language
 import com.intellij.openapi.Disposable
@@ -16,7 +16,6 @@ import com.intellij.openapi.editor.ex.FocusChangeListener
 import com.intellij.openapi.editor.ex.MarkupModelEx
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory
 import com.intellij.openapi.fileEditor.FileDocumentManager
-import com.intellij.openapi.fileEditor.FileEditorProvider
 import com.intellij.openapi.fileTypes.PlainTextLanguage
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
@@ -24,7 +23,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.testFramework.LightVirtualFile
 import com.intellij.ui.components.JBPanel
 import com.intellij.util.concurrency.annotations.RequiresReadLock
-import com.phodal.shirecore.ui.EditorFragment
+import com.phodal.shirecore.sketch.LangSketch
 import com.phodal.shirecore.utils.markdown.CodeFenceLanguage
 import java.awt.BorderLayout
 import java.util.concurrent.atomic.AtomicBoolean

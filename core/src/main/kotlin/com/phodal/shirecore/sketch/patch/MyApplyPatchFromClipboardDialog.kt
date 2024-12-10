@@ -1,4 +1,4 @@
-package com.phodal.shirecore.ui.viewer.patch
+package com.phodal.shirecore.sketch.patch
 
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vcs.VcsApplicationSettings

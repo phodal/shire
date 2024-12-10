@@ -2,7 +2,7 @@ package com.phodal.shirecore.provider.sketch
 
 import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.project.Project
-import com.phodal.shirecore.ui.viewer.LangSketch
+import com.phodal.shirecore.sketch.LangSketch
 
 
 interface ExtensionLangSketch: LangSketch {

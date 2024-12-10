@@ -1,4 +1,4 @@
-package com.phodal.shirecore.ui.viewer
+package com.phodal.shirecore.sketch.patch
 
 import com.intellij.icons.AllIcons
 import com.intellij.lang.Language
@@ -23,8 +23,6 @@ import com.phodal.shirecore.ShireCoreBundle
 import com.phodal.shirecore.ShirelangNotifications
 import com.phodal.shirecore.findFile
 import com.phodal.shirecore.provider.sketch.ExtensionLangSketch
-import com.phodal.shirecore.ui.viewer.patch.MyApplyPatchFromClipboardDialog
-import com.phodal.shirecore.ui.viewer.patch.SingleFileDiffView
 import java.awt.BorderLayout
 import javax.swing.BoxLayout
 import javax.swing.JButton
