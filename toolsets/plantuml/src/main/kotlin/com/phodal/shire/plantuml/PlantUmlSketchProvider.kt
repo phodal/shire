@@ -6,8 +6,8 @@ import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.testFramework.LightVirtualFile
+import com.phodal.shirecore.provider.sketch.ExtensionLangSketch
 import com.phodal.shirecore.provider.sketch.LanguageSketchProvider
-import com.phodal.shirecore.ui.viewer.LangSketch
 import org.plantuml.idea.preview.PlantUmlPreviewPanel
 import org.plantuml.idea.preview.editor.PlantUmlPreviewEditor
 import org.plantuml.idea.preview.editor.PlantUmlSplitEditor
@@ -24,13 +24,13 @@ class PlantUmlSketchProvider : LanguageSketchProvider {
         return true
     }
 
-    override fun createSketch(project: Project, content: String): LangSketch {
+    override fun createSketch(project: Project, content: String): ExtensionLangSketch {
         val virtualFile = LightVirtualFile("plantuml.puml", content)
         return PlantUmlSketch(project, virtualFile)
     }
 }
 
-class PlantUmlSketch(private val project: Project, private val virtualFile: VirtualFile) : LangSketch {
+class PlantUmlSketch(private val project: Project, private val virtualFile: VirtualFile) : ExtensionLangSketch {
     private var mainPanel: JPanel = JPanel()
     private var umlPreviewEditor: PlantUmlPreviewEditor
 
@@ -40,6 +40,8 @@ class PlantUmlSketch(private val project: Project, private val virtualFile: Virt
         umlPreviewEditor.editor = editor.editor
         val splitEditor = PlantUmlSplitEditor(editor, umlPreviewEditor)
 
+        splitEditor.component.preferredSize = null
+
         mainPanel.add(splitEditor.component, BorderLayout.CENTER)
 
         PlantUmlSettings.getInstance().previewSettings.splitEditorLayout = SplitFileEditor.SplitEditorLayout.SECOND
@@ -47,6 +49,10 @@ class PlantUmlSketch(private val project: Project, private val virtualFile: Virt
 
     override fun doneUpdateText(text: String) {
         (umlPreviewEditor.component as PlantUmlPreviewPanel).processRequest(LazyApplicationPoolExecutor.Delay.NOW, RenderCommand.Reason.FILE_SWITCHED)
+    }
+
+    override fun getExtensionName(): String {
+        return "plantuml"
     }
 
     override fun getViewText(): String {

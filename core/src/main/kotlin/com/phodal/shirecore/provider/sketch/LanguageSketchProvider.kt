@@ -4,10 +4,15 @@ import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.ui.viewer.LangSketch
 
+
+interface ExtensionLangSketch: LangSketch {
+    fun getExtensionName(): String
+}
+
 interface LanguageSketchProvider {
     fun isSupported(lang: String): Boolean
 
-    fun createSketch(project: Project, content: String): LangSketch
+    fun createSketch(project: Project, content: String): ExtensionLangSketch
 
     companion object {
         private val EP_NAME: ExtensionPointName<LanguageSketchProvider> =

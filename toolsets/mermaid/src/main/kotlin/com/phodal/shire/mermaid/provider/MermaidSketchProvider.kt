@@ -1,12 +1,13 @@
 package com.phodal.shire.mermaid.provider
 
 import com.intellij.lang.Language
+import com.intellij.mermaid.preview.MermaidDiagramPreviewComponent
 import com.intellij.openapi.project.Project
-import com.intellij.ui.dsl.builder.*
+import com.intellij.ui.dsl.builder.panel
+import com.phodal.shirecore.provider.sketch.ExtensionLangSketch
 import com.phodal.shirecore.provider.sketch.LanguageSketchProvider
 import com.phodal.shirecore.ui.viewer.LangSketch
 import javax.swing.JComponent
-import com.intellij.mermaid.preview.MermaidDiagramPreviewComponent
 import javax.swing.JPanel
 
 class MermaidSketchProvider : LanguageSketchProvider {
@@ -14,12 +15,12 @@ class MermaidSketchProvider : LanguageSketchProvider {
         return lang == "mermaid"
     }
 
-    override fun createSketch(project: Project, content: String): LangSketch {
+    override fun createSketch(project: Project, content: String): ExtensionLangSketch {
         TODO("Not yet implemented")
     }
 }
 
-class MermaidSketch(private val project: Project, private val content: String) : LangSketch {
+class MermaidSketch(private val project: Project, private val content: String) : ExtensionLangSketch {
     private var mainPanel: JPanel
 
     init {
@@ -32,6 +33,10 @@ class MermaidSketch(private val project: Project, private val content: String) :
                 }
             }
         }
+    }
+
+    override fun getExtensionName(): String {
+        return "mermaid"
     }
 
     override fun getViewText(): String {

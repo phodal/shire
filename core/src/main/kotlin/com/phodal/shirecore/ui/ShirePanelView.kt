@@ -15,6 +15,7 @@ import com.intellij.ui.dsl.builder.Cell
 import com.intellij.ui.dsl.builder.panel
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
+import com.phodal.shirecore.provider.sketch.ExtensionLangSketch
 import com.phodal.shirecore.ui.viewer.CodeHighlightSketch
 import com.phodal.shirecore.ui.viewer.DiffLangSketch
 import com.phodal.shirecore.ui.viewer.LangSketch
@@ -116,8 +117,8 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
                         }
 
                         else -> {
-                            var langSketch: LangSketch? = null
-                            if (codeFence.originLanguage != null && codeFence.isComplete) {
+                            var langSketch: ExtensionLangSketch? = null
+                            if (codeFence.originLanguage != null && codeFence.isComplete && blockViews[index] !is ExtensionLangSketch) {
                                 langSketch = LanguageSketchProvider.provide(codeFence.originLanguage)
                                     ?.createSketch(project, codeFence.text)
                             }
