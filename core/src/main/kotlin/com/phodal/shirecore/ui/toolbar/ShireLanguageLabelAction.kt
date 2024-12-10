@@ -36,8 +36,12 @@ class ShireLanguageLabelAction: DumbAwareAction(), CustomComponentAction {
 
     override fun update(e: AnActionEvent) {
         val editor = e.dataContext.getData(CommonDataKeys.EDITOR) ?: return
-        val lightVirtualFile = FileDocumentManager.getInstance().getFile(editor.document) as? LightVirtualFile ?: return
-        e.presentation.putClientProperty(SHIRE_LANGUAGE_LABEL_KEY, lightVirtualFile.language.displayName)
+        val lightVirtualFile = FileDocumentManager.getInstance().getFile(editor.document)
+                as? LightVirtualFile ?: return
+
+        val language = lightVirtualFile.language ?: return
+
+        e.presentation.putClientProperty(SHIRE_LANGUAGE_LABEL_KEY, language.displayName)
     }
 
     companion object {

@@ -1,6 +1,7 @@
 package com.phodal.shire.mermaid.provider
 
 import com.intellij.lang.Language
+import com.intellij.openapi.actionSystem.PlatformDataKeys
 import com.intellij.openapi.fileEditor.FileEditorProvider
 import com.intellij.openapi.fileEditor.TextEditorWithPreview
 import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider
@@ -33,6 +34,9 @@ class MermaidSketch(private val project: Project, private val virtualFile: Virtu
         val editor = getEditorProvider().createEditor(project, virtualFile) as TextEditorWithPreview
         val previewEditor = editor.previewEditor
         mainPanel = panel {
+            row {
+                cell(editor.editor.component).align(Align.FILL)
+            }
             row {
                 cell(previewEditor.component).align(Align.FILL)
             }
