@@ -1,19 +1,27 @@
 package com.phodal.shire.plantuml
 
 import com.intellij.lang.Language
+import com.intellij.openapi.fileEditor.TextEditor
+import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.testFramework.LightVirtualFile
-import com.intellij.ui.dsl.builder.panel
 import com.phodal.shirecore.provider.sketch.LanguageSketchProvider
 import com.phodal.shirecore.ui.viewer.LangSketch
-import org.plantuml.idea.preview.editor.PlantUmlPreviewEditor
 import org.plantuml.idea.preview.PlantUmlPreviewPanel
+import org.plantuml.idea.preview.editor.PlantUmlPreviewEditor
+import org.plantuml.idea.preview.editor.PlantUmlSplitEditor
+import org.plantuml.idea.preview.editor.SplitFileEditor
+import org.plantuml.idea.rendering.LazyApplicationPoolExecutor
+import org.plantuml.idea.rendering.RenderCommand
+import org.plantuml.idea.settings.PlantUmlSettings
+import java.awt.BorderLayout
 import javax.swing.JComponent
+import javax.swing.JPanel
 
 class PlantUmlSketchProvider : LanguageSketchProvider {
     override fun isSupported(lang: String): Boolean {
-        return lang == "plantuml" || lang == "puml" || lang == "uml"
+        return true
     }
 
     override fun createSketch(project: Project, content: String): LangSketch {
@@ -23,20 +31,17 @@ class PlantUmlSketchProvider : LanguageSketchProvider {
 }
 
 class PlantUmlSketch(private val project: Project, private val virtualFile: VirtualFile) : LangSketch {
-    private var mainPanel: JComponent
+    private var mainPanel: JPanel = JPanel()
 
     init {
-        val editor = PlantUmlPreviewEditor(virtualFile, project)
-        val plantUmlPreviewPanel = PlantUmlPreviewPanel(project, editor)
+        val editor = TextEditorProvider.getInstance().createEditor(project, virtualFile) as TextEditor
+        val umlPreviewEditor = PlantUmlPreviewEditor(virtualFile, project)
+        umlPreviewEditor.editor = editor.editor
+        val splitEditor = PlantUmlSplitEditor(editor, umlPreviewEditor)
 
-        mainPanel = panel {
-            row {
-                plantUmlPreviewPanel.also {
-                    it.isVisible = true
-                    it.setSize(800, 600)
-                }
-            }
-        }
+        mainPanel.add(splitEditor.component, BorderLayout.CENTER)
+        PlantUmlSettings.getInstance().previewSettings.splitEditorLayout = SplitFileEditor.SplitEditorLayout.SECOND
+        (umlPreviewEditor.component as PlantUmlPreviewPanel).processRequest(LazyApplicationPoolExecutor.Delay.NOW, RenderCommand.Reason.FILE_SWITCHED)
     }
 
     override fun getViewText(): String {
@@ -48,7 +53,7 @@ class PlantUmlSketch(private val project: Project, private val virtualFile: Virt
     }
 
     override fun getComponent(): JComponent {
-        return mainPanel!!
+        return mainPanel
     }
 
     override fun updateLanguage(language: Language?) {
