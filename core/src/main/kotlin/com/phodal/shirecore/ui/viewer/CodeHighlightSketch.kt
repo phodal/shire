@@ -57,28 +57,8 @@ class CodeHighlightSketch(val project: Project, val text: String, private var id
         add(editorFragment!!.getContent(), BorderLayout.CENTER)
 
         if (ideaLanguage?.displayName != "Markdown" && ideaLanguage != PlainTextLanguage.INSTANCE) {
-            setupActionBar()
+            setupActionBar(project, editor)
         }
-    }
-
-    private fun setupActionBar() {
-        val toolbarActionGroup = ActionManager.getInstance().getAction("Shire.ToolWindow.Toolbar") as? ActionGroup
-            ?: return
-
-        val toolbar = ActionManager.getInstance()
-            .createActionToolbar(ActionPlaces.MAIN_TOOLBAR, toolbarActionGroup, true)
-
-        val editor = editorFragment?.editor
-        toolbar.component.setBackground(editor!!.backgroundColor)
-        toolbar.component.setOpaque(true)
-        toolbar.targetComponent = editor.contentComponent
-        editor.headerComponent = toolbar.component
-
-        val connect = project.messageBus.connect(this)
-        val topic: Topic<EditorColorsListener> = EditorColorsManager.TOPIC
-        connect.subscribe(topic, EditorColorsListener {
-            toolbar.component.setBackground(editor.backgroundColor)
-        })
     }
 
     override fun getViewText(): String {

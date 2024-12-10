@@ -8,11 +8,12 @@ import com.intellij.openapi.wm.ToolWindowManager
 import com.phodal.shire.marketplace.ui.MarketplaceView
 
 class ShireToolWindowFactory : ToolWindowFactory, DumbAware {
-    object Util {
-        const val id = "ShireToolWindow"
-    }
 
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
         project.getService(MarketplaceView::class.java).initToolWindow(toolWindow)
+    }
+
+    companion object {
+        const val id = "ShireToolWindow"
     }
 }

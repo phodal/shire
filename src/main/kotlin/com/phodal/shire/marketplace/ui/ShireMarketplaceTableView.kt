@@ -14,8 +14,8 @@ import com.phodal.shire.ShireMainBundle
 import com.phodal.shire.marketplace.model.ShirePackage
 import com.phodal.shire.marketplace.util.ShireDownloader
 import com.phodal.shirecore.ShirelangNotifications
-import com.phodal.shirecore.lookupFile
-import com.phodal.shirecore.ui.viewer.DiffLangSketch
+import com.phodal.shirecore.provider.sketch.LanguageSketchProvider
+import com.phodal.shirecore.provider.sketch.LanguageSketchProvider.Companion
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -105,6 +105,17 @@ class ShireMarketplaceTableView(val project: Project) {
 
             row {
                 cell(scrollPane).align(Align.FILL)
+            }.resizableRow()
+
+
+            row {
+                val patchContent = """
+                    sequenceDiagram
+                        Alice->>John: Hello John, how are you?
+                        John-->>Alice: Great!
+                        Alice-)John: See you later!
+                """.trimIndent()
+                cell(LanguageSketchProvider.provide("mermaid")!!.createSketch(project, patchContent).getComponent()).align(Align.FILL)
             }.resizableRow()
         }
 

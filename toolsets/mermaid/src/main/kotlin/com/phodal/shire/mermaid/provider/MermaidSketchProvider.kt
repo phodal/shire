@@ -1,46 +1,55 @@
 package com.phodal.shire.mermaid.provider
 
 import com.intellij.lang.Language
-import com.intellij.mermaid.preview.MermaidDiagramPreviewComponent
+import com.intellij.openapi.fileEditor.FileEditorProvider
+import com.intellij.openapi.fileEditor.TextEditorWithPreview
+import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.vfs.readText
+import com.intellij.testFramework.LightVirtualFile
+import com.intellij.ui.dsl.builder.Align
 import com.intellij.ui.dsl.builder.panel
 import com.phodal.shirecore.provider.sketch.ExtensionLangSketch
 import com.phodal.shirecore.provider.sketch.LanguageSketchProvider
-import com.phodal.shirecore.ui.viewer.LangSketch
 import javax.swing.JComponent
 import javax.swing.JPanel
 
 class MermaidSketchProvider : LanguageSketchProvider {
     override fun isSupported(lang: String): Boolean {
-        return lang == "mermaid"
+        return lang == "mermaid" || lang == "mmd"
     }
 
     override fun createSketch(project: Project, content: String): ExtensionLangSketch {
-        TODO("Not yet implemented")
+        val file = LightVirtualFile("mermaid.mermaid", content)
+        return MermaidSketch(project, file)
     }
 }
 
-class MermaidSketch(private val project: Project, private val content: String) : ExtensionLangSketch {
+class MermaidSketch(private val project: Project, private val virtualFile: VirtualFile) : ExtensionLangSketch {
     private var mainPanel: JPanel
 
     init {
-        val component = MermaidDiagramPreviewComponent(project)
+        val editor = getEditorProvider().createEditor(project, virtualFile) as TextEditorWithPreview
+        val previewEditor = editor.previewEditor
         mainPanel = panel {
             row {
-                component.also {
-                    it.isVisible = true
-                    it.setSize(800, 600)
-                }
+                cell(previewEditor.component).align(Align.FILL)
             }
         }
     }
+
+    private fun getEditorProvider(): FileEditorProvider =
+        FileEditorProvider.EP_FILE_EDITOR_PROVIDER.extensionList.filter {
+            it.javaClass.simpleName == "MermaidEditorWithPreviewProvider"
+        }.firstOrNull() ?: TextEditorProvider.getInstance()
 
     override fun getExtensionName(): String {
         return "mermaid"
     }
 
     override fun getViewText(): String {
-        return content
+        return virtualFile.readText()
     }
 
     override fun updateViewText(text: String) {

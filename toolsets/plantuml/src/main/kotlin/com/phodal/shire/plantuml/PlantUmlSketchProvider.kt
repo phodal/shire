@@ -21,7 +21,7 @@ import javax.swing.JPanel
 
 class PlantUmlSketchProvider : LanguageSketchProvider {
     override fun isSupported(lang: String): Boolean {
-        return true
+        return lang == "plantuml" || lang == "puml" || lang == "uml"
     }
 
     override fun createSketch(project: Project, content: String): ExtensionLangSketch {
