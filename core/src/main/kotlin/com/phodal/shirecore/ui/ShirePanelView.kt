@@ -20,6 +20,7 @@ import com.phodal.shirecore.ui.viewer.DiffLangSketch
 import com.phodal.shirecore.ui.viewer.LangSketch
 import com.phodal.shirecore.utils.markdown.CodeFence
 import com.phodal.shirecore.utils.markdown.CodeFenceLanguage
+import com.phodal.shirecore.provider.sketch.LanguageSketchProvider
 import java.awt.BorderLayout
 import javax.swing.*
 
@@ -91,36 +92,65 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
 
     fun onUpdate(text: String) {
         val codeFenceList = CodeFence.parseAll(text)
-        codeFenceList.forEachIndexed { index, codeFence ->
-            if (index < blockViews.size) {
-                when (codeFence.originLanguage) {
-                    "diff" -> {
-                        if(codeFence.isComplete && blockViews[index] !is DiffLangSketch) {
-                            blockViews[index] = DiffLangSketch(project, codeFence.text)
-                            myList.remove(index)
-                            myList.add(blockViews[index].getComponent(), index)
-                            myList.revalidate() // 刷新布局
-                            myList.repaint() // 重绘界面
-                        } else {
-                            blockViews[index].updateLanguage(codeFence.ideaLanguage)
-                            blockViews[index].updateViewText(codeFence.text)
+
+        runInEdt {
+            codeFenceList.forEachIndexed { index, codeFence ->
+                if (index < blockViews.size) {
+                    when (codeFence.originLanguage) {
+                        "diff" -> {
+                            if (codeFence.isComplete && blockViews[index] !is DiffLangSketch) {
+                                val diffLangSketch = DiffLangSketch(project, codeFence.text)
+                                val oldComponent = blockViews[index]
+
+                                blockViews[index] = diffLangSketch
+                                myList.remove(index)
+                                myList.add(diffLangSketch.getComponent(), index)
+
+                                oldComponent.dispose()
+                            } else {
+                                blockViews[index].apply {
+                                    updateLanguage(codeFence.ideaLanguage)
+                                    updateViewText(codeFence.text)
+                                }
+                            }
+                        }
+                        else -> {
+                            var langSketch: LangSketch? = null
+                            if (codeFence.originLanguage != null) {
+                                langSketch = LanguageSketchProvider.provide(codeFence.originLanguage)
+                                    ?.createSketch(project, codeFence.text)
+                            }
+
+                            if (langSketch != null) {
+                                blockViews[index] = langSketch
+                                myList.remove(index)
+                                myList.add(langSketch.getComponent(), index)
+                            } else {
+                                blockViews[index].apply {
+                                    updateLanguage(codeFence.ideaLanguage)
+                                    updateViewText(codeFence.text)
+                                }
+                            }
                         }
                     }
-                    else -> {
-                        blockViews[index].updateLanguage(codeFence.ideaLanguage)
-                        blockViews[index].updateViewText(codeFence.text)
-                    }
-                }
-            } else {
-                runInEdt {
+                } else {
                     val codeBlockViewer = CodeHighlightSketch(project, codeFence.text, PlainTextLanguage.INSTANCE)
                     blockViews.add(codeBlockViewer)
-                    myList.add(codeBlockViewer)
+                    myList.add(codeBlockViewer.getComponent())
                 }
             }
-        }
 
-        scrollToBottom()
+            while (blockViews.size > codeFenceList.size) {
+                val lastIndex = blockViews.lastIndex
+                blockViews.removeAt(lastIndex)
+                myList.remove(lastIndex)
+            }
+
+            myList.revalidate()
+            myList.repaint()
+
+            scrollToBottom()
+        }
     }
 
     fun onFinish(text: String) {

@@ -1,6 +1,7 @@
 package com.phodal.shirecore.ui.viewer.patch
 
 import com.intellij.icons.AllIcons
+import com.intellij.lang.Language
 import com.intellij.openapi.command.undo.UndoManager
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
@@ -12,13 +13,14 @@ import com.intellij.ui.dsl.builder.AlignX
 import com.intellij.ui.dsl.builder.panel
 import com.intellij.util.ui.JBUI
 import com.phodal.shirecore.ShireCoreBundle
+import com.phodal.shirecore.ui.viewer.LangSketch
 import java.awt.BorderLayout
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.*
 
 
-class SingleFileDiffView(private val myProject: Project, private val filepath: VirtualFile) {
+class SingleFileDiffView(private val myProject: Project, private val filepath: VirtualFile) : LangSketch {
     private val mainPanel: JPanel = JPanel(VerticalLayout(5))
     private val myHeaderPanel: JPanel = JPanel(BorderLayout())
 
@@ -99,7 +101,23 @@ class SingleFileDiffView(private val myProject: Project, private val filepath: V
         return listOf(rollback)
     }
 
-    fun getComponent(): JComponent {
+    override fun getViewText(): String {
+        return ""
+    }
+
+    override fun updateViewText(text: String) {
+        // do nothing
+    }
+
+    override fun getComponent(): JComponent {
         return mainPanel
+    }
+
+    override fun updateLanguage(language: Language?) {
+
+    }
+
+    override fun dispose() {
+
     }
 }

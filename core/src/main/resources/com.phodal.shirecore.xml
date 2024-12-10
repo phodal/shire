@@ -159,6 +159,12 @@
             <with attribute="implementationClass"
                   implements="com.phodal.shirecore.provider.complexity.ComplexityProvider"/>
         </extensionPoint>
+
+        <!-- Lang Sketch Provider -->
+        <extensionPoint qualifiedName="com.phodal.shireLangSketchProvider"
+                        interface="com.phodal.shirecore.provider.sketch.LanguageSketchProvider"
+                        dynamic="true">
+        </extensionPoint>
     </extensionPoints>
 
     <extensions defaultExtensionNs="JavaScript.JsonSchema">

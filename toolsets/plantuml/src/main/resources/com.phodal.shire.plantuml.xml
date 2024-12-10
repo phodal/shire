@@ -8,5 +8,7 @@
         <shireLanguageToolchainProvider
                 language="PUML"
                 implementationClass="com.phodal.shire.plantuml.PlantUmlToolchainProvider"/>
+
+        <shireLangSketchProvider implementation="com.phodal.shire.plantuml.PlantUmlSketchProvider"/>
     </extensions>
 </idea-plugin>
