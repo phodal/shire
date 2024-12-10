@@ -7,14 +7,18 @@ import com.intellij.openapi.command.undo.UndoManager
 import com.intellij.openapi.diff.impl.patch.PatchReader
 import com.intellij.openapi.diff.impl.patch.TextFilePatch
 import com.intellij.openapi.fileEditor.FileEditorManager
+import com.intellij.openapi.fileEditor.FileEditorProvider
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.vcs.changes.patch.AbstractFilePatchInProgress
 import com.intellij.openapi.vcs.changes.patch.ApplyPatchDefaultExecutor
 import com.intellij.openapi.vcs.changes.patch.MatchPatchPaths
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.testFramework.LightVirtualFile
 import com.intellij.ui.JBColor
 import com.intellij.ui.components.panels.VerticalLayout
 import com.intellij.util.containers.MultiMap
+import com.intellij.util.ui.JBUI
 import com.phodal.shirecore.ShireCoreBundle
 import com.phodal.shirecore.ShirelangNotifications
 import com.phodal.shirecore.findFile
@@ -41,8 +45,10 @@ class DiffLangSketch(private val myProject: Project, private var patchContent: S
     private val filePatches: MutableList<TextFilePatch> = myReader.textPatches
 
     init {
-        val createHeaderAction = createHeaderAction()
-        myHeaderPanel.add(createHeaderAction, BorderLayout.EAST)
+        val header = createHeaderAction()
+        header.border = JBUI.Borders.emptyTop(10)
+
+        myHeaderPanel.add(header, BorderLayout.EAST)
         mainPanel.add(myHeaderPanel)
 
         ApplicationManager.getApplication().invokeAndWait {
@@ -131,11 +137,33 @@ class DiffLangSketch(private val myProject: Project, private var patchContent: S
         if (beforeFileNames.size > 1) {
             return defaultView()
         } else {
-//            val patchDiffRequest = PatchDiffRequest(filePatches.first())
-//            DiffManager.getInstance().showDiff(myProject, patchDiffRequest, DiffDialogHints.DEFAULT)
-        }
+            val firstOrNull = FileEditorProvider.EP_FILE_EDITOR_PROVIDER.extensionList.firstOrNull {
+                it.javaClass.simpleName == "DiffPatchFileEditorProvider"
+            }
 
-        return defaultView()
+            if (firstOrNull != null) {
+                val virtualFile = LightVirtualFile("diff.diff", patchContent)
+                val editor = firstOrNull.createEditor(myProject, virtualFile)
+                object: DialogWrapper(myProject) {
+                    init {
+                        title = "Diff Preview"
+                        setOKButtonText("Accept")
+                        init()
+                    }
+
+                    override fun doOKAction() {
+                        handleAcceptAction()
+                        super.doOKAction()
+                    }
+
+                    override fun createCenterPanel(): JComponent {
+                        return editor.component
+                    }
+                }.show()
+            } else {
+                return defaultView()
+            }
+        }
     }
 
     private fun defaultView() {
