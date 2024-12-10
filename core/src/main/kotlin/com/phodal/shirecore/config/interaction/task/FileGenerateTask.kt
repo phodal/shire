@@ -20,6 +20,17 @@ import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.runBlocking
 import java.nio.file.Path
 import kotlin.io.path.Path
+import com.intellij.diff.tools.simple.SimpleDiffViewer
+import com.intellij.diff.tools.util.TwosideContentPanel
+import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.editor.ex.EditorEx
+import com.intellij.openapi.editor.impl.EditorImpl
+import com.intellij.openapi.fileEditor.FileEditorManager
+import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.psi.PsiDocumentManager
+import com.intellij.ui.components.JBPanel
+import java.awt.BorderLayout
+import javax.swing.JPanel
 
 open class FileGenerateTask(
     @JvmField val project: Project,
@@ -99,6 +110,21 @@ open class FileGenerateTask(
                     }
                 }
             }
+        }
+    }
+
+    private fun createDiffViewerPanel(): JPanel {
+        val panel = JBPanel<JBPanel<*>>(BorderLayout())
+        val contentPanel = TwosideContentPanel()
+        val diffViewer = SimpleDiffViewer(project, contentPanel)
+        panel.add(diffViewer.component, BorderLayout.CENTER)
+        return panel
+    }
+
+    private fun addHyperlinkToCompileOutput(output: String): String {
+        val hyperlinkRegex = Regex("(https?://\\S+)")
+        return output.replace(hyperlinkRegex) { matchResult ->
+            "<a href=\"${matchResult.value}\">${matchResult.value}</a>"
         }
     }
 }

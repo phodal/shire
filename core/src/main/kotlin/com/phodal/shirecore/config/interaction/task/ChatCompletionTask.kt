@@ -19,6 +19,17 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.awt.event.KeyEvent
 import javax.swing.KeyStroke
+import com.intellij.diff.tools.simple.SimpleDiffViewer
+import com.intellij.diff.tools.util.TwosideContentPanel
+import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.editor.ex.EditorEx
+import com.intellij.openapi.editor.impl.EditorImpl
+import com.intellij.openapi.fileEditor.FileEditorManager
+import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.psi.PsiDocumentManager
+import com.intellij.ui.components.JBPanel
+import java.awt.BorderLayout
+import javax.swing.JPanel
 
 open class ChatCompletionTask(private val request: CodeCompletionRequest) :
     ShireInteractionTask(request.project, ShireCoreBundle.message("intentions.chat.code.complete.name"), request.postExecute) {
@@ -98,11 +109,50 @@ open class ChatCompletionTask(private val request: CodeCompletionRequest) :
 
     override fun onThrowable(error: Throwable) {
         super.onThrowable(error)
+        if (error.message?.contains("/goto") == true) {
+            handleGotoCommand(error.message!!)
+        }
+    }
+
+    private fun handleGotoCommand(command: String) {
+        val symbol = command.substringAfter("/goto").trim()
+        val file = findFileContainingSymbol(symbol)
+        if (file != null) {
+            openFileInEditor(file)
+        } else {
+            logger.warn("Symbol not found: $symbol")
+        }
+    }
+
+    private fun findFileContainingSymbol(symbol: String): VirtualFile? {
+        // Implement logic to find the file containing the symbol
+        return null
+    }
+
+    private fun openFileInEditor(file: VirtualFile) {
+        invokeLater {
+            FileEditorManager.getInstance(request.project).openFile(file, true)
+        }
     }
 
     override fun onCancel() {
         this.isCanceled = true
         this.cancelCallback?.invoke("This job is canceled")
         super.onCancel()
+    }
+
+    private fun createDiffViewerPanel(): JPanel {
+        val panel = JBPanel<JBPanel<*>>(BorderLayout())
+        val contentPanel = TwosideContentPanel()
+        val diffViewer = SimpleDiffViewer(request.project, contentPanel)
+        panel.add(diffViewer.component, BorderLayout.CENTER)
+        return panel
+    }
+
+    private fun addHyperlinkToCompileOutput(output: String): String {
+        val hyperlinkRegex = Regex("(https?://\\S+)")
+        return output.replace(hyperlinkRegex) { matchResult ->
+            "<a href=\"${matchResult.value}\">${matchResult.value}</a>"
+        }
     }
 }
