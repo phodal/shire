@@ -18,7 +18,7 @@ interface LangSketch : Disposable {
     fun getViewText(): String
     fun updateViewText(text: String)
     fun getComponent(): JComponent
-    fun updateLanguage(language: Language?)
+    fun updateLanguage(language: Language?, originLanguage: String?)
     fun doneUpdateText(text: String) {}
 
     fun setupActionBar(project: Project, editor: Editor) {

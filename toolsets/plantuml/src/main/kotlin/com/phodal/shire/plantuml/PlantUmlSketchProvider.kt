@@ -75,7 +75,7 @@ class PlantUmlSketch(private val project: Project, private val virtualFile: Virt
         return mainPanel
     }
 
-    override fun updateLanguage(language: Language?) {
+    override fun updateLanguage(language: Language?, originLanguage: String?) {
     }
 
     override fun dispose() {

@@ -1,5 +1,7 @@
 package com.phodal.shirecore.ui.viewer
 
+import com.intellij.diff.DiffDialogHints
+import com.intellij.diff.DiffManager
 import com.intellij.icons.AllIcons
 import com.intellij.lang.Language
 import com.intellij.openapi.application.ApplicationManager
@@ -11,6 +13,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vcs.changes.patch.AbstractFilePatchInProgress
 import com.intellij.openapi.vcs.changes.patch.ApplyPatchDefaultExecutor
 import com.intellij.openapi.vcs.changes.patch.MatchPatchPaths
+import com.intellij.openapi.vcs.changes.patch.tool.PatchDiffRequest
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.JBColor
 import com.intellij.ui.components.panels.VerticalLayout
@@ -127,16 +130,26 @@ class DiffLangSketch(private val myProject: Project, private var patchContent: S
     }
 
     private fun handleViewDiffAction() {
+        val beforeFileNames = filePatches.mapNotNull { it.beforeFileName }
+        if (beforeFileNames.size > 1) {
+            return defaultView()
+        } else {
+            val patchDiffRequest = PatchDiffRequest(filePatches.first())
+            DiffManager.getInstance().showDiff(myProject, patchDiffRequest, DiffDialogHints.DEFAULT)
+        }
+    }
+
+    private fun defaultView() {
         MyApplyPatchFromClipboardDialog(myProject, patchContent).show()
     }
 
-    override fun getExtensionName(): String = "diff"
+    override fun getExtensionName(): String = "patch"
     override fun getViewText(): String = patchContent
     override fun updateViewText(text: String) {
         this.patchContent = text
     }
 
     override fun getComponent(): JComponent = mainPanel
-    override fun updateLanguage(language: Language?) {}
+    override fun updateLanguage(language: Language?, originLanguage: String?) {}
     override fun dispose() {}
 }

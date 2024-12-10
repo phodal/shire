@@ -6,7 +6,7 @@ import com.phodal.shirecore.provider.sketch.LanguageSketchProvider
 
 class DiffLangSketchProvider : LanguageSketchProvider {
     override fun isSupported(lang: String): Boolean {
-        return lang == "diff"
+        return lang == "diff" || lang == "patch"
     }
 
     override fun createSketch(project: Project, content: String): ExtensionLangSketch {

@@ -112,7 +112,7 @@ class SingleFileDiffView(private val myProject: Project, private val virtualFile
 
     override fun getComponent(): JComponent = mainPanel
 
-    override fun updateLanguage(language: Language?) {}
+    override fun updateLanguage(language: Language?, originLanguage: String?) {}
 
     override fun dispose() {}
 }

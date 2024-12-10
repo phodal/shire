@@ -2,9 +2,6 @@ package com.phodal.shirecore.ui.viewer
 
 import com.intellij.lang.Language
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.actionSystem.ActionGroup
-import com.intellij.openapi.actionSystem.ActionManager
-import com.intellij.openapi.actionSystem.ActionPlaces
 import com.intellij.openapi.actionSystem.DataProvider
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ReadAction
@@ -13,14 +10,13 @@ import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.EditorFactory
 import com.intellij.openapi.editor.EditorKind
-import com.intellij.openapi.editor.colors.EditorColorsListener
-import com.intellij.openapi.editor.colors.EditorColorsManager
 import com.intellij.openapi.editor.ex.EditorEx
 import com.intellij.openapi.editor.ex.EditorMarkupModel
 import com.intellij.openapi.editor.ex.FocusChangeListener
 import com.intellij.openapi.editor.ex.MarkupModelEx
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory
 import com.intellij.openapi.fileEditor.FileDocumentManager
+import com.intellij.openapi.fileEditor.FileEditorProvider
 import com.intellij.openapi.fileTypes.PlainTextLanguage
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
@@ -28,7 +24,6 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.testFramework.LightVirtualFile
 import com.intellij.ui.components.JBPanel
 import com.intellij.util.concurrency.annotations.RequiresReadLock
-import com.intellij.util.messages.Topic
 import com.phodal.shirecore.ui.EditorFragment
 import com.phodal.shirecore.utils.markdown.CodeFenceLanguage
 import java.awt.BorderLayout
@@ -37,6 +32,7 @@ import javax.swing.JComponent
 
 class CodeHighlightSketch(val project: Project, val text: String, private var ideaLanguage: Language?) :
     JBPanel<CodeHighlightSketch>(BorderLayout()), DataProvider, LangSketch {
+    private var textLanguage: String? = null
 
     var editorFragment: EditorFragment? = null
     private var hasSetupAction = false
@@ -51,7 +47,7 @@ class CodeHighlightSketch(val project: Project, val text: String, private var id
         if (hasSetupAction) return
         hasSetupAction = true
 
-        val editor = createCodeViewerEditor(project, text, ideaLanguage, this)
+        val editor = createCodeViewerEditor(project, text, ideaLanguage, this, textLanguage)
 
         editorFragment = EditorFragment(editor)
         add(editorFragment!!.getContent(), BorderLayout.CENTER)
@@ -65,9 +61,10 @@ class CodeHighlightSketch(val project: Project, val text: String, private var id
         return editorFragment?.editor?.document?.text ?: ""
     }
 
-    override fun updateLanguage(language: Language?) {
+    override fun updateLanguage(language: Language?, originLanguage: String?) {
         if (ideaLanguage == null || ideaLanguage == PlainTextLanguage.INSTANCE) {
             ideaLanguage = language
+            textLanguage = originLanguage
         }
     }
 
@@ -92,6 +89,7 @@ class CodeHighlightSketch(val project: Project, val text: String, private var id
             text: String,
             ideaLanguage: Language?,
             disposable: Disposable,
+            textLanguage: String?,
         ): EditorEx {
             val language = ideaLanguage ?: CodeFenceLanguage.findLanguage("Plain text")
             val ext = CodeFenceLanguage.lookupFileExt(language.displayName)

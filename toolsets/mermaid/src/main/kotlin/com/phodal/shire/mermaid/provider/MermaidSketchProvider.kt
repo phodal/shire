@@ -55,7 +55,7 @@ class MermaidSketch(private val project: Project, private val virtualFile: Virtu
 
     override fun getComponent(): JComponent = mainPanel
 
-    override fun updateLanguage(language: Language?) {}
+    override fun updateLanguage(language: Language?, originLanguage: String?) {}
 
     override fun dispose() {}
 }

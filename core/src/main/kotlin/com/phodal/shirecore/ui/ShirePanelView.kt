@@ -17,7 +17,6 @@ import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
 import com.phodal.shirecore.provider.sketch.ExtensionLangSketch
 import com.phodal.shirecore.ui.viewer.CodeHighlightSketch
-import com.phodal.shirecore.ui.viewer.DiffLangSketch
 import com.phodal.shirecore.ui.viewer.LangSketch
 import com.phodal.shirecore.utils.markdown.CodeFence
 import com.phodal.shirecore.utils.markdown.CodeFenceLanguage
@@ -122,7 +121,7 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
                         oldComponent.dispose()
                     } else {
                         blockViews[index].apply {
-                            updateLanguage(codeFence.ideaLanguage)
+                            updateLanguage(codeFence.ideaLanguage, codeFence.originLanguage)
                             updateViewText(codeFence.text)
                         }
                     }
