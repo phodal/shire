@@ -7,7 +7,6 @@ import com.intellij.execution.configurations.RunConfiguration
 import com.intellij.execution.configurations.RunProfile
 import com.intellij.execution.executors.DefaultRunExecutor
 import com.intellij.execution.runners.ExecutionEnvironmentBuilder
-import com.intellij.openRewrite.recipe.OpenRewriteType
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
@@ -126,10 +125,12 @@ class OpenRewriteFileRunService : FileRunService {
         nameMethod.invoke(configuration)
     }
 
-    private fun getRecipeDescriptors(project: Project, virtualFile: VirtualFile): java.util.LinkedHashMap<*, *>? {
+    private fun getRecipeDescriptors(project: Project, virtualFile: VirtualFile): LinkedHashMap<*, *>? {
         val clazz = Class.forName("com.intellij.openRewrite.recipe.OpenRewriteRecipeService")
         val getInstanceMethod = clazz.getDeclaredMethod("getInstance", Project::class.java)
         val recipeService = getInstanceMethod.invoke(null, project)
+        val OpenRewriteType = Class.forName("com.intellij.openRewrite.recipe.OpenRewriteType").getEnumConstants()[0]
+
         val method =
             clazz.getDeclaredMethod("getLocalDescriptors", PsiFile::class.java, OpenRewriteType::class.java)
         method.isAccessible = true
@@ -139,7 +140,8 @@ class OpenRewriteFileRunService : FileRunService {
         } ?: return null
 
         val list = runReadAction {
-            method.invoke(recipeService, psiFile, OpenRewriteType.RECIPE) as LinkedHashMap<*, *>
+            val type = OpenRewriteType::class.java.enumConstants[0]
+            method.invoke(recipeService, psiFile, type) as LinkedHashMap<*, *>
         }
 
         return list
