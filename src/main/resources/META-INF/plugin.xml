@@ -29,6 +29,8 @@
         <module name="com.phodal.shire.mock"/>
         <module name="com.phodal.shire.sonarqube"/>
         <module name="com.phodal.shire.openrewrite"/>
+        <module name="com.phodal.shire.mermaid"/>
+        <module name="com.phodal.shire.plantuml"/>
     </content>
 
     <extensions defaultExtensionNs="com.intellij">

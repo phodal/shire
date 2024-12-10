@@ -228,7 +228,7 @@ project(":languages:shire-python") {
     dependencies {
         intellijPlatform {
             intellijIde(prop("ideaVersion"))
-            intellijPlugins(ideaPlugins + prop("platformPlugins"))
+            intellijPlugins(ideaPlugins + prop("pythonPlugins"))
         }
 
         implementation(project(":core"))
@@ -609,6 +609,7 @@ project(":") {
             pluginModule(implementation(project(":toolsets:database")))
             pluginModule(implementation(project(":toolsets:mock")))
             pluginModule(implementation(project(":toolsets:openrewrite")))
+            pluginModule(implementation(project(":toolsets:plantuml")))
             pluginModule(implementation(project(":toolsets:mermaid")))
 
             testFramework(TestFrameworkType.Bundled)
