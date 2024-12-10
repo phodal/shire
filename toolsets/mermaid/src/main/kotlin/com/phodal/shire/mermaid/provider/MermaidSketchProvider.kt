@@ -1,7 +1,6 @@
 package com.phodal.shire.mermaid.provider
 
 import com.intellij.lang.Language
-import com.intellij.openapi.actionSystem.PlatformDataKeys
 import com.intellij.openapi.fileEditor.FileEditorProvider
 import com.intellij.openapi.fileEditor.TextEditorWithPreview
 import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider

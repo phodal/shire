@@ -18,6 +18,7 @@ import com.intellij.util.containers.MultiMap
 import com.phodal.shirecore.ShireCoreBundle
 import com.phodal.shirecore.ShirelangNotifications
 import com.phodal.shirecore.findFile
+import com.phodal.shirecore.provider.sketch.ExtensionLangSketch
 import com.phodal.shirecore.ui.viewer.patch.MyApplyPatchFromClipboardDialog
 import com.phodal.shirecore.ui.viewer.patch.SingleFileDiffView
 import java.awt.BorderLayout
@@ -26,7 +27,7 @@ import javax.swing.JButton
 import javax.swing.JComponent
 import javax.swing.JPanel
 
-class DiffLangSketch(private val myProject: Project, private var patchContent: String) : LangSketch {
+class DiffLangSketch(private val myProject: Project, private var patchContent: String) : ExtensionLangSketch {
     private val mainPanel: JPanel = JPanel(VerticalLayout(5))
     private val myHeaderPanel: JPanel = JPanel(BorderLayout())
     private val shelfExecutor = ApplyPatchDefaultExecutor(myProject)
@@ -128,6 +129,10 @@ class DiffLangSketch(private val myProject: Project, private var patchContent: S
 
     private fun handleViewDiffAction() {
         MyApplyPatchFromClipboardDialog(myProject, patchContent).show()
+    }
+
+    override fun getExtensionName(): String {
+        return "diff"
     }
 
 

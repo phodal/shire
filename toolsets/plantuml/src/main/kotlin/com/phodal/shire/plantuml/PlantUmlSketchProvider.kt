@@ -16,7 +16,6 @@ import org.plantuml.idea.preview.editor.SplitFileEditor
 import org.plantuml.idea.rendering.LazyApplicationPoolExecutor
 import org.plantuml.idea.rendering.RenderCommand
 import org.plantuml.idea.settings.PlantUmlSettings
-import java.awt.BorderLayout
 import javax.swing.JComponent
 import javax.swing.JPanel
 

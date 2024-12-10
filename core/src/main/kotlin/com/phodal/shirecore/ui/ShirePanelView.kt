@@ -97,45 +97,23 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
         runInEdt {
             codeFenceList.forEachIndexed { index, codeFence ->
                 if (index < blockViews.size) {
-                    when (codeFence.originLanguage) {
-                        "diff" -> {
-                            if (codeFence.isComplete && blockViews[index] !is DiffLangSketch) {
-                                val diffLangSketch = DiffLangSketch(project, codeFence.text)
-                                val oldComponent = blockViews[index]
+                    var langSketch: ExtensionLangSketch? = null
+                    if (codeFence.originLanguage != null && codeFence.isComplete && blockViews[index] !is ExtensionLangSketch) {
+                        langSketch = LanguageSketchProvider.provide(codeFence.originLanguage)
+                            ?.createSketch(project, codeFence.text)
+                    }
 
-                                blockViews[index] = diffLangSketch
-                                myList.remove(index)
-                                myList.add(diffLangSketch.getComponent(), index)
+                    if (langSketch != null) {
+                        val oldComponent = blockViews[index]
+                        blockViews[index] = langSketch
+                        myList.remove(index)
+                        myList.add(langSketch.getComponent(), index)
 
-                                oldComponent.dispose()
-                            } else {
-                                blockViews[index].apply {
-                                    updateLanguage(codeFence.ideaLanguage)
-                                    updateViewText(codeFence.text)
-                                }
-                            }
-                        }
-
-                        else -> {
-                            var langSketch: ExtensionLangSketch? = null
-                            if (codeFence.originLanguage != null && codeFence.isComplete && blockViews[index] !is ExtensionLangSketch) {
-                                langSketch = LanguageSketchProvider.provide(codeFence.originLanguage)
-                                    ?.createSketch(project, codeFence.text)
-                            }
-
-                            if (langSketch != null) {
-                                val oldComponent = blockViews[index]
-                                blockViews[index] = langSketch
-                                myList.remove(index)
-                                myList.add(langSketch.getComponent(), index)
-
-                                oldComponent.dispose()
-                            } else {
-                                blockViews[index].apply {
-                                    updateLanguage(codeFence.ideaLanguage)
-                                    updateViewText(codeFence.text)
-                                }
-                            }
+                        oldComponent.dispose()
+                    } else {
+                        blockViews[index].apply {
+                            updateLanguage(codeFence.ideaLanguage)
+                            updateViewText(codeFence.text)
                         }
                     }
                 } else {
