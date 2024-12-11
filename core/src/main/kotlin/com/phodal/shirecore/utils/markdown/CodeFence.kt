@@ -43,7 +43,7 @@ class CodeFence(
                 language.associatedFileType?.defaultExtension ?: CodeFenceLanguage.lookupFileExt(languageId ?: "txt")
 
             return if (trimmedCode.isEmpty()) {
-                CodeFence(language, content.replace("\\n", "\n"), codeClosed, extension, languageId)
+                CodeFence(language, "", codeClosed, extension, languageId)
             } else {
                 CodeFence(language, trimmedCode, codeClosed, extension, languageId)
             }
