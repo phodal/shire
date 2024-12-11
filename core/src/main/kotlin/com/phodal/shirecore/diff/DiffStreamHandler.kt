@@ -98,8 +98,8 @@ class DiffStreamHandler(
                         return@collect
                     }
 
-                    val newLines = if (lastLineNo + value.size < lines.size) {
-                        lines.subList(lastLineNo, lastLineNo + value.size)
+                    val newLines = if (lastLineNo < value.size) {
+                        value.subList(lastLineNo, value.size)
                     } else {
                         listOf()
                     }
@@ -109,8 +109,7 @@ class DiffStreamHandler(
                     }
 
                     val flowValue: Flow<String> = flowOf(*newLines.toTypedArray())
-                    // pick until oldLines.size from originContent
-                    val oldLinesContent = if (lastLineNo + newLines.size < lines.size) {
+                    val oldLinesContent = if (lastLineNo + newLines.size <= lines.size) {
                         lines.subList(lastLineNo, lastLineNo + newLines.size)
                     } else {
                         listOf()
