@@ -109,7 +109,7 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
                     var langSketch: ExtensionLangSketch? = null
                     if (codeFence.originLanguage != null && codeFence.isComplete && blockViews[index] !is ExtensionLangSketch) {
                         langSketch = LanguageSketchProvider.provide(codeFence.originLanguage)
-                            ?.createSketch(project, codeFence.text)
+                            ?.create(project, codeFence.text)
                     }
 
                     if (langSketch != null) {

@@ -24,7 +24,7 @@ class PlantUmlSketchProvider : LanguageSketchProvider {
         return lang == "plantuml" || lang == "puml" || lang == "uml"
     }
 
-    override fun createSketch(project: Project, content: String): ExtensionLangSketch {
+    override fun create(project: Project, content: String): ExtensionLangSketch {
         val virtualFile = LightVirtualFile("plantuml.puml", content)
         return PlantUmlSketch(project, virtualFile)
     }

@@ -194,7 +194,7 @@
         <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.OpenWebpageProcessor"/>
         <shirePostProcessor implementation="com.phodal.shirecore.middleware.builtin.ShowWebviewProcessor"/>
 
-        <!--   LocationInteractionProvider-->
+        <!--   EditorInteractionProvider-->
         <shireLocationInteraction implementation="com.phodal.shirecore.config.interaction.EditorInteractionProvider"/>
 
         <shireLangSketchProvider implementation="com.phodal.shirecore.sketch.patch.DiffLangSketchProvider" />

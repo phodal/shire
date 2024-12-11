@@ -156,7 +156,7 @@ class ShireMarketplaceTableView(val project: Project) {
                     将上述代码块复制到你的代码编辑器中，并应用这些补丁，即可实现通过 `PATCH` 方法删除博客的功能。
                 """.trimIndent()
                 cell(
-                    LanguageSketchProvider.provide("patch")!!.createSketch(project, patchContent).getComponent()
+                    LanguageSketchProvider.provide("patch")!!.create(project, patchContent).getComponent()
                 ).align(Align.FILL)
             }
         }

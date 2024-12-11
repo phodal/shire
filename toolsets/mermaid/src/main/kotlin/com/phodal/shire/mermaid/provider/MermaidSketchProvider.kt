@@ -20,7 +20,7 @@ class MermaidSketchProvider : LanguageSketchProvider {
         return lang == "mermaid" || lang == "mmd"
     }
 
-    override fun createSketch(project: Project, content: String): ExtensionLangSketch {
+    override fun create(project: Project, content: String): ExtensionLangSketch {
         val file = LightVirtualFile("mermaid.mermaid", content)
         return MermaidSketch(project, file)
     }

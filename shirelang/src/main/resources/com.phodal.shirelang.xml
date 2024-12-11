@@ -195,21 +195,6 @@
                     icon="AllIcons.Actions.Execute"
                     class="com.phodal.shirecore.sketch.highlight.toolbar.ShireRunCodeAction"/>
         </group>
-
-<!--        <group id="Shire.DiffView.Toolbar">-->
-<!--            <action id="Shire.ToolWindow.Snippet.AcceptDiff"-->
-<!--                    icon="AllIcons.Actions.SetDefault"-->
-<!--                    text="Accept"-->
-<!--                    class="com.phodal.shirecore.ui.toolbar.diff.ShireAcceptDiffAction"/>-->
-<!--            <action id="Shire.ToolWindow.Toolbar.RejectDiff"-->
-<!--                    icon="AllIcons.Actions.Rollback"-->
-<!--                    text="Reject"-->
-<!--                    class="com.phodal.shirecore.ui.toolbar.diff.ShireRejectDiffAction"/>-->
-<!--            <action id="Shire.ToolWindow.Toolbar.ViewDiff"-->
-<!--                    icon="AllIcons.Actions.ListChanges"-->
-<!--                    text="View Diff"-->
-<!--                    class="com.phodal.shirecore.ui.toolbar.diff.ShireViewDiffAction"/>-->
-<!--        </group>-->
     </actions>
 
     <extensions defaultExtensionNs="com.phodal">

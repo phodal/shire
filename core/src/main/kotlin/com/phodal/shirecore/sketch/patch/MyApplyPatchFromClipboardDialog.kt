@@ -18,9 +18,7 @@ class MyApplyPatchFromClipboardDialog(project: Project, clipboardText: String) :
         LightVirtualFile("clipboardPatchFile", clipboardText), null, null,  //NON-NLS
         null, null, null, false
     ) {
-    override fun createDoNotAskCheckbox(): JComponent? {
-        return createAnalyzeOnTheFlyOptionPanel()
-    }
+    override fun createDoNotAskCheckbox(): JComponent = createAnalyzeOnTheFlyOptionPanel()
 
     companion object {
         private fun createAnalyzeOnTheFlyOptionPanel(): JCheckBox {

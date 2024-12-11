@@ -12,7 +12,7 @@ interface ExtensionLangSketch: LangSketch {
 interface LanguageSketchProvider {
     fun isSupported(lang: String): Boolean
 
-    fun createSketch(project: Project, content: String): ExtensionLangSketch
+    fun create(project: Project, content: String): ExtensionLangSketch
 
     companion object {
         private val EP_NAME: ExtensionPointName<LanguageSketchProvider> =
