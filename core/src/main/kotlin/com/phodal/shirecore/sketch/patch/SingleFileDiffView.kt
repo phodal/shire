@@ -45,13 +45,11 @@ class SingleFileDiffView(private val myProject: Project, private val virtualFile
 
                 override fun mouseEntered(e: MouseEvent) {
                     foreground = JBColor.WHITE
-                    actions.forEach { it.foreground = JBColor.WHITE }
                     filePanel?.background = JBColor(DarculaColors.BLUE, DarculaColors.BLUE)
                 }
 
                 override fun mouseExited(e: MouseEvent) {
                     foreground = JBColor.BLACK
-                    actions.forEach { it.foreground = JBColor.BLACK }
                     filePanel?.background = JBColor.PanelBackground
                 }
             })
