@@ -1,10 +1,19 @@
 package com.phodal.shirecore.diff.model
 
+import com.phodal.shirecore.diff.DiffLineType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.toList
 
 sealed class DiffLine {
+    fun toDiffLineType(): DiffLineType {
+        return when (this) {
+            is Same -> DiffLineType.SAME
+            is New -> DiffLineType.NEW
+            is Old -> DiffLineType.OLD
+        }
+    }
+
     data class Same(val line: String) : DiffLine()
     data class New(val line: String) : DiffLine()
     data class Old(val line: String) : DiffLine()

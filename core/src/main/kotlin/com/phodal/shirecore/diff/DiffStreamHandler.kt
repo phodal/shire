@@ -109,14 +109,13 @@ class DiffStreamHandler(
                     }
 
                     val flowValue: Flow<String> = flowOf(*newLines.toTypedArray())
-                    lastLineNo = value.size
-
                     // pick until oldLines.size from originContent
                     val oldLinesContent = if (lastLineNo + newLines.size < lines.size) {
                         lines.subList(lastLineNo, lastLineNo + newLines.size)
                     } else {
                         listOf()
                     }
+                    lastLineNo = value.size
 
                     streamDiff(oldLinesContent, flowValue).collect {
                         ApplicationManager.getApplication().invokeLater {
@@ -134,6 +133,8 @@ class DiffStreamHandler(
                                         handleSameLine()
                                     }
                                 }
+
+                                updateProgressHighlighters(it.toDiffLineType())
                             }
                         }
                     }
