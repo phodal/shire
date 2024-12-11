@@ -2,69 +2,63 @@ package com.phodal.shirecore.diff.model
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.toList
 
 sealed class DiffLine {
+    data class Same(val line: String) : DiffLine()
     data class New(val line: String) : DiffLine()
     data class Old(val line: String) : DiffLine()
-    data class Same(val line: String) : DiffLine()
 }
 
-data class MatchResult(val matchIndex: Int, val isPerfectMatch: Boolean, val newLine: String)
-
-fun matchLine(newLine: String, oldLines: List<String>, seenIndentationMistake: Boolean): MatchResult {
-    for ((index, oldLine) in oldLines.withIndex()) {
-        if (oldLine == newLine) {
-            return MatchResult(index, true, newLine)
-        } else if (!seenIndentationMistake && oldLine.trim() == newLine.trim()) {
-            return MatchResult(index, false, oldLine)
-        }
-    }
-    return MatchResult(-1, false, newLine)
-}
-
-/**
- * https://blog.jcoglan.com/2017/02/12/the-myers-diff-algorithm-part-1/
- * Invariants:
- * - new + same = newLines.length
- * - old + same = oldLinesCopy.length
- * ^ (above two guarantee that all lines get represented)
- * - Lines are always output in order, at least among old and new separately
- * - Old lines in a hunk are always output before the new lines
- */
 fun streamDiff(oldLines: List<String>, newLines: Flow<String>): Flow<DiffLine> = flow {
-    val oldLinesCopy = oldLines.toMutableList()
-    var seenIndentationMistake = false
+    val newLinesList = newLines.toList()
+    val diffs = diff(oldLines, newLinesList)
+    for (diff in diffs) {
+        emit(diff)
+    }
+}
 
-    newLines.collect { newLine ->
-        val (matchIndex, isPerfectMatch, matchedNewLine) = matchLine(newLine, oldLinesCopy, seenIndentationMistake)
+private fun diff(oldLines: List<String>, newLines: List<String>): List<DiffLine> {
+    // 计算 LCS 长度表
+    val lcs = computeLcsTable(oldLines, newLines)
+    // 回溯 LCS 表，构建差异列表
+    val diffs = mutableListOf<DiffLine>()
+    backtrackDiff(lcs, oldLines, newLines, oldLines.size, newLines.size, diffs)
+    return diffs
+}
 
-        if (!seenIndentationMistake && newLine != matchedNewLine) {
-            seenIndentationMistake = true
-        }
-
-        when {
-            matchIndex == -1 -> {
-                emit(DiffLine.New(newLine))
-            }
-
-            isPerfectMatch -> {
-                emit(DiffLine.Same(oldLinesCopy.removeAt(0)))
-            }
-
-            else -> {
-                for (i in 0 until matchIndex) {
-                    emit(DiffLine.Old(oldLinesCopy.removeAt(0)))
-                }
-                emit(DiffLine.Old(oldLinesCopy.removeAt(0)))
-                if (oldLinesCopy.firstOrNull() != newLine) {
-                    emit(DiffLine.New(newLine))
-                }
+private fun computeLcsTable(oldLines: List<String>, newLines: List<String>): Array<IntArray> {
+    val m = oldLines.size
+    val n = newLines.size
+    val table = Array(m + 1) { IntArray(n + 1) }
+    for (i in 0 until m) {
+        for (j in 0 until n) {
+            if (oldLines[i] == newLines[j]) {
+                table[i + 1][j + 1] = table[i][j] + 1
+            } else {
+                table[i + 1][j + 1] = maxOf(table[i + 1][j], table[i][j + 1])
             }
         }
     }
+    return table
+}
 
-    // Process remaining old lines
-    for (oldLine in oldLinesCopy) {
-        emit(DiffLine.Old(oldLine))
+private fun backtrackDiff(
+    lcs: Array<IntArray>,
+    oldLines: List<String>,
+    newLines: List<String>,
+    i: Int,
+    j: Int,
+    diffs: MutableList<DiffLine>,
+) {
+    if (i > 0 && j > 0 && oldLines[i - 1] == newLines[j - 1]) {
+        backtrackDiff(lcs, oldLines, newLines, i - 1, j - 1, diffs)
+        diffs.add(DiffLine.Same(oldLines[i - 1]))
+    } else if (j > 0 && (i == 0 || lcs[i][j - 1] >= lcs[i - 1][j])) {
+        backtrackDiff(lcs, oldLines, newLines, i, j - 1, diffs)
+        diffs.add(DiffLine.New(newLines[j - 1]))
+    } else if (i > 0 && (j == 0 || lcs[i][j - 1] < lcs[i - 1][j])) {
+        backtrackDiff(lcs, oldLines, newLines, i - 1, j, diffs)
+        diffs.add(DiffLine.Old(oldLines[i - 1]))
     }
 }
