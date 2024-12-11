@@ -44,10 +44,13 @@ class DiffLangSketch(private val myProject: Project, private var patchContent: S
 
     init {
         val header = createHeaderAction()
-        header.border = JBUI.Borders.emptyTop(10)
 
         myHeaderPanel.add(header, BorderLayout.EAST)
         mainPanel.add(myHeaderPanel)
+        mainPanel.border = JBUI.Borders.compound(
+            JBUI.Borders.empty(0, 10),
+            JBUI.Borders.customLine(JBColor.border(), 1, 1, 1, 1)
+        )
 
         ApplicationManager.getApplication().invokeAndWait {
             if (filePatches.isEmpty()) {

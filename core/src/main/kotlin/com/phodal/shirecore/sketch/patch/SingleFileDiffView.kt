@@ -5,17 +5,19 @@ import com.intellij.lang.Language
 import com.intellij.openapi.command.undo.UndoManager
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.DialogPanel
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.readText
+import com.intellij.ui.DarculaColors
 import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.panels.VerticalLayout
 import com.intellij.ui.dsl.builder.AlignX
 import com.intellij.ui.dsl.builder.panel
-import com.intellij.util.ui.JBUI
 import com.phodal.shirecore.ShireCoreBundle
 import com.phodal.shirecore.sketch.LangSketch
 import java.awt.BorderLayout
+import java.awt.Color
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.*
@@ -27,53 +29,43 @@ class SingleFileDiffView(private val myProject: Project, private val virtualFile
 
     init {
         val contentPanel = JPanel(BorderLayout())
-        val fileIcon = JLabel(virtualFile.fileType.icon)
 
         val filepathLabel = JBLabel(virtualFile.name).apply {
-            foreground = JBColor(0x888888, 0x888888)
-            background = JBColor(0xF5F5F5, 0x333333)
+            icon = virtualFile.fileType.icon
+            background = JBColor(Color(200, 216, 230), Color(135, 206, 235))
+            isOpaque = true
+            border = BorderFactory.createEmptyBorder(5, 10, 5, 10)
 
             addMouseListener(object : MouseAdapter() {
-                override fun mouseEntered(e: MouseEvent) {
-                    foreground = JBColor(0x0000FF, 0x0000FF)
-                    background = JBColor(0xF5F5F5, 0x333333)
-                }
-
                 override fun mouseClicked(e: MouseEvent?) {
                     FileEditorManager.getInstance(myProject).openFile(virtualFile, true)
+                }
+
+                override fun mouseEntered(e: MouseEvent) {
+                    foreground = JBColor(Color.WHITE, Color.WHITE)
+                    background = JBColor(DarculaColors.BLUE, DarculaColors.BLUE)
                 }
 
                 override fun mouseExited(e: MouseEvent) {
-                    foreground = JBColor(0x888888, 0x888888)
-                }
-            })
-        }
-
-        val filepathComponent = JPanel(BorderLayout()).apply {
-            add(filepathLabel, BorderLayout.WEST)
-            addMouseListener(object : MouseAdapter() {
-                override fun mouseClicked(e: MouseEvent?) {
-                    FileEditorManager.getInstance(myProject).openFile(virtualFile, true)
+                    background = JBColor(Color(200, 216, 230), Color(135, 206, 235))
                 }
             })
         }
 
         val actions = createActions()
-
-        val filePanel = panel {
+        val filePanel: DialogPanel = panel {
             row {
-                cell(fileIcon).align(AlignX.LEFT)
-                cell(filepathComponent).align(AlignX.LEFT)
+                cell(filepathLabel).align(AlignX.FILL).resizableColumn()
                 actions.forEach {
-                    cell(it).align(AlignX.RIGHT)
+                    cell(it).align(AlignX.LEFT)
                 }
             }
-        }.also {
-            it.background = JBColor(0xF5F5F5, 0x333333)
-            it.border = JBUI.Borders.empty(10)
         }
 
-        contentPanel.add(filePanel, BorderLayout.CENTER)
+        val fileContainer = JPanel(BorderLayout(10, 10)).also {
+            it.add(filePanel)
+        }
+        contentPanel.add(fileContainer, BorderLayout.CENTER)
 
         mainPanel.add(myHeaderPanel)
         mainPanel.add(contentPanel)
@@ -86,15 +78,9 @@ class SingleFileDiffView(private val myProject: Project, private val virtualFile
         val rollback = JButton(AllIcons.Actions.Rollback).apply {
             toolTipText = ShireCoreBundle.message("sketch.patch.action.rollback.tooltip")
             isOpaque = true
-            border = BorderFactory.createEmptyBorder()
-            background = JBColor(0xF5F5F5, 0x333333)
             isEnabled = undoManager.isUndoAvailable(fileEditor)
 
             addMouseListener(object : MouseAdapter() {
-                override fun mouseEntered(e: MouseEvent?) {
-                    isOpaque = false
-                }
-
                 override fun mouseClicked(e: MouseEvent?) {
                     if (undoManager.isUndoAvailable(fileEditor)) {
                         undoManager.undo(fileEditor)

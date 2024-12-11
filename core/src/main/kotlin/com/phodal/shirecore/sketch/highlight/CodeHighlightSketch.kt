@@ -23,10 +23,12 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.testFramework.LightVirtualFile
 import com.intellij.ui.components.JBPanel
 import com.intellij.util.concurrency.annotations.RequiresReadLock
+import com.intellij.util.ui.JBUI
 import com.phodal.shirecore.sketch.LangSketch
 import com.phodal.shirecore.utils.markdown.CodeFenceLanguage
 import java.awt.BorderLayout
 import java.util.concurrent.atomic.AtomicBoolean
+import javax.swing.BorderFactory
 import javax.swing.JComponent
 
 class CodeHighlightSketch(val project: Project, val text: String, private var ideaLanguage: Language?) :
@@ -47,6 +49,9 @@ class CodeHighlightSketch(val project: Project, val text: String, private var id
         hasSetupAction = true
 
         val editor = createCodeViewerEditor(project, text, ideaLanguage, this, textLanguage)
+
+        editor.component.border = JBUI.Borders.empty(10)
+        editor.component.isOpaque = true
 
         editorFragment = EditorFragment(editor)
         add(editorFragment!!.getContent(), BorderLayout.CENTER)
