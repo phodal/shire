@@ -23,6 +23,20 @@ class CodeFenceTest : BasePlatformTestCase() {
         assertTrue(!code.isComplete)
     }
 
+    fun testShould_handle_code_for_when_code() {
+        val markdown = """
+            |下面是
+            |```java
+        """.trimMargin()
+
+        val code = CodeFence.parse(markdown)
+        assertEquals(
+            code.text, """
+        """.trimMargin()
+        )
+        assertTrue(!code.isComplete)
+    }
+
     fun testShould_handle_pure_markdown_content() {
         val content = "```markdown\\nGET /wp/v2/posts\\n```"
         val code = CodeFence.parse(content)
