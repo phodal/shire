@@ -2,6 +2,8 @@ package com.phodal.shire.marketplace.ui
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.intellij.icons.AllIcons
+import com.intellij.openapi.application.runInEdt
+import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.dsl.builder.Align
@@ -14,6 +16,8 @@ import com.phodal.shire.ShireMainBundle
 import com.phodal.shire.marketplace.model.ShirePackage
 import com.phodal.shire.marketplace.util.ShireDownloader
 import com.phodal.shirecore.ShirelangNotifications
+import com.phodal.shirecore.diff.DiffStreamHandler
+import com.phodal.shirecore.lookupFile
 import com.phodal.shirecore.provider.sketch.LanguageSketchProvider
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -105,60 +109,6 @@ class ShireMarketplaceTableView(val project: Project) {
             row {
                 cell(scrollPane).align(Align.FILL)
             }.resizableRow()
-
-            row {
-                val patchContent = """
-                    以下是使用 `PATCH` 方法来完成删除博客的代码补丁。这里提供了两个补丁，分别用于更新 `BlogController` 和 `BlogService`。
-
-                    ### BlogController 的补丁
-                    
-                    ```patch
-                    --- a/Users/phodal/IdeaProjects/shire-demo/src/main/java/com/phodal/shire/demo/controller/BlogController.java
-                    +++ b/Users/phodal/IdeaProjects/shire-demo/src/main/java/com/phodal/shire/demo/controller/BlogController.java
-                    @@ -44,6 +44,13 @@ public class BlogController {
-                         }
-                    
-                         /**
-                    +     * Delete a blog post by id.
-                    +     *
-                    +     * @param id The id of the blog post to delete
-                    +     */
-                    +    @PatchMapping("/{id}")
-                    +    public void deleteBlog(@PathVariable Long id) {
-                    +        blogService.deleteBlog(id);
-                         }
-                     }
-                    ```
-                    
-                    ### BlogService 的补丁
-                    
-                    实际上，根据你提供的 `BlogService` 代码，删除方法已经存在，所以这里不需要补丁。但如果你的项目需要遵循 RESTful API 的最佳实践，通常删除操作会使用 `DELETE` 方法而不是 `PATCH`。不过，如果你确实想使用 `PATCH` 来删除博客，以下是补丁示例：
-                    
-                    ```patch
-                    --- a/Users/phodal/IdeaProjects/shire-demo/src/main/java/com/phodal/shire/demo/service/BlogService.java
-                    +++ b/Users/phodal/IdeaProjects/shire-demo/src/main/java/com/phodal/shire/demo/service/BlogService.java
-                    @@ -20,6 +20,9 @@ public class BlogService {
-                         public void deleteBlog(Long id) {
-                             blogRepository.deleteById(id);
-                         }
-                    +
-                    +    /**
-                    +     * Alternative method to delete blog using PATCH, if required.
-                    +     */
-                    +    public void patchDeleteBlog(Long id) {
-                    +        blogRepository.deleteById(id);
-                    +    }
-                     }
-                    ```
-                    
-                    请注意，通常 `PATCH` 方法用于部分更新资源，而 `DELETE` 方法用于删除资源。如果你确实想使用 `PATCH` 来删除资源，你可能需要考虑设计你的 API 以支持这一行为。
-                    
-                    将上述代码块复制到你的代码编辑器中，并应用这些补丁，即可实现通过 `PATCH` 方法删除博客的功能。
-                """.trimIndent()
-                cell(
-                    LanguageSketchProvider.provide("patch")!!.create(project, patchContent).getComponent()
-                ).align(Align.FILL)
-            }
         }
 
         tableModel.items = makeApiCall()

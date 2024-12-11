@@ -1,3 +1,18 @@
+/**
+ * Copyright 2023 Continue Dev, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.phodal.shirecore.diff
 
 import com.intellij.openapi.application.ApplicationManager
@@ -29,6 +44,36 @@ enum class DiffLineType {
     SAME, NEW, OLD
 }
 
+/**
+ *
+ *     JButton("Apply Patch").apply {
+ *
+ *        addActionListener {
+ *            val lookupFile =
+ *                project.lookupFile("src/main/java/com/phodal/shire/demo/service/BlogService.java")!!
+ *            val editor = FileEditorManager.getInstance(project).selectedTextEditor
+ *            val code = lookupFile.inputStream.bufferedReader().use { it.readText() }
+ *
+ *            val diffStreamHandler = DiffStreamHandler(
+ *                project,
+ *                editor = editor!!, 0, code.lines().size,
+ *                onClose = {
+ *                },
+ *                onFinish = {
+ *                    ShirelangNotifications.info(project, "Patch Applied")
+ *                }
+ *            )
+ *
+ *            runInEdt {
+ *                diffStreamHandler
+ *                    .streamDiffLinesToEditor(
+ *                        code,
+ *                        "使用为如下的代码添加删除功能，请使用 Markdown  code 返回完整代码块: $code"
+ *                    )
+ *            }
+ *        }
+ *      }
+ */
 class DiffStreamHandler(
     private val project: Project,
     private val editor: Editor,
