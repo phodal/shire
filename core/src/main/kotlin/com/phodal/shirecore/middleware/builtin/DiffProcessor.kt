@@ -27,30 +27,24 @@ class DiffProcessor : PostProcessor {
         return true
     }
 
-    override fun execute(
-        project: Project,
-        context: PostProcessorContext,
-        console: ConsoleView?,
-        args: List<Any>,
-    ): Any {
+    override fun execute(project: Project, context: PostProcessorContext, console: ConsoleView?, args: List<Any>): Any {
         if (args.size < 2) {
             console?.print("DiffProcessor: not enough arguments", ConsoleViewContentType.ERROR_OUTPUT)
             return ""
         }
 
         val firstArg = args[0].toString()
-        val virtualFile = runReadAction { project.findFile(firstArg) }
-        val currentDocContent = if (virtualFile != null) {
-            diffFactory.create(project, virtualFile)
-        } else {
-            diffFactory.create(firstArg)
+        val virtualFile = runReadAction { project.findFile(firstArg) } ?: let {
+            console?.print("DiffProcessor: file not found", ConsoleViewContentType.ERROR_OUTPUT)
+            return ""
         }
 
+        val currentDocContent = diffFactory.create(project, virtualFile)
         val newDocContent = diffFactory.create(args[1].toString())
 
         val diffRequest =
             SimpleDiffRequest("Shire Diff Viewer", currentDocContent, newDocContent, "Current code", "AI generated")
-        val producer = SimpleDiffRequestProducer.create(virtualFile!!.path) {
+        val producer = SimpleDiffRequestProducer.create(virtualFile.path) {
             diffRequest
         }
 
