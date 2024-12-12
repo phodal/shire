@@ -40,10 +40,6 @@ import kotlinx.coroutines.launch
 import kotlin.math.min
 
 
-enum class DiffLineType {
-    SAME, NEW, OLD
-}
-
 /**
  *
  *     JButton("Apply Patch").apply {
@@ -178,7 +174,7 @@ class DiffStreamHandler(
                                     }
                                 }
 
-                                updateProgressHighlighters(it.toDiffLineType())
+                                updateProgressHighlighters(it)
                             }
                         }
                     }
@@ -197,26 +193,6 @@ class DiffStreamHandler(
                 ), HighlighterLayer.LAST
             )
             unfinishedHighlighters.add(highlighter)
-        }
-    }
-
-    private fun handleDiffLine(type: DiffLineType, text: String) {
-        try {
-            when (type) {
-                DiffLineType.SAME -> handleSameLine()
-                DiffLineType.NEW -> handleNewLine(text)
-                DiffLineType.OLD -> handleOldLine()
-            }
-
-            updateProgressHighlighters(type)
-        } catch (e: Exception) {
-            println(
-                "Error handling diff line - " +
-                        "Line index: ${curLine.index}, " +
-                        "Line type: $type, " +
-                        "Line text: $text, " +
-                        "Error message: ${e.message}"
-            )
         }
     }
 
@@ -273,7 +249,7 @@ class DiffStreamHandler(
         curLine.diffBlock!!.deleteLineAt(curLine.index)
     }
 
-    private fun updateProgressHighlighters(type: DiffLineType) {
+    private fun updateProgressHighlighters(type: DiffLine) {
         // Update the highlighter to show the current line
         curLine.highlighter?.let { editor.markupModel.removeHighlighter(it) }
         curLine.highlighter = editor.markupModel.addLineHighlighter(
@@ -281,7 +257,7 @@ class DiffStreamHandler(
         )
 
         // Remove the unfinished lines highlighter
-        if (type != DiffLineType.OLD && unfinishedHighlighters.isNotEmpty()) {
+        if (type is DiffLine.Old && unfinishedHighlighters.isNotEmpty()) {
             editor.markupModel.removeHighlighter(unfinishedHighlighters.removeAt(0))
         }
     }

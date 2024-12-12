@@ -221,7 +221,7 @@ class VerticalDiffBlock(
 
     private fun createDeletionTextArea(text: String) = JTextArea(text).apply {
         isEditable = false
-        background = JBColor(0x30FF0000.toInt(), 0x30FF0000.toInt())
+        background = JBColor(0x30FF0000, 0x30FF0000)
         foreground = JBColor.GRAY
         border = BorderFactory.createEmptyBorder()
         lineWrap = false
