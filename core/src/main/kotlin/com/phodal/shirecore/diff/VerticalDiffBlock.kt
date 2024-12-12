@@ -27,6 +27,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
 import com.intellij.ui.Gray
 import com.intellij.ui.JBColor
+import com.phodal.shirecore.ShireCoreBundle
 import java.awt.*
 import javax.swing.BorderFactory
 import javax.swing.JButton
@@ -160,7 +161,9 @@ class VerticalDiffBlock(
 
     private fun createButtons(): Pair<JButton, JButton> {
         val rejectBtn =
-            createButton("Reject", JBColor(0x99FF000, 0x99FF000)).apply {
+            createButton(ShireCoreBundle.message("sketch.patch.action.reject"),
+                JBColor(0x99FF0000.toInt(), 0x99FF0000.toInt())
+            ).apply {
                 addActionListener {
                     handleReject();
                     onAcceptReject(this@VerticalDiffBlock, false)
@@ -169,7 +172,7 @@ class VerticalDiffBlock(
             }
 
         val acceptBtn =
-            createButton("Accept", JBColor(0x7700BB00, 0x7700BB00)).apply {
+            createButton(ShireCoreBundle.message("sketch.patch.action.accept"), JBColor(0x7700BB00, 0x7700BB00)).apply {
                 addActionListener {
                     handleAccept();
                     onAcceptReject(this@VerticalDiffBlock, true)

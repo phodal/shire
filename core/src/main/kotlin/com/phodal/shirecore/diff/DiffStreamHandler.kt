@@ -27,7 +27,6 @@ import com.intellij.openapi.fileEditor.TextEditor
 import com.intellij.openapi.fileTypes.PlainTextLanguage
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.psi.PsiDocumentManager
 import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.diff.model.DiffLine
 import com.phodal.shirecore.diff.model.streamDiff
@@ -76,7 +75,7 @@ class DiffStreamHandler(
     private val startLine: Int,
     private val endLine: Int,
     private val onClose: () -> Unit,
-    private val onFinish: () -> Unit,
+    private val onFinish: (response: String) -> Unit,
 ) {
     private data class CurLineState(
         var index: Int, var highlighter: RangeHighlighter? = null, var diffBlock: VerticalDiffBlock? = null,
@@ -117,9 +116,6 @@ class DiffStreamHandler(
 
     fun streamDiffLinesToEditor(originContent: String, prompt: String) {
         val lines = originContent.lines()
-        /// commit document
-        val document = editor.document
-        PsiDocumentManager.getInstance(project).commitDocument(document)
 
         isRunning = true
         val flow: Flow<String> = LlmProvider.provider(project)!!.stream(prompt, "", false)
@@ -161,7 +157,7 @@ class DiffStreamHandler(
                 }
             }
 
-            handleFinishedResponse()
+            handleFinishedResponse(suggestion.toString())
         }
     }
 
@@ -298,13 +294,13 @@ class DiffStreamHandler(
         return FileDocumentManager.getInstance().getFile(editor.document) ?: return null
     }
 
-    private fun handleFinishedResponse() {
+    private fun handleFinishedResponse(response: String) {
         ApplicationManager.getApplication().invokeLater {
             // Since we only call onLastDiffLine() when we reach a "same" line, we need to handle the case where
             // the last line in the diff stream is in the middle of a diff block.
             curLine.diffBlock?.onLastDiffLine()
 
-            onFinish()
+            onFinish(response)
             cleanupProgressHighlighters()
         }
     }

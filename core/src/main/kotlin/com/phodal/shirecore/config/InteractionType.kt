@@ -9,7 +9,8 @@ enum class InteractionType(val description: String) {
     InsertBeforeSelection("Insert content before the currently selected content"),
     RunPanel("Show Result in Run panel which is the bottom of the IDE"),
     OnPaste("Copy the content to the clipboard"),
-    RightPanel("Show Result in Right panel which is the right of the IDE")
+    RightPanel("Show Result in Right panel which is the right of the IDE"),
+    StreamDiff("Use streaming diff to show the result")
     ;
 
     companion object {
@@ -24,6 +25,7 @@ enum class InteractionType(val description: String) {
                 RunPanel.name.lowercase() -> RunPanel
                 OnPaste.name.lowercase() -> OnPaste
                 RightPanel.name.lowercase() -> RightPanel
+                StreamDiff.name.lowercase() -> StreamDiff
                 else -> RunPanel
             }
         }

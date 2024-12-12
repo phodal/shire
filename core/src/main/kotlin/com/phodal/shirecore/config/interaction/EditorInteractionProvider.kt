@@ -14,6 +14,8 @@ import com.phodal.shirecore.config.interaction.dto.CodeCompletionRequest
 import com.phodal.shirecore.config.interaction.task.ChatCompletionTask
 import com.phodal.shirecore.config.interaction.task.FileGenerateTask
 import com.phodal.shirecore.config.interaction.task.cancelWithConsole
+import com.phodal.shirecore.diff.DiffStreamHandler
+import com.phodal.shirecore.diff.DiffStreamService
 import com.phodal.shirecore.runner.console.cancelWithConsole
 import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.provider.ide.LocationInteractionContext
@@ -34,8 +36,14 @@ class EditorInteractionProvider : LocationInteractionProvider {
         when (context.interactionType) {
             InteractionType.AppendCursor,
             InteractionType.AppendCursorStream,
-            -> {
-                val task = createTask(context, context.prompt, isReplacement = false, postExecute = postExecute, false)?.cancelWithConsole(context.console)
+                -> {
+                val task = createTask(
+                    context,
+                    context.prompt,
+                    isReplacement = false,
+                    postExecute = postExecute,
+                    false
+                )?.cancelWithConsole(context.console)
 
                 if (task == null) {
                     ShirelangNotifications.error(context.project, "Failed to create code completion task.")
@@ -49,13 +57,19 @@ class EditorInteractionProvider : LocationInteractionProvider {
 
             InteractionType.OutputFile -> {
                 val fileName = targetFile?.name
-                val task = FileGenerateTask(context.project, context.prompt, fileName, postExecute = postExecute).cancelWithConsole(context.console)
+                val task = FileGenerateTask(
+                    context.project,
+                    context.prompt,
+                    fileName,
+                    postExecute = postExecute
+                ).cancelWithConsole(context.console)
                 ProgressManager.getInstance()
                     .runProcessWithProgressAsynchronously(task, BackgroundableProcessIndicator(task))
             }
 
             InteractionType.ReplaceSelection -> {
-                val task = createTask(context, context.prompt, true, postExecute, false)?.cancelWithConsole(context.console)
+                val task =
+                    createTask(context, context.prompt, true, postExecute, false)?.cancelWithConsole(context.console)
 
                 if (task == null) {
                     ShirelangNotifications.error(context.project, "Failed to create code completion task.")
@@ -69,14 +83,22 @@ class EditorInteractionProvider : LocationInteractionProvider {
 
             InteractionType.ReplaceCurrentFile -> {
                 val fileName = targetFile?.name
-                val task = FileGenerateTask(context.project, context.prompt, fileName, postExecute = postExecute).cancelWithConsole(context.console)
+                val task = FileGenerateTask(
+                    context.project,
+                    context.prompt,
+                    fileName,
+                    postExecute = postExecute
+                ).cancelWithConsole(context.console)
 
                 ProgressManager.getInstance()
                     .runProcessWithProgressAsynchronously(task, BackgroundableProcessIndicator(task))
             }
 
             InteractionType.InsertBeforeSelection -> {
-                val task = createTask(context, context.prompt, false, postExecute, isInsertBefore = true)?.cancelWithConsole(context.console)
+                val task =
+                    createTask(context, context.prompt, false, postExecute, isInsertBefore = true)?.cancelWithConsole(
+                        context.console
+                    )
 
                 if (task == null) {
                     ShirelangNotifications.error(context.project, "Failed to create code completion task.")
@@ -106,10 +128,11 @@ class EditorInteractionProvider : LocationInteractionProvider {
             }
 
             InteractionType.RightPanel -> {
-                val toolWindowManager = ToolWindowManager.getInstance(context.project).getToolWindow("ShireToolWindow") ?: run {
-                    logger<EditorInteractionProvider>().warn("Tool window not found")
-                    return
-                }
+                val toolWindowManager =
+                    ToolWindowManager.getInstance(context.project).getToolWindow("ShireToolWindow") ?: run {
+                        logger<EditorInteractionProvider>().warn("Tool window not found")
+                        return
+                    }
 
                 val contentManager = toolWindowManager.contentManager
                 val panelView = ShirePanelView(context.project)
@@ -144,6 +167,28 @@ class EditorInteractionProvider : LocationInteractionProvider {
                 /**
                  *  already handle in [com.phodal.shirelang.actions.copyPaste.ShireCopyPastePreProcessor]
                  */
+            }
+
+            InteractionType.StreamDiff -> {
+                if (context.editor == null) {
+                    ShirelangNotifications.error(context.project, "Editor is null, please open a file to continue.")
+                    return
+                }
+
+                val code = context.editor.document.text
+                val diffStreamHandler = DiffStreamHandler(
+                    context.project,
+                    editor = context.editor,
+                    0,
+                    code.lines().size,
+                    onClose = {
+                    },
+                    onFinish = {
+                        postExecute.invoke(it, null)
+                        ShirelangNotifications.info(context.project, "Patch Applied")
+                    })
+
+                diffStreamHandler.streamDiffLinesToEditor(code, context.prompt)
             }
         }
     }

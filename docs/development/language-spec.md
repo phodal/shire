@@ -2,7 +2,7 @@
 layout: default
 title: Language Specification
 parent: Development
-nav_order: 9
+nav_order: 2
 ---
 
 See in [ShireParser.bnf] for latest version.
