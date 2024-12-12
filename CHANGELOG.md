@@ -1,8 +1,44 @@
-# [](https://github.com/phodal/shire/compare/v1.1.0...v) (2024-12-01)
+# [](https://github.com/phodal/shire/compare/v1.2.0...v) (2024-12-12)
 
 ## [Unreleased]
 
-## [1.1.0-SNAPSHOT] - 2024-12-01
+## [1.2.0] - 2024-12-12
+
+### Bug Fixes
+
+* **diff:** correct line selection logic in DiffStreamHandler [#153](https://github.com/phodal/shire/issues/153) ([511f7f1](https://github.com/phodal/shire/commit/511f7f1d63591cd1b74684fcb78ca6ffb665ef00))
+* **diff:** optimize StreamDiff handling and add DiffLineType conversion [#153](https://github.com/phodal/shire/issues/153) ([b103f58](https://github.com/phodal/shire/commit/b103f58bf282c6da8b13639ba2d413312dcbafe4))
+* **openrewrite:** resolve missing OpenRewriteType class ([46f4084](https://github.com/phodal/shire/commit/46f408436fc31f53e9307446b61d5a46a8ca1dee))
+* **ui:** remove redundant revalidate and repaint calls ([78374cd](https://github.com/phodal/shire/commit/78374cdbf6ebdb6a9e2f3177be06e9cb50ab0605))
+* **utils:** prevent adding empty new lines to CodeFence content ([449efdf](https://github.com/phodal/shire/commit/449efdf5b35972c8bdd04b4078a2e8f4dec297d0)), closes [#153](https://github.com/phodal/shire/issues/153)
+
+### Features
+
+* **action:** Add RunCode action and refactor execution flow ([11d48c0](https://github.com/phodal/shire/commit/11d48c089cef5c4aeba7b27144de9fd5e9fa6c1c))
+* **code-highlight:** enhance setupActionBar and add Mermaid support [#153](https://github.com/phodal/shire/issues/153) ([f8f69a2](https://github.com/phodal/shire/commit/f8f69a26fb10ceef4810db9e431ab1bbf3f09432))
+* **core:** add DiffLangSketchProvider for diff language support [#153](https://github.com/phodal/shire/issues/153) ([61b592b](https://github.com/phodal/shire/commit/61b592bfeb0cab4b4dd59132c6bd0f12d14c1d72))
+* **diff-ui:** implement apply patch from clipboard dialog and enhance SingleFileDiffLangSketch [#153](https://github.com/phodal/shire/issues/153) ([a1e89d2](https://github.com/phodal/shire/commit/a1e89d29fde66eacf29b538992ed3a353dbdfb97))
+* **diff:** add diff streaming support for editors [#153](https://github.com/phodal/shire/issues/153) ([f2014bc](https://github.com/phodal/shire/commit/f2014bc60fc29f77f5472bb6fe87d1bc70582fc0))
+* **diff:** enhance diff view and context handling ([ea610a4](https://github.com/phodal/shire/commit/ea610a4e3febb39a9dd76376e8f6ce5e77027e4a))
+* **diff:** enhance SingleFileDiffLangSketch with new actions and dialog ([72a667f](https://github.com/phodal/shire/commit/72a667f856bf8d62d3e67ac9b7fe03fbcbd33545)), closes [#153](https://github.com/phodal/shire/issues/153)
+* **DiffPatchViewer:** enhance patch application and UI [#153](https://github.com/phodal/shire/issues/153) ([a2099cf](https://github.com/phodal/shire/commit/a2099cfc3da4e472332bdddd3c7abe272b223da8))
+* **diffs:** add StreamDiff feature and improve UI [#153](https://github.com/phodal/shire/issues/153) ([b260b49](https://github.com/phodal/shire/commit/b260b497adfd9f36b73dcd337448a0342dadbf79))
+* **extensions:** add DiffStreamService project service [#153](https://github.com/phodal/shire/issues/153) ([d8cb1b0](https://github.com/phodal/shire/commit/d8cb1b055507d9062137dbe386e192504ae78b07))
+* **patch:** add clipboard patch application dialog ([7ea22c5](https://github.com/phodal/shire/commit/7ea22c542d895e75c94bf84c329455a67860b4b1))
+* **shirelang:** implement `/goto` command for file navigation [#153](https://github.com/phodal/shire/issues/153) ([bd37fda](https://github.com/phodal/shire/commit/bd37fda786e3e6f1b6e131a8dc51b9c1eba95094))
+* **stream-diff:** implement stream diff functionality [#153](https://github.com/phodal/shire/issues/153) ([57ee622](https://github.com/phodal/shire/commit/57ee622fd0c470e561e733d17a55a6ced481e0a0))
+* **toolbar:** add ShireDiffCodeAction [#153](https://github.com/phodal/shire/issues/153) ([74d995a](https://github.com/phodal/shire/commit/74d995a13caca4580a3ed95ff47785f578d5dabe))
+* **toolsets:** add mermaid support and integration plugin [#153](https://github.com/phodal/shire/issues/153) ([55e33d0](https://github.com/phodal/shire/commit/55e33d0b34a8644c7f6a92990dba06ea0a044b7f))
+* **ui:** add diff viewer and toolbar actions [#153](https://github.com/phodal/shire/issues/153) ([ed903cd](https://github.com/phodal/shire/commit/ed903cd1bb8d05ca86361291b0977d470db796d4))
+* **ui:** add doneUpdateText method and optimize component handling [#153](https://github.com/phodal/shire/issues/153) ([5622123](https://github.com/phodal/shire/commit/56221238217a4fddfa655f0c9358eea3b5c1f55a))
+* **ui:** add patch display and action buttons to ShireMarketplaceTableView [#153](https://github.com/phodal/shire/issues/153) ([17eb9ff](https://github.com/phodal/shire/commit/17eb9ffbdd7960fb5d29b97a80f29d352127dbf8))
+* **ui:** enhance diff viewer with preview dialog [#153](https://github.com/phodal/shire/issues/153) ([b9a62db](https://github.com/phodal/shire/commit/b9a62db07c2dde01b228015d478ecbc3538b6c91))
+* **ui:** enhance DiffPatchViewer with project context and diff viewing [#153](https://github.com/phodal/shire/issues/153) ([7b88f2a](https://github.com/phodal/shire/commit/7b88f2a1efb2b491d4a39d8c8954e846b9b09bcc))
+* **ui:** enhance DiffPatchViewer with project context and diff viewing [#153](https://github.com/phodal/shire/issues/153) ([7cd80ea](https://github.com/phodal/shire/commit/7cd80ea8d5971aa0d514e93bef0e487241ec4e71))
+* **ui:** implement LangSketch and add PlantUML support [#153](https://github.com/phodal/shire/issues/153) ([6aa5b75](https://github.com/phodal/shire/commit/6aa5b755d9eed391597a3a02cc2e83225ee115c7))
+* **view:** Implement ShirePanelView for enhanced UI representation ([676df38](https://github.com/phodal/shire/commit/676df3895f62522e33a51c99360a6f4123ac3e82))
+
+## [1.1.1](https://github.com/phodal/shire/compare/v1.1.0...v[1.1.1]) (2024-12-02)
 
 ### Bug Fixes
 
@@ -706,8 +742,9 @@
 * **shell:** add shell language support plugin file ([bdc1c90](https://github.com/phodal/shire/commit/bdc1c90f10d7c2c4fb8f7157db343dd756c11352))
 * **shire:** add Shire context action group and location support ([e3df86d](https://github.com/phodal/shire/commit/e3df86d16d0c9985fec787a8e76ce553be9a9a45))
 
-[Unreleased]: https://github.com/phodal/shire/compare/v1.1.0-SNAPSHOT...HEAD
-[1.1.0-SNAPSHOT]: https://github.com/phodal/shire/compare/v1.0.6...v1.1.0-SNAPSHOT
+[Unreleased]: https://github.com/phodal/shire/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/phodal/shire/compare/v1.1.1...v1.2.0
+[1.1.1]: https://github.com/phodal/shire/compare/v1.0.6...v1.1.1
 [1.0.6]: https://github.com/phodal/shire/compare/v1.0.4-SNAPSHOT...v1.0.6
 [1.0.4-SNAPSHOT]: https://github.com/phodal/shire/compare/v1.0.2...v1.0.4-SNAPSHOT
 [1.0.2]: https://github.com/phodal/shire/compare/v0.9.1...v1.0.2
