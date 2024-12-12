@@ -75,11 +75,11 @@ object ShireShellCommandRunner {
      * for example,the file also needs to be deleted when [create-process][OSProcessHandler.startProcess] fails.
      */
     private fun deleteFileOnTermination(commandLine: GeneralCommandLine, tempFile: File) {
-        OSProcessHandler.deleteFileOnTermination(commandLine, tempFile)  // is Internal API
-//        try {
-//            FileUtil.delete(tempFile)
-//        } catch (e: Exception) {
-//            // ignore
-//        }
+//        OSProcessHandler.deleteFileOnTermination(commandLine, tempFile)  // is Internal API
+        try {
+            FileUtil.delete(tempFile)
+        } catch (e: Exception) {
+            // ignore
+        }
     }
 }
