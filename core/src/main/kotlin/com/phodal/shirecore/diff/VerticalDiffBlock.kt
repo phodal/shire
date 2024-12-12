@@ -25,6 +25,7 @@ import com.intellij.openapi.editor.markup.HighlighterLayer
 import com.intellij.openapi.editor.markup.TextAttributes
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
+import com.intellij.ui.Gray
 import com.intellij.ui.JBColor
 import java.awt.*
 import javax.swing.BorderFactory
@@ -36,7 +37,7 @@ class VerticalDiffBlock(
     private val editor: Editor,
     private val project: Project,
     var startLine: Int,
-    private val onAcceptReject: (VerticalDiffBlock, Boolean) -> Unit
+    private val onAcceptReject: (VerticalDiffBlock, Boolean) -> Unit,
 ) {
     val deletedLines: MutableList<String> = mutableListOf();
     val addedLines: MutableList<String> = mutableListOf();
@@ -159,10 +160,7 @@ class VerticalDiffBlock(
 
     private fun createButtons(): Pair<JButton, JButton> {
         val rejectBtn =
-            createButton(
-                "${getAltKeyLabel()}${getShiftKeyLabel()}N",
-                JBColor(0x99FF0000.toInt(), 0x99FF0000.toInt())
-            ).apply {
+            createButton("Reject", JBColor(0x99FF000, 0x99FF000)).apply {
                 addActionListener {
                     handleReject();
                     onAcceptReject(this@VerticalDiffBlock, false)
@@ -171,11 +169,7 @@ class VerticalDiffBlock(
             }
 
         val acceptBtn =
-            createButton(
-                "${getAltKeyLabel()}${
-                    getShiftKeyLabel()
-                }Y", JBColor(0x7700BB00.toInt(), 0x7700BB00.toInt())
-            ).apply {
+            createButton("Accept", JBColor(0x7700BB00, 0x7700BB00)).apply {
                 addActionListener {
                     handleAccept();
                     onAcceptReject(this@VerticalDiffBlock, true)
@@ -252,7 +246,7 @@ class VerticalDiffBlock(
                 g2.dispose()
             }
         }.apply {
-            foreground = Color(240, 240, 240)
+            foreground = Gray._240
             font = Font("Arial", Font.BOLD, 9)
             isContentAreaFilled = false
             isOpaque = false
@@ -260,45 +254,6 @@ class VerticalDiffBlock(
             preferredSize = Dimension(preferredSize.width - 30, 14)
             cursor = Cursor(Cursor.HAND_CURSOR)
         }
-    }
-}
-
-
-enum class Os {
-    MAC, WINDOWS, LINUX
-}
-
-fun getOs(): Os {
-    val osName = System.getProperty("os.name").lowercase()
-    val os = when {
-        osName.contains("mac") || osName.contains("darwin") -> Os.MAC
-        osName.contains("win") -> Os.WINDOWS
-        osName.contains("nix") || osName.contains("nux") || osName.contains("aix") -> Os.LINUX
-        else -> Os.LINUX
-    }
-    return os
-}
-
-fun getMetaKeyLabel(): String {
-    return when (getOs()) {
-        Os.MAC -> "⌘"
-        Os.WINDOWS -> "^"
-        Os.LINUX -> "^"
-    }
-}
-
-fun getAltKeyLabel(): String {
-    return when (getOs()) {
-        Os.MAC -> "⌥"
-        Os.WINDOWS -> "Alt"
-        Os.LINUX -> "Alt"
-    }
-}
-
-fun getShiftKeyLabel(): String {
-    return when (getOs()) {
-        Os.MAC -> "⇧"
-        Os.WINDOWS, Os.LINUX -> "↑"
     }
 }
 
