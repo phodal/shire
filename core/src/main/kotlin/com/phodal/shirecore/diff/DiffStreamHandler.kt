@@ -131,13 +131,9 @@ class DiffStreamHandler(
                 val code = CodeFence.parse(suggestion.toString())
                 if (PlainTextLanguage.INSTANCE != code.ideaLanguage && code.ideaLanguage.displayName != "Markdown" && code.text.isNotEmpty()) {
                     var value: List<String> = code.text.lines()
-
-                    // we don't need the last line, maybe not finished
                     value = value.dropLast(1)
 
-                    if (value.isEmpty()) {
-                        return@collect
-                    }
+                    if (value.isEmpty()) return@collect
 
                     val newLines = if (lastLineNo < value.size) {
                         value.subList(lastLineNo, value.size)
@@ -145,9 +141,7 @@ class DiffStreamHandler(
                         listOf()
                     }
 
-                    if (newLines.isEmpty()) {
-                        return@collect
-                    }
+                    if (newLines.isEmpty()) return@collect
 
                     val flowValue: Flow<String> = flowOf(*newLines.toTypedArray())
                     val oldLinesContent = if (lastLineNo + newLines.size <= lines.size) {
@@ -160,21 +154,7 @@ class DiffStreamHandler(
                     streamDiff(oldLinesContent, flowValue).collect {
                         ApplicationManager.getApplication().invokeLater {
                             WriteCommandAction.runWriteCommandAction(project) {
-                                when (it) {
-                                    is DiffLine.New -> {
-                                        handleNewLine(it.line)
-                                    }
-
-                                    is DiffLine.Old -> {
-                                        handleOldLine()
-                                    }
-
-                                    is DiffLine.Same -> {
-                                        handleSameLine()
-                                    }
-                                }
-
-                                updateProgressHighlighters(it)
+                                updateByDiffType(it)
                             }
                         }
                     }
@@ -183,6 +163,16 @@ class DiffStreamHandler(
 
             handleFinishedResponse()
         }
+    }
+
+    private fun updateByDiffType(diffLine: DiffLine) {
+        when (diffLine) {
+            is DiffLine.New -> handleNewLine(diffLine.line)
+            is DiffLine.Old -> handleOldLine()
+            is DiffLine.Same -> handleSameLine()
+        }
+
+        updateProgressHighlighters(diffLine)
     }
 
     private fun initUnfinishedRangeHighlights() {
