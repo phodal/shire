@@ -19,8 +19,9 @@ interface LanguageSketchProvider {
             ExtensionPointName("com.phodal.shireLangSketchProvider")
 
         fun provide(language: String): LanguageSketchProvider? {
+            val lang = language.lowercase()
             return EP_NAME.extensionList.firstOrNull {
-                it.isSupported(language)
+                it.isSupported(lang)
             }
         }
     }
