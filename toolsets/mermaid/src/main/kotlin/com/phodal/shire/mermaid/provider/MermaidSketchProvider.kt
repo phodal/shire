@@ -9,8 +9,8 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.readText
 import com.intellij.testFramework.LightVirtualFile
 import com.intellij.ui.dsl.builder.Align
-import com.intellij.ui.dsl.builder.impl.interactiveComponent
 import com.intellij.ui.dsl.builder.panel
+import com.intellij.util.ui.JBUI
 import com.phodal.shirecore.provider.sketch.ExtensionLangSketch
 import com.phodal.shirecore.provider.sketch.LanguageSketchProvider
 import javax.swing.JComponent
@@ -36,6 +36,8 @@ class MermaidSketch(project: Project, private val virtualFile: VirtualFile) : Ex
             row {
                 cell(editor.component).align(Align.FILL)
             }
+        }.apply {
+            border = JBUI.Borders.empty(0, 10)
         }
     }
 

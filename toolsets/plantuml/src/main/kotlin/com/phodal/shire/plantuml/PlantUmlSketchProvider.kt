@@ -7,6 +7,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.testFramework.LightVirtualFile
 import com.intellij.ui.dsl.builder.panel
+import com.intellij.util.ui.JBUI
 import com.phodal.shirecore.provider.sketch.ExtensionLangSketch
 import com.phodal.shirecore.provider.sketch.LanguageSketchProvider
 import org.plantuml.idea.preview.PlantUmlPreviewPanel
@@ -50,6 +51,8 @@ class PlantUmlSketch(private val project: Project, private val virtualFile: Virt
             row {
                 cell(splitEditor.component)
             }
+        }.apply {
+            border = JBUI.Borders.empty(0, 10)
         }
 
         PlantUmlSettings.getInstance().previewSettings.splitEditorLayout = SplitFileEditor.SplitEditorLayout.SECOND
