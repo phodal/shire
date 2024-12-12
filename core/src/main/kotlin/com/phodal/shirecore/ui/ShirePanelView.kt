@@ -94,7 +94,6 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
 
             userPrompt.add(panel, BorderLayout.CENTER)
 
-
             this.revalidate()
             this.repaint()
         }

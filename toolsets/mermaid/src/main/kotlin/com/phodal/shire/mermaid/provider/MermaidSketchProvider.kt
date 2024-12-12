@@ -9,6 +9,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.readText
 import com.intellij.testFramework.LightVirtualFile
 import com.intellij.ui.dsl.builder.Align
+import com.intellij.ui.dsl.builder.impl.interactiveComponent
 import com.intellij.ui.dsl.builder.panel
 import com.phodal.shirecore.provider.sketch.ExtensionLangSketch
 import com.phodal.shirecore.provider.sketch.LanguageSketchProvider
@@ -26,18 +27,14 @@ class MermaidSketchProvider : LanguageSketchProvider {
     }
 }
 
-class MermaidSketch(private val project: Project, private val virtualFile: VirtualFile) : ExtensionLangSketch {
+class MermaidSketch(project: Project, private val virtualFile: VirtualFile) : ExtensionLangSketch {
     private var mainPanel: JPanel
 
     init {
         val editor = getEditorProvider().createEditor(project, virtualFile) as TextEditorWithPreview
-        val previewEditor = editor.previewEditor
         mainPanel = panel {
             row {
-                cell(editor.editor.component).align(Align.FILL)
-            }
-            row {
-                cell(previewEditor.component).align(Align.FILL)
+                cell(editor.component).align(Align.FILL)
             }
         }
     }
