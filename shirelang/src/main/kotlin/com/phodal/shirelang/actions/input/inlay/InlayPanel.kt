@@ -21,7 +21,6 @@ open class InlayPanel<T : JComponent?>(var component: T) : JPanel() {
     val panel: JPanel = object : JPanel() {
         init {
             setOpaque(false)
-            setBorder(JBUI.Borders.empty())
         }
 
         override fun paintComponent(g: Graphics) {
