@@ -420,7 +420,6 @@ open class PatternFuncProcessor(open val myProject: Project, open val hole: Hobb
                 TokenizerProcessor.execute(myProject, action)
             }
             is PatternActionFunc.LineNo -> {
-                /// add line no for each line
                 when (lastResult) {
                     is Array<*> -> {
                         (lastResult as Array<String>).mapIndexed { index, line ->

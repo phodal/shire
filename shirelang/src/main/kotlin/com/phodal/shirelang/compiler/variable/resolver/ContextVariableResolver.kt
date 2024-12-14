@@ -16,10 +16,23 @@ class ContextVariableResolver(
         val file = context.element?.containingFile
         val caretModel = context.editor.caretModel
 
-        all().associate {
-            it.variableName to when (it) {
+        all().associate { variable ->
+            variable.variableName to when (variable) {
                 SELECTION -> context.editor.selectionModel.selectedText
                     ?: context.editor.document.text.substring(caretModel.offset)
+
+                SELECTION_WITH_NUM -> {
+                    val selection = context.editor.selectionModel.selectedText
+                        ?: context.editor.document.text.substring(caretModel.offset)
+
+                    var lineNo = caretModel.logicalPosition.line + 1
+                    selection.split("\n").joinToString("\n") {
+                        val line = "$lineNo: $it"
+                        lineNo++
+                        line
+                    }
+                }
+
                 BEFORE_CURSOR -> file?.text?.substring(0, caretModel.offset)
                     ?: context.editor.document.text.substring(0, caretModel.offset)
 

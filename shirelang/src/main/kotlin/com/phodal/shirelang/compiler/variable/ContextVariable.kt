@@ -2,6 +2,7 @@ package com.phodal.shirelang.compiler.variable
 
 enum class ContextVariable(val variableName: String, val description: String) {
     SELECTION("selection", "User selection code/element's in text"),
+    SELECTION_WITH_NUM("selectionWithNum", "User selection code/element's in text with line number"),
     BEFORE_CURSOR("beforeCursor", "All the text before the cursor"),
     AFTER_CURSOR("afterCursor", "All the text after the cursor"),
     FILE_NAME("fileName", "The name of the file"),
