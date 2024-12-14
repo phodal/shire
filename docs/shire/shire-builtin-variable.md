@@ -15,17 +15,18 @@ nav_order: 4
 
 ## ContextVariable
 
-| 变量名           | 描述                                    |
-|---------------|---------------------------------------|
-| selection     | User selection code/element's in text |
-| beforeCursor  | All the text before the cursor        |
-| afterCursor   | All the text after the cursor         |
-| fileName      | The name of the file                  |
-| filePath      | The path of the file                  |
-| methodName    | The name of the method                |
-| language      | The language of the current file      |
-| commentSymbol | The comment symbol of the language    |
-| all           | All the text                          |
+| 变量名              | 描述                                                     |
+|------------------|--------------------------------------------------------|
+| selection        | User selection code/element's in text                  |
+| selectionWithNum | User selection code/element's in text with line number |
+| beforeCursor     | All the text before the cursor                         |
+| afterCursor      | All the text after the cursor                          |
+| fileName         | The name of the file                                   |
+| filePath         | The path of the file                                   |
+| methodName       | The name of the method                                 |
+| language         | The language of the current file                       |
+| commentSymbol    | The comment symbol of the language                     |
+| all              | All the text                                           |
 
 ## PsiContextVariable
 

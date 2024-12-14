@@ -161,6 +161,7 @@ onStreamingEnd: { parseCode | patch($filePath, $output) }
 | jsonpath  | 使用 JsonPath 选择数据 | `jsonPath`: JsonPath 表达式,其中 jsonString 为可选                                  | `jsonpath(jsonString, "$.store.*")`         |
 | batch     | 批处理操作            | `fileName`: Shire  文件名，: paths`: 要处理的文件路径                                   | `batch("file1.shire", "file2.txt")`         |
 | tokenizer | 分词操作             | `text`: 待分词的文本, type: 分词类型（`word`, `naming`, `stopwords`，`jieba`，默认 `word`） | `tokenizer("text") `                        |
+| lineNo    | 行号操作             | `text`: 待处理的文本                                                              | `lineNo("text")`                            |
 
 编排函数
 
