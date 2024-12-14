@@ -52,8 +52,10 @@ object ShireShellCommandRunner {
             .withParameters(tempFile.path)
 
         val future = ApplicationManager.getApplication().executeOnPooledThread<String> {
-            val processOutput = CapturingProcessHandler(commandLine).runProcess(DEFAULT_TIMEOUT)
-            deleteFileOnTermination(commandLine, tempFile)
+            val processOutput = runCatching {
+                CapturingProcessHandler(commandLine).runProcess(DEFAULT_TIMEOUT)
+            }.apply { deleteFileOnTermination(commandLine, tempFile) }.getOrThrow()
+
 
             val exitCode = processOutput.exitCode
             if (exitCode != 0) {
