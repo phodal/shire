@@ -28,7 +28,6 @@ import com.phodal.shirecore.sketch.LangSketch
 import com.phodal.shirecore.utils.markdown.CodeFenceLanguage
 import java.awt.BorderLayout
 import java.util.concurrent.atomic.AtomicBoolean
-import javax.swing.BorderFactory
 import javax.swing.JComponent
 
 class CodeHighlightSketch(val project: Project, val text: String, private var ideaLanguage: Language?) :
@@ -48,7 +47,7 @@ class CodeHighlightSketch(val project: Project, val text: String, private var id
         if (hasSetupAction) return
         hasSetupAction = true
 
-        val editor = createCodeViewerEditor(project, text, ideaLanguage, this, textLanguage)
+        val editor = createCodeViewerEditor(project, text, ideaLanguage, this)
 
         editor.component.border = JBUI.Borders.empty(10)
         editor.component.isOpaque = true
@@ -88,19 +87,35 @@ class CodeHighlightSketch(val project: Project, val text: String, private var id
     override fun getData(dataId: String): Any? = null
 
     companion object {
+        private val LINE_NO_REGEX = Regex("^\\d+:")
+
         private fun createCodeViewerEditor(
             project: Project,
             text: String,
             ideaLanguage: Language?,
             disposable: Disposable,
-            textLanguage: String?,
         ): EditorEx {
+            var editorText = text
             val language = ideaLanguage ?: CodeFenceLanguage.findLanguage("Plain text")
             val ext = CodeFenceLanguage.lookupFileExt(language.displayName)
-            val file = LightVirtualFile("shire.${ext}", language, text)
+            /// check text easyline starts with Lineno and :, for example: 1:
+            var isShowLineNo = true
+            editorText.lines().forEach {
+                if (!it.matches(LINE_NO_REGEX)) {
+                    isShowLineNo = false
+                    return@forEach
+                }
+            }
+
+            if (isShowLineNo) {
+                val newLines = text.lines().map { it.replace(LINE_NO_REGEX, "") }
+                editorText = newLines.joinToString("\n")
+            }
+
+            val file = LightVirtualFile("shire.${ext}", language, editorText)
             val document: Document = file.findDocument() ?: throw IllegalStateException("Document not found")
 
-            return createCodeViewerEditor(project, file, document, disposable)
+            return createCodeViewerEditor(project, file, document, disposable, isShowLineNo)
         }
 
         private fun createCodeViewerEditor(
@@ -108,6 +123,7 @@ class CodeHighlightSketch(val project: Project, val text: String, private var id
             file: LightVirtualFile,
             document: Document,
             disposable: Disposable,
+            isShowLineNo: Boolean? = false,
         ): EditorEx {
             val editor: EditorEx = ReadAction.compute<EditorEx, Throwable> {
                 EditorFactory.getInstance().createViewer(document, project, EditorKind.PREVIEW) as EditorEx
@@ -131,7 +147,7 @@ class CodeHighlightSketch(val project: Project, val text: String, private var id
 
             val settings = editor.settings.also {
                 it.isDndEnabled = false
-                it.isLineNumbersShown = false
+                it.isLineNumbersShown = isShowLineNo ?: false
                 it.additionalLinesCount = 0
                 it.isLineMarkerAreaShown = false
                 it.isFoldingOutlineShown = false

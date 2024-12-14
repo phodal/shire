@@ -80,10 +80,8 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
 
             codeBlockViewer.editorFragment?.setCollapsed(true)
             codeBlockViewer.editorFragment!!.updateExpandCollapseLabel()
-
             codeBlockViewer.editorFragment!!.editor.backgroundColor = JBColor(0xF7FAFDF, 0x2d2f30)
 
-            /// add margin top 10, bottom 10
             val panel = panel {
                 row {
                     cell(codeBlockViewer).fullWidth()
