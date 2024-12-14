@@ -15,6 +15,38 @@ Shire Sketch 是 Shire 提供的 IDE 画布功能，旨在通过其丰富的文�
 - **Mermaid 流程图**：支持 Mermaid 流程图的渲染，与双向绑定的代码编辑器。（要求启用 Mermaid 插件）
 - **PlantUML 图表**：支持 PlantUML 图表的渲染，与双向绑定的代码编辑器。（要求安装 `PlantUML integration` 插件）
 
+## Sketch 示例
+
+### Diff Sketch
+
+示例：Prompt：
+
+```shire
+请使用 patch 的方式完成需求，并使用 markdown patch 代码格式返回。
+```
+
+![](https://shire.run/images/shire-sketch-diff.png)
+
+### Mermaid Sketch
+
+示例 Prompt：
+
+```shire
+请使用 mermaid Code 格式，语言 `mermaid`，请根据用户故事绘制 mermaid 时序图，返回设计的 mermaid 代码。
+```
+
+![](https://shire.run/images/shire-sketch-mermaid.png)
+
+### PlantUml Sketch
+
+示例 Prompt：
+
+```shire
+请使用 plantuml Code 格式，语言 `plantuml`，请根据用户故事绘制 PUML 时序图，返回设计的 PUML 代码。
+```
+
+![](https://shire.run/images/shire-sketch-plantuml.png)
+
 ## 创建新 Sketch
 
 ```kotlin
