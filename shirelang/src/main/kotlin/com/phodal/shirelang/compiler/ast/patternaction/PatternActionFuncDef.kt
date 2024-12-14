@@ -334,6 +334,22 @@ enum class PatternActionFuncDef(val funcName: String, val description: String, v
         | Output Example: package, com, phodal, shirelang, controller, import, org, springframework, web, bind, ...
         | 
         """.trimMargin()
+    ),
+
+    LINE_NO(
+        "lineNo",
+        "`lineNo` will add line number to the text.",
+        """
+        | ```shire
+        | ---
+        | variables:
+        |   "controllers": /.*.java/ { cat | lineNo }
+        | ---
+        | ```
+        | 
+        | Output Example: 1 package com.phodal.shirelang.controller; 2 import org.springframework.web.bind.annotation.GetMapping; 3 import org.springframework.web.bind.annotation.RestController; 4 5 @RestController 6 public class BlogController { 7 8 @GetMapping("/blog") 9 public String blog() { 10 return "blog"; 11 } 12 }
+        | 
+        """.trimMargin()
     )
     ;
 

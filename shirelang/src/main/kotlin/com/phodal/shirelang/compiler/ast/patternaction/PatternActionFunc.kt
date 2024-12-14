@@ -192,6 +192,11 @@ sealed class PatternActionFunc(val type: PatternActionFuncDef) {
     class Tokenizer(var text: String, val tokType: String) : PatternActionFunc(PatternActionFuncDef.TOKENIZER)
 
     /**
+     * Line Number
+     */
+    class LineNo(var text: String) : PatternActionFunc(PatternActionFuncDef.LINE_NO)
+
+    /**
      * User Custom Functions
      */
     class ToolchainFunction(override val funcName: String, val args: List<String>) :
@@ -372,6 +377,13 @@ sealed class PatternActionFunc(val type: PatternActionFuncDef) {
                         return null
                     }
                     Tokenizer(args[0], args.getOrNull(1) ?: "word")
+                }
+                PatternActionFuncDef.LINE_NO -> {
+                    if (args.isEmpty()) {
+                        logger.error("PatternActionFun,`lineNo` func requires at least 1 argument")
+                        return null
+                    }
+                    LineNo(args[0])
                 }
 
                 else -> {
