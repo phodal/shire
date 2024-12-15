@@ -1,6 +1,8 @@
 package com.phodal.shirelang.compiler.variable.resolver
 
+import com.intellij.lang.Language
 import com.intellij.openapi.application.ReadAction
+import com.intellij.openapi.editor.CaretModel
 import com.intellij.psi.PsiNameIdentifierOwner
 import com.phodal.shirelang.compiler.variable.resolver.base.VariableResolver
 import com.phodal.shirelang.compiler.variable.resolver.base.VariableResolverContext
@@ -22,15 +24,7 @@ class ContextVariableResolver(
                     ?: context.editor.document.text.substring(caretModel.offset)
 
                 SELECTION_WITH_NUM -> {
-                    val selection = context.editor.selectionModel.selectedText
-                        ?: context.editor.document.text.substring(caretModel.offset)
-
-                    var lineNo = caretModel.logicalPosition.line + 1
-                    selection.split("\n").joinToString("\n") {
-                        val line = "$lineNo: $it"
-                        lineNo++
-                        line
-                    }
+                    lineNumberedSelection(caretModel)
                 }
 
                 BEFORE_CURSOR -> file?.text?.substring(0, caretModel.offset)
@@ -49,21 +43,45 @@ class ContextVariableResolver(
                 }
 
                 LANGUAGE -> context.element?.language?.displayName ?: ""
-                COMMENT_SYMBOL -> when (context.element?.language?.displayName?.lowercase()) {
-                    "java", "kotlin" -> "//"
-                    "python" -> "#"
-                    "javascript" -> "//"
-                    "typescript" -> "//"
-                    "go" -> "//"
-                    "c", "c++", "c#" -> "//"
-                    "rust" -> "//"
-                    "ruby" -> "#"
-                    "shell" -> "#"
-                    else -> "-"
-                }
+                COMMENT_SYMBOL -> getCommentSymbol(context.element?.language)
 
                 ALL -> file?.text ?: context.editor.document.text ?: ""
             }
+        }
+    }
+
+    private fun lineNumberedSelection(caretModel: CaretModel): String {
+        val selection = context.editor.selectionModel.selectedText
+            ?: context.editor.document.text.substring(caretModel.offset)
+
+        var lineNo = caretModel.logicalPosition.line + 1
+        return selection.split("\n").joinToString("\n") {
+            val line = "$lineNo: $it"
+            lineNo++
+            line
+        }
+    }
+
+
+    private fun getCommentSymbol(language: Language?): String {
+        return when (language?.displayName?.lowercase()) {
+            "java", "kotlin" -> "//"
+            "python" -> "#"
+            "javascript" -> "//"
+            "typescript" -> "//"
+            "go" -> "//"
+            "c", "c++", "c#" -> "//"
+            "rust" -> "//"
+            "ruby" -> "#"
+            "shell" -> "#"
+            "php" -> "//"
+            "perl" -> "#"
+            "swift" -> "//"
+            "r" -> "#"
+            "scala" -> "//"
+            "groovy" -> "//"
+            "lua" -> "--"
+            else -> "-"
         }
     }
 }
