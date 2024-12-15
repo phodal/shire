@@ -7,6 +7,7 @@ import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator
 import com.intellij.openapi.wm.ToolWindowManager
+import com.intellij.ui.content.impl.ContentManagerImpl
 import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.ShirelangNotifications
 import com.phodal.shirecore.config.InteractionType
@@ -15,11 +16,11 @@ import com.phodal.shirecore.config.interaction.task.ChatCompletionTask
 import com.phodal.shirecore.config.interaction.task.FileGenerateTask
 import com.phodal.shirecore.config.interaction.task.cancelWithConsole
 import com.phodal.shirecore.diff.DiffStreamHandler
-import com.phodal.shirecore.diff.DiffStreamService
 import com.phodal.shirecore.runner.console.cancelWithConsole
 import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.provider.ide.LocationInteractionContext
 import com.phodal.shirecore.provider.ide.LocationInteractionProvider
+import com.phodal.shirecore.runner.console.cancelHandler
 import com.phodal.shirecore.ui.ShirePanelView
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.cancellable
@@ -137,8 +138,15 @@ class EditorInteractionProvider : LocationInteractionProvider {
                 val contentManager = toolWindowManager.contentManager
                 val panelView = ShirePanelView(context.project)
                 contentManager.factory.createContent(panelView, "Shire RightPanel Run", false).let {
-                    contentManager.removeAllContents(false)
+                    // Default is 3, configurable in the future.
+                    if (contentManager.contentCount >= 3) {
+                        contentManager.getContent(0)?.let { content ->
+                            contentManager.removeContent(content, false)
+                            (content.component as? ShirePanelView)?.cancel("This content is removed")
+                        }
+                    }
                     contentManager.addContent(it)
+                    (contentManager as ContentManagerImpl).setSelectedContent(it)
                 }
 
 
@@ -150,7 +158,7 @@ class EditorInteractionProvider : LocationInteractionProvider {
                     panelView.onStart()
                     panelView.addRequestPrompt(context.prompt)
 
-                    flow?.cancellable()?.collect { char ->
+                    flow?.cancelHandler { panelView.handleCancel = it }?.cancellable()?.collect { char ->
                         suggestion.append(char)
 
                         invokeLater {

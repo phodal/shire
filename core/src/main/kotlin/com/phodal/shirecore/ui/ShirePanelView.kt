@@ -1,5 +1,6 @@
 package com.phodal.shirecore.ui
 
+import com.intellij.icons.AllIcons
 import com.intellij.openapi.application.runInEdt
 import com.intellij.openapi.fileTypes.PlainTextLanguage
 import com.intellij.openapi.project.Project
@@ -7,6 +8,7 @@ import com.intellij.openapi.ui.DialogPanel
 import com.intellij.openapi.ui.NullableComponent
 import com.intellij.openapi.ui.SimpleToolWindowPanel
 import com.intellij.ui.JBColor
+import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.components.panels.VerticalLayout
 import com.intellij.ui.dsl.builder.AlignX
@@ -22,10 +24,12 @@ import com.phodal.shirecore.utils.markdown.CodeFence
 import com.phodal.shirecore.utils.markdown.CodeFenceLanguage
 import com.phodal.shirecore.provider.sketch.LanguageSketchProvider
 import java.awt.BorderLayout
+import java.awt.event.MouseAdapter
+import java.awt.event.MouseEvent
 import javax.swing.*
 
 class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), NullableComponent {
-    private var progressBar: JProgressBar = JProgressBar()
+    private var progressBar: CustomProgressBar = CustomProgressBar(this)
 
     private var myList = JPanel(VerticalLayout(JBUI.scale(0))).apply {
         this.isOpaque = true
@@ -51,6 +55,8 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
     ).apply {
         this.verticalScrollBar.autoscrolls = true
     }
+
+    var handleCancel: ((String) -> Unit)? = null
 
     init {
         setContent(scrollPanel)
@@ -168,6 +174,41 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
     override fun isNull(): Boolean {
         return !isVisible
     }
+
+    fun cancel(s: String) = runCatching { handleCancel?.invoke(s) }
+}
+
+class CustomProgressBar(private val view: ShirePanelView) : JPanel(BorderLayout()) {
+
+    private val progressBar: JProgressBar = JProgressBar()
+
+    var isIndeterminate = progressBar.isIndeterminate
+        set(value) {
+            progressBar.isIndeterminate = value
+            field = value
+        }
+
+    private val cancelLabel = JBLabel(AllIcons.Actions.CloseHovered)
+
+    init {
+
+        cancelLabel.setBorder(JBUI.Borders.empty(0, 5))
+        cancelLabel.addMouseListener(object : MouseAdapter() {
+            override fun mouseClicked(e: MouseEvent?) {
+                view.cancel("This progressBar is canceled")
+            }
+        })
+
+        add(progressBar, BorderLayout.CENTER)
+        add(cancelLabel, BorderLayout.EAST)
+    }
+
+    override fun setVisible(visible: Boolean) {
+        super.setVisible(visible)
+        progressBar.isVisible = visible
+        cancelLabel.isVisible = visible
+    }
+
 }
 
 fun <T : JComponent> Cell<T>.fullWidth(): Cell<T> {
