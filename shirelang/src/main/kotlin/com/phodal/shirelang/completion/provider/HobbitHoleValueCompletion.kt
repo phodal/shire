@@ -48,7 +48,7 @@ class HobbitHoleValueCompletion : CompletionProvider<CompletionParameters>() {
             }
 
             HobbitHole.INTERACTION -> {
-                InteractionType.values().forEach {
+                InteractionType.entries.forEach {
                     result.addElement(
                         LookupElementBuilder
                             .create(it.name)

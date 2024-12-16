@@ -5,7 +5,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.phodal.shirecore.middleware.post.PostProcessorContext
 import com.phodal.shirecore.middleware.post.PostProcessor.Companion.handler
-import com.phodal.shirecore.middleware.post.PostProcessorFuncSign
+import com.phodal.shirecore.middleware.post.LifecycleProcessorSignature
 import com.phodal.shirelang.compiler.parser.ShireSyntaxAnalyzer
 import com.phodal.shirelang.psi.ShireFile
 import junit.framework.TestCase
@@ -47,7 +47,7 @@ class ShireLifecycleTest : BasePlatformTestCase() {
     }
 
     @TestOnly
-    fun execute(project: Project, funcNodes: List<PostProcessorFuncSign>, handleContext: PostProcessorContext, console: ConsoleView?) {
+    fun execute(project: Project, funcNodes: List<LifecycleProcessorSignature>, handleContext: PostProcessorContext, console: ConsoleView?) {
         funcNodes.forEach { funNode ->
             val handler = handler(funNode.funcName)
             if (handler != null) {
@@ -143,5 +143,26 @@ class ShireLifecycleTest : BasePlatformTestCase() {
         assertEquals(hole.processors[0].funcName, "caching")
         assertEquals(hole.processors[1].funcName, "splitting")
         assertEquals(hole.processors[2].funcName, "embedding")
+    }
+
+    fun testShouldExecuteProcessForOnStreamingEvent(){
+        @Language("Shire")
+        val code = """
+            ---
+            onStreaming: { logging() }
+            ---
+            
+            ${'$'}allController
+        """.trimIndent()
+
+        val file = myFixture.addFileToProject("sample.shire", code)
+
+        myFixture.openFileInEditor(file.virtualFile)
+
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
+        val funcSigns = compile.config!!.onStreaming
+
+        assertEquals(funcSigns.size, 1)
+        assertEquals(funcSigns[0].funcName, "logging")
     }
 }

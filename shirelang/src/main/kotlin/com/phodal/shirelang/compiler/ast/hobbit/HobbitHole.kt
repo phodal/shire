@@ -12,8 +12,7 @@ import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirecore.runner.console.isCanceled
 import com.phodal.shirecore.middleware.post.PostProcessor
 import com.phodal.shirecore.middleware.post.PostProcessorContext
-import com.phodal.shirecore.middleware.post.PostProcessorFuncSign
-import com.phodal.shirecore.middleware.streaming.StreamingProcessorFuncSign
+import com.phodal.shirecore.middleware.post.LifecycleProcessorSignature
 import com.phodal.shirecore.middleware.select.SelectElementStrategy
 import com.phodal.shirecore.middleware.select.SelectedEntry
 import com.phodal.shirecore.workerThread
@@ -145,7 +144,7 @@ open class HobbitHole(
      * ---
      * ```
      */
-    val onStreamingEnd: List<PostProcessorFuncSign> = emptyList(),
+    val onStreamingEnd: List<LifecycleProcessorSignature> = emptyList(),
 
     /**
      * This property represents a list of middleware actions to be executed
@@ -155,7 +154,7 @@ open class HobbitHole(
      * onStreaming: { logging() | redacting() }
      * ---
      */
-    val onStreaming: List<StreamingProcessorFuncSign> = emptyList(),
+    val onStreaming: List<LifecycleProcessorSignature> = emptyList(),
 
     /**
      * ```shire
@@ -358,7 +357,7 @@ open class HobbitHole(
                 VARIABLES to "The list of variables to apply for the action",
                 FUNCTIONS to "The list of custom functions for the action",
 
-                ON_STREAMING to "TBD ",
+                ON_STREAMING to "Some actions when receive the streaming text",
                 ON_STREAMING_END to "After Streaming end middleware actions, like Logging, Metrics, CodeVerify, RunCode, ParseCode etc.",
                 BEFORE_STREAMING to "The task/patternAction before streaming",
                 AFTER_STREAMING to "Decision to run the task after streaming, routing to different tasks",
@@ -389,7 +388,11 @@ open class HobbitHole(
             )
 
             val endProcessors = frontMatterMap[ON_STREAMING_END]?.let {
-                buildStreamingEndProcessors(it)
+                buildLifecycleProcessors(it)
+            } ?: mutableListOf()
+
+            val onStreamingProcessors = frontMatterMap[ON_STREAMING]?.let {
+                buildLifecycleProcessors(it)
             } ?: mutableListOf()
 
             val variables = (frontMatterMap[VARIABLES] as? FrontMatterType.OBJECT)?.let {
@@ -430,6 +433,7 @@ open class HobbitHole(
                 when_ = whenCondition,
                 beforeStreaming = beforeStreaming,
                 onStreamingEnd = endProcessors,
+                onStreaming = onStreamingProcessors,
                 afterStreaming = afterStreaming,
                 shortcut = shortcut,
                 enabled = enabled,
@@ -447,8 +451,8 @@ open class HobbitHole(
             }.associateBy { it.variable }.toMutableMap()
         }
 
-        private fun buildStreamingEndProcessors(item: FrontMatterType): List<PostProcessorFuncSign> {
-            val endProcessors: MutableList<PostProcessorFuncSign> = mutableListOf()
+        private fun buildLifecycleProcessors(item: FrontMatterType): List<LifecycleProcessorSignature> {
+            val endProcessors: MutableList<LifecycleProcessorSignature> = mutableListOf()
             when (item) {
                 is FrontMatterType.ARRAY -> {
                     item.toValue().forEach { matterType ->
@@ -465,7 +469,7 @@ open class HobbitHole(
 
                 is FrontMatterType.STRING -> {
                     val handleName = item.value as String
-                    endProcessors.add(PostProcessorFuncSign(handleName, emptyList()))
+                    endProcessors.add(LifecycleProcessorSignature(handleName, emptyList()))
                 }
 
                 else -> {}
@@ -474,17 +478,17 @@ open class HobbitHole(
             return endProcessors
         }
 
-        private fun toPostProcessorNode(expression: FrontMatterType.EXPRESSION): PostProcessorFuncSign {
+        private fun toPostProcessorNode(expression: FrontMatterType.EXPRESSION): LifecycleProcessorSignature {
             return when (val child = expression.value) {
                 is MethodCall -> {
                     val handleName = child.objectName.display()
                     val args: List<String> = child.arguments?.map { it.toString() } ?: emptyList()
-                    return PostProcessorFuncSign(handleName, args)
+                    return LifecycleProcessorSignature(handleName, args)
                 }
 
                 else -> {
                     val handleName = expression.display()
-                    PostProcessorFuncSign(handleName, emptyList())
+                    LifecycleProcessorSignature(handleName, emptyList())
                 }
             }
         }

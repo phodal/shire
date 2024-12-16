@@ -4,7 +4,7 @@ import com.intellij.execution.ui.ConsoleView
 import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.project.Project
 
-data class PostProcessorFuncSign(
+data class LifecycleProcessorSignature(
     val funcName: String,
     val args: List<Any>,
 )
