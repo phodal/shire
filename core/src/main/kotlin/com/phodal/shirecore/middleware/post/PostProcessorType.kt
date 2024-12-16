@@ -1,4 +1,4 @@
-package com.phodal.shirecore.middleware
+package com.phodal.shirecore.middleware.post
 
 /**
  * Post middleware actions, like

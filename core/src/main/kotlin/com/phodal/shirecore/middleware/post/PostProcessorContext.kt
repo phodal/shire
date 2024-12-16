@@ -1,4 +1,4 @@
-package com.phodal.shirecore.middleware
+package com.phodal.shirecore.middleware.post
 
 import com.intellij.lang.Language
 import com.intellij.openapi.editor.Editor

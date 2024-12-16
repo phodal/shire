@@ -3,9 +3,9 @@ package com.phodal.shirelang
 import com.intellij.execution.ui.ConsoleView
 import com.intellij.openapi.project.Project
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
-import com.phodal.shirecore.middleware.PostProcessorContext
-import com.phodal.shirecore.middleware.PostProcessor.Companion.handler
-import com.phodal.shirecore.middleware.PostProcessorFuncSign
+import com.phodal.shirecore.middleware.post.PostProcessorContext
+import com.phodal.shirecore.middleware.post.PostProcessor.Companion.handler
+import com.phodal.shirecore.middleware.post.PostProcessorFuncSign
 import com.phodal.shirelang.compiler.parser.ShireSyntaxAnalyzer
 import com.phodal.shirelang.psi.ShireFile
 import junit.framework.TestCase

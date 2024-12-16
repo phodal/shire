@@ -16,9 +16,9 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.*
 import com.intellij.util.messages.MessageBusConnection
 import com.phodal.shirecore.ast.PsiSyntaxCheckingVisitor
-import com.phodal.shirecore.middleware.PostProcessorType
-import com.phodal.shirecore.middleware.PostProcessorContext
-import com.phodal.shirecore.middleware.PostProcessor
+import com.phodal.shirecore.middleware.post.PostProcessorType
+import com.phodal.shirecore.middleware.post.PostProcessorContext
+import com.phodal.shirecore.middleware.post.PostProcessor
 
 class VerifyCodeProcessor : PostProcessor {
     override val processorName: String = PostProcessorType.VerifyCode.handleName

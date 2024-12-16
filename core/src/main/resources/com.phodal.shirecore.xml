@@ -133,7 +133,7 @@
 
         <!-- Post Code Middleware -->
         <extensionPoint qualifiedName="com.phodal.shirePostProcessor"
-                        interface="com.phodal.shirecore.middleware.PostProcessor"
+                        interface="com.phodal.shirecore.middleware.post.PostProcessor"
                         dynamic="true"/>
 
         <!-- Location Interaction  -->

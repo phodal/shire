@@ -10,7 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.ProcessingContext
 import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirecore.config.InteractionType
-import com.phodal.shirecore.middleware.PostProcessor
+import com.phodal.shirecore.middleware.post.PostProcessor
 import com.phodal.shirecore.middleware.select.SelectElementStrategy
 import com.phodal.shirelang.ShireIcons
 import com.phodal.shirelang.compiler.ast.hobbit.HobbitHole

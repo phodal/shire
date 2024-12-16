@@ -12,7 +12,7 @@ import com.intellij.psi.util.PsiTreeUtil.getChildrenOfTypeAsList
 import com.intellij.psi.util.elementType
 import com.phodal.shirecore.findFile
 import com.phodal.shirecore.lookupFile
-import com.phodal.shirecore.middleware.PostProcessorType
+import com.phodal.shirecore.middleware.post.PostProcessorType
 import com.phodal.shirelang.compiler.ast.patternaction.PatternActionFuncDef
 import com.phodal.shirelang.psi.*
 

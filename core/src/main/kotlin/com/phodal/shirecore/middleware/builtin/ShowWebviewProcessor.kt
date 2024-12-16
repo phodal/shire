@@ -15,9 +15,9 @@ import com.intellij.ui.dsl.builder.*
 import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.utils.markdown.CodeFence
-import com.phodal.shirecore.middleware.PostProcessor
-import com.phodal.shirecore.middleware.PostProcessorContext
-import com.phodal.shirecore.middleware.PostProcessorType
+import com.phodal.shirecore.middleware.post.PostProcessor
+import com.phodal.shirecore.middleware.post.PostProcessorContext
+import com.phodal.shirecore.middleware.post.PostProcessorType
 import com.phodal.shirecore.middleware.builtin.ui.WebViewWindow
 import com.phodal.shirecore.runner.console.cancelHandler
 import kotlinx.coroutines.flow.cancellable

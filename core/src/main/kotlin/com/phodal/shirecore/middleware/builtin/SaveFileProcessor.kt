@@ -12,9 +12,9 @@ import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.vfs.VirtualFile
 import com.phodal.shirecore.utils.markdown.CodeFence
 import com.phodal.shirecore.SHIRE_TEMP_OUTPUT
-import com.phodal.shirecore.middleware.PostProcessorType
-import com.phodal.shirecore.middleware.PostProcessorContext
-import com.phodal.shirecore.middleware.PostProcessor
+import com.phodal.shirecore.middleware.post.PostProcessorType
+import com.phodal.shirecore.middleware.post.PostProcessorContext
+import com.phodal.shirecore.middleware.post.PostProcessor
 
 class SaveFileProcessor : PostProcessor, Disposable {
     override val processorName: String = PostProcessorType.SaveFile.handleName

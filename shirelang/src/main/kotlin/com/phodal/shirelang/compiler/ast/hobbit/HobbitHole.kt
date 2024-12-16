@@ -10,9 +10,10 @@ import com.intellij.openapi.project.Project
 import com.phodal.shirecore.config.InteractionType
 import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirecore.runner.console.isCanceled
-import com.phodal.shirecore.middleware.PostProcessor
-import com.phodal.shirecore.middleware.PostProcessorContext
-import com.phodal.shirecore.middleware.PostProcessorFuncSign
+import com.phodal.shirecore.middleware.post.PostProcessor
+import com.phodal.shirecore.middleware.post.PostProcessorContext
+import com.phodal.shirecore.middleware.post.PostProcessorFuncSign
+import com.phodal.shirecore.middleware.streaming.StreamingProcessorFuncSign
 import com.phodal.shirecore.middleware.select.SelectElementStrategy
 import com.phodal.shirecore.middleware.select.SelectedEntry
 import com.phodal.shirecore.workerThread
@@ -147,10 +148,14 @@ open class HobbitHole(
     val onStreamingEnd: List<PostProcessorFuncSign> = emptyList(),
 
     /**
-     * TBD, keep it for future use.
+     * This property represents a list of middleware actions to be executed
+     *
+     * ```shire
+     * ---
+     * onStreaming: { logging() | redacting() }
+     * ---
      */
-    @Deprecated("TBD")
-    val onStreaming: List<PostProcessor> = emptyList(),
+    val onStreaming: List<StreamingProcessorFuncSign> = emptyList(),
 
     /**
      * ```shire

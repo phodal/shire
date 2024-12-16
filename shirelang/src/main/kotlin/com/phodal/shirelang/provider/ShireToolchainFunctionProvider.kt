@@ -1,7 +1,7 @@
 package com.phodal.shirelang.provider
 
 import com.intellij.openapi.project.Project
-import com.phodal.shirecore.middleware.PostProcessor
+import com.phodal.shirecore.middleware.post.PostProcessor
 import com.phodal.shirecore.provider.function.ToolchainFunctionProvider
 import com.phodal.shirelang.compiler.ast.patternaction.PatternActionFunc
 import com.phodal.shirelang.compiler.variable.CompositeVariableProvider

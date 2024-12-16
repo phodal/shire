@@ -16,9 +16,9 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
-import com.phodal.shirecore.middleware.PostProcessor
-import com.phodal.shirecore.middleware.PostProcessorContext
-import com.phodal.shirecore.middleware.PostProcessorType
+import com.phodal.shirecore.middleware.post.PostProcessor
+import com.phodal.shirecore.middleware.post.PostProcessorContext
+import com.phodal.shirecore.middleware.post.PostProcessorType
 
 class OpenWebpageProcessor : PostProcessor {
     override val processorName: String get() = PostProcessorType.OpenWebpage.handleName

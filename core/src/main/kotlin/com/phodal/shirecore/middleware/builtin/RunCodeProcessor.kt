@@ -10,9 +10,9 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.PsiManager
-import com.phodal.shirecore.middleware.PostProcessorType
-import com.phodal.shirecore.middleware.PostProcessorContext
-import com.phodal.shirecore.middleware.PostProcessor
+import com.phodal.shirecore.middleware.post.PostProcessorType
+import com.phodal.shirecore.middleware.post.PostProcessorContext
+import com.phodal.shirecore.middleware.post.PostProcessor
 import com.phodal.shirecore.provider.shire.FileRunService
 
 class RunCodeProcessor : PostProcessor {

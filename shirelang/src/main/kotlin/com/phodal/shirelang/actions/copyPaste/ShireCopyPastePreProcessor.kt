@@ -11,7 +11,7 @@ import com.intellij.psi.PsiFile
 import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.utils.markdown.CodeFence
-import com.phodal.shirecore.middleware.PostProcessorContext
+import com.phodal.shirecore.middleware.post.PostProcessorContext
 import com.phodal.shirelang.compiler.template.ShireTemplateCompiler
 import com.phodal.shirelang.compiler.ast.hobbit.HobbitHole
 import com.phodal.shirelang.psi.ShireFile

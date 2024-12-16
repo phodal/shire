@@ -11,9 +11,9 @@ import com.intellij.openapi.vcs.changes.patch.ApplyPatchDefaultExecutor
 import com.intellij.openapi.vcs.changes.patch.MatchPatchPaths
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.util.containers.MultiMap
-import com.phodal.shirecore.middleware.PostProcessor
-import com.phodal.shirecore.middleware.PostProcessorContext
-import com.phodal.shirecore.middleware.PostProcessorType
+import com.phodal.shirecore.middleware.post.PostProcessor
+import com.phodal.shirecore.middleware.post.PostProcessorContext
+import com.phodal.shirecore.middleware.post.PostProcessorType
 
 class PatchProcessor : PostProcessor {
     override val processorName: String = PostProcessorType.Patch.handleName

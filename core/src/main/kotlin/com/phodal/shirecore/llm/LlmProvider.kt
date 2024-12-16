@@ -5,7 +5,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.search.ProjectScope
 import com.phodal.shirecore.ShireCoreBundle
 import com.phodal.shirecore.ShirelangNotifications
-import com.phodal.shirecore.middleware.PostProcessorContext
+import com.phodal.shirecore.middleware.post.PostProcessorContext
 import com.phodal.shire.json.llm.LlmEnv
 import kotlinx.coroutines.flow.Flow
 

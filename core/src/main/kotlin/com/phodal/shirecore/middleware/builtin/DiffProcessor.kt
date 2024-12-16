@@ -12,9 +12,9 @@ import com.intellij.openapi.application.runInEdt
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.findFile
-import com.phodal.shirecore.middleware.PostProcessor
-import com.phodal.shirecore.middleware.PostProcessorContext
-import com.phodal.shirecore.middleware.PostProcessorType
+import com.phodal.shirecore.middleware.post.PostProcessor
+import com.phodal.shirecore.middleware.post.PostProcessorContext
+import com.phodal.shirecore.middleware.post.PostProcessorType
 
 class DiffProcessor : PostProcessor {
     override val processorName: String = PostProcessorType.Diff.handleName

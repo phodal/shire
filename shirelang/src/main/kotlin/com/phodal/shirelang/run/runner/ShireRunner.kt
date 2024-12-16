@@ -11,7 +11,7 @@ import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirecore.config.interaction.PostFunction
 import com.phodal.shirecore.runner.console.cancelWithConsole
 import com.phodal.shirecore.llm.LlmProvider
-import com.phodal.shirecore.middleware.PostProcessorContext
+import com.phodal.shirecore.middleware.post.PostProcessorContext
 import com.phodal.shirecore.provider.action.TerminalLocationExecutor
 import com.phodal.shirecore.provider.context.ActionLocationEditor
 import com.phodal.shirecore.workerThread

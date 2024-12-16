@@ -5,9 +5,9 @@ import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.codeStyle.CodeStyleManager
-import com.phodal.shirecore.middleware.PostProcessorType
-import com.phodal.shirecore.middleware.PostProcessorContext
-import com.phodal.shirecore.middleware.PostProcessor
+import com.phodal.shirecore.middleware.post.PostProcessorType
+import com.phodal.shirecore.middleware.post.PostProcessorContext
+import com.phodal.shirecore.middleware.post.PostProcessor
 import com.phodal.shirecore.workerThread
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch

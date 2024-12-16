@@ -7,7 +7,7 @@ import com.intellij.codeInsight.completion.InsertionContext
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.util.ProcessingContext
-import com.phodal.shirecore.middleware.PostProcessor
+import com.phodal.shirecore.middleware.post.PostProcessor
 import com.phodal.shirelang.ShireIcons
 
 class PostProcessorCompletion : CompletionProvider<CompletionParameters>() {

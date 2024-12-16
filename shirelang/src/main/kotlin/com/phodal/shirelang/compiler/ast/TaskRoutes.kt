@@ -2,7 +2,7 @@ package com.phodal.shirelang.compiler.ast
 
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
-import com.phodal.shirecore.middleware.PostProcessorContext
+import com.phodal.shirecore.middleware.post.PostProcessorContext
 import com.phodal.shirelang.compiler.ast.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.execute.FunctionStatementProcessor
 

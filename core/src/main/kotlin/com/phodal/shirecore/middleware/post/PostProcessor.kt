@@ -1,4 +1,4 @@
-package com.phodal.shirecore.middleware
+package com.phodal.shirecore.middleware.post
 
 import com.intellij.execution.ui.ConsoleView
 import com.intellij.openapi.extensions.ExtensionPointName
