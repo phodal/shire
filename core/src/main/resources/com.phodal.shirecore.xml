@@ -169,6 +169,12 @@
                         interface="com.phodal.shirecore.provider.sketch.LanguageSketchProvider"
                         dynamic="true">
         </extensionPoint>
+
+        <!--        streamingService -->
+        <extensionPoint qualifiedName="com.phodal.shireStreamingService"
+                        interface="com.phodal.shirecore.provider.streaming.StreamingServiceProvider"
+                        dynamic="true">
+        </extensionPoint>
     </extensionPoints>
 
     <extensions defaultExtensionNs="JavaScript.JsonSchema">
