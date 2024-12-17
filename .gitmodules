@@ -1,3 +1,0 @@
-[submodule "core/src/main/resources/model"]
-	path = core/src/main/resources/model
-	url = https://github.com/shire-lang/embedding-model
