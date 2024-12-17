@@ -29,6 +29,7 @@ import com.phodal.shirelang.run.executor.ShireDefaultLlmExecutor
 import com.phodal.shirelang.run.executor.ShireLlmExecutor
 import com.phodal.shirelang.run.executor.ShireLlmExecutorContext
 import com.phodal.shirelang.run.flow.ShireConversationService
+import com.phodal.shirecore.provider.streaming.OnStreamingService
 import kotlinx.coroutines.*
 import java.util.concurrent.CompletableFuture
 
@@ -218,11 +219,11 @@ class ShireRunner(
 
         PostProcessorContext.updateContextAndVariables(context)
 
-        val processor = hobbitHole?.executeStreamingEndProcessor(project, console, context, compiledVariables)
-        PostProcessorContext.updateOutput(processor)
+        val endStreamProcessor = hobbitHole?.executeStreamingEndProcessor(project, console, context, compiledVariables)
+        PostProcessorContext.updateOutput(endStreamProcessor)
 
-        val processor2 = hobbitHole?.executeAfterStreamingProcessor(project, console, context)
-        PostProcessorContext.updateOutput(processor2)
+        val afterStreamHandler = hobbitHole?.executeAfterStreamingProcessor(project, console, context)
+        PostProcessorContext.updateOutput(afterStreamHandler)
 
         try {
             processHandler.detachProcess()
@@ -279,6 +280,11 @@ class ShireRunner(
 
         val vars: MutableMap<String, Any?> = compiledVariables.toMutableMap()
         hobbitHole?.executeBeforeStreamingProcessor(project, context, console, vars)
+
+        project.getService(OnStreamingService::class.java).clearStreamingService()
+        hobbitHole?.onStreaming?.forEach {
+            project.getService(OnStreamingService::class.java).registerStreamingService(it)
+        }
 
         hobbitHole?.setupStreamingEndProcessor(project, context)
     }

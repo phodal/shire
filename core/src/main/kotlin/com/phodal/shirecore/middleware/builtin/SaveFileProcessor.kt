@@ -11,7 +11,7 @@ import com.intellij.openapi.project.guessProjectDir
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.vfs.VirtualFile
 import com.phodal.shirecore.utils.markdown.CodeFence
-import com.phodal.shirecore.SHIRE_TEMP_OUTPUT
+import com.phodal.shirecore.ShireConstants
 import com.phodal.shirecore.middleware.post.PostProcessorType
 import com.phodal.shirecore.middleware.post.PostProcessorContext
 import com.phodal.shirecore.middleware.post.PostProcessor
@@ -54,8 +54,7 @@ class SaveFileProcessor : PostProcessor, Disposable {
     ) {
         ApplicationManager.getApplication().invokeAndWait {
             WriteAction.compute<VirtualFile, Throwable> {
-                val outputDir = project.guessProjectDir()?.findChild(SHIRE_TEMP_OUTPUT)
-                    ?: project.guessProjectDir()?.createChildDirectory(this, SHIRE_TEMP_OUTPUT)
+                val outputDir = ShireConstants.outputDir(project)
 
                 val outputFile = outputDir?.createChildData(this, fileName)
                     ?: throw IllegalStateException("Failed to save file")

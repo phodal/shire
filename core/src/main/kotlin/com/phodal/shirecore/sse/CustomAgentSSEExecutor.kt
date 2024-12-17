@@ -63,7 +63,7 @@ class CustomAgentSSEExecutor(val project: Project) : CustomSSEHandler() {
 
         return when (agent.responseAction) {
             CustomAgentResponseAction.Stream -> {
-                streamSSE(call, messages = messages)
+                streamSSE(call, messages = messages, project)
             }
 
             else -> {

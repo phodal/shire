@@ -103,10 +103,12 @@ class OpenAILikeProvider : CustomSSEHandler(), LlmProvider {
         client = client.newBuilder().readTimeout(timeout).build()
         val call = client.newCall(builder.url(url).post(body).build())
 
+        val copyMessages = messages.toMutableList()
         if (!keepHistory) {
             clearMessage()
+            return streamSSE(call, copyMessages, project!!)
+        } else {
+            return streamSSE(call, messages, project!!)
         }
-
-        return streamSSE(call, messages)
     }
 }

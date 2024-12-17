@@ -2,6 +2,7 @@ package com.phodal.shirecore.sse
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.intellij.openapi.diagnostic.logger
+import com.intellij.openapi.project.Project
 import com.nfeld.jsonpathkt.JsonPath
 import com.nfeld.jsonpathkt.extension.read
 import com.phodal.shirecore.sse.io.ChatCompletionResult
@@ -12,6 +13,7 @@ import com.phodal.shirecore.runner.console.CustomFlowWrapper
 import com.phodal.shirecore.llm.ChatMessage
 import com.phodal.shirecore.llm.ChatRole
 import com.phodal.shirecore.llm.CustomRequest
+import com.phodal.shirecore.provider.streaming.OnStreamingService
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.FlowableEmitter
@@ -59,12 +61,16 @@ open class CustomSSEHandler {
     }
 
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
-    fun streamSSE(call: Call, messages: MutableList<ChatMessage>): Flow<String> {
+    fun streamSSE(call: Call, messages: MutableList<ChatMessage>, project: Project): Flow<String> {
         var emit: FlowableEmitter<SSE>? = null
         val sseFlowable = Flowable
             .create({ emitter: FlowableEmitter<SSE> ->
                 emit = emitter.apply { call.enqueue(ResponseBodyCallback(emitter, true)) }
             }, BackpressureStrategy.BUFFER)
+
+        val service = project.getService(OnStreamingService::class.java)
+        val lastPrompt = messages.lastOrNull { it.role == ChatRole.user }?.content ?: ""
+        service?.onStart(project, lastPrompt)
 
         try {
             var output = ""
@@ -95,6 +101,7 @@ open class CustomSSEHandler {
                                     } else {
                                         hasSuccessRequest = true
                                         output += chunk
+                                        service?.onStreaming(project, chunk)
                                         trySend(chunk)
                                     }
                                 } else {
@@ -104,6 +111,7 @@ open class CustomSSEHandler {
                                     val completion = result.choices[0].message
                                     if (completion?.content != null) {
                                         output += completion.content
+                                        service?.onStreaming(project, completion.content)
                                         trySend(completion.content)
                                     }
                                 }
@@ -121,10 +129,12 @@ open class CustomSSEHandler {
 
                         // TODO add refresh feature
                         // don't use trySend, it may be ignored by 'close()` op
+                        service?.onError()
                         send(errorMsg)
                     }
 
                     messages += ChatMessage(ChatRole.assistant, output)
+                    service?.onDone(project)
                     close()
                 }
                 awaitClose()

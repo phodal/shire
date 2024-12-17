@@ -207,11 +207,14 @@
         <!--   EditorInteractionProvider-->
         <shireLocationInteraction implementation="com.phodal.shirecore.config.interaction.EditorInteractionProvider"/>
 
-        <shireLangSketchProvider implementation="com.phodal.shirecore.sketch.patch.DiffLangSketchProvider" />
+        <shireLangSketchProvider implementation="com.phodal.shirecore.sketch.patch.DiffLangSketchProvider"/>
 
         <!-- Markdown Impl -->
         <shirePsiVariableProvider
                 language="Markdown"
                 implementationClass="com.phodal.shirecore.provider.impl.MarkdownPsiContextVariableProvider"/>
+
+        <shireStreamingService
+                implementationClass="com.phodal.shirecore.provider.streaming.LoggingStreamingService"/>
     </extensions>
 </idea-plugin>
