@@ -7,19 +7,9 @@ package com.phodal.shirecore.middleware.post
  */
 enum class PostProcessorType(var handleName: String) {
     /**
-     * Logging the action.
-     */
-    Logging("logging"),
-
-    /**
      * Metric time spent on the action.
      */
     TimeMetric("timeMetric"),
-
-    /**
-     * Acceptance metric.
-     */
-    AcceptanceMetric("acceptanceMetric"),
 
     /**
      * Check has code error or PSI issue.
@@ -35,11 +25,6 @@ enum class PostProcessorType(var handleName: String) {
      * Parse text to code blocks
      */
     ParseCode("parseCode"),
-
-    /**
-     * For example, TestCode should be in the correct directory, like java test should be in test directory.
-     */
-    InferCodeLocation("InferCodeLocation"),
 
     /**
      * Save file to the disk
