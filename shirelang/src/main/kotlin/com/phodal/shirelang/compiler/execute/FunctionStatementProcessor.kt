@@ -9,7 +9,6 @@ import com.nfeld.jsonpathkt.extension.read
 import com.phodal.shirecore.variable.vcs.ShireGitCommit
 import com.phodal.shirelang.compiler.ast.*
 import com.phodal.shirelang.compiler.ast.hobbit.HobbitHole
-import com.phodal.shirelang.compiler.ast.*
 import com.phodal.shirelang.compiler.execute.shireql.ShireDateSchema
 import com.phodal.shirelang.compiler.execute.shireql.ShireQLSchema
 import com.phodal.shirelang.compiler.execute.variable.ShireQLVariableBuilder
@@ -155,19 +154,18 @@ open class FunctionStatementProcessor(override val myProject: Project, override 
                         is FrontMatterType.STRING -> (methodArgs[0] as FrontMatterType.STRING).value.toString()
                         else -> firstArg.toString()
                     }
-                    val json: String = try {
+                    val string: String = try {
                         JsonPath.parse(output)?.read<Any>(arg).toString()
                     } catch (e: Exception) {
                         logger<FunctionStatementProcessor>().warn("jsonpath error: $e")
                         return null
                     }
 
-                    return json
+                    return string
                 }
 
                 "print" -> {
-                    val value = firstArg
-                    println(value)
+                    println(firstArg)
                 }
 
                 else -> {
