@@ -25,6 +25,7 @@ class OnStreamingService {
         val streamingService = StreamingServiceProvider.getStreamingService(sign.funcName)
         if (streamingService != null) {
             map[sign] = streamingService
+            streamingService.onCreated(console)
         }
     }
 

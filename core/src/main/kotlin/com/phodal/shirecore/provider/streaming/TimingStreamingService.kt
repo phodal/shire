@@ -14,16 +14,25 @@ class TimingStreamingService : StreamingServiceProvider {
     private var time: Long = 0
     private var console: ShireConsoleViewBase? = null
 
-    override fun onStart(project: Project, userPrompt: String, console: ShireConsoleViewBase?) {
+    override fun onCreated(console: ShireConsoleViewBase?) {
         this.console = console
         val currentTime = System.currentTimeMillis()
         time = currentTime
-        console?.print("Start timing: $currentTime", ConsoleViewContentType.SYSTEM_OUTPUT)
+        // new line
+        console?.print("\n", ConsoleViewContentType.SYSTEM_OUTPUT)
+        console?.print("Start timing: $currentTime \n", ConsoleViewContentType.SYSTEM_OUTPUT)
+    }
+
+    override fun onStart(project: Project, userPrompt: String, console: ShireConsoleViewBase?) {
+
     }
 
     override fun onDone(project: Project) {
         val currentTime = System.currentTimeMillis()
-        console?.print("End timing: $currentTime", ConsoleViewContentType.SYSTEM_OUTPUT)
+
+        console?.print("\n", ConsoleViewContentType.SYSTEM_OUTPUT)
+        console?.print("End timing: $currentTime \n", ConsoleViewContentType.SYSTEM_OUTPUT)
+
         ShirelangNotifications.info(project, "Timing: ${currentTime - time}ms")
     }
 

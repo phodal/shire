@@ -13,7 +13,14 @@ interface StreamingServiceProvider : Disposable {
     var name: String
 
     /**
-     * For the start of the streaming, you can do some initialization here, for example, you can create a file to log the data
+     * When create the service, you can do some initialization here
+     */
+    fun onCreated(console: ShireConsoleViewBase?) {
+        /// do nothing
+    }
+
+    /**
+     * For the start of the LLM streaming, you can do some initialization here, for example, you can create a file to log the data
      */
     fun onStart(project: Project, userPrompt: String, console: ShireConsoleViewBase?) {
         /// do nothing

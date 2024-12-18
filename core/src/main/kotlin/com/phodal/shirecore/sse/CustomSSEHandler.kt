@@ -69,8 +69,6 @@ open class CustomSSEHandler {
             }, BackpressureStrategy.BUFFER)
 
         val service = project.getService(OnStreamingService::class.java)
-        val lastPrompt = messages.lastOrNull { it.role == ChatRole.user }?.content ?: ""
-        service?.onStart(project, lastPrompt)
 
         try {
             var output = ""

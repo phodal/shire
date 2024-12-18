@@ -9,6 +9,7 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiManager
 import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirecore.config.interaction.PostFunction
+import com.phodal.shirecore.llm.ChatRole
 import com.phodal.shirecore.runner.console.cancelWithConsole
 import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.middleware.post.PostProcessorContext
@@ -66,6 +67,9 @@ class ShireRunner(
             processHandler.exitWithError()
             return null
         }
+
+        val service = project.getService(OnStreamingService::class.java)
+        service?.onStart(project, runnerContext.finalPrompt)
 
         this.compiledVariables = runnerContext.compiledVariables
 
@@ -283,7 +287,8 @@ class ShireRunner(
 
         project.getService(OnStreamingService::class.java).clearStreamingService()
         hobbitHole?.onStreaming?.forEach {
-            project.getService(OnStreamingService::class.java).registerStreamingService(it, console)
+            val streamingService = project.getService(OnStreamingService::class.java)
+            streamingService.registerStreamingService(it, console)
         }
 
         hobbitHole?.setupStreamingEndProcessor(project, context)
