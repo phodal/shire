@@ -14,7 +14,9 @@ interface StreamingServiceProvider : Disposable {
     /**
      * Receive streaming data
      */
-    fun onStreaming(project: Project, flow: String, args: List<Any>)
+    fun onStreaming(project: Project, flow: String, args: List<Any>) {
+        /// do nothing
+    }
 
     fun onDone(project: Project) {
         /// do nothing
