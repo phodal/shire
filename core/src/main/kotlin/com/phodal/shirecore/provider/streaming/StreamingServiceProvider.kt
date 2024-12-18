@@ -4,20 +4,31 @@ import com.intellij.openapi.Disposable
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.runner.console.ShireConsoleViewBase
 
+/**
+ * all - Returns a list of all registered StreamingServiceProvider implementations.
+ *
+ * @return A list of StreamingServiceProvider instances.
+ */
 interface StreamingServiceProvider : Disposable {
     var name: String
 
+    /**
+     * For the start of the streaming, you can do some initialization here, for example, you can create a file to log the data
+     */
     fun onStart(project: Project, userPrompt: String, console: ShireConsoleViewBase?) {
         /// do nothing
     }
 
     /**
-     * Receive streaming data
+     * For the streaming data, you can do some processing here, for example, you can log the data to a file
      */
     fun onStreaming(project: Project, flow: String, args: List<Any>) {
         /// do nothing
     }
 
+    /**
+     * For the end of the streaming, for example, you can do some cleanup here, or show some notification
+     */
     fun onDone(project: Project) {
         /// do nothing
     }

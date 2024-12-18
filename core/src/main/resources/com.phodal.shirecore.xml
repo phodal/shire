@@ -219,5 +219,8 @@
 
         <shireStreamingService
                 implementationClass="com.phodal.shirecore.provider.streaming.TimingStreamingService"/>
+
+        <shireStreamingService
+                implementationClass="com.phodal.shirecore.provider.streaming.ProfilingStreamingService"/>
     </extensions>
 </idea-plugin>

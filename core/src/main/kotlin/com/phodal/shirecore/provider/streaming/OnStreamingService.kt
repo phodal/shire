@@ -7,7 +7,13 @@ import com.phodal.shirecore.middleware.post.LifecycleProcessorSignature
 import com.phodal.shirecore.runner.console.ShireConsoleViewBase
 
 /**
- * Manage all [com.phodal.shirecore.provider.streaming.StreamingServiceProvider]
+ * The OnStreamingService class is responsible for managing all the [StreamingServiceProvider] instances related to streaming services.
+ * It offers methods for registering, clearing, and initiating streaming services within the application.
+ *
+ * This class is annotated with the @Service annotation at the project level, indicating its role in the service management infrastructure.
+ *
+ * The class maintains a mutable map to associate [LifecycleProcessorSignature] objects with corresponding [StreamingServiceProvider] instances.
+ * It also holds an optional reference to a console view object that can be used for outputting information to the user.
  */
 @Service(Service.Level.PROJECT)
 class OnStreamingService {

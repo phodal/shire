@@ -21,6 +21,7 @@ onStreaming: { logging }
 
 - logging,
 - timing,
+- profiling,
 
 ### logging
 
@@ -34,3 +35,7 @@ onStreaming: { logging }
 ### timing
 
 > 记录生成 LLM prompt 时间。
+
+### profiling
+
+> 记录 LLM prompt 的性能分析，主要包含内存。

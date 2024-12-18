@@ -32,7 +32,7 @@ class SaveFileProcessor : PostProcessor, Disposable {
         val ext = getFileExt(context)
         if (args.isNotEmpty()) {
             fileName = getValidFilePath(args[0].toString(), ext)
-            handleForProjectFile(project, fileName, context, console, ext)
+            handleForProjectFile(project, fileName, context, console)
         } else {
             fileName = "${System.currentTimeMillis()}.$ext"
             handleForTempFile(project, fileName, context, console)
@@ -75,8 +75,7 @@ class SaveFileProcessor : PostProcessor, Disposable {
         project: Project,
         filepath: String,
         context: PostProcessorContext,
-        console: ConsoleView?,
-        ext: String,
+        console: ConsoleView?
     ) {
         var fileName = filepath
         ApplicationManager.getApplication().invokeAndWait {
