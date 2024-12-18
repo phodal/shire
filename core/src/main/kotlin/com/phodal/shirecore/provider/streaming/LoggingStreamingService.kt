@@ -10,6 +10,7 @@ import com.phodal.shirecore.LLM_LOGGING_JSONL
 import com.phodal.shirecore.ShireConstants
 import com.phodal.shirecore.llm.ChatMessage
 import com.phodal.shirecore.llm.ChatRole
+import com.phodal.shirecore.runner.console.ShireConsoleViewBase
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -28,7 +29,7 @@ class LoggingStreamingService : StreamingServiceProvider {
     private var result: String = ""
     private var userPrompt: String = ""
 
-    override fun onStart(project: Project, userPrompt: String) {
+    override fun onStart(project: Project, userPrompt: String, console: ShireConsoleViewBase?) {
         this.userPrompt = userPrompt
         this.outputDir = ShireConstants.outputDir(project) ?: throw IllegalStateException("Project directory not found")
         if (outputDir.findChild(LLM_LOGGING) == null) {
@@ -38,7 +39,6 @@ class LoggingStreamingService : StreamingServiceProvider {
                 }
             }
         } else {
-            // clear the file
             runWriteAction {
                 val file = outputDir.findChild(LLM_LOGGING)
                 file?.setBinaryContent(ByteArray(0))

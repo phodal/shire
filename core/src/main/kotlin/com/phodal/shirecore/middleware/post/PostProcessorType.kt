@@ -51,6 +51,9 @@ enum class PostProcessorType(var handleName: String) {
      */
     ParseComment("parseComment"),
 
+    /**
+     * Insert new line
+     */
     InsertNewline("insertNewline"),
 
     /**
@@ -70,10 +73,14 @@ enum class PostProcessorType(var handleName: String) {
 
     UpdateEditorText("updateEditorText"),
 
-    // openWebpage
+    /**
+     * openWebpage
+     */
     OpenWebpage("openWebpage"),
 
-    // showWebView
+    /**
+     *  showWebView
+     */
     ShowWebview("showWebView"),
     ;
 }

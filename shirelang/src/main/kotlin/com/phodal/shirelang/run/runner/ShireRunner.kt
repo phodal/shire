@@ -283,7 +283,7 @@ class ShireRunner(
 
         project.getService(OnStreamingService::class.java).clearStreamingService()
         hobbitHole?.onStreaming?.forEach {
-            project.getService(OnStreamingService::class.java).registerStreamingService(it)
+            project.getService(OnStreamingService::class.java).registerStreamingService(it, console)
         }
 
         hobbitHole?.setupStreamingEndProcessor(project, context)

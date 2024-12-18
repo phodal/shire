@@ -2,11 +2,12 @@ package com.phodal.shirecore.provider.streaming
 
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.project.Project
+import com.phodal.shirecore.runner.console.ShireConsoleViewBase
 
 interface StreamingServiceProvider : Disposable {
     var name: String
 
-    fun onStart(project: Project, userPrompt: String) {
+    fun onStart(project: Project, userPrompt: String, console: ShireConsoleViewBase?) {
         /// do nothing
     }
 

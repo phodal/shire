@@ -4,6 +4,7 @@ import com.intellij.openapi.components.Service
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.ShirelangNotifications
 import com.phodal.shirecore.middleware.post.LifecycleProcessorSignature
+import com.phodal.shirecore.runner.console.ShireConsoleViewBase
 
 /**
  * Manage all [com.phodal.shirecore.provider.streaming.StreamingServiceProvider]
@@ -11,8 +12,10 @@ import com.phodal.shirecore.middleware.post.LifecycleProcessorSignature
 @Service(Service.Level.PROJECT)
 class OnStreamingService {
     val map = mutableMapOf<LifecycleProcessorSignature, StreamingServiceProvider>()
+    var console: ShireConsoleViewBase? = null
 
-    fun registerStreamingService(sign: LifecycleProcessorSignature) {
+    fun registerStreamingService(sign: LifecycleProcessorSignature, console: ShireConsoleViewBase?) {
+        this.console = console
         val streamingService = StreamingServiceProvider.getStreamingService(sign.funcName)
         if (streamingService != null) {
             map[sign] = streamingService
@@ -30,7 +33,7 @@ class OnStreamingService {
     fun onStart(project: Project, userPrompt: String) {
         map.forEach { (_, service) ->
             try {
-                service.onStart(project, userPrompt)
+                service.onStart(project, userPrompt, console)
             } catch (e: Exception) {
                 ShirelangNotifications.error(project, "Error on start streaming service: ${e.message}")
             }
