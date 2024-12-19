@@ -23,11 +23,11 @@ class TimingStreamingService : StreamingServiceProvider {
         console?.print("Start timing: $currentTime \n", ConsoleViewContentType.SYSTEM_OUTPUT)
     }
 
-    override fun onStart(project: Project, userPrompt: String, console: ShireConsoleViewBase?) {
+    override fun onBeforeStreaming(project: Project, userPrompt: String, console: ShireConsoleViewBase?) {
 
     }
 
-    override fun onDone(project: Project) {
+    override fun afterStreamingDone(project: Project) {
         val currentTime = System.currentTimeMillis()
 
         console?.print("\n", ConsoleViewContentType.SYSTEM_OUTPUT)

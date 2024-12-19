@@ -126,20 +126,16 @@ class ShireConsoleView(private val executionConsole: ShireExecutionConsole) :
     private val id = ProjectSystemId("Shire")
     private fun createTaskId() =
         ExternalSystemTaskId.create(id, ExternalSystemTaskType.RESOLVE_PROJECT, executionConsole.project)
+    private val scriptPath = executionConsole.configuration.getScriptPath()
 
     val task = createTaskId()
     val buildDescriptor: DefaultBuildDescriptor =
-        DefaultBuildDescriptor(
-            task.id,
-            "Shire",
-            executionConsole.configuration.getScriptPath(),
-            System.currentTimeMillis()
-        )
+        DefaultBuildDescriptor(task.id, "Shire", scriptPath, System.currentTimeMillis())
 
     val viewManager: ExternalSystemRunConfigurationViewManager =
         executionConsole.project.getService(ExternalSystemRunConfigurationViewManager::class.java)
 
-    val buildView: BuildView = object : BuildView(
+    private val buildView: BuildView = object : BuildView(
         executionConsole.project,
         executionConsole,
         buildDescriptor,
@@ -153,7 +149,6 @@ class ShireConsoleView(private val executionConsole: ShireExecutionConsole) :
     }
 
     init {
-
         val baseComponent = buildView.component
         myPanel.add(baseComponent, BorderLayout.EAST)
 
@@ -175,7 +170,6 @@ class ShireConsoleView(private val executionConsole: ShireExecutionConsole) :
     }
 
     override fun isCanceled(): Boolean = shireRunner?.isCanceled() ?: super.isCanceled()
-
 
     fun bindShireRunner(runner: ShireRunner) {
         shireRunner = runner
@@ -218,7 +212,7 @@ class ShireExecutionConsole(
     private var isStopped: Boolean = false,
     val configuration: ShireConfiguration,
 ) : ConsoleViewImpl(project, viewer) {
-    private val output = StringBuilder()
+    private val outputBuilder = StringBuilder()
     private var processHandler: ShireProcessHandler? = null
 
     fun getProcessHandler(): ShireProcessHandler? {
@@ -232,17 +226,17 @@ class ShireExecutionConsole(
 
     override fun print(text: String, contentType: ConsoleViewContentType) {
         super.print(text, contentType)
-        if (!isStopped) output.append(text)
+        if (!isStopped) outputBuilder.append(text)
     }
 
     fun getOutput(clearAndStop: Boolean): String {
-        val o = output.toString()
+        val output = outputBuilder.toString()
         if (clearAndStop) {
             isStopped = true
-            output.clear()
+            outputBuilder.clear()
         }
 
-        return o
+        return output
     }
 
 }

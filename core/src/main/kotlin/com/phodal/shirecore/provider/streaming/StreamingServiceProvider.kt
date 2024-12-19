@@ -13,7 +13,7 @@ interface StreamingServiceProvider : Disposable {
     var name: String
 
     /**
-     * When create the service, you can do some initialization here
+     * When create the service, you can do some initialization here, like start timer, etc.
      */
     fun onCreated(console: ShireConsoleViewBase?) {
         /// do nothing
@@ -22,7 +22,7 @@ interface StreamingServiceProvider : Disposable {
     /**
      * For the start of the LLM streaming, you can do some initialization here, for example, you can create a file to log the data
      */
-    fun onStart(project: Project, userPrompt: String, console: ShireConsoleViewBase?) {
+    fun onBeforeStreaming(project: Project, userPrompt: String, console: ShireConsoleViewBase?) {
         /// do nothing
     }
 
@@ -36,7 +36,7 @@ interface StreamingServiceProvider : Disposable {
     /**
      * For the end of the streaming, for example, you can do some cleanup here, or show some notification
      */
-    fun onDone(project: Project) {
+    fun afterStreamingDone(project: Project) {
         /// do nothing
     }
 

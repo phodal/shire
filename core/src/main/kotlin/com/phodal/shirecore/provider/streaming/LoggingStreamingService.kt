@@ -29,7 +29,7 @@ class LoggingStreamingService : StreamingServiceProvider {
     private var result: String = ""
     private var userPrompt: String = ""
 
-    override fun onStart(project: Project, userPrompt: String, console: ShireConsoleViewBase?) {
+    override fun onBeforeStreaming(project: Project, userPrompt: String, console: ShireConsoleViewBase?) {
         this.userPrompt = userPrompt
         this.outputDir = ShireConstants.outputDir(project) ?: throw IllegalStateException("Project directory not found")
         if (outputDir.findChild(LLM_LOGGING) == null) {
@@ -62,7 +62,7 @@ class LoggingStreamingService : StreamingServiceProvider {
         file?.appendText(flow)
     }
 
-    override fun onDone(project: Project) {
+    override fun afterStreamingDone(project: Project) {
         ApplicationManager.getApplication().invokeAndWait {
             WriteAction.compute<VirtualFile, Throwable> {
                 val virtualFile = outputDir.createChildData(this, LLM_LOGGING_JSONL)

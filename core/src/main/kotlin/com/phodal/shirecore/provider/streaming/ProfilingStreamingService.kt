@@ -15,13 +15,13 @@ class ProfilingStreamingService : StreamingServiceProvider {
     override var name: String = "profiling"
     private var console: ShireConsoleViewBase? = null
 
-    override fun onStart(project: Project, userPrompt: String, console: ShireConsoleViewBase?) {
+    override fun onBeforeStreaming(project: Project, userPrompt: String, console: ShireConsoleViewBase?) {
         this.console = console
         console?.print("Start profiling: ${getMemory()}", ConsoleViewContentType.SYSTEM_OUTPUT)
 
     }
 
-    override fun onDone(project: Project) {
+    override fun afterStreamingDone(project: Project) {
         console?.print("End profiling: ${getMemory()}", ConsoleViewContentType.SYSTEM_OUTPUT)
         ShirelangNotifications.info(project, "Memory: ${getMemory()}MB")
     }

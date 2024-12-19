@@ -40,7 +40,7 @@ class OnStreamingService {
     fun onStart(project: Project, userPrompt: String) {
         map.forEach { (_, service) ->
             try {
-                service.onStart(project, userPrompt, console)
+                service.onBeforeStreaming(project, userPrompt, console)
             } catch (e: Exception) {
                 ShirelangNotifications.error(project, "Error on start streaming service: ${e.message}")
             }
@@ -60,7 +60,7 @@ class OnStreamingService {
     fun onDone(project: Project) {
         map.forEach { (_, service) ->
             try {
-                service.onDone(project)
+                service.afterStreamingDone(project)
             } catch (e: Exception) {
                 ShirelangNotifications.error(project, "Error on done streaming service: ${e.message}")
             }
