@@ -19,6 +19,7 @@ class DefaultPsiContextVariableProvider : PsiContextVariableProvider {
             CHANGE_COUNT -> return calculateChangeCount(psiElement)
             LINE_COUNT -> return calculateLineCount(psiElement)
             COMPLEXITY_COUNT -> return calculateComplexityCount(psiElement)
+            CODE_SMELL -> return CodeSmellBuilder.collectElementProblemAsSting(psiElement!!, project, editor)
 
             else -> ""
         }

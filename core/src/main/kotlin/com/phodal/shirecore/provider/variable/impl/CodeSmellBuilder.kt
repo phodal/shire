@@ -51,7 +51,7 @@ object CodeSmellBuilder  {
         return collectProblems(project, editor, element) ?: ""
     }
 
-    fun commentPrefix(element: PsiElement): String {
+    private fun commentPrefix(element: PsiElement): String {
         return LanguageCommenters.INSTANCE.forLanguage(element.language)?.lineCommentPrefix ?: "//"
     }
 }
