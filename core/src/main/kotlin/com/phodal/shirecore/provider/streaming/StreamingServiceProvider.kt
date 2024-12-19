@@ -40,6 +40,10 @@ interface StreamingServiceProvider : Disposable {
         /// do nothing
     }
 
+    override fun dispose() {
+        /// do nothing
+    }
+
     companion object {
         val EP_NAME =
             com.intellij.openapi.extensions.ExtensionPointName.create<StreamingServiceProvider>("com.phodal.shireStreamingService")

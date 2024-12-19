@@ -36,8 +36,4 @@ class ProfilingStreamingService : StreamingServiceProvider {
     private fun toMb(value: Long): Long {
         return value / IOUtil.MiB
     }
-
-    override fun dispose() {
-        //
-    }
 }

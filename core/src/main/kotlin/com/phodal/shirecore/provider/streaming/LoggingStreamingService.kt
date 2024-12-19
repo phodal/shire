@@ -80,8 +80,4 @@ class LoggingStreamingService : StreamingServiceProvider {
             }
         }
     }
-
-    override fun dispose() {
-        /// do nothing
-    }
 }
