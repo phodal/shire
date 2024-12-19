@@ -26,5 +26,7 @@ class ShireCoroutineScope {
     companion object {
         fun scope(project: Project): CoroutineScope =
             project.getService(ShireCoroutineScope::class.java).coroutineScope
+
+        fun workerThread(): CoroutineScope = CoroutineScope(SupervisorJob() + workerThread)
     }
 }

@@ -16,7 +16,9 @@ import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
+import com.intellij.psi.PsiFileFactory
 import com.phodal.shirecore.middleware.post.PostProcessorContext
+import com.phodal.shirelang.ShireLanguage
 import com.phodal.shirelang.actions.base.DynamicShireActionConfig
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.*
@@ -91,6 +93,16 @@ class ShireRunFileAction : DumbAwareAction() {
 
         fun suspendExecuteFile(
             project: Project,
+            prompt: String,
+        ): String? {
+            val shireFile: ShireFile = PsiFileFactory.getInstance(project)
+                .createFileFromText("temp.shire", ShireLanguage.INSTANCE, prompt) as ShireFile
+
+            return suspendExecuteFile(project, arrayOf(), mutableMapOf(), shireFile)
+        }
+
+        fun suspendExecuteFile(
+            project: Project,
             variableNames: Array<String>,
             variableTable: MutableMap<String, Any?>,
             file: ShireFile,
@@ -134,7 +146,13 @@ class ShireRunFileAction : DumbAwareAction() {
             val hintDisposable = Disposer.newDisposable()
             val connection = ApplicationManager.getApplication().messageBus.connect(hintDisposable)
             connection.subscribe(ShireRunListener.TOPIC, object : ShireRunListener {
-                override fun runFinish(allOutput: String, llmOutput: String, event: ProcessEvent, scriptPath: String, consoleView: ShireConsoleView?) {
+                override fun runFinish(
+                    allOutput: String,
+                    llmOutput: String,
+                    event: ProcessEvent,
+                    scriptPath: String,
+                    consoleView: ShireConsoleView?,
+                ) {
                     future.complete(llmOutput)
                 }
             })
