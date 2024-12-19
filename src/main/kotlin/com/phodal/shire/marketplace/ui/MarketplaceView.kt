@@ -1,5 +1,7 @@
 package com.phodal.shire.marketplace.ui
 
+import com.intellij.ide.scratch.ScratchRootType
+import com.intellij.lang.Language
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
@@ -42,8 +44,17 @@ class MarketplaceView(val project: Project) : Disposable {
                     return
                 }
 
-                val file = LightVirtualFile("temp.shire", prompt)
-                FileRunService.provider(project, file)?.runFile(project, file, null)
+                val createScratchFile = ScratchRootType.getInstance().createScratchFile(
+                    project,
+                    "shire-temp.shire",
+                    Language.findLanguageByID("Shire"),
+                    prompt
+                )
+
+                val file = createScratchFile!!
+                val result = FileRunService.provider(project, file)?.runFile(project, file, null)
+                // delete scracth file?
+                println(result)
             }
         })
         val borderPanel = JPanel(BorderLayout())

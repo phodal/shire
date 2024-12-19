@@ -65,11 +65,7 @@ open class ShireRunConfigurationProfileState(
 
         console!!.attachToProcess(processHandler)
 
-        var shireFile: ShireFile? = ShireFile.lookup(myProject, configuration.getScriptPath())
-        if (shireFile == null) {
-            shireFile = tryLoadFromDataContext()
-        }
-
+        val shireFile: ShireFile? = ShireFile.lookup(myProject, configuration.getScriptPath())
         if (shireFile == null) {
             console!!.print("File not found: ${configuration.getScriptPath()}", ConsoleViewContentType.ERROR_OUTPUT)
             processHandler.exitWithError()
@@ -116,15 +112,6 @@ open class ShireRunConfigurationProfileState(
         }
 
         return DefaultExecutionResult(console, processHandler)
-    }
-
-    private fun tryLoadFromDataContext(): ShireFile? {
-        val dataContext = DataManager.getInstance().dataContextFromFocusAsync.blockingGet(10000)
-            ?: throw IllegalStateException("No data context found")
-
-        val data = SimpleDataContext.getProjectContext(myProject).getData(SHIRE_VIRTUAL_KEY)
-
-        return dataContext.getData(SHIRE_VIRTUAL_KEY) ?: data
     }
 
     override fun dispose() {

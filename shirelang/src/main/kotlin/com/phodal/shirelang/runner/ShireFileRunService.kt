@@ -56,13 +56,6 @@ class ShireFileRunService : FileRunService {
 
         val shireConfiguration = setting.configuration as ShireConfiguration
         shireConfiguration.name = virtualFile.nameWithoutExtension
-
-        if (virtualFile is LightVirtualFile) {
-            val dataContext = SimpleDataContext.builder()
-                .add<ShireFile>(ShireRunConfigurationProfileState.SHIRE_VIRTUAL_KEY, psiFile).build()
-
-        }
-
         shireConfiguration.setScriptPath(virtualFile.path)
 
         runManager.setTemporaryConfiguration(setting)
