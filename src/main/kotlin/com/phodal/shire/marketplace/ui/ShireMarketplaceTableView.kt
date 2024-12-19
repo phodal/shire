@@ -2,8 +2,6 @@ package com.phodal.shire.marketplace.ui
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.intellij.icons.AllIcons
-import com.intellij.openapi.application.runInEdt
-import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.dsl.builder.Align
@@ -15,10 +13,8 @@ import com.phodal.shire.ShireIdeaIcons
 import com.phodal.shire.ShireMainBundle
 import com.phodal.shire.marketplace.model.ShirePackage
 import com.phodal.shire.marketplace.util.ShireDownloader
+import com.phodal.shirecore.SHIRE_MKT_HOST
 import com.phodal.shirecore.ShirelangNotifications
-import com.phodal.shirecore.diff.DiffStreamHandler
-import com.phodal.shirecore.lookupFile
-import com.phodal.shirecore.provider.sketch.LanguageSketchProvider
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -29,8 +25,6 @@ import javax.swing.JTable
 import javax.swing.table.TableCellEditor
 import javax.swing.table.TableCellRenderer
 
-
-private const val SHIRE_MKT_HOST = "https://shire.run/packages.json"
 
 class ShireMarketplaceTableView(val project: Project) {
     private val columns = arrayOf(

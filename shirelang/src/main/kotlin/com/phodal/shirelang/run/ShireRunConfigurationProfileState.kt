@@ -11,11 +11,7 @@ import com.intellij.execution.impl.ConsoleViewImpl
 import com.intellij.execution.process.*
 import com.intellij.execution.runners.ProgramRunner
 import com.intellij.execution.ui.ConsoleViewContentType
-import com.intellij.ide.DataManager
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.actionSystem.CommonDataKeys
-import com.intellij.openapi.actionSystem.DataKey
-import com.intellij.openapi.actionSystem.impl.SimpleDataContext
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.externalSystem.model.ProjectSystemId
@@ -24,7 +20,6 @@ import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskType
 import com.intellij.openapi.externalSystem.service.execution.ExternalSystemRunConfigurationViewManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Key
-import com.intellij.psi.PsiManager
 import com.intellij.ui.components.panels.NonOpaquePanel
 import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.config.InteractionType
@@ -117,10 +112,6 @@ open class ShireRunConfigurationProfileState(
     override fun dispose() {
         console?.dispose()
         executionConsole?.dispose()
-    }
-
-    companion object {
-        val SHIRE_VIRTUAL_KEY: DataKey<ShireFile> = DataKey.create("shireVirtualKey")
     }
 }
 

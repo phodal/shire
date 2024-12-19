@@ -7,6 +7,7 @@ import com.intellij.openapi.vfs.VirtualFile
 public const val SHIRE_TEMP_OUTPUT = ".shire-output"
 public const val LLM_LOGGING_JSONL = "logging.jsonl"
 public const val LLM_LOGGING = "logging.log"
+public const val SHIRE_MKT_HOST = "https://shire.run/packages.json"
 
 object ShireConstants {
     fun outputDir(project: Project): VirtualFile? {
