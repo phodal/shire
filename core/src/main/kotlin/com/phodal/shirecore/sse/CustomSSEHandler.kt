@@ -127,12 +127,11 @@ open class CustomSSEHandler {
 
                         // TODO add refresh feature
                         // don't use trySend, it may be ignored by 'close()` op
-                        service?.onError()
+                        service?.onStreamingError()
                         send(errorMsg)
                     }
 
                     messages += ChatMessage(ChatRole.assistant, output)
-                    service?.onDone(project)
                     close()
                 }
                 awaitClose()

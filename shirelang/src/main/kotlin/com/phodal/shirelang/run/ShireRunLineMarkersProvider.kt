@@ -10,7 +10,6 @@ import com.intellij.psi.PsiElement
 import com.phodal.shirelang.ShireBundle
 import com.phodal.shirelang.ShireLanguage
 import com.phodal.shirelang.psi.ShireFile
-import com.intellij.psi.PsiComment
 
 class ShireRunLineMarkersProvider : RunLineMarkerContributor(), DumbAware {
     override fun getInfo(element: PsiElement): Info? {

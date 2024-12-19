@@ -285,9 +285,9 @@ class ShireRunner(
         val vars: MutableMap<String, Any?> = compiledVariables.toMutableMap()
         hobbitHole?.executeBeforeStreamingProcessor(project, context, console, vars)
 
-        project.getService(OnStreamingService::class.java).clearStreamingService()
+        val streamingService = project.getService(OnStreamingService::class.java)
+        streamingService.clearStreamingService()
         hobbitHole?.onStreaming?.forEach {
-            val streamingService = project.getService(OnStreamingService::class.java)
             streamingService.registerStreamingService(it, console)
         }
 

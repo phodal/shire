@@ -24,6 +24,7 @@ import com.intellij.ui.components.panels.NonOpaquePanel
 import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.config.InteractionType
 import com.phodal.shirecore.config.ShireActionLocation
+import com.phodal.shirecore.provider.streaming.OnStreamingService
 import com.phodal.shirecore.runner.ShireProcessHandler
 import com.phodal.shirecore.runner.console.ShireConsoleViewBase
 import com.phodal.shirelang.psi.ShireFile
@@ -94,6 +95,8 @@ open class ShireRunConfigurationProfileState(
             try {
                 val llmOutput = shireRunner.execute(parsedResult)
                 processAdapter.setLlmOutput(llmOutput)
+
+                myProject.getService(OnStreamingService::class.java)?.onDone(myProject)
             } catch (e: Exception) {
                 console!!.print(
                     "Failed to run ${configuration.name}: ${e.message}\n",

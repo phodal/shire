@@ -67,7 +67,7 @@ class OnStreamingService {
         }
     }
 
-    fun onError() {
+    fun onStreamingError() {
         // todo
     }
 }

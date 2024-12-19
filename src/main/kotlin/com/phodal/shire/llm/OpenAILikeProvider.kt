@@ -14,13 +14,6 @@ import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.time.Duration
 
-data class CustomFields(
-    val model: String,
-    val temperature: Double,
-    val maxTokens: Int?,
-    val stream: Boolean
-)
-
 class OpenAILikeProvider : CustomSSEHandler(), LlmProvider {
     private val timeout = Duration.ofSeconds(defaultTimeout)
     private var modelName: String = ShireSettingsState.getInstance().modelName
