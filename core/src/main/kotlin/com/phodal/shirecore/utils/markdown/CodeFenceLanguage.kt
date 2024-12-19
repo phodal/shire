@@ -4,6 +4,15 @@ import com.intellij.lang.Language
 import com.intellij.openapi.fileTypes.PlainTextLanguage
 
 object CodeFenceLanguage {
+    /**
+     * Returns the corresponding file extension for a given programming language identifier.
+     *
+     * This function maps a language identifier (e.g., "Java", "Python") to its typical file extension (e.g., "java", "py").
+     * If the language identifier is not recognized, the function returns the input string as the file extension.
+     *
+     * @param languageId The identifier of the programming language (case-insensitive).
+     * @return The file extension corresponding to the given language identifier.
+     */
     fun lookupFileExt(languageId: String): String {
         return when (languageId.lowercase()) {
             "c#" -> "cs"
