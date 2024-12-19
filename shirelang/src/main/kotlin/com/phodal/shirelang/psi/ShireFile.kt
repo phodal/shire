@@ -17,7 +17,7 @@ class ShireFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, Shir
 
     override fun toString(): String = "ShireFile"
 
-    override fun getStub(): ShireFileStub? = super.getStub() as ShireFileStub ?
+    override fun getStub(): ShireFileStub? = super.getStub() as ShireFileStub?
 
     companion object {
         /**
@@ -27,7 +27,8 @@ class ShireFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, Shir
             val filename =
                 ShireLanguage.INSTANCE.displayName + "-${UUID.randomUUID()}." + ShireFileType.INSTANCE.defaultExtension
             val shireFile = runReadAction {
-                PsiFileFactory.getInstance(project).createFileFromText(filename, ShireLanguage.INSTANCE, text) as ShireFile
+                PsiFileFactory.getInstance(project)
+                    .createFileFromText(filename, ShireLanguage.INSTANCE, text) as ShireFile
             }
 
             return shireFile

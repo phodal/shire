@@ -201,6 +201,8 @@
     <extensions defaultExtensionNs="com.phodal">
         <shireFileRunService implementation="com.phodal.shirelang.runner.ShellFileRunService"/>
 
+        <shireFileRunService implementation="com.phodal.shirelang.runner.ShireFileRunService"/>
+
         <shirePsiVariableProvider language="Shire"
                                   implementationClass="com.phodal.shirelang.provider.ShirePsiVariableProvider"/>
         <shireLanguageToolchainProvider language="Shire"

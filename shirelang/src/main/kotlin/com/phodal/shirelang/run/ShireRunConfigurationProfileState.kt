@@ -11,7 +11,11 @@ import com.intellij.execution.impl.ConsoleViewImpl
 import com.intellij.execution.process.*
 import com.intellij.execution.runners.ProgramRunner
 import com.intellij.execution.ui.ConsoleViewContentType
+import com.intellij.ide.DataManager
 import com.intellij.openapi.Disposable
+import com.intellij.openapi.actionSystem.CommonDataKeys
+import com.intellij.openapi.actionSystem.DataKey
+import com.intellij.openapi.actionSystem.impl.SimpleDataContext
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.externalSystem.model.ProjectSystemId
@@ -20,6 +24,7 @@ import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskType
 import com.intellij.openapi.externalSystem.service.execution.ExternalSystemRunConfigurationViewManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Key
+import com.intellij.psi.PsiManager
 import com.intellij.ui.components.panels.NonOpaquePanel
 import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.config.InteractionType
@@ -60,10 +65,14 @@ open class ShireRunConfigurationProfileState(
 
         console!!.attachToProcess(processHandler)
 
-        val shireFile: ShireFile? = ShireFile.lookup(myProject, configuration.getScriptPath())
+        var shireFile: ShireFile? = ShireFile.lookup(myProject, configuration.getScriptPath())
+        if (shireFile == null) {
+            shireFile = tryLoadFromDataContext()
+        }
+
         if (shireFile == null) {
             console!!.print("File not found: ${configuration.getScriptPath()}", ConsoleViewContentType.ERROR_OUTPUT)
-            processHandler.destroyProcess()
+            processHandler.exitWithError()
             return DefaultExecutionResult(console, processHandler)
         }
 
@@ -109,9 +118,22 @@ open class ShireRunConfigurationProfileState(
         return DefaultExecutionResult(console, processHandler)
     }
 
+    private fun tryLoadFromDataContext(): ShireFile? {
+        val dataContext = DataManager.getInstance().dataContextFromFocusAsync.blockingGet(10000)
+            ?: throw IllegalStateException("No data context found")
+
+        val data = SimpleDataContext.getProjectContext(myProject).getData(SHIRE_VIRTUAL_KEY)
+
+        return dataContext.getData(SHIRE_VIRTUAL_KEY) ?: data
+    }
+
     override fun dispose() {
         console?.dispose()
         executionConsole?.dispose()
+    }
+
+    companion object {
+        val SHIRE_VIRTUAL_KEY: DataKey<ShireFile> = DataKey.create("shireVirtualKey")
     }
 }
 
@@ -126,6 +148,7 @@ class ShireConsoleView(private val executionConsole: ShireExecutionConsole) :
     private val id = ProjectSystemId("Shire")
     private fun createTaskId() =
         ExternalSystemTaskId.create(id, ExternalSystemTaskType.RESOLVE_PROJECT, executionConsole.project)
+
     private val scriptPath = executionConsole.configuration.getScriptPath()
 
     val task = createTaskId()
