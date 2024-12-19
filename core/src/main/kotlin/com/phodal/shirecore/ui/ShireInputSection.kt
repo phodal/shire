@@ -2,7 +2,6 @@ package com.phodal.shirecore.ui
 
 import com.intellij.ide.IdeTooltip
 import com.intellij.ide.IdeTooltipManager
-import com.intellij.ide.ui.laf.darcula.DarculaUIUtil
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.actionSystem.ex.AnActionListener
@@ -17,15 +16,12 @@ import com.intellij.openapi.editor.actions.IncrementalFindAction
 import com.intellij.openapi.editor.event.DocumentEvent
 import com.intellij.openapi.editor.event.DocumentListener
 import com.intellij.openapi.editor.ex.EditorEx
-import com.intellij.openapi.editor.ex.FocusChangeListener
 import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider
 import com.intellij.openapi.fileTypes.FileTypes
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.ComponentValidator
-import com.intellij.openapi.ui.ErrorBorderCapable
 import com.intellij.openapi.ui.popup.Balloon.Position
-import com.intellij.openapi.util.NlsContexts
 import com.intellij.openapi.wm.IdeFocusManager
 import com.intellij.openapi.wm.impl.InternalDecorator
 import com.intellij.ui.EditorTextField
@@ -46,7 +42,6 @@ import javax.swing.Box
 import javax.swing.JComponent
 import javax.swing.JPanel
 import javax.swing.KeyStroke
-import javax.swing.border.Border
 import kotlin.math.max
 import kotlin.math.min
 
@@ -61,7 +56,7 @@ interface ShireInputListener : EventListener {
     fun onStop(component: ShireInputSection) {}
 }
 
-class ShireInput(
+class ShireInputTextField(
     project: Project,
     private val listeners: List<DocumentListener>,
     val disposable: Disposable?,
@@ -84,8 +79,6 @@ class ShireInput(
             object : AnAction() {
                 override fun actionPerformed(actionEvent: AnActionEvent) {
                     val editor = editor ?: return
-
-                    // Insert a new line
                     CommandProcessor.getInstance().executeCommand(project, {
                         val eol = "\n"
                         val caretOffset = editor.caretModel.offset
@@ -155,7 +148,7 @@ class ShireInput(
     fun recreateDocument() {
         val id = UUID.randomUUID()
         val language = CodeFenceLanguage.findLanguage("Shire")
-        val file = LightVirtualFile("AutoDevInput-$id", language, "")
+        val file = LightVirtualFile("ShireInput-$id", language, "")
 
         val document = file.findDocument() ?: throw IllegalStateException("Can't create in-memory document")
 
@@ -172,7 +165,7 @@ class ShireInput(
 }
 
 class ShireInputSection(private val project: Project, val disposable: Disposable?) : BorderLayoutPanel() {
-    private val input: ShireInput
+    private val input: ShireInputTextField
     private val documentListener: DocumentListener
     private val sendButtonPresentation: Presentation
     private val stopButtonPresentation: Presentation
@@ -224,7 +217,7 @@ class ShireInputSection(private val project: Project, val disposable: Disposable
             Dimension(20, 20)
         )
 
-        input = ShireInput(project, listOf(), disposable, this)
+        input = ShireInputTextField(project, listOf(), disposable, this)
 
         documentListener = object : DocumentListener {
             override fun documentChanged(event: DocumentEvent) {
@@ -272,11 +265,11 @@ class ShireInputSection(private val project: Project, val disposable: Disposable
         stopButton.isEnabled = true
     }
 
-    fun showTooltip(text: @NlsContexts.Tooltip String) {
+    fun showTooltip(text: String) {
         showTooltip(input, Position.above, text)
     }
 
-    fun showTooltip(component: JComponent, position: Position, text: @NlsContexts.Tooltip String) {
+    fun showTooltip(component: JComponent, position: Position, text: String) {
         val point = Point(component.x, component.y)
         val tipComponent = IdeTooltipManager.initPane(
             text, HintHint(component, point).setAwtTooltip(true).setPreferredPosition(position), null
@@ -292,7 +285,7 @@ class ShireInputSection(private val project: Project, val disposable: Disposable
 
     fun initEditor() {
         val editorEx = this.input.editor as? EditorEx ?: return
-        setBorder(AutoDevCoolBorder(editorEx, this))
+        setBorder(ShireCoolBorder(editorEx, this))
         UIUtil.setOpaqueRecursively(this, false)
         this.revalidate()
     }
@@ -338,29 +331,3 @@ class ShireInputSection(private val project: Project, val disposable: Disposable
     val focusableComponent: JComponent get() = input
 }
 
-class AutoDevCoolBorder(private val editor: EditorEx, parent: JComponent) : Border, ErrorBorderCapable {
-    init {
-        editor.addFocusListener(object : FocusChangeListener {
-            override fun focusGained(editor2: Editor) {
-                parent.repaint()
-            }
-
-            override fun focusLost(editor2: Editor) {
-                parent.repaint()
-            }
-        })
-    }
-
-    override fun paintBorder(c: Component, g: Graphics, x: Int, y: Int, width: Int, height: Int) {
-        val r = Rectangle(x, y, width, height)
-        JBInsets.removeFrom(r, JBInsets.create(1, 1))
-
-        DarculaNewUIUtil.fillInsideComponentBorder(g, r, c.background)
-        val enabled = c.isEnabled
-        val hasFocus = UIUtil.isFocusAncestor(c)
-        DarculaNewUIUtil.paintComponentBorder(g, r, DarculaUIUtil.getOutline(c as JComponent), hasFocus, enabled)
-    }
-
-    override fun getBorderInsets(c: Component): Insets = JBInsets.create(Insets(3, 8, 3, 3)).asUIResource()
-    override fun isBorderOpaque(): Boolean = true
-}
