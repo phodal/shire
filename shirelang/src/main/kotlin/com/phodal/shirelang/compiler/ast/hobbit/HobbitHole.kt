@@ -339,6 +339,10 @@ open class HobbitHole(
             return HobbitHoleParser.parse(file)
         }
 
+        fun create(name: String, description: String, interactionType: InteractionType, chatBox: ShireActionLocation): HobbitHole {
+            return HobbitHole(name, description, interactionType, actionLocation = chatBox)
+        }
+
         /**
          * For Code completion ,
          * todo: modify to map with description

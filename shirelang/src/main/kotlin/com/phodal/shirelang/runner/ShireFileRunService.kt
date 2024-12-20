@@ -8,9 +8,12 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
+import com.phodal.shirecore.config.InteractionType
+import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirecore.provider.shire.FileRunService
 import com.phodal.shirelang.actions.ShireRunFileAction.Companion.executeShireFile
 import com.phodal.shirelang.actions.base.DynamicShireActionConfig
+import com.phodal.shirelang.compiler.ast.hobbit.HobbitHole
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.ShireConfiguration
 import com.phodal.shirelang.run.ShireConfigurationType
@@ -55,8 +58,19 @@ class ShireFileRunService : FileRunService {
             PsiManager.getInstance(project).findFile(virtualFile) as? ShireFile ?: return@runReadAction null
         } ?: return null
 
-        val config = DynamicShireActionConfig.from(psiFile)
+        var config = DynamicShireActionConfig.from(psiFile)
+        if (config.hole == null) {
+            config = config.copy(
+                hole = HobbitHole.create(
+                    "Chatbox",
+                    "Run from Chatbox",
+                    InteractionType.RightPanel,
+                    ShireActionLocation.CHAT_BOX
+                )
+            )
+        }
 
+        /// we should recreate file in Here
         executeShireFile(project, config, settings)
         return "Running Shire file: ${virtualFile.name}"
     }
