@@ -2,7 +2,6 @@ package com.phodal.shirelang.runner
 
 import com.intellij.execution.RunManager
 import com.intellij.execution.RunnerAndConfigurationSettings
-import com.intellij.execution.configurations.RunConfiguration
 import com.intellij.execution.configurations.RunProfile
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.project.Project
@@ -22,21 +21,6 @@ class ShireFileRunService : FileRunService {
     }
 
     override fun runConfigurationClass(project: Project): Class<out RunProfile> = ShireConfiguration::class.java
-
-    override fun createConfiguration(project: Project, virtualFile: VirtualFile): RunConfiguration? {
-        val configurationSetting = runReadAction {
-            val psiFile =
-                PsiManager.getInstance(project).findFile(virtualFile) as? ShireFile ?: return@runReadAction null
-            RunManager.getInstance(project)
-                .createConfiguration(psiFile.name, ShireConfigurationType.getInstance())
-        } ?: return null
-
-        val shireConfiguration = configurationSetting.configuration as ShireConfiguration
-        shireConfiguration.name = virtualFile.nameWithoutExtension
-        shireConfiguration.setScriptPath(virtualFile.path)
-
-        return shireConfiguration
-    }
 
     override fun createRunSettings(
         project: Project,
