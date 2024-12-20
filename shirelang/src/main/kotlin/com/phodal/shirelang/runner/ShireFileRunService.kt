@@ -4,18 +4,17 @@ import com.intellij.execution.RunManager
 import com.intellij.execution.RunnerAndConfigurationSettings
 import com.intellij.execution.configurations.RunConfiguration
 import com.intellij.execution.configurations.RunProfile
-import com.intellij.openapi.actionSystem.impl.SimpleDataContext
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
-import com.intellij.testFramework.LightVirtualFile
 import com.phodal.shirecore.provider.shire.FileRunService
+import com.phodal.shirelang.actions.ShireRunFileAction.Companion.executeShireFile
+import com.phodal.shirelang.actions.base.DynamicShireActionConfig
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.ShireConfiguration
 import com.phodal.shirelang.run.ShireConfigurationType
-import com.phodal.shirelang.run.ShireRunConfigurationProfileState
 
 class ShireFileRunService : FileRunService {
     override fun isApplicable(project: Project, file: VirtualFile): Boolean {
@@ -58,11 +57,23 @@ class ShireFileRunService : FileRunService {
         shireConfiguration.name = virtualFile.nameWithoutExtension
         shireConfiguration.setScriptPath(virtualFile.path)
 
-        runManager.setTemporaryConfiguration(setting)
-
         setting.isTemporary = true
+
+        runManager.setTemporaryConfiguration(setting)
         runManager.selectedConfiguration = setting
 
         return setting
+    }
+
+    override fun runFile(project: Project, virtualFile: VirtualFile, psiElement: PsiElement?): String? {
+        val settings = createRunSettings(project, virtualFile, psiElement) ?: return null
+        val psiFile = runReadAction {
+            PsiManager.getInstance(project).findFile(virtualFile) as? ShireFile ?: return@runReadAction null
+        } ?: return null
+
+        val config = DynamicShireActionConfig.from(psiFile)
+
+        executeShireFile(project, config, settings)
+        return "Running Shire file: ${virtualFile.name}"
     }
 }
