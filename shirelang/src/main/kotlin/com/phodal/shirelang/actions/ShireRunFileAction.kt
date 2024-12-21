@@ -16,9 +16,7 @@ import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
-import com.intellij.psi.PsiFileFactory
 import com.phodal.shirecore.middleware.post.PostProcessorContext
-import com.phodal.shirelang.ShireLanguage
 import com.phodal.shirelang.actions.base.DynamicShireActionConfig
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.*
@@ -51,10 +49,8 @@ class ShireRunFileAction : DumbAwareAction() {
 
         fun createRunConfig(e: AnActionEvent): RunnerAndConfigurationSettings? {
             val context = ConfigurationContext.getFromContext(e.dataContext, e.place)
-            val configProducer = RunConfigurationProducer.getInstance(ShireRunConfigurationProducer::class.java)
-
-            val existingConfiguration = configProducer.findExistingConfiguration(context)
-            return existingConfiguration
+            return RunConfigurationProducer.getInstance(ShireRunConfigurationProducer::class.java)
+                .findExistingConfiguration(context)
         }
 
         fun executeShireFile(
@@ -89,16 +85,6 @@ class ShireRunFileAction : DumbAwareAction() {
             }
 
             ExecutionManager.getInstance(project).restartRunProfile(executionEnvironment)
-        }
-
-        fun suspendExecuteFile(
-            project: Project,
-            prompt: String,
-        ): String? {
-            val shireFile: ShireFile = PsiFileFactory.getInstance(project)
-                .createFileFromText("temp.shire", ShireLanguage.INSTANCE, prompt) as ShireFile
-
-            return suspendExecuteFile(project, arrayOf(), mutableMapOf(), shireFile)
         }
 
         fun suspendExecuteFile(
