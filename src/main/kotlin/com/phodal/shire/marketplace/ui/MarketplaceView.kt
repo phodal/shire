@@ -8,7 +8,6 @@ import com.intellij.openapi.components.Storage
 import com.intellij.openapi.components.StoragePathMacros
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.ToolWindow
-import com.intellij.testFramework.LightVirtualFile
 import com.intellij.ui.content.ContentFactory
 import com.intellij.ui.dsl.builder.Align
 import com.intellij.ui.dsl.builder.panel
@@ -51,10 +50,8 @@ class MarketplaceView(val project: Project) : Disposable {
                     prompt
                 )
 
-                val file = createScratchFile!!
-                val result = FileRunService.provider(project, file)?.runFile(project, file, null)
-                // delete scracth file?
-                println(result)
+                FileRunService.provider(project, createScratchFile!!)
+                    ?.runFile(project, createScratchFile, null)
             }
         })
         val borderPanel = JPanel(BorderLayout())
