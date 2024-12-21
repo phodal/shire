@@ -36,14 +36,16 @@ open class ChatCompletionTask(private val request: CodeCompletionRequest) :
         val flow: Flow<String> = LlmProvider.provider(request.project)!!.stream(request.userPrompt, "", false)
         logger.info("Prompt: ${request.userPrompt}")
 
-        DumbAwareAction.create {
+        val shortcutAction = DumbAwareAction.create {
             isCanceled = true
-        }.registerCustomShortcutSet(
-            CustomShortcutSet(
-                KeyboardShortcut(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), null),
-            ),
-            request.editor.component
-        )
+        }.apply {
+            registerCustomShortcutSet(
+                CustomShortcutSet(
+                    KeyboardShortcut(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), null),
+                ),
+                request.editor.component
+            )
+        }
 
         val editor = request.editor
         val project = request.project
@@ -93,6 +95,8 @@ open class ChatCompletionTask(private val request: CodeCompletionRequest) :
 
             request.postExecute.invoke(suggestion.toString(), textRange)
             indicator.fraction = 1.0
+        }.invokeOnCompletion {
+            shortcutAction.unregisterCustomShortcutSet(editor.component)
         }
     }
 

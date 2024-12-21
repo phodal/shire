@@ -37,10 +37,10 @@ class OpenAILikeProvider : CustomSSEHandler(), LlmProvider {
     override fun clearMessage() = messages.clear()
 
     override fun isApplicable(project: Project, llmConfig: LlmConfig?): Boolean {
+        this.project = project
         if (llmConfig != null) return llmConfig.checkAvailable()
         // If the configRunLlm configuration exists, it is also available
         if (configRunLlm().let { it?.checkAvailable() == true }) return true
-        this.project = project
         // dynamic check for the API key and model name
         return ShireSettingsState.getInstance().apiToken.isNotEmpty()
                 && ShireSettingsState.getInstance().modelName.isNotEmpty()
