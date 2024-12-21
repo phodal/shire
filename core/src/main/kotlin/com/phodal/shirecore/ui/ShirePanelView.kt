@@ -52,7 +52,7 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
         this.verticalScrollBar.autoscrolls = true
     }
 
-    var handleCancel: ((String) -> Unit)? = nullm
+    var handleCancel: ((String) -> Unit)? = null
 
     init {
         setContent(scrollPanel)
