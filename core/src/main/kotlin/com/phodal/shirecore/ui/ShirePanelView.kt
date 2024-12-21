@@ -26,6 +26,7 @@ import javax.swing.*
 
 class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), NullableComponent {
     private var progressBar: CustomProgressBar = CustomProgressBar(this)
+    private var shireInput: ShireInput = ShireInput(project)
 
     private var myList = JPanel(VerticalLayout(JBUI.scale(0))).apply {
         this.isOpaque = true
@@ -36,6 +37,11 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
         this.isOpaque = true
         this.background = JBUI.CurrentTheme.CustomFrameDecorations.titlePaneInactiveBackground()
         this.border = JBUI.Borders.empty(10, 0)
+    }
+
+    private var contentPanel = JPanel(BorderLayout()).apply {
+        this.isOpaque = true
+        this.background = UIUtil.getLabelBackground()
     }
 
     private var panelContent: DialogPanel = panel {
@@ -55,7 +61,9 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
     var handleCancel: ((String) -> Unit)? = null
 
     init {
-        setContent(scrollPanel)
+        contentPanel.add(scrollPanel, BorderLayout.CENTER)
+        contentPanel.add(shireInput, BorderLayout.SOUTH)
+        setContent(contentPanel)
     }
 
     fun onStart() {
