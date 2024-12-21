@@ -14,11 +14,7 @@ import com.phodal.shirecore.provider.shire.FileRunService
 
 class ShellFileRunService : FileRunService {
     override fun isApplicable(project: Project, file: VirtualFile): Boolean {
-        if (file.extension != "sh" && file.extension != "bash") {
-            return false
-        }
-
-        return PsiManager.getInstance(project).findFile(file) is ShFile
+        return file.extension == "sh" || file.extension == "bash"
     }
 
     override fun runConfigurationClass(project: Project): Class<out RunProfile> = ShRunConfiguration::class.java

@@ -10,6 +10,9 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.ProjectScope
+import com.intellij.psi.util.CachedValueProvider
+import com.intellij.psi.util.CachedValuesManager
+import com.intellij.openapi.util.ModificationTracker
 
 
 fun Project.lookupFile(path: String): VirtualFile? {
@@ -20,17 +23,17 @@ fun Project.lookupFile(path: String): VirtualFile? {
 
 fun Project.findFile(path: String): VirtualFile? {
     ApplicationManager.getApplication().assertReadAccessAllowed()
-    val searchScope = ProjectScope.getProjectScope(this)
-    val fileType: FileType = FileTypeManager.getInstance().getFileTypeByFileName(path)
-    val allTypeFiles = FileTypeIndex.getFiles(fileType, searchScope)
+    return CachedValuesManager.getManager(this).getCachedValue(this) {
+        val searchScope = ProjectScope.getProjectScope(this)
+        val fileType: FileType = FileTypeManager.getInstance().getFileTypeByFileName(path)
+        val allTypeFiles = FileTypeIndex.getFiles(fileType, searchScope)
 
-    for (file in allTypeFiles) {
-        if (file.name == path || file.path.endsWith(path)) {
-            return file
+        val result = allTypeFiles.find { file ->
+            file.name == path || file.path.endsWith(path)
         }
-    }
 
-    return null
+        CachedValueProvider.Result.create(result, ModificationTracker.NEVER_CHANGED)
+    }
 }
 
 fun VirtualFile.canBeAdded(): Boolean {

@@ -4,6 +4,7 @@ import com.intellij.extapi.psi.PsiFileBase
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.fileTypes.FileType
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.psi.*
 import com.phodal.shirelang.ShireFileType
@@ -20,6 +21,7 @@ class ShireFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, Shir
     override fun getStub(): ShireFileStub? = super.getStub() as ShireFileStub?
 
     companion object {
+        private val shireFileCache = mutableMapOf<VirtualFile, ShireFile>()
         /**
          * Create a tempShireFile from a string.
          */
@@ -37,8 +39,31 @@ class ShireFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, Shir
         fun lookup(project: Project, path: String) = VirtualFileManager.getInstance()
             .findFileByUrl("file://$path")
             ?.let {
-                PsiManager.getInstance(project).findFile(it)
-            } as? ShireFile
+                lookup(project, it)
+            }
+
+        fun lookup(
+            project: Project,
+            virtualFile: VirtualFile,
+        ): ShireFile? {
+            shireFileCache[virtualFile]?.let {
+                if (it.isValid) {
+                    return it
+                } else {
+                    shireFileCache.remove(virtualFile)
+                }
+            }
+
+            val psiFile = runReadAction {
+                PsiManager.getInstance(project).findFile(virtualFile) as? ShireFile
+            }
+
+            if (psiFile != null) {
+                shireFileCache[virtualFile] = psiFile
+            }
+
+            return psiFile
+        }
     }
 }
 
