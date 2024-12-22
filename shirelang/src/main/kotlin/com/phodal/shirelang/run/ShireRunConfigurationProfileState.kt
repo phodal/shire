@@ -1,37 +1,22 @@
 package com.phodal.shirelang.run
 
-import com.intellij.build.BuildView
-import com.intellij.build.DefaultBuildDescriptor
-import com.intellij.build.events.BuildEvent
 import com.intellij.execution.DefaultExecutionResult
 import com.intellij.execution.ExecutionResult
 import com.intellij.execution.Executor
 import com.intellij.execution.configurations.RunProfileState
-import com.intellij.execution.impl.ConsoleViewImpl
 import com.intellij.execution.process.*
 import com.intellij.execution.runners.ProgramRunner
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.editor.Editor
-import com.intellij.openapi.externalSystem.model.ProjectSystemId
-import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskId
-import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskType
-import com.intellij.openapi.externalSystem.service.execution.ExternalSystemRunConfigurationViewManager
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.Key
-import com.intellij.ui.components.panels.NonOpaquePanel
 import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.config.InteractionType
 import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirecore.provider.streaming.OnStreamingService
 import com.phodal.shirecore.runner.ShireProcessHandler
-import com.phodal.shirecore.runner.console.ShireConsoleViewBase
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.runner.ShireRunner
 import kotlinx.coroutines.launch
-import java.awt.BorderLayout
-import javax.swing.JComponent
 
 /**
  * ShireRunConfigurationProfileState is a class that represents the state of a run configuration profile in the Shire plugin for Kotlin.
@@ -114,128 +99,3 @@ open class ShireRunConfigurationProfileState(
     }
 }
 
-class ShireConsoleView(private val executionConsole: ShireExecutionConsole) :
-    ShireConsoleViewBase(executionConsole) {
-
-    override fun getComponent(): JComponent = myPanel
-
-    private var myPanel: NonOpaquePanel = NonOpaquePanel(BorderLayout())
-
-    private var shireRunner: ShireRunner? = null
-    private val id = ProjectSystemId("Shire")
-    private fun createTaskId() =
-        ExternalSystemTaskId.create(id, ExternalSystemTaskType.RESOLVE_PROJECT, executionConsole.project)
-
-    private val scriptPath = executionConsole.configuration.getScriptPath()
-
-    val task = createTaskId()
-    val buildDescriptor: DefaultBuildDescriptor =
-        DefaultBuildDescriptor(task.id, "Shire", scriptPath, System.currentTimeMillis())
-
-    val viewManager: ExternalSystemRunConfigurationViewManager =
-        executionConsole.project.getService(ExternalSystemRunConfigurationViewManager::class.java)
-
-    private val buildView: BuildView = object : BuildView(
-        executionConsole.project,
-        executionConsole,
-        buildDescriptor,
-        "build.toolwindow.run.selection.state",
-        viewManager
-    ) {
-        override fun onEvent(buildId: Any, event: BuildEvent) {
-            super.onEvent(buildId, event)
-            viewManager.onEvent(buildId, event)
-        }
-    }
-
-    init {
-        val baseComponent = buildView.component
-        myPanel.add(baseComponent, BorderLayout.EAST)
-
-        executionConsole.getProcessHandler()?.let {
-            buildView.attachToProcess(it)
-        }
-
-        myPanel.add(delegate.component, BorderLayout.CENTER)
-    }
-
-    fun output(clearAndStop: Boolean = true) = executionConsole.getOutput(clearAndStop)
-
-    override fun cancelCallback(callback: (String) -> Unit) {
-        shireRunner?.addCancelListener(callback)
-    }
-
-    fun getEditor(): Editor? {
-        return executionConsole.editor
-    }
-
-    override fun isCanceled(): Boolean = shireRunner?.isCanceled() ?: super.isCanceled()
-
-    fun bindShireRunner(runner: ShireRunner) {
-        shireRunner = runner
-    }
-
-    override fun dispose() {
-        super.dispose()
-        executionConsole.dispose()
-    }
-}
-
-class ShireProcessAdapter(val configuration: ShireConfiguration, val consoleView: ShireConsoleView?) :
-    ProcessAdapter() {
-    var result = ""
-    private var llmOutput: String = ""
-
-    override fun processTerminated(event: ProcessEvent) {
-        super.processTerminated(event)
-
-        ApplicationManager.getApplication().messageBus
-            .syncPublisher(ShireRunListener.TOPIC)
-            .runFinish(result, llmOutput, event, configuration.getScriptPath(), consoleView)
-    }
-
-    override fun onTextAvailable(event: ProcessEvent, outputType: Key<*>) {
-        super.onTextAvailable(event, outputType)
-        result = consoleView?.output().toString()
-    }
-
-    fun setLlmOutput(llmOutput: String?) {
-        if (llmOutput != null) {
-            this.llmOutput = llmOutput
-        }
-    }
-}
-
-class ShireExecutionConsole(
-    project: Project,
-    viewer: Boolean,
-    private var isStopped: Boolean = false,
-    val configuration: ShireConfiguration,
-) : ConsoleViewImpl(project, viewer) {
-    private val outputBuilder = StringBuilder()
-    private var processHandler: ShireProcessHandler? = null
-
-    fun getProcessHandler(): ShireProcessHandler? {
-        return processHandler
-    }
-
-    override fun attachToProcess(processHandler: ProcessHandler) {
-        super.attachToProcess(processHandler)
-        this.processHandler = processHandler as ShireProcessHandler
-    }
-
-    override fun print(text: String, contentType: ConsoleViewContentType) {
-        super.print(text, contentType)
-        if (!isStopped) outputBuilder.append(text)
-    }
-
-    fun getOutput(clearAndStop: Boolean): String {
-        val output = outputBuilder.toString()
-        if (clearAndStop) {
-            isStopped = true
-            outputBuilder.clear()
-        }
-
-        return output
-    }
-}
