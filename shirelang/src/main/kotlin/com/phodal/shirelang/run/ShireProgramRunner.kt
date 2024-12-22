@@ -16,8 +16,6 @@ import com.intellij.openapi.util.Disposer
 import java.util.concurrent.atomic.AtomicReference
 
 class ShireProgramRunner : GenericProgramRunner<RunnerSettings>(), Disposable {
-    private val RUNNER_ID: String = "ShireProgramRunner"
-
     private val connection = ApplicationManager.getApplication().messageBus.connect(this)
 
     private var isSubscribed = false
@@ -26,7 +24,7 @@ class ShireProgramRunner : GenericProgramRunner<RunnerSettings>(), Disposable {
         Disposer.register(ShirePluginDisposable.getInstance(), this)
     }
 
-    override fun getRunnerId(): String = RUNNER_ID
+    override fun getRunnerId(): String = Companion.RUNNER_ID
 
     override fun canRun(executorId: String, profile: RunProfile) = profile is ShireConfiguration
 
@@ -40,7 +38,13 @@ class ShireProgramRunner : GenericProgramRunner<RunnerSettings>(), Disposable {
 
         if (!isSubscribed) {
             connection.subscribe(ShireRunListener.TOPIC, object : ShireRunListener {
-                override fun runFinish(allOutput: String, llmOutput: String, event: ProcessEvent, scriptPath: String, consoleView: ShireConsoleView?) {
+                override fun runFinish(
+                    allOutput: String,
+                    llmOutput: String,
+                    event: ProcessEvent,
+                    scriptPath: String,
+                    consoleView: ShireConsoleView?,
+                ) {
                     environment.project.getService(ShireProcessProcessor::class.java)
                         .process(allOutput, event, scriptPath, consoleView)
 
@@ -64,5 +68,9 @@ class ShireProgramRunner : GenericProgramRunner<RunnerSettings>(), Disposable {
 
     override fun dispose() {
         connection.dispose()
+    }
+
+    companion object {
+        val RUNNER_ID: String = "ShireProgramRunner"
     }
 }
