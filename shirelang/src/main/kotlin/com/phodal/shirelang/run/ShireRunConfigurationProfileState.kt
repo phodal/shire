@@ -28,7 +28,6 @@ import com.phodal.shirecore.provider.streaming.OnStreamingService
 import com.phodal.shirecore.runner.ShireProcessHandler
 import com.phodal.shirecore.runner.console.ShireConsoleViewBase
 import com.phodal.shirelang.psi.ShireFile
-import com.phodal.shirelang.run.precompile.preAnalysisSyntax
 import com.phodal.shirelang.run.runner.ShireRunner
 import kotlinx.coroutines.launch
 import java.awt.BorderLayout
@@ -78,7 +77,7 @@ open class ShireRunConfigurationProfileState(
             })
         }
 
-        val parsedResult = preAnalysisSyntax(shireFile, myProject)
+        val parsedResult = ShireRunner.preAnalysisSyntax(shireFile, myProject)
 
         val location = parsedResult.config?.actionLocation
         if (location == ShireActionLocation.TERMINAL_MENU || location == ShireActionLocation.COMMIT_MENU) {

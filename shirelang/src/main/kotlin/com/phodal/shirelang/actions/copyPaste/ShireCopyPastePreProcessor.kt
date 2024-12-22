@@ -15,7 +15,7 @@ import com.phodal.shirecore.middleware.post.PostProcessorContext
 import com.phodal.shirelang.compiler.template.ShireTemplateCompiler
 import com.phodal.shirelang.compiler.ast.hobbit.HobbitHole
 import com.phodal.shirelang.psi.ShireFile
-import com.phodal.shirelang.run.precompile.preAnalysisSyntax
+import com.phodal.shirelang.run.runner.ShireRunner
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.launch
@@ -34,11 +34,17 @@ class PasteManagerService {
         return pasteProcessorMap.keys.firstOrNull()
     }
 
-    fun executeProcessor(project: Project, hobbitHole: HobbitHole, text: String, file: PsiFile, editor: Editor): String {
+    fun executeProcessor(
+        project: Project,
+        hobbitHole: HobbitHole,
+        text: String,
+        file: PsiFile,
+        editor: Editor
+    ): String {
         val future = CompletableFuture<String>()
         val shireFile = pasteProcessorMap[hobbitHole] ?: return text
 
-        val compileResult = preAnalysisSyntax(shireFile, project)
+        val compileResult = ShireRunner.preAnalysisSyntax(shireFile, project)
         val variableTable = compileResult.variableTable
 
         val templateCompiler =

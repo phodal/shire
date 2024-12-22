@@ -20,9 +20,7 @@ class ShireBeforeRunProviderDelegate : RunConfigurationBeforeRunProviderDelegate
     }
 
     private fun getRunBeforeUserDataKey(runConfiguration: RunConfiguration): Key<Boolean> {
-        return KEY_MAP.computeIfAbsent(
-            runConfiguration.name
-        ) { key: String ->
+        return KEY_MAP.computeIfAbsent(runConfiguration.name) { key: String ->
             Key.create(
                 SHIRE_BEFORE_RUN_TASK_KEY + "_" + key
             )

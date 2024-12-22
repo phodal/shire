@@ -31,6 +31,7 @@ import com.phodal.shirelang.run.executor.ShireLlmExecutor
 import com.phodal.shirelang.run.executor.ShireLlmExecutorContext
 import com.phodal.shirelang.run.flow.ShireConversationService
 import com.phodal.shirecore.provider.streaming.OnStreamingService
+import com.phodal.shirelang.compiler.parser.ShireSyntaxAnalyzer
 import kotlinx.coroutines.*
 import java.util.concurrent.CompletableFuture
 
@@ -314,4 +315,11 @@ class ShireRunner(
         cancel("This job is canceled")
     }
 
+    companion object {
+        fun preAnalysisSyntax(shireFile: ShireFile, project: Project): ShireParsedResult {
+            val syntaxAnalyzer = ShireSyntaxAnalyzer(project, shireFile, ActionLocationEditor.defaultEditor(project))
+            val parsedResult = syntaxAnalyzer.parse()
+            return parsedResult
+        }
+    }
 }

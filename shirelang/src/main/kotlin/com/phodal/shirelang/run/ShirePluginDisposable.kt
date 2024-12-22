@@ -14,7 +14,6 @@ import com.intellij.openapi.project.Project
  */
 @Service(Service.Level.APP, Service.Level.PROJECT)
 class ShirePluginDisposable : Disposable {
-
     override fun dispose() {
     }
 
