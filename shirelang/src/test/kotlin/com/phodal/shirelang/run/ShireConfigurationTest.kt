@@ -1,5 +1,3 @@
-// File: com/phodal/shirelang/run/ShireConfiguration Companion Test.kt
-
 package com.phodal.shirelang.run
 
 import com.phodal.shirelang.run.ShireConfiguration.Companion.mapStringToMap

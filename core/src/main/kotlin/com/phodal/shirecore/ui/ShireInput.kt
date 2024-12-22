@@ -1,10 +1,12 @@
 package com.phodal.shirecore.ui
 
+import com.intellij.ide.scratch.ScratchFileService
 import com.intellij.ide.scratch.ScratchRootType
 import com.intellij.lang.Language
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
+import com.phodal.shirecore.SHIRE_CHAT_BOX_FILE
 import com.phodal.shirecore.ShireCoreBundle
 import com.phodal.shirecore.provider.shire.FileRunService
 import java.awt.BorderLayout
@@ -53,9 +55,10 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
 
         return ScratchRootType.getInstance().createScratchFile(
             project,
-            "shire-temp.shire",
+            SHIRE_CHAT_BOX_FILE,
             Language.findLanguageByID("Shire"),
-            content
+            content,
+            ScratchFileService.Option.create_if_missing
         )
     }
 
