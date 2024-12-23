@@ -72,22 +72,14 @@ class ShireInputSection(private val project: Project, val disposable: Disposable
 
         sendButton = ActionButton(
             DumbAwareAction.create {
-                object : DumbAwareAction("") {
-                    override fun actionPerformed(e: AnActionEvent) {
-                        editorListeners.multicaster.onSubmit(this@ShireInputSection, ShireInputTrigger.Button)
-                    }
-                }.actionPerformed(it)
+                editorListeners.multicaster.onSubmit(this@ShireInputSection, ShireInputTrigger.Button)
             },
             this.sendButtonPresentation, "", Dimension(20, 20)
         )
 
         stopButton = ActionButton(
             DumbAwareAction.create {
-                object : DumbAwareAction("") {
-                    override fun actionPerformed(e: AnActionEvent) {
-                        editorListeners.multicaster.onStop(this@ShireInputSection)
-                    }
-                }.actionPerformed(it)
+                editorListeners.multicaster.onStop(this@ShireInputSection)
             },
             this.stopButtonPresentation, "", Dimension(20, 20)
         )
