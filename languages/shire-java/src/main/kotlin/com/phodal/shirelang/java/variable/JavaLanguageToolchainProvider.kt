@@ -7,9 +7,10 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.projectRoots.JavaSdkType
 import com.intellij.openapi.roots.ModuleRootManager
 import com.intellij.openapi.roots.ProjectRootManager
+import com.intellij.psi.PsiJavaFile
+import com.phodal.shirecore.provider.context.LanguageToolchainProvider
 import com.phodal.shirecore.provider.context.ToolchainContextItem
 import com.phodal.shirecore.provider.context.ToolchainPrepareContext
-import com.phodal.shirecore.provider.context.LanguageToolchainProvider
 import com.phodal.shirelang.java.toolchain.JavaLanguageDetector
 
 class JavaLanguageToolchainProvider : LanguageToolchainProvider {
@@ -39,8 +40,7 @@ class JavaLanguageToolchainProvider : LanguageToolchainProvider {
         context: ToolchainPrepareContext,
         project: Project,
     ): ToolchainContextItem? {
-        val psiFile = context.sourceFile
-        psiFile?.containingFile?.virtualFile?.extension?.equals("java", true) ?: return null
+        val psiFile = context.sourceFile as? PsiJavaFile ?: return null
 
         val languageLevel = JavaLanguageDetector.detectLanguageLevel(project, psiFile) ?: return null
 
