@@ -32,41 +32,43 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
                     return
                 }
 
-                val createScratchFile = createShireFile(prompt)
+                val virtualFile = Companion.createShireFile(prompt, project)
+                this@ShireInput.scratchFile = virtualFile
 
-                FileRunService.provider(project, createScratchFile!!)
-                    ?.runFile(project, createScratchFile, null)
+                FileRunService.provider(project, virtualFile!!)
+                    ?.runFile(project, virtualFile, null)
             }
         })
         this.border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
         this.add(inputSection, BorderLayout.CENTER)
     }
 
-    private fun createShireFile(prompt: String): VirtualFile? {
-        val header = """
-            |---
-            |name: "shire-temp"
-            |description: "Shire Temp File"
-            |interaction: RightPanel
-            |---
-            |
-        """.trimMargin()
-
-        val content = header + prompt
-
-        val virtualFile = ScratchRootType.getInstance().createScratchFile(
-            project,
-            SHIRE_CHAT_BOX_FILE,
-            Language.findLanguageByID("Shire"),
-            content,
-            ScratchFileService.Option.create_if_missing
-        )
-
-        this.scratchFile = virtualFile
-        return virtualFile
-    }
-
     override fun dispose() {
         scratchFile?.delete(this)
+    }
+
+    companion object {
+        fun createShireFile(prompt: String, project: Project): VirtualFile? {
+            val header = """
+                |---
+                |name: "shire-temp"
+                |description: "Shire Temp File"
+                |interaction: RightPanel
+                |---
+                |
+            """.trimMargin()
+
+            val content = header + prompt
+
+            val virtualFile = ScratchRootType.getInstance().createScratchFile(
+                project,
+                SHIRE_CHAT_BOX_FILE,
+                Language.findLanguageByID("Shire"),
+                content,
+                ScratchFileService.Option.create_if_missing
+            )
+
+            return virtualFile
+        }
     }
 }
