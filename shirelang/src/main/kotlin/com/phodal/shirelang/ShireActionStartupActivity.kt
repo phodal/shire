@@ -16,7 +16,6 @@ import com.intellij.psi.PsiManager
 import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.ProjectScope
 import com.phodal.shirecore.config.InteractionType
-import com.phodal.shirecore.ui.input.ShireInput
 import com.phodal.shirelang.actions.GlobalShireFileChangesProvider
 import com.phodal.shirelang.actions.ShireFileChangesProvider
 import com.phodal.shirelang.actions.base.DynamicShireActionService
@@ -119,7 +118,6 @@ class ShireActionStartupActivity : ProjectActivity {
                 it.name == filename
             }
         }
-
     }
 }
 

@@ -1,8 +1,8 @@
 package com.phodal.shirelang.actions.base
 
 import com.intellij.openapi.editor.Editor
-import com.phodal.shirelang.compiler.parser.HobbitHoleParser
 import com.phodal.shirelang.compiler.ast.hobbit.HobbitHole
+import com.phodal.shirelang.compiler.parser.HobbitHoleParser
 import com.phodal.shirelang.psi.ShireFile
 
 data class DynamicShireActionConfig(

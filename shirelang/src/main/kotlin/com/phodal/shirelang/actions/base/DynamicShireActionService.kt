@@ -14,7 +14,6 @@ import java.util.*
 
 @Service(Service.Level.PROJECT)
 class DynamicShireActionService: DynamicActionService {
-
     private val dynamicActionService = GlobalShireActionService.getInstance()
 
     private val actionCache = WeakHashMap<ShireFile, DynamicShireActionConfig>()
