@@ -33,6 +33,6 @@ class ShireSonarLintAction : AnAction() {
         VariableActionEventDataHolder.putData(VariableActionEventDataHolder(e.dataContext))
 
         val config = shireActionConfigs(project).firstOrNull() ?: return
-        ShireRunFileAction.executeShireFile(project, config, null)
+        ShireRunFileAction.executeFile(project, config, null)
     }
 }

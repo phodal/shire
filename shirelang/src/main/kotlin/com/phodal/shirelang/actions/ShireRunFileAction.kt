@@ -41,7 +41,7 @@ class ShireRunFileAction : DumbAwareAction() {
         val config = DynamicShireActionConfig.from(file)
 
         val existingConfiguration = createRunConfig(e)
-        executeShireFile(project, config, existingConfiguration)
+        executeFile(project, config, existingConfiguration)
     }
 
     companion object {
@@ -53,7 +53,26 @@ class ShireRunFileAction : DumbAwareAction() {
                 .findExistingConfiguration(context)
         }
 
-        fun executeShireFile(
+        /**
+         * Executes a Shire file within the specified project context.
+         *
+         * ```kotlin
+         * val project = ... // IntelliJ IDEA project
+         * val config = ... // DynamicShireActionConfig object
+         * val runSettings = ... // Optional RunnerAndConfigurationSettings
+         * val variables = mapOf("key1" to "value1", "key2" to "value2")
+         *
+         * executeFile(project, config, runSettings, variables)
+         * ```
+         *
+         * @param project The IntelliJ IDEA project in which the Shire file is to be executed.
+         * @param config The configuration object containing details about the Shire file to be executed.
+         * @param runSettings Optional runner and configuration settings to use for execution. If null, a new configuration will be created.
+         * @param variables A map of variables to be passed to the Shire file during execution. Defaults to an empty map.
+         *
+         * @throws Exception If there is an error creating the run configuration or execution environment.
+         */
+        fun executeFile(
             project: Project,
             config: DynamicShireActionConfig,
             runSettings: RunnerAndConfigurationSettings?,
@@ -89,9 +108,9 @@ class ShireRunFileAction : DumbAwareAction() {
 
         fun suspendExecuteFile(
             project: Project,
-            variableNames: Array<String>,
-            variableTable: MutableMap<String, Any?>,
             file: ShireFile,
+            variableNames: Array<String> = arrayOf(),
+            variableTable: MutableMap<String, Any?> = mutableMapOf(),
         ): String? {
             val variables: MutableMap<String, String> = mutableMapOf()
             for (i in variableNames.indices) {

@@ -29,6 +29,6 @@ class ShireIntentionAction(private val hobbitHole: HobbitHole?, val file: PsiFil
             .getActions(ShireActionLocation.INTENTION_MENU)
             .firstOrNull { it.hole == hobbitHole } ?: return
 
-        ShireRunFileAction.executeShireFile(project, config, null)
+        ShireRunFileAction.executeFile(project, config, null)
     }
 }

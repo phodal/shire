@@ -12,7 +12,7 @@ import com.phodal.shirecore.config.InteractionType
 import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirecore.provider.shire.FileRunService
 import com.phodal.shirelang.ShireBundle
-import com.phodal.shirelang.actions.ShireRunFileAction.Companion.executeShireFile
+import com.phodal.shirelang.actions.ShireRunFileAction.Companion.executeFile
 import com.phodal.shirelang.actions.base.DynamicShireActionConfig
 import com.phodal.shirelang.compiler.ast.hobbit.HobbitHole
 import com.phodal.shirelang.psi.ShireFile
@@ -70,7 +70,7 @@ class ShireFileRunService : FileRunService, Disposable {
             )
         }
 
-        executeShireFile(project, config, settings)
+        executeFile(project, config, settings)
         return "Running Shire file: ${virtualFile.name}"
     }
 

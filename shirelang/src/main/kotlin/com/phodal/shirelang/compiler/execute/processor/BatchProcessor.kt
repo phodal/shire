@@ -38,7 +38,7 @@ object BatchProcessor : PatternProcessor {
             try {
                 val variableNames = arrayOf("input")
                 variableTable["input"] = chunk
-                ShireRunFileAction.suspendExecuteFile(myProject, variableNames, variableTable, file) ?: ""
+                ShireRunFileAction.suspendExecuteFile(myProject, file, variableNames, variableTable) ?: ""
             } catch (e: Exception) {
                 logger<FunctionStatementProcessor>().error("execute shire error: $e")
             }

@@ -60,7 +60,7 @@ object ExecuteProcessor : PatternProcessor {
                 return ""
             }
 
-            return ShireRunFileAction.suspendExecuteFile(myProject, variableNames, variableTable, file) ?: ""
+            return ShireRunFileAction.suspendExecuteFile(myProject, file, variableNames, variableTable) ?: ""
         } catch (e: Exception) {
             logger.warn("execute shire error: $e")
             return ""

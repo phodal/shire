@@ -40,6 +40,6 @@ class ShireVcsAction(val config: DynamicShireActionConfig) :
 
         VariableActionEventDataHolder.putData(VariableActionEventDataHolder(e.dataContext))
 
-        ShireRunFileAction.executeShireFile(project, config, null)
+        ShireRunFileAction.executeFile(project, config, null)
     }
 }

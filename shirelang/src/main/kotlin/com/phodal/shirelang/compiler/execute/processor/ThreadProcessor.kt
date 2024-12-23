@@ -119,7 +119,7 @@ object ThreadProcessor : PatternProcessor {
         variableTable: MutableMap<String, Any?>,
         psiFile: ShireFile,
     ): String? {
-        return ShireRunFileAction.suspendExecuteFile(myProject, variables, variableTable, psiFile)
+        return ShireRunFileAction.suspendExecuteFile(myProject, psiFile, variables, variableTable)
     }
 }
 

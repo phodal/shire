@@ -10,7 +10,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.IdeFocusManager
 import com.phodal.shirecore.config.ShireActionLocation
-import com.phodal.shirelang.actions.ShireRunFileAction.Companion.executeShireFile
+import com.phodal.shirelang.actions.ShireRunFileAction.Companion.executeFile
 import com.phodal.shirelang.actions.base.DynamicShireActionConfig
 import com.phodal.shirelang.actions.base.DynamicShireActionService
 import com.phodal.shirelang.actions.input.inlay.CustomInputBox
@@ -62,7 +62,7 @@ class ShireInputBoxAction : DumbAwareAction() {
         component.actionMap.put(CUSTOM_INPUT_SUBMIT_ACTION, object : AbstractAction() {
             override fun actionPerformed(e: ActionEvent?) {
                 val inputText = component.getText()
-                executeShireFile(project, config, null, variables = mutableMapOf("input" to inputText))
+                executeFile(project, config, null, variables = mutableMapOf("input" to inputText))
                 Disposer.dispose(inlay.inlay!!)
             }
         })
