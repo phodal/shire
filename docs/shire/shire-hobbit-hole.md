@@ -86,6 +86,7 @@ enum class ShireActionLocation(val location: String, val description: String) {
     DATABASE_MENU("DatabaseMenu", "Show in Database panel menu bar"),
     CONSOLE_MENU("ConsoleMenu", "Show in Console panel menu bar"),
     VCS_LOG_MENU("VcsLogMenu", "Show in VCS Log panel menu bar"),
+    CHAT_BOX("ChatBox", "Show in Chat Box"), // 将默认使用 RigthPanel 作为展示位置
 
     /// external plugins
     EXT_SONARQUBE_MENU("ExtSonarQubeMenu", "Show in SonarQube panel menu bar"),
