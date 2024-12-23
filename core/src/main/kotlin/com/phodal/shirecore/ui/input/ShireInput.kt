@@ -43,8 +43,11 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
 
     private fun getVirtualFile(prompt: String): VirtualFile? {
         val findLanguageByID = Language.findLanguageByID("Shire")
-        val provide = FileCreateService.provide(findLanguageByID!!)
-        return provide!!.createFile(prompt, project)
+            ?: throw IllegalStateException("Shire language not found")
+        val provide = FileCreateService.provide(findLanguageByID)
+            ?: throw IllegalStateException("FileCreateService not found")
+
+        return provide.createFile(prompt, project)
     }
 
     override fun dispose() {
