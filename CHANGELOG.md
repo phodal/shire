@@ -1,6 +1,18 @@
-# [](https://github.com/phodal/shire/compare/v1.2.2...v) (2024-12-23)
+# [](https://github.com/phodal/shire/compare/v1.2.3...v) (2024-12-23)
 
 ## [Unreleased]
+
+## [1.2.3](https://github.com/phodal/shire/compare/v1.2.2...v[1.2.3]) (2024-12-23)
+
+### Bug Fixes
+
+* **core:** handle missing Shire language and FileCreateService ([dcece27](https://github.com/phodal/shire/commit/dcece27bdbd97cbdb05bee4637d4fbe3cc146538))
+* fix Compatibility issue for 243 ([81b5d5f](https://github.com/phodal/shire/commit/81b5d5f002c206d349525e0ff241b64ec538c58a))
+
+### Features
+
+* **shire:** add FileCreateService and integrate with ShireInput ([50e698e](https://github.com/phodal/shire/commit/50e698ecd49c057dc5c3d86d870e14e84292e433))
+* **ui:** add stop button and refactor document listener ([c544688](https://github.com/phodal/shire/commit/c544688ad3b8a148d26a89959d49954aec70ce2c))
 
 ## [1.2.2](https://github.com/phodal/shire/compare/v1.2.1...v[1.2.2]) (2024-12-23)
 
@@ -24,6 +36,7 @@
 * **streaming:** add StreamingServiceProvider interface and OnStreamingService [#160](https://github.com/phodal/shire/issues/160) ([8997e96](https://github.com/phodal/shire/commit/8997e966299f8b181bbaeab008894e30a66f76d1))
 * **streaming:** enhance OnStreamingService with registration and notification [#160](https://github.com/phodal/shire/issues/160) ([b7cc22e](https://github.com/phodal/shire/commit/b7cc22e539c55a21ef808e59b70b75e7b449233b))
 * **ui:** add custom progress bar and input section components [#165](https://github.com/phodal/shire/issues/165) ([6531f4c](https://github.com/phodal/shire/commit/6531f4c882e54ca9235a9308c2651b934894885a))
+* **ui:** add scratch file management to ShireInput ([510965e](https://github.com/phodal/shire/commit/510965eda304107ab0d87a588da76b88d139784c))
 * **ui:** add ShireInputTextField component and integrate with ShireInputSection [#165](https://github.com/phodal/shire/issues/165) ([7f71c0d](https://github.com/phodal/shire/commit/7f71c0d55d698a646b195f9e9466af99aa1751f4))
 * **utils:** add PostCodeProcessor for markdown code formatting ([11cd109](https://github.com/phodal/shire/commit/11cd109ba816f0210a3582e68cd7b9608ae06f6e))
 * **variable-resolver:** add support for selection with line numbers [#159](https://github.com/phodal/shire/issues/159) ([cdf84c4](https://github.com/phodal/shire/commit/cdf84c4262dc2928de8e57de50b0b91f65fc62cf))
@@ -773,7 +786,8 @@
 * **shell:** add shell language support plugin file ([bdc1c90](https://github.com/phodal/shire/commit/bdc1c90f10d7c2c4fb8f7157db343dd756c11352))
 * **shire:** add Shire context action group and location support ([e3df86d](https://github.com/phodal/shire/commit/e3df86d16d0c9985fec787a8e76ce553be9a9a45))
 
-[Unreleased]: https://github.com/phodal/shire/compare/v1.2.2...HEAD
+[Unreleased]: https://github.com/phodal/shire/compare/v1.2.3...HEAD
+[1.2.3]: https://github.com/phodal/shire/compare/v1.2.2...v1.2.3
 [1.2.2]: https://github.com/phodal/shire/compare/v1.2.1...v1.2.2
 [1.2.1]: https://github.com/phodal/shire/compare/v1.1.1...v1.2.1
 [1.1.1]: https://github.com/phodal/shire/compare/v1.0.6...v1.1.1
