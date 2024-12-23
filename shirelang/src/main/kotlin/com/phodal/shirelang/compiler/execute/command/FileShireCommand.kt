@@ -3,6 +3,7 @@ package com.phodal.shirelang.compiler.execute.command
 import com.phodal.shirelang.compiler.ast.LineInfo
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiManager
 import com.phodal.shirecore.lookupFile
 
@@ -19,10 +20,8 @@ class FileShireCommand(private val myProject: Project, private val prop: String)
 
     override suspend fun doExecute(): String? {
         val range: LineInfo? = LineInfo.fromString(prop)
-
         // prop name can be src/file.name#L1-L2
-        val filename = prop.split("#")[0]
-        val virtualFile = myProject.lookupFile(filename)
+        val virtualFile = Companion.file(myProject, prop)
 
         val contentsToByteArray = virtualFile?.contentsToByteArray()
         if (contentsToByteArray == null) {
@@ -55,6 +54,14 @@ class FileShireCommand(private val myProject: Project, private val prop: String)
         }
 
         return output.toString()
+    }
+
+    companion object {
+        fun file(project: Project, path: String): VirtualFile? {
+            val filename = path.split("#")[0]
+            val virtualFile = project.lookupFile(filename)
+            return virtualFile
+        }
     }
 }
 
