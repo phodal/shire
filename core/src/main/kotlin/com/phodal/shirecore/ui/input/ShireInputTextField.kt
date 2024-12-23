@@ -1,4 +1,4 @@
-package com.phodal.shirecore.ui
+package com.phodal.shirecore.ui.input
 
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.*

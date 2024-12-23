@@ -21,6 +21,7 @@ import com.phodal.shirecore.sketch.LangSketch
 import com.phodal.shirecore.utils.markdown.CodeFence
 import com.phodal.shirecore.utils.markdown.CodeFenceLanguage
 import com.phodal.shirecore.provider.sketch.LanguageSketchProvider
+import com.phodal.shirecore.ui.input.ShireInput
 import java.awt.BorderLayout
 import javax.swing.*
 

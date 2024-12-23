@@ -1,4 +1,4 @@
-package com.phodal.shirecore.ui
+package com.phodal.shirecore.ui.input
 
 import com.intellij.ide.ui.laf.darcula.DarculaUIUtil
 import com.intellij.openapi.editor.Editor

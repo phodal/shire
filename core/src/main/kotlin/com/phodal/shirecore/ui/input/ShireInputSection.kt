@@ -1,4 +1,4 @@
-package com.phodal.shirecore.ui
+package com.phodal.shirecore.ui.input
 
 import com.intellij.icons.AllIcons
 import com.intellij.ide.IdeTooltip
@@ -23,23 +23,11 @@ import com.phodal.shirecore.ShireCoreBundle
 import java.awt.*
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-import java.util.*
 import javax.swing.Box
 import javax.swing.JComponent
 import javax.swing.JPanel
 import kotlin.math.max
 import kotlin.math.min
-
-enum class ShireInputTrigger {
-    Button,
-    Key
-}
-
-interface ShireInputListener : EventListener {
-    fun editorAdded(editor: EditorEx) {}
-    fun onSubmit(component: ShireInputSection, trigger: ShireInputTrigger) {}
-    fun onStop(component: ShireInputSection) {}
-}
 
 class ShireInputSection(private val project: Project, val disposable: Disposable?) : BorderLayoutPanel() {
     private val input: ShireInputTextField
