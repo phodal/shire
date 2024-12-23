@@ -39,9 +39,11 @@ class ShireActionStartupActivity : ProjectActivity {
             }
 
             attachTerminalAction()
-            attachDatabaseAction(project)
-            attachVcsLogAction(project)
-            attachSonarLintAction(project)
+            attachDatabaseAction()
+            attachVcsLogAction()
+
+            // attache extension actions, like SonarLint
+            attachExtensionActions(project)
         }
     }
 
@@ -66,7 +68,7 @@ class ShireActionStartupActivity : ProjectActivity {
         }
     }
 
-    private fun attachDatabaseAction(project: Project) {
+    private fun attachDatabaseAction() {
         val actionManager = ActionManager.getInstance()
         val toolsMenu = actionManager.getAction("DatabaseViewPopupMenu") as? DefaultActionGroup ?: return
 
@@ -76,7 +78,7 @@ class ShireActionStartupActivity : ProjectActivity {
         }
     }
 
-    private fun attachVcsLogAction(project: Project) {
+    private fun attachVcsLogAction() {
         val actionManager = ActionManager.getInstance()
         val toolsMenu = actionManager.getAction("Vcs.Log.ContextMenu") as? DefaultActionGroup ?: return
 
@@ -86,8 +88,8 @@ class ShireActionStartupActivity : ProjectActivity {
         }
     }
 
-    private fun attachSonarLintAction(project: Project) {
-        project.messageBus.connect().subscribe(ToolWindowManagerListener.TOPIC, SonarLintToolWindowListener(project));
+    private fun attachExtensionActions(project: Project) {
+        project.messageBus.connect().subscribe(ToolWindowManagerListener.TOPIC, ShireSonarLintToolWindowListener());
     }
 
     companion object {
@@ -120,7 +122,7 @@ class ShireActionStartupActivity : ProjectActivity {
     }
 }
 
-class SonarLintToolWindowListener(private val project: Project) : ToolWindowManagerListener {
+class ShireSonarLintToolWindowListener : ToolWindowManagerListener {
     override fun toolWindowShown(toolWindow: ToolWindow) {
         if (toolWindow.id != "SonarLint") return
 
