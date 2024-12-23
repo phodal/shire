@@ -203,6 +203,10 @@
 
         <shireFileRunService implementation="com.phodal.shirelang.runner.ShireFileRunService"/>
 
+        <shireFileCreateService
+                language="Shire"
+                implementationClass="com.phodal.shirelang.provider.ChatBoxShireFileCreateService"/>
+
         <shirePsiVariableProvider language="Shire"
                                   implementationClass="com.phodal.shirelang.provider.ShirePsiVariableProvider"/>
         <shireLanguageToolchainProvider language="Shire"

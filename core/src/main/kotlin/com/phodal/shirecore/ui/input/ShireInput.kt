@@ -1,14 +1,11 @@
 package com.phodal.shirecore.ui.input
 
-import com.intellij.ide.scratch.ScratchFileService
-import com.intellij.ide.scratch.ScratchRootType
 import com.intellij.lang.Language
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
-import com.phodal.shirecore.SHIRE_CHAT_BOX_FILE
 import com.phodal.shirecore.ShireCoreBundle
-import com.phodal.shirecore.ShireCoroutineScope
+import com.phodal.shirecore.provider.shire.FileCreateService
 import com.phodal.shirecore.provider.shire.FileRunService
 import java.awt.BorderLayout
 import javax.swing.BorderFactory
@@ -33,8 +30,7 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
                     return
                 }
 
-                val virtualFile =
-                    project.getService(ChatBoxShireFileService::class.java).createShireFile(prompt, project)
+                val virtualFile = getVirtualFile(prompt)
                 this@ShireInput.scratchFile = virtualFile
 
                 FileRunService.provider(project, virtualFile!!)
@@ -45,10 +41,13 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
         this.add(inputSection, BorderLayout.CENTER)
     }
 
-    override fun dispose() {
-        scratchFile?.delete(this)
+    private fun getVirtualFile(prompt: String): VirtualFile? {
+        val findLanguageByID = Language.findLanguageByID("Shire")
+        val provide = FileCreateService.provide(findLanguageByID!!)
+        return provide!!.createFile(prompt, project)
     }
 
-    companion object {
+    override fun dispose() {
+        scratchFile?.delete(this)
     }
 }

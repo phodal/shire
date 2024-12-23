@@ -58,6 +58,12 @@
             <with attribute="implementationClass" implements="com.phodal.shirecore.provider.TestingService"/>
         </extensionPoint>
 
+        <extensionPoint qualifiedName="com.phodal.shireFileCreateService"
+                        beanClass="com.intellij.lang.LanguageExtensionPoint"
+                        dynamic="true">
+            <with attribute="implementationClass" implements="com.phodal.shirecore.provider.shire.FileCreateService"/>
+        </extensionPoint>
+
         <!-- Toolchain Provider -->
         <extensionPoint qualifiedName="com.phodal.shireLanguageToolchainProvider"
                         beanClass="com.intellij.lang.LanguageExtensionPoint" dynamic="true">

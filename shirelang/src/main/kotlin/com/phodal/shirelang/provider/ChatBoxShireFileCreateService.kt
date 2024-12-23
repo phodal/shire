@@ -1,20 +1,25 @@
-package com.phodal.shirecore.ui.input
+package com.phodal.shirelang.provider
 
 import com.intellij.ide.scratch.ScratchFileService
 import com.intellij.ide.scratch.ScratchRootType
-import com.intellij.openapi.components.Service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.phodal.shirecore.SHIRE_CHAT_BOX_FILE
+import com.phodal.shirecore.config.ShireActionLocation
+import com.phodal.shirecore.provider.shire.FileCreateService
+import com.phodal.shirelang.actions.base.DynamicShireActionService
 import org.intellij.lang.annotations.Language
 
-@Service(Service.Level.PROJECT)
-class ChatBoxShireFileService(val project: Project) {
-    private var baseContent: String = ""
+class ChatBoxShireFileCreateService : FileCreateService {
+    override fun createFile(prompt: String, project: Project): VirtualFile? {
+        val actions = DynamicShireActionService.getInstance(project).getActions(ShireActionLocation.CHAT_BOX)
+        var baseContent = ""
+        if (actions.isNotEmpty()) {
+            baseContent = actions.first().shireFile.text ?: ""
+        }
 
-    fun createShireFile(prompt: String, project: Project): VirtualFile? {
         if (baseContent.isNotEmpty()) {
-            return createInputWithBase(prompt, project)
+            return createInputWithBase(prompt, project, baseContent)
         }
 
         return createInputOnly(prompt, project)
@@ -50,6 +55,7 @@ class ChatBoxShireFileService(val project: Project) {
     private fun createInputWithBase(
         prompt: String,
         project: Project,
+        baseContent: String,
     ): VirtualFile? {
         val content = baseContent.replace("\$chatPrompt", prompt)
 
