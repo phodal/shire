@@ -14,6 +14,8 @@ import javax.swing.BorderFactory
 import javax.swing.JPanel
 
 class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
+    private var scratchFile: VirtualFile? = null
+
     init {
         val inputSection = ShireInputSection(project, this)
         inputSection.addListener(object : ShireInputListener {
@@ -52,16 +54,19 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
 
         val content = header + prompt
 
-        return ScratchRootType.getInstance().createScratchFile(
+        val virtualFile = ScratchRootType.getInstance().createScratchFile(
             project,
             SHIRE_CHAT_BOX_FILE,
             Language.findLanguageByID("Shire"),
             content,
             ScratchFileService.Option.create_if_missing
         )
+
+        this.scratchFile = virtualFile
+        return virtualFile
     }
 
     override fun dispose() {
-        // do nothing
+        scratchFile?.delete(this)
     }
 }
