@@ -1,8 +1,35 @@
-# [](https://github.com/phodal/shire/compare/v1.2.0...v) (2024-12-12)
+# [](https://github.com/phodal/shire/compare/v1.2.2...v) (2024-12-23)
 
 ## [Unreleased]
 
-## [1.2.0] - 2024-12-12
+## [1.2.2](https://github.com/phodal/shire/compare/v1.2.1...v[1.2.2]) (2024-12-23)
+
+### Bug Fixes
+
+* **core:** Unregister the shortcut to ensure it works the second time ([5381851](https://github.com/phodal/shire/commit/5381851ed60e406ad9a8ed657a9a067986beb6cd))
+* **llm:** NPE in streamSSE ([07a900c](https://github.com/phodal/shire/commit/07a900c4009d5b5eae122f31d9b5577222e87f7f))
+* **run:** 修复ShireProgramRunner的ID获取问题并优化代码结构 ([b4aaabe](https://github.com/phodal/shire/commit/b4aaabe49c3bc235ddd471e4e6641bc4acb25d1a))
+
+### Features
+
+* **CodeHighlight:** enhance editor with line number handling [#159](https://github.com/phodal/shire/issues/159) ([4a416f4](https://github.com/phodal/shire/commit/4a416f43203b3ce78a22a4ed60ce6c9fe5b7c891))
+* **compiler:** add line number functionality [#159](https://github.com/phodal/shire/issues/159) ([471d710](https://github.com/phodal/shire/commit/471d7107d6dfd6b3f7b9f2652488bf35e26d3770))
+* **lifycycle:** Add TimingStreamingService and refactor provider interface [#160](https://github.com/phodal/shire/issues/160) ([656915e](https://github.com/phodal/shire/commit/656915e5031368436035cad803fe496cd4999adf))
+* **marketplace:** replace LightVirtualFile with ScratchRootType for temp files [#165](https://github.com/phodal/shire/issues/165) ([11c1082](https://github.com/phodal/shire/commit/11c1082117b71f620fa190e29efb1d1615abfd48))
+* **run:** add ShireConsoleView and ShireProcessAdapter ([617ae40](https://github.com/phodal/shire/commit/617ae40dcc0be7d584bf835ab5527b831a9cfd1f))
+* **runner:** add ShireFileRunService and enhance run configuration ([e08c831](https://github.com/phodal/shire/commit/e08c83140c2f40185cd36b5f16ef3d99fdc462ca)), closes [#165](https://github.com/phodal/shire/issues/165)
+* **shire:** add chatbox functionality and update file references ([d045cd3](https://github.com/phodal/shire/commit/d045cd319108d2361a3ab20631a13091e6a5b6ca))
+* **streaming:** add logging streaming service and refactor streaming API [#160](https://github.com/phodal/shire/issues/160) ([ecbd342](https://github.com/phodal/shire/commit/ecbd342ab3da934c9f2b12d01f423a171c4a2505))
+* **streaming:** Add profiling capability and enhance documentation [#160](https://github.com/phodal/shire/issues/160) ([8f299e2](https://github.com/phodal/shire/commit/8f299e2a5bd1f185632648883b43aaffd4d5da86))
+* **streaming:** add StreamingServiceProvider interface and OnStreamingService [#160](https://github.com/phodal/shire/issues/160) ([8997e96](https://github.com/phodal/shire/commit/8997e966299f8b181bbaeab008894e30a66f76d1))
+* **streaming:** enhance OnStreamingService with registration and notification [#160](https://github.com/phodal/shire/issues/160) ([b7cc22e](https://github.com/phodal/shire/commit/b7cc22e539c55a21ef808e59b70b75e7b449233b))
+* **ui:** add custom progress bar and input section components [#165](https://github.com/phodal/shire/issues/165) ([6531f4c](https://github.com/phodal/shire/commit/6531f4c882e54ca9235a9308c2651b934894885a))
+* **ui:** add ShireInputTextField component and integrate with ShireInputSection [#165](https://github.com/phodal/shire/issues/165) ([7f71c0d](https://github.com/phodal/shire/commit/7f71c0d55d698a646b195f9e9466af99aa1751f4))
+* **utils:** add PostCodeProcessor for markdown code formatting ([11cd109](https://github.com/phodal/shire/commit/11cd109ba816f0210a3582e68cd7b9608ae06f6e))
+* **variable-resolver:** add support for selection with line numbers [#159](https://github.com/phodal/shire/issues/159) ([cdf84c4](https://github.com/phodal/shire/commit/cdf84c4262dc2928de8e57de50b0b91f65fc62cf))
+* **viewer:** Add cancel functionality to progress bar ([d947425](https://github.com/phodal/shire/commit/d9474257b9a5cf8b1846ca4ebdce66eb591b2cf5))
+
+## [1.2.1](https://github.com/phodal/shire/compare/v1.2.0...v[1.2.1]) (2024-12-12)
 
 ### Bug Fixes
 
@@ -37,6 +64,10 @@
 * **ui:** enhance DiffPatchViewer with project context and diff viewing [#153](https://github.com/phodal/shire/issues/153) ([7cd80ea](https://github.com/phodal/shire/commit/7cd80ea8d5971aa0d514e93bef0e487241ec4e71))
 * **ui:** implement LangSketch and add PlantUML support [#153](https://github.com/phodal/shire/issues/153) ([6aa5b75](https://github.com/phodal/shire/commit/6aa5b755d9eed391597a3a02cc2e83225ee115c7))
 * **view:** Implement ShirePanelView for enhanced UI representation ([676df38](https://github.com/phodal/shire/commit/676df3895f62522e33a51c99360a6f4123ac3e82))
+
+### Reverts
+
+* revert change of delete file for MKT place ([1adbd5a](https://github.com/phodal/shire/commit/1adbd5a0cc12adb3bae2b4cb8dabbd00a7886fb7))
 
 ## [1.1.1](https://github.com/phodal/shire/compare/v1.1.0...v[1.1.1]) (2024-12-02)
 
@@ -742,8 +773,9 @@
 * **shell:** add shell language support plugin file ([bdc1c90](https://github.com/phodal/shire/commit/bdc1c90f10d7c2c4fb8f7157db343dd756c11352))
 * **shire:** add Shire context action group and location support ([e3df86d](https://github.com/phodal/shire/commit/e3df86d16d0c9985fec787a8e76ce553be9a9a45))
 
-[Unreleased]: https://github.com/phodal/shire/compare/v1.2.0...HEAD
-[1.2.0]: https://github.com/phodal/shire/compare/v1.1.1...v1.2.0
+[Unreleased]: https://github.com/phodal/shire/compare/v1.2.2...HEAD
+[1.2.2]: https://github.com/phodal/shire/compare/v1.2.1...v1.2.2
+[1.2.1]: https://github.com/phodal/shire/compare/v1.1.1...v1.2.1
 [1.1.1]: https://github.com/phodal/shire/compare/v1.0.6...v1.1.1
 [1.0.6]: https://github.com/phodal/shire/compare/v1.0.4-SNAPSHOT...v1.0.6
 [1.0.4-SNAPSHOT]: https://github.com/phodal/shire/compare/v1.0.2...v1.0.4-SNAPSHOT
