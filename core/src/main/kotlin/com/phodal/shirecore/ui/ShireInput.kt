@@ -25,7 +25,6 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
                 val prompt = component.text
                 component.text = ""
 
-
                 if (prompt.isEmpty() || prompt.isBlank()) {
                     component.showTooltip(ShireCoreBundle.message("chat.input.empty.tips"))
                     return
