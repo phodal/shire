@@ -65,11 +65,6 @@ class ShireInputSection(private val project: Project, val disposable: Disposable
         val sendButtonPresentation = Presentation(ShireCoreBundle.message("chat.panel.send"))
         sendButtonPresentation.icon = AllIcons.Actions.Execute
         this.sendButtonPresentation = sendButtonPresentation
-
-        val stopButtonPresentation = Presentation("Stop")
-        stopButtonPresentation.icon = AllIcons.Actions.Suspend
-        this.stopButtonPresentation = stopButtonPresentation
-
         sendButton = ActionButton(
             DumbAwareAction.create {
                 editorListeners.multicaster.onSubmit(this@ShireInputSection, ShireInputTrigger.Button)
@@ -77,6 +72,9 @@ class ShireInputSection(private val project: Project, val disposable: Disposable
             this.sendButtonPresentation, "", Dimension(20, 20)
         )
 
+        val stopButtonPresentation = Presentation("Stop")
+        stopButtonPresentation.icon = AllIcons.Actions.Suspend
+        this.stopButtonPresentation = stopButtonPresentation
         stopButton = ActionButton(
             DumbAwareAction.create {
                 editorListeners.multicaster.onStop(this@ShireInputSection)
@@ -88,10 +86,10 @@ class ShireInputSection(private val project: Project, val disposable: Disposable
 
         documentListener = object : DocumentListener {
             override fun documentChanged(event: DocumentEvent) {
-                val i = input.preferredSize?.height
-                if (i != input.height) {
-                    revalidate()
-                }
+                val inputHeight = input.preferredSize?.height
+                if (inputHeight == input.height) return
+
+                revalidate()
             }
         }
 
