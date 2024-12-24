@@ -25,6 +25,7 @@ import com.intellij.icons.AllIcons
 import com.intellij.ui.components.JBScrollPane
 import javax.swing.border.EmptyBorder
 import com.intellij.util.ui.JBUI
+import com.phodal.shirecore.relativePath
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 
@@ -92,14 +93,7 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
                         listModel.remove(index)
                     } else {
                         element.containingFile?.let { psiFile ->
-                            val virtualFile = psiFile.virtualFile
-                            val projectBasePath = project.basePath
-                            val filePath = virtualFile.path
-                            val relativePath = if (projectBasePath != null && filePath.startsWith(projectBasePath)) {
-                                filePath.substring(projectBasePath.length + 1)
-                            } else {
-                                filePath
-                            }
+                            val relativePath = psiFile.virtualFile.relativePath(project)
                             inputSection.appendText("\n/file:${relativePath}")
                         }
                     }

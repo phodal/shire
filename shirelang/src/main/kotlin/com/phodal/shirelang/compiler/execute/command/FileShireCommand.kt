@@ -4,11 +4,10 @@ import com.intellij.lang.LanguageCommenters
 import com.phodal.shirelang.compiler.ast.LineInfo
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.project.guessProjectDir
-import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiManager
 import com.phodal.shirecore.lookupFile
+import com.phodal.shirecore.relativePath
 
 /**
  * FileAutoCommand is responsible for reading a file and returning its contents.
@@ -32,14 +31,9 @@ class FileShireCommand(private val myProject: Project, private val prop: String)
 
         val fileContent = LineInfo.fromString(prop)?.splitContent(content) ?: content
         val language = PsiManager.getInstance(myProject).findFile(virtualFile)?.language
-        val lang = language
-            ?.displayName
-            ?: "plaintext"
+        val lang = language?.displayName ?: "plaintext"
 
-        val relativePath = FileUtil.getRelativePath(
-            myProject.guessProjectDir()!!.toNioPath().toFile(),
-            virtualFile.toNioPath().toFile()
-        )
+        val relativePath = virtualFile.relativePath(myProject)
 
         val commentPrefix = language?.let { LanguageCommenters.INSTANCE.forLanguage(it).lineCommentPrefix } ?: "//"
 

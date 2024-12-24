@@ -7,6 +7,7 @@ import com.intellij.openapi.vfs.VfsUtilCore
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.openapi.vfs.VirtualFileVisitor
+import com.intellij.util.io.URLUtil
 import java.util.regex.Pattern
 
 object PatternSearcher {
@@ -27,8 +28,8 @@ object PatternSearcher {
      * @return A list of VirtualFile objects that match the specified regular expression. If no matching files are found, an empty list is returned.
      */
     fun findFilesByRegex(project: Project, regex: String): List<VirtualFile> {
-        if (PatternSearcher.cache.containsKey(regex)) {
-            return PatternSearcher.cache[regex]!!
+        if (cache.containsKey(regex)) {
+            return cache[regex]!!
         }
 
         val pattern: Pattern = try {
@@ -42,7 +43,7 @@ object PatternSearcher {
 
         val matchingFiles: MutableList<VirtualFile> = ArrayList()
 
-        VirtualFileManager.getInstance().getFileSystem("file").refresh(false)
+        VirtualFileManager.getInstance().getFileSystem(URLUtil.FILE_PROTOCOL).refresh(false)
 
         VfsUtilCore.visitChildrenRecursively(baseDir, object : VirtualFileVisitor<Any>() {
             override fun visitFile(file: VirtualFile): Boolean {

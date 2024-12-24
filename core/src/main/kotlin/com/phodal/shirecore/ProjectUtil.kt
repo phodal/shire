@@ -6,6 +6,7 @@ import com.intellij.openapi.fileTypes.FileTypeManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
 import com.intellij.openapi.util.ModificationTracker
+import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.util.io.FileUtilRt
 import com.intellij.openapi.vcs.changes.VcsIgnoreManager
 import com.intellij.openapi.vfs.VirtualFile
@@ -44,6 +45,12 @@ fun VirtualFile.canBeAdded(project: Project): Boolean {
     if (isIgnoredByVcs(project, this)) return false
 
     return true
+}
+
+fun VirtualFile.relativePath(project: Project): String {
+    val projectDir = project.guessProjectDir()!!.toNioPath().toFile()
+    val relativePath = FileUtil.getRelativePath(projectDir, this.toNioPath().toFile())
+    return relativePath ?: this.path
 }
 
 fun isIgnoredByVcs(project: Project?, file: VirtualFile?): Boolean {
