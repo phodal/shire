@@ -10,6 +10,7 @@ import com.intellij.ide.presentation.VirtualFilePresentation
 import com.intellij.openapi.fileEditor.impl.EditorHistoryManager
 import com.intellij.openapi.project.guessProjectDir
 import com.intellij.openapi.roots.ProjectFileIndex
+import com.intellij.openapi.vfs.VFileProperty
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.util.ProcessingContext
 import com.phodal.shirecore.canBeAdded
@@ -30,7 +31,7 @@ class FileReferenceLanguageProvider : CompletionProvider<CompletionParameters>()
          */
         EditorHistoryManager.getInstance(project).fileList.forEach {
             if (!it.canBeAdded(project)) return@forEach
-            result.addElement(buildElement(it, basePath))
+            result.addElement(buildElement(it, basePath, 99.0))
         }
 
         /**
@@ -38,14 +39,16 @@ class FileReferenceLanguageProvider : CompletionProvider<CompletionParameters>()
          */
         ProjectFileIndex.getInstance(project).iterateContent {
             if (!it.canBeAdded(project)) return@iterateContent true
-            result.addElement(buildElement(it, basePath))
+            // if relative to same extention can be high priority, if can be added to project
+            result.addElement(buildElement(it, basePath, 1.0))
             true
         }
     }
 
     private fun buildElement(
         virtualFile: VirtualFile,
-        basePath: @NonNls String
+        basePath: @NonNls String,
+        priority: Double,
     ): LookupElement {
         val removePrefix = virtualFile.path.removePrefix(basePath)
         val relativePath: String = removePrefix.removePrefix(File.separator)
@@ -53,12 +56,10 @@ class FileReferenceLanguageProvider : CompletionProvider<CompletionParameters>()
         val elementBuilder = LookupElementBuilder.create(relativePath)
             .withIcon(VirtualFilePresentation.getIcon(virtualFile))
             .withInsertHandler { context, _ ->
-                context.editor.caretModel.moveCaretRelatively(
-                    1, 0, false, false, false
-                )
+                context.editor.caretModel.moveCaretRelatively(1, 0, false, false, false)
             }
 
-        return PrioritizedLookupElement.withPriority(elementBuilder, 1.0)
+        return PrioritizedLookupElement.withPriority(elementBuilder, priority)
     }
 }
 
