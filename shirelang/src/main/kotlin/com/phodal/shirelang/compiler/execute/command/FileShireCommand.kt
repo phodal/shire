@@ -16,31 +16,30 @@ import com.phodal.shirecore.lookupFile
  */
 class FileShireCommand(private val myProject: Project, private val prop: String) : ShireCommand {
     private val logger = logger<FileShireCommand>()
-    private val output = StringBuilder()
 
     override suspend fun doExecute(): String? {
         // prop name can be src/file.name#L1-L2
-        val range: LineInfo? = LineInfo.fromString(prop)
         val virtualFile = file(myProject, prop)
-
-        val contentsToByteArray = virtualFile?.contentsToByteArray()
-        if (contentsToByteArray == null) {
-            logger.warn("File not found: $virtualFile")
+        if (virtualFile == null) {
+            logger.warn("File not found: $prop")
             return null
         }
 
-        contentsToByteArray.let { bytes ->
-            val lang = PsiManager.getInstance(myProject).findFile(virtualFile)?.language?.displayName
-            val content = bytes.toString(Charsets.UTF_8)
+        val content = virtualFile.contentsToByteArray().toString(Charsets.UTF_8)
 
-            val fileContent = range?.splitContent(content) ?: content
+        val range = LineInfo.fromString(prop)
+        val fileContent = range?.splitContent(content) ?: content
+        val lang = PsiManager.getInstance(myProject)
+            .findFile(virtualFile)
+            ?.language
+            ?.displayName
+            ?: "plaintext"
 
-            output.append("\n```$lang\n")
-            output.append(fileContent)
-            output.append("\n```\n")
+        return buildString {
+            append("\n```$lang\n")
+            append(fileContent)
+            append("\n```\n")
         }
-
-        return output.toString()
     }
 
     companion object {

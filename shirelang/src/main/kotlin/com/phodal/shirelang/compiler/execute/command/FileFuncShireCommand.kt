@@ -30,7 +30,7 @@ class FileFuncShireCommand(val myProject: Project, private val prop: String) : S
     private fun regexFunction(regex: Regex, project: Project): MutableList<VirtualFile> {
         val files: MutableList<VirtualFile> = mutableListOf()
         ProjectFileIndex.getInstance(project).iterateContent {
-            if (it.canBeAdded()) {
+            if (it.canBeAdded(project)) {
                 if (regex.matches(it.path)) {
                     files.add(it)
                 }

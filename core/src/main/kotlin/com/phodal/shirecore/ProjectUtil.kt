@@ -5,14 +5,15 @@ import com.intellij.openapi.fileTypes.FileType
 import com.intellij.openapi.fileTypes.FileTypeManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
+import com.intellij.openapi.util.ModificationTracker
 import com.intellij.openapi.util.io.FileUtilRt
+import com.intellij.openapi.vcs.changes.VcsIgnoreManager
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.ProjectScope
 import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
-import com.intellij.openapi.util.ModificationTracker
 
 
 fun Project.lookupFile(path: String): VirtualFile? {
@@ -36,9 +37,16 @@ fun Project.findFile(path: String): VirtualFile? {
     }
 }
 
-fun VirtualFile.canBeAdded(): Boolean {
+fun VirtualFile.canBeAdded(project: Project): Boolean {
     if (!this.isValid || this.isDirectory) return false
     if (this.fileType.isBinary || FileUtilRt.isTooLarge(this.length)) return false
+    if (FileTypeManager.getInstance().isFileIgnored(this)) return false
+    if (isIgnoredByVcs(project, this)) return false
 
     return true
+}
+
+fun isIgnoredByVcs(project: Project?, file: VirtualFile?): Boolean {
+    val ignoreManager = VcsIgnoreManager.getInstance(project!!)
+    return ignoreManager.isPotentiallyIgnoredFile(file!!)
 }

@@ -96,3 +96,34 @@ enum class ShireActionLocation(val location: String, val description: String) {
 
 {: .note }
 当 COMMIT_MENU 项多于一个时，将会用 PopupMenu 显示；当只有一个时，将直接显示在 Commit 菜单中。
+
+#### ChatBox 示例
+
+ChatBox 是在 Shire ToolWindow 中的一个输入框，用户可以在这里输入内容，然后调用大语言模型。使用事项如下：
+
+- 默认使用 `RigthPanel` 作为展示位置，使用 `ChatBox` 作为 `actionLocation`。
+- 当用户创建了 `actionLocation: ChatBox` 的 Shire 代码时，将会读取用户的输入作为提示词的一部分。 
+
+如下是一个自定义 ChatBox 的 Shire 示例：
+
+```shire
+---
+name: "shire-chat-box"
+description: "Shire Chat Box"
+interaction: RightPanel
+actionLocation: ChatBox
+---
+
+根据用户的输入生成 Java 代码
+
+$chatPrompt
+
+```
+
+此时，当用户在 ChatBox 中输入 `create hello world` 时，会将 `hello world` 作为 `chatPrompt` 的值。生成最终的提示词：
+
+```shire
+根据用户的输入生成 Java 代码 
+
+create hello world
+```
