@@ -1,4 +1,4 @@
-package com.phodal.shirelang.java.variable.provider
+package com.phodal.shirelang.java.provider
 
 import com.intellij.openapi.roots.ProjectFileIndex
 import com.intellij.psi.*
@@ -23,6 +23,13 @@ class JavaRelatedClassesProvider : RelatedClassesProvider {
                 .toList()
 
             is PsiClass -> findRelatedClasses(element)
+            else -> emptyList()
+        }
+    }
+
+    override fun lookup(element: PsiFile): List<PsiElement> {
+        return when (element) {
+            is PsiJavaFile -> findRelatedClasses(element.classes.first())
             else -> emptyList()
         }
     }
@@ -70,10 +77,6 @@ class JavaRelatedClassesProvider : RelatedClassesProvider {
 
         psiElement.docComment?.delete()
         return psiElement
-    }
-
-    override fun cleanUp(psiClass: PsiElement): PsiElement {
-        return cleanUp(psiClass as PsiClass)
     }
 
     private fun findSuperClasses(psiClass: PsiClass): List<PsiClass> {

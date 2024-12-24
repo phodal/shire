@@ -16,7 +16,7 @@ import com.phodal.shirecore.search.similar.SimilarChunksSearch
 import com.phodal.shirelang.java.codemodel.JavaClassStructureProvider
 import com.phodal.shirelang.java.util.JavaTestHelper
 import com.phodal.shirelang.java.util.getContainingClass
-import com.phodal.shirelang.java.variable.provider.JavaRelatedClassesProvider
+import com.phodal.shirelang.java.provider.JavaRelatedClassesProvider
 
 class JavaPsiContextVariableProvider : PsiContextVariableProvider {
     override fun resolve(variable: PsiContextVariable, project: Project, editor: Editor, psiElement: PsiElement?): Any {

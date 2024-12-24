@@ -1,7 +1,9 @@
 package com.phodal.shirecore.provider.psi
 
-import com.intellij.openapi.roots.ProjectFileIndex
+import com.intellij.lang.Language
+import com.intellij.lang.LanguageExtension
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiFile
 
 /**
  * The `RelatedClassesProvider` interface is used to provide related classes for a given element.
@@ -27,5 +29,14 @@ interface RelatedClassesProvider {
      */
     fun lookup(element: PsiElement): List<PsiElement>
 
-    fun cleanUp(psiClass: PsiElement): PsiElement
+    fun lookup(element: PsiFile): List<PsiElement>
+
+    companion object {
+        private val languageExtension: LanguageExtension<RelatedClassesProvider> =
+            LanguageExtension("com.phodal.shireRelatedClass")
+
+        fun provide(language: Language): RelatedClassesProvider? {
+            return languageExtension.forLanguage(language)
+        }
+    }
 }

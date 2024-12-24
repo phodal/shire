@@ -54,5 +54,8 @@
 
         <shireComplexityProvider language="JAVA"
                                  implementationClass="com.phodal.shirelang.java.complexity.JavaComplexityProvider"/>
+
+        <shireRelatedClass language="JAVA"
+                                   implementationClass="com.phodal.shirelang.java.provider.JavaRelatedClassesProvider"/>
     </extensions>
 </idea-plugin>
