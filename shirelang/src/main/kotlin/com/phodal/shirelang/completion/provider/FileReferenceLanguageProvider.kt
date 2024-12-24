@@ -55,7 +55,7 @@ class FileReferenceLanguageProvider : CompletionProvider<CompletionParameters>()
         val elementBuilder = LookupElementBuilder.create(relativePath)
             .withIcon(VirtualFilePresentation.getIcon(virtualFile))
             .withInsertHandler { context, _ ->
-                context.editor.caretModel.moveCaretRelatively(1, 0, false, false, false)
+                context.editor.caretModel.moveCaretRelatively(1, 1, false, false, false)
             }
 
         return ShireLookupElement.withPriority(elementBuilder, priority, virtualFile)

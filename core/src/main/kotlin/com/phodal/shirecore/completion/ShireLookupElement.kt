@@ -14,6 +14,10 @@ class ShireLookupElement<T : LookupElement> private constructor(
         return "ShireLookupElement{priority=$priority, delegate=$delegate}"
     }
 
+    fun getFile(): VirtualFile {
+        return virtualFile
+    }
+
     companion object {
         private val CLASS_CONDITION_KEY: ClassConditionKey<ShireLookupElement<*>> = ClassConditionKey.create(
             ShireLookupElement::class.java

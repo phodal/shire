@@ -9,7 +9,6 @@
                            bundle="messages.ShireCoreBundle"
                            key="name"/>
 
-        <lookup.actionProvider implementation="com.phodal.shirecore.completion.ShireCompletionLookupActionProvider"/>
     </extensions>
 
     <extensionPoints>
