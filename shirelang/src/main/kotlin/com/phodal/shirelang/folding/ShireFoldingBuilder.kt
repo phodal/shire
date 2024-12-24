@@ -23,9 +23,8 @@ class ShireFoldingBuilder : FoldingBuilderEx() {
         return descriptors.toTypedArray()
     }
 
-    override fun getPlaceholderText(node: ASTNode, range: TextRange): String? {
+    override fun getPlaceholderText(node: ASTNode, range: TextRange): String {
         val elementType = PsiUtilCore.getElementType(node)
-        val explicitName = foldedElementsPresentations[elementType]
         when (elementType) {
             ShireTypes.USED -> {
                 val commandId = (node.psi as ShireUsed).commandId
@@ -37,6 +36,7 @@ class ShireFoldingBuilder : FoldingBuilderEx() {
             }
         }
 
+        val explicitName = foldedElementsPresentations[elementType]
         val elementText = StringUtil.shortenTextWithEllipsis(node.text, 30, 5)
         return explicitName?.let{ "$it: $elementText" } ?: elementText
     }
