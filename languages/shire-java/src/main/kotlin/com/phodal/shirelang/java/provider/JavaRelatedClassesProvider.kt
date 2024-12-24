@@ -2,34 +2,43 @@ package com.phodal.shirelang.java.provider
 
 import com.intellij.openapi.roots.ProjectFileIndex
 import com.intellij.psi.*
-import com.intellij.psi.util.PsiTreeUtil
-import com.intellij.psi.util.PsiUtil
+import com.intellij.psi.util.*
 import com.phodal.shirecore.provider.psi.RelatedClassesProvider
 
-/**
- * This class JavaRelatedClassesProvider implements the RelatedClassesProvider interface and provides a method to
- * lookup related classes for a given PsiElement, specifically a PsiMethod.
- * It analyzes the parameters, return type, and generic types of the PsiMethod to find related classes that are part
- * of the project content.
- * It also includes methods to clean up unnecessary elements in a PsiClass, find superclasses of a PsiClass, and determine
- * if an element is part of the project content.
- */
 class JavaRelatedClassesProvider : RelatedClassesProvider {
-    override fun lookup(element: PsiElement): List<PsiClass> {
-        return when (element) {
-            is PsiMethod -> findRelatedClasses(element)
-                .flatMap { findSuperClasses(it) }
-                .map { cleanUp(it) }
-                .toList()
+    private val cache = mutableMapOf<PsiElement, CachedValue<List<PsiClass>>>()
 
-            is PsiClass -> findRelatedClasses(element)
-            else -> emptyList()
+    override fun lookup(element: PsiElement): List<PsiClass> {
+        return getCachedValue(element) {
+            when (element) {
+                is PsiMethod -> findRelatedClasses(element)
+                    .flatMap { findSuperClasses(it) }
+                    .map { cleanUp(it) }
+                    .toList()
+
+                is PsiClass -> findRelatedClasses(element)
+                else -> emptyList()
+            }
         }
+    }
+
+    private fun <T> getCachedValue(element: PsiElement, provider: () -> T): T {
+        return CachedValuesManager.getCachedValue(
+            element,
+            CachedValueProvider {
+                CachedValueProvider.Result.create(
+                    provider(),
+                    PsiModificationTracker.MODIFICATION_COUNT
+                )
+            }
+        )
     }
 
     override fun lookup(element: PsiFile): List<PsiElement> {
         return when (element) {
-            is PsiJavaFile -> findRelatedClasses(element.classes.first())
+            is PsiJavaFile -> getCachedValue(element) {
+                findRelatedClasses(element.classes.first())
+            }
             else -> emptyList()
         }
     }

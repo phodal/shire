@@ -92,7 +92,15 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
                         listModel.remove(index)
                     } else {
                         element.containingFile?.let { psiFile ->
-                            inputSection.appendText("\n/file:${psiFile.virtualFile.path}")
+                            val virtualFile = psiFile.virtualFile
+                            val projectBasePath = project.basePath
+                            val filePath = virtualFile.path
+                            val relativePath = if (projectBasePath != null && filePath.startsWith(projectBasePath)) {
+                                filePath.substring(projectBasePath.length + 1)
+                            } else {
+                                filePath
+                            }
+                            inputSection.appendText("\n/file:${relativePath}")
                         }
                     }
                 }
