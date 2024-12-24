@@ -1,10 +1,13 @@
 package com.phodal.shirecore.ui.input
 
+import com.intellij.codeInsight.lookup.LookupManagerListener
 import com.intellij.lang.Language
 import com.intellij.openapi.Disposable
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.phodal.shirecore.ShireCoreBundle
+import com.phodal.shirecore.provider.psi.RelatedClassesProvider
 import com.phodal.shirecore.provider.shire.FileCreateService
 import com.phodal.shirecore.provider.shire.FileRunService
 import java.awt.BorderLayout
@@ -39,6 +42,14 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
         })
         this.border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
         this.add(inputSection, BorderLayout.CENTER)
+
+        project.messageBus.connect(this)
+            .subscribe(LookupManagerListener.TOPIC, ShireInputLookupManagerListener(project) {
+                ApplicationManager.getApplication().invokeLater {
+                    val relatedElement = RelatedClassesProvider.provide(it.language)?.lookup(it)
+                    println("lookup: $relatedElement")
+                }
+            })
     }
 
     private fun getVirtualFile(prompt: String): VirtualFile? {

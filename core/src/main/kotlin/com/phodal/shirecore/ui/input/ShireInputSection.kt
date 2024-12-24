@@ -1,18 +1,11 @@
 package com.phodal.shirecore.ui.input
 
-import com.intellij.codeInsight.lookup.Lookup
-import com.intellij.codeInsight.lookup.LookupEvent
-import com.intellij.codeInsight.lookup.LookupListener
-import com.intellij.codeInsight.lookup.LookupManagerListener
-import com.intellij.codeInsight.lookup.impl.LookupImpl
 import com.intellij.icons.AllIcons
 import com.intellij.ide.IdeTooltip
 import com.intellij.ide.IdeTooltipManager
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.Presentation
 import com.intellij.openapi.actionSystem.impl.ActionButton
-import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.editor.event.DocumentEvent
 import com.intellij.openapi.editor.event.DocumentListener
 import com.intellij.openapi.editor.ex.EditorEx
@@ -22,7 +15,6 @@ import com.intellij.openapi.ui.ComponentValidator
 import com.intellij.openapi.ui.popup.Balloon.Position
 import com.intellij.openapi.wm.IdeFocusManager
 import com.intellij.openapi.wm.impl.InternalDecorator
-import com.intellij.psi.PsiFile
 import com.intellij.ui.HintHint
 import com.intellij.util.EventDispatcher
 import com.intellij.util.ui.JBEmptyBorder
@@ -30,7 +22,6 @@ import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
 import com.intellij.util.ui.components.BorderLayoutPanel
 import com.phodal.shirecore.ShireCoreBundle
-import com.phodal.shirecore.completion.ShireLookupElement
 import java.awt.CardLayout
 import java.awt.Color
 import java.awt.Dimension
@@ -42,8 +33,6 @@ import javax.swing.JComponent
 import javax.swing.JPanel
 import kotlin.math.max
 import kotlin.math.min
-import com.intellij.psi.PsiManager
-import com.phodal.shirecore.provider.psi.RelatedClassesProvider
 
 class ShireInputSection(private val project: Project, val disposable: Disposable?) : BorderLayoutPanel() {
     private val input: ShireInputTextField
@@ -95,16 +84,6 @@ class ShireInputSection(private val project: Project, val disposable: Disposable
 
                 revalidate()
             }
-        }
-
-        if (disposable != null) {
-            project.messageBus.connect(disposable)
-                .subscribe(LookupManagerListener.TOPIC, ShireInputLookupManagerListener(project) {
-                    ApplicationManager.getApplication().invokeLater {
-                        val lookup = RelatedClassesProvider.provide(it.language)?.lookup(it)
-                        println("lookup: $lookup")
-                    }
-                })
         }
 
         input.addDocumentListener(documentListener)
@@ -212,29 +191,3 @@ class ShireInputSection(private val project: Project, val disposable: Disposable
 
     val focusableComponent: JComponent get() = input
 }
-
-class ShireInputLookupManagerListener(
-    private val project: Project,
-    private val callback: ((PsiFile) -> Unit)? = null,
-) : LookupManagerListener {
-    override fun activeLookupChanged(oldLookup: Lookup?, newLookup: Lookup?) {
-        if (newLookup !is LookupImpl) return
-
-        newLookup.addLookupListener(object : LookupListener {
-            override fun itemSelected(event: LookupEvent) {
-                if (event.item !is ShireLookupElement<*>) return
-
-                val lookupElement = event.item as ShireLookupElement<*>
-
-                runReadAction {
-                    val file = lookupElement.getFile()
-                    val psiFile = PsiManager.getInstance(project).findFile(file)
-                    if (psiFile != null) {
-                        callback?.invoke(psiFile)
-                    }
-                }
-            }
-        })
-    }
-}
-
