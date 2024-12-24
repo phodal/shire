@@ -1,6 +1,7 @@
 package com.phodal.shirelang.completion
 
 import com.intellij.codeInsight.completion.CompletionContributor
+import com.intellij.codeInsight.completion.CompletionInitializationContext
 import com.intellij.codeInsight.completion.CompletionType
 import com.intellij.patterns.ElementPattern
 import com.intellij.patterns.PlatformPatterns
@@ -10,7 +11,6 @@ import com.intellij.psi.tree.IElementType
 import com.phodal.shirelang.completion.dataprovider.BuiltinCommand
 import com.phodal.shirelang.completion.provider.*
 import com.phodal.shirelang.psi.ShireFrontMatterEntry
-import com.phodal.shirelang.psi.ShireFrontMatterHeader
 import com.phodal.shirelang.psi.ShireTypes
 import com.phodal.shirelang.psi.ShireUsed
 
@@ -26,7 +26,6 @@ class ShireCompletionContributor : CompletionContributor() {
 
         extend(CompletionType.BASIC, identifierAfter(ShireTypes.VARIABLE_START), VariableCompletionProvider())
 
-        // FOR
         extend(CompletionType.BASIC, identifierAfter(ShireTypes.VARIABLE_START), AgentToolOverviewCompletion())
 
         extend(CompletionType.BASIC, identifierAfter(ShireTypes.COMMAND_START), BuiltinCommandCompletion())

@@ -28,6 +28,7 @@ import javax.swing.JComponent
 import javax.swing.JPanel
 import kotlin.math.max
 import kotlin.math.min
+import com.intellij.codeInsight.completion.CompletionService
 
 class ShireInputSection(private val project: Project, val disposable: Disposable?) : BorderLayoutPanel() {
     private val input: ShireInputTextField

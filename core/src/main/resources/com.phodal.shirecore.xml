@@ -8,6 +8,8 @@
         <notificationGroup id="Shirelang.notification.group" displayType="STICKY_BALLOON"
                            bundle="messages.ShireCoreBundle"
                            key="name"/>
+
+        <lookup.actionProvider implementation="com.phodal.shirecore.completion.ShireCompletionLookupActionProvider"/>
     </extensions>
 
     <extensionPoints>

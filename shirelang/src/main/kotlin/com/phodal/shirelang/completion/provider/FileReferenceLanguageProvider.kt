@@ -3,17 +3,16 @@ package com.phodal.shirelang.completion.provider
 import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.codeInsight.completion.CompletionProvider
 import com.intellij.codeInsight.completion.CompletionResultSet
-import com.intellij.codeInsight.completion.PrioritizedLookupElement
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.ide.presentation.VirtualFilePresentation
 import com.intellij.openapi.fileEditor.impl.EditorHistoryManager
 import com.intellij.openapi.project.guessProjectDir
 import com.intellij.openapi.roots.ProjectFileIndex
-import com.intellij.openapi.vfs.VFileProperty
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.util.ProcessingContext
 import com.phodal.shirecore.canBeAdded
+import com.phodal.shirecore.completion.ShireLookupElement
 import org.jetbrains.annotations.NonNls
 import java.io.File
 
@@ -39,7 +38,7 @@ class FileReferenceLanguageProvider : CompletionProvider<CompletionParameters>()
          */
         ProjectFileIndex.getInstance(project).iterateContent {
             if (!it.canBeAdded(project)) return@iterateContent true
-            // if relative to same extention can be high priority, if can be added to project
+            // if relative to the same extention can be high priority, if can be added to project
             result.addElement(buildElement(it, basePath, 1.0))
             true
         }
@@ -59,7 +58,6 @@ class FileReferenceLanguageProvider : CompletionProvider<CompletionParameters>()
                 context.editor.caretModel.moveCaretRelatively(1, 0, false, false, false)
             }
 
-        return PrioritizedLookupElement.withPriority(elementBuilder, priority)
+        return ShireLookupElement.withPriority(elementBuilder, priority, virtualFile)
     }
 }
-
