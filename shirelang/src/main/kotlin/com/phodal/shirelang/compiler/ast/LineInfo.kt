@@ -6,6 +6,20 @@ data class LineInfo(
     val startColumn: Int = 0,
     val endColumn: Int = 0
 ) {
+    fun splitContent(content: String): String {
+        val fileContent = run {
+            val subContent = try {
+                content.split("\n").slice(startLine - 1 until endLine)
+                    .joinToString("\n")
+            } catch (e: StringIndexOutOfBoundsException) {
+                content
+            }
+
+            subContent
+        }
+        return fileContent
+    }
+
     companion object {
         private val regex = Regex("""L(\d+)(?:C(\d+))?(?:-L(\d+)(?:C(\d+))?)?""")
 

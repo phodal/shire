@@ -19,9 +19,9 @@ class FileShireCommand(private val myProject: Project, private val prop: String)
     private val output = StringBuilder()
 
     override suspend fun doExecute(): String? {
-        val range: LineInfo? = LineInfo.fromString(prop)
         // prop name can be src/file.name#L1-L2
-        val virtualFile = Companion.file(myProject, prop)
+        val range: LineInfo? = LineInfo.fromString(prop)
+        val virtualFile = file(myProject, prop)
 
         val contentsToByteArray = virtualFile?.contentsToByteArray()
         if (contentsToByteArray == null) {
@@ -30,23 +30,10 @@ class FileShireCommand(private val myProject: Project, private val prop: String)
         }
 
         contentsToByteArray.let { bytes ->
-            val lang = virtualFile.let {
-                PsiManager.getInstance(myProject).findFile(it)?.language?.displayName
-            } ?: ""
-
+            val lang = PsiManager.getInstance(myProject).findFile(virtualFile)?.language?.displayName
             val content = bytes.toString(Charsets.UTF_8)
-            val fileContent = if (range != null) {
-                val subContent = try {
-                    content.split("\n").slice(range.startLine - 1 until range.endLine)
-                        .joinToString("\n")
-                } catch (e: StringIndexOutOfBoundsException) {
-                    content
-                }
 
-                subContent
-            } else {
-                content
-            }
+            val fileContent = range?.splitContent(content) ?: content
 
             output.append("\n```$lang\n")
             output.append(fileContent)
