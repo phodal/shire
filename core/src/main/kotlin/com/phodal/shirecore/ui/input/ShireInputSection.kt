@@ -6,6 +6,8 @@ import com.intellij.ide.IdeTooltipManager
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.Presentation
 import com.intellij.openapi.actionSystem.impl.ActionButton
+import com.intellij.openapi.application.runWriteAction
+import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.editor.event.DocumentEvent
 import com.intellij.openapi.editor.event.DocumentListener
 import com.intellij.openapi.editor.ex.EditorEx
@@ -22,6 +24,7 @@ import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
 import com.intellij.util.ui.components.BorderLayoutPanel
 import com.phodal.shirecore.ShireCoreBundle
+import com.phodal.shirecore.config.interaction.task.InsertUtil.insertStringAndSaveChange
 import java.awt.CardLayout
 import java.awt.Color
 import java.awt.Dimension
@@ -152,6 +155,16 @@ class ShireInputSection(private val project: Project, val disposable: Disposable
         val result = super.getPreferredSize()
         result.height = max(min(result.height, maxHeight), minimumSize.height)
         return result
+    }
+
+    fun appendText(text: String) {
+        WriteCommandAction.runWriteCommandAction(
+            project,
+            "Append text",
+            "intentions.write.action",
+            {
+                insertStringAndSaveChange(project, text, input.editor!!.document, input.editor!!.document.textLength, false)
+            })
     }
 
     /**

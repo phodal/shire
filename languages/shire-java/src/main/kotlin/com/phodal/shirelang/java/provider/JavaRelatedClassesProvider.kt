@@ -51,7 +51,10 @@ class JavaRelatedClassesProvider : RelatedClassesProvider {
         val genericTypes = parameters.flatMap { (it.type as? PsiClassType)?.parameters?.toList() ?: emptyList() }
         val mentionedTypes = parameterTypes + method.returnType + genericTypes
 
-        return mentionedTypes.filterIsInstance<PsiClassType>()
+        val filterIsInstance = mentionedTypes.filterIsInstance<PsiClassType>()
+            .distinct()
+
+        return filterIsInstance
             .mapNotNull { it.resolve() }
             .filter { isProjectContent(it) }
             .toList()
