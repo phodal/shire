@@ -2,6 +2,7 @@ package com.phodal.shirecore.provider.streaming
 
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.WriteAction
+import com.intellij.openapi.application.runInEdt
 import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
@@ -39,7 +40,7 @@ class LoggingStreamingService : StreamingServiceProvider {
                 }
             }
         } else {
-            runWriteAction {
+            runInEdt {
                 val file = outputDir.findChild(LLM_LOGGING)
                 file?.setBinaryContent(ByteArray(0))
             }

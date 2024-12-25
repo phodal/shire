@@ -25,17 +25,17 @@ fun Project.lookupFile(path: String): VirtualFile? {
 
 fun Project.findFile(path: String): VirtualFile? {
     ApplicationManager.getApplication().assertReadAccessAllowed()
-    return CachedValuesManager.getManager(this).getCachedValue(this) {
-        val searchScope = ProjectScope.getProjectScope(this)
-        val fileType: FileType = FileTypeManager.getInstance().getFileTypeByFileName(path)
-        val allTypeFiles = FileTypeIndex.getFiles(fileType, searchScope)
+    val searchScope = ProjectScope.getProjectScope(this)
+    val fileType: FileType = FileTypeManager.getInstance().getFileTypeByFileName(path)
+    val allTypeFiles = FileTypeIndex.getFiles(fileType, searchScope)
 
-        val result = allTypeFiles.find { file ->
-            file.name == path || file.path.endsWith(path)
+    for (file in allTypeFiles) {
+        if (file.name == path || file.path.endsWith(path)) {
+            return file
         }
-
-        CachedValueProvider.Result.create(result, ModificationTracker.NEVER_CHANGED)
     }
+
+    return null
 }
 
 fun VirtualFile.canBeAdded(project: Project): Boolean {

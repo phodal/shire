@@ -1,7 +1,9 @@
 package com.phodal.shirecore.provider.streaming
 
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.project.Project
+import com.intellij.psi.PsiElement
 import com.phodal.shirecore.ShirelangNotifications
 import com.phodal.shirecore.middleware.post.LifecycleProcessorSignature
 import com.phodal.shirecore.runner.console.ShireConsoleViewBase
