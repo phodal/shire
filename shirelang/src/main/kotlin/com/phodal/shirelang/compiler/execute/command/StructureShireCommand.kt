@@ -1,10 +1,14 @@
 package com.phodal.shirelang.compiler.execute.command
 
+import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
+import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.phodal.shirecore.provider.codemodel.FileStructureProvider
-import org.jetbrains.kotlin.asJava.classes.runReadAction
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class StructureShireCommand(val myProject: Project, val prop: String) : ShireCommand {
     private val logger = logger<StructureShireCommand>()
@@ -15,8 +19,12 @@ class StructureShireCommand(val myProject: Project, val prop: String) : ShireCom
             return null
         }
 
-        val psiFile = runReadAction {
-            PsiManager.getInstance(myProject).findFile(virtualFile)
+        val psiFile: PsiFile = withContext(Dispatchers.IO) {
+            ApplicationManager.getApplication().executeOnPooledThread<PsiFile?> {
+                runReadAction {
+                    PsiManager.getInstance(myProject).findFile(virtualFile)
+                }
+            }.get()
         } ?: return null
 
         FileStructureProvider.from(psiFile).let {
