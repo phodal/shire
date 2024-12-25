@@ -1,35 +1,31 @@
 package com.phodal.shirecore.ui.input
 
 import com.intellij.codeInsight.lookup.LookupManagerListener
+import com.intellij.icons.AllIcons
 import com.intellij.lang.Language
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.fileEditor.FileEditorManagerEvent
+import com.intellij.openapi.fileEditor.FileEditorManagerListener
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
 import com.intellij.ui.components.JBList
+import com.intellij.ui.components.JBScrollPane
+import com.intellij.util.ui.JBUI
 import com.phodal.shirecore.ShireCoreBundle
 import com.phodal.shirecore.provider.psi.RelatedClassesProvider
 import com.phodal.shirecore.provider.shire.FileCreateService
 import com.phodal.shirecore.provider.shire.FileRunService
+import com.phodal.shirecore.relativePath
 import java.awt.BorderLayout
-import javax.swing.BorderFactory
-import javax.swing.DefaultListModel
-import javax.swing.JPanel
-import javax.swing.ListSelectionModel
 import java.awt.Component
 import java.awt.Dimension
 import java.awt.FlowLayout
-import javax.swing.*
-import com.intellij.icons.AllIcons
-import com.intellij.openapi.fileEditor.*
-import com.intellij.openapi.util.Pair
-import com.intellij.ui.components.JBScrollPane
-import com.intellij.util.ui.JBUI
-import com.phodal.shirecore.relativePath
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
+import javax.swing.*
 
 class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
     private var scratchFile: VirtualFile? = null
@@ -80,7 +76,6 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
                     val file = event.newFile ?: return
                     val psiFile = PsiManager.getInstance(project).findFile(file) ?: return
                     ApplicationManager.getApplication().invokeLater {
-                        listModel.clear()
                         listModel.addElement(psiFile)
                     }
                 }
@@ -101,12 +96,15 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
     private fun setupElementsList() {
         elementsList.selectionMode = ListSelectionModel.SINGLE_SELECTION
         elementsList.layoutOrientation = JList.HORIZONTAL_WRAP
-        elementsList.visibleRowCount = 1
-
-        val scrollPane = JBScrollPane(elementsList)
-        scrollPane.preferredSize = Dimension(-1, 40)
-
+        elementsList.visibleRowCount = 2
         elementsList.cellRenderer = ElementListCellRenderer()
+        
+        // 创建一个可滚动的面板
+        val scrollPane = JBScrollPane(elementsList)
+        scrollPane.preferredSize = Dimension(-1, 80)
+        scrollPane.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS
+        scrollPane.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED
+
         elementsList.addMouseListener(object : MouseAdapter() {
             override fun mouseClicked(e: MouseEvent) {
                 val list = e.source as JBList<*>
@@ -115,16 +113,25 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
                     val element = listModel.getElementAt(index) as PsiElement
                     val cellBounds = list.getCellBounds(index, index)
 
-                    if (e.x > cellBounds.x + cellBounds.width - 10) {
-                        listModel.remove(index)
-                    } else {
-                        element.containingFile?.let { psiFile ->
-                            val relativePath = psiFile.virtualFile.relativePath(project)
-                            inputSection.appendText("\n/" + "file" + ":${relativePath}")
+                    // 计算关闭按钮的区域
+                    val closeButtonWidth = 20  // 关闭按钮的大约宽度
+                    val isClickOnCloseButton = e.x > cellBounds.x + cellBounds.width - closeButtonWidth
 
-                            val relatedElements = RelatedClassesProvider.provide(psiFile.language)?.lookup(psiFile)
-                            updateElements(relatedElements)
-                        }
+                    if (isClickOnCloseButton) {
+                        listModel.remove(index)
+                        e.consume()  // 阻止事件继续传播
+                        return
+                    }
+
+                    // 只有在非关闭按钮区域的点击才处理文件路径添加
+                    element.containingFile?.let { psiFile ->
+                        val relativePath = psiFile.virtualFile.relativePath(project)
+                        inputSection.appendText("\n/" + "file" + ":${relativePath}")
+
+                        listModel.remove(index)
+
+                        val relatedElements = RelatedClassesProvider.provide(psiFile.language)?.lookup(psiFile)
+                        updateElements(relatedElements)
                     }
                 }
             }
@@ -134,7 +141,6 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
     }
 
     private fun updateElements(elements: List<PsiElement>?) {
-        listModel.clear()
         elements?.forEach { listModel.addElement(it) }
     }
 
@@ -173,6 +179,12 @@ private class ElementListCellRenderer : ListCellRenderer<PsiElement> {
 
         val closeLabel = JLabel(AllIcons.Actions.Close)
         closeLabel.border = JBUI.Borders.empty()
+        closeLabel.addMouseListener(object : MouseAdapter() {
+            override fun mouseClicked(e: MouseEvent) {
+                val model = list.model as DefaultListModel<*>
+                model.remove(index)
+            }
+        })
         panel.add(closeLabel)
 
         if (isSelected) {
