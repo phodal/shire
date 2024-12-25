@@ -7,10 +7,10 @@ import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.config.InteractionType
 import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirecore.config.interaction.PostFunction
-import com.phodal.shirecore.runner.console.cancelWithConsole
 import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.provider.ide.LocationInteractionContext
 import com.phodal.shirecore.provider.ide.LocationInteractionProvider
+import com.phodal.shirecore.runner.console.cancelWithConsole
 import com.phodal.shirelang.ShireBundle
 import com.phodal.shirelang.run.flow.ShireConversationService
 import kotlinx.coroutines.launch
@@ -23,7 +23,7 @@ class ShireDefaultLlmExecutor(
     override fun execute(postFunction: PostFunction) {
         ApplicationManager.getApplication().invokeLater({
             val console = context.console
-            if (isLocalMode) {
+            if (isLocalMode && context.hole == null) {
                 console?.print(ShireBundle.message("shire.run.local.mode"), ConsoleViewContentType.SYSTEM_OUTPUT)
                 context.processHandler.detachProcess()
                 return@invokeLater

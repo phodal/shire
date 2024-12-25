@@ -8,10 +8,11 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.util.PsiTreeUtil
 import com.phodal.shirecore.provider.codemodel.FileStructureProvider
 import com.phodal.shirecore.provider.codemodel.model.FileStructure
+import com.phodal.shirecore.relativePath
 
 class JavaScriptFileStructureProvider : FileStructureProvider {
     override fun build(psiFile: PsiFile): FileStructure? {
-        val file = psiFile.virtualFile ?: return null
+        val file = if (psiFile.virtualFile != null) psiFile.virtualFile!!.relativePath(psiFile.project) else ""
         val importDeclarations = ES6ImportPsiUtil.getImportDeclarations((psiFile as PsiElement))
         val classes =
             PsiTreeUtil.getChildrenOfTypeAsList(psiFile as PsiElement, JSClass::class.java)
@@ -21,7 +22,7 @@ class JavaScriptFileStructureProvider : FileStructureProvider {
         return FileStructure(
             psiFile,
             psiFile.name,
-            file.path,
+            file,
             null,
             importDeclarations,
             classes,

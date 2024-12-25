@@ -8,11 +8,12 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.util.PsiTreeUtil
 import com.phodal.shirecore.provider.codemodel.FileStructureProvider
 import com.phodal.shirecore.provider.codemodel.model.FileStructure
+import com.phodal.shirecore.relativePath
 
 class ProtoFileStructureProvider : FileStructureProvider {
     override fun build(psiFile: PsiFile): FileStructure? {
         val name = psiFile.name
-        val path = psiFile.virtualFile?.path ?: ""
+        val path = if (psiFile.virtualFile != null) psiFile.virtualFile!!.relativePath(psiFile.project) else ""
 
         val packageName =
             PsiTreeUtil.getChildrenOfTypeAsList(psiFile, PbPackageStatement::class.java).firstOrNull()?.text ?: ""
