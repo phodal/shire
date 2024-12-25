@@ -4,9 +4,12 @@ import com.intellij.codeInsight.lookup.LookupManagerListener
 import com.intellij.lang.Language
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.fileEditor.FileEditorManager
+import com.intellij.openapi.fileEditor.FileEditorManagerListener
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiManager
 import com.intellij.ui.components.JBList
 import com.phodal.shirecore.ShireCoreBundle
 import com.phodal.shirecore.provider.psi.RelatedClassesProvider
@@ -22,6 +25,9 @@ import java.awt.Dimension
 import java.awt.FlowLayout
 import javax.swing.*
 import com.intellij.icons.AllIcons
+import com.intellij.openapi.fileEditor.FileEditor
+import com.intellij.openapi.fileEditor.FileEditorProvider
+import com.intellij.openapi.util.Pair
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.util.ui.JBUI
 import com.phodal.shirecore.relativePath
@@ -65,6 +71,33 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
         this.add(inputSection, BorderLayout.CENTER)
         this.add(elementsList, BorderLayout.NORTH)
 
+        setupEditorListener()
+        setupRelatedListener()
+    }
+
+    private fun setupEditorListener() {
+        project.messageBus.connect(this).subscribe(
+            FileEditorManagerListener.FILE_EDITOR_MANAGER,
+            object : FileEditorManagerListener {
+                @Deprecated("Deprecated in Java")
+                override fun fileOpenedSync(
+                    source: FileEditorManager,
+                    file: VirtualFile,
+                    editors: Pair<Array<FileEditor>, Array<FileEditorProvider>>,
+                ) {
+                    ApplicationManager.getApplication().invokeLater {
+                        listModel.clear()
+                        val psiFile = PsiManager.getInstance(project).findFile(file)
+                        psiFile?.let {
+                            listModel.addElement(it)
+                        }
+                    }
+                }
+            }
+        )
+    }
+
+    private fun setupRelatedListener() {
         project.messageBus.connect(this)
             .subscribe(LookupManagerListener.TOPIC, ShireInputLookupManagerListener(project) {
                 ApplicationManager.getApplication().invokeLater {
