@@ -6,6 +6,8 @@ import com.intellij.openapi.roots.ProjectFileIndex
 import com.intellij.psi.*
 import com.intellij.psi.util.*
 import com.phodal.shirecore.provider.psi.RelatedClassesProvider
+import com.phodal.shirelang.java.util.JavaContextCollection.isJavaBuiltin
+import com.phodal.shirelang.java.util.JavaContextCollection.isPopularFramework
 
 class JavaRelatedClassesProvider : RelatedClassesProvider {
     override fun lookup(element: PsiElement): List<PsiClass> {
@@ -28,10 +30,31 @@ class JavaRelatedClassesProvider : RelatedClassesProvider {
     }
 
     private fun findRelatedClasses(clazz: PsiClass): List<PsiClass> {
-        return ApplicationManager.getApplication().executeOnPooledThread<List<PsiClass>> {
-            runReadAction { clazz.allMethods }
-                .flatMap { findRelatedClasses(it) }.distinct()
-        }.get()
+        if (!clazz.isValid) return emptyList()
+
+        val qualifiedName = clazz.qualifiedName
+        return ApplicationManager.getApplication().executeOnPooledThread<List<PsiClass>?> {
+            runReadAction {
+                val methods = clazz.allMethods.flatMap { findRelatedClasses(it) }
+                val fieldsTypes: List<PsiClass> = clazz.fields.mapNotNull {
+                    when (it.type) {
+                        is PsiClassType -> {
+                            val resolve = (it.type as PsiClassType).resolve() ?: return@mapNotNull null
+                            if (resolve.qualifiedName == qualifiedName) return@mapNotNull null
+
+                            if (isJavaBuiltin(resolve.qualifiedName) == true || isPopularFramework(resolve.qualifiedName) == true) {
+                                return@mapNotNull null
+                            }
+
+                            resolve
+                        }
+
+                        else -> null
+                    }
+                }
+                return@runReadAction (fieldsTypes + methods).distinct()
+            }
+        }?.get() ?: emptyList()
     }
 
     /**
@@ -41,6 +64,8 @@ class JavaRelatedClassesProvider : RelatedClassesProvider {
      * @return a list of PsiClass instances that are related to the given PsiMethod, filtered to include only classes that are part of the project content
      */
     private fun findRelatedClasses(method: PsiMethod): List<PsiClass> = runReadAction {
+        if (!method.isValid) return@runReadAction emptyList()
+
         val parameters = method.parameterList.parameters
         val parameterTypes = parameters.map { it.type }
 

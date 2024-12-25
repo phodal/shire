@@ -122,7 +122,6 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
                             val relativePath = psiFile.virtualFile.relativePath(project)
                             inputSection.appendText("\n/" + "file" + ":${relativePath}")
 
-                            /// update related elements
                             val relatedElements = RelatedClassesProvider.provide(psiFile.language)?.lookup(psiFile)
                             updateElements(relatedElements)
                         }

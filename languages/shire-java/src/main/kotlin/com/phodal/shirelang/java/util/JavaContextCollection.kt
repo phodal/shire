@@ -108,7 +108,7 @@ object JavaContextCollection {
         "org.mockito"
     )
 
-    private fun isPopularFramework(qualifiedName: String?): Boolean {
+    fun isPopularFramework(qualifiedName: String?): Boolean {
         return popularFrameworks.any { qualifiedName?.startsWith(it) == true }
     }
 
@@ -133,5 +133,5 @@ object JavaContextCollection {
         return isJavaBuiltin(resolve.qualifiedName) == true
     }
 
-    private fun isJavaBuiltin(qualifiedName: String?) = qualifiedName?.startsWith("java.")
+    fun isJavaBuiltin(qualifiedName: String?) = qualifiedName?.startsWith("java.")
 }
