@@ -75,6 +75,7 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
                 override fun selectionChanged(event: FileEditorManagerEvent) {
                     val file = event.newFile ?: return
                     val psiFile = PsiManager.getInstance(project).findFile(file) ?: return
+                    RelatedClassesProvider.provide(psiFile.language) ?: return
                     ApplicationManager.getApplication().invokeLater {
                         listModel.addElement(psiFile)
                     }
