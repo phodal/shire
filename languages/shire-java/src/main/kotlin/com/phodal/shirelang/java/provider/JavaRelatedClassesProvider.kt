@@ -1,50 +1,37 @@
 package com.phodal.shirelang.java.provider
 
+import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.roots.ProjectFileIndex
 import com.intellij.psi.*
 import com.intellij.psi.util.*
 import com.phodal.shirecore.provider.psi.RelatedClassesProvider
 
 class JavaRelatedClassesProvider : RelatedClassesProvider {
-    private val cache = mutableMapOf<PsiElement, CachedValue<List<PsiClass>>>()
-
     override fun lookup(element: PsiElement): List<PsiClass> {
-        return getCachedValue(element) {
-            when (element) {
-                is PsiMethod -> findRelatedClasses(element)
-                    .flatMap { findSuperClasses(it) }
-                    .map { cleanUp(it) }
-                    .toList()
+        return when (element) {
+            is PsiMethod -> findRelatedClasses(element)
+                .flatMap { findSuperClasses(it) }
+                .map { cleanUp(it) }
+                .toList()
 
-                is PsiClass -> findRelatedClasses(element)
-                else -> emptyList()
-            }
+            is PsiClass -> findRelatedClasses(element)
+            else -> emptyList()
         }
-    }
-
-    private fun <T> getCachedValue(element: PsiElement, provider: () -> T): T {
-        return CachedValuesManager.getCachedValue(
-            element,
-            CachedValueProvider {
-                CachedValueProvider.Result.create(
-                    provider(),
-                    PsiModificationTracker.MODIFICATION_COUNT
-                )
-            }
-        )
     }
 
     override fun lookup(element: PsiFile): List<PsiElement> {
         return when (element) {
-            is PsiJavaFile -> getCachedValue(element) {
-                findRelatedClasses(element.classes.first())
-            }
+            is PsiJavaFile -> findRelatedClasses(element.classes.first())
             else -> emptyList()
         }
     }
 
     private fun findRelatedClasses(clazz: PsiClass): List<PsiClass> {
-        return clazz.allMethods.flatMap { findRelatedClasses(it) }.distinct()
+        return ApplicationManager.getApplication().executeOnPooledThread<List<PsiClass>> {
+            runReadAction { clazz.allMethods }
+                .flatMap { findRelatedClasses(it) }.distinct()
+        }.get()
     }
 
     /**
@@ -53,20 +40,22 @@ class JavaRelatedClassesProvider : RelatedClassesProvider {
      * @param method the PsiMethod for which related classes need to be found
      * @return a list of PsiClass instances that are related to the given PsiMethod, filtered to include only classes that are part of the project content
      */
-    private fun findRelatedClasses(method: PsiMethod): List<PsiClass> {
+    private fun findRelatedClasses(method: PsiMethod): List<PsiClass> = runReadAction {
         val parameters = method.parameterList.parameters
         val parameterTypes = parameters.map { it.type }
 
         val genericTypes = parameters.flatMap { (it.type as? PsiClassType)?.parameters?.toList() ?: emptyList() }
-        val mentionedTypes = parameterTypes + method.returnType + genericTypes
+        val mentionedTypes = parameterTypes + genericTypes
 
         val filterIsInstance = mentionedTypes.filterIsInstance<PsiClassType>()
             .distinct()
 
-        return filterIsInstance
-            .mapNotNull { it.resolve() }
-            .filter { isProjectContent(it) }
-            .toList()
+        return@runReadAction ApplicationManager.getApplication().executeOnPooledThread<List<PsiClass>> {
+            return@executeOnPooledThread filterIsInstance
+                .mapNotNull { runReadAction { it.resolve() } }
+                .filter { isProjectContent(it) }
+                .toList()
+        }.get()
     }
 
     /**
@@ -111,6 +100,10 @@ class JavaRelatedClassesProvider : RelatedClassesProvider {
 
     private fun isProjectContent(element: PsiElement): Boolean {
         val virtualFile = PsiUtil.getVirtualFile(element) ?: return false
-        return ProjectFileIndex.getInstance(element.project).isInContent(virtualFile)
+        return ApplicationManager.getApplication().executeOnPooledThread<Boolean> {
+            runReadAction {
+                ProjectFileIndex.getInstance(element.project).isInSourceContent(virtualFile)
+            }
+        }.get()
     }
 }

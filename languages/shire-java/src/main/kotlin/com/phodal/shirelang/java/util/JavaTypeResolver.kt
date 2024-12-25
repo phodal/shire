@@ -84,7 +84,12 @@ object JavaTypeResolver {
                     .filter { isProjectContent((it as PsiClassReferenceType).resolve() ?: return@filter false) }
                     .forEach { resolvedClasses.putAll(resolveByType(it)) }
 
-                resolvedClasses[parameter.name] = resolve
+                // class kotlin.Unit cannot be cast to class java.lang.Void
+                if (resolve is PsiClass) {
+                    resolvedClasses[parameter.name] = resolve
+                }
+
+                resolvedClasses
             }
 
             val outputType = element.returnTypeElement?.type

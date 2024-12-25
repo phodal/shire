@@ -66,7 +66,7 @@ enum class BuiltinCommand(
 
     companion object {
         fun all(): List<BuiltinCommand> {
-            return values().toList()
+            return entries
         }
 
         fun example(command: BuiltinCommand): String {
