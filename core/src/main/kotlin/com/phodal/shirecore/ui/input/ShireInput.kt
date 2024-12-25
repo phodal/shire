@@ -129,7 +129,7 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
                     } else {
                         element.containingFile?.let { psiFile ->
                             val relativePath = psiFile.virtualFile.relativePath(project)
-                            inputSection.appendText("\n/" + "structure" + ":${relativePath}")
+                            inputSection.appendText("\n/" + "file" + ":${relativePath}")
                         }
                     }
                 }
