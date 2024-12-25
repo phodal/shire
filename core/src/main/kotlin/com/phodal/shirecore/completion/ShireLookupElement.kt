@@ -10,10 +10,6 @@ class ShireLookupElement<T : LookupElement> private constructor(
     val priority: Double,
     val virtualFile: VirtualFile,
 ) : LookupElementDecorator<T>(delegate) {
-    override fun toString(): String {
-        return "ShireLookupElement{priority=$priority, delegate=$delegate}"
-    }
-
     fun getFile(): VirtualFile {
         return virtualFile
     }
@@ -30,8 +26,8 @@ class ShireLookupElement<T : LookupElement> private constructor(
          */
         fun withPriority(element: LookupElement, priority: Double, virtualFile: VirtualFile): LookupElement {
             val prioritized = element.`as`(CLASS_CONDITION_KEY)
-            val finalElement = if (prioritized !== element) element else prioritized.delegate
-            return ShireLookupElement(finalElement, priority, virtualFile)
+            val lookupElement = if (prioritized !== element) element else prioritized.delegate
+            return ShireLookupElement(lookupElement, priority, virtualFile)
         }
     }
 }

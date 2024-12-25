@@ -15,7 +15,6 @@ class StructureShireCommand(val myProject: Project, val prop: String) : ShireCom
             return null
         }
 
-
         val psiFile = runReadAction {
             PsiManager.getInstance(myProject).findFile(virtualFile)
         } ?: return null

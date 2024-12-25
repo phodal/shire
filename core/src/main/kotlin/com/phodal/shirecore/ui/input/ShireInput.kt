@@ -23,7 +23,6 @@ import java.awt.FlowLayout
 import javax.swing.*
 import com.intellij.icons.AllIcons
 import com.intellij.ui.components.JBScrollPane
-import javax.swing.border.EmptyBorder
 import com.intellij.util.ui.JBUI
 import com.phodal.shirecore.relativePath
 import java.awt.event.MouseAdapter
@@ -33,7 +32,7 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
     private var scratchFile: VirtualFile? = null
     private val listModel = DefaultListModel<PsiElement>()
     private val elementsList = JBList(listModel)
-    private lateinit var inputSection: ShireInputSection
+    private var inputSection: ShireInputSection
 
     init {
         setupElementsList()
@@ -52,11 +51,14 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
                     return
                 }
 
-                val virtualFile = getVirtualFile(prompt)
+                val virtualFile = createShireFile(prompt)
                 this@ShireInput.scratchFile = virtualFile
 
                 FileRunService.provider(project, virtualFile!!)
                     ?.runFile(project, virtualFile, null)
+
+                listModel.clear()
+                elementsList.clearSelection()
             }
         })
         this.border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
@@ -76,10 +78,10 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
         elementsList.selectionMode = ListSelectionModel.SINGLE_SELECTION
         elementsList.layoutOrientation = JList.HORIZONTAL_WRAP
         elementsList.visibleRowCount = 1
-        
+
         val scrollPane = JBScrollPane(elementsList)
         scrollPane.preferredSize = Dimension(-1, 40)
-        
+
         elementsList.cellRenderer = ElementListCellRenderer()
         elementsList.addMouseListener(object : MouseAdapter() {
             override fun mouseClicked(e: MouseEvent) {
@@ -88,13 +90,13 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
                 if (index != -1) {
                     val element = listModel.getElementAt(index) as PsiElement
                     val cellBounds = list.getCellBounds(index, index)
-                    
+
                     if (e.x > cellBounds.x + cellBounds.width - 10) {
                         listModel.remove(index)
                     } else {
                         element.containingFile?.let { psiFile ->
                             val relativePath = psiFile.virtualFile.relativePath(project)
-                            inputSection.appendText("\n/file:${relativePath}")
+                            inputSection.appendText("\n/" + "structure" + ":${relativePath}")
                         }
                     }
                 }
@@ -104,12 +106,12 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
         add(scrollPane, BorderLayout.NORTH)
     }
 
-    fun updateElements(elements: List<PsiElement>?) {
+    private fun updateElements(elements: List<PsiElement>?) {
         listModel.clear()
         elements?.forEach { listModel.addElement(it) }
     }
 
-    private fun getVirtualFile(prompt: String): VirtualFile? {
+    private fun createShireFile(prompt: String): VirtualFile? {
         val findLanguageByID = Language.findLanguageByID("Shire")
             ?: throw IllegalStateException("Shire language not found")
         val provide = FileCreateService.provide(findLanguageByID)
@@ -129,24 +131,23 @@ private class ElementListCellRenderer : ListCellRenderer<PsiElement> {
         value: PsiElement,
         index: Int,
         isSelected: Boolean,
-        cellHasFocus: Boolean
+        cellHasFocus: Boolean,
     ): Component {
         val panel = JPanel(FlowLayout(FlowLayout.LEFT, 3, 0))
-        panel.border = EmptyBorder(2, 5, 2, 5)
-        
-        // 添加文件类型图标
+        panel.accessibleContext.accessibleName = "Element Panel"
+
+        panel.border = JBUI.Borders.empty(2, 5)
+
         val iconLabel = JLabel(value.containingFile?.fileType?.icon ?: AllIcons.FileTypes.Unknown)
         panel.add(iconLabel)
-        
-        // 添加文件名
+
         val nameLabel = JLabel(value.containingFile?.name ?: "Unknown")
         panel.add(nameLabel)
-        
-        // 添加关闭按钮
+
         val closeLabel = JLabel(AllIcons.Actions.Close)
-        closeLabel.border = JBUI.Borders.empty(0, 0)
+        closeLabel.border = JBUI.Borders.empty()
         panel.add(closeLabel)
-        
+
         if (isSelected) {
             panel.background = list.selectionBackground
             nameLabel.foreground = list.selectionForeground
@@ -154,7 +155,7 @@ private class ElementListCellRenderer : ListCellRenderer<PsiElement> {
             panel.background = list.background
             nameLabel.foreground = list.foreground
         }
-        
+
         return panel
     }
 }

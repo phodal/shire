@@ -37,21 +37,23 @@ class JavaMethodStructureProvider : MethodStructureProvider {
             emptyList()
         }
 
-        return runReadAction {
-            MethodStructure(
-                psiElement,
-                text = psiElement.text,
-                name = psiElement.name,
-                signature = getSignatureString(psiElement),
-                enclosingClass = psiElement.containingClass,
-                language = psiElement.language.displayName,
-                returnType = processReturnTypeText(psiElement.returnType?.presentableText),
-                variableContextList,
-                includeClassContext,
-                usagesList,
-                ios
-            )
-        }
+        return ApplicationManager.getApplication().executeOnPooledThread<MethodStructure> {
+            runReadAction {
+                MethodStructure(
+                    psiElement,
+                    text = psiElement.text,
+                    name = psiElement.name,
+                    signature = getSignatureString(psiElement),
+                    enclosingClass = psiElement.containingClass,
+                    language = psiElement.language.displayName,
+                    returnType = processReturnTypeText(psiElement.returnType?.presentableText),
+                    variableContextList,
+                    includeClassContext,
+                    usagesList,
+                    ios
+                )
+            }
+        }.get()
     }
 
     private fun processReturnTypeText(returnType: String?): String? {

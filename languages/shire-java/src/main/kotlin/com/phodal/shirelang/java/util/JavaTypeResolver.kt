@@ -70,39 +70,37 @@ object JavaTypeResolver {
         }
 
         return runReadAction {
-            element.parameterList.parameters.filter {
-                it.type is PsiClassReferenceType
-            }.map { parameter ->
-                val type = parameter.type as PsiClassReferenceType
-                val resolve: PsiClass = type.resolve() ?: return@map null
-                val typeParametersTypeList: List<PsiType> = getTypeParametersType(type)
+            element.parameterList.parameters
+                .filter { it.type is PsiClassReferenceType }
+                .map { parameter ->
+                    val type = parameter.type as PsiClassReferenceType
+                    val resolve: PsiClass = type.resolve() ?: return@map null
+                    val typeParametersTypeList: List<PsiType> = getTypeParametersType(type)
 
-                val relatedClass = mutableListOf(parameter.type)
-                relatedClass.addAll(typeParametersTypeList)
+                    val relatedClass = mutableListOf(parameter.type)
+                    relatedClass.addAll(typeParametersTypeList)
 
-                relatedClass
-                    .filter { isProjectContent((it as PsiClassReferenceType).resolve() ?: return@filter false) }
-                    .forEach { resolvedClasses.putAll(resolveByType(it)) }
+                    relatedClass
+                        .filter { isProjectContent((it as PsiClassReferenceType).resolve() ?: return@filter false) }
+                        .forEach { resolvedClasses.putAll(resolveByType(it)) }
 
-                // class kotlin.Unit cannot be cast to class java.lang.Void
-                if (resolve is PsiClass) {
-                    resolvedClasses[parameter.name] = resolve
+                    // class kotlin.Unit cannot be cast to class java.lang.Void
+                    if (resolve is PsiClass) {
+                        resolvedClasses[parameter.name] = resolve
+                    }
+
+                    resolvedClasses
                 }
-
-                resolvedClasses
-            }
 
             val outputType = element.returnTypeElement?.type
             resolvedClasses.putAll(resolveByType(outputType))
-
-            // todo: add for second level functions
 
             resolvedClasses.filter { isProjectContent(it.value) }.toMap()
         }
     }
 
     private fun getTypeParametersType(
-        psiType: PsiClassReferenceType
+        psiType: PsiClassReferenceType,
     ): List<PsiType> {
         val result = psiType.resolveGenerics()
         val psiClass = result.element ?: return emptyList();
