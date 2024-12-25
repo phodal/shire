@@ -149,13 +149,13 @@ class DiffLangSketch(private val myProject: Project, private var patchContent: S
         if (beforeFileNames.size > 1) {
             return defaultView()
         } else {
-            val firstOrNull = FileEditorProvider.EP_FILE_EDITOR_PROVIDER.extensionList.firstOrNull {
+            val editorProvider = FileEditorProvider.EP_FILE_EDITOR_PROVIDER.extensionList.firstOrNull {
                 it.javaClass.simpleName == "DiffPatchFileEditorProvider"
             }
 
-            if (firstOrNull != null) {
+            if (editorProvider != null) {
                 val virtualFile = LightVirtualFile("diff.diff", patchContent)
-                val editor = firstOrNull.createEditor(myProject, virtualFile)
+                val editor = editorProvider.createEditor(myProject, virtualFile)
                 object: DialogWrapper(myProject) {
                     init {
                         title = "Diff Preview"
