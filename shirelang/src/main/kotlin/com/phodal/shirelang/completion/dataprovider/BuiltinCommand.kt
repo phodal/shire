@@ -47,14 +47,21 @@ enum class BuiltinCommand(
         true,
         true
     ),
-    Refactor(
+    REFACTOR(
         "refactor",
         "Refactor the content of a file",
         ShireIcons.Idea,
         true,
         true
     ),
-    Goto("goto", "Goto the content of a file", AllIcons.Actions.Forward, true, true),
+    GOTO("goto", "Goto the content of a file", AllIcons.Actions.Forward, true, true),
+    STRUCTURE(
+        "structure",
+        "Get the structure of a file with AST/PSI",
+        AllIcons.Toolwindows.ToolWindowStructure,
+        true,
+        true
+    ),
     ;
 
     companion object {

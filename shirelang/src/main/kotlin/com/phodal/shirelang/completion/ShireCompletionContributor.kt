@@ -1,7 +1,6 @@
 package com.phodal.shirelang.completion
 
 import com.intellij.codeInsight.completion.CompletionContributor
-import com.intellij.codeInsight.completion.CompletionInitializationContext
 import com.intellij.codeInsight.completion.CompletionType
 import com.intellij.patterns.ElementPattern
 import com.intellij.patterns.PlatformPatterns
@@ -41,7 +40,9 @@ class ShireCompletionContributor : CompletionContributor() {
         // command completion
         extend(
             CompletionType.BASIC,
-            (valuePatterns(listOf(BuiltinCommand.FILE, BuiltinCommand.RUN, BuiltinCommand.WRITE))),
+            (valuePatterns(listOf(
+                BuiltinCommand.FILE, BuiltinCommand.RUN, BuiltinCommand.WRITE, BuiltinCommand.STRUCTURE
+            ))),
             FileReferenceLanguageProvider()
         )
         extend(
@@ -61,7 +62,7 @@ class ShireCompletionContributor : CompletionContributor() {
         )
         extend(
             CompletionType.BASIC,
-            commandPropPattern(BuiltinCommand.Refactor.commandName),
+            commandPropPattern(BuiltinCommand.REFACTOR.commandName),
             RefactoringFuncProvider()
         )
         extend(

@@ -6,17 +6,14 @@ import com.intellij.execution.RunnerAndConfigurationSettings
 import com.intellij.execution.actions.ConfigurationContext
 import com.intellij.execution.configurations.RunConfiguration
 import com.intellij.execution.configurations.RunProfile
-import com.intellij.httpClient.http.request.HttpRequestLanguage
 import com.intellij.httpClient.http.request.HttpRequestPsiFile
 import com.intellij.httpClient.http.request.run.HttpRequestExecutorExtensionFactory
 import com.intellij.httpClient.http.request.run.HttpRequestRunConfigurationExecutor
 import com.intellij.httpClient.http.request.run.config.HttpRequestRunConfiguration
 import com.intellij.httpClient.http.request.run.config.HttpRequestRunConfigurationType
-import com.intellij.ide.scratch.ScratchRootType
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.openapi.vfs.readText
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
 import com.phodal.shirecore.provider.shire.FileRunService

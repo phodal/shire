@@ -28,17 +28,24 @@ class ShireFoldingBuilder : FoldingBuilderEx() {
         when (elementType) {
             ShireTypes.USED -> {
                 val commandId = (node.psi as ShireUsed).commandId
-                if (commandId?.text == BuiltinCommand.FILE.commandName) {
-                    val prop = (node.psi as ShireUsed).commandProp?.text ?: return ""
-                    val virtualFile = FileShireCommand.file((node.psi as ShireUsed).project, prop)
-                    return "/file:${virtualFile?.name}"
+                when (commandId?.text) {
+                    BuiltinCommand.FILE.commandName -> {
+                        val prop = (node.psi as ShireUsed).commandProp?.text ?: return ""
+                        val virtualFile = FileShireCommand.file((node.psi as ShireUsed).project, prop)
+                        return "/${BuiltinCommand.FILE.commandName}:${virtualFile?.name}"
+                    }
+                    BuiltinCommand.STRUCTURE.commandName -> {
+                        val prop = (node.psi as ShireUsed).commandProp?.text ?: return ""
+                        val virtualFile = FileShireCommand.file((node.psi as ShireUsed).project, prop)
+                        return "/${BuiltinCommand.STRUCTURE.commandName}:${virtualFile?.name}"
+                    }
                 }
             }
         }
 
         val explicitName = foldedElementsPresentations[elementType]
         val elementText = StringUtil.shortenTextWithEllipsis(node.text, 30, 5)
-        return explicitName?.let{ "$it: $elementText" } ?: elementText
+        return explicitName?.let { "$it: $elementText" } ?: elementText
     }
 
     private val foldedElementsPresentations = hashMapOf(
