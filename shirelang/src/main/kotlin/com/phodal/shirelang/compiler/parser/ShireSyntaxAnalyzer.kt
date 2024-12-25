@@ -12,19 +12,15 @@ import com.intellij.psi.TokenType.WHITE_SPACE
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.elementType
 import com.phodal.shirecore.agent.CustomAgent
-import com.phodal.shirecore.provider.codemodel.FileStructureProvider
 import com.phodal.shirelang.compiler.execute.command.*
-import com.phodal.shirelang.compiler.execute.command.FileShireCommand.Companion.file
 import com.phodal.shirelang.compiler.template.VariableTemplateCompiler
 import com.phodal.shirelang.compiler.variable.VariableTable
 import com.phodal.shirelang.completion.dataprovider.BuiltinCommand
 import com.phodal.shirelang.completion.dataprovider.CustomCommand
 import com.phodal.shirelang.parser.CodeBlockElement
 import com.phodal.shirelang.psi.*
-import com.intellij.psi.PsiManager
 import com.phodal.shirelang.psi.ShireTypes.MARKDOWN_HEADER
 import kotlinx.coroutines.runBlocking
-import org.jetbrains.kotlin.asJava.classes.runReadAction
 import java.util.*
 
 
@@ -433,25 +429,3 @@ class ShireSyntaxAnalyzer(
         return textSegment.toString()
     }
 }
-
-class StructureShireCommand(val myProject: Project, val prop: String) : ShireCommand {
-    private val logger = logger<StructureShireCommand>()
-    override suspend fun doExecute(): String? {
-        val virtualFile = file(myProject, prop)
-        if (virtualFile == null) {
-            logger.warn("File not found: $prop")
-            return null
-        }
-
-
-        val psiFile = runReadAction {
-            PsiManager.getInstance(myProject).findFile(virtualFile)
-        } ?: return null
-
-        FileStructureProvider.from(psiFile).let {
-            return it?.format()
-        }
-    }
-}
-
-
