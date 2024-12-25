@@ -4,8 +4,6 @@ import com.intellij.codeInsight.lookup.LookupManagerListener
 import com.intellij.lang.Language
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.fileEditor.FileEditorManager
-import com.intellij.openapi.fileEditor.FileEditorManagerListener
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
@@ -25,8 +23,7 @@ import java.awt.Dimension
 import java.awt.FlowLayout
 import javax.swing.*
 import com.intellij.icons.AllIcons
-import com.intellij.openapi.fileEditor.FileEditor
-import com.intellij.openapi.fileEditor.FileEditorProvider
+import com.intellij.openapi.fileEditor.*
 import com.intellij.openapi.util.Pair
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.util.ui.JBUI
@@ -79,18 +76,12 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
         project.messageBus.connect(this).subscribe(
             FileEditorManagerListener.FILE_EDITOR_MANAGER,
             object : FileEditorManagerListener {
-                @Deprecated("Deprecated in Java")
-                override fun fileOpenedSync(
-                    source: FileEditorManager,
-                    file: VirtualFile,
-                    editors: Pair<Array<FileEditor>, Array<FileEditorProvider>>,
-                ) {
+                override fun selectionChanged(event: FileEditorManagerEvent) {
+                    val file = event.newFile ?: return
+                    val psiFile = PsiManager.getInstance(project).findFile(file) ?: return
                     ApplicationManager.getApplication().invokeLater {
                         listModel.clear()
-                        val psiFile = PsiManager.getInstance(project).findFile(file)
-                        psiFile?.let {
-                            listModel.addElement(it)
-                        }
+                        listModel.addElement(psiFile)
                     }
                 }
             }
@@ -130,6 +121,10 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
                         element.containingFile?.let { psiFile ->
                             val relativePath = psiFile.virtualFile.relativePath(project)
                             inputSection.appendText("\n/" + "file" + ":${relativePath}")
+
+                            /// update related elements
+                            val relatedElements = RelatedClassesProvider.provide(psiFile.language)?.lookup(psiFile)
+                            updateElements(relatedElements)
                         }
                     }
                 }
