@@ -1,19 +1,23 @@
 package com.phodal.shirecore.sketch.patch
 
+import com.intellij.diff.DiffContentFactoryEx
+import com.intellij.diff.DiffDialogHints
+import com.intellij.diff.DiffManager
+import com.intellij.diff.chains.SimpleDiffRequestChain
+import com.intellij.diff.chains.SimpleDiffRequestProducer
+import com.intellij.diff.requests.SimpleDiffRequest
 import com.intellij.icons.AllIcons
-import com.intellij.ide.scratch.ScratchRootType
 import com.intellij.lang.Language
+import com.intellij.openapi.application.runInEdt
 import com.intellij.openapi.command.undo.UndoManager
+import com.intellij.openapi.diff.impl.patch.TextFilePatch
+import com.intellij.openapi.diff.impl.patch.apply.GenericPatchApplier
+import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogPanel
-import com.intellij.openapi.vcs.AbstractVcs
-import com.intellij.openapi.vcs.ProjectLevelVcsManager
-import com.intellij.openapi.vcs.actions.DiffActionExecutor.CompareToCurrentExecutor
-import com.intellij.openapi.vcs.changes.ChangesUtil
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.readText
-import com.intellij.testFramework.LightVirtualFile
 import com.intellij.ui.DarculaColors
 import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBLabel
@@ -32,7 +36,12 @@ import javax.swing.JComponent
 import javax.swing.JPanel
 
 
-class SingleFileDiffView(private val myProject: Project, private val virtualFile: VirtualFile, val patchContent: String) : LangSketch {
+class SingleFileDiffView(
+    private val myProject: Project,
+    private val virtualFile: VirtualFile,
+    val patchContent: String,
+    val patch: TextFilePatch,
+) : LangSketch {
     private val mainPanel: JPanel = JPanel(VerticalLayout(5))
     private val myHeaderPanel: JPanel = JPanel(BorderLayout())
     private var filePanel: DialogPanel? = null
@@ -88,21 +97,26 @@ class SingleFileDiffView(private val myProject: Project, private val virtualFile
     }
 
     private fun showDiff(): Boolean {
-        val patchFile = LightVirtualFile("patch.diff", patchContent)
+        val document = FileDocumentManager.getInstance().getDocument(virtualFile)  ?: return false
+        val appliedPatch = GenericPatchApplier.apply(document.text, patch.hunks)
+            ?: return false
 
-        val editor = FileEditorManager.getInstance(myProject).selectedTextEditor
-            ?: throw IllegalStateException("No editor for file ${patchFile.name}")
+        val newText = appliedPatch.patchedText
+        val diffFactory = DiffContentFactoryEx.getInstanceEx()
+        val currentDocContent = diffFactory.create(myProject, virtualFile)
+        val newDocContent = diffFactory.create(newText)
 
-        val vcs: AbstractVcs = ChangesUtil.getVcsForFile(virtualFile, myProject)
-            ?: throw IllegalStateException("No VCS for file ${patchFile.name}")
+        val diffRequest =
+            SimpleDiffRequest("Shire Diff", currentDocContent, newDocContent, "Current code", "AI generated")
 
-        val diffProvider = ProjectLevelVcsManager.getInstance(myProject).allActiveVcss
-            .firstOrNull { it == vcs }
-            ?.diffProvider
-            ?: throw IllegalStateException("No diff provider for VCS ${vcs.name}")
+        val producer = SimpleDiffRequestProducer.create(virtualFile.path) {
+            diffRequest
+        }
 
-        CompareToCurrentExecutor(diffProvider, patchFile, myProject, editor)
-            .showDiff()
+        val chain = SimpleDiffRequestChain.fromProducer(producer)
+        runInEdt {
+            DiffManager.getInstance().showDiff(myProject, chain, DiffDialogHints.FRAME)
+        }
 
         return true
     }
