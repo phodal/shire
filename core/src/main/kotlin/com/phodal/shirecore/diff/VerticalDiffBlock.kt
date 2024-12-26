@@ -172,7 +172,7 @@ class VerticalDiffBlock(
             }
 
         val acceptBtn =
-            createButton(ShireCoreBundle.message("sketch.patch.action.accept"), JBColor(0x7700BB00, 0x7700BB00)).apply {
+            createButton(ShireCoreBundle.message("sketch.patch.action.accept"), JBColor(0x8AA653, 0x8AA653)).apply {
                 addActionListener {
                     handleAccept();
                     onAcceptReject(this@VerticalDiffBlock, true)

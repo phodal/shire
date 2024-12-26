@@ -42,7 +42,9 @@ class LoggingStreamingService : StreamingServiceProvider {
         } else {
             runInEdt {
                 val file = outputDir.findChild(LLM_LOGGING)
-                file?.setBinaryContent(ByteArray(0))
+                runWriteAction {
+                    file?.setBinaryContent(ByteArray(0))
+                }
             }
         }
 

@@ -56,7 +56,7 @@ object PsiErrorCollector {
         val range = TextRange(0, document.textLength)
         val errors = mutableListOf<String>()
 
-        DaemonCodeAnalyzerEx.getInstance(project).restart(sourceFile);
+        DaemonCodeAnalyzerEx.getInstance(project).restart(sourceFile)
 
         val hintDisposable = Disposer.newDisposable()
         val busConnection: MessageBusConnection = project.messageBus.connect(hintDisposable)
