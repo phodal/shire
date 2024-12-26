@@ -1,6 +1,29 @@
-# [](https://github.com/phodal/shire/compare/v1.2.3...v) (2024-12-23)
+# [](https://github.com/phodal/shire/compare/v1.2.4...v) (2024-12-26)
 
 ## [Unreleased]
+
+## [1.2.4](https://github.com/phodal/shire/compare/v1.2.3...v[1.2.4]) (2024-12-26)
+
+### Bug Fixes
+
+* **input:** skip unsupported languages in selectionChanged [#170](https://github.com/phodal/shire/issues/170) ([cd182d3](https://github.com/phodal/shire/commit/cd182d3fd91a3ae945024e11c420561bf337d548))
+
+### Features
+
+* **compiler:** add file path comment in code block output [#170](https://github.com/phodal/shire/issues/170) ([81a93dd](https://github.com/phodal/shire/commit/81a93dd295f9f9d53663d90549e55ffe06b7e253))
+* **completion:** add priority to file reference completion elements ([c97be93](https://github.com/phodal/shire/commit/c97be93ef4fe596214ab3ab8d7fced8e927407e2))
+* **completion:** add ShireCompletionLookupActionProvider and ShireLookupElement ([8ff9ee3](https://github.com/phodal/shire/commit/8ff9ee3669eed108d497338719a23fad3c79f9e5))
+* **completion:** enhance lookup functionality and refactor dependencies ([38b2f3d](https://github.com/phodal/shire/commit/38b2f3d13a8036a5d0e51efb782b48c29c96896f))
+* **core:** add related classes provider and lookup functionality ([e97e828](https://github.com/phodal/shire/commit/e97e82831925c5daece6688a8a3c16813731c0af))
+* **core:** add relative file path and caching for related classes [#170](https://github.com/phodal/shire/issues/170) ([58858b9](https://github.com/phodal/shire/commit/58858b913c056397a175437c862fb9ca38b47c15))
+* **diff:** add openDiffView method and refactor diff panel creation ([acf2245](https://github.com/phodal/shire/commit/acf22455d8e99be3ba43873cc57d87aa54b88c1d))
+* **diff:** enhance diff view and prevent duplicate entries ([61795f2](https://github.com/phodal/shire/commit/61795f2dd02b5ebb49fdcb592050deba11c354f6))
+* **diff:** try to add for local compare view ([8d6e4c1](https://github.com/phodal/shire/commit/8d6e4c1e39427c0230c9c780e0222d14d59a0d4c))
+* **folding:** add file command support to folding builder ([b502605](https://github.com/phodal/shire/commit/b5026055ca824d493a542f552739e6557e595485))
+* **input:** add editor and related listeners to ShireInput [#170](https://github.com/phodal/shire/issues/170) ([9e71d1e](https://github.com/phodal/shire/commit/9e71d1e6a7cc774e8714d20adac8920376449704))
+* **shirelang:** add support for STRUCTURE command [#170](https://github.com/phodal/shire/issues/170) ([be8084e](https://github.com/phodal/shire/commit/be8084ef487fc403d547d540b0fbc6e2dd24e087))
+* **ui:** add element list and append text functionality ([fb5c61d](https://github.com/phodal/shire/commit/fb5c61dca54d2c374836035df2f153d988ece929))
+* **ui:** extract LookupManagerListener to separate file [#170](https://github.com/phodal/shire/issues/170) ([6514ce9](https://github.com/phodal/shire/commit/6514ce9fe1b72ce17f892f939917432f7233188d))
 
 ## [1.2.3](https://github.com/phodal/shire/compare/v1.2.2...v[1.2.3]) (2024-12-23)
 
@@ -786,7 +809,8 @@
 * **shell:** add shell language support plugin file ([bdc1c90](https://github.com/phodal/shire/commit/bdc1c90f10d7c2c4fb8f7157db343dd756c11352))
 * **shire:** add Shire context action group and location support ([e3df86d](https://github.com/phodal/shire/commit/e3df86d16d0c9985fec787a8e76ce553be9a9a45))
 
-[Unreleased]: https://github.com/phodal/shire/compare/v1.2.3...HEAD
+[Unreleased]: https://github.com/phodal/shire/compare/v1.2.4...HEAD
+[1.2.4]: https://github.com/phodal/shire/compare/v1.2.3...v1.2.4
 [1.2.3]: https://github.com/phodal/shire/compare/v1.2.2...v1.2.3
 [1.2.2]: https://github.com/phodal/shire/compare/v1.2.1...v1.2.2
 [1.2.1]: https://github.com/phodal/shire/compare/v1.1.1...v1.2.1
