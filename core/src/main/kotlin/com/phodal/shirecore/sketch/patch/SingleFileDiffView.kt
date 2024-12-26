@@ -97,7 +97,7 @@ class SingleFileDiffView(
     }
 
     private fun showDiff(): Boolean {
-        val document = FileDocumentManager.getInstance().getDocument(virtualFile)  ?: return false
+        val document = FileDocumentManager.getInstance().getDocument(virtualFile) ?: return false
         val appliedPatch = GenericPatchApplier.apply(document.text, patch.hunks)
             ?: return false
 
@@ -153,4 +153,8 @@ class SingleFileDiffView(
     override fun updateLanguage(language: Language?, originLanguage: String?) {}
 
     override fun dispose() {}
+
+    fun openDiffView() {
+        showDiff()
+    }
 }

@@ -58,24 +58,28 @@ class DiffLangSketch(private val myProject: Project, private var patchContent: S
                 return@invokeAndWait
             }
 
-            filePatches
-                .forEach { patch ->
-                    if (patch.beforeFileName != null) {
-                        val originFile = myProject.findFile(patch.beforeFileName!!) ?: return@forEach
-                        val diffPanel = SingleFileDiffView(myProject, originFile, patchContent, patch).getComponent()
-                        mainPanel.add(diffPanel)
-                    } else if (patch.afterFileName != null) {
+            filePatches.forEachIndexed { _, patch ->
+                val diffPanel = when {
+                    patch.beforeFileName != null -> {
+                        val originFile = myProject.findFile(patch.beforeFileName!!) ?: return@forEachIndexed
+                        SingleFileDiffView(myProject, originFile, patchContent, patch)
+                    }
+
+                    patch.afterFileName != null -> {
                         val content = patch.singleHunkPatchText
                         val virtualFile = LightVirtualFile(patch.afterFileName!!, content)
-                        val diffPanel = SingleFileDiffView(myProject, virtualFile, patchContent, patch).getComponent()
-                        mainPanel.add(diffPanel)
-                    } else {
+                        SingleFileDiffView(myProject, virtualFile, patchContent, patch)
+                    }
+
+                    else -> {
                         val content = patch.singleHunkPatchText
                         val virtualFile = LightVirtualFile("ErrorPatchFile", content)
-                        val diffPanel = SingleFileDiffView(myProject, virtualFile, patchContent, patch).getComponent()
-                        mainPanel.add(diffPanel)
+                        SingleFileDiffView(myProject, virtualFile, patchContent, patch)
                     }
                 }
+
+                mainPanel.add(diffPanel.getComponent())
+            }
         }
     }
 
@@ -156,7 +160,7 @@ class DiffLangSketch(private val myProject: Project, private var patchContent: S
             if (editorProvider != null) {
                 val virtualFile = LightVirtualFile("diff.diff", patchContent)
                 val editor = editorProvider.createEditor(myProject, virtualFile)
-                object: DialogWrapper(myProject) {
+                object : DialogWrapper(myProject) {
                     init {
                         title = "Diff Preview"
                         setOKButtonText("Accept")
