@@ -100,7 +100,6 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
         elementsList.visibleRowCount = 2
         elementsList.cellRenderer = ElementListCellRenderer()
         
-        // 创建一个可滚动的面板
         val scrollPane = JBScrollPane(elementsList)
         scrollPane.preferredSize = Dimension(-1, 80)
         scrollPane.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS
@@ -114,17 +113,15 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
                     val element = listModel.getElementAt(index) as PsiElement
                     val cellBounds = list.getCellBounds(index, index)
 
-                    // 计算关闭按钮的区域
-                    val closeButtonWidth = 20  // 关闭按钮的大约宽度
+                    val closeButtonWidth = 20
                     val isClickOnCloseButton = e.x > cellBounds.x + cellBounds.width - closeButtonWidth
 
                     if (isClickOnCloseButton) {
                         listModel.remove(index)
-                        e.consume()  // 阻止事件继续传播
+                        e.consume()
                         return
                     }
 
-                    // 只有在非关闭按钮区域的点击才处理文件路径添加
                     element.containingFile?.let { psiFile ->
                         val relativePath = psiFile.virtualFile.relativePath(project)
                         inputSection.appendText("\n/" + "file" + ":${relativePath}")

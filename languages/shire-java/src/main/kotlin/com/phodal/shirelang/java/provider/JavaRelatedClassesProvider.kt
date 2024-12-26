@@ -5,6 +5,7 @@ import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.roots.ProjectFileIndex
 import com.intellij.psi.*
 import com.intellij.psi.util.*
+import com.intellij.testIntegration.TestFinderHelper
 import com.phodal.shirecore.provider.psi.RelatedClassesProvider
 import com.phodal.shirelang.java.util.JavaContextCollection.isJavaBuiltin
 import com.phodal.shirelang.java.util.JavaContextCollection.isPopularFramework
@@ -26,7 +27,13 @@ class JavaRelatedClassesProvider : RelatedClassesProvider {
         return when (element) {
             is PsiJavaFile -> findRelatedClasses(element.classes.first())
             else -> emptyList()
-        }
+        } + lookupTestFile(element)
+    }
+
+    private fun lookupTestFile(psiElement: PsiElement): List<PsiElement> {
+        return ApplicationManager.getApplication().executeOnPooledThread<List<PsiElement>> {
+            runReadAction { TestFinderHelper.findTestsForClass(psiElement) }?.toList() ?: emptyList()
+        }.get() ?: emptyList()
     }
 
     private fun findRelatedClasses(clazz: PsiClass): List<PsiClass> {
