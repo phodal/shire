@@ -77,7 +77,7 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
                     val psiFile = PsiManager.getInstance(project).findFile(file) ?: return
                     RelatedClassesProvider.provide(psiFile.language) ?: return
                     ApplicationManager.getApplication().invokeLater {
-                        listModel.addElement(psiFile)
+                        listModel.addIfAbsent(psiFile)
                     }
                 }
             }
@@ -142,7 +142,7 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
     }
 
     private fun updateElements(elements: List<PsiElement>?) {
-        elements?.forEach { listModel.addElement(it) }
+        elements?.forEach { listModel.addIfAbsent(it) }
     }
 
     private fun createShireFile(prompt: String): VirtualFile? {
@@ -156,6 +156,12 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
 
     override fun dispose() {
         scratchFile?.delete(this)
+    }
+}
+
+private fun <E> DefaultListModel<E>.addIfAbsent(psiFile: E) {
+    if (!contains(psiFile)) {
+        addElement(psiFile)
     }
 }
 

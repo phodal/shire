@@ -2,20 +2,27 @@ package com.phodal.shirecore.sketch.patch
 
 import com.intellij.diff.DiffContentFactoryEx
 import com.intellij.diff.DiffDialogHints
-import com.intellij.diff.DiffManager
+import com.intellij.diff.DiffManagerImpl
 import com.intellij.diff.chains.SimpleDiffRequestChain
 import com.intellij.diff.chains.SimpleDiffRequestProducer
+import com.intellij.diff.editor.ChainDiffVirtualFile
+import com.intellij.diff.editor.DiffEditorTabFilesManager
+import com.intellij.diff.impl.DiffWindow
 import com.intellij.diff.requests.SimpleDiffRequest
+import com.intellij.diff.util.DiffUtil
 import com.intellij.icons.AllIcons
 import com.intellij.lang.Language
 import com.intellij.openapi.application.runInEdt
 import com.intellij.openapi.command.undo.UndoManager
+import com.intellij.openapi.diff.DiffBundle
 import com.intellij.openapi.diff.impl.patch.TextFilePatch
 import com.intellij.openapi.diff.impl.patch.apply.GenericPatchApplier
 import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogPanel
+import com.intellij.openapi.ui.WindowWrapper
+import com.intellij.openapi.util.registry.Registry
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.readText
 import com.intellij.ui.DarculaColors
@@ -45,6 +52,7 @@ class SingleFileDiffView(
     private val mainPanel: JPanel = JPanel(VerticalLayout(5))
     private val myHeaderPanel: JPanel = JPanel(BorderLayout())
     private var filePanel: DialogPanel? = null
+    private var diffWindow: DiffWindow? = null
 
     init {
         val contentPanel = JPanel(BorderLayout())
@@ -97,6 +105,11 @@ class SingleFileDiffView(
     }
 
     private fun showDiff(): Boolean {
+        if (diffWindow != null) {
+            diffWindow?.show()
+            return true
+        }
+
         val document = FileDocumentManager.getInstance().getDocument(virtualFile) ?: return false
         val appliedPatch = GenericPatchApplier.apply(document.text, patch.hunks)
             ?: return false
@@ -107,7 +120,13 @@ class SingleFileDiffView(
         val newDocContent = diffFactory.create(newText)
 
         val diffRequest =
-            SimpleDiffRequest("Shire Diff", currentDocContent, newDocContent, "Current code", "AI generated")
+            SimpleDiffRequest(
+                "Shire Diff - ${patch.beforeFileName}",
+                currentDocContent,
+                newDocContent,
+                "Original",
+                "AI generated"
+            )
 
         val producer = SimpleDiffRequestProducer.create(virtualFile.path) {
             diffRequest
@@ -115,7 +134,8 @@ class SingleFileDiffView(
 
         val chain = SimpleDiffRequestChain.fromProducer(producer)
         runInEdt {
-            DiffManager.getInstance().showDiff(myProject, chain, DiffDialogHints.FRAME)
+            diffWindow = DiffWindow(myProject, chain, DiffDialogHints.NON_MODAL)
+            diffWindow?.show()
         }
 
         return true
