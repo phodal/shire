@@ -1,18 +1,15 @@
 package com.phodal.shirecore.sketch.patch
 
 import com.intellij.diff.DiffContentFactoryEx
-import com.intellij.diff.DiffDialogHints
 import com.intellij.diff.chains.SimpleDiffRequestChain
 import com.intellij.diff.chains.SimpleDiffRequestProducer
 import com.intellij.diff.editor.ChainDiffVirtualFile
 import com.intellij.diff.editor.DiffEditorTabFilesManager
-import com.intellij.diff.impl.DiffWindow
 import com.intellij.diff.requests.SimpleDiffRequest
 import com.intellij.icons.AllIcons
 import com.intellij.lang.Language
 import com.intellij.openapi.application.runInEdt
 import com.intellij.openapi.command.undo.UndoManager
-import com.intellij.openapi.diff.DiffBundle
 import com.intellij.openapi.diff.impl.patch.TextFilePatch
 import com.intellij.openapi.diff.impl.patch.apply.GenericPatchApplier
 import com.intellij.openapi.fileEditor.FileDocumentManager
@@ -42,13 +39,12 @@ import javax.swing.JPanel
 class SingleFileDiffView(
     private val myProject: Project,
     private val virtualFile: VirtualFile,
-    val patchContent: String,
     val patch: TextFilePatch,
 ) : LangSketch {
     private val mainPanel: JPanel = JPanel(VerticalLayout(5))
     private val myHeaderPanel: JPanel = JPanel(BorderLayout())
     private var filePanel: DialogPanel? = null
-    private var diffFile: ChainDiffVirtualFile? = null
+    var diffFile: ChainDiffVirtualFile? = null
 
     init {
         val contentPanel = JPanel(BorderLayout())
@@ -138,9 +134,8 @@ class SingleFileDiffView(
     }
 
     private val diffEditorTabFilesManager = DiffEditorTabFilesManager.getInstance(myProject)
-    private fun showDiffFile(
-        diffFile: ChainDiffVirtualFile,
-    ) {
+
+    private fun showDiffFile(diffFile: ChainDiffVirtualFile) {
         diffEditorTabFilesManager.showDiffFile(diffFile, true)
     }
 
