@@ -2,14 +2,12 @@ package com.phodal.shirecore.sketch.patch
 
 import com.intellij.diff.DiffContentFactoryEx
 import com.intellij.diff.DiffDialogHints
-import com.intellij.diff.DiffManagerImpl
 import com.intellij.diff.chains.SimpleDiffRequestChain
 import com.intellij.diff.chains.SimpleDiffRequestProducer
 import com.intellij.diff.editor.ChainDiffVirtualFile
 import com.intellij.diff.editor.DiffEditorTabFilesManager
 import com.intellij.diff.impl.DiffWindow
 import com.intellij.diff.requests.SimpleDiffRequest
-import com.intellij.diff.util.DiffUtil
 import com.intellij.icons.AllIcons
 import com.intellij.lang.Language
 import com.intellij.openapi.application.runInEdt
@@ -21,8 +19,6 @@ import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogPanel
-import com.intellij.openapi.ui.WindowWrapper
-import com.intellij.openapi.util.registry.Registry
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.readText
 import com.intellij.ui.DarculaColors
@@ -52,7 +48,7 @@ class SingleFileDiffView(
     private val mainPanel: JPanel = JPanel(VerticalLayout(5))
     private val myHeaderPanel: JPanel = JPanel(BorderLayout())
     private var filePanel: DialogPanel? = null
-    private var diffWindow: DiffWindow? = null
+    private var diffFile: ChainDiffVirtualFile? = null
 
     init {
         val contentPanel = JPanel(BorderLayout())
@@ -105,8 +101,8 @@ class SingleFileDiffView(
     }
 
     private fun showDiff(): Boolean {
-        if (diffWindow != null) {
-            diffWindow?.show()
+        if (diffFile != null) {
+            showDiffFile(diffFile!!)
             return true
         }
 
@@ -134,11 +130,18 @@ class SingleFileDiffView(
 
         val chain = SimpleDiffRequestChain.fromProducer(producer)
         runInEdt {
-            diffWindow = DiffWindow(myProject, chain, DiffDialogHints.NON_MODAL)
-            diffWindow?.show()
+            diffFile = ChainDiffVirtualFile(chain, "Diff")
+            showDiffFile(diffFile!!)
         }
 
         return true
+    }
+
+    private val diffEditorTabFilesManager = DiffEditorTabFilesManager.getInstance(myProject)
+    private fun showDiffFile(
+        diffFile: ChainDiffVirtualFile,
+    ) {
+        diffEditorTabFilesManager.showDiffFile(diffFile, true)
     }
 
     private fun createActionButtons(): List<JButton> {
