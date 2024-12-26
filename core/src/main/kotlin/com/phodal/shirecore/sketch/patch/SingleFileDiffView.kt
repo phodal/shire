@@ -1,13 +1,19 @@
 package com.phodal.shirecore.sketch.patch
 
 import com.intellij.icons.AllIcons
+import com.intellij.ide.scratch.ScratchRootType
 import com.intellij.lang.Language
 import com.intellij.openapi.command.undo.UndoManager
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogPanel
+import com.intellij.openapi.vcs.AbstractVcs
+import com.intellij.openapi.vcs.ProjectLevelVcsManager
+import com.intellij.openapi.vcs.actions.DiffActionExecutor.CompareToCurrentExecutor
+import com.intellij.openapi.vcs.changes.ChangesUtil
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.readText
+import com.intellij.testFramework.LightVirtualFile
 import com.intellij.ui.DarculaColors
 import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBLabel
@@ -26,7 +32,7 @@ import javax.swing.JComponent
 import javax.swing.JPanel
 
 
-class SingleFileDiffView(private val myProject: Project, private val virtualFile: VirtualFile) : LangSketch {
+class SingleFileDiffView(private val myProject: Project, private val virtualFile: VirtualFile, val patchContent: String) : LangSketch {
     private val mainPanel: JPanel = JPanel(VerticalLayout(5))
     private val myHeaderPanel: JPanel = JPanel(BorderLayout())
     private var filePanel: DialogPanel? = null
@@ -40,6 +46,9 @@ class SingleFileDiffView(private val myProject: Project, private val virtualFile
 
             addMouseListener(object : MouseAdapter() {
                 override fun mouseClicked(e: MouseEvent?) {
+                    val isShowDiffSuccess = showDiff()
+                    if (isShowDiffSuccess) return
+
                     FileEditorManager.getInstance(myProject).openFile(virtualFile, true)
                 }
 
@@ -76,6 +85,26 @@ class SingleFileDiffView(private val myProject: Project, private val virtualFile
 
         mainPanel.add(myHeaderPanel)
         mainPanel.add(contentPanel)
+    }
+
+    private fun showDiff(): Boolean {
+        val patchFile = LightVirtualFile("patch.diff", patchContent)
+
+        val editor = FileEditorManager.getInstance(myProject).selectedTextEditor
+            ?: throw IllegalStateException("No editor for file ${patchFile.name}")
+
+        val vcs: AbstractVcs = ChangesUtil.getVcsForFile(virtualFile, myProject)
+            ?: throw IllegalStateException("No VCS for file ${patchFile.name}")
+
+        val diffProvider = ProjectLevelVcsManager.getInstance(myProject).allActiveVcss
+            .firstOrNull { it == vcs }
+            ?.diffProvider
+            ?: throw IllegalStateException("No diff provider for VCS ${vcs.name}")
+
+        CompareToCurrentExecutor(diffProvider, patchFile, myProject, editor)
+            .showDiff()
+
+        return true
     }
 
     private fun createActionButtons(): List<JButton> {
