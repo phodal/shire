@@ -147,6 +147,23 @@ class SaveFileProcessor : PostProcessor, Disposable {
     }
 }
 
+/**
+ * 根据给定的文件路径和扩展名，返回一个有效的文件路径。
+ *
+ * <pre>
+ *    {@code
+ *        String validPath = getValidFilePath("example.txt", "txt");
+ *        // validPath = "example.txt"
+ *
+ *        String validPath2 = getValidFilePath("", "txt");
+ *        // validPath2 = "1633024800000.txt" (当前时间戳)
+ *    }
+ *    </pre>
+ *
+ * @param filePath 文件路径，可以为空或包含特殊字符
+ * @param ext 文件扩展名，用于在文件路径无效时生成默认文件名
+ * @return 有效的文件路径，如果输入路径无效，则返回基于时间戳的默认文件名
+ */
 fun getValidFilePath(filePath: String, ext: String): String {
     val pathRegex = """^([a-zA-Z]:\\|\\\\|/|)([a-zA-Z0-9_\-\\/.]+)$""".toRegex()
 

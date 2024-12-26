@@ -21,7 +21,6 @@ class InsertNewlineProcessor : PostProcessor {
 
         CoroutineScope(workerThread).launch {
             WriteCommandAction.runWriteCommandAction(project) {
-                // insert \n at cursor position
                 editor.document.insertString(editor.caretModel.offset, "\n")
             }
         }
