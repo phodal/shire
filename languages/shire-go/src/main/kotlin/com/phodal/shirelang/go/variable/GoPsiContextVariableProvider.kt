@@ -9,7 +9,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.testIntegration.TestFinderHelper
 import com.phodal.shirecore.provider.variable.PsiContextVariableProvider
-import com.phodal.shirecore.provider.variable.impl.CodeSmellBuilder
+import com.phodal.shirecore.psi.CodeSmellCollector
 import com.phodal.shirecore.provider.variable.model.PsiContextVariable
 import com.phodal.shirecore.search.similar.SimilarChunksSearch
 import com.phodal.shirelang.go.codemodel.GoClassStructureProvider
@@ -94,7 +94,7 @@ class GoPsiContextVariableProvider : PsiContextVariableProvider {
             }
 
             PsiContextVariable.FRAMEWORK_CONTEXT -> return collectFrameworkContext(psiElement, project)
-            PsiContextVariable.CODE_SMELL -> CodeSmellBuilder.collectElementProblemAsSting(
+            PsiContextVariable.CODE_SMELL -> CodeSmellCollector.collectElementProblemAsSting(
                 underTestElement,
                 project,
                 editor

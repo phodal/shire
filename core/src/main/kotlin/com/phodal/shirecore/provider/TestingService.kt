@@ -5,11 +5,10 @@ import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiErrorElement
 import com.intellij.psi.PsiFile
-import com.phodal.shirecore.ast.PsiSyntaxCheckingVisitor
 import com.phodal.shirecore.provider.codemodel.model.ClassStructure
 import com.phodal.shirecore.provider.shire.FileRunService
+import com.phodal.shirecore.psi.PsiErrorCollector
 import com.phodal.shirecore.variable.toolchain.unittest.AutoTestingPromptContext
 
 /**
@@ -23,6 +22,7 @@ import com.phodal.shirecore.variable.toolchain.unittest.AutoTestingPromptContext
  */
 abstract class TestingService : FileRunService {
     abstract fun isApplicable(element: PsiElement): Boolean
+
     /**
      * Finds or creates a test file for the given source file, project, and element.
      *
@@ -37,7 +37,11 @@ abstract class TestingService : FileRunService {
      * If a test file is found or created successfully, a TestFileContext object representing the test file is returned.
      * If a test file cannot be found or created, null is returned.
      */
-    abstract fun findOrCreateTestFile(sourceFile: PsiFile, project: Project, psiElement: PsiElement): AutoTestingPromptContext?
+    abstract fun findOrCreateTestFile(
+        sourceFile: PsiFile,
+        project: Project,
+        psiElement: PsiElement,
+    ): AutoTestingPromptContext?
 
     /**
      * Looks up the relevant classes in the project for the given element.
@@ -57,8 +61,8 @@ abstract class TestingService : FileRunService {
      * @param runAction An optional lambda function that takes a list of strings as its parameter, representing the syntax errors.
      *                  If provided, this action is invoked with an empty list of errors, indicating no syntax errors were found.
      */
-    open fun collectSyntaxError(outputFile: VirtualFile, project: Project, runAction: ((errors: List<String>) -> Unit)?) {
-        runAction?.invoke(emptyList())
+    open fun collectSyntaxError(psiFile: PsiFile, project: Project, runAction: ((errors: List<String>) -> Unit)?) {
+        PsiErrorCollector.collectSyntaxError(psiFile, psiFile.virtualFile, project, runAction)
     }
 
     /**
@@ -78,21 +82,6 @@ abstract class TestingService : FileRunService {
 
         fun context(psiElement: PsiElement): TestingService? {
             return EP_NAME.forLanguage(psiElement.language)
-        }
-
-        fun PsiFile.collectPsiError(): MutableList<String> {
-            val errors = mutableListOf<String>()
-            val visitor = object : PsiSyntaxCheckingVisitor() {
-                override fun visitElement(element: PsiElement) {
-                    if (element is PsiErrorElement) {
-                        errors.add("Syntax error at position ${element.textRange.startOffset}: ${element.errorDescription}")
-                    }
-                    super.visitElement(element)
-                }
-            }
-
-            this.accept(visitor)
-            return errors
         }
     }
 }

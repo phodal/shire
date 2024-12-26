@@ -1,4 +1,4 @@
-package com.phodal.shirecore.provider.variable.impl
+package com.phodal.shirecore.psi
 
 import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerEx
 import com.intellij.lang.LanguageCommenters
@@ -6,7 +6,7 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 
-object CodeSmellBuilder  {
+object CodeSmellCollector  {
     /**
      * Collects all the problems found in the given `project`, within the specified `editor` and `element`.
      *

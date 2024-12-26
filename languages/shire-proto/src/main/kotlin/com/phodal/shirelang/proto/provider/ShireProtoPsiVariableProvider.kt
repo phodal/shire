@@ -6,7 +6,7 @@ import com.intellij.protobuf.lang.PbLanguage
 import com.intellij.protobuf.lang.psi.*
 import com.intellij.psi.PsiElement
 import com.phodal.shirecore.provider.variable.PsiContextVariableProvider
-import com.phodal.shirecore.provider.variable.impl.CodeSmellBuilder
+import com.phodal.shirecore.psi.CodeSmellCollector
 import com.phodal.shirecore.provider.variable.model.PsiContextVariable
 import com.phodal.shirelang.proto.codemodel.ProtoClassStructureProvider
 import com.phodal.shirelang.proto.codemodel.ProtoFileStructureProvider
@@ -47,7 +47,7 @@ class ShireProtoPsiVariableProvider : PsiContextVariableProvider {
                 return containingFile.importStatements.joinToString("\n") { it.text }
             }
             PsiContextVariable.FRAMEWORK_CONTEXT -> return collectFrameworkContext(psiElement, project)
-            PsiContextVariable.CODE_SMELL -> return CodeSmellBuilder.collectElementProblemAsSting(
+            PsiContextVariable.CODE_SMELL -> return CodeSmellCollector.collectElementProblemAsSting(
                 psiElement,
                 project,
                 editor

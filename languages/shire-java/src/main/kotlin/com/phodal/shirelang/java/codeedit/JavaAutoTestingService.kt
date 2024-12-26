@@ -1,11 +1,9 @@
 package com.phodal.shirelang.java.codeedit
 
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer
-import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerEx
 import com.intellij.execution.RunManager
 import com.intellij.execution.configurations.RunConfiguration
 import com.intellij.execution.configurations.RunProfile
-import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.lang.java.JavaLanguage
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.application.runReadAction
@@ -17,17 +15,15 @@ import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
 import com.intellij.openapi.roots.ProjectFileIndex
-import com.intellij.openapi.util.Disposer
-import com.intellij.openapi.util.TextRange
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.psi.*
 import com.intellij.psi.util.PsiTreeUtil
-import com.intellij.util.messages.MessageBusConnection
+import com.phodal.shirecore.provider.TestingService
 import com.phodal.shirecore.provider.codemodel.ClassStructureProvider
 import com.phodal.shirecore.provider.codemodel.model.ClassStructure
-import com.phodal.shirecore.provider.TestingService
+import com.phodal.shirecore.psi.collectPsiError
 import com.phodal.shirecore.variable.toolchain.unittest.AutoTestingPromptContext
 import com.phodal.shirelang.java.util.JavaTypeResolver
 import org.jetbrains.idea.maven.execution.MavenRunConfiguration
@@ -223,52 +219,6 @@ class JavaAutoTestService : TestingService() {
 
         val editor = FileEditorManager.getInstance(project).selectedTextEditor ?: return
         DaemonCodeAnalyzer.getInstance(project).autoImportReferenceAtCursor(editor, sourceFile)
-    }
-
-    override fun collectSyntaxError(
-        outputFile: VirtualFile,
-        project: Project,
-        runAction: ((errors: List<String>) -> Unit)?,
-    ) {
-        val sourceFile = runReadAction { PsiManager.getInstance(project).findFile(outputFile) } ?: return
-        val collectPsiError = sourceFile.collectPsiError()
-        if (collectPsiError.isNotEmpty()) {
-            runAction?.invoke(collectPsiError)
-            return
-        }
-
-        val document = runReadAction { FileDocumentManager.getInstance().getDocument(outputFile) } ?: return
-        val range = TextRange(0, document.textLength)
-        val errors = mutableListOf<String>()
-
-        DaemonCodeAnalyzerEx.getInstance(project).restart(sourceFile);
-
-        val hintDisposable = Disposer.newDisposable()
-        val busConnection: MessageBusConnection = project.messageBus.connect(hintDisposable)
-        busConnection.subscribe<DaemonCodeAnalyzer.DaemonListener>(
-            DaemonCodeAnalyzer.DAEMON_EVENT_TOPIC,
-            object : DaemonCodeAnalyzer.DaemonListener {
-                override fun daemonFinished() {
-                    DaemonCodeAnalyzerEx.processHighlights(
-                        document,
-                        project,
-                        HighlightSeverity.ERROR,
-                        range.startOffset,
-                        range.endOffset
-                    ) {
-                        if (it.description != null) {
-                            errors.add(it.description)
-                        }
-
-                        true
-                    }
-
-                    runAction?.invoke(errors)
-                    busConnection.disconnect()
-                    Disposer.dispose(hintDisposable)
-                }
-            })
-
     }
 
     private fun createTestFile(sourceFile: PsiFile, testDir: VirtualFile, project: Project): VirtualFile {

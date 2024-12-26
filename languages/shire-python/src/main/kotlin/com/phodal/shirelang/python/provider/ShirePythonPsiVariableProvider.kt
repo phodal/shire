@@ -14,7 +14,7 @@ import com.jetbrains.python.psi.PyClass
 import com.jetbrains.python.psi.PyFile
 import com.jetbrains.python.psi.PyFunction
 import com.phodal.shirecore.provider.variable.PsiContextVariableProvider
-import com.phodal.shirecore.provider.variable.impl.CodeSmellBuilder
+import com.phodal.shirecore.psi.CodeSmellCollector
 import com.phodal.shirecore.provider.variable.model.PsiContextVariable
 import com.phodal.shirelang.python.util.PyTestUtil
 import com.phodal.shirelang.python.util.PythonPsiUtil
@@ -90,7 +90,7 @@ class ShirePythonPsiVariableProvider : PsiContextVariableProvider {
 
             PsiContextVariable.UNDER_TEST_METHOD_CODE -> TODO()
             PsiContextVariable.FRAMEWORK_CONTEXT -> return collectFrameworkContext(psiElement, project)
-            PsiContextVariable.CODE_SMELL -> CodeSmellBuilder.collectElementProblemAsSting(
+            PsiContextVariable.CODE_SMELL -> CodeSmellCollector.collectElementProblemAsSting(
                 underTestElement,
                 project,
                 editor

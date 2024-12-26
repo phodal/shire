@@ -13,7 +13,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.phodal.shirecore.provider.variable.PsiContextVariableProvider
-import com.phodal.shirecore.provider.variable.impl.CodeSmellBuilder
+import com.phodal.shirecore.psi.CodeSmellCollector
 import com.phodal.shirecore.provider.variable.model.PsiContextVariable
 import com.phodal.shirecore.provider.variable.model.PsiContextVariable.*
 import com.phodal.shirecore.search.similar.SimilarChunksSearch
@@ -91,7 +91,7 @@ class JSPsiContextVariableProvider : PsiContextVariableProvider {
                 collectFrameworkContext(underTestElement, project)
             }
 
-            CODE_SMELL -> CodeSmellBuilder.collectElementProblemAsSting(psiElement, project, editor)
+            CODE_SMELL -> CodeSmellCollector.collectElementProblemAsSting(psiElement, project, editor)
             METHOD_CALLER -> TODO()
             CALLED_METHOD -> TODO()
             SIMILAR_CODE -> return SimilarChunksSearch.createQuery(psiElement) ?: ""

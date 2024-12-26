@@ -9,7 +9,7 @@ import com.intellij.psi.PsiJavaFile
 import com.intellij.psi.PsiMethod
 import com.intellij.testIntegration.TestFinderHelper
 import com.phodal.shirecore.provider.variable.PsiContextVariableProvider
-import com.phodal.shirecore.provider.variable.impl.CodeSmellBuilder
+import com.phodal.shirecore.psi.CodeSmellCollector
 import com.phodal.shirecore.provider.variable.model.PsiContextVariable
 import com.phodal.shirecore.provider.variable.model.PsiContextVariable.*
 import com.phodal.shirecore.search.similar.SimilarChunksSearch
@@ -36,7 +36,7 @@ class JavaPsiContextVariableProvider : PsiContextVariableProvider {
             IS_NEED_CREATE_FILE -> TestFinderHelper.findClassesForTest(psiElement).isEmpty()
             TARGET_TEST_FILE_NAME -> sourceFile.name.replace(".java", "") + "Test.java"
             UNDER_TEST_METHOD_CODE -> JavaTestHelper.extractMethodCalls(project, psiElement)
-            CODE_SMELL -> CodeSmellBuilder.collectElementProblemAsSting(psiElement, project, editor)
+            CODE_SMELL -> CodeSmellCollector.collectElementProblemAsSting(psiElement, project, editor)
             METHOD_CALLER -> {
                 if (psiElement !is PsiMethod) return ""
                 return JavaTestHelper.findCallers(psiElement).joinToString("\n") { it.text }
