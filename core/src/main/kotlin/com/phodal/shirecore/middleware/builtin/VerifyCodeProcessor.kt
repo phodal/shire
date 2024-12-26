@@ -59,23 +59,6 @@ class VerifyCodeProcessor : PostProcessor {
     }
 
     /**
-     * This function is used to collect syntax errors from a given PsiFile and then execute a specified action with the list of errors.
-     *
-     * @param outputFile the VirtualFile representing the output file to collect syntax errors from
-     * @param project the Project in which the file is located
-     * @param runAction the action to run with the list of syntax errors (optional)
-     */
-    private fun collectSyntaxError(
-        outputFile: VirtualFile,
-        project: Project,
-        runAction: ((errors: List<String>) -> Unit)?,
-    ) {
-        val sourceFile = runReadAction { PsiManager.getInstance(project).findFile(outputFile) } ?: return
-
-        collectSyntaxError(sourceFile, runAction, outputFile, project)
-    }
-
-    /**
      * This function is used to collect syntax errors in a given source file using the PSI (Program Structure Interface) of the file.
      * It takes the source file, a callback function to run after collecting errors, an output file, and the project as parameters.
      *
@@ -85,11 +68,11 @@ class VerifyCodeProcessor : PostProcessor {
      * @param project The project to which the files belong.
      */
     fun collectSyntaxError(
-        sourceFile: PsiFile,
-        runAction: ((errors: List<String>) -> Unit)?,
         outputFile: VirtualFile,
         project: Project,
+        runAction: ((errors: List<String>) -> Unit)?,
     ) {
+        val sourceFile = runReadAction { PsiManager.getInstance(project).findFile(outputFile) } ?: return
         val collectPsiError = sourceFile.collectPsiError()
         if (collectPsiError.isNotEmpty()) {
             runAction?.invoke(collectPsiError)

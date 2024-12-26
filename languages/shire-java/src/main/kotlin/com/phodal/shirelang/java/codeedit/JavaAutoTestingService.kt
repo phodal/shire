@@ -230,8 +230,7 @@ class JavaAutoTestService : TestingService() {
         project: Project,
         runAction: ((errors: List<String>) -> Unit)?,
     ) {
-        val sourceFile =
-            runReadAction { PsiManager.getInstance(project).findFile(outputFile) as? PsiJavaFile } ?: return
+        val sourceFile = runReadAction { PsiManager.getInstance(project).findFile(outputFile) } ?: return
         val collectPsiError = sourceFile.collectPsiError()
         if (collectPsiError.isNotEmpty()) {
             runAction?.invoke(collectPsiError)
