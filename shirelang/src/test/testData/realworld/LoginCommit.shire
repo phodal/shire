@@ -1,5 +1,6 @@
 ---
 name: "Commit message"
+enabled: false
 description: "生成提交信息"
 interaction: AppendCursor
 actionLocation: CommitMenu
