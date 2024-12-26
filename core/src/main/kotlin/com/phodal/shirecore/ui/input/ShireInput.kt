@@ -76,6 +76,7 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
                     val file = event.newFile ?: return
                     val psiFile = PsiManager.getInstance(project).findFile(file) ?: return
                     RelatedClassesProvider.provide(psiFile.language) ?: return
+
                     ApplicationManager.getApplication().invokeLater {
                         listModel.addIfAbsent(psiFile)
                     }
@@ -117,7 +118,7 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
                     val isClickOnCloseButton = e.x > cellBounds.x + cellBounds.width - closeButtonWidth
 
                     if (isClickOnCloseButton) {
-                        listModel.remove(index)
+                        listModel.indexOf(element).takeIf { it != -1 }?.let { listModel.remove(it) }
                         e.consume()
                         return
                     }
@@ -126,7 +127,7 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
                         val relativePath = psiFile.virtualFile.relativePath(project)
                         inputSection.appendText("\n/" + "file" + ":${relativePath}")
 
-                        listModel.remove(index)
+                        listModel.indexOf(element).takeIf { it != -1 }?.let { listModel.remove(it) }
 
                         val relatedElements = RelatedClassesProvider.provide(psiFile.language)?.lookup(psiFile)
                         updateElements(relatedElements)

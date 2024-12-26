@@ -25,14 +25,21 @@ class JavaRelatedClassesProvider : RelatedClassesProvider {
 
     override fun lookup(element: PsiFile): List<PsiElement> {
         return when (element) {
-            is PsiJavaFile -> findRelatedClasses(element.classes.first())
+            is PsiJavaFile -> findRelatedClasses(element.classes.first()) + lookupTestFile(element.classes.first())
             else -> emptyList()
-        } + lookupTestFile(element)
+        }
     }
 
     private fun lookupTestFile(psiElement: PsiElement): List<PsiElement> {
+        if (!psiElement.isValid) return emptyList()
+
         return ApplicationManager.getApplication().executeOnPooledThread<List<PsiElement>> {
-            runReadAction { TestFinderHelper.findTestsForClass(psiElement) }?.toList() ?: emptyList()
+            runReadAction {
+                val isTest = TestFinderHelper.isTest(psiElement)
+                if (isTest) return@runReadAction emptyList()
+
+                TestFinderHelper.findTestsForClass(psiElement)
+            }?.toList() ?: emptyList()
         }.get() ?: emptyList()
     }
 
