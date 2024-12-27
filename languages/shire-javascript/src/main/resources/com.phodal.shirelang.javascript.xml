@@ -55,5 +55,8 @@
                 language="JavaScript"
                 implementationClass="com.phodal.shirelang.javascript.variable.JSPsiContextVariableProvider"/>
 
+        <shireRelatedClass language="TypeScript"
+                           implementationClass="com.phodal.shirelang.javascript.provider.JavaScriptRelatedClassesProvider"/>
+
     </extensions>
 </idea-plugin>

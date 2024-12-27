@@ -1,4 +1,4 @@
-package com.phodal.shirelang.javascript.util
+package com.phodal.shirelang.javascript
 
 import com.intellij.lang.javascript.psi.JSFunction
 import com.intellij.lang.javascript.psi.ecma6.TypeScriptInterface
@@ -6,15 +6,12 @@ import com.intellij.lang.javascript.psi.ecma6.TypeScriptSingleType
 import com.intellij.lang.javascript.psi.ecmal4.JSClass
 import com.intellij.lang.javascript.psi.util.JSStubBasedPsiTreeUtil
 import com.intellij.openapi.application.ReadAction
-import com.intellij.openapi.diagnostic.logger
 import com.intellij.psi.PsiElement
-import com.phodal.shirecore.provider.codemodel.model.ClassStructure
-import com.phodal.shirelang.javascript.codemodel.JavaScriptClassStructureProvider
 
-object JSRelevantUtil {
-    fun lookupRelevantClass(element: PsiElement): List<ClassStructure> {
-        return ReadAction.compute<List<ClassStructure>, Throwable> {
-            val elements = mutableListOf<ClassStructure>()
+object JSTypeResolver {
+    fun resolveByElement(element: PsiElement): List<JSClass> =
+        ReadAction.compute<List<JSClass>, Throwable> {
+            val elements = mutableListOf<JSClass>()
             when (element) {
                 is JSClass -> {
                     element.functions.map {
@@ -31,10 +28,9 @@ object JSRelevantUtil {
 
             return@compute elements
         }
-    }
 
-    private fun resolveByFunction(jsFunction: JSFunction): Map<String, ClassStructure> {
-        val result = mutableMapOf<String, ClassStructure>()
+    private fun resolveByFunction(jsFunction: JSFunction): Map<String, JSClass> {
+        val result = mutableMapOf<String, JSClass>()
         jsFunction.parameterList?.parameters?.map {
             it.typeElement?.let { typeElement ->
                 result += resolveByType(typeElement, it.typeElement!!.text)
@@ -51,30 +47,15 @@ object JSRelevantUtil {
     private fun resolveByType(
         returnType: PsiElement?,
         typeName: String,
-    ): MutableMap<String, ClassStructure> {
-        val result = mutableMapOf<String, ClassStructure>()
+    ): MutableMap<String, JSClass> {
+        val result = mutableMapOf<String, JSClass>()
         when (returnType) {
             is TypeScriptSingleType -> {
-                val resolveReferenceLocally = JSStubBasedPsiTreeUtil.resolveLocally(
-                    typeName,
-                    returnType
-                )
-
-                when (resolveReferenceLocally) {
+                when (val referenceLocally = JSStubBasedPsiTreeUtil.resolveLocally(typeName, returnType)) {
                     is TypeScriptInterface -> {
-                        JavaScriptClassStructureProvider().build(resolveReferenceLocally, false)?.let {
-                            result += mapOf(typeName to it)
-                        }
-                    }
-
-                    else -> {
-                        logger<JSRelevantUtil>().warn("resolveReferenceLocally is not TypeScriptInterface: $resolveReferenceLocally")
+                        result += mapOf(typeName to referenceLocally)
                     }
                 }
-            }
-
-            else -> {
-                logger<JSRelevantUtil>().warn("returnType is not TypeScriptSingleType: $returnType")
             }
         }
 

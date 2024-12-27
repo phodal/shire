@@ -17,10 +17,10 @@ import com.phodal.shirecore.psi.CodeSmellCollector
 import com.phodal.shirecore.provider.variable.model.PsiContextVariable
 import com.phodal.shirecore.provider.variable.model.PsiContextVariable.*
 import com.phodal.shirecore.search.similar.SimilarChunksSearch
+import com.phodal.shirelang.javascript.JSTypeResolver
 import com.phodal.shirelang.javascript.codemodel.JavaScriptClassStructureProvider
 import com.phodal.shirelang.javascript.codemodel.JavaScriptMethodStructureProvider
 import com.phodal.shirelang.javascript.util.JSPsiUtil
-import com.phodal.shirelang.javascript.util.JSRelevantUtil
 
 class JSPsiContextVariableProvider : PsiContextVariableProvider {
     override fun resolve(variable: PsiContextVariable, project: Project, editor: Editor, psiElement: PsiElement?): Any {
@@ -66,7 +66,7 @@ class JSPsiContextVariableProvider : PsiContextVariableProvider {
                 }
             }
 
-            RELATED_CLASSES -> JSRelevantUtil.lookupRelevantClass(underTestElement)
+            RELATED_CLASSES -> JSTypeResolver.resolveByElement(underTestElement)
             SIMILAR_TEST_CASE -> ""
             IMPORTS -> {
                 return PsiTreeUtil.findChildrenOfAnyType(sourceFile,
