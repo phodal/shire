@@ -107,9 +107,8 @@ object PythonPsiUtil {
             }
 
             private fun addResolvedElement(declarationName: String, element: PsiElement?) {
-                if (element == null || ProjectFileIndex.getInstance(element.project)
-                        .isInLibrary(element.containingFile.virtualFile)
-                ) return
+                if (element == null) return
+                if (ProjectFileIndex.getInstance(element.project).isInLibrary(element.containingFile.virtualFile)) return
 
                 val resolvedElement = if (PyUtil.isInitOrNewMethod(element)) {
                     PsiTreeUtil.getParentOfType(element, PyClass::class.java, false)
