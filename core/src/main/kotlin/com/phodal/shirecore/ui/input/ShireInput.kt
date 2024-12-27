@@ -76,8 +76,8 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
                     val file = event.newFile ?: return
                     val psiFile = PsiManager.getInstance(project).findFile(file) ?: return
                     RelatedClassesProvider.provide(psiFile.language) ?: return
-
                     ApplicationManager.getApplication().invokeLater {
+                        if (!psiFile.isValid) return@invokeLater
                         listModel.addIfAbsent(psiFile)
                     }
                 }
