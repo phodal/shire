@@ -10,6 +10,7 @@ import com.intellij.openapi.fileEditor.FileEditorManagerListener
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.intellij.ui.components.JBList
 import com.intellij.ui.components.JBScrollPane
@@ -77,7 +78,6 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
                     val psiFile = PsiManager.getInstance(project).findFile(file) ?: return
                     RelatedClassesProvider.provide(psiFile.language) ?: return
                     ApplicationManager.getApplication().invokeLater {
-                        if (!psiFile.isValid) return@invokeLater
                         listModel.addIfAbsent(psiFile)
                     }
                 }
@@ -158,6 +158,12 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
 }
 
 private fun <E> DefaultListModel<E>.addIfAbsent(psiFile: E) {
+    val isValid = when (psiFile) {
+        is PsiFile -> psiFile.isValid
+        else -> true
+    }
+    if (!isValid) return
+
     if (!contains(psiFile)) {
         addElement(psiFile)
     }
