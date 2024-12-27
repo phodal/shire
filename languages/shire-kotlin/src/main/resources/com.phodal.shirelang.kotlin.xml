@@ -34,8 +34,5 @@
 
         <shirePsiElementDataBuilder language="kotlin"
                                     implementationClass="com.phodal.shirelang.kotlin.provider.KotlinPsiElementDataBuilder"/>
-
-        <shireRefactoringTool language="kotlin"
-                              implementationClass="com.phodal.shirelang.kotlin.provider.KotlinRefactoringTool"/>
     </extensions>
 </idea-plugin>
