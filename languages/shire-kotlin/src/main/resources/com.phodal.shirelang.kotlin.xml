@@ -25,5 +25,17 @@
 
         <shireComplexityProvider language="kotlin"
                                  implementationClass="com.phodal.shirelang.kotlin.complexity.KotlinComplexityProvider"/>
+
+        <shireRelatedClass language="kotlin"
+                           implementationClass="com.phodal.shirelang.kotlin.provider.KotlinRelatedClassesProvider"/>
+
+        <shireAutoTesting language="kotlin"
+                          implementationClass="com.phodal.shirelang.kotlin.provider.KotlinAutoTestService"/>
+
+        <shirePsiElementDataBuilder language="kotlin"
+                                    implementationClass="com.phodal.shirelang.kotlin.provider.KotlinPsiElementDataBuilder"/>
+
+        <shireRefactoringTool language="kotlin"
+                              implementationClass="com.phodal.shirelang.kotlin.provider.KotlinRefactoringTool"/>
     </extensions>
 </idea-plugin>
