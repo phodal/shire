@@ -28,9 +28,11 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.*
 
+data class modelWrapper(val psiElement: PsiElement, var panel: JPanel? = null, var namePanel: JPanel? = null)
+
 class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
     private var scratchFile: VirtualFile? = null
-    private val listModel = DefaultListModel<PsiElement>()
+    private val listModel = DefaultListModel<modelWrapper>()
     private val elementsList = JBList(listModel)
     private var inputSection: ShireInputSection
 
@@ -100,6 +102,7 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
         elementsList.layoutOrientation = JList.HORIZONTAL_WRAP
         elementsList.visibleRowCount = 2
         elementsList.cellRenderer = ElementListCellRenderer()
+        elementsList.setEmptyText("")
         
         val scrollPane = JBScrollPane(elementsList)
         scrollPane.preferredSize = Dimension(-1, 80)
@@ -111,27 +114,24 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
                 val list = e.source as JBList<*>
                 val index = list.locationToIndex(e.point)
                 if (index != -1) {
-                    val element = listModel.getElementAt(index) as PsiElement
+                    val wrapper = listModel.getElementAt(index)
                     val cellBounds = list.getCellBounds(index, index)
-
-                    val closeButtonWidth = 20
-                    val isClickOnCloseButton = e.x > cellBounds.x + cellBounds.width - closeButtonWidth
-
-                    if (isClickOnCloseButton) {
-                        listModel.indexOf(element).takeIf { it != -1 }?.let { listModel.remove(it) }
-                        e.consume()
-                        return
-                    }
-
-                    element.containingFile?.let { psiFile ->
-                        val relativePath = psiFile.virtualFile.relativePath(project)
-                        inputSection.appendText("\n/" + "file" + ":${relativePath}")
-
-                        listModel.indexOf(element).takeIf { it != -1 }?.let { listModel.remove(it) }
-
-                        val relatedElements = RelatedClassesProvider.provide(psiFile.language)?.lookup(psiFile)
-                        updateElements(relatedElements)
-                    }
+                    wrapper.panel?.components?.firstOrNull { it.contains(e.x - cellBounds.x - it.x, it.height - 1) }?.let {
+                        when {
+                            it is JPanel -> {
+                                listModel.removeElement(wrapper)
+                                wrapper.psiElement.containingFile?.let { psiFile ->
+                                    val relativePath = psiFile.virtualFile.relativePath(project)
+                                    inputSection.appendText("\n/" + "file" + ":${relativePath}")
+                                    listModel.indexOf(wrapper.psiElement).takeIf { it != -1 }?.let { listModel.remove(it) }
+                                    val relatedElements = RelatedClassesProvider.provide(psiFile.language)?.lookup(psiFile)
+                                    updateElements(relatedElements)
+                                }
+                            }
+                            it is JLabel && it.icon == AllIcons.Actions.Close -> listModel.removeElement(wrapper)
+                            else -> list.clearSelection()
+                        }
+                    } ?: list.clearSelection()
                 }
             }
         })
@@ -157,53 +157,54 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
     }
 }
 
-private fun <E> DefaultListModel<E>.addIfAbsent(psiFile: E) {
+private fun DefaultListModel<modelWrapper>.addIfAbsent(psiFile: PsiElement) {
     val isValid = when (psiFile) {
         is PsiFile -> psiFile.isValid
         else -> true
     }
     if (!isValid) return
 
-    if (!contains(psiFile)) {
-        addElement(psiFile)
+    if (elements().asIterator().asSequence().none { it.psiElement == psiFile }) {
+        addElement(modelWrapper(psiFile))
     }
 }
 
-private class ElementListCellRenderer : ListCellRenderer<PsiElement> {
+private class ElementListCellRenderer : ListCellRenderer<modelWrapper> {
     override fun getListCellRendererComponent(
-        list: JList<out PsiElement>,
-        value: PsiElement,
+        list: JList<out modelWrapper>,
+        value: modelWrapper,
         index: Int,
         isSelected: Boolean,
         cellHasFocus: Boolean,
     ): Component {
-        val panel = JPanel(FlowLayout(FlowLayout.LEFT, 3, 0))
-        panel.accessibleContext.accessibleName = "Element Panel"
+        val psiElement = value.psiElement
+        val panel = value.panel ?: JPanel(FlowLayout(FlowLayout.LEFT, 3, 0)).apply {
+            accessibleContext.accessibleName = "Element Panel"
 
-        panel.border = JBUI.Borders.empty(2, 5)
+            border = JBUI.Borders.empty(2, 5)
 
-        val iconLabel = JLabel(value.containingFile?.fileType?.icon ?: AllIcons.FileTypes.Unknown)
-        panel.add(iconLabel)
+            val namePanel = JPanel(layout)
+            val iconLabel = JLabel(psiElement.containingFile?.fileType?.icon ?: AllIcons.FileTypes.Unknown)
+            namePanel.add(iconLabel)
 
-        val nameLabel = JLabel(value.containingFile?.name ?: "Unknown")
-        panel.add(nameLabel)
+            val nameLabel = JLabel(psiElement.containingFile?.name ?: "Unknown")
+            namePanel.add(nameLabel)
 
-        val closeLabel = JLabel(AllIcons.Actions.Close)
-        closeLabel.border = JBUI.Borders.empty()
-        closeLabel.addMouseListener(object : MouseAdapter() {
-            override fun mouseClicked(e: MouseEvent) {
-                val model = list.model as DefaultListModel<*>
-                model.remove(index)
-            }
-        })
-        panel.add(closeLabel)
+            add(namePanel)
+            val closeLabel = JLabel(AllIcons.Actions.Close)
+            closeLabel.border = JBUI.Borders.empty()
+            add(closeLabel, BorderLayout.EAST)
 
+            value.panel = this
+            value.namePanel = namePanel
+        }
+        val namePanel = value.namePanel
         if (isSelected) {
-            panel.background = list.selectionBackground
-            nameLabel.foreground = list.selectionForeground
+            namePanel?.background = list.selectionBackground
+            namePanel?.foreground = list.selectionForeground
         } else {
-            panel.background = list.background
-            nameLabel.foreground = list.foreground
+            namePanel?.background = list.background
+            namePanel?.foreground = list.foreground
         }
 
         return panel
