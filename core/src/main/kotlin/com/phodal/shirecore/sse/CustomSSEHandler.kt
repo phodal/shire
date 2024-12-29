@@ -171,12 +171,37 @@ fun JsonObject.updateCustomBody(customRequest: String): JsonObject {
     return runCatching {
         buildJsonObject {
             // copy origin object
-            this@updateCustomBody.forEach { u, v -> put(u, v) }
-
             val customRequestJson = Json.parseToJsonElement(customRequest).jsonObject
+            customRequestJson["fields"]?.jsonObject?.let { fieldsObj ->
+                val messages: JsonArray = this@updateCustomBody["messages"]?.jsonArray ?: buildJsonArray {}
+                val contentOfFirstMessage = if (messages.isNotEmpty()) {
+                    messages.last().jsonObject["content"]?.jsonPrimitive?.content ?: ""
+                } else ""
+                fieldsObj.forEach { (fieldKey, fieldValue) ->
+                    if (fieldValue is JsonObject) {
+                        put(fieldKey, buildJsonObject {
+                            fieldValue.forEach { (subKey, subValue) ->
+                                if (subValue is JsonPrimitive && subValue.content == "\$content") {
+                                    put(subKey, JsonPrimitive(contentOfFirstMessage))
+                                } else {
+                                    put(subKey, subValue)
+                                }
+                            }
+                        })
+                    } else if (fieldValue is JsonPrimitive && fieldValue.content == "\$content") {
+                        put(fieldKey, JsonPrimitive(contentOfFirstMessage))
+                    } else {
+                        put(fieldKey, fieldValue)
+                    }
+                }
+
+                return@buildJsonObject
+            }
+
+            this@updateCustomBody.forEach { u, v -> put(u, v) }
             customRequestJson["customFields"]?.let { customFields ->
                 customFields.jsonObject.forEach { (key, value) ->
-                    put(key, value.jsonPrimitive)
+                    put(key, value)
                 }
             }
 
@@ -201,7 +226,7 @@ fun JsonObject.updateCustomBody(customRequest: String): JsonObject {
             })
         }
     }.getOrElse {
-        logger<CustomRequest>().error("Failed to parse custom request body", it)
+        logger<CustomSSEHandler>().error("Failed to parse custom request body", it)
         this
     }
 }
