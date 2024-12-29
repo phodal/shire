@@ -16,7 +16,7 @@ interface ToolchainFunctionProvider {
             return EP_NAME.extensionList
         }
 
-        fun lookup(project: Project, providerName: String): ToolchainFunctionProvider? {
+        fun lookup(providerName: String): ToolchainFunctionProvider? {
             return EP_NAME.extensionList.firstOrNull {
                 it.javaClass.simpleName == providerName
             }

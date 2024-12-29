@@ -369,12 +369,8 @@ class ShireSyntaxAnalyzer(
 
             BuiltinCommand.DATABASE -> {
                 result.isLocalCommand = true
-                val shireCode: CodeBlockElement? = lookupNextCode(used)
-                if (shireCode == null) {
-                    PrintShireCommand("/" + commandNode.commandName + ":" + prop)
-                } else {
-                    DatabaseShireCommand(myProject, prop, shireCode.text)
-                }
+                val shireCode: String? = lookupNextCode(used)?.text
+                DatabaseShireCommand(myProject, prop, shireCode)
             }
         }
 
