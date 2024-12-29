@@ -16,6 +16,12 @@ interface ToolchainFunctionProvider {
             return EP_NAME.extensionList
         }
 
+        fun lookup(project: Project, providerName: String): ToolchainFunctionProvider? {
+            return EP_NAME.extensionList.firstOrNull {
+                it.javaClass.simpleName == providerName
+            }
+        }
+
         fun provide(project: Project, funcName: String): ToolchainFunctionProvider? {
             return EP_NAME.extensionList.firstOrNull {
                 it.isApplicable(project, funcName)
