@@ -14,10 +14,14 @@ class CustomAgentCompletion : CompletionProvider<CompletionParameters>() {
         result: CompletionResultSet,
     ) {
         val configs: List<CustomAgent> = CustomAgent.loadFromProject(parameters.originalFile.project)
-        configs.forEach {
-            result.addElement(LookupElementBuilder
-                .create("\"${it.name}\"")
-                .withTypeText(it.description, true))
+        configs.forEach { config ->
+            result.addElement(
+                LookupElementBuilder.create(config.name)
+                    .withInsertHandler { context, _ ->
+                        context.document.insertString(context.tailOffset, " ")
+                        context.editor.caretModel.moveCaretRelatively(1, 0, false, true, false)
+                    }
+                    .withTypeText(config.description, true))
         }
     }
 }
