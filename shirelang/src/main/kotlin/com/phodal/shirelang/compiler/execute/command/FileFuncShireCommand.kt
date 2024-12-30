@@ -38,6 +38,7 @@ class FileFuncShireCommand(val myProject: Project, private val prop: String) : S
 
             true
         }
+
         return files
     }
 

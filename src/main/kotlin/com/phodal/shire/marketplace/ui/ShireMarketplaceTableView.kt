@@ -2,6 +2,7 @@ package com.phodal.shire.marketplace.ui
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.intellij.icons.AllIcons
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.dsl.builder.Align
@@ -105,7 +106,10 @@ class ShireMarketplaceTableView(val project: Project) {
             }.resizableRow()
         }
 
-        tableModel.items = makeApiCall()
+        tableModel.items = ApplicationManager.getApplication().executeOnPooledThread<List<ShirePackage>> {
+            makeApiCall()
+        }.get()
+
         tableModel.fireTableDataChanged()
     }
 

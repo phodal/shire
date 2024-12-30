@@ -9,18 +9,20 @@ import com.phodal.shirecore.provider.function.ToolchainFunctionProvider
 
 enum class DatabaseFunction(val funName: String) {
     Table("table"),
-    Column("column");
+    Column("column"),
+
+    ;
 
     companion object {
         fun fromString(value: String): DatabaseFunction? {
-            return values().firstOrNull { it.funName == value }
+            return entries.firstOrNull { it.funName == value }
         }
     }
 }
 
 class DatabaseFunctionProvider : ToolchainFunctionProvider {
     override fun isApplicable(project: Project, funcName: String): Boolean {
-        return DatabaseFunction.values().any { it.funName == funcName }
+        return DatabaseFunction.entries.any { it.funName == funcName }
     }
 
     override fun execute(
@@ -30,18 +32,18 @@ class DatabaseFunctionProvider : ToolchainFunctionProvider {
         allVariables: Map<String, Any?>,
     ): Any {
         val databaseFunction = DatabaseFunction.fromString(funcName)
-            ?: throw IllegalArgumentException("Shire[DBTool]: Invalid Database function name")
+            ?: throw IllegalArgumentException("Shire[Database]: Invalid Database function name")
 
         when (databaseFunction) {
             DatabaseFunction.Table -> {
                 if (args.isEmpty()) {
                     val dataSource = DatabaseSchemaAssistant.getAllRawDatasource(project).firstOrNull()
-                        ?: return "ShireError[DBTool]: No database found"
+                        ?: return "ShireError[Database]: No database found"
                     return DatabaseSchemaAssistant.getTableByDataSource(dataSource)
                 }
 
                 val dbName = args.first()
-                // [accounts, payment_limits, transactions]
+                // for example: [accounts, payment_limits, transactions]
                 var result = mutableListOf<DasTable>()
                 when (dbName) {
                     is String -> {
