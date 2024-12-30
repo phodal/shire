@@ -1,12 +1,18 @@
 package com.phodal.shire.database
 
+import com.intellij.database.console.JdbcConsoleProvider
 import com.intellij.database.model.DasTable
 import com.intellij.database.model.ObjectKind
 import com.intellij.database.model.RawDataSource
 import com.intellij.database.psi.DbDataSource
 import com.intellij.database.psi.DbPsiFacade
+import com.intellij.database.settings.DatabaseSettings
 import com.intellij.database.util.DasUtil
+import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
+import com.intellij.psi.PsiManager
+import com.intellij.sql.psi.SqlPsiFacade
+import com.intellij.testFramework.LightVirtualFile
 
 object DatabaseSchemaAssistant {
     fun getDataSources(project: Project): List<DbDataSource> {
@@ -41,6 +47,39 @@ object DatabaseSchemaAssistant {
     fun getTable(dataSource: RawDataSource, tableName: String): List<DasTable> {
         val dasTables = DasUtil.getTables(dataSource)
         return dasTables.filter { it.name == tableName }.toList()
+    }
+
+    fun executeSqlQuery(project: Project, sql: String): List<Map<String, Any?>> {
+        val file = LightVirtualFile("temp.sql", sql)
+        val psiFile = PsiManager.getInstance(project).findFile(file)
+            ?: throw IllegalArgumentException("ShireError[Database]: No file found")
+
+        val fileEditor = FileEditorManager.getInstance(project).openFile(file).firstOrNull()
+            ?: throw IllegalArgumentException("ShireError[Database]: No editor found")
+
+        val editor = FileEditorManager.getInstance(project).selectedTextEditor
+            ?: throw IllegalArgumentException("ShireError[Database]: No editor found")
+
+        val dataSource = getAllRawDatasource(project).firstOrNull()
+            ?: throw IllegalArgumentException("ShireError[Database]: No database found")
+
+//        val activeConnections = DatabaseConnectionManager.getInstance().activeConnections
+//        val first: DatabaseConnection = activeConnections.firstOrNull()
+
+        val execOptions = DatabaseSettings.getSettings().execOptions.last()
+        val console = JdbcConsoleProvider.getValidConsole(project, file)
+//        val elementAt = JdbcConsoleProvider.elementAt(psiFile, null, editor)
+//        JdbcConsoleProvider.findScriptModel(psiFile, elementAt, editor, execOption)
+//        val dbSession = JdbcConsoleProvider.findOrCreateSession(project, file)
+//        val info = JdbcConsoleProvider.Info()
+        val scriptModel =
+            if (console != null) console.scriptModel else SqlPsiFacade.getInstance(project).createScriptModel(psiFile)
+//        val m = ScriptModelUtil.adjustModelForSelection(model, document, selectionRange, execOption)
+//        JdbcConsoleProvider.Info(file, file, editor as EditorEx?, m, execOption, null as NotNullFunction<*, *>?)
+
+//        JdbcConsoleProvider.doRunQueryInConsole(console, info)
+        console!!.executeQueries(editor, scriptModel, execOptions)
+        return emptyList()
     }
 
     private fun isSQLiteTable(
