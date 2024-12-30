@@ -40,7 +40,7 @@ object SqlContextBuilder {
     private fun columnType(it: BasicTableOrViewColumn) = it.dasType.specification
 
     fun buildDatabaseInfo(project: Project): String {
-        val dataSources = DatabaseSchemaAssistant.getAllRawDatasource(project)
+        val dataSources = DatabaseSchemaAssistant.allRawDatasource(project)
         return dataSources.joinToString("\n") {
             """
             DatabaseName: ${it.databaseVersion.name}

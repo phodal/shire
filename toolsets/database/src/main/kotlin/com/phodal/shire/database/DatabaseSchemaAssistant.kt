@@ -31,18 +31,15 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.ex.EditorEx
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.Disposer
 import com.intellij.psi.PsiManager
 import com.intellij.sql.psi.SqlPsiFacade
 import com.intellij.testFramework.LightVirtualFile
 import java.util.concurrent.CompletableFuture
 
 object DatabaseSchemaAssistant {
-    fun getDataSources(project: Project): List<DbDataSource> {
-        return DbPsiFacade.getInstance(project).dataSources.toList()
-    }
+    fun getDataSources(project: Project): List<DbDataSource> = DbPsiFacade.getInstance(project).dataSources.toList()
 
-    fun getAllRawDatasource(project: Project): List<RawDataSource> {
+    fun allRawDatasource(project: Project): List<RawDataSource> {
         val dbPsiFacade = DbPsiFacade.getInstance(project)
         return dbPsiFacade.dataSources.map { dataSource ->
             dbPsiFacade.getDataSourceManager(dataSource).dataSources
@@ -50,12 +47,11 @@ object DatabaseSchemaAssistant {
     }
 
     fun getDatabase(project: Project, dbName: String): RawDataSource? {
-        return getAllRawDatasource(project).firstOrNull { it.name == dbName }
+        return allRawDatasource(project).firstOrNull { it.name == dbName }
     }
 
     fun getAllTables(project: Project): List<DasTable> {
-        val rawDataSources = getAllRawDatasource(project)
-        return rawDataSources.map {
+        return allRawDatasource(project).map {
             val schemaName = it.name.substringBeforeLast('@')
             DasUtil.getTables(it).filter { table ->
                 table.kind == ObjectKind.TABLE && (table.dasParent?.name == schemaName || isSQLiteTable(it, table))
@@ -76,7 +72,7 @@ object DatabaseSchemaAssistant {
         val file = LightVirtualFile("temp.sql", sql)
         val psiFile = PsiManager.getInstance(project).findFile(file)!!
 
-        val dataSource = getAllRawDatasource(project).firstOrNull()
+        val dataSource = allRawDatasource(project).firstOrNull()
             ?: throw IllegalArgumentException("ShireError[Database]: No database found")
 
         val execOptions = DatabaseSettings.getSettings().execOptions.last()
@@ -98,7 +94,7 @@ object DatabaseSchemaAssistant {
 
                     override fun addRows(context: GridDataRequest.Context, rows: MutableList<out GridRow>) {
                         super.addRows(context, rows)
-                        result += rows;
+                        result += rows
                         /// TODO: fix this use result.size instead of rows.size
                         if (rows.size < 100) {
                             future.complete(result.toString())
@@ -191,6 +187,6 @@ object DatabaseSchemaAssistant {
             "${column.name}: ${column.dasType.toDataType()}"
         }.joinToString(", ")
 
-        return "TableName: ${table.name} Columns: { $columns }"
+        return "TableName: ${table.name}, Columns: { $columns }"
     }
 }

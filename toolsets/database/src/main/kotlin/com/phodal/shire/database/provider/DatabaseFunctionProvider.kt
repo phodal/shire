@@ -43,7 +43,7 @@ class DatabaseFunctionProvider : ToolchainFunctionProvider {
 
     private fun executeTableFunction(args: List<Any>, project: Project): Any {
         if (args.isEmpty()) {
-            val dataSource = DatabaseSchemaAssistant.getAllRawDatasource(project).firstOrNull()
+            val dataSource = DatabaseSchemaAssistant.allRawDatasource(project).firstOrNull()
                 ?: return "ShireError[Database]: No database found"
             return DatabaseSchemaAssistant.getTableByDataSource(dataSource)
         }
