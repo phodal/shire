@@ -106,9 +106,9 @@ class ShireMarketplaceTableView(val project: Project) {
             }.resizableRow()
         }
 
-        tableModel.items = ApplicationManager.getApplication().executeOnPooledThread<List<ShirePackage>> {
-            makeApiCall()
-        }.get()
+        ApplicationManager.getApplication().executeOnPooledThread {
+            tableModel.items = makeApiCall()
+        }
 
         tableModel.fireTableDataChanged()
     }
