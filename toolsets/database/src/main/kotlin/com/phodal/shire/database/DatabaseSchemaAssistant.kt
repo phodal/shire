@@ -1,14 +1,10 @@
 package com.phodal.shire.database
 
-import com.intellij.database.DataBus
-import com.intellij.database.DatabaseTopics
 import com.intellij.database.console.DatabaseRunners
 import com.intellij.database.console.JdbcConsole
 import com.intellij.database.console.JdbcConsoleProvider
-import com.intellij.database.datagrid.DataConsumer
-import com.intellij.database.datagrid.GridColumn
-import com.intellij.database.datagrid.GridDataRequest
-import com.intellij.database.datagrid.GridRow
+import com.intellij.database.console.evaluation.EvaluationRequest
+import com.intellij.database.datagrid.*
 import com.intellij.database.editor.DatabaseEditorHelper
 import com.intellij.database.intentions.RunQueryInConsoleIntentionAction.Manager.chooseAndRunRunners
 import com.intellij.database.model.DasTable
@@ -16,15 +12,17 @@ import com.intellij.database.model.ObjectKind
 import com.intellij.database.model.RawDataSource
 import com.intellij.database.psi.DbDataSource
 import com.intellij.database.psi.DbPsiFacade
-import com.intellij.database.run.ConsoleDataRequest
 import com.intellij.database.settings.DatabaseSettings
 import com.intellij.database.util.DasUtil
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.ex.EditorEx
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiManager
 import com.intellij.sql.psi.SqlPsiFacade
 import com.intellij.testFramework.LightVirtualFile
+import com.phodal.shirecore.provider.codemodel.model.ClassStructure
+import java.util.concurrent.CompletableFuture
 
 object DatabaseSchemaAssistant {
     fun getDataSources(project: Project): List<DbDataSource> {
@@ -61,25 +59,47 @@ object DatabaseSchemaAssistant {
         return dasTables.filter { it.name == tableName }.toList()
     }
 
-    fun executeSqlQuery(project: Project, sql: String): List<Map<String, Any?>> {
+    fun executeSqlQuery(project: Project, sql: String): String {
         val file = LightVirtualFile("temp.sql", sql)
-        val psiFile = PsiManager.getInstance(project).findFile(file)
-            ?: throw IllegalArgumentException("ShireError[Database]: No file found")
-
-//        val fileEditor = FileEditorManager.getInstance(project).openFile(file).firstOrNull()
-//            ?: throw IllegalArgumentException("ShireError[Database]: No editor found")
-
-        val editor = FileEditorManager.getInstance(project).selectedTextEditor
-            ?: throw IllegalArgumentException("ShireError[Database]: No editor found")
+        val psiFile = PsiManager.getInstance(project).findFile(file)!!
 
         val dataSource = getAllRawDatasource(project).firstOrNull()
             ?: throw IllegalArgumentException("ShireError[Database]: No database found")
 
         val execOptions = DatabaseSettings.getSettings().execOptions.last()
-        val activeConsoles = JdbcConsole.getActiveConsoles(project)
-        val console: JdbcConsole? = activeConsoles.firstOrNull()
+        val console: JdbcConsole? = JdbcConsole.getActiveConsoles(project).firstOrNull()
             ?: JdbcConsoleProvider.getValidConsole(project, file)
             ?: createConsole(project, file)
+
+        if (console != null) {
+            return ApplicationManager.getApplication().executeOnPooledThread<String> {
+                val future: CompletableFuture<String> = CompletableFuture()
+                val messageBus = console.session.messageBus
+                val newConsoleRequest = EvaluationRequest.newRequest(console, sql, dataSource.dbms)
+                messageBus.dataProducer.processRequest(newConsoleRequest)
+                messageBus.addConsumer(object : DataConsumer {
+                    var result = mutableListOf<GridRow>()
+                    override fun setColumns(context: GridDataRequest.Context, columns: Array<out GridColumn>) {
+                        super.setColumns(context, columns)
+                    }
+
+                    override fun addRows(context: GridDataRequest.Context, rows: MutableList<out GridRow>) {
+                        super.addRows(context, rows)
+                        result += rows;
+                    }
+
+                    override fun afterLastRowAdded(context: GridDataRequest.Context, total: Int) {
+                        super.afterLastRowAdded(context, total)
+                        future.complete(result.toString())
+                    }
+                })
+
+               return@executeOnPooledThread future.get()
+            }.get()
+        }
+
+        val editor = FileEditorManager.getInstance(project).selectedTextEditor
+            ?: throw IllegalArgumentException("ShireError[Database]: No editor found")
 
         val scriptModel = console?.scriptModel
             ?: SqlPsiFacade.getInstance(project).createScriptModel(psiFile)
@@ -87,41 +107,12 @@ object DatabaseSchemaAssistant {
         val dasNamespace = dataSource.model.currentRootNamespace
         DatabaseEditorHelper.openConsoleForFile(project, dataSource, dasNamespace, file)
 
-        if (console == null) {
-            val info = JdbcConsoleProvider.Info(
-                psiFile, psiFile, editor as EditorEx, scriptModel, execOptions, null
-            )
-            chooseAndRunRunners(DatabaseRunners.getAttachDataSourceRunners(info), info.editor, null)
-            return emptyList()
-        }
-
-        val messageBus = console.session.messageBus
-        val newConsoleRequest = ConsoleDataRequest.newConsoleRequest(
-            console,
-            editor,
-            scriptModel,
-            false
-        )
-        if (newConsoleRequest != null) {
-            messageBus.dataProducer.processRequest(newConsoleRequest)
-        } else {
-            console.executeQueries(editor, scriptModel, execOptions)
-        }
-
-        messageBus.addConsumer(object : DataConsumer {
-            override fun setColumns(context: GridDataRequest.Context, columns: Array<out GridColumn>) {
-                super.setColumns(context, columns)
-            }
-
-            override fun addRows(context: GridDataRequest.Context, rows: MutableList<out GridRow>) {
-                super.addRows(context, rows)
-            }
-        })
-
-        return emptyList()
+        val info = JdbcConsoleProvider.Info(psiFile, psiFile, editor as EditorEx, scriptModel, execOptions, null)
+        chooseAndRunRunners(DatabaseRunners.getAttachDataSourceRunners(info), info.editor, null)
+        return "Error"
     }
 
-    fun createConsole(project: Project, file: LightVirtualFile): JdbcConsole? {
+    private fun createConsole(project: Project, file: LightVirtualFile): JdbcConsole? {
         val attached = JdbcConsoleProvider.findOrCreateSession(project, file) ?: return null
         return JdbcConsoleProvider.attachConsole(project, attached, file)
     }
