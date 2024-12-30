@@ -1,7 +1,9 @@
 package com.phodal.shire.database
 
 import com.intellij.database.console.DatabaseRunners
+import com.intellij.database.console.JdbcConsole
 import com.intellij.database.console.JdbcConsoleProvider
+import com.intellij.database.editor.DatabaseEditorHelper
 import com.intellij.database.intentions.RunQueryInConsoleIntentionAction.Manager.chooseAndRunRunners
 import com.intellij.database.model.DasTable
 import com.intellij.database.model.ObjectKind
@@ -10,8 +12,6 @@ import com.intellij.database.psi.DbDataSource
 import com.intellij.database.psi.DbPsiFacade
 import com.intellij.database.settings.DatabaseSettings
 import com.intellij.database.util.DasUtil
-import com.intellij.ide.DataManager
-import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.editor.ex.EditorEx
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
@@ -72,17 +72,22 @@ object DatabaseSchemaAssistant {
 //        val first: DatabaseConnection = activeConnections.firstOrNull()
 
         val execOptions = DatabaseSettings.getSettings().execOptions.last()
-        val console = JdbcConsoleProvider.getValidConsole(project, file)
+        val activeConsoles = JdbcConsole.getActiveConsoles(project)
+        val console: JdbcConsole? = activeConsoles.firstOrNull()
+            ?: JdbcConsoleProvider.getValidConsole(project, file)
+            ?: createConsole(project, file)
+
 //        val elementAt = JdbcConsoleProvider.elementAt(psiFile, null, editor)
 //        JdbcConsoleProvider.findScriptModel(psiFile, elementAt, editor, execOption)
 //        val dbSession = JdbcConsoleProvider.findOrCreateSession(project, file)
         val scriptModel = console?.scriptModel ?: SqlPsiFacade.getInstance(project).createScriptModel(psiFile)
-
 //        val m = ScriptModelUtil.adjustModelForSelection(model, document, selectionRange, execOption)
 //        JdbcConsoleProvider.Info(file, file, editor as EditorEx?, m, execOption, null as NotNullFunction<*, *>?)
 
-        if (console == null) {
+        val dasNamespace = dataSource.model.currentRootNamespace
+        DatabaseEditorHelper.openConsoleForFile(project, dataSource, dasNamespace, file)
 
+        if (console == null) {
             val info = JdbcConsoleProvider.Info(
                 psiFile, psiFile, editor as EditorEx, scriptModel, execOptions, null
             )
@@ -91,8 +96,13 @@ object DatabaseSchemaAssistant {
         }
 
 //        JdbcConsoleProvider.doRunQueryInConsole(console, info)
-        console!!.executeQueries(editor, scriptModel, execOptions)
+        console.executeQueries(editor, scriptModel, execOptions)
         return emptyList()
+    }
+
+    fun createConsole(project: Project, file: LightVirtualFile): JdbcConsole? {
+        val attached = JdbcConsoleProvider.findOrCreateSession(project, file) ?: return null
+        return JdbcConsoleProvider.attachConsole(project, attached, file)
     }
 
     private fun isSQLiteTable(
