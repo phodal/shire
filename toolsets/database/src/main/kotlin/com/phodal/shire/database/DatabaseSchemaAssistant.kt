@@ -11,7 +11,10 @@ import com.intellij.database.dataSource.connection.DGDepartment
 import com.intellij.database.dataSource.connection.statements.Configuration
 import com.intellij.database.dataSource.connection.statements.ReusableSmartStatement
 import com.intellij.database.dataSource.connection.statements.SmartStatements
-import com.intellij.database.datagrid.*
+import com.intellij.database.datagrid.DataConsumer
+import com.intellij.database.datagrid.GridColumn
+import com.intellij.database.datagrid.GridDataRequest
+import com.intellij.database.datagrid.GridRow
 import com.intellij.database.editor.DatabaseEditorHelper
 import com.intellij.database.editor.DatabaseEditorHelperCore
 import com.intellij.database.intentions.RunQueryInConsoleIntentionAction.Manager.chooseAndRunRunners
@@ -28,6 +31,7 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.ex.EditorEx
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.Disposer
 import com.intellij.psi.PsiManager
 import com.intellij.sql.psi.SqlPsiFacade
 import com.intellij.testFramework.LightVirtualFile
@@ -121,7 +125,9 @@ object DatabaseSchemaAssistant {
             val runner = runners.first()
             val handler = ErrorHandler()
             val searchPath = DatabaseEditorHelperCore.getSearchPath(psiFile)
-            DatabaseSessionManager
+//            val future: CompletableFuture<String> = CompletableFuture()
+//            return ApplicationManager.getApplication().executeOnPooledThread<String> {
+            val facade = DatabaseSessionManager
                 .getFacade(
                     project,
                     dataSource as LocalDataSource,
@@ -129,17 +135,21 @@ object DatabaseSchemaAssistant {
                     searchPath,
                     false,
                     handler,
-                    DGDepartment.DATA_IMPORT
-                ).runSync { connection: InterruptibleDatabaseConnection ->
-                    var statement: ReusableSmartStatement<String>? = null
-                    try {
-                        statement = SmartStatements.poweredBy(connection).simple(Configuration.default).reuse()
-                        runner.run()
-                    } finally {
-                        statement?.close()
-                    }
+                    DGDepartment.DATA_EXPORT
+                )
+            facade.runSync { connection: InterruptibleDatabaseConnection ->
+                var statement: ReusableSmartStatement<String>? = null
+                try {
+                    statement = SmartStatements.poweredBy(connection).simple(Configuration.default).reuse()
+                    runner.run()
+                } finally {
+//                            future.complete("Done")
+                    statement?.close()
                 }
+            }
 
+//                return@executeOnPooledThread future.get()
+//            }.get()
         } else {
             chooseAndRunRunners(runners, info.editor, null)
         }
