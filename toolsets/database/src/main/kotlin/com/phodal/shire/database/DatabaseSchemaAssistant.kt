@@ -4,16 +4,26 @@ import com.intellij.database.console.DatabaseRunners
 import com.intellij.database.console.JdbcConsole
 import com.intellij.database.console.JdbcConsoleProvider
 import com.intellij.database.console.evaluation.EvaluationRequest
+import com.intellij.database.console.session.DatabaseSessionManager
+import com.intellij.database.dataSource.InterruptibleDatabaseConnection
+import com.intellij.database.dataSource.LocalDataSource
+import com.intellij.database.dataSource.connection.DGDepartment
+import com.intellij.database.dataSource.connection.statements.Configuration
+import com.intellij.database.dataSource.connection.statements.ReusableSmartStatement
+import com.intellij.database.dataSource.connection.statements.SmartStatements
 import com.intellij.database.datagrid.*
 import com.intellij.database.editor.DatabaseEditorHelper
+import com.intellij.database.editor.DatabaseEditorHelperCore
 import com.intellij.database.intentions.RunQueryInConsoleIntentionAction.Manager.chooseAndRunRunners
 import com.intellij.database.model.DasTable
 import com.intellij.database.model.ObjectKind
 import com.intellij.database.model.RawDataSource
 import com.intellij.database.psi.DbDataSource
 import com.intellij.database.psi.DbPsiFacade
+import com.intellij.database.script.PersistenceConsoleProvider
 import com.intellij.database.settings.DatabaseSettings
 import com.intellij.database.util.DasUtil
+import com.intellij.database.util.ErrorHandler
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.ex.EditorEx
 import com.intellij.openapi.fileEditor.FileEditorManager
@@ -21,7 +31,6 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiManager
 import com.intellij.sql.psi.SqlPsiFacade
 import com.intellij.testFramework.LightVirtualFile
-import com.phodal.shirecore.provider.codemodel.model.ClassStructure
 import java.util.concurrent.CompletableFuture
 
 object DatabaseSchemaAssistant {
@@ -94,7 +103,7 @@ object DatabaseSchemaAssistant {
                     }
                 })
 
-               return@executeOnPooledThread future.get()
+                return@executeOnPooledThread future.get()
             }.get()
         }
 
@@ -108,7 +117,34 @@ object DatabaseSchemaAssistant {
         DatabaseEditorHelper.openConsoleForFile(project, dataSource, dasNamespace, file)
 
         val info = JdbcConsoleProvider.Info(psiFile, psiFile, editor as EditorEx, scriptModel, execOptions, null)
-        chooseAndRunRunners(DatabaseRunners.getAttachDataSourceRunners(info), info.editor, null)
+        val runners: MutableList<PersistenceConsoleProvider.Runner> = DatabaseRunners.getAttachDataSourceRunners(info)
+        if (runners.size == 1) {
+            val runner = runners.first()
+            val handler = ErrorHandler()
+            val searchPath = DatabaseEditorHelperCore.getSearchPath(psiFile)
+            DatabaseSessionManager
+                .getFacade(
+                    project,
+                    dataSource as LocalDataSource,
+                    null,
+                    searchPath,
+                    false,
+                    handler,
+                    DGDepartment.DATA_IMPORT
+                ).runSync { connection: InterruptibleDatabaseConnection ->
+                    var statement: ReusableSmartStatement<String>? = null
+                    try {
+                        statement = SmartStatements.poweredBy(connection).simple(Configuration.default).reuse()
+                        runner.run()
+                    } finally {
+                        statement?.close()
+                    }
+                }
+
+        } else {
+            chooseAndRunRunners(runners, info.editor, null)
+        }
+
         return "Error"
     }
 
