@@ -68,21 +68,14 @@ object DatabaseSchemaAssistant {
         val dataSource = getAllRawDatasource(project).firstOrNull()
             ?: throw IllegalArgumentException("ShireError[Database]: No database found")
 
-//        val activeConnections = DatabaseConnectionManager.getInstance().activeConnections
-//        val first: DatabaseConnection = activeConnections.firstOrNull()
-
         val execOptions = DatabaseSettings.getSettings().execOptions.last()
         val activeConsoles = JdbcConsole.getActiveConsoles(project)
         val console: JdbcConsole? = activeConsoles.firstOrNull()
             ?: JdbcConsoleProvider.getValidConsole(project, file)
             ?: createConsole(project, file)
 
-//        val elementAt = JdbcConsoleProvider.elementAt(psiFile, null, editor)
-//        JdbcConsoleProvider.findScriptModel(psiFile, elementAt, editor, execOption)
-//        val dbSession = JdbcConsoleProvider.findOrCreateSession(project, file)
-        val scriptModel = console?.scriptModel ?: SqlPsiFacade.getInstance(project).createScriptModel(psiFile)
-//        val m = ScriptModelUtil.adjustModelForSelection(model, document, selectionRange, execOption)
-//        JdbcConsoleProvider.Info(file, file, editor as EditorEx?, m, execOption, null as NotNullFunction<*, *>?)
+        val scriptModel = console?.scriptModel
+            ?: SqlPsiFacade.getInstance(project).createScriptModel(psiFile)
 
         val dasNamespace = dataSource.model.currentRootNamespace
         DatabaseEditorHelper.openConsoleForFile(project, dataSource, dasNamespace, file)
@@ -95,7 +88,6 @@ object DatabaseSchemaAssistant {
             return emptyList()
         }
 
-//        JdbcConsoleProvider.doRunQueryInConsole(console, info)
         console.executeQueries(editor, scriptModel, execOptions)
         return emptyList()
     }
