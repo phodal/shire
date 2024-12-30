@@ -1,6 +1,8 @@
 package com.phodal.shire.database
 
+import com.intellij.database.console.DatabaseRunners
 import com.intellij.database.console.JdbcConsoleProvider
+import com.intellij.database.intentions.RunQueryInConsoleIntentionAction.Manager.chooseAndRunRunners
 import com.intellij.database.model.DasTable
 import com.intellij.database.model.ObjectKind
 import com.intellij.database.model.RawDataSource
@@ -8,6 +10,9 @@ import com.intellij.database.psi.DbDataSource
 import com.intellij.database.psi.DbPsiFacade
 import com.intellij.database.settings.DatabaseSettings
 import com.intellij.database.util.DasUtil
+import com.intellij.ide.DataManager
+import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.editor.ex.EditorEx
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiManager
@@ -71,11 +76,19 @@ object DatabaseSchemaAssistant {
 //        val elementAt = JdbcConsoleProvider.elementAt(psiFile, null, editor)
 //        JdbcConsoleProvider.findScriptModel(psiFile, elementAt, editor, execOption)
 //        val dbSession = JdbcConsoleProvider.findOrCreateSession(project, file)
-//        val info = JdbcConsoleProvider.Info()
-        val scriptModel =
-            if (console != null) console.scriptModel else SqlPsiFacade.getInstance(project).createScriptModel(psiFile)
+        val scriptModel = console?.scriptModel ?: SqlPsiFacade.getInstance(project).createScriptModel(psiFile)
+
 //        val m = ScriptModelUtil.adjustModelForSelection(model, document, selectionRange, execOption)
 //        JdbcConsoleProvider.Info(file, file, editor as EditorEx?, m, execOption, null as NotNullFunction<*, *>?)
+
+        if (console == null) {
+
+            val info = JdbcConsoleProvider.Info(
+                psiFile, psiFile, editor as EditorEx, scriptModel, execOptions, null
+            )
+            chooseAndRunRunners(DatabaseRunners.getAttachDataSourceRunners(info), info.editor, null)
+            return emptyList()
+        }
 
 //        JdbcConsoleProvider.doRunQueryInConsole(console, info)
         console!!.executeQueries(editor, scriptModel, execOptions)
