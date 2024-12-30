@@ -1,8 +1,14 @@
 package com.phodal.shire.database
 
+import com.intellij.database.DataBus
+import com.intellij.database.DatabaseTopics
 import com.intellij.database.console.DatabaseRunners
 import com.intellij.database.console.JdbcConsole
 import com.intellij.database.console.JdbcConsoleProvider
+import com.intellij.database.datagrid.DataConsumer
+import com.intellij.database.datagrid.GridColumn
+import com.intellij.database.datagrid.GridDataRequest
+import com.intellij.database.datagrid.GridRow
 import com.intellij.database.editor.DatabaseEditorHelper
 import com.intellij.database.intentions.RunQueryInConsoleIntentionAction.Manager.chooseAndRunRunners
 import com.intellij.database.model.DasTable
@@ -10,6 +16,7 @@ import com.intellij.database.model.ObjectKind
 import com.intellij.database.model.RawDataSource
 import com.intellij.database.psi.DbDataSource
 import com.intellij.database.psi.DbPsiFacade
+import com.intellij.database.run.ConsoleDataRequest
 import com.intellij.database.settings.DatabaseSettings
 import com.intellij.database.util.DasUtil
 import com.intellij.openapi.editor.ex.EditorEx
@@ -59,8 +66,8 @@ object DatabaseSchemaAssistant {
         val psiFile = PsiManager.getInstance(project).findFile(file)
             ?: throw IllegalArgumentException("ShireError[Database]: No file found")
 
-        val fileEditor = FileEditorManager.getInstance(project).openFile(file).firstOrNull()
-            ?: throw IllegalArgumentException("ShireError[Database]: No editor found")
+//        val fileEditor = FileEditorManager.getInstance(project).openFile(file).firstOrNull()
+//            ?: throw IllegalArgumentException("ShireError[Database]: No editor found")
 
         val editor = FileEditorManager.getInstance(project).selectedTextEditor
             ?: throw IllegalArgumentException("ShireError[Database]: No editor found")
@@ -88,7 +95,29 @@ object DatabaseSchemaAssistant {
             return emptyList()
         }
 
-        console.executeQueries(editor, scriptModel, execOptions)
+        val messageBus = console.session.messageBus
+        val newConsoleRequest = ConsoleDataRequest.newConsoleRequest(
+            console,
+            editor,
+            scriptModel,
+            false
+        )
+        if (newConsoleRequest != null) {
+            messageBus.dataProducer.processRequest(newConsoleRequest)
+        } else {
+            console.executeQueries(editor, scriptModel, execOptions)
+        }
+
+        messageBus.addConsumer(object : DataConsumer {
+            override fun setColumns(context: GridDataRequest.Context, columns: Array<out GridColumn>) {
+                super.setColumns(context, columns)
+            }
+
+            override fun addRows(context: GridDataRequest.Context, rows: MutableList<out GridRow>) {
+                super.addRows(context, rows)
+            }
+        })
+
         return emptyList()
     }
 
