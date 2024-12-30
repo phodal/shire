@@ -81,8 +81,8 @@ object DatabaseSchemaAssistant {
             ?: createConsole(project, file)
 
         if (console != null) {
+            val future: CompletableFuture<String> = CompletableFuture()
             return ApplicationManager.getApplication().executeOnPooledThread<String> {
-                val future: CompletableFuture<String> = CompletableFuture()
                 val messageBus = console.session.messageBus
                 val newConsoleRequest = EvaluationRequest.newRequest(console, sql, dataSource.dbms)
                 messageBus.dataProducer.processRequest(newConsoleRequest)
@@ -95,11 +95,10 @@ object DatabaseSchemaAssistant {
                     override fun addRows(context: GridDataRequest.Context, rows: MutableList<out GridRow>) {
                         super.addRows(context, rows)
                         result += rows;
-                    }
-
-                    override fun afterLastRowAdded(context: GridDataRequest.Context, total: Int) {
-                        super.afterLastRowAdded(context, total)
-                        future.complete(result.toString())
+                        /// TODO: fix this use result.size instead of rows.size
+                        if (rows.size < 100) {
+                            future.complete(result.toString())
+                        }
                     }
                 })
 
