@@ -25,7 +25,7 @@ class JavaRelatedClassesProvider : RelatedClassesProvider {
 
     override fun lookup(element: PsiFile): List<PsiElement> {
         return when (element) {
-            is PsiJavaFile -> element.classes.firstOrNull()?.let { findRelatedClasses(it) + lookupTestFile(it) } ?: emptyList()
+            is PsiJavaFile -> findRelatedClasses(element.classes.first()) + lookupTestFile(element.classes.first())
             else -> emptyList()
         }
     }
