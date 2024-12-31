@@ -130,7 +130,8 @@ internal class AsyncShireFileListener : AsyncFileListener, ShireFileListener {
  */
 interface ShireFileListener {
     fun onUpdated(file: VirtualFile?) {
-        if (file == null || file.fileType !is ShireFileType || !file.isValid || file.isDirectory) return
+        if (file == null || !file.isValid || file.isDirectory) return
+        if (file.fileType !is ShireFileType) return
         if (file is LightVirtualFile) return
 
         ShireUpdater.publisher.onUpdated(file)
