@@ -10,7 +10,7 @@ import com.phodal.shirecore.provider.function.ToolchainFunctionProvider
 enum class DatabaseFunction(val funName: String) {
     Table("table"),
     Column("column"),
-    Execute("execute")
+    Query("query")
     ;
 
     companion object {
@@ -37,7 +37,7 @@ class DatabaseFunctionProvider : ToolchainFunctionProvider {
         return when (databaseFunction) {
             DatabaseFunction.Table -> executeTableFunction(args, project)
             DatabaseFunction.Column -> executeColumnFunction(args, project)
-            DatabaseFunction.Execute -> executeSqlFunction(args, project)
+            DatabaseFunction.Query -> executeSqlFunction(args, project)
         }
     }
 

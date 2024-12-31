@@ -38,6 +38,7 @@ hi
 
 - `table`，获取数据库表信息，参数 1：`databaseName`，默认获取第一个连接的数据库。
 - `column`，获取数据库列信息，参数 1：`tableName`，默认获取第一个表的列信息。
+- `query`，执行 SQL 查询，参数 1：`sql`，示例：`query("select * from user")`
 
 ### 示例 1
 

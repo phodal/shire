@@ -6,7 +6,6 @@ import com.intellij.database.console.JdbcConsoleProvider
 import com.intellij.database.console.evaluation.EvaluationRequest
 import com.intellij.database.console.session.DatabaseSessionManager
 import com.intellij.database.datagrid.*
-import com.intellij.database.editor.DatabaseEditorHelper
 import com.intellij.database.intentions.RunQueryInConsoleIntentionAction.Manager.chooseAndRunRunners
 import com.intellij.database.model.DasTable
 import com.intellij.database.model.ObjectKind
