@@ -81,6 +81,7 @@ configure(
 
     tasks {
         prepareSandbox { enabled = false }
+        prepareTestSandbox { enabled = false }
     }
 
     val testOutput = configurations.create("testOutput")
