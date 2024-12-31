@@ -11,13 +11,14 @@ import com.phodal.shirelang.psi.ShireFile
 import junit.framework.TestCase
 import org.intellij.lang.annotations.Language
 import org.jetbrains.annotations.TestOnly
+import org.junit.Ignore
 
 class ShireLifecycleTest : BasePlatformTestCase() {
     fun testShouldHandleWhenStreamingEnd() {
         @Language("Shire")
         val code = """
             ---
-            onStreamingEnd:  { parseCode | saveFile("api.py") | verifyCode | runCode }
+            onStreamingEnd:  { parseCode | saveFile("demo.sample") | verifyCode | runCode }
             ---
             
             ${'$'}allController
@@ -37,7 +38,7 @@ class ShireLifecycleTest : BasePlatformTestCase() {
         assertEquals(funcNode[0].args.size, 0)
 
         assertEquals(funcNode[1].funcName, "saveFile")
-        assertEquals(funcNode[1].args[0], "api.py")
+        assertEquals(funcNode[1].args[0], "demo.sample")
 
         assertEquals(funcNode[2].funcName, "verifyCode")
         assertEquals(funcNode[3].funcName, "runCode")
