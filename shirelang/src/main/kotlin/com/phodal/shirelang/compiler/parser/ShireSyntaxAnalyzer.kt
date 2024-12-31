@@ -1,6 +1,7 @@
 package com.phodal.shirelang.compiler.parser
 
 import com.intellij.lang.parser.GeneratedParserUtilBase.DUMMY_BLOCK
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.Editor
@@ -383,7 +384,8 @@ class ShireSyntaxAnalyzer(
             val hasReadCodeBlock = commandNode in listOf(
                 BuiltinCommand.WRITE,
                 BuiltinCommand.PATCH,
-                BuiltinCommand.COMMIT
+                BuiltinCommand.COMMIT,
+                BuiltinCommand.DATABASE,
             )
 
             if (hasReadCodeBlock) {

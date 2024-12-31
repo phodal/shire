@@ -18,6 +18,7 @@ import com.intellij.database.settings.DatabaseSettings
 import com.intellij.database.util.DasUtil
 import com.intellij.database.util.DbImplUtilCore
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.editor.ex.EditorEx
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
@@ -79,11 +80,11 @@ object DatabaseSchemaAssistant {
 
         val scriptModel = SqlPsiFacade.getInstance(project).createScriptModel(psiFile)
 
-        val dasNamespace = dataSource.model.currentRootNamespace
-        DatabaseEditorHelper.openConsoleForFile(project, dataSource, dasNamespace, file)
-
         val info = JdbcConsoleProvider.Info(psiFile, psiFile, editor as EditorEx, scriptModel, execOptions, null)
-        val runners: MutableList<PersistenceConsoleProvider.Runner> = DatabaseRunners.getAttachDataSourceRunners(info)
+        val runners: MutableList<PersistenceConsoleProvider.Runner> = runReadAction {
+            DatabaseRunners.getAttachDataSourceRunners(info)
+        }
+
         if (runners.size == 1) {
             var result = ""
             ApplicationManager.getApplication().invokeAndWait {
