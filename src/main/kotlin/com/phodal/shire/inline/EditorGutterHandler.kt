@@ -1,11 +1,10 @@
-package com.phodal.shire.marketplace
+package com.phodal.shire.inline
 
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.EditorFactory
-import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.openapi.editor.event.EditorFactoryEvent
 import com.intellij.openapi.editor.event.EditorFactoryListener
 import com.intellij.openapi.editor.event.SelectionEvent
@@ -59,17 +58,16 @@ class EditorGutterHandler {
     }
 
     fun addGutterIcon(editor: Editor, line: Int) {
-        val it: GutterIconData? = gutterIcons.get(editor)
-        if (it != null) {
-            INSTANCE.removeGutterIcon(editor, it.highlighter)
+        val iconData: GutterIconData? = gutterIcons[editor]
+        if (iconData != null) {
+            INSTANCE.removeGutterIcon(editor, iconData.highlighter)
         }
-
 
         FileDocumentManager.getInstance().getFile(editor.document) ?: return
 
         val highlighter = editor.markupModel.addLineHighlighter(null, line, 0)
         highlighter.gutterIconRenderer = ShireGutterIconRenderer(line, onClick = {
-            ShirelangNotifications.info(editor.project!!, "Line $line clicked")
+            ShireInlineChatService.getInstance().showInlineChat(editor)
         })
 
         gutterIcons[editor] = GutterIconData(line, highlighter)
