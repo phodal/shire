@@ -31,6 +31,7 @@ see in: ShireCommand.kt
 - `/browse`: browse web page, like `https://ide.unitmesh.cc`
 - `/refactor`: refactor code, like `rename`, `delete`, `move` etc.
 - `/goto`: go to file, like `src/main/java/com/example/Controller.java#L1C1`
+- `/database`: query database, like `select * from table where id = 1`
 
 ### File Command
 
@@ -145,3 +146,27 @@ Go to symbol:
 ```shire
 /goto:com.phodal.shire.demo.MathHelper.calculateInsurance#L1C1
 ```
+
+### Database Command
+
+List all tables:
+
+    /database:table
+    ```
+    autodev-index.sqlite
+    ```
+
+List all columns:
+    
+    /database:column
+    ```
+    chunks
+    ```
+
+Execute SQL:
+   
+    /database:query
+    ```sql
+    select * from table
+    ```
+
