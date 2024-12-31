@@ -4,8 +4,19 @@ title: Quick Start
 nav_order: 3
 ---
 
+## Install IDE
+Follow the link below for installation. Specific installation methods and steps will not be detailed here.
 
-## Installation
+Currently, the Shire language only supports [JetBrains' IDEs](https://www.jetbrains.com.cn), including:
+- [IntelliJ IDEA](https://www.jetbrains.com.cn/idea/)
+- [PyCharm](https://www.jetbrains.com.cn/pycharm/)
+- [WebStorm](https://www.jetbrains.com.cn/webstorm/)
+- ...
+
+You can choose one of these to install. Here, we will select IntelliJ IDEA.
+
+## Installation Shire Plugin
+The installation methods for the Shire plugin come in three forms:
 
 - Using the IDE built-in plugin system:
 
