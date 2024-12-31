@@ -61,7 +61,8 @@ object DatabaseSchemaAssistant {
 
     fun executeSqlQuery(project: Project, sql: String): String {
         val file = LightVirtualFile("temp.sql", sql)
-        val psiFile = PsiManager.getInstance(project).findFile(file)!!
+        val psiFile = runReadAction { PsiManager.getInstance(project).findFile(file) }
+            ?: return "ShireError[Database]: Can't find PSI file"
 
         val dataSource = allRawDatasource(project).firstOrNull()
             ?: throw IllegalArgumentException("ShireError[Database]: No database found")
