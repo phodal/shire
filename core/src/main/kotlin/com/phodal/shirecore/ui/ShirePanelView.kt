@@ -25,7 +25,8 @@ import com.phodal.shirecore.ui.input.ShireInput
 import java.awt.BorderLayout
 import javax.swing.*
 
-class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), NullableComponent {
+class ShirePanelView(val project: Project, showInput: Boolean = true) : SimpleToolWindowPanel(true, true),
+    NullableComponent {
     private var progressBar: CustomProgressBar = CustomProgressBar(this)
     private var shireInput: ShireInput = ShireInput(project)
 
@@ -63,7 +64,10 @@ class ShirePanelView(val project: Project) : SimpleToolWindowPanel(true, true), 
 
     init {
         contentPanel.add(scrollPanel, BorderLayout.CENTER)
-        contentPanel.add(shireInput, BorderLayout.SOUTH)
+        if (showInput) {
+            contentPanel.add(shireInput, BorderLayout.SOUTH)
+        }
+
         setContent(contentPanel)
     }
 

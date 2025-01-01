@@ -1,32 +1,36 @@
 package com.phodal.shire.inline
 
+import com.intellij.icons.AllIcons
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.actionSystem.KeyboardShortcut
+import com.intellij.openapi.actionSystem.Presentation
+import com.intellij.openapi.actionSystem.impl.ActionButton
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.EditorCustomElementRenderer
 import com.intellij.openapi.editor.Inlay
 import com.intellij.openapi.editor.markup.TextAttributes
-import com.intellij.openapi.keymap.KeymapManager
-import com.intellij.openapi.observable.util.*
+import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.wm.IdeFocusManager
 import com.intellij.ui.Gray
 import com.intellij.ui.JBColor
 import com.intellij.ui.RoundedLineBorder
 import com.intellij.ui.components.JBTextArea
+import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.llm.LlmProvider
+import com.phodal.shirecore.runner.console.cancelHandler
+import com.phodal.shirecore.ui.ShirePanelView
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.flow.cancellable
+import kotlinx.coroutines.launch
 import java.awt.*
-import java.awt.event.ActionEvent
-import java.awt.event.KeyEvent
-import java.awt.event.MouseAdapter
-import java.awt.event.MouseEvent
+import java.awt.event.*
 import java.awt.geom.Rectangle2D
 import java.util.concurrent.ConcurrentHashMap
 import javax.swing.*
 import javax.swing.border.Border
+import kotlin.collections.set
 
 @Service(Service.Level.APP)
 class ShireInlineChatService : Disposable {
@@ -92,11 +96,29 @@ class ShireInlineChatPanel(val editor: Editor) : JPanel(GridBagLayout()), Editor
     Disposable {
     var inlay: Inlay<*>? = null
     val inputPanel = ShireInlineChatInputPanel(this, onSubmit = { input ->
-        val flow: Flow<String>? = LlmProvider.provider(editor.project!!)?.stream(input, "", false)
-        runBlocking {
-            flow?.collect {
-                println(it)
+        this.centerPanel.isVisible = true
+        val project = editor.project!!
+
+        val flow: Flow<String>? = LlmProvider.provider(project)?.stream(input, "", false)
+
+        val panelView = ShirePanelView(project, showInput = false)
+        panelView.minimumSize = Dimension(800, 100)
+        setContent(panelView)
+        this@ShireInlineChatPanel.redraw()
+        ShireCoroutineScope.scope(project).launch {
+            val suggestion = StringBuilder()
+            panelView.onStart()
+            panelView.addRequestPrompt(input)
+
+            flow?.cancelHandler { panelView.handleCancel = it }?.cancellable()?.collect { char ->
+                suggestion.append(char)
+
+                invokeLater {
+                    panelView.onUpdate(suggestion.toString())
+                }
             }
+
+            panelView.onFinish(suggestion.toString())
         }
     })
     private var centerPanel: JPanel = JPanel(BorderLayout())
@@ -110,6 +132,7 @@ class ShireInlineChatPanel(val editor: Editor) : JPanel(GridBagLayout()), Editor
         isOpaque = false
         cursor = Cursor.getPredefinedCursor(0)
         background = JBColor(Gray.x99, Gray.x78)
+        minimumSize = Dimension(800, 100)
 
         val c = GridBagConstraints()
         c.gridx = 0
@@ -119,6 +142,8 @@ class ShireInlineChatPanel(val editor: Editor) : JPanel(GridBagLayout()), Editor
         add(inputPanel, c)
 
         val jPanel = JPanel(BorderLayout())
+        jPanel.isVisible = false
+        jPanel.background = JBColor(Color.LIGHT_GRAY, Color.LIGHT_GRAY)
         jPanel.addMouseListener(object : MouseAdapter() {
             override fun mouseClicked(e: MouseEvent) {
                 IdeFocusManager.getInstance(editor.project).requestFocus(inputPanel.getInputComponent(), true)
@@ -134,7 +159,13 @@ class ShireInlineChatPanel(val editor: Editor) : JPanel(GridBagLayout()), Editor
         isFocusCycleRoot = true
         focusTraversalPolicy = LayoutFocusTraversalPolicy()
 
-        redraw()
+        this.inAllChildren { child ->
+            child.addComponentListener(object : ComponentAdapter() {
+                override fun componentResized(e: ComponentEvent) {
+                    this@ShireInlineChatPanel.redraw()
+                }
+            })
+        }
     }
 
     override fun calcWidthInPixels(inlay: Inlay<*>): Int = size.width
@@ -167,6 +198,29 @@ class ShireInlineChatPanel(val editor: Editor) : JPanel(GridBagLayout()), Editor
         repaint()
     }
 
+    fun setContent(content: JComponent) {
+        content.isOpaque = true
+        ApplicationManager.getApplication().invokeLater {
+            if (!this.centerPanel.isVisible) {
+                this.centerPanel.isVisible = true
+            }
+
+            this.centerPanel.removeAll()
+            this.centerPanel.add(content, BorderLayout.CENTER)
+
+            this@ShireInlineChatPanel.redraw()
+        }
+    }
+
+    fun JComponent.inAllChildren(callback: (JComponent) -> Unit) {
+        callback(this)
+        components.forEach { component ->
+            if (component is JComponent) {
+                component.inAllChildren(callback)
+            }
+        }
+    }
+
     override fun dispose() {
         inlay?.dispose()
     }
@@ -186,7 +240,7 @@ class ShireInlineChatInputPanel(
             lineWrap = true
             wrapStyleWord = true
             border = BorderFactory.createEmptyBorder(8, 5, 8, 5)
-         }
+        }
 
         // escape to close
         textArea.actionMap.put("escapeAction", object : AbstractAction() {
@@ -195,30 +249,35 @@ class ShireInlineChatInputPanel(
             }
         })
         textArea.inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "escapeAction")
-
         // submit with enter
         textArea.actionMap.put("enterAction", object : AbstractAction() {
             override fun actionPerformed(e: ActionEvent) {
-                textArea.text = ""
-                onSubmit(textArea.text.trim())
+                submit()
             }
         })
         textArea.inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "enterAction")
         // newLine with shift + enter
-        textArea.actionMap.put("insert-break", object : AbstractAction() {
+        textArea.actionMap.put("newlineAction", object : AbstractAction() {
             override fun actionPerformed(e: ActionEvent) {
                 textArea.append("\n")
             }
         })
-        textArea.inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, KeyEvent.SHIFT_DOWN_MASK), "insert-break")
-
-
+        textArea.inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, KeyEvent.SHIFT_DOWN_MASK), "newlineAction")
         add(textArea)
-//
-//        val document = textArea.document
-//        document.whenTextChanged {
-//            //
-//        }
+
+        val submitPresentation = Presentation("Submit")
+        submitPresentation.icon = AllIcons.Actions.Execute
+        val submitButton = ActionButton(
+            DumbAwareAction.create { submit() },
+            submitPresentation, "", Dimension(20, 20)
+        )
+
+        add(submitButton, BorderLayout.EAST)
+    }
+
+    private fun submit() {
+        textArea.text = ""
+        onSubmit(textArea.text.trim())
     }
 
     fun getInputComponent(): Component = textArea
