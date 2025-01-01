@@ -13,7 +13,6 @@ import com.intellij.openapi.editor.Inlay
 import com.intellij.openapi.editor.markup.TextAttributes
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.wm.IdeFocusManager
-import com.intellij.ui.Gray
 import com.intellij.ui.JBColor
 import com.intellij.ui.RoundedLineBorder
 import com.intellij.ui.components.JBTextArea
@@ -101,22 +100,23 @@ class ShireInlineChatPanel(val editor: Editor) : JPanel(GridBagLayout()), Editor
         val flow: Flow<String>? = LlmProvider.provider(project)?.stream(input, "", false)
 
         val panelView = ShirePanelView(project, showInput = false)
-        panelView.minimumSize = Dimension(800, 100)
+        panelView.minimumSize = Dimension(800, 40)
         setContent(panelView)
 
         ShireCoroutineScope.scope(project).launch {
             val suggestion = StringBuilder()
             panelView.onStart()
-            panelView.addRequestPrompt(input)
 
             flow?.cancelHandler { panelView.handleCancel = it }?.cancellable()?.collect { char ->
                 suggestion.append(char)
 
                 invokeLater {
                     panelView.onUpdate(suggestion.toString())
+                    panelView.resize()
                 }
             }
 
+            panelView.resize()
             panelView.onFinish(suggestion.toString())
         }
     })
@@ -124,23 +124,19 @@ class ShireInlineChatPanel(val editor: Editor) : JPanel(GridBagLayout()), Editor
     private var container: Container? = null
 
     init {
-        val bgColor = JBColor(Color.LIGHT_GRAY, Color.LIGHT_GRAY)
-        val borderColor = JBColor(Color.LIGHT_GRAY, Color.LIGHT_GRAY)
-
         border = BorderFactory.createCompoundBorder(
             BorderFactory.createCompoundBorder(
                 BorderFactory.createEmptyBorder(12, 12, 12, 12),
-                RoundedLineBorder(bgColor, 8, 1)
+                RoundedLineBorder(JBColor.border(), 8, 1)
             ),
             BorderFactory.createCompoundBorder(
-                RoundedLineBorder(borderColor, 8, 1),
-                BorderFactory.createMatteBorder(10, 10, 10, 10, borderColor)
+                RoundedLineBorder(JBColor.border(), 8, 1),
+                BorderFactory.createMatteBorder(10, 10, 10, 10, JBColor.border())
             )
         )
 
         isOpaque = false
         cursor = Cursor.getPredefinedCursor(0)
-        background = borderColor
 
         val c = GridBagConstraints()
         c.gridx = 0
@@ -151,7 +147,6 @@ class ShireInlineChatPanel(val editor: Editor) : JPanel(GridBagLayout()), Editor
 
         val jPanel = JPanel(BorderLayout())
         jPanel.isVisible = false
-        jPanel.background = JBColor(Color.LIGHT_GRAY, Color.LIGHT_GRAY)
         jPanel.addMouseListener(object : MouseAdapter() {
             override fun mouseClicked(e: MouseEvent) {
                 IdeFocusManager.getInstance(editor.project).requestFocus(inputPanel.getInputComponent(), true)
@@ -163,7 +158,6 @@ class ShireInlineChatPanel(val editor: Editor) : JPanel(GridBagLayout()), Editor
         c.gridy = 1
         c.fill = 1
         add(this.centerPanel, c)
-
 
         this.inAllChildren { child ->
             child.addComponentListener(object : ComponentAdapter() {
@@ -278,7 +272,7 @@ class ShireInlineChatInputPanel(
         submitPresentation.icon = AllIcons.Actions.Execute
         val submitButton = ActionButton(
             DumbAwareAction.create { submit() },
-            submitPresentation, "", Dimension(20, 20)
+            submitPresentation, "", Dimension(40, 20)
         )
 
         add(submitButton, BorderLayout.EAST)

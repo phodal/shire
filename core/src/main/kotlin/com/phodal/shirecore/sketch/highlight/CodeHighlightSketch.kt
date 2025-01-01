@@ -49,7 +49,7 @@ class CodeHighlightSketch(val project: Project, val text: String, private var id
 
         val editor = createCodeViewerEditor(project, text, ideaLanguage, this)
 
-        editor.component.border = JBUI.Borders.empty(10)
+        editor.component.border = JBUI.Borders.empty(10, 0)
         editor.component.isOpaque = true
 
         editorFragment = EditorFragment(editor)

@@ -16,14 +16,17 @@ import com.intellij.ui.dsl.builder.panel
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
 import com.phodal.shirecore.provider.sketch.ExtensionLangSketch
-import com.phodal.shirecore.sketch.highlight.CodeHighlightSketch
+import com.phodal.shirecore.provider.sketch.LanguageSketchProvider
 import com.phodal.shirecore.sketch.LangSketch
+import com.phodal.shirecore.sketch.highlight.CodeHighlightSketch
+import com.phodal.shirecore.ui.input.ShireInput
 import com.phodal.shirecore.utils.markdown.CodeFence
 import com.phodal.shirecore.utils.markdown.CodeFenceLanguage
-import com.phodal.shirecore.provider.sketch.LanguageSketchProvider
-import com.phodal.shirecore.ui.input.ShireInput
 import java.awt.BorderLayout
-import javax.swing.*
+import javax.swing.JComponent
+import javax.swing.JPanel
+import javax.swing.ScrollPaneConstants
+import javax.swing.SwingUtilities
 
 class ShirePanelView(val project: Project, showInput: Boolean = true) : SimpleToolWindowPanel(true, true),
     NullableComponent {
@@ -64,6 +67,7 @@ class ShirePanelView(val project: Project, showInput: Boolean = true) : SimpleTo
 
     init {
         contentPanel.add(scrollPanel, BorderLayout.CENTER)
+
         if (showInput) {
             contentPanel.add(shireInput, BorderLayout.SOUTH)
         }
@@ -177,6 +181,15 @@ class ShirePanelView(val project: Project, showInput: Boolean = true) : SimpleTo
         SwingUtilities.invokeLater {
             val verticalScrollBar = scrollPanel.verticalScrollBar
             verticalScrollBar.value = verticalScrollBar.maximum
+        }
+    }
+
+    fun resize() {
+        val height = myList.components.sumOf { it.height }
+        if (height < 600) {
+            this.minimumSize = JBUI.size(800, height)
+        } else {
+            this.minimumSize = JBUI.size(800, 600)
         }
     }
 
