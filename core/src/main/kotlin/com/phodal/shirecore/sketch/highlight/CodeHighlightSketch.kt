@@ -21,6 +21,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.testFramework.LightVirtualFile
+import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBPanel
 import com.intellij.util.concurrency.annotations.RequiresReadLock
 import com.intellij.util.ui.JBUI
@@ -57,6 +58,8 @@ class CodeHighlightSketch(val project: Project, val text: String, private var id
 
         if (ideaLanguage?.displayName != "Markdown" && ideaLanguage != PlainTextLanguage.INSTANCE) {
             setupActionBar(project, editor)
+        } else {
+            editor.backgroundColor = JBColor.PanelBackground
         }
     }
 

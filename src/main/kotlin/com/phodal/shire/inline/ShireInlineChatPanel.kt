@@ -67,10 +67,10 @@ class ShireInlineChatPanel(val editor: Editor) : JPanel(GridBagLayout()), Editor
         border = BorderFactory.createCompoundBorder(
             BorderFactory.createCompoundBorder(
                 BorderFactory.createEmptyBorder(12, 12, 12, 12),
-                RoundedLineBorder(JBColor.LIGHT_GRAY, 4, 1)
+                RoundedLineBorder(JBColor.LIGHT_GRAY, 1, 1)
             ),
             BorderFactory.createCompoundBorder(
-                RoundedLineBorder(JBColor.LIGHT_GRAY, 4, 1),
+                RoundedLineBorder(JBColor.LIGHT_GRAY, 1, 1),
                 BorderFactory.createMatteBorder(10, 10, 10, 10, JBColor.PanelBackground)
             )
         )
