@@ -196,14 +196,16 @@ class VerticalDiffBlock(
     private fun revertDiff() {
         WriteCommandAction.runWriteCommandAction(project) {
             // Delete the added lines
-            val startOffset = if (startLine > editor.document.lineCount) {
-                editor.document.textLength
+            val lineCount = editor.document.lineCount
+            val textLength = editor.document.textLength
+            val startOffset = if (startLine >= lineCount) {
+                textLength
             } else {
                 editor.document.getLineStartOffset(startLine)
             }
 
-            val endOffset = editor.document.getLineEndOffset(startLine + addedLines.size - 1) + 1
-            editor.document.deleteString(startOffset, endOffset)
+            val endOffset = editor.document.getLineEndOffset(Math.min(lineCount - 1, startLine + addedLines.size - 1)) + 1
+            editor.document.deleteString(startOffset, Math.min(endOffset, textLength))
 
             // Add the deleted lines back
             if (deletedLines.isNotEmpty()) {
