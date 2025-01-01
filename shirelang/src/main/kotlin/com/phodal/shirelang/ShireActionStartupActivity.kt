@@ -13,6 +13,8 @@ import com.intellij.psi.PsiManager
 import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.ProjectScope
 import com.phodal.shirecore.config.InteractionType
+import com.phodal.shirecore.config.ShireActionLocation
+import com.phodal.shirecore.provider.ide.InlineChatProvider
 import com.phodal.shirelang.actions.GlobalShireFileChangesProvider
 import com.phodal.shirelang.actions.ShireFileChangesProvider
 import com.phodal.shirelang.actions.base.DynamicShireActionService
@@ -31,7 +33,11 @@ class ShireActionStartupActivity : ProjectActivity {
         GlobalShireFileChangesProvider.getInstance().startup(::attachCopyPasteAction)
         val changesProvider = ShireFileChangesProvider.getInstance(project)
         smartReadAction(project) {
-            changesProvider.startup(::attachCopyPasteAction)
+            changesProvider.startup { shireConfig, shireFile ->
+                attachCopyPasteAction(shireConfig, shireFile)
+                attachInlineChat(shireConfig)
+            }
+
             obtainShireFiles(project).forEach {
                 changesProvider.onUpdated(it)
             }
@@ -83,6 +89,12 @@ class ShireActionStartupActivity : ProjectActivity {
         val action = actionManager.getAction("ShireVcsLogAction")
         if (!toolsMenu.containsAction(action)) {
             toolsMenu.add(action, Constraints.FIRST)
+        }
+    }
+
+    private fun attachInlineChat(shireConfig: HobbitHole) {
+        if (shireConfig.actionLocation == ShireActionLocation.INLINE_CHAT) {
+            InlineChatProvider.provide()?.listen()
         }
     }
 

@@ -2,6 +2,7 @@
 package com.phodal.shirelang
 
 import com.intellij.lang.Language
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.InjectedLanguagePlaces
 import com.intellij.psi.LanguageInjector
@@ -77,7 +78,11 @@ class ShireLanguageInjector : LanguageInjector {
         val first = contentList.first()
         val last = contentList.last()
 
-        val textRange = TextRange.create(first.startOffsetInParent, last.startOffsetInParent + last.textLength)
-        registrar.addPlace(language, textRange, null, null)
+        try {
+            val textRange = TextRange.create(first.startOffsetInParent, last.startOffsetInParent + last.textLength)
+            registrar.addPlace(language, textRange, null, null)
+        } catch (e: Exception) {
+            logger<ShireLanguageInjector>().error("Failed to inject language", e)
+        }
     }
 }

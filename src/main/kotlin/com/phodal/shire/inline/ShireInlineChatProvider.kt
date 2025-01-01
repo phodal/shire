@@ -9,12 +9,19 @@ import com.intellij.openapi.editor.event.SelectionEvent
 import com.intellij.openapi.editor.event.SelectionListener
 import com.intellij.openapi.editor.markup.RangeHighlighter
 import com.intellij.openapi.fileEditor.FileDocumentManager
+import com.phodal.shirecore.provider.ide.InlineChatProvider
 import io.ktor.util.collections.*
 
 data class GutterIconData(
     val line: Int,
     val highlighter: RangeHighlighter,
 )
+
+class ShireInlineChatProvider: InlineChatProvider {
+    override fun listen() {
+        EditorGutterHandler.INSTANCE.listen()
+    }
+}
 
 class EditorGutterHandler {
     val gutterIcons: ConcurrentMap<Editor, GutterIconData?> = ConcurrentMap()
@@ -69,6 +76,7 @@ class EditorGutterHandler {
 
     fun removeGutterIcon(editor: Editor, highlighter: RangeHighlighter) {
         editor.markupModel.removeHighlighter(highlighter)
+        gutterIcons.remove(editor)
     }
 
     companion object {

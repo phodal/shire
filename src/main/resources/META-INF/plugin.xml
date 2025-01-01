@@ -47,5 +47,7 @@
 
     <extensions defaultExtensionNs="com.phodal">
         <shireLlmProvider implementation="com.phodal.shire.llm.OpenAILikeProvider"/>
+
+        <shireInlineChatProvider implementation="com.phodal.shire.inline.ShireInlineChatProvider"/>
     </extensions>
 </idea-plugin>
