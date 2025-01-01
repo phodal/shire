@@ -1,7 +1,5 @@
 package com.phodal.shire.inline
 
-import com.intellij.openapi.actionSystem.AnAction
-import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.EditorFactory
@@ -9,13 +7,9 @@ import com.intellij.openapi.editor.event.EditorFactoryEvent
 import com.intellij.openapi.editor.event.EditorFactoryListener
 import com.intellij.openapi.editor.event.SelectionEvent
 import com.intellij.openapi.editor.event.SelectionListener
-import com.intellij.openapi.editor.markup.GutterIconRenderer
 import com.intellij.openapi.editor.markup.RangeHighlighter
 import com.intellij.openapi.fileEditor.FileDocumentManager
-import com.phodal.shire.ShireIdeaIcons
-import com.phodal.shirecore.ShirelangNotifications
 import io.ktor.util.collections.*
-import javax.swing.Icon
 
 data class GutterIconData(
     val line: Int,
@@ -40,7 +34,7 @@ class EditorGutterHandler {
     fun onEditorCreated(editor: Editor) {
         editor.selectionModel.addSelectionListener(object : SelectionListener {
             override fun selectionChanged(e: SelectionEvent) {
-                if (!editor.hasSelection()) {
+                if (!editor.selectionModel.hasSelection()) {
                     gutterIcons[editor]?.let {
                         INSTANCE.removeGutterIcon(editor, it.highlighter)
                     }
@@ -82,42 +76,3 @@ class EditorGutterHandler {
     }
 }
 
-class ShireGutterIconRenderer(
-    val line: Int, val onClick: () -> Unit,
-) : GutterIconRenderer() {
-    override fun getClickAction(): AnAction {
-        return object : AnAction() {
-            override fun actionPerformed(e: AnActionEvent) {
-                onClick()
-            }
-        }
-    }
-
-    override fun getIcon(): Icon = ShireIdeaIcons.Default
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as ShireGutterIconRenderer
-
-        if (line != other.line) return false
-        if (onClick != other.onClick) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = line
-        result = 31 * result + onClick.hashCode()
-        return result
-    }
-
-}
-
-fun Editor.addSelectionListener(listener: SelectionListener) {
-    selectionModel.addSelectionListener(listener)
-}
-
-fun Editor.hasSelection(): Boolean {
-    return selectionModel.hasSelection()
-}
