@@ -16,10 +16,12 @@ import com.intellij.openapi.wm.IdeFocusManager
 import com.intellij.ui.JBColor
 import com.intellij.ui.RoundedLineBorder
 import com.intellij.ui.components.JBTextArea
+import com.intellij.util.ui.JBUI.CurrentTheme
 import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.runner.console.cancelHandler
 import com.phodal.shirecore.ui.ShirePanelView
+import com.phodal.shirecore.ui.input.ShireLineBorder
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.launch
@@ -65,11 +67,11 @@ class ShireInlineChatPanel(val editor: Editor) : JPanel(GridBagLayout()), Editor
         border = BorderFactory.createCompoundBorder(
             BorderFactory.createCompoundBorder(
                 BorderFactory.createEmptyBorder(12, 12, 12, 12),
-                RoundedLineBorder(JBColor.border(), 8, 1)
+                RoundedLineBorder(JBColor.LIGHT_GRAY, 4, 1)
             ),
             BorderFactory.createCompoundBorder(
-                RoundedLineBorder(JBColor.border(), 8, 1),
-                BorderFactory.createMatteBorder(10, 10, 10, 10, JBColor.border())
+                RoundedLineBorder(JBColor.LIGHT_GRAY, 4, 1),
+                BorderFactory.createMatteBorder(10, 10, 10, 10, JBColor.PanelBackground)
             )
         )
 
@@ -184,7 +186,7 @@ class ShireInlineChatInputPanel(
             }
         }
 
-        border = BorderFactory.createMatteBorder(1, 0, 0, 0, JBColor.border())
+        border = ShireLineBorder(CurrentTheme.Focus.focusColor(), 1, true, 8)
 
         // escape to close
         textArea.actionMap.put("escapeAction", object : AbstractAction() {

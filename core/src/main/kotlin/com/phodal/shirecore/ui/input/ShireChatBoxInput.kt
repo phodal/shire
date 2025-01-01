@@ -30,7 +30,7 @@ import javax.swing.*
 
 data class modelWrapper(val psiElement: PsiElement, var panel: JPanel? = null, var namePanel: JPanel? = null)
 
-class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
+class ShireChatBoxInput(val project: Project) : JPanel(BorderLayout()), Disposable {
     private var scratchFile: VirtualFile? = null
     private val listModel = DefaultListModel<modelWrapper>()
     private val elementsList = JBList(listModel)
@@ -54,7 +54,7 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
                 }
 
                 val virtualFile = createShireFile(prompt)
-                this@ShireInput.scratchFile = virtualFile
+                this@ShireChatBoxInput.scratchFile = virtualFile
 
                 FileRunService.provider(project, virtualFile!!)
                     ?.runFile(project, virtualFile, null)
@@ -63,6 +63,7 @@ class ShireInput(val project: Project) : JPanel(BorderLayout()), Disposable {
                 elementsList.clearSelection()
             }
         })
+
         this.border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
         this.add(inputSection, BorderLayout.CENTER)
         this.add(elementsList, BorderLayout.NORTH)

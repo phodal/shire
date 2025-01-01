@@ -8,7 +8,7 @@ import com.intellij.openapi.wm.ToolWindow
 import com.intellij.ui.content.ContentFactory
 import com.intellij.ui.dsl.builder.Align
 import com.intellij.ui.dsl.builder.panel
-import com.phodal.shirecore.ui.input.ShireInput
+import com.phodal.shirecore.ui.input.ShireChatBoxInput
 import javax.swing.JPanel
 
 @State(name = "MarketPlaceView", storages = [Storage(StoragePathMacros.PRODUCT_WORKSPACE_FILE)])
@@ -18,7 +18,7 @@ class MarketplaceView(project: Project) {
     private val shirePackageTableComponent = ShireMarketplaceTableView(project)
 
     init {
-        val shireInput = ShireInput(project)
+        val shireInput = ShireChatBoxInput(project)
         myToolWindowPanel = panel {
             row {
                 cell(shirePackageTableComponent.mainPanel).align(Align.FILL)

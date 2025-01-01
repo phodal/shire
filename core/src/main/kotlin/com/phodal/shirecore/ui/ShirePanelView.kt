@@ -19,7 +19,7 @@ import com.phodal.shirecore.provider.sketch.ExtensionLangSketch
 import com.phodal.shirecore.provider.sketch.LanguageSketchProvider
 import com.phodal.shirecore.sketch.LangSketch
 import com.phodal.shirecore.sketch.highlight.CodeHighlightSketch
-import com.phodal.shirecore.ui.input.ShireInput
+import com.phodal.shirecore.ui.input.ShireChatBoxInput
 import com.phodal.shirecore.utils.markdown.CodeFence
 import com.phodal.shirecore.utils.markdown.CodeFenceLanguage
 import java.awt.BorderLayout
@@ -31,7 +31,7 @@ import javax.swing.SwingUtilities
 class ShirePanelView(val project: Project, showInput: Boolean = true) : SimpleToolWindowPanel(true, true),
     NullableComponent {
     private var progressBar: CustomProgressBar = CustomProgressBar(this)
-    private var shireInput: ShireInput = ShireInput(project)
+    private var shireInput: ShireChatBoxInput = ShireChatBoxInput(project)
 
     private var myList = JPanel(VerticalLayout(JBUI.scale(0))).apply {
         this.isOpaque = true
