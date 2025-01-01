@@ -7,11 +7,15 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.EditorCustomElementRenderer
 import com.intellij.openapi.editor.Inlay
 import com.intellij.openapi.editor.markup.TextAttributes
+import com.intellij.openapi.observable.util.*
 import com.intellij.openapi.wm.IdeFocusManager
 import com.intellij.ui.Gray
 import com.intellij.ui.JBColor
 import com.intellij.ui.RoundedLineBorder
 import com.intellij.ui.components.JBTextArea
+import com.phodal.shirecore.llm.LlmProvider
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.runBlocking
 import java.awt.*
 import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
@@ -85,7 +89,14 @@ class ShireInlineChatService : Disposable {
 class ShireInlineChatPanel(val editor: Editor) : JPanel(GridBagLayout()), EditorCustomElementRenderer,
     Disposable {
     var inlay: Inlay<*>? = null
-    val inputPanel = ShireInlineChatInputPanel(this)
+    val inputPanel = ShireInlineChatInputPanel(this, onSubmit = { input ->
+        val flow: Flow<String>? = LlmProvider.provider(editor.project!!)?.stream(input, "", false)
+        runBlocking {
+            flow?.collect {
+                println(it)
+            }
+        }
+    })
     private var centerPanel: JPanel = JPanel(BorderLayout())
     private var container: Container? = null
 
@@ -159,28 +170,56 @@ class ShireInlineChatPanel(val editor: Editor) : JPanel(GridBagLayout()), Editor
     }
 }
 
-class ShireInlineChatInputPanel(val shireInlineChatPanel: ShireInlineChatPanel) : JPanel(GridBagLayout()) {
+class ShireInlineChatInputPanel(
+    val shireInlineChatPanel: ShireInlineChatPanel,
+    val onSubmit: (String) -> Unit,
+) : JPanel(GridBagLayout()) {
     private val textArea: JBTextArea
 
     init {
         layout = BorderLayout()
         textArea = JBTextArea().apply {
-            val closeOnEscapeAction = object : AbstractAction() {
-                override fun actionPerformed(e: ActionEvent) {
-                    ShireInlineChatService.getInstance().closeInlineChat(shireInlineChatPanel.editor)
-                }
-            }
-
             isOpaque = false
             isFocusable = true
             lineWrap = true
             wrapStyleWord = true
             border = BorderFactory.createEmptyBorder(8, 5, 8, 5)
-            actionMap.put("closeOnEscape", closeOnEscapeAction)
-            inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "closeOnEscape")
          }
 
+        val escapeAction = object : AbstractAction() {
+            override fun actionPerformed(e: ActionEvent) {
+                ShireInlineChatService.getInstance().closeInlineChat(shireInlineChatPanel.editor)
+            }
+        }
+        val enterAction = object : AbstractAction() {
+            override fun actionPerformed(e: ActionEvent) {
+                textArea.text = ""
+                onSubmit(textArea.text.trim())
+            }
+        }
+
+        textArea.actionMap.put("escapeAction", escapeAction)
+        textArea.inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "escapeAction")
+
+        // submit with enter
+        textArea.actionMap.put("enterAction", enterAction)
+        textArea.inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "enterAction")
+        // newLine with shift + enter
+        val insertBreakAction = object : AbstractAction() {
+            override fun actionPerformed(e: ActionEvent) {
+                textArea.append("\n")
+            }
+        }
+        textArea.actionMap.put("insert-break", insertBreakAction)
+        textArea.inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, KeyEvent.SHIFT_DOWN_MASK), "insert-break")
+
+
         add(textArea)
+
+        val document = textArea.document
+        document.whenTextChanged {
+            //
+        }
     }
 
     fun getInputComponent(): Component = textArea
