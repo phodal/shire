@@ -62,8 +62,7 @@ class EditorFragment(var editor: EditorEx) {
                 return height + headerHeight + labelHeight + insets.height
             }
         }.apply {
-            border = JBUI.Borders.empty(10)
-            isOpaque = false
+            isOpaque = true
 
             addToLeft(EditorPadding(editor, 5))
             addToRight(EditorPadding(editor, 5))

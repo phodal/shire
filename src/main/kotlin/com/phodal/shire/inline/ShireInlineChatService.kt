@@ -1,6 +1,7 @@
 package com.phodal.shire.inline
 
 import com.intellij.icons.AllIcons
+import com.intellij.ide.KeyboardAwareFocusOwner
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.Presentation
 import com.intellij.openapi.actionSystem.impl.ActionButton
@@ -166,9 +167,6 @@ class ShireInlineChatPanel(val editor: Editor) : JPanel(GridBagLayout()), Editor
                 }
             })
         }
-
-        isFocusCycleRoot = true
-        focusTraversalPolicy = LayoutFocusTraversalPolicy()
     }
 
     override fun calcWidthInPixels(inlay: Inlay<*>): Int = size.width
@@ -237,13 +235,19 @@ class ShireInlineChatInputPanel(
 
     init {
         layout = BorderLayout()
-        textArea = JBTextArea().apply {
-            isOpaque = false
-            isFocusable = true
-            lineWrap = true
-            wrapStyleWord = true
-            border = BorderFactory.createEmptyBorder(8, 5, 8, 5)
+        textArea = object: JBTextArea(), KeyboardAwareFocusOwner {
+            override fun skipKeyEventDispatcher(event: KeyEvent): Boolean = true
+
+            init {
+                isOpaque = false
+                isFocusable = true
+                lineWrap = true
+                wrapStyleWord = true
+                border = BorderFactory.createEmptyBorder(8, 6, 8, 6)
+            }
         }
+
+        border = BorderFactory.createMatteBorder(1, 0, 0, 0, JBColor.border())
 
         // escape to close
         textArea.actionMap.put("escapeAction", object : AbstractAction() {
