@@ -1,12 +1,14 @@
 package com.phodal.shire.inline
 
 import com.intellij.openapi.Disposable
+import com.intellij.openapi.actionSystem.KeyboardShortcut
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.EditorCustomElementRenderer
 import com.intellij.openapi.editor.Inlay
 import com.intellij.openapi.editor.markup.TextAttributes
+import com.intellij.openapi.keymap.KeymapManager
 import com.intellij.openapi.observable.util.*
 import com.intellij.openapi.wm.IdeFocusManager
 import com.intellij.ui.Gray
@@ -186,40 +188,37 @@ class ShireInlineChatInputPanel(
             border = BorderFactory.createEmptyBorder(8, 5, 8, 5)
          }
 
-        val escapeAction = object : AbstractAction() {
+        // escape to close
+        textArea.actionMap.put("escapeAction", object : AbstractAction() {
             override fun actionPerformed(e: ActionEvent) {
                 ShireInlineChatService.getInstance().closeInlineChat(shireInlineChatPanel.editor)
             }
-        }
-        val enterAction = object : AbstractAction() {
+        })
+        textArea.inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "escapeAction")
+
+        // submit with enter
+        textArea.actionMap.put("enterAction", object : AbstractAction() {
             override fun actionPerformed(e: ActionEvent) {
                 textArea.text = ""
                 onSubmit(textArea.text.trim())
             }
-        }
-
-        textArea.actionMap.put("escapeAction", escapeAction)
-        textArea.inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "escapeAction")
-
-        // submit with enter
-        textArea.actionMap.put("enterAction", enterAction)
+        })
         textArea.inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "enterAction")
         // newLine with shift + enter
-        val insertBreakAction = object : AbstractAction() {
+        textArea.actionMap.put("insert-break", object : AbstractAction() {
             override fun actionPerformed(e: ActionEvent) {
                 textArea.append("\n")
             }
-        }
-        textArea.actionMap.put("insert-break", insertBreakAction)
+        })
         textArea.inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, KeyEvent.SHIFT_DOWN_MASK), "insert-break")
 
 
         add(textArea)
-
-        val document = textArea.document
-        document.whenTextChanged {
-            //
-        }
+//
+//        val document = textArea.document
+//        document.whenTextChanged {
+//            //
+//        }
     }
 
     fun getInputComponent(): Component = textArea
