@@ -19,7 +19,7 @@ data class GutterIconData(
 class EditorGutterHandler {
     val gutterIcons: ConcurrentMap<Editor, GutterIconData?> = ConcurrentMap()
 
-    fun create() {
+    fun listen() {
         addEditorFactoryListener()
     }
 
