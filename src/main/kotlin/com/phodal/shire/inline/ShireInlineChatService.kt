@@ -29,7 +29,6 @@ import java.awt.event.*
 import java.awt.geom.Rectangle2D
 import java.util.concurrent.ConcurrentHashMap
 import javax.swing.*
-import javax.swing.border.Border
 import kotlin.collections.set
 
 @Service(Service.Level.APP)
@@ -104,7 +103,7 @@ class ShireInlineChatPanel(val editor: Editor) : JPanel(GridBagLayout()), Editor
         val panelView = ShirePanelView(project, showInput = false)
         panelView.minimumSize = Dimension(800, 100)
         setContent(panelView)
-        this@ShireInlineChatPanel.redraw()
+
         ShireCoroutineScope.scope(project).launch {
             val suggestion = StringBuilder()
             panelView.onStart()
@@ -125,14 +124,23 @@ class ShireInlineChatPanel(val editor: Editor) : JPanel(GridBagLayout()), Editor
     private var container: Container? = null
 
     init {
-        val createEmptyBorder = BorderFactory.createEmptyBorder(12, 12, 12, 12)
-        val roundedLineBorder: Border = RoundedLineBorder(JBColor(Gray.xCD, Gray.x4D), 8, 1)
-        border = BorderFactory.createCompoundBorder(createEmptyBorder, roundedLineBorder)
+        val bgColor = JBColor(Color.LIGHT_GRAY, Color.LIGHT_GRAY)
+        val borderColor = JBColor(Color.LIGHT_GRAY, Color.LIGHT_GRAY)
+
+        border = BorderFactory.createCompoundBorder(
+            BorderFactory.createCompoundBorder(
+                BorderFactory.createEmptyBorder(12, 12, 12, 12),
+                RoundedLineBorder(bgColor, 8, 1)
+            ),
+            BorderFactory.createCompoundBorder(
+                RoundedLineBorder(borderColor, 8, 1),
+                BorderFactory.createMatteBorder(10, 10, 10, 10, borderColor)
+            )
+        )
 
         isOpaque = false
         cursor = Cursor.getPredefinedCursor(0)
-        background = JBColor(Gray.x99, Gray.x78)
-        minimumSize = Dimension(800, 100)
+        background = borderColor
 
         val c = GridBagConstraints()
         c.gridx = 0
@@ -156,8 +164,6 @@ class ShireInlineChatPanel(val editor: Editor) : JPanel(GridBagLayout()), Editor
         c.fill = 1
         add(this.centerPanel, c)
 
-        isFocusCycleRoot = true
-        focusTraversalPolicy = LayoutFocusTraversalPolicy()
 
         this.inAllChildren { child ->
             child.addComponentListener(object : ComponentAdapter() {
@@ -166,6 +172,9 @@ class ShireInlineChatPanel(val editor: Editor) : JPanel(GridBagLayout()), Editor
                 }
             })
         }
+
+        isFocusCycleRoot = true
+        focusTraversalPolicy = LayoutFocusTraversalPolicy()
     }
 
     override fun calcWidthInPixels(inlay: Inlay<*>): Int = size.width
@@ -276,8 +285,9 @@ class ShireInlineChatInputPanel(
     }
 
     private fun submit() {
+        val trimText = textArea.text.trim()
         textArea.text = ""
-        onSubmit(textArea.text.trim())
+        onSubmit(trimText)
     }
 
     fun getInputComponent(): Component = textArea
