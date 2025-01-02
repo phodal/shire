@@ -59,6 +59,11 @@ class ShireInlineChatService : Disposable {
         allChats.remove(editor.virtualFile.url)
     }
 
+    fun prompt(input: String): String {
+        // todo: call our service to get action prompt
+        return input
+    }
+
     companion object {
         fun getInstance(): ShireInlineChatService {
             return ApplicationManager.getApplication().getService(ShireInlineChatService::class.java)
