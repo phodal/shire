@@ -1,6 +1,7 @@
 package com.phodal.shire.inline
 
-import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.Disposable
+import com.intellij.openapi.components.Service
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.EditorFactory
 import com.intellij.openapi.editor.event.EditorFactoryEvent
@@ -9,6 +10,10 @@ import com.intellij.openapi.editor.event.SelectionEvent
 import com.intellij.openapi.editor.event.SelectionListener
 import com.intellij.openapi.editor.markup.RangeHighlighter
 import com.intellij.openapi.fileEditor.FileDocumentManager
+import com.intellij.openapi.fileEditor.FileEditorManager
+import com.intellij.openapi.fileEditor.TextEditor
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.Disposer
 import com.phodal.shirecore.provider.ide.InlineChatProvider
 import io.ktor.util.collections.*
 
@@ -18,50 +23,74 @@ data class GutterIconData(
 )
 
 class ShireInlineChatProvider: InlineChatProvider {
-    override fun listen() {
-        EditorGutterHandler.INSTANCE.listen()
+    override fun addListener(project: Project) {
+        EditorGutterHandler.getInstance(project).listen()
+    }
+
+    override fun removeListener(project: Project) {
+        EditorGutterHandler.getInstance(project).dispose()
     }
 }
 
-class EditorGutterHandler {
+@Service(Service.Level.PROJECT)
+class EditorGutterHandler(private val project: Project) : Disposable {
     val gutterIcons: ConcurrentMap<Editor, GutterIconData?> = ConcurrentMap()
+
+    private var disposable: Disposable? = null
 
     fun listen() {
         addEditorFactoryListener()
     }
 
     fun addEditorFactoryListener() {
-        EditorFactory.getInstance().addEditorFactoryListener(object : EditorFactoryListener {
-            override fun editorCreated(event: EditorFactoryEvent) {
-                INSTANCE.onEditorCreated(event.editor)
+        if (disposable != null) {
+            return
+        }
+        disposable = Disposer.newDisposable().apply {
+            EditorFactory.getInstance().addEditorFactoryListener(object : EditorFactoryListener {
+                override fun editorCreated(event: EditorFactoryEvent) {
+                    onEditorCreated(event.editor, this@apply)
+                }
+            }, this)
+
+            FileEditorManager.getInstance(project).allEditors.mapNotNull { it as? TextEditor }.forEach {
+                updateGutterIconWithSelection(it.editor)
+                onEditorCreated(it.editor, this@apply)
             }
-        }, ApplicationManager.getApplication())
+        }
     }
 
-    fun onEditorCreated(editor: Editor) {
+    fun onEditorCreated(editor: Editor, disposable: Disposable) {
         editor.selectionModel.addSelectionListener(object : SelectionListener {
             override fun selectionChanged(e: SelectionEvent) {
-                if (!editor.selectionModel.hasSelection()) {
-                    gutterIcons[editor]?.let {
-                        INSTANCE.removeGutterIcon(editor, it.highlighter)
-                    }
-                }
-
-                val selectionStart = editor.document.getLineNumber(e.newRange.startOffset)
-                if (selectionStart >= 0 && selectionStart < editor.document.lineCount) {
-                    val gutterIconInfo = gutterIcons[editor]
-                    if (gutterIconInfo?.line != selectionStart) {
-                        INSTANCE.addGutterIcon(editor, selectionStart)
-                    }
-                }
+                if (e.editor.project != project) return
+                updateGutterIconWithSelection(editor)
             }
-        })
+        }, disposable)
+    }
+
+    fun updateGutterIconWithSelection(editor: Editor) {
+        if (!editor.selectionModel.hasSelection()) {
+            gutterIcons[editor]?.let {
+                removeGutterIcon(editor, it.highlighter)
+            }
+
+            return
+        }
+
+        val selectionStart = editor.document.getLineNumber(editor.selectionModel.selectionStart)
+        if (selectionStart >= 0 && selectionStart < editor.document.lineCount) {
+            val gutterIconInfo = gutterIcons[editor]
+            if (gutterIconInfo?.line != selectionStart) {
+                addGutterIcon(editor, selectionStart)
+            }
+        }
     }
 
     fun addGutterIcon(editor: Editor, line: Int) {
         val iconData: GutterIconData? = gutterIcons[editor]
         if (iconData != null) {
-            INSTANCE.removeGutterIcon(editor, iconData.highlighter)
+            removeGutterIcon(editor, iconData.highlighter)
         }
 
         FileDocumentManager.getInstance().getFile(editor.document) ?: return
@@ -74,13 +103,24 @@ class EditorGutterHandler {
         gutterIcons[editor] = GutterIconData(line, highlighter)
     }
 
-    fun removeGutterIcon(editor: Editor, highlighter: RangeHighlighter) {
-        editor.markupModel.removeHighlighter(highlighter)
+    fun removeGutterIcon(editor: Editor, highlighter: RangeHighlighter? = null) {
+        if (highlighter != null) editor.markupModel.removeHighlighter(highlighter)
         gutterIcons.remove(editor)
     }
 
+    override fun dispose() {
+        gutterIcons.forEach {
+            removeGutterIcon(it.key, it.value?.highlighter)
+        }
+        disposable?.let { Disposer.dispose(it) }
+        disposable = null
+    }
+
     companion object {
-        val INSTANCE = EditorGutterHandler()
+
+        fun getInstance(project: Project): EditorGutterHandler {
+            return project.getService(EditorGutterHandler::class.java)
+        }
     }
 }
 
