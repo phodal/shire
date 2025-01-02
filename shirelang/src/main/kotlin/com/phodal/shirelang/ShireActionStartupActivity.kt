@@ -35,7 +35,7 @@ class ShireActionStartupActivity : ProjectActivity {
         smartReadAction(project) {
             changesProvider.startup { shireConfig, shireFile ->
                 attachCopyPasteAction(shireConfig, shireFile)
-                attachInlineChat(shireConfig)
+                attachInlineChat(project)
             }
 
             obtainShireFiles(project).forEach {
@@ -92,9 +92,11 @@ class ShireActionStartupActivity : ProjectActivity {
         }
     }
 
-    private fun attachInlineChat(shireConfig: HobbitHole) {
-        if (shireConfig.actionLocation == ShireActionLocation.INLINE_CHAT) {
-            InlineChatProvider.provide()?.listen()
+    private fun attachInlineChat(project: Project) {
+        if (DynamicShireActionService.getInstance(project).getActions(ShireActionLocation.INLINE_CHAT).isNotEmpty()) {
+            InlineChatProvider.provide()?.addListener(project)
+        }else{
+            InlineChatProvider.provide()?.removeListener(project)
         }
     }
 
