@@ -68,10 +68,10 @@ class ShireInlineChatPanel(val editor: Editor) : JPanel(GridBagLayout()), Editor
         border = BorderFactory.createCompoundBorder(
             BorderFactory.createCompoundBorder(
                 BorderFactory.createEmptyBorder(12, 12, 12, 12),
-                RoundedLineBorder(JBColor.LIGHT_GRAY, 1, 1)
+                RoundedLineBorder(JBColor.LIGHT_GRAY, 18, 1)
             ),
             BorderFactory.createCompoundBorder(
-                RoundedLineBorder(JBColor.LIGHT_GRAY, 1, 1),
+                ShireLineBorder(JBColor.border(), 1, true, 8),
                 BorderFactory.createMatteBorder(10, 10, 10, 10, JBColor.PanelBackground)
             )
         )
@@ -85,6 +85,21 @@ class ShireInlineChatPanel(val editor: Editor) : JPanel(GridBagLayout()), Editor
         c.weightx = 1.0
         c.fill = 2
         add(inputPanel, c)
+
+        val submitPresentation = Presentation("Submit")
+        submitPresentation.icon = AllIcons.Actions.Cancel
+        val submitButton = ActionButton(
+            DumbAwareAction.create {
+                ShireInlineChatService.getInstance().closeInlineChat(editor)
+            },
+            submitPresentation, "", Dimension(24, 20)
+        )
+        submitButton.isOpaque = true
+        submitButton.background = JBColor.PanelBackground
+        c.gridx = 1
+        c.weightx = 0.0
+        c.fill = 1
+        add(submitButton, c)
 
         val jPanel = JPanel(BorderLayout())
         jPanel.isVisible = false
