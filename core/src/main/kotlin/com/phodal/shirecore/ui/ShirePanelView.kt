@@ -184,12 +184,12 @@ class ShirePanelView(val project: Project, showInput: Boolean = true) : SimpleTo
         }
     }
 
-    fun resize() {
+    fun resize(maxHeight: Int = 480) {
         val height = myList.components.sumOf { it.height }
-        if (height < 600) {
+        if (height < maxHeight) {
             this.minimumSize = JBUI.size(800, height)
         } else {
-            this.minimumSize = JBUI.size(800, 600)
+            this.minimumSize = JBUI.size(800, maxHeight)
         }
     }
 

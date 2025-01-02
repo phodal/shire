@@ -340,8 +340,11 @@ class ShireRunner(
 
             /// add context
             prepareExecute(parsedResult, variables, project, null)
-
             val runnerContext = processTemplateCompile(parsedResult, variables, project, null, null)
+
+            val service = project.getService(OnStreamingService::class.java)
+            service?.onStart(project, runnerContext.finalPrompt)
+
             return runnerContext
 
         }
