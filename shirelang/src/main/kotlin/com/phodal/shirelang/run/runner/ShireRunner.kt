@@ -9,7 +9,6 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiManager
 import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirecore.config.interaction.PostFunction
-import com.phodal.shirecore.llm.ChatRole
 import com.phodal.shirecore.runner.console.cancelWithConsole
 import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.middleware.post.PostProcessorContext
@@ -36,7 +35,6 @@ import kotlinx.coroutines.*
 import java.util.concurrent.CompletableFuture
 
 class ShireRunner(
-    private val shireFile: ShireFile,
     private val project: Project,
     private val console: ShireConsoleView?,
     private val configuration: ShireConfiguration,
@@ -63,7 +61,7 @@ class ShireRunner(
             varsMap["output"] = variables["output"].toString()
         }
 
-        val runnerContext = processTemplateCompile(parsedResult, varsMap, processHandler)
+        val runnerContext = processTemplateCompile(parsedResult, varsMap)
         if (runnerContext.hasError) {
             processHandler.exitWithError()
             return null
@@ -130,7 +128,7 @@ class ShireRunner(
     }
 
     private suspend fun processTemplateCompile(
-        compileResult: ShireParsedResult, variableMap: Map<String, String>, processHandler: ShireProcessHandler,
+        compileResult: ShireParsedResult, variableMap: Map<String, String>,
     ): ShireRunnerContext {
         val hobbitHole = compileResult.config
         val editor = ActionLocationEditor.provide(project, hobbitHole?.actionLocation)

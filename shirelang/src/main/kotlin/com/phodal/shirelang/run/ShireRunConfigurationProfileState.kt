@@ -52,7 +52,7 @@ open class ShireRunConfigurationProfileState(
         }
 
         val shireRunner = ShireRunner(
-            shireFile, myProject, console!!, configuration, configuration.getVariables(), processHandler
+            myProject, console!!, configuration, configuration.getVariables(), processHandler
         ).also {
             console?.bindShireRunner(it)
             processHandler.addProcessListener(object : ProcessListener {

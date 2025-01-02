@@ -46,6 +46,7 @@ class ShireFileRunService : FileRunService, Disposable {
 
         return setting
     }
+
     override fun runFile(project: Project, virtualFile: VirtualFile, psiElement: PsiElement?): String? {
         val settings = createRunSettings(project, virtualFile, psiElement) ?: return null
         val psiFile = ShireFile.lookup(project, virtualFile) ?: return null

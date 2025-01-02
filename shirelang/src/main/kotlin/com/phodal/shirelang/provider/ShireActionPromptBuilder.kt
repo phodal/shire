@@ -12,6 +12,7 @@ class ShireActionPromptBuilder : ShirePromptBuilder {
         val action = DynamicShireActionService.getInstance(project).getActions(location)
             .firstOrNull() ?: return originPrompt
 
+
         return action.shireFile.text?.replace("\$chatPrompt", originPrompt) ?: ""
     }
 }
