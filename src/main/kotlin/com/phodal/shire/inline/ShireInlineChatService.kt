@@ -68,7 +68,7 @@ class ShireInlineChatService : Disposable {
     }
 
     fun prompt(project: Project, prompt: String): String {
-        return ShirePromptBuilder.provide()?.build(project, ShireActionLocation.INPUT_BOX.name, prompt) ?: prompt
+        return ShirePromptBuilder.provide()?.build(project, ShireActionLocation.INLINE_CHAT.name, prompt) ?: prompt
     }
 
     companion object {

@@ -4,6 +4,8 @@ import com.intellij.openapi.project.Project
 import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirecore.provider.ide.ShirePromptBuilder
 import com.phodal.shirelang.actions.base.DynamicShireActionService
+import com.phodal.shirelang.run.runner.ShireRunner
+import kotlinx.coroutines.runBlocking
 
 class ShireActionPromptBuilder : ShirePromptBuilder {
     override fun build(project: Project, actionLocation: String, originPrompt: String): String {
@@ -12,7 +14,11 @@ class ShireActionPromptBuilder : ShirePromptBuilder {
         val action = DynamicShireActionService.getInstance(project).getActions(location)
             .firstOrNull() ?: return originPrompt
 
+        val initVariables = mapOf("chatPrompt" to originPrompt)
+        val finalPrompt = runBlocking {
+            ShireRunner.compileFileContext(project, action.shireFile, initVariables)
+        }.finalPrompt
 
-        return action.shireFile.text?.replace("\$chatPrompt", originPrompt) ?: ""
+        return finalPrompt
     }
 }

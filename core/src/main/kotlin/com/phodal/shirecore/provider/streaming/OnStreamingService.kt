@@ -52,7 +52,8 @@ class OnStreamingService {
     fun onStreaming(project: Project, chunk: String) {
         map.forEach { (sign, service) ->
             try {
-                service.onStreaming(project, chunk, sign.args)
+                service.
+                onStreaming(project, chunk, sign.args)
             } catch (e: Exception) {
                 ShirelangNotifications.error(project, "Error on streaming service: ${e.message}")
             }
