@@ -1,10 +1,17 @@
 package com.phodal.shire.inline
 
+import com.intellij.lang.Language
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.wm.IdeFocusManager
+import com.phodal.shirecore.config.ShireActionLocation
+import com.phodal.shirecore.provider.shire.FileCreateService
+import com.phodal.shirecore.provider.shire.FileRunService
+import com.phodal.shirelang.actions.base.DynamicShireActionService
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.set
 
@@ -59,9 +66,18 @@ class ShireInlineChatService : Disposable {
         allChats.remove(editor.virtualFile.url)
     }
 
-    fun prompt(input: String): String {
-        // todo: call our service to get action prompt
-        return input
+    fun prompt(project: Project, prompt: String): String {
+        val actions = DynamicShireActionService.getInstance(project).getActions(ShireActionLocation.INPUT_BOX)
+        var baseContent = ""
+        if (actions.isNotEmpty()) {
+            baseContent = actions.first().shireFile.text ?: ""
+        }
+
+        if (baseContent.isNotEmpty()) {
+            return baseContent.replace("\$chatPrompt", prompt)
+        } else {
+            return prompt
+        }
     }
 
     companion object {

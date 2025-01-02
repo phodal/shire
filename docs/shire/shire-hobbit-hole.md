@@ -87,6 +87,7 @@ enum class ShireActionLocation(val location: String, val description: String) {
     CONSOLE_MENU("ConsoleMenu", "Show in Console panel menu bar"),
     VCS_LOG_MENU("VcsLogMenu", "Show in VCS Log panel menu bar"),
     CHAT_BOX("ChatBox", "Show in Chat Box"), // 将默认使用 RigthPanel 作为展示位置
+    INLINE_CHAT("InlineChat", "Show in Inline Chat"),
 
     /// external plugins
     EXT_SONARQUBE_MENU("ExtSonarQubeMenu", "Show in SonarQube panel menu bar"),
@@ -127,3 +128,10 @@ $chatPrompt
 
 create hello world
 ```
+
+### Inline Chat 示例
+
+Inline Chat 是在当前文件器的行号附近的一个由 Shire Icon 触发的输入框，用户可以在这里输入内容，然后调用大语言模型。使用事项如下：
+
+- 用户需要自行创建一个 Shire 文件，然后将 `actionLocation` 设置为 `InlineChat`。
+

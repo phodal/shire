@@ -37,7 +37,7 @@ class ShireInlineChatPanel(val editor: Editor) : JPanel(GridBagLayout()), Editor
         this.centerPanel.isVisible = true
         val project = editor.project!!
 
-        val prompt = ShireInlineChatService.getInstance().prompt(input)
+        val prompt = ShireInlineChatService.getInstance().prompt(project, input)
         val flow: Flow<String>? = LlmProvider.provider(project)?.stream(prompt, "", false)
 
         val panelView = ShirePanelView(project, showInput = false)
