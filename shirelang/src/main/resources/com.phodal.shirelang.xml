@@ -86,6 +86,7 @@
 
         <editorFactoryDocumentListener implementation="com.phodal.shirelang.actions.ShireFileModificationListener"/>
 
+        <fileEditorProvider implementation="com.phodal.shirelang.editor.ShireFileEditorProvider"/>
     </extensions>
 
     <actions>
