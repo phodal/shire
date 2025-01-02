@@ -155,6 +155,9 @@
         <extensionPoint qualifiedName="com.phodal.shireInlineChatProvider"
                         interface="com.phodal.shirecore.provider.ide.InlineChatProvider"
                         dynamic="true"/>
+        <extensionPoint qualifiedName="com.phodal.shirePromptBuilder"
+                        interface="com.phodal.shirecore.provider.ide.ShirePromptBuilder"
+                        dynamic="true"/>
 
         <extensionPoint qualifiedName="com.phodal.shireLlmProvider"
                         interface="com.phodal.shirecore.llm.LlmProvider"
@@ -230,12 +233,12 @@
                 implementationClass="com.phodal.shirecore.provider.impl.MarkdownPsiContextVariableProvider"/>
 
         <shireStreamingService
-                implementationClass="com.phodal.shirecore.provider.streaming.LoggingStreamingService"/>
+                implementation="com.phodal.shirecore.provider.streaming.LoggingStreamingService"/>
 
         <shireStreamingService
-                implementationClass="com.phodal.shirecore.provider.streaming.TimingStreamingService"/>
+                implementation="com.phodal.shirecore.provider.streaming.TimingStreamingService"/>
 
         <shireStreamingService
-                implementationClass="com.phodal.shirecore.provider.streaming.ProfilingStreamingService"/>
+                implementation="com.phodal.shirecore.provider.streaming.ProfilingStreamingService"/>
     </extensions>
 </idea-plugin>

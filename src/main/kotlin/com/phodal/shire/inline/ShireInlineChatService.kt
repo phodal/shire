@@ -9,6 +9,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.wm.IdeFocusManager
 import com.phodal.shirecore.config.ShireActionLocation
+import com.phodal.shirecore.provider.ide.ShirePromptBuilder
 import com.phodal.shirecore.provider.shire.FileCreateService
 import com.phodal.shirecore.provider.shire.FileRunService
 import com.phodal.shirelang.actions.base.DynamicShireActionService
@@ -67,17 +68,7 @@ class ShireInlineChatService : Disposable {
     }
 
     fun prompt(project: Project, prompt: String): String {
-        val actions = DynamicShireActionService.getInstance(project).getActions(ShireActionLocation.INPUT_BOX)
-        var baseContent = ""
-        if (actions.isNotEmpty()) {
-            baseContent = actions.first().shireFile.text ?: ""
-        }
-
-        if (baseContent.isNotEmpty()) {
-            return baseContent.replace("\$chatPrompt", prompt)
-        } else {
-            return prompt
-        }
+        return ShirePromptBuilder.provide()?.build(project, ShireActionLocation.INPUT_BOX.name, prompt) ?: prompt
     }
 
     companion object {
