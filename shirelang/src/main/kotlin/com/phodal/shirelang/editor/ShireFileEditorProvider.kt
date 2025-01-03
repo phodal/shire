@@ -1,84 +1,126 @@
 package com.phodal.shirelang.editor
 
-import com.intellij.codeHighlighting.BackgroundEditorHighlighter
 import com.intellij.icons.AllIcons
-import com.intellij.ide.structureView.StructureViewBuilder
 import com.intellij.openapi.actionSystem.*
+import com.intellij.openapi.actionSystem.ex.ActionUtil
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.fileEditor.*
-import com.intellij.openapi.fileEditor.impl.text.TextEditorImpl
 import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider
 import com.intellij.openapi.fileTypes.FileTypeRegistry
-import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.UserDataHolder
 import com.intellij.openapi.util.UserDataHolderBase
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.pom.Navigatable
+import com.intellij.psi.PsiManager
 import com.intellij.testFramework.LightVirtualFile
+import com.intellij.ui.dsl.builder.Align
+import com.intellij.ui.dsl.builder.panel
+import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirelang.ShireFileType
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import java.awt.BorderLayout
 import java.beans.PropertyChangeListener
+import javax.swing.JComponent
 import javax.swing.JPanel
 
-class ShireFileEditorProvider : FileEditorProvider, DumbAware {
-    override fun getEditorTypeId() = "r-editor"
+class ShireFileEditorProvider : WeighedFileEditorProvider() {
+    override fun getEditorTypeId() = "shire-editor"
+    private val mainProvider: TextEditorProvider = TextEditorProvider.getInstance()
+    private val previewProvider: FileEditorProvider = ShirePreviewEditorProvider()
 
     override fun accept(project: Project, file: VirtualFile) =
         FileTypeRegistry.getInstance().isFileOfType(file, ShireFileType.INSTANCE)
 
     override fun createEditor(project: Project, file: VirtualFile): FileEditor {
-        val editor = TextEditorProvider.getInstance().createEditor(project, file) as TextEditorImpl
+        val editor = TextEditorProvider.getInstance().createEditor(project, file)
         if (editor.file is LightVirtualFile) {
             return editor
         }
 
-        return ShireFileEditor(project, editor, file)
+        val mainEditor = mainProvider.createEditor(project, file) as TextEditor
+        val preview = previewProvider.createEditor(project, file) as ShirePreviewEditor
+        return ShireFileEditor(mainEditor, preview, project)
     }
 
     override fun getPolicy() = FileEditorPolicy.HIDE_DEFAULT_EDITOR
+}
+
+class ShirePreviewEditorProvider : WeighedFileEditorProvider(), AsyncFileEditorProvider {
+    override fun accept(project: Project, file: VirtualFile): Boolean {
+        return FileTypeRegistry.getInstance().isFileOfType(file, ShireFileType.INSTANCE)
+    }
+
+    override fun createEditor(project: Project, virtualFile: VirtualFile): FileEditor {
+        return ShirePreviewEditor(project, virtualFile)
+    }
+
+    override fun getEditorTypeId(): String = "markdown-preview-editor"
+
+    override fun getPolicy(): FileEditorPolicy = FileEditorPolicy.PLACE_AFTER_DEFAULT_EDITOR
 }
 
 /**
  * Display shire file render prompt and have a sample file as view
  */
-open class ShirePreviewEditorProvider : FileEditorProvider, DumbAware {
-    override fun getEditorTypeId() = "shire-preview"
-
-    override fun accept(project: Project, file: VirtualFile) =
-        FileTypeRegistry.getInstance().isFileOfType(file, ShireFileType.INSTANCE)
-
-    override fun createEditor(project: Project, file: VirtualFile): FileEditor {
-        val editor = TextEditorProvider.getInstance().createEditor(project, file) as TextEditorImpl
-        if (editor.file is LightVirtualFile) {
-            return editor
-        }
-
-        return ShireFileEditor(project, editor, file)
+open class ShirePreviewEditor(
+    val project: Project,
+    val virtualFile: VirtualFile,
+) : UserDataHolder by UserDataHolderBase(), FileEditor {
+    val psiFile = PsiManager.getInstance(project).findFile(virtualFile)
+    private var mainEditor = MutableStateFlow<Editor?>(null)
+    private val visualPanel: JPanel = JPanel(BorderLayout()).apply {
+        /// show preview of the shire file
     }
 
-    override fun getPolicy() = FileEditorPolicy.HIDE_DEFAULT_EDITOR
+    init {
+        ShireCoroutineScope.scope(project).launch {
+            val corePanel = panel {
+                row {
+                    val textArea = textArea()
+                    textArea.align(Align.FILL)
+                }
+            }
+
+            visualPanel.add(corePanel)
+        }
+    }
+
+
+    fun setMainEditor(editor: Editor) {
+        check(mainEditor.value == null)
+        mainEditor.value = editor
+    }
+
+    override fun getComponent(): JComponent = visualPanel
+    override fun getName(): String = "Shire Prompt Preview"
+    override fun setState(state: FileEditorState) {}
+    override fun isModified(): Boolean = false
+    override fun isValid(): Boolean = true
+    override fun getFile(): VirtualFile = virtualFile
+    override fun getPreferredFocusedComponent(): JComponent? = null
+    override fun addPropertyChangeListener(listener: PropertyChangeListener) {}
+    override fun removePropertyChangeListener(listener: PropertyChangeListener) {}
+    override fun dispose() {}
 }
 
-open class ShireFileEditor(
-    val project: Project,
-    val textEditor: TextEditor,
-    val virtualFile: VirtualFile,
-) : UserDataHolderBase(), TextEditor {
-    protected val mainComponent = JPanel(BorderLayout())
+class ShireFileEditor(
+    private val ourEditor: TextEditor,
+    private val preview: ShirePreviewEditor,
+    private val project: Project,
+) : TextEditorWithPreview(ourEditor, preview) {
+    val virtualFile: VirtualFile = ourEditor.file
 
     init {
-        val toolbarComponent = createToolbar().component
-        mainComponent.add(textEditor.component, BorderLayout.CENTER)
-        // maybe left panel for editor
-        /// split for workflow view
-        mainComponent.add(toolbarComponent, BorderLayout.NORTH)
+        editor.contentComponent.putClientProperty(ActionUtil.ALLOW_ACTION_PERFORM_WHEN_HIDDEN, true)
+        preview.setMainEditor(editor)
     }
 
     override fun dispose() {
-        TextEditorProvider.getInstance().disposeEditor(textEditor)
+        TextEditorProvider.getInstance().disposeEditor(ourEditor)
     }
 
-    private fun createToolbar(): ActionToolbar {
+    override fun createToolbar(): ActionToolbar {
         return ActionManager.getInstance()
             .createActionToolbar(ActionPlaces.EDITOR_TOOLBAR, createActionGroup(project, virtualFile, editor), true)
             .also {
@@ -86,42 +128,20 @@ open class ShireFileEditor(
             }
     }
 
-    private fun createActionGroup(project: Project, report: VirtualFile, editor: Editor): ActionGroup {
+    private fun createActionGroup(project: Project, virtualFile: VirtualFile, editor: Editor): ActionGroup {
         return DefaultActionGroup(
-            createRunShireAction(project),
+            createHelpAction(project),
+            Separator()
         )
     }
 
-    private fun createRunShireAction(project: Project): AnAction {
-        val idleIcon = AllIcons.Actions.Execute
-        return object : AnAction("Run Shire", "Run Shire", idleIcon) {
+    private fun createHelpAction(project: Project): AnAction {
+        val idleIcon = AllIcons.Actions.Help
+        return object : AnAction("Help", "Help", idleIcon) {
             override fun actionPerformed(e: AnActionEvent) {
-                /// run current File
+                val url = "https://shire.phodal.com/"
+                com.intellij.ide.BrowserUtil.browse(url)
             }
         }
-    }
-
-    override fun getComponent() = mainComponent
-    override fun getState(level: FileEditorStateLevel): FileEditorState = textEditor.getState(level)
-    override fun setState(state: FileEditorState) = textEditor.setState(state)
-    override fun isModified(): Boolean = textEditor.isModified
-    override fun isValid(): Boolean = textEditor.isValid
-    override fun getBackgroundHighlighter(): BackgroundEditorHighlighter? = textEditor.backgroundHighlighter
-    override fun getCurrentLocation(): FileEditorLocation? = textEditor.currentLocation
-    override fun getPreferredFocusedComponent() = textEditor.preferredFocusedComponent
-    override fun getName(): String = "Shire Preview"
-
-    override fun getStructureViewBuilder(): StructureViewBuilder? = textEditor.structureViewBuilder
-    override fun getEditor(): Editor = textEditor.editor
-    override fun navigateTo(navigatable: Navigatable) = textEditor.navigateTo(navigatable)
-    override fun canNavigateTo(navigatable: Navigatable): Boolean = textEditor.canNavigateTo(navigatable)
-    override fun getFile(): VirtualFile = virtualFile
-
-    override fun addPropertyChangeListener(listener: PropertyChangeListener) {
-        textEditor.addPropertyChangeListener(listener)
-    }
-
-    override fun removePropertyChangeListener(listener: PropertyChangeListener) {
-        textEditor.removePropertyChangeListener(listener)
     }
 }
