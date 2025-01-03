@@ -13,6 +13,7 @@ import com.intellij.openapi.editor.event.DocumentListener
 import com.intellij.openapi.fileEditor.*
 import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider
 import com.intellij.openapi.fileTypes.FileTypeRegistry
+import com.intellij.openapi.fileTypes.PlainTextLanguage
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.UserDataHolder
 import com.intellij.openapi.util.UserDataHolderBase
@@ -106,7 +107,7 @@ open class ShirePreviewEditor(
     init {
         val corePanel = panel {
             row {
-                highlightSketch = CodeHighlightSketch(project, "", null).apply {
+                highlightSketch = CodeHighlightSketch(project, "", PlainTextLanguage.INSTANCE).apply {
                     initEditor(virtualFile.readText())
                 }
 
