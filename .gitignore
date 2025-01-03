@@ -6,3 +6,4 @@ build
 .shire-output
 .intellijPlatform
 recording.jsonl
+**/bin/
