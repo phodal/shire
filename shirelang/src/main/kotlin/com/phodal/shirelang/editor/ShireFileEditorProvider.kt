@@ -4,7 +4,6 @@ import com.intellij.icons.AllIcons
 import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.actionSystem.ex.ActionUtil
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.application.runInEdt
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.event.DocumentEvent
 import com.intellij.openapi.editor.event.DocumentListener
@@ -70,7 +69,7 @@ class ShirePreviewEditorProvider : WeighedFileEditorProvider(), AsyncFileEditorP
         return ShirePreviewEditor(project, virtualFile)
     }
 
-    override fun getEditorTypeId(): String = "markdown-preview-editor"
+    override fun getEditorTypeId(): String = "shire-preview-editor"
 
     override fun getPolicy(): FileEditorPolicy = FileEditorPolicy.PLACE_AFTER_DEFAULT_EDITOR
 }
@@ -111,37 +110,35 @@ open class ShirePreviewEditor(
                     initEditor(virtualFile.readText())
                 }
 
-                ApplicationManager.getApplication().invokeLater {
-                    updateOutput()
-                }
                 cell(highlightSketch!!).align(Align.FILL)
             }
         }
 
         jPanel.add(corePanel, BorderLayout.CENTER)
         mainEditor.value?.document?.addDocumentListener(ReparseContentDocumentListener())
+        updateOutput()
     }
 
 
     private inner class ReparseContentDocumentListener : DocumentListener {
         override fun documentChanged(event: DocumentEvent) {
-            ApplicationManager.getApplication().invokeLater {
-                updateOutput()
-            }
+            updateOutput()
         }
     }
 
     fun updateOutput() {
-        try {
-            val psiFile = PsiManager.getInstance(project).findFile(virtualFile) as? ShireFile ?: return
-            val finalPrompt = runBlocking {
-                ShireRunner.compileFileContext(project, psiFile, mapOf())
-            }.finalPrompt
+        ApplicationManager.getApplication().invokeLater {
+            try {
+                val psiFile = PsiManager.getInstance(project).findFile(virtualFile) as? ShireFile ?: return@invokeLater
+                val finalPrompt = runBlocking {
+                    ShireRunner.compileFileContext(project, psiFile, mapOf())
+                }.finalPrompt
 
-            highlightSketch?.updateViewText(finalPrompt)
-            highlightSketch?.repaint()
-        } catch (e: Exception) {
-            e.printStackTrace()
+                highlightSketch?.updateViewText(finalPrompt)
+                highlightSketch?.repaint()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 
