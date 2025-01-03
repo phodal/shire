@@ -16,13 +16,33 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.pom.Navigatable
 import com.intellij.testFramework.LightVirtualFile
 import com.phodal.shirelang.ShireFileType
-import org.jetbrains.annotations.NonNls
 import java.awt.BorderLayout
 import java.beans.PropertyChangeListener
 import javax.swing.JPanel
 
 class ShireFileEditorProvider : FileEditorProvider, DumbAware {
     override fun getEditorTypeId() = "r-editor"
+
+    override fun accept(project: Project, file: VirtualFile) =
+        FileTypeRegistry.getInstance().isFileOfType(file, ShireFileType.INSTANCE)
+
+    override fun createEditor(project: Project, file: VirtualFile): FileEditor {
+        val editor = TextEditorProvider.getInstance().createEditor(project, file) as TextEditorImpl
+        if (editor.file is LightVirtualFile) {
+            return editor
+        }
+
+        return ShireFileEditor(project, editor, file)
+    }
+
+    override fun getPolicy() = FileEditorPolicy.HIDE_DEFAULT_EDITOR
+}
+
+/**
+ * Display shire file render prompt and have a sample file as view
+ */
+open class ShirePreviewEditorProvider : FileEditorProvider, DumbAware {
+    override fun getEditorTypeId() = "shire-preview"
 
     override fun accept(project: Project, file: VirtualFile) =
         FileTypeRegistry.getInstance().isFileOfType(file, ShireFileType.INSTANCE)
@@ -49,6 +69,8 @@ open class ShireFileEditor(
     init {
         val toolbarComponent = createToolbar().component
         mainComponent.add(textEditor.component, BorderLayout.CENTER)
+        // maybe left panel for editor
+        /// split for workflow view
         mainComponent.add(toolbarComponent, BorderLayout.NORTH)
     }
 
@@ -87,7 +109,7 @@ open class ShireFileEditor(
     override fun getBackgroundHighlighter(): BackgroundEditorHighlighter? = textEditor.backgroundHighlighter
     override fun getCurrentLocation(): FileEditorLocation? = textEditor.currentLocation
     override fun getPreferredFocusedComponent() = textEditor.preferredFocusedComponent
-    override fun getName(): String = "Shire Editor"
+    override fun getName(): String = "Shire Preview"
 
     override fun getStructureViewBuilder(): StructureViewBuilder? = textEditor.structureViewBuilder
     override fun getEditor(): Editor = textEditor.editor
