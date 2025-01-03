@@ -86,20 +86,20 @@ class ShireInlineChatPanel(val editor: Editor) : JPanel(GridBagLayout()), Editor
         c.fill = 2
         add(inputPanel, c)
 
-        val submitPresentation = Presentation("Submit")
-        submitPresentation.icon = AllIcons.Actions.Cancel
-        val submitButton = ActionButton(
+        val cancelPresentation = Presentation("Cancel")
+        cancelPresentation.icon = AllIcons.Actions.Cancel
+        val cancelButton = ActionButton(
             DumbAwareAction.create {
                 ShireInlineChatService.getInstance().closeInlineChat(editor)
             },
-            submitPresentation, "", Dimension(24, 20)
+            cancelPresentation, "", Dimension(24, 20)
         )
-        submitButton.isOpaque = true
-        submitButton.background = JBColor.PanelBackground
+        cancelButton.isOpaque = true
+        cancelButton.background = JBColor.PanelBackground
         c.gridx = 1
         c.weightx = 0.0
         c.fill = 1
-        add(submitButton, c)
+        add(cancelButton, c)
 
         val jPanel = JPanel(BorderLayout())
         jPanel.isVisible = false
