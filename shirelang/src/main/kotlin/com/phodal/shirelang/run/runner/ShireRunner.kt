@@ -336,10 +336,9 @@ class ShireRunner(
             initVariables: Map<String, String>,
         ): ShireRunnerContext {
             val parsedResult = preAnalysisSyntax(shireFile, project)
-            val variables = variableFromPostProcessorContext(initVariables)
+            prepareExecute(parsedResult, initVariables, project, null)
 
-            /// add context
-            prepareExecute(parsedResult, variables, project, null)
+            val variables = variableFromPostProcessorContext(initVariables)
             val runnerContext = processTemplateCompile(parsedResult, variables, project, null, null)
 
             val service = project.getService(OnStreamingService::class.java)

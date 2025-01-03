@@ -3,10 +3,8 @@ package com.phodal.shirelang.editor
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.actionSystem.ex.ActionUtil
-import com.intellij.openapi.application.EDT
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.runInEdt
-import com.intellij.openapi.components.Service
-import com.intellij.openapi.components.service
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.event.DocumentEvent
 import com.intellij.openapi.editor.event.DocumentListener
@@ -19,38 +17,26 @@ import com.intellij.openapi.util.UserDataHolder
 import com.intellij.openapi.util.UserDataHolderBase
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.readText
-import com.intellij.platform.util.coroutines.childScope
 import com.intellij.psi.PsiManager
 import com.intellij.testFramework.LightVirtualFile
+import com.intellij.ui.JBColor
+import com.intellij.ui.components.JBLabel
+import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.dsl.builder.Align
 import com.intellij.ui.dsl.builder.panel
+import com.intellij.util.ui.JBUI
+import com.intellij.util.ui.UIUtil.FontColor
 import com.phodal.shirecore.sketch.highlight.CodeHighlightSketch
 import com.phodal.shirelang.ShireFileType
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.runner.ShireRunner
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.awt.BorderLayout
 import java.beans.PropertyChangeListener
 import javax.swing.JComponent
 import javax.swing.JPanel
-
-
-@Service(Service.Level.PROJECT)
-internal class ShireEditorScope(private val coroutineScope: CoroutineScope) {
-    companion object {
-        fun createChildScope(project: Project): CoroutineScope {
-            return scope(project).childScope()
-        }
-
-        fun scope(project: Project): CoroutineScope {
-            return project.service<ShireEditorScope>().coroutineScope
-        }
-    }
-}
+import javax.swing.ScrollPaneConstants
 
 
 class ShireFileEditorProvider : WeighedFileEditorProvider() {
@@ -98,46 +84,65 @@ open class ShirePreviewEditor(
 ) : UserDataHolder by UserDataHolderBase(), FileEditor {
     val psiFile = PsiManager.getInstance(project).findFile(virtualFile)
     private var mainEditor = MutableStateFlow<Editor?>(null)
-    private val visualPanel: JPanel = JPanel(BorderLayout()).apply {
-        /// show preview of the shire file
-    }
+    val jPanel = JPanel(BorderLayout())
+    private val visualPanel: JBScrollPane = JBScrollPane(
+        jPanel,
+        ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+    )
 
     private var highlightSketch: CodeHighlightSketch? = null
 
     init {
         val corePanel = panel {
             row {
+                // yello text
+                val label = JBLabel("Shire Preview (Experimental)").apply {
+                    fontColor = FontColor.BRIGHTER
+                    foreground = JBColor(0x8A8A8A, 0x8A8A8A)
+                    background = JBColor(0xF7FAFDF, 0x2d2f30)
+                    border = JBUI.Borders.empty(10)
+                }
+
+                cell(label).align(Align.FILL)
+            }
+            row {
                 highlightSketch = CodeHighlightSketch(project, "", PlainTextLanguage.INSTANCE).apply {
                     initEditor(virtualFile.readText())
                 }
 
-                updateOutput()
+                ApplicationManager.getApplication().invokeLater {
+                    updateOutput()
+                }
                 cell(highlightSketch!!).align(Align.FILL)
             }
         }
 
-        visualPanel.add(corePanel)
-
+        jPanel.add(corePanel, BorderLayout.CENTER)
         mainEditor.value?.document?.addDocumentListener(ReparseContentDocumentListener())
     }
 
 
     private inner class ReparseContentDocumentListener : DocumentListener {
         override fun documentChanged(event: DocumentEvent) {
-            runInEdt {
+            ApplicationManager.getApplication().invokeLater {
                 updateOutput()
             }
         }
     }
 
     fun updateOutput() {
-        val psiFile = PsiManager.getInstance(project).findFile(virtualFile) as? ShireFile ?: return
-        val finalPrompt = runBlocking {
-            ShireRunner.compileFileContext(project, psiFile, mapOf())
-        }.finalPrompt
+        try {
+            val psiFile = PsiManager.getInstance(project).findFile(virtualFile) as? ShireFile ?: return
+            val finalPrompt = runBlocking {
+                ShireRunner.compileFileContext(project, psiFile, mapOf())
+            }.finalPrompt
 
-        highlightSketch?.updateViewText(finalPrompt)
-        highlightSketch?.repaint()
+            highlightSketch?.updateViewText(finalPrompt)
+            highlightSketch?.repaint()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
 
