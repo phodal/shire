@@ -3,7 +3,13 @@ package com.phodal.shirelang.editor
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.actionSystem.ex.ActionUtil
+import com.intellij.openapi.application.EDT
+import com.intellij.openapi.application.runInEdt
+import com.intellij.openapi.components.Service
+import com.intellij.openapi.components.service
 import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.editor.event.DocumentEvent
+import com.intellij.openapi.editor.event.DocumentListener
 import com.intellij.openapi.fileEditor.*
 import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider
 import com.intellij.openapi.fileTypes.FileTypeRegistry
@@ -11,18 +17,40 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.UserDataHolder
 import com.intellij.openapi.util.UserDataHolderBase
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.vfs.readText
+import com.intellij.platform.util.coroutines.childScope
 import com.intellij.psi.PsiManager
 import com.intellij.testFramework.LightVirtualFile
 import com.intellij.ui.dsl.builder.Align
 import com.intellij.ui.dsl.builder.panel
-import com.phodal.shirecore.ShireCoroutineScope
+import com.phodal.shirecore.sketch.highlight.CodeHighlightSketch
 import com.phodal.shirelang.ShireFileType
+import com.phodal.shirelang.psi.ShireFile
+import com.phodal.shirelang.run.runner.ShireRunner
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.awt.BorderLayout
 import java.beans.PropertyChangeListener
 import javax.swing.JComponent
 import javax.swing.JPanel
+
+
+@Service(Service.Level.PROJECT)
+internal class ShireEditorScope(private val coroutineScope: CoroutineScope) {
+    companion object {
+        fun createChildScope(project: Project): CoroutineScope {
+            return scope(project).childScope()
+        }
+
+        fun scope(project: Project): CoroutineScope {
+            return project.service<ShireEditorScope>().coroutineScope
+        }
+    }
+}
+
 
 class ShireFileEditorProvider : WeighedFileEditorProvider() {
     override fun getEditorTypeId() = "shire-editor"
@@ -73,17 +101,42 @@ open class ShirePreviewEditor(
         /// show preview of the shire file
     }
 
-    init {
-        ShireCoroutineScope.scope(project).launch {
-            val corePanel = panel {
-                row {
-                    val textArea = textArea()
-                    textArea.align(Align.FILL)
-                }
-            }
+    private var highlightSketch: CodeHighlightSketch? = null
 
-            visualPanel.add(corePanel)
+    init {
+        val corePanel = panel {
+            row {
+                highlightSketch = CodeHighlightSketch(project, "", null).apply {
+                    initEditor(virtualFile.readText())
+                }
+
+                updateOutput()
+                cell(highlightSketch!!).align(Align.FILL)
+            }
         }
+
+        visualPanel.add(corePanel)
+
+        mainEditor.value?.document?.addDocumentListener(ReparseContentDocumentListener())
+    }
+
+
+    private inner class ReparseContentDocumentListener : DocumentListener {
+        override fun documentChanged(event: DocumentEvent) {
+            runInEdt {
+                updateOutput()
+            }
+        }
+    }
+
+    fun updateOutput() {
+        val psiFile = PsiManager.getInstance(project).findFile(virtualFile) as? ShireFile ?: return
+        val finalPrompt = runBlocking {
+            ShireRunner.compileFileContext(project, psiFile, mapOf())
+        }.finalPrompt
+
+        highlightSketch?.updateViewText(finalPrompt)
+        highlightSketch?.repaint()
     }
 
 
