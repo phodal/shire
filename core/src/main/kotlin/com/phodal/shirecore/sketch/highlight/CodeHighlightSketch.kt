@@ -81,7 +81,8 @@ class CodeHighlightSketch(val project: Project, val text: String, private var id
 
         WriteCommandAction.runWriteCommandAction(project) {
             val document = editorFragment?.editor?.document
-            document?.replaceString(0, document.textLength, text)
+            val normalizedText = com.intellij.openapi.util.text.StringUtil.convertLineSeparators(text)
+            document?.replaceString(0, document.textLength, normalizedText)
         }
     }
 
