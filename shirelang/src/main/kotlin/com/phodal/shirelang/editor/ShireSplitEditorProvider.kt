@@ -15,8 +15,8 @@ import com.intellij.openapi.editor.impl.EditorImpl
 import com.intellij.openapi.fileEditor.*
 import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider
 import com.intellij.openapi.fileTypes.FileTypeRegistry
-import com.intellij.openapi.fileTypes.PlainTextLanguage
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.DialogPanel
 import com.intellij.openapi.util.UserDataHolder
 import com.intellij.openapi.util.UserDataHolderBase
 import com.intellij.openapi.vfs.VirtualFile
@@ -34,6 +34,7 @@ import com.phodal.shirecore.sketch.highlight.CodeHighlightSketch
 import com.phodal.shirelang.ShireFileType
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.runner.ShireRunner
+import com.phodal.shirelang.run.runner.ShireRunnerContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
 import org.intellij.plugins.markdown.lang.MarkdownLanguage
@@ -63,7 +64,7 @@ class ShireSplitEditorProvider : WeighedFileEditorProvider() {
         return ShireFileEditorWithPreview(mainEditor, preview, project)
     }
 
-    override fun getPolicy() = FileEditorPolicy.HIDE_DEFAULT_EDITOR
+    override fun getPolicy() = FileEditorPolicy.HIDE_OTHER_EDITORS
 }
 
 class ShirePreviewEditorProvider : WeighedFileEditorProvider(), AsyncFileEditorProvider {
@@ -89,27 +90,37 @@ open class ShirePreviewEditor(
 ) : UserDataHolder by UserDataHolderBase(), FileEditor {
     val psiFile = PsiManager.getInstance(project).findFile(virtualFile)
     private var mainEditor = MutableStateFlow<Editor?>(null)
-    val jPanel = JPanel(BorderLayout())
+    private val mainPanel = JPanel(BorderLayout())
     private val visualPanel: JBScrollPane = JBScrollPane(
-        jPanel,
+        mainPanel,
         ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
         ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
     )
+
+    private var shireRunnerContext: ShireRunnerContext? = null
+    private var variableDebugPanel: JPanel = panel {}
 
     private var highlightSketch: CodeHighlightSketch? = null
 
     init {
         val corePanel = panel {
             row {
-                // yello text
                 val label = JBLabel("Shire Preview (Experimental)").apply {
                     fontColor = FontColor.BRIGHTER
-                    foreground = JBColor(0x8A8A8A, 0x8A8A8A)
-                    background = JBColor(0xF7FAFDF, 0x2d2f30)
-                    border = JBUI.Borders.empty(10)
+                    font = JBUI.Fonts.label(14.0f)
+                    foreground = JBColor(0x4A4A4A, 0xBBBBBB)
+                    background = JBColor(0xF5F7FA, 0x2B2D30)
+                    border = JBUI.Borders.compound(
+                        JBUI.Borders.empty(12, 16),
+                        JBUI.Borders.customLine(JBColor(0xE0E0E0, 0x3C3F41), 0, 0, 1, 0)
+                    )
+                    isOpaque = true
                 }
 
-                cell(label).align(Align.FILL)
+                cell(label).align(Align.FILL).resizableColumn()
+            }
+            row {
+                cell(variableDebugPanel).align(Align.FILL)
             }
             row {
                 highlightSketch = CodeHighlightSketch(project, "", MarkdownLanguage.INSTANCE).apply {
@@ -120,9 +131,29 @@ open class ShirePreviewEditor(
             }
         }
 
-        jPanel.add(corePanel, BorderLayout.CENTER)
+        this.mainPanel.add(corePanel, BorderLayout.CENTER)
         mainEditor.value?.document?.addDocumentListener(ReparseContentDocumentListener())
         updateOutput()
+    }
+
+    private fun variablePanel(variables: Map<String, Any>): JPanel {
+        val variablesPanel: DialogPanel = panel {
+            row {
+                val label = JBLabel("Variables")
+                cell(label).align(Align.FILL).resizableColumn()
+            }
+
+            variables.forEach { (key, value) ->
+                row {
+                    val label = JBLabel("$key: $value")
+                    cell(label).align(Align.FILL).resizableColumn()
+                }
+            }
+        }
+
+        return JPanel(BorderLayout()).apply {
+            add(variablesPanel, BorderLayout.CENTER)
+        }
     }
 
 
@@ -136,11 +167,17 @@ open class ShirePreviewEditor(
         ApplicationManager.getApplication().invokeLater {
             try {
                 val psiFile = PsiManager.getInstance(project).findFile(virtualFile) as? ShireFile ?: return@invokeLater
-                val finalPrompt = runBlocking {
+                shireRunnerContext = runBlocking {
                     ShireRunner.compileFileContext(project, psiFile, mapOf())
-                }.finalPrompt
+                }
 
-                highlightSketch?.updateViewText(finalPrompt)
+                val variables = shireRunnerContext?.compiledVariables
+                if (variables != null) {
+                    variableDebugPanel = variablePanel(variables)
+                    mainPanel.repaint()
+                }
+
+                highlightSketch?.updateViewText(shireRunnerContext!!.finalPrompt)
                 highlightSketch?.repaint()
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -148,6 +185,9 @@ open class ShirePreviewEditor(
         }
     }
 
+    fun rerenderShire() {
+        updateOutput()
+    }
 
     fun setMainEditor(editor: Editor) {
         check(mainEditor.value == null)
@@ -193,7 +233,6 @@ class ShireFileEditorWithPreview(
         // FIXME: better solution IDEA-354102
         ourEditor.editor.contentComponent.putClientProperty(ActionUtil.ALLOW_ACTION_PERFORM_WHEN_HIDDEN, true)
         preview.setMainEditor(ourEditor.editor)
-
         ourEditor.editor.scrollingModel.addVisibleAreaListener(MyVisibleAreaListener(), this)
     }
 
@@ -227,8 +266,9 @@ class ShireFileEditorWithPreview(
 
     private fun createActionGroup(project: Project, virtualFile: VirtualFile, editor: Editor): ActionGroup {
         return DefaultActionGroup(
-            createHelpAction(project),
-            Separator()
+            showPreviewAction(project, virtualFile, editor),
+            Separator(),
+            createHelpAction(project)
         )
     }
 
@@ -238,6 +278,16 @@ class ShireFileEditorWithPreview(
             override fun actionPerformed(e: AnActionEvent) {
                 val url = "https://shire.phodal.com/"
                 com.intellij.ide.BrowserUtil.browse(url)
+            }
+        }
+    }
+
+    private fun showPreviewAction(project: Project, virtualFile: VirtualFile, editor: Editor): AnAction {
+        val idleIcon = AllIcons.Actions.Preview
+        return object : AnAction("Show Preview", "Show Preview", idleIcon) {
+            override fun actionPerformed(e: AnActionEvent) {
+                preview.component.isVisible = true
+                (preview as ShirePreviewEditor).rerenderShire()
             }
         }
     }
