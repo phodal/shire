@@ -82,8 +82,8 @@ open class ShirePreviewEditor(
             }
             if (javaLanguage != null) {
                 row {
-                    cell(JBLabel("Sample File For Variable")).align(Align.FILL).resizableColumn()
-                    cell(JBLabel("shire.java")).align(Align.FILL).resizableColumn()
+                    cell(JBLabel("Sample File For Variable"))
+                    cell(JBLabel("(/shire.java)")).align(Align.FILL).resizableColumn()
                     // add refresh button for select
                     icon(AllIcons.Actions.Refresh)
                     button("Refresh", object : AnAction() {
