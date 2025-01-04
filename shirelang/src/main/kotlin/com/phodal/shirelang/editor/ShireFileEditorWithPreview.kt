@@ -64,9 +64,18 @@ class ShireFileEditorWithPreview(
     private fun createActionGroup(project: Project, virtualFile: VirtualFile, editor: Editor): ActionGroup {
         return DefaultActionGroup(
             showPreviewAction(project, virtualFile, editor),
+            createRefreshAction(project),
             Separator(),
             createHelpAction(project)
         )
+    }
+
+    private fun createRefreshAction(project: Project): AnAction {
+        return object : AnAction("Refresh Preview", "Refresh Preview", AllIcons.Actions.Refresh) {
+            override fun actionPerformed(e: AnActionEvent) {
+                preview.updateOutput()
+            }
+        }
     }
 
     private fun createHelpAction(project: Project): AnAction {

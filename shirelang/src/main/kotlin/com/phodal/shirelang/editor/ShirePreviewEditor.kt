@@ -84,14 +84,9 @@ open class ShirePreviewEditor(
         }
 
         this.mainPanel.add(corePanel, BorderLayout.CENTER)
-        mainEditor.value?.document?.addDocumentListener(ReparseContentDocumentListener())
+        // 删除自动更新监听
+        // mainEditor.value?.document?.addDocumentListener(ReparseContentDocumentListener())
         updateOutput()
-    }
-
-    private inner class ReparseContentDocumentListener : DocumentListener {
-        override fun documentChanged(event: DocumentEvent) {
-            updateOutput()
-        }
     }
 
     fun updateOutput() {

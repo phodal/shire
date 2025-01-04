@@ -11,101 +11,59 @@ import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBPanel
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.util.ui.JBUI
+import com.intellij.ui.table.JBTable
 import java.awt.BorderLayout
-import java.awt.FlowLayout
-import java.awt.GridBagConstraints
-import java.awt.GridBagLayout
 import java.awt.datatransfer.StringSelection
-import javax.swing.Box
 import javax.swing.JPanel
 import javax.swing.ScrollPaneConstants
+import javax.swing.table.DefaultTableModel
 
 class ShireVariablePanel : JPanel(BorderLayout()) {
-    private val contentPanel = JBPanel<JBPanel<*>>(GridBagLayout())
+    private val contentPanel = JBPanel<JBPanel<*>>(BorderLayout())
+    private val tableModel = DefaultTableModel(arrayOf("Key", "Value", ""), 0)
 
     init {
+        val table = JBTable(tableModel).apply {
+            tableHeader.reorderingAllowed = true
+            tableHeader.resizingAllowed = true
+            setShowGrid(true)
+            gridColor = JBColor.PanelBackground
+            intercellSpacing = JBUI.size(0, 0)
+        }
+
         val scrollPane = JBScrollPane(
-            contentPanel,
+            table,
             ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
             ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
-        )
+        ).apply {
+            minimumSize = JBUI.size(0, 200)
+            preferredSize = JBUI.size(0, 200)
+        }
         add(scrollPane, BorderLayout.CENTER)
         setupPanel()
     }
 
     private fun setupPanel() {
         contentPanel.background = JBColor(0xF5F5F5, 0x2B2D30)
-        contentPanel.border = JBUI.Borders.empty(4)
 
-        // 添加标题
         val titleLabel = JBLabel("Variables").apply {
             font = JBUI.Fonts.label(14f).asBold()
             border = JBUI.Borders.empty(4, 8)
         }
-        
-        contentPanel.add(titleLabel, GridBagConstraints().apply {
-            fill = GridBagConstraints.HORIZONTAL
-            anchor = GridBagConstraints.NORTHWEST
-            weightx = 1.0
-            gridx = 0
-            insets = JBUI.insets(2)
-        })
+
+        contentPanel.add(titleLabel, BorderLayout.NORTH)
     }
 
     fun updateVariables(variables: Map<String, Any>) {
-        contentPanel.removeAll()
-        setupPanel()
+        tableModel.rowCount = 0 // 清空表格内容
 
-        var gridy = 1
         variables.forEach { (key, value) ->
-            addVariableRow(key, value, gridy++)
+            val valueStr = value.toString()
+            tableModel.addRow(arrayOf(key, valueStr, createCopyButton(valueStr)))
         }
-
-        // 填充剩余空间
-        contentPanel.add(Box.createVerticalGlue(), GridBagConstraints().apply {
-            fill = GridBagConstraints.HORIZONTAL
-            anchor = GridBagConstraints.NORTHWEST
-            weightx = 1.0
-            weighty = 1.0
-            gridx = 0
-            gridy = gridy
-        })
 
         revalidate()
         repaint()
-    }
-
-    private fun addVariableRow(key: String, value: Any, gridy: Int) {
-        val varPanel = JBPanel<JBPanel<*>>(FlowLayout(FlowLayout.LEFT, 0, 0))
-        varPanel.isOpaque = false
-        varPanel.border = JBUI.Borders.compound(
-            JBUI.Borders.customLine(JBColor(0xE6E6E6, 0x3C3F41), 0, 0, 1, 0),
-            JBUI.Borders.empty(6, 8)
-        )
-
-        varPanel.add(createLabel(key, true))
-        varPanel.add(JBLabel(": ").apply {
-            foreground = JBColor(0x666666, 0x999999)
-        })
-
-        val valueStr = value.toString()
-        varPanel.add(createLabel(valueStr, false))
-        varPanel.add(Box.createHorizontalStrut(4))
-        varPanel.add(createCopyButton(valueStr))
-
-        contentPanel.add(varPanel, GridBagConstraints().apply {
-            fill = GridBagConstraints.HORIZONTAL
-            anchor = GridBagConstraints.NORTHWEST
-            weightx = 1.0
-            gridx = 0
-            this.gridy = gridy
-            insets = JBUI.insets(2)
-        })
-    }
-
-    private fun createLabel(text: String, isKey: Boolean) = JBLabel(text).apply {
-        font = JBUI.Fonts.label(11f)
-        foreground = if (isKey) JBColor(0x666666, 0x999999) else JBColor(0x000000, 0xCCCCCC)
     }
 
     private fun createCopyButton(text: String) = ActionButton(
