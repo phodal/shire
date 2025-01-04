@@ -1,26 +1,19 @@
 package com.phodal.shirelang.editor
 
-import com.intellij.icons.AllIcons
-import com.intellij.openapi.actionSystem.AnAction
-import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.Presentation
-import com.intellij.openapi.actionSystem.impl.ActionButton
-import com.intellij.openapi.ide.CopyPasteManager
 import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBPanel
 import com.intellij.ui.components.JBScrollPane
-import com.intellij.util.ui.JBUI
 import com.intellij.ui.table.JBTable
+import com.intellij.util.ui.JBUI
 import java.awt.BorderLayout
-import java.awt.datatransfer.StringSelection
 import javax.swing.JPanel
 import javax.swing.ScrollPaneConstants
 import javax.swing.table.DefaultTableModel
 
 class ShireVariablePanel : JPanel(BorderLayout()) {
     private val contentPanel = JBPanel<JBPanel<*>>(BorderLayout())
-    private val tableModel = DefaultTableModel(arrayOf("Key", "Value", ""), 0)
+    private val tableModel = DefaultTableModel(arrayOf("Name", "Value"), 0)
 
     init {
         val table = JBTable(tableModel).apply {
@@ -29,6 +22,12 @@ class ShireVariablePanel : JPanel(BorderLayout()) {
             setShowGrid(true)
             gridColor = JBColor.PanelBackground
             intercellSpacing = JBUI.size(0, 0)
+            
+            val columnModel = columnModel
+            columnModel.getColumn(0).preferredWidth = 150
+            columnModel.getColumn(1).preferredWidth = 450
+
+            autoResizeMode = JBTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS
         }
 
         val scrollPane = JBScrollPane(
@@ -55,28 +54,14 @@ class ShireVariablePanel : JPanel(BorderLayout()) {
     }
 
     fun updateVariables(variables: Map<String, Any>) {
-        tableModel.rowCount = 0 // 清空表格内容
+        tableModel.rowCount = 0
 
         variables.forEach { (key, value) ->
             val valueStr = value.toString()
-            tableModel.addRow(arrayOf(key, valueStr, createCopyButton(valueStr)))
+            tableModel.addRow(arrayOf(key, valueStr))
         }
 
         revalidate()
         repaint()
-    }
-
-    private fun createCopyButton(text: String) = ActionButton(
-        object : AnAction(AllIcons.Actions.Copy) {
-            override fun actionPerformed(e: AnActionEvent) {
-                CopyPasteManager.getInstance().setContents(StringSelection(text))
-            }
-        },
-        Presentation().apply { icon = AllIcons.Actions.Copy },
-        "Variables",
-        JBUI.size(16)
-    ).apply {
-        toolTipText = "Copy value"
-        border = JBUI.Borders.empty(2)
     }
 }
