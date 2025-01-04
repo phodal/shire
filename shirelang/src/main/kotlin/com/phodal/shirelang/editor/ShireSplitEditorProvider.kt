@@ -5,8 +5,13 @@ import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.actionSystem.ex.ActionUtil
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.editor.ScrollType
 import com.intellij.openapi.editor.event.DocumentEvent
 import com.intellij.openapi.editor.event.DocumentListener
+import com.intellij.openapi.editor.event.VisibleAreaEvent
+import com.intellij.openapi.editor.event.VisibleAreaListener
+import com.intellij.openapi.editor.ex.util.EditorUtil
+import com.intellij.openapi.editor.impl.EditorImpl
 import com.intellij.openapi.fileEditor.*
 import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider
 import com.intellij.openapi.fileTypes.FileTypeRegistry
@@ -31,6 +36,7 @@ import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.runner.ShireRunner
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
+import org.intellij.plugins.markdown.lang.MarkdownLanguage
 import java.awt.BorderLayout
 import java.beans.PropertyChangeListener
 import javax.swing.JComponent
@@ -38,7 +44,7 @@ import javax.swing.JPanel
 import javax.swing.ScrollPaneConstants
 
 
-class ShireFileEditorProvider : WeighedFileEditorProvider() {
+class ShireSplitEditorProvider : WeighedFileEditorProvider() {
     override fun getEditorTypeId() = "shire-editor"
     private val mainProvider: TextEditorProvider = TextEditorProvider.getInstance()
     private val previewProvider: FileEditorProvider = ShirePreviewEditorProvider()
@@ -54,7 +60,7 @@ class ShireFileEditorProvider : WeighedFileEditorProvider() {
 
         val mainEditor = mainProvider.createEditor(project, file) as TextEditor
         val preview = previewProvider.createEditor(project, file) as ShirePreviewEditor
-        return ShireFileEditor(mainEditor, preview, project)
+        return ShireFileEditorWithPreview(mainEditor, preview, project)
     }
 
     override fun getPolicy() = FileEditorPolicy.HIDE_DEFAULT_EDITOR
@@ -106,7 +112,7 @@ open class ShirePreviewEditor(
                 cell(label).align(Align.FILL)
             }
             row {
-                highlightSketch = CodeHighlightSketch(project, "", PlainTextLanguage.INSTANCE).apply {
+                highlightSketch = CodeHighlightSketch(project, "", MarkdownLanguage.INSTANCE).apply {
                     initEditor(virtualFile.readText())
                 }
 
@@ -148,6 +154,17 @@ open class ShirePreviewEditor(
         mainEditor.value = editor
     }
 
+    fun scrollToSrcOffset(offset: Int) {
+        val highlightEditor = highlightSketch?.editorFragment?.editor
+        if (highlightEditor == null) {
+            visualPanel.verticalScrollBar.value = offset
+            return
+        }
+
+        val position = highlightEditor.offsetToLogicalPosition(offset)
+        highlightEditor.scrollingModel.scrollTo(position, ScrollType.MAKE_VISIBLE)
+    }
+
     override fun getComponent(): JComponent = visualPanel
     override fun getName(): String = "Shire Prompt Preview"
     override fun setState(state: FileEditorState) {}
@@ -160,20 +177,44 @@ open class ShirePreviewEditor(
     override fun dispose() {}
 }
 
-class ShireFileEditor(
+class ShireFileEditorWithPreview(
     private val ourEditor: TextEditor,
-    private val preview: ShirePreviewEditor,
+    @JvmField var preview: ShirePreviewEditor,
     private val project: Project,
-) : TextEditorWithPreview(ourEditor, preview) {
+) : TextEditorWithPreview(
+    ourEditor, preview,
+    "Shire Split Editor",
+    Layout.SHOW_EDITOR_AND_PREVIEW,
+) {
     val virtualFile: VirtualFile = ourEditor.file
 
     init {
-        editor.contentComponent.putClientProperty(ActionUtil.ALLOW_ACTION_PERFORM_WHEN_HIDDEN, true)
-        preview.setMainEditor(editor)
+        // allow launching actions while in preview mode;
+        // FIXME: better solution IDEA-354102
+        ourEditor.editor.contentComponent.putClientProperty(ActionUtil.ALLOW_ACTION_PERFORM_WHEN_HIDDEN, true)
+        preview.setMainEditor(ourEditor.editor)
+
+        ourEditor.editor.scrollingModel.addVisibleAreaListener(MyVisibleAreaListener(), this)
     }
 
     override fun dispose() {
         TextEditorProvider.getInstance().disposeEditor(ourEditor)
+    }
+
+    inner class MyVisibleAreaListener() : VisibleAreaListener {
+        private var previousLine = 0
+
+        override fun visibleAreaChanged(event: VisibleAreaEvent) {
+            val editor = event.editor
+            val y = editor.scrollingModel.verticalScrollOffset
+            val currentLine = if (editor is EditorImpl) editor.yToVisualLine(y) else y / editor.lineHeight
+            if (currentLine == previousLine) {
+                return
+            }
+
+            previousLine = currentLine
+            preview.scrollToSrcOffset(EditorUtil.getVisualLineEndOffset(editor, currentLine))
+        }
     }
 
     override fun createToolbar(): ActionToolbar {
