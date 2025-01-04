@@ -3,6 +3,7 @@ package com.phodal.shirelang.editor
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.actionSystem.ex.ActionUtil
+import com.intellij.openapi.actionSystem.impl.ActionButton
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.ScrollType
@@ -15,8 +16,8 @@ import com.intellij.openapi.editor.impl.EditorImpl
 import com.intellij.openapi.fileEditor.*
 import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider
 import com.intellij.openapi.fileTypes.FileTypeRegistry
+import com.intellij.openapi.ide.CopyPasteManager
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.ui.DialogPanel
 import com.intellij.openapi.util.UserDataHolder
 import com.intellij.openapi.util.UserDataHolderBase
 import com.intellij.openapi.vfs.VirtualFile
@@ -25,6 +26,7 @@ import com.intellij.psi.PsiManager
 import com.intellij.testFramework.LightVirtualFile
 import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBLabel
+import com.intellij.ui.components.JBPanel
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.dsl.builder.Align
 import com.intellij.ui.dsl.builder.panel
@@ -39,7 +41,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
 import org.intellij.plugins.markdown.lang.MarkdownLanguage
 import java.awt.BorderLayout
+import java.awt.FlowLayout
+import java.awt.GridBagConstraints
+import java.awt.GridBagLayout
+import java.awt.datatransfer.StringSelection
 import java.beans.PropertyChangeListener
+import javax.swing.Box
 import javax.swing.JComponent
 import javax.swing.JPanel
 import javax.swing.ScrollPaneConstants
@@ -98,7 +105,7 @@ open class ShirePreviewEditor(
     )
 
     private var shireRunnerContext: ShireRunnerContext? = null
-    private var variableDebugPanel: JPanel = panel {}
+    private var variableDebugPanel: JPanel = JPanel(BorderLayout())
 
     private var highlightSketch: CodeHighlightSketch? = null
 
@@ -137,25 +144,81 @@ open class ShirePreviewEditor(
     }
 
     private fun variablePanel(variables: Map<String, Any>): JPanel {
-        val variablesPanel: DialogPanel = panel {
-            row {
-                val label = JBLabel("Variables")
-                cell(label).align(Align.FILL).resizableColumn()
-            }
+        val panel = JBPanel<JBPanel<*>>(GridBagLayout())
+        panel.background = JBColor(0xF5F5F5, 0x2B2D30)
+        panel.border = JBUI.Borders.empty(4)
 
-            variables.forEach { (key, value) ->
-                row {
-                    val label = JBLabel("$key: $value")
-                    cell(label).align(Align.FILL).resizableColumn()
-                }
-            }
+        val gbc = GridBagConstraints().apply {
+            fill = GridBagConstraints.HORIZONTAL
+            anchor = GridBagConstraints.NORTHWEST
+            weightx = 1.0
+            gridx = 0
+            insets = JBUI.insets(2)
         }
 
-        return JPanel(BorderLayout()).apply {
-            add(variablesPanel, BorderLayout.CENTER)
+        // 添加标题
+        val titleLabel = JBLabel("Variables").apply {
+            font = JBUI.Fonts.label(14f).asBold()
+            border = JBUI.Borders.empty(4, 8)
         }
+        panel.add(titleLabel, gbc)
+
+        // 添加变量列表
+        variables.forEach { (key, value) ->
+            gbc.gridy++
+            
+            val varPanel = JBPanel<JBPanel<*>>(FlowLayout(FlowLayout.LEFT, 0, 0))
+            varPanel.isOpaque = false
+            varPanel.border = JBUI.Borders.compound(
+                JBUI.Borders.customLine(JBColor(0xE6E6E6, 0x3C3F41), 0, 0, 1, 0),
+                JBUI.Borders.empty(6, 8)
+            )
+
+            val keyLabel = JBLabel(key).apply {
+                font = JBUI.Fonts.label(11f)
+                foreground = JBColor(0x666666, 0x999999)
+            }
+            varPanel.add(keyLabel)
+
+            val colonLabel = JBLabel(": ").apply {
+                foreground = JBColor(0x666666, 0x999999)
+            }
+            varPanel.add(colonLabel)
+
+            val valueStr = value.toString()
+            val valueLabel = JBLabel(valueStr).apply {
+                font = JBUI.Fonts.label(11f)
+                foreground = JBColor(0x000000, 0xCCCCCC)
+            }
+            varPanel.add(valueLabel)
+
+            val copyButton = ActionButton(
+                object : AnAction(AllIcons.Actions.Copy) {
+                    override fun actionPerformed(e: AnActionEvent) {
+                        val clipboardManager = CopyPasteManager.getInstance()
+                        clipboardManager.setContents(StringSelection(valueStr))
+                    }
+                },
+                Presentation().apply { icon = AllIcons.Actions.Copy },
+                "Variables",
+                JBUI.size(16)
+            ).apply {
+                toolTipText = "Copy value"
+                border = JBUI.Borders.empty(2)
+            }
+            varPanel.add(Box.createHorizontalStrut(4))
+            varPanel.add(copyButton)
+
+            panel.add(varPanel, gbc)
+        }
+
+        // 填充剩余空间
+        gbc.gridy++
+        gbc.weighty = 1.0
+        panel.add(Box.createVerticalGlue(), gbc)
+
+        return panel
     }
-
 
     private inner class ReparseContentDocumentListener : DocumentListener {
         override fun documentChanged(event: DocumentEvent) {
@@ -173,12 +236,16 @@ open class ShirePreviewEditor(
 
                 val variables = shireRunnerContext?.compiledVariables
                 if (variables != null) {
-                    variableDebugPanel = variablePanel(variables)
-                    mainPanel.repaint()
+                    variableDebugPanel.removeAll()
+                    val panel = variablePanel(variables)
+                    variableDebugPanel.add(panel, BorderLayout.CENTER)
                 }
 
                 highlightSketch?.updateViewText(shireRunnerContext!!.finalPrompt)
                 highlightSketch?.repaint()
+
+                mainPanel.revalidate()
+                mainPanel.repaint()
             } catch (e: Exception) {
                 e.printStackTrace()
             }
