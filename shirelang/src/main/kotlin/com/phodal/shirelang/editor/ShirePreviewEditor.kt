@@ -136,7 +136,8 @@ open class ShirePreviewEditor(
                     border = JBUI.Borders.empty(0, 16)
                     isOpaque = true
                 }).align(Align.FILL).resizableColumn()
-
+            }
+            row {
                 highlightSketch = CodeHighlightSketch(project, "", MarkdownLanguage.INSTANCE).apply {
                     initEditor(virtualFile.readText())
                 }
