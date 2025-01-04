@@ -57,8 +57,10 @@ open class ShirePreviewEditor(
 
     private var highlightSketch: CodeHighlightSketch? = null
     private var sampleEditor: Editor? = null
-
+    private var language: Language? =  Language.findLanguageByID("JAVA")
     private val javaHelloWorld = """
+        package com.phodal.shirelang;
+        
         class HelloWorld {
             public static void main(String[] args) {
                 System.out.println("Hello, World");
@@ -67,7 +69,6 @@ open class ShirePreviewEditor(
     """.trimIndent()
 
     init {
-        val javaLanguage = Language.findLanguageByID("JAVA")
         val corePanel = panel {
             row {
                 val label = JBLabel("Shire Preview (Experimental)").apply {
@@ -80,7 +81,7 @@ open class ShirePreviewEditor(
 
                 cell(label).align(Align.FILL).resizableColumn()
             }
-            if (javaLanguage != null) {
+            if (language != null) {
                 row {
                     cell(JBLabel("Sample File For Variable").apply {
                         fontColor = UIUtil.FontColor.BRIGHTER
@@ -105,14 +106,12 @@ open class ShirePreviewEditor(
                     val editor = CodeHighlightSketch.createCodeViewerEditor(
                         project,
                         javaHelloWorld,
-                        javaLanguage,
+                        language,
                         this@ShirePreviewEditor
                     )
 
                     editor.isViewer = false
                     editor.settings.isLineNumbersShown = true
-
-                    /// maybe enable to change file languages?
 
                     val editorFragment = EditorFragment(editor)
                     this@ShirePreviewEditor.sampleEditor = editor
