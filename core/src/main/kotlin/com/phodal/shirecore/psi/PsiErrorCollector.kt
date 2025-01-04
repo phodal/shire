@@ -17,6 +17,7 @@ import com.intellij.psi.PsiFile
 import com.intellij.util.messages.MessageBusConnection
 import com.phodal.shirecore.ast.PsiSyntaxCheckingVisitor
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.TimeUnit
 
 object PsiErrorCollector {
     fun collectSyntaxError(
@@ -68,7 +69,7 @@ object PsiErrorCollector {
             }
         )
 
-        future.get()
+        future.get(30, TimeUnit.SECONDS)
     }
 
     class SimpleCodeErrorListener(

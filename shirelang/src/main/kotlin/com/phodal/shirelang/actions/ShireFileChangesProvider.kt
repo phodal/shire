@@ -37,13 +37,16 @@ class ShireFileChangesProvider(val project: Project) : Disposable {
 
     fun startup(afterUpdater: (HobbitHole, ShireFile) -> Unit) {
         (shireFileModifier ?: synchronized(this) {
-            shireFileModifier ?: ShireFileModifier(ShireFileModificationContext(
-                DynamicShireActionService.getInstance(project),
-                afterUpdater,
-                ShireCoroutineScope.scope(project)
-            ){
-                ReadAction.compute<ShireFile?, Throwable> { PsiManager.getInstance(project).findFile(it) as? ShireFile }
-            }).also { shireFileModifier = it }
+            shireFileModifier ?: ShireFileModifier(
+                ShireFileModificationContext(
+                    DynamicShireActionService.getInstance(project),
+                    afterUpdater,
+                    ShireCoroutineScope.scope(project)
+                ) {
+                    ReadAction.compute<ShireFile?, Throwable> {
+                        PsiManager.getInstance(project).findFile(it) as? ShireFile
+                    }
+                }).also { shireFileModifier = it }
         }).startup {
             ReadAction.compute<Boolean, Throwable> { ProjectFileIndex.getInstance(project).isInProject(it) }
         }
@@ -90,10 +93,11 @@ internal class AsyncShireFileListener : AsyncFileListener, ShireFileListener {
         val beforeChangedEvents = mutableListOf<VFileEvent>()
         val afterChangedEvents = mutableListOf<VFileEvent>()
         for (event in events) {
-            when(event) {
+            when (event) {
                 is VFileDeleteEvent -> {
                     beforeChangedEvents.add(event)
                 }
+
                 else -> {
                     afterChangedEvents.add(event) // Maybe the file type has been changed
                 }
@@ -130,10 +134,13 @@ internal class AsyncShireFileListener : AsyncFileListener, ShireFileListener {
  */
 interface ShireFileListener {
     fun onUpdated(file: VirtualFile?) {
-        if (file == null || !file.isValid || file.isDirectory) return
-        if (file.fileType !is ShireFileType) return
-        if (file is LightVirtualFile) return
-
-        ShireUpdater.publisher.onUpdated(file)
+        try {
+            if (file == null || !file.isValid || file.isDirectory) return
+            if (file.fileType !is ShireFileType) return
+            if (file is LightVirtualFile) return
+            ShireUpdater.publisher.onUpdated(file)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 }
