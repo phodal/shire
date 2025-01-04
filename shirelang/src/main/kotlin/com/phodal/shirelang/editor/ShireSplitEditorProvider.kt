@@ -10,7 +10,7 @@ import com.phodal.shirelang.ShireFileType
 
 
 class ShireSplitEditorProvider : WeighedFileEditorProvider() {
-    override fun getEditorTypeId() = "shire-editor"
+    override fun getEditorTypeId() = "shire-split-editor"
     private val mainProvider: TextEditorProvider = TextEditorProvider.getInstance()
     private val previewProvider: FileEditorProvider = ShirePreviewEditorProvider()
 

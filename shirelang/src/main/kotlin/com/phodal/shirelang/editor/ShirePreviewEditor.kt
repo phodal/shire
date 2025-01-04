@@ -17,6 +17,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.readText
 import com.intellij.psi.PsiManager
 import com.intellij.ui.JBColor
+import com.intellij.ui.RoundedLineBorder
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.dsl.builder.Align
@@ -32,12 +33,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
 import org.intellij.plugins.markdown.lang.MarkdownLanguage
 import java.awt.BorderLayout
-import java.awt.event.ActionEvent
 import java.beans.PropertyChangeListener
-import javax.swing.AbstractAction
-import javax.swing.JComponent
-import javax.swing.JPanel
-import javax.swing.ScrollPaneConstants
+import javax.swing.*
 
 /**
  * Display shire file render prompt and have a sample file as view
@@ -111,6 +108,12 @@ open class ShirePreviewEditor(
                         javaLanguage,
                         this@ShirePreviewEditor
                     )
+
+                    editor.isViewer = false
+                    editor.settings.isLineNumbersShown = true
+
+                    /// maybe enable to change file languages?
+
                     val editorFragment = EditorFragment(editor)
                     this@ShirePreviewEditor.sampleEditor = editor
                     cell(editorFragment.getContent()).align(Align.FILL).resizableColumn()
@@ -141,19 +144,29 @@ open class ShirePreviewEditor(
                 highlightSketch = CodeHighlightSketch(project, "", MarkdownLanguage.INSTANCE).apply {
                     initEditor(virtualFile.readText())
                 }
+                /// hidden editor scroll bar
+                highlightSketch?.editorFragment?.editor?.settings?.apply {
+                    isUseSoftWraps = true
+                }
 
-                cell(highlightSketch!!).align(Align.FILL)
+                val panel = JPanel(BorderLayout())
+                panel.border = BorderFactory.createCompoundBorder(
+                    BorderFactory.createEmptyBorder(12, 12, 12, 12),
+                    RoundedLineBorder(JBColor.border(), 8, 1)
+                )
+                panel.add(highlightSketch, BorderLayout.CENTER)
+
+                cell(panel).align(Align.FILL)
             }
         }
 
         this.mainPanel.add(corePanel, BorderLayout.CENTER)
-        /// after index ready
         DumbService.getInstance(project).smartInvokeLater {
-            updateOutput()
+            updateDisplayedContent()
         }
     }
 
-    fun updateOutput() {
+    fun updateDisplayedContent() {
         ApplicationManager.getApplication().invokeLater {
             try {
                 val psiFile = PsiManager.getInstance(project).findFile(virtualFile) as? ShireFile ?: return@invokeLater
@@ -178,7 +191,7 @@ open class ShirePreviewEditor(
     }
 
     fun rerenderShire() {
-        updateOutput()
+        updateDisplayedContent()
     }
 
     fun setMainEditor(editor: Editor) {

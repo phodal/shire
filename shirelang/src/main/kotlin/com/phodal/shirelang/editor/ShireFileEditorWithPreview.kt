@@ -71,7 +71,7 @@ class ShireFileEditorWithPreview(
             },
             object : AnAction("Refresh Preview", "Refresh Preview", AllIcons.Actions.Refresh) {
                 override fun actionPerformed(e: AnActionEvent) {
-                    preview.updateOutput()
+                    preview.updateDisplayedContent()
                 }
             },
             Separator(),
