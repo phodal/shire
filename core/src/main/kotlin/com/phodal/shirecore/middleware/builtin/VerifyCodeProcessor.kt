@@ -34,6 +34,11 @@ class VerifyCodeProcessor : PostProcessor {
             return ""
         }
 
+        if (!psiFile.isValid) {
+            console?.print("No code to verify\n", ConsoleViewContentType.ERROR_OUTPUT)
+            return ""
+        }
+
         val errors: List<String> = PsiErrorCollector.collectSyntaxError(psiFile, project)
 
         if (errors.isNotEmpty()) {

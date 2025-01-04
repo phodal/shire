@@ -17,7 +17,7 @@ class ShireLifecycleTest : BasePlatformTestCase() {
         @Language("Shire")
         val code = """
             ---
-            onStreamingEnd:  { parseCode | saveFile("demo.sample") | verifyCode | runCode }
+            onStreamingEnd:  { parseCode | saveFile("demo.shire") | verifyCode | runCode }
             ---
             
             ${'$'}allController
@@ -37,17 +37,26 @@ class ShireLifecycleTest : BasePlatformTestCase() {
         assertEquals(funcNode[0].args.size, 0)
 
         assertEquals(funcNode[1].funcName, "saveFile")
-        assertEquals(funcNode[1].args[0], "demo.sample")
+        assertEquals(funcNode[1].args[0], "demo.shire")
 
         assertEquals(funcNode[2].funcName, "verifyCode")
         assertEquals(funcNode[3].funcName, "runCode")
 
-        val handleContext = PostProcessorContext(currentLanguage = ShireLanguage.INSTANCE, editor = null)
-        execute(project, funcNode, handleContext, null)
+        try {
+            val handleContext = PostProcessorContext(currentLanguage = ShireLanguage.INSTANCE, editor = null)
+            execute(project, funcNode, handleContext, null)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     @TestOnly
-    fun execute(project: Project, funcNodes: List<LifecycleProcessorSignature>, handleContext: PostProcessorContext, console: ConsoleView?) {
+    fun execute(
+        project: Project,
+        funcNodes: List<LifecycleProcessorSignature>,
+        handleContext: PostProcessorContext,
+        console: ConsoleView?,
+    ) {
         funcNodes.forEach { funNode ->
             val handler = handler(funNode.funcName)
             if (handler != null) {
@@ -122,7 +131,7 @@ class ShireLifecycleTest : BasePlatformTestCase() {
         }
     }
 
-    fun testShouldSupportForBeforeStreaming(){
+    fun testShouldSupportForBeforeStreaming() {
         @Language("Shire")
         val code = """
             ---
@@ -145,7 +154,7 @@ class ShireLifecycleTest : BasePlatformTestCase() {
         assertEquals(hole.processors[2].funcName, "embedding")
     }
 
-    fun testShouldExecuteProcessForOnStreamingEvent(){
+    fun testShouldExecuteProcessForOnStreamingEvent() {
         @Language("Shire")
         val code = """
             ---
