@@ -3,6 +3,7 @@ package com.phodal.shirelang.run.runner
 import com.intellij.execution.console.ConsoleViewWrapperBase
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.application.runReadAction
+import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
@@ -41,7 +42,7 @@ class ShireRunner(
     private val variableMap: Map<String, String>,
     private val processHandler: ShireProcessHandler,
 ) {
-    private var compiledVariables: Map<String, Any> = mapOf()
+    private var `compiledVariables`: Map<String, Any> = mapOf()
     private val terminalLocationExecutor = TerminalLocationExecutor.provide(project)
 
     private var isCanceled: Boolean = false
@@ -212,12 +213,15 @@ class ShireRunner(
             project: Project,
             shireFile: ShireFile,
             initVariables: Map<String, String>,
+            sampleEditor: Editor?,
         ): ShireRunnerContext {
-            val parsedResult = preAnalysisAndLocalExecute(shireFile, project)
-            prepareExecute(parsedResult, initVariables, project, null)
+            val parsedResult = preAnalysisAndLocalExecute(shireFile, project, sampleEditor)
+            prepareExecute(parsedResult, initVariables, project, null, userEditor = sampleEditor)
 
             val variables = variableFromPostProcessorContext(initVariables)
-            val runnerContext = processTemplateCompile(parsedResult, variables, project, null, null)
+            val runnerContext = processTemplateCompile(parsedResult, variables, project, null, null,
+                userEditor = sampleEditor
+            )
 
             val service = project.getService(OnStreamingService::class.java)
             service?.onStart(project, runnerContext.finalPrompt)
@@ -225,8 +229,14 @@ class ShireRunner(
 
         }
 
-        fun preAnalysisAndLocalExecute(shireFile: ShireFile, project: Project): ShireParsedResult {
-            val syntaxAnalyzer = ShireSyntaxAnalyzer(project, shireFile, ActionLocationEditor.defaultEditor(project))
+        fun preAnalysisAndLocalExecute(
+            shireFile: ShireFile,
+            project: Project,
+            editor: Editor? = null,
+        ): ShireParsedResult {
+            val baseEditor = editor ?: ActionLocationEditor.defaultEditor(project)
+
+            val syntaxAnalyzer = ShireSyntaxAnalyzer(project, shireFile, baseEditor)
             return syntaxAnalyzer.parseAndExecuteLocalCommand()
         }
 
@@ -235,9 +245,10 @@ class ShireRunner(
             variables: Map<String, Any>,
             project: Project,
             consoleView: ShireConsoleView?,
+            userEditor: Editor? = null,
         ): PostProcessorContext {
             val hobbitHole = parsedResult.config
-            val editor = FileEditorManager.getInstance(project).selectedTextEditor
+            val editor = userEditor ?: FileEditorManager.getInstance(project).selectedTextEditor
             hobbitHole?.pickupElement(project, editor)
 
             val file = runReadAction {
@@ -274,9 +285,10 @@ class ShireRunner(
             project: Project,
             shireConfiguration: ShireConfiguration?,
             shireConsoleView: ShireConsoleView?,
+            userEditor: Editor? = null,
         ): ShireRunnerContext {
             val hobbitHole = compileResult.config
-            val editor = ActionLocationEditor.provide(project, hobbitHole?.actionLocation)
+            val editor = userEditor ?: ActionLocationEditor.provide(project, hobbitHole?.actionLocation)
 
             val templateCompiler =
                 ShireTemplateCompiler(

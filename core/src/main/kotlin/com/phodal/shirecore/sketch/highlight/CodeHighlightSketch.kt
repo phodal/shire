@@ -93,7 +93,7 @@ class CodeHighlightSketch(val project: Project, val text: String, private var id
     companion object {
         private val LINE_NO_REGEX = Regex("^\\d+:")
 
-        private fun createCodeViewerEditor(
+        fun createCodeViewerEditor(
             project: Project,
             text: String,
             ideaLanguage: Language?,

@@ -16,7 +16,7 @@ class ShireActionPromptBuilder : ShirePromptBuilder {
 
         val initVariables = mapOf("chatPrompt" to originPrompt)
         val finalPrompt = runBlocking {
-            ShireRunner.compileOnly(project, action.shireFile, initVariables)
+            ShireRunner.compileOnly(project, action.shireFile, initVariables, null)
         }.finalPrompt
 
         return finalPrompt

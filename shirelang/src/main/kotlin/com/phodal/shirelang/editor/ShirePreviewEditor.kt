@@ -1,5 +1,9 @@
 package com.phodal.shirelang.editor
 
+import com.intellij.icons.AllIcons
+import com.intellij.lang.Language
+import com.intellij.openapi.actionSystem.AnAction
+import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.ScrollType
@@ -11,7 +15,6 @@ import com.intellij.openapi.util.UserDataHolderBase
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.readText
 import com.intellij.psi.PsiManager
-import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.dsl.builder.Align
@@ -19,6 +22,7 @@ import com.intellij.ui.dsl.builder.panel
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
 import com.phodal.shirecore.sketch.highlight.CodeHighlightSketch
+import com.phodal.shirecore.sketch.highlight.EditorFragment
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.runner.ShireRunner
 import com.phodal.shirelang.run.runner.ShireRunnerContext
@@ -26,7 +30,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
 import org.intellij.plugins.markdown.lang.MarkdownLanguage
 import java.awt.BorderLayout
+import java.awt.event.ActionEvent
 import java.beans.PropertyChangeListener
+import javax.swing.AbstractAction
 import javax.swing.JComponent
 import javax.swing.JPanel
 import javax.swing.ScrollPaneConstants
@@ -51,8 +57,18 @@ open class ShirePreviewEditor(
     private val variablePanel = ShireVariablePanel()
 
     private var highlightSketch: CodeHighlightSketch? = null
+    private var sampleEditor: Editor? = null
+
+    private val javaHelloWorld = """
+        class HelloWorld {
+            public static void main(String[] args) {
+                System.out.println("Hello, World");
+            }
+        }
+    """.trimIndent()
 
     init {
+        val javaLanguage = Language.findLanguageByID("JAVA")
         val corePanel = panel {
             row {
                 val label = JBLabel("Shire Preview (Experimental)").apply {
@@ -63,6 +79,30 @@ open class ShirePreviewEditor(
                 }
 
                 cell(label).align(Align.FILL).resizableColumn()
+            }
+            if (javaLanguage != null) {
+                row {
+                    cell(JBLabel("Sample File For Variable")).align(Align.FILL).resizableColumn()
+                    cell(JBLabel("shire.java")).align(Align.FILL).resizableColumn()
+                    // add refresh button for select
+                    icon(AllIcons.Actions.Refresh)
+                    button("Refresh", object : AnAction() {
+                        override fun actionPerformed(p0: AnActionEvent) {
+                            rerenderShire()
+                        }
+                    })
+                }
+                row {
+                    val editor = CodeHighlightSketch.createCodeViewerEditor(
+                        project,
+                        javaHelloWorld,
+                        javaLanguage,
+                        this@ShirePreviewEditor
+                    )
+                    val editorFragment = EditorFragment(editor)
+                    this@ShirePreviewEditor.sampleEditor = editor
+                    cell(editorFragment.getContent()).align(Align.FILL).resizableColumn()
+                }
             }
             row {
                 cell(variablePanel).align(Align.FILL)
@@ -85,7 +125,7 @@ open class ShirePreviewEditor(
             try {
                 val psiFile = PsiManager.getInstance(project).findFile(virtualFile) as? ShireFile ?: return@invokeLater
                 shireRunnerContext = runBlocking {
-                    ShireRunner.compileOnly(project, psiFile, mapOf())
+                    ShireRunner.compileOnly(project, psiFile, mapOf(), sampleEditor)
                 }
 
                 val variables = shireRunnerContext?.compiledVariables
