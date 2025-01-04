@@ -1,9 +1,9 @@
 package com.phodal.shirelang.editor
 
 import com.intellij.icons.AllIcons
+import com.intellij.ide.BrowserUtil
 import com.intellij.openapi.actionSystem.*
 import com.intellij.openapi.actionSystem.ex.ActionUtil
-import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.event.VisibleAreaEvent
 import com.intellij.openapi.editor.event.VisibleAreaListener
 import com.intellij.openapi.editor.ex.util.EditorUtil
@@ -55,46 +55,33 @@ class ShireFileEditorWithPreview(
 
     override fun createToolbar(): ActionToolbar {
         return ActionManager.getInstance()
-            .createActionToolbar(ActionPlaces.EDITOR_TOOLBAR, createActionGroup(project, virtualFile, editor), true)
+            .createActionToolbar(ActionPlaces.EDITOR_TOOLBAR, createActionGroup(project), true)
             .also {
                 it.targetComponent = editor.contentComponent
             }
     }
 
-    private fun createActionGroup(project: Project, virtualFile: VirtualFile, editor: Editor): ActionGroup {
+    private fun createActionGroup(project: Project): ActionGroup {
         return DefaultActionGroup(
-            showPreviewAction(project, virtualFile, editor),
-            createRefreshAction(project),
+            object : AnAction("Show Preview", "Show Shire Prompt Preview", AllIcons.Actions.Preview) {
+                override fun actionPerformed(e: AnActionEvent) {
+                    preview.component.isVisible = true
+                    preview.rerenderShire()
+                }
+            },
+            object : AnAction("Refresh Preview", "Refresh Preview", AllIcons.Actions.Refresh) {
+                override fun actionPerformed(e: AnActionEvent) {
+                    preview.updateOutput()
+                }
+            },
             Separator(),
-            createHelpAction(project)
+            object : AnAction("Help", "Help", AllIcons.Actions.Help) {
+                override fun actionPerformed(e: AnActionEvent) {
+                    val url = "https://shire.phodal.com/"
+                    BrowserUtil.browse(url)
+                }
+            }
         )
     }
 
-    private fun createRefreshAction(project: Project): AnAction {
-        return object : AnAction("Refresh Preview", "Refresh Preview", AllIcons.Actions.Refresh) {
-            override fun actionPerformed(e: AnActionEvent) {
-                preview.updateOutput()
-            }
-        }
-    }
-
-    private fun createHelpAction(project: Project): AnAction {
-        val idleIcon = AllIcons.Actions.Help
-        return object : AnAction("Help", "Help", idleIcon) {
-            override fun actionPerformed(e: AnActionEvent) {
-                val url = "https://shire.phodal.com/"
-                com.intellij.ide.BrowserUtil.browse(url)
-            }
-        }
-    }
-
-    private fun showPreviewAction(project: Project, virtualFile: VirtualFile, editor: Editor): AnAction {
-        val idleIcon = AllIcons.Actions.Preview
-        return object : AnAction("Show Preview", "Show Preview", idleIcon) {
-            override fun actionPerformed(e: AnActionEvent) {
-                preview.component.isVisible = true
-                (preview as ShirePreviewEditor).rerenderShire()
-            }
-        }
-    }
 }
