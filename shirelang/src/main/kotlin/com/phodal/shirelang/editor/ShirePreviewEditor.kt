@@ -58,12 +58,7 @@ open class ShirePreviewEditor(
                 val label = JBLabel("Shire Preview (Experimental)").apply {
                     fontColor = UIUtil.FontColor.BRIGHTER
                     font = JBUI.Fonts.label(14.0f)
-                    foreground = JBColor(0x4A4A4A, 0xBBBBBB)
-                    background = JBColor(0xF5F7FA, 0x2B2D30)
-                    border = JBUI.Borders.compound(
-                        JBUI.Borders.empty(12, 16),
-                        JBUI.Borders.customLine(JBColor(0xE0E0E0, 0x3C3F41), 0, 0, 1, 0)
-                    )
+                    border = JBUI.Borders.empty(0, 16)
                     isOpaque = true
                 }
 
