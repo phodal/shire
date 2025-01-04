@@ -62,7 +62,7 @@ open class ShireRunConfigurationProfileState(
             })
         }
 
-        val parsedResult = ShireRunner.preAnalysisSyntax(shireFile, myProject)
+        val parsedResult = ShireRunner.preAnalysisAndLocalExecute(shireFile, myProject)
 
         val location = parsedResult.config?.actionLocation
         if (location == ShireActionLocation.TERMINAL_MENU || location == ShireActionLocation.COMMIT_MENU) {

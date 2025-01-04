@@ -11,7 +11,6 @@ import com.phodal.shirelang.psi.ShireFile
 import junit.framework.TestCase
 import org.intellij.lang.annotations.Language
 import org.jetbrains.annotations.TestOnly
-import org.junit.Ignore
 
 class ShireLifecycleTest : BasePlatformTestCase() {
     fun testShouldHandleWhenStreamingEnd() {
@@ -28,7 +27,7 @@ class ShireLifecycleTest : BasePlatformTestCase() {
 
         myFixture.openFileInEditor(file.virtualFile)
 
-        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parseAndExecuteLocalCommand()
         val hole = compile.config!!
 
         val funcNode = hole.onStreamingEnd
@@ -85,7 +84,7 @@ class ShireLifecycleTest : BasePlatformTestCase() {
 
         myFixture.openFileInEditor(file.virtualFile)
 
-        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parseAndExecuteLocalCommand()
         val hole = compile.config!!
 
         val funcNode = hole.afterStreaming!!
@@ -137,7 +136,7 @@ class ShireLifecycleTest : BasePlatformTestCase() {
 
         myFixture.openFileInEditor(file.virtualFile)
 
-        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parseAndExecuteLocalCommand()
         val hole = compile.config!!.beforeStreaming!!
 
         assertEquals(hole.processors.size, 3)
@@ -160,7 +159,7 @@ class ShireLifecycleTest : BasePlatformTestCase() {
 
         myFixture.openFileInEditor(file.virtualFile)
 
-        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parseAndExecuteLocalCommand()
         val funcSigns = compile.config!!.onStreaming
 
         assertEquals(funcSigns.size, 1)

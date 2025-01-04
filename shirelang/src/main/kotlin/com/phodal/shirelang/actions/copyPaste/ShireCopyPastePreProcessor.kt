@@ -44,7 +44,7 @@ class PasteManagerService {
         val future = CompletableFuture<String>()
         val shireFile = pasteProcessorMap[hobbitHole] ?: return text
 
-        val compileResult = ShireRunner.preAnalysisSyntax(shireFile, project)
+        val compileResult = ShireRunner.preAnalysisAndLocalExecute(shireFile, project)
         val variableTable = compileResult.variableTable
 
         val templateCompiler =

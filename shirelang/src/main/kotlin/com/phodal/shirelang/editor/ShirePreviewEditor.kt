@@ -3,8 +3,6 @@ package com.phodal.shirelang.editor
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.ScrollType
-import com.intellij.openapi.editor.event.DocumentEvent
-import com.intellij.openapi.editor.event.DocumentListener
 import com.intellij.openapi.fileEditor.FileEditor
 import com.intellij.openapi.fileEditor.FileEditorState
 import com.intellij.openapi.project.Project
@@ -84,8 +82,6 @@ open class ShirePreviewEditor(
         }
 
         this.mainPanel.add(corePanel, BorderLayout.CENTER)
-        // 删除自动更新监听
-        // mainEditor.value?.document?.addDocumentListener(ReparseContentDocumentListener())
         updateOutput()
     }
 
@@ -94,7 +90,7 @@ open class ShirePreviewEditor(
             try {
                 val psiFile = PsiManager.getInstance(project).findFile(virtualFile) as? ShireFile ?: return@invokeLater
                 shireRunnerContext = runBlocking {
-                    ShireRunner.compileFileContext(project, psiFile, mapOf())
+                    ShireRunner.compileOnly(project, psiFile, mapOf())
                 }
 
                 val variables = shireRunnerContext?.compiledVariables

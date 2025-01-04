@@ -95,7 +95,7 @@ class ShireProcessProcessor(val project: Project) {
      */
     private fun executeTask(newScript: ShireFile, consoleView: ShireConsoleView?) {
         val shireCompiler = createCompiler(project, newScript)
-        val result = shireCompiler.parse()
+        val result = shireCompiler.parseAndExecuteLocalCommand()
         if (result.shireOutput != "") {
             ShirelangNotifications.info(project, result.shireOutput)
         }
@@ -116,7 +116,7 @@ class ShireProcessProcessor(val project: Project) {
             if (result.nextJob == null) return
 
             val nextJob = result.nextJob!!
-            val nextResult = createCompiler(project, nextJob).parse()
+            val nextResult = createCompiler(project, nextJob).parseAndExecuteLocalCommand()
             if (nextResult.shireOutput != "") {
                 ShirelangNotifications.info(project, nextResult.shireOutput)
             }

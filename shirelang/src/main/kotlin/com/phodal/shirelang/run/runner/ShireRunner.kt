@@ -121,7 +121,7 @@ class ShireRunner(
         }
     }
 
-    fun executeNormalUiTask(runData: ShireRunnerContext, postFunction: PostFunction) {
+    private fun executeNormalUiTask(runData: ShireRunnerContext, postFunction: PostFunction) {
         val agent = runData.compileResult.executeAgent
         val hobbitHole = runData.hole
 
@@ -148,7 +148,7 @@ class ShireRunner(
         shireLlmExecutor.execute(postFunction)
     }
 
-    private fun executePostFunction(
+    fun executePostFunction(
         runnerContext: ShireRunnerContext,
         hobbitHole: HobbitHole?,
         response: String?,
@@ -205,9 +205,29 @@ class ShireRunner(
     }
 
     companion object {
-        fun preAnalysisSyntax(shireFile: ShireFile, project: Project): ShireParsedResult {
+        /**
+         * Thi api design for compile only
+         */
+        suspend fun compileOnly(
+            project: Project,
+            shireFile: ShireFile,
+            initVariables: Map<String, String>,
+        ): ShireRunnerContext {
+            val parsedResult = preAnalysisAndLocalExecute(shireFile, project)
+            prepareExecute(parsedResult, initVariables, project, null)
+
+            val variables = variableFromPostProcessorContext(initVariables)
+            val runnerContext = processTemplateCompile(parsedResult, variables, project, null, null)
+
+            val service = project.getService(OnStreamingService::class.java)
+            service?.onStart(project, runnerContext.finalPrompt)
+            return runnerContext
+
+        }
+
+        fun preAnalysisAndLocalExecute(shireFile: ShireFile, project: Project): ShireParsedResult {
             val syntaxAnalyzer = ShireSyntaxAnalyzer(project, shireFile, ActionLocationEditor.defaultEditor(project))
-            return syntaxAnalyzer.parse()
+            return syntaxAnalyzer.parseAndExecuteLocalCommand()
         }
 
         fun prepareExecute(
@@ -328,24 +348,6 @@ class ShireRunner(
             }
 
             console.print("\n--------------------\n", ConsoleViewContentType.NORMAL_OUTPUT)
-        }
-
-        suspend fun compileFileContext(
-            project: Project,
-            shireFile: ShireFile,
-            initVariables: Map<String, String>,
-        ): ShireRunnerContext {
-            val parsedResult = preAnalysisSyntax(shireFile, project)
-            prepareExecute(parsedResult, initVariables, project, null)
-
-            val variables = variableFromPostProcessorContext(initVariables)
-            val runnerContext = processTemplateCompile(parsedResult, variables, project, null, null)
-
-            val service = project.getService(OnStreamingService::class.java)
-            service?.onStart(project, runnerContext.finalPrompt)
-
-            return runnerContext
-
         }
 
         private fun variableFromPostProcessorContext(initValue: Map<String, String>): MutableMap<String, String> {

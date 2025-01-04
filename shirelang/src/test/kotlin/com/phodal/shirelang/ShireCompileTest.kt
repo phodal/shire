@@ -18,7 +18,7 @@ class ShireCompileTest : BasePlatformTestCase() {
         val code = "Normal String /"
         val file = myFixture.configureByText("test.shire", code)
 
-        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parseAndExecuteLocalCommand()
         assertEquals("Normal String /", compile.shireOutput)
     }
 
@@ -38,7 +38,7 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         val file = myFixture.configureByText("test.shire", code)
 
-        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parseAndExecuteLocalCommand()
         assertEquals("\n\nSummary webpage:\n", compile.shireOutput)
         compile.config!!.let {
             assertEquals("Summary", it.name)
@@ -64,7 +64,7 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         val file = myFixture.configureByText("test.shire", code)
 
-        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parseAndExecuteLocalCommand()
         assertEquals("\n\nSummary webpage:\n", compile.shireOutput)
     }
 
@@ -106,7 +106,7 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         val file = myFixture.configureByText("test.shire", code)
 
-        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parseAndExecuteLocalCommand()
         assertEquals("\n\nSummary webpage:", compile.shireOutput)
         val map = compile.config!!.variables
 
@@ -133,7 +133,7 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         val file = myFixture.configureByText("test.shire", code)
 
-        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parseAndExecuteLocalCommand()
         assertEquals("\n\nSummary webpage:", compile.shireOutput)
         val when_ = compile.config?.when_
 
@@ -163,7 +163,7 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         val file = myFixture.configureByText("test.shire", code)
 
-        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parseAndExecuteLocalCommand()
         assertEquals("\n\nSummary webpage:", compile.shireOutput)
         val when_ = compile.config?.when_
 
@@ -193,7 +193,7 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         val file = myFixture.configureByText("test.shire", code)
 
-        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parseAndExecuteLocalCommand()
         assertEquals("\n\nSummary webpage:", compile.shireOutput)
         val when_ = compile.config?.when_
 
@@ -212,7 +212,7 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         val file = myFixture.configureByText("test.shire", code)
 
-        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parseAndExecuteLocalCommand()
         assertEquals("\n\nSummary webpage:", compile.shireOutput)
         val when_ = compile.config?.when_
 
@@ -238,7 +238,7 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         val file = myFixture.configureByText("test.shire", code)
 
-        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parseAndExecuteLocalCommand()
         val table = compile.variableTable
 
         val hole = compile.config!!
@@ -276,7 +276,7 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         myFixture.openFileInEditor(file.virtualFile)
 
-        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parseAndExecuteLocalCommand()
         val hole = compile.config!!
 
         val results = runBlocking {
@@ -312,7 +312,7 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         val file = myFixture.configureByText("test.shire", code)
 
-        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parseAndExecuteLocalCommand()
         val hole = compile.config!!
 
         TestCase.assertEquals(1, hole.variables.size)
@@ -348,7 +348,7 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         myFixture.openFileInEditor(file.virtualFile)
 
-        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parseAndExecuteLocalCommand()
         val hole = compile.config!!
 
         val results = runBlocking {
@@ -381,7 +381,7 @@ class ShireCompileTest : BasePlatformTestCase() {
 
         myFixture.openFileInEditor(file.virtualFile)
 
-        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parseAndExecuteLocalCommand()
         val hole = compile.config!!
 
         val results = runBlocking {
@@ -422,7 +422,7 @@ Summary webpage: ${'$'}fileName""", results["var2"].toString()
 
         myFixture.openFileInEditor(file.virtualFile)
 
-        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parseAndExecuteLocalCommand()
         val hole = compile.config!!
 
         val results = runBlocking {
@@ -467,7 +467,7 @@ Summary webpage: ${'$'}fileName""", results["var2"].toString()
         val file = myFixture.addFileToProject("sample.shire", code)
         myFixture.openFileInEditor(file.virtualFile)
 
-        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parseAndExecuteLocalCommand()
         val hole = compile.config!!
 
         val results = runBlocking {

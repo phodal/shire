@@ -1,7 +1,6 @@
 package com.phodal.shirelang.compiler.parser
 
 import com.intellij.lang.parser.GeneratedParserUtilBase.DUMMY_BLOCK
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.Editor
@@ -56,7 +55,7 @@ class ShireSyntaxAnalyzer(
     /**
      * @return ShireCompiledResult object containing the compiled result
      */
-    fun parse(): ShireParsedResult {
+    fun parseAndExecuteLocalCommand(): ShireParsedResult {
         result.sourceCode = file.text
         val iterator = file.children.iterator()
 
@@ -153,7 +152,7 @@ class ShireSyntaxAnalyzer(
 
             is ShireVelocityBlock -> {
                 ShireFile.fromString(myProject, clauseContent.text).let { file ->
-                    ShireSyntaxAnalyzer(myProject, file).parse().let {
+                    ShireSyntaxAnalyzer(myProject, file).parseAndExecuteLocalCommand().let {
                         output.append(it.shireOutput)
                         variableTable.addVariable(it.variableTable)
                         result.hasError = it.hasError
@@ -202,7 +201,7 @@ class ShireSyntaxAnalyzer(
                 if (command == null) {
                     CustomCommand.fromString(myProject, id?.text ?: "")?.let { cmd ->
                         ShireFile.fromString(myProject, cmd.content).let { file ->
-                            ShireSyntaxAnalyzer(myProject, file).parse().let {
+                            ShireSyntaxAnalyzer(myProject, file).parseAndExecuteLocalCommand().let {
                                 output.append(it.shireOutput)
                                 result.hasError = it.hasError
                             }

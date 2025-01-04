@@ -37,7 +37,7 @@ class ShireQueryExpressionTest : BasePlatformTestCase() {
         myFixture.addFileToProject("HelloWorld.txt", sampleText)
         val file = myFixture.addFileToProject("sample.shire", code)
 
-        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parseAndExecuteLocalCommand()
         val hole = compile.config!!
 
         val patternActionFuncs = hole.variables.first().value.patternActionFuncs
@@ -84,7 +84,7 @@ class ShireQueryExpressionTest : BasePlatformTestCase() {
 
         myFixture.openFileInEditor(file.virtualFile)
 
-        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parseAndExecuteLocalCommand()
         val hole = compile.config!!
 
         val results = runBlocking {

@@ -64,7 +64,7 @@ class ShireCompileTest : BasePlatformTestCase() {
         """.trimIndent()
 
         val file = myFixture.configureByText("test.shire", code)
-        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parseAndExecuteLocalCommand()
         val hole = compile.config!!
 
         val context = PostProcessorContext(
@@ -120,7 +120,7 @@ public class HelloController {
         """.trimIndent()
 
         val file = myFixture.configureByText("test.shire", code)
-        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parse()
+        val compile = ShireSyntaxAnalyzer(project, file as ShireFile, myFixture.editor).parseAndExecuteLocalCommand()
         val hole = compile.config!!
 
         val context = PostProcessorContext(
