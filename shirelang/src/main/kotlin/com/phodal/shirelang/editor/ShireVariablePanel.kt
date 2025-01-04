@@ -38,6 +38,8 @@ class ShireVariablePanel : JPanel(BorderLayout()) {
             minimumSize = JBUI.size(0, 200)
             preferredSize = JBUI.size(0, 200)
         }
+
+        background = JBColor.WHITE
         add(scrollPane, BorderLayout.CENTER)
         setupPanel()
     }

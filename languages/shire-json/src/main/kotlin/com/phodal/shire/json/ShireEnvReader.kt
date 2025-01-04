@@ -2,6 +2,7 @@ package com.phodal.shire.json
 
 import com.intellij.json.psi.JsonFile
 import com.intellij.json.psi.JsonObject
+import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
@@ -24,11 +25,13 @@ object ShireEnvReader {
         scope: GlobalSearchScope,
         project: Project,
     ): JsonFile? {
-        return FileBasedIndex.getInstance().getContainingFiles(ShireEnvironmentIndex.id(), envName, scope)
-            .firstOrNull()
-            ?.let {
-                (PsiManager.getInstance(project).findFile(it) as? JsonFile)
-            }
+        return DumbService.getInstance(project).runReadActionInSmartMode<JsonFile?> {
+            FileBasedIndex.getInstance().getContainingFiles(ShireEnvironmentIndex.id(), envName, scope)
+                .firstOrNull()
+                ?.let {
+                    (PsiManager.getInstance(project).findFile(it) as? JsonFile)
+                }
+        }
     }
 
     fun getEnvObject(
@@ -58,13 +61,22 @@ object ShireEnvReader {
     }
 
     fun getAllEnvironments(project: Project, scope: GlobalSearchScope): Collection<String> {
-        val index = FileBasedIndex.getInstance()
-
-        return index.getAllKeys(ShireEnvironmentIndex.id(), project).stream()
-            .filter {
-                it != ShireEnvironmentIndex.MODEL_LIST && index.getContainingFiles(ShireEnvironmentIndex.id(), it, scope).isNotEmpty()
+        try {
+            return DumbService.getInstance(project).runReadActionInSmartMode<Collection<String>> {
+                val index = FileBasedIndex.getInstance()
+                index.getAllKeys(ShireEnvironmentIndex.id(), project).stream()
+                    .filter {
+                        it != ShireEnvironmentIndex.MODEL_LIST && index.getContainingFiles(
+                            ShireEnvironmentIndex.id(),
+                            it,
+                            scope
+                        ).isNotEmpty()
+                    }
+                    .toList()
             }
-            .toList()
+        } catch (e: Exception) {
+            return emptyList()
+        }
     }
 
 }

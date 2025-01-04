@@ -22,6 +22,8 @@ import com.phodal.shirecore.provider.http.HttpHandlerType
 import com.phodal.shire.json.ShireEnvReader
 import com.phodal.shire.json.ShireEnvVariableFiller
 import okhttp3.OkHttpClient
+import com.intellij.openapi.application.ApplicationManager
+import okhttp3.Request
 
 class CUrlHttpHandler : HttpHandler {
     override fun isApplicable(type: HttpHandlerType): Boolean = type == HttpHandlerType.CURL
@@ -37,18 +39,24 @@ class CUrlHttpHandler : HttpHandler {
         var filledShell: String = content
         val client = OkHttpClient()
         var restClientRequest: RestClientRequest? = null
-        val request = runReadAction {
-            val scope = getSearchScope(project)
+        val request = ApplicationManager.getApplication().executeOnPooledThread<Request?> {
+            runReadAction {
+                val scope = getSearchScope(project)
 
-            val envName =
-                ShireEnvReader.getAllEnvironments(project, scope).firstOrNull() ?: ShireEnvReader.DEFAULT_ENV_NAME
-            val envObject = ShireEnvReader.getEnvObject(envName, scope, project)
+                val envName =
+                    ShireEnvReader.getAllEnvironments(project, scope).firstOrNull() ?: ShireEnvReader.DEFAULT_ENV_NAME
+                val envObject = ShireEnvReader.getEnvObject(envName, scope, project)
 
-            val enVariables: List<Set<String>> = ShireEnvReader.fetchEnvironmentVariables(envName, scope)
-            filledShell = ShireEnvVariableFiller.fillVariables(content, enVariables, envObject, processVariables)
-            restClientRequest = CurlParser().parseToRestClientRequest(filledShell)
+                val enVariables: List<Set<String>> = ShireEnvReader.fetchEnvironmentVariables(envName, scope)
+                filledShell = ShireEnvVariableFiller.fillVariables(content, enVariables, envObject, processVariables)
+                restClientRequest = CurlParser().parseToRestClientRequest(filledShell)
 
-            CUrlConverter.convert(restClientRequest!!)
+                CUrlConverter.convert(restClientRequest!!)
+            }
+        }.get()
+
+        if (restClientRequest == null || request == null) {
+            return null
         }
 
         restClientRequest?.let {

@@ -9,6 +9,7 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.ScrollType
 import com.intellij.openapi.fileEditor.FileEditor
 import com.intellij.openapi.fileEditor.FileEditorState
+import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.UserDataHolder
 import com.intellij.openapi.util.UserDataHolderBase
@@ -85,12 +86,14 @@ open class ShirePreviewEditor(
                     cell(JBLabel("Sample File For Variable"))
                     cell(JBLabel("(/shire.java)")).align(Align.FILL).resizableColumn()
                     // add refresh button for select
-                    icon(AllIcons.Actions.Refresh)
-                    button("Refresh", object : AnAction() {
+                    button("", object : AnAction() {
                         override fun actionPerformed(p0: AnActionEvent) {
                             rerenderShire()
                         }
-                    })
+                    }).also {
+                        it.component.icon = AllIcons.Actions.Refresh
+                        it.component.preferredSize = JBUI.size(24, 24)
+                    }
                 }
                 row {
                     val editor = CodeHighlightSketch.createCodeViewerEditor(
@@ -117,7 +120,10 @@ open class ShirePreviewEditor(
         }
 
         this.mainPanel.add(corePanel, BorderLayout.CENTER)
-        updateOutput()
+        /// after index ready
+        DumbService.getInstance(project).smartInvokeLater {
+            updateOutput()
+        }
     }
 
     fun updateOutput() {
