@@ -13,7 +13,9 @@ import javax.swing.table.DefaultTableModel
 
 class ShireVariablePanel : JPanel(BorderLayout()) {
     private val contentPanel = JBPanel<JBPanel<*>>(BorderLayout())
-    private val tableModel = DefaultTableModel(arrayOf("Name", "Value"), 0)
+    private val tableModel = DefaultTableModel(arrayOf("Name", "Value"), 0).apply {
+        background = JBColor.WHITE
+    }
 
     init {
         val table = JBTable(tableModel).apply {
@@ -39,7 +41,6 @@ class ShireVariablePanel : JPanel(BorderLayout()) {
             preferredSize = JBUI.size(0, 200)
         }
 
-        background = JBColor.WHITE
         add(scrollPane, BorderLayout.CENTER)
         setupPanel()
     }

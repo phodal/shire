@@ -16,6 +16,7 @@ import com.intellij.openapi.util.UserDataHolderBase
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.readText
 import com.intellij.psi.PsiManager
+import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.dsl.builder.Align
@@ -74,7 +75,8 @@ open class ShirePreviewEditor(
             row {
                 val label = JBLabel("Shire Preview (Experimental)").apply {
                     fontColor = UIUtil.FontColor.BRIGHTER
-                    font = JBUI.Fonts.label(14.0f)
+                    background = JBColor(0xF5F5F5, 0x2B2D30)
+                    font = JBUI.Fonts.label(16.0f).asBold()
                     border = JBUI.Borders.empty(0, 16)
                     isOpaque = true
                 }
@@ -83,7 +85,14 @@ open class ShirePreviewEditor(
             }
             if (javaLanguage != null) {
                 row {
-                    cell(JBLabel("Sample File For Variable"))
+                    cell(JBLabel("Sample File For Variable").apply {
+                        fontColor = UIUtil.FontColor.BRIGHTER
+                        background = JBColor(0xF5F5F5, 0x2B2D30)
+                        font = JBUI.Fonts.label(14.0f).asBold()
+                        border = JBUI.Borders.empty(0, 16)
+                        isOpaque = true
+                    }).align(Align.FILL).resizableColumn()
+
                     cell(JBLabel("(/shire.java)")).align(Align.FILL).resizableColumn()
                     // add refresh button for select
                     button("", object : AnAction() {
@@ -108,9 +117,26 @@ open class ShirePreviewEditor(
                 }
             }
             row {
+                cell(JBLabel("Variables").apply {
+                    fontColor = UIUtil.FontColor.BRIGHTER
+                    background = JBColor(0xF5F5F5, 0x2B2D30)
+                    font = JBUI.Fonts.label(14.0f).asBold()
+                    border = JBUI.Borders.empty(0, 16)
+                    isOpaque = true
+                }).align(Align.FILL).resizableColumn()
+            }
+            row {
                 cell(variablePanel).align(Align.FILL)
             }
             row {
+                cell(JBLabel("Prompt").apply {
+                    fontColor = UIUtil.FontColor.BRIGHTER
+                    background = JBColor(0xF5F5F5, 0x2B2D30)
+                    font = JBUI.Fonts.label(14.0f).asBold()
+                    border = JBUI.Borders.empty(0, 16)
+                    isOpaque = true
+                }).align(Align.FILL).resizableColumn()
+
                 highlightSketch = CodeHighlightSketch(project, "", MarkdownLanguage.INSTANCE).apply {
                     initEditor(virtualFile.readText())
                 }
