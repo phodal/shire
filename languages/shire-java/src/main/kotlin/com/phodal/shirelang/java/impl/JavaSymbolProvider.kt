@@ -8,6 +8,7 @@ import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.ide.highlighter.JavaFileType
 import com.intellij.lang.java.JavaLanguage
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 import com.intellij.psi.*
 import com.intellij.psi.impl.file.impl.JavaFileManagerImpl
@@ -130,15 +131,12 @@ class JavaSymbolProvider : ShireSymbolProvider {
         scope: GlobalSearchScope,
         methodName: String,
     ): List<PsiMethod> {
-        val psiClass = JavaFileManagerImpl(project).findClass(clazzName, scope)
-        if (psiClass != null) {
-            val psiMethod = psiClass.findMethodsByName(methodName, true).firstOrNull()
-            if (psiMethod != null) {
-                return listOf(psiMethod)
-            }
-        }
+        val psiClass = JavaFileManagerImpl(project).findClass(clazzName, scope) ?: return emptyList()
+        val psiMethod = ApplicationManager.getApplication().executeOnPooledThread<PsiMethod?> {
+            psiClass.findMethodsByName(methodName, true).firstOrNull()
+        }.get() ?: return emptyList()
 
-        return emptyList()
+        return listOf(psiMethod)
     }
 }
 

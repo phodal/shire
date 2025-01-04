@@ -82,7 +82,7 @@ class ShireLanguageInjector : LanguageInjector {
             val textRange = TextRange.create(first.startOffsetInParent, last.startOffsetInParent + last.textLength)
             registrar.addPlace(language, textRange, null, null)
         } catch (e: Exception) {
-            logger<ShireLanguageInjector>().error("Failed to inject language", e)
+            logger<ShireLanguageInjector>().warn("Failed to inject language", e)
         }
     }
 }
