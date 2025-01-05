@@ -3,7 +3,7 @@ package com.phodal.shirelang.regression
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.phodal.shirecore.middleware.post.PostProcessorContext
 import com.phodal.shirelang.compiler.parser.ShireSyntaxAnalyzer
-import com.phodal.shirelang.compiler.template.ShireTemplateCompiler
+import com.phodal.shirelang.compiler.template.ShireVariableTemplateCompiler
 import com.phodal.shirelang.psi.ShireFile
 import kotlinx.coroutines.runBlocking
 import org.intellij.lang.annotations.Language
@@ -52,7 +52,7 @@ class ShireTokenizerTest : BasePlatformTestCase() {
         )
 
         runBlocking {
-            val templateCompiler = ShireTemplateCompiler(project, hole, compile.variableTable, code, myFixture.editor)
+            val templateCompiler = ShireVariableTemplateCompiler(project, hole, compile.variableTable, code, myFixture.editor)
             val compiledVariables =
                 templateCompiler.compileVariable(myFixture.editor, mutableMapOf())
 

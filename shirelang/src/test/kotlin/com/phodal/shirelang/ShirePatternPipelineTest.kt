@@ -4,7 +4,7 @@ import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.phodal.shirecore.middleware.post.PostProcessorContext
 import com.phodal.shirelang.compiler.execute.PatternActionProcessor
 import com.phodal.shirelang.compiler.parser.ShireSyntaxAnalyzer
-import com.phodal.shirelang.compiler.template.ShireTemplateCompiler
+import com.phodal.shirelang.compiler.template.ShireVariableTemplateCompiler
 import com.phodal.shirelang.psi.ShireFile
 import kotlinx.coroutines.runBlocking
 import org.intellij.lang.annotations.Language
@@ -39,7 +39,7 @@ class ShirePatternPipelineTest : BasePlatformTestCase() {
         )
 
         runBlocking {
-            val shireTemplateCompiler = ShireTemplateCompiler(project, hole, compile.variableTable, code, myFixture.editor)
+            val shireTemplateCompiler = ShireVariableTemplateCompiler(project, hole, compile.variableTable, code, myFixture.editor)
             val compiledVariables =
                 shireTemplateCompiler.compileVariable(myFixture.editor, mutableMapOf())
 
@@ -90,7 +90,7 @@ class ShirePatternPipelineTest : BasePlatformTestCase() {
         )
 
         runBlocking {
-            val shireTemplateCompiler = ShireTemplateCompiler(project, hole, compile.variableTable, code, myFixture.editor)
+            val shireTemplateCompiler = ShireVariableTemplateCompiler(project, hole, compile.variableTable, code, myFixture.editor)
             val compiledVariables =
                 shireTemplateCompiler.compileVariable(myFixture.editor, mutableMapOf())
 
@@ -134,7 +134,7 @@ class ShirePatternPipelineTest : BasePlatformTestCase() {
         )
 
         runBlocking {
-            val shireTemplateCompiler = ShireTemplateCompiler(project, hole, compile.variableTable, code, myFixture.editor)
+            val shireTemplateCompiler = ShireVariableTemplateCompiler(project, hole, compile.variableTable, code, myFixture.editor)
             val compiledVariables =
                 shireTemplateCompiler.compileVariable(myFixture.editor, mutableMapOf())
 

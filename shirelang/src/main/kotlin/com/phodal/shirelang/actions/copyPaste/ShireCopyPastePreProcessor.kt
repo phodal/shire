@@ -12,7 +12,7 @@ import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.llm.LlmProvider
 import com.phodal.shirecore.utils.markdown.CodeFence
 import com.phodal.shirecore.middleware.post.PostProcessorContext
-import com.phodal.shirelang.compiler.template.ShireTemplateCompiler
+import com.phodal.shirelang.compiler.template.ShireVariableTemplateCompiler
 import com.phodal.shirelang.compiler.ast.hobbit.HobbitHole
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.runner.ShireRunner
@@ -48,7 +48,7 @@ class PasteManagerService {
         val variableTable = compileResult.variableTable
 
         val templateCompiler =
-            ShireTemplateCompiler(project, hobbitHole, variableTable, compileResult.shireOutput, editor)
+            ShireVariableTemplateCompiler(project, hobbitHole, variableTable, compileResult.shireOutput, editor)
         templateCompiler.putCustomVariable("text", text)
 
         val promptText = runBlocking {

@@ -19,7 +19,7 @@ import com.phodal.shirecore.workerThread
 import com.phodal.shirelang.ShireBundle
 import com.phodal.shirelang.compiler.parser.SHIRE_ERROR
 import com.phodal.shirelang.compiler.parser.ShireParsedResult
-import com.phodal.shirelang.compiler.template.ShireTemplateCompiler
+import com.phodal.shirelang.compiler.template.ShireVariableTemplateCompiler
 import com.phodal.shirelang.compiler.ast.hobbit.HobbitHole
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.ShireConfiguration
@@ -293,7 +293,7 @@ class ShireRunner(
             val editor = userEditor ?: ActionLocationEditor.provide(project, hobbitHole?.actionLocation)
 
             val templateCompiler =
-                ShireTemplateCompiler(
+                ShireVariableTemplateCompiler(
                     project,
                     hobbitHole,
                     compileResult.variableTable,

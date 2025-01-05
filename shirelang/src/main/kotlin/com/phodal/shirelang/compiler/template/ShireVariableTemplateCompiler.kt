@@ -13,7 +13,7 @@ import com.phodal.shirelang.compiler.variable.resolver.base.VariableResolverCont
  * The `ShireTemplateCompiler` class is responsible for compiling templates in a Kotlin project.
  * It takes a `Project`, a `HobbitHole`, a `SymbolTable`, and an `input` string as parameters.
  */
-class ShireTemplateCompiler(
+class ShireVariableTemplateCompiler(
     private val myProject: Project,
     private val hole: HobbitHole?,
     private val variableTable: VariableTable,
