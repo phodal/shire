@@ -4,7 +4,9 @@ import com.intellij.database.console.DatabaseRunners
 import com.intellij.database.console.JdbcConsole
 import com.intellij.database.console.JdbcConsoleProvider
 import com.intellij.database.console.evaluation.EvaluationRequest
+import com.intellij.database.console.session.DatabaseSession
 import com.intellij.database.console.session.DatabaseSessionManager
+import com.intellij.database.console.session.getSessionTitle
 import com.intellij.database.datagrid.*
 import com.intellij.database.intentions.RunQueryInConsoleIntentionAction.Manager.chooseAndRunRunners
 import com.intellij.database.model.DasTable
@@ -16,6 +18,7 @@ import com.intellij.database.script.PersistenceConsoleProvider
 import com.intellij.database.settings.DatabaseSettings
 import com.intellij.database.util.DasUtil
 import com.intellij.database.util.DbImplUtilCore
+import com.intellij.database.vfs.DbVFSUtils
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.editor.ex.EditorEx
@@ -24,6 +27,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiManager
 import com.intellij.sql.psi.SqlPsiFacade
 import com.intellij.testFramework.LightVirtualFile
+import com.intellij.util.Consumer
 import java.util.concurrent.CompletableFuture
 
 object DatabaseSchemaAssistant {
@@ -82,7 +86,7 @@ object DatabaseSchemaAssistant {
 
         val info = JdbcConsoleProvider.Info(psiFile, psiFile, editor as EditorEx, scriptModel, execOptions, null)
         val runners: MutableList<PersistenceConsoleProvider.Runner> = runReadAction {
-            DatabaseRunners.getAttachDataSourceRunners(info)
+            getAttachDataSourceRunners(info)
         }
 
         if (runners.size == 1) {
@@ -96,6 +100,28 @@ object DatabaseSchemaAssistant {
             chooseAndRunRunners(runners, info.editor, null)
             return "ShireError[Database]: Currently not support multiple runners"
         }
+    }
+
+    private fun getAttachDataSourceRunners(info: JdbcConsoleProvider.Info): MutableList<PersistenceConsoleProvider.Runner> {
+        val virtualFile = info.editor!!.virtualFile
+        val project = info.originalFile.project
+        val title = getSessionTitle(virtualFile)
+        val consumer: Consumer<in DatabaseSession> =
+            Consumer<DatabaseSession> { newSession: DatabaseSession? ->
+                val console = JdbcConsoleProvider.attachConsole(
+                    project,
+                    newSession!!, virtualFile
+                )
+                if (console != null) {
+                    val runnable = Runnable { JdbcConsoleProvider.doRunQueryInConsole(console, info) }
+                    if (DbVFSUtils.isAssociatedWithDataSourceAndSchema(virtualFile)) {
+                        runnable.run()
+                    } else {
+                        DatabaseRunners.chooseSchemaAndRun(info.editor!!, runnable)
+                    }
+                }
+            }
+        return DatabaseRunners.getAttachDataSourceRunners(info.file, title, consumer)
     }
 
     private fun executeSqlInConsole(console: JdbcConsole, sql: String, dataSource: RawDataSource): String {
