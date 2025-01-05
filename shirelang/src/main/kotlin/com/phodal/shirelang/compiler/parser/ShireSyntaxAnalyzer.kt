@@ -14,7 +14,7 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.elementType
 import com.phodal.shirecore.agent.CustomAgent
 import com.phodal.shirelang.compiler.execute.command.*
-import com.phodal.shirelang.compiler.template.VariableTemplateCompiler
+import com.phodal.shirelang.compiler.template.TemplateCompiler
 import com.phodal.shirelang.compiler.variable.VariableTable
 import com.phodal.shirelang.completion.dataprovider.BuiltinCommand
 import com.phodal.shirelang.completion.dataprovider.CustomCommand
@@ -266,8 +266,8 @@ class ShireSyntaxAnalyzer(
         }
         val variableId = variableStart.nextSibling?.text
 
-        val currentEditor = editor ?: VariableTemplateCompiler.defaultEditor(myProject)
-        val currentElement = element ?: VariableTemplateCompiler.defaultElement(myProject, currentEditor)
+        val currentEditor = editor ?: TemplateCompiler.defaultEditor(myProject)
+        val currentElement = element ?: TemplateCompiler.defaultElement(myProject, currentEditor)
 
         if (currentElement == null) {
             output.append("$SHIRE_ERROR No element found for variable: ${variableStart.text}")

@@ -13,11 +13,11 @@ import org.apache.velocity.VelocityContext
 import org.apache.velocity.app.Velocity
 import java.io.StringWriter
 
-class VariableTemplateCompiler(
+class TemplateCompiler(
     val language: Language?,
     val file: PsiFile?,
 ) {
-    private val logger = logger<VariableTemplateCompiler>()
+    private val logger = logger<TemplateCompiler>()
     private val variableMap: MutableMap<String, Any> = mutableMapOf()
 
     fun putAll(map: Map<String, Any>) {
@@ -26,7 +26,7 @@ class VariableTemplateCompiler(
 
     fun compile(template: String): String {
         val oldContextClassLoader = Thread.currentThread().contextClassLoader
-        Thread.currentThread().contextClassLoader = VariableTemplateCompiler::class.java.classLoader
+        Thread.currentThread().contextClassLoader = TemplateCompiler::class.java.classLoader
 
         // for compatibility with older versions of AutoDev
         val context = VelocityContext(variableMap as Map<String, Any>?)
