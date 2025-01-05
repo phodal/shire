@@ -24,17 +24,21 @@ import com.intellij.ui.dsl.builder.Align
 import com.intellij.ui.dsl.builder.panel
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
+import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.sketch.highlight.CodeHighlightSketch
 import com.phodal.shirecore.sketch.highlight.EditorFragment
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.runner.ShireRunner
 import com.phodal.shirelang.run.runner.ShireRunnerContext
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.launch
 import org.intellij.plugins.markdown.lang.MarkdownLanguage
 import java.awt.BorderLayout
 import java.beans.PropertyChangeListener
-import javax.swing.*
+import javax.swing.BorderFactory
+import javax.swing.JComponent
+import javax.swing.JPanel
+import javax.swing.ScrollPaneConstants
 
 /**
  * Display shire file render prompt and have a sample file as view
@@ -57,7 +61,7 @@ open class ShirePreviewEditor(
 
     private var highlightSketch: CodeHighlightSketch? = null
     private var sampleEditor: Editor? = null
-    private var language: Language? =  Language.findLanguageByID("JAVA")
+    private var language: Language? = Language.findLanguageByID("JAVA")
     private val javaHelloWorld = """
         package com.phodal.shirelang;
         
@@ -83,7 +87,7 @@ open class ShirePreviewEditor(
             }
             if (language != null) {
                 row {
-                    cell(JBLabel("Sample File For Variable").apply {
+                    cell(JBLabel("Sample file for variable").apply {
                         fontColor = UIUtil.FontColor.BRIGHTER
                         background = JBColor(0xF5F5F5, 0x2B2D30)
                         font = JBUI.Fonts.label(14.0f).asBold()
@@ -114,6 +118,9 @@ open class ShirePreviewEditor(
                     editor.settings.isLineNumbersShown = true
 
                     val editorFragment = EditorFragment(editor)
+                    editorFragment.setCollapsed(true)
+                    editorFragment.updateExpandCollapseLabel()
+
                     this@ShirePreviewEditor.sampleEditor = editor
                     cell(editorFragment.getContent()).align(Align.FILL).resizableColumn()
                 }
@@ -131,7 +138,7 @@ open class ShirePreviewEditor(
                 cell(variablePanel).align(Align.FILL)
             }
             row {
-                cell(JBLabel("Prompt").apply {
+                cell(JBLabel("Prompt (some variable may be error)").apply {
                     fontColor = UIUtil.FontColor.BRIGHTER
                     background = JBColor(0xF5F5F5, 0x2B2D30)
                     font = JBUI.Fonts.label(14.0f).asBold()
@@ -160,31 +167,34 @@ open class ShirePreviewEditor(
         }
 
         this.mainPanel.add(corePanel, BorderLayout.CENTER)
-        DumbService.getInstance(project).smartInvokeLater {
-            updateDisplayedContent()
-        }
+//        updateDisplayedContent()
     }
 
     fun updateDisplayedContent() {
-        ApplicationManager.getApplication().invokeLater {
-            try {
-                val psiFile = PsiManager.getInstance(project).findFile(virtualFile) as? ShireFile ?: return@invokeLater
-                shireRunnerContext = runBlocking {
-                    ShireRunner.compileOnly(project, psiFile, mapOf(), sampleEditor)
+        DumbService.getInstance(project).smartInvokeLater {
+            ApplicationManager.getApplication().invokeLater {
+                ShireCoroutineScope.scope(project).launch {
+                    try {
+                        val psiFile = org.jetbrains.kotlin.asJava.classes.runReadAction {
+                            PsiManager.getInstance(project).findFile(virtualFile) as? ShireFile
+                        } ?: return@launch
+
+                        shireRunnerContext = ShireRunner.compileOnly(project, psiFile, mapOf(), sampleEditor)
+
+                        val variables = shireRunnerContext?.compiledVariables
+                        if (variables != null) {
+                            variablePanel.updateVariables(variables)
+                        }
+
+                        highlightSketch?.updateViewText(shireRunnerContext!!.finalPrompt)
+                        highlightSketch?.repaint()
+
+                        mainPanel.revalidate()
+                        mainPanel.repaint()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
                 }
-
-                val variables = shireRunnerContext?.compiledVariables
-                if (variables != null) {
-                    variablePanel.updateVariables(variables)
-                }
-
-                highlightSketch?.updateViewText(shireRunnerContext!!.finalPrompt)
-                highlightSketch?.repaint()
-
-                mainPanel.revalidate()
-                mainPanel.repaint()
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }

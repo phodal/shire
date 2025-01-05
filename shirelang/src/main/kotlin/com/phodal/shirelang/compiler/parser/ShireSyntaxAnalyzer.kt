@@ -1,6 +1,7 @@
 package com.phodal.shirelang.compiler.parser
 
 import com.intellij.lang.parser.GeneratedParserUtilBase.DUMMY_BLOCK
+import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.Editor
@@ -275,10 +276,11 @@ class ShireSyntaxAnalyzer(
         }
 
         val lineNo = try {
-            val containingFile = currentElement.containingFile
-            val document: Document? =
-                PsiDocumentManager.getInstance(variableStart.project).getDocument(containingFile)
-            document?.getLineNumber(variableStart.textRange.startOffset) ?: 0
+            runReadAction {
+                val containingFile = currentElement.containingFile
+                val document: Document? =     PsiDocumentManager.getInstance(variableStart.project).getDocument(containingFile)
+                document?.getLineNumber(variableStart.textRange.startOffset) ?: 0
+            }
         } catch (e: Exception) {
             0
         }

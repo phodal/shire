@@ -215,7 +215,9 @@ class ShireRunner(
             initVariables: Map<String, String>,
             sampleEditor: Editor?,
         ): ShireRunnerContext {
-            val parsedResult = preAnalysisAndLocalExecute(shireFile, project, sampleEditor)
+            val parsedResult = runReadAction {
+                preAnalysisAndLocalExecute(shireFile, project, sampleEditor)
+            }
             prepareExecute(parsedResult, initVariables, project, null, userEditor = sampleEditor)
 
             val variables = variableFromPostProcessorContext(initVariables)
