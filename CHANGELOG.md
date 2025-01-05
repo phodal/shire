@@ -1,6 +1,64 @@
-# [](https://github.com/phodal/shire/compare/v1.2.4...v) (2024-12-26)
+# [](https://github.com/phodal/shire/compare/v1.3.0...v) (2025-01-05)
 
 ## [Unreleased]
+
+## [1.3.0] - 2025-01-05
+
+### Bug Fixes
+
+* **build:** disable prepareTestSandbox task ([0140675](https://github.com/phodal/shire/commit/014067564ce8801c1b5a020c9200e160e7c3d4b2))
+* **code-highlight:** normalize line separators in text replacement [#157](https://github.com/phodal/shire/issues/157) ([1a4ddd4](https://github.com/phodal/shire/commit/1a4ddd4f458e2c6d36d1e6b23f82ac993dfd5379))
+* **compatibility:** refactor database session handling ([0d4885e](https://github.com/phodal/shire/commit/0d4885e701d7c1c0da99d4bacb174f8da50c6eb6))
+* **compatibility:** remove deprecated client property setting ([f0b2774](https://github.com/phodal/shire/commit/f0b27741779d7e93195304928a88dda4f38ab466))
+* **editor:** add missing row for highlight sketch [#178](https://github.com/phodal/shire/issues/178) ([3d9f6cb](https://github.com/phodal/shire/commit/3d9f6cb17496f8fd0322f7c957da186b0ff4a7a8))
+* **editor:** set PlainTextLanguage for CodeHighlightSketch [#157](https://github.com/phodal/shire/issues/157) ([6fd404f](https://github.com/phodal/shire/commit/6fd404f04b53c5a844352a6c9f8bf60141f3cf72))
+* **editor:** update sample file label format [#178](https://github.com/phodal/shire/issues/178) ([8c68528](https://github.com/phodal/shire/commit/8c68528ce1f3b93e7345247552ce3d12ccfafb5d))
+* **injection:** change error log to warn for language injection ([6cf0cda](https://github.com/phodal/shire/commit/6cf0cda4048f31d6e1f4a768148509fc7e250704))
+* **input:** ensure safe removal of elements from listModel ([a433c42](https://github.com/phodal/shire/commit/a433c428b260cf4cdab3bd173e6d95030758f48b))
+* **input:** Resolved close button functionality in chat box ([5d66d68](https://github.com/phodal/shire/commit/5d66d688d1574cbfbdbe919095b3f022909dbdc4))
+* **input:** skip invalid psiFile in ShireInput ([c3c49a8](https://github.com/phodal/shire/commit/c3c49a8137503a21998ae687d79700c7b5c54603))
+* **input:** skip invalid psiFile in ShireInput ([0b0f011](https://github.com/phodal/shire/commit/0b0f0110d2cdd84dca09a8c6445833902d51699f))
+* **python:** restore PythonCore plugin and simplify PsiUtil check ([63f73e5](https://github.com/phodal/shire/commit/63f73e5102eb05def5b85c88a670cad7481b0bde))
+* **tests:** update file extension and add error handling ([eae3a8c](https://github.com/phodal/shire/commit/eae3a8c0d7eeba6f540e3f19576a88ef9038e9c8))
+* **ui:** execute table update on UI thread ([9bec8f3](https://github.com/phodal/shire/commit/9bec8f363a11ef824d7516168a8739b92bfe072d))
+
+### Features
+
+* **chat:** add inline chat provider support [#157](https://github.com/phodal/shire/issues/157) ([594d985](https://github.com/phodal/shire/commit/594d985c19388b716f6133163cd4e07e24e396a6))
+* **chat:** add prompt method to inline chat service [#157](https://github.com/phodal/shire/issues/157) ([ab09b82](https://github.com/phodal/shire/commit/ab09b822be0af908d5441731d2a19a9a4c56d32d))
+* **chat:** enhance inline chat UI and interaction [#157](https://github.com/phodal/shire/issues/157) ([c85ff46](https://github.com/phodal/shire/commit/c85ff467ada569b28ef0c6acb434130cd1665736))
+* **compiler:** add database command support [#271](https://github.com/phodal/shire/issues/271) ([6f079b4](https://github.com/phodal/shire/commit/6f079b4b6cebc53d1064f0d4f6dbf1cb02ed427d))
+* **compiler:** add ResolvableVariableSnapshot for variable tracking [#178](https://github.com/phodal/shire/issues/178) ([22131dd](https://github.com/phodal/shire/commit/22131dd3a890e54d62763b02653eb6c30215ec62))
+* **compiler:** add ResolvableVariableSnapshot for variable tracking [#183](https://github.com/phodal/shire/issues/183) ([c6f319a](https://github.com/phodal/shire/commit/c6f319a06817d9cf512d4511cc3e299e82362984))
+* **completion:** enhance custom agent completion with auto-insert ([146ecc4](https://github.com/phodal/shire/commit/146ecc4222bf0dfcc59eb933a93cb13877d4d9a0))
+* **database:** add SQL query execution support [#171](https://github.com/phodal/shire/issues/171) ([660eb67](https://github.com/phodal/shire/commit/660eb674116ec5b73a1347871977f2a8271d270a))
+* **editor:** add document listener for real-time updates [#157](https://github.com/phodal/shire/issues/157) ([68c88ba](https://github.com/phodal/shire/commit/68c88ba638628c14876503f43c35da746d4a22f5))
+* **editor:** add gutter icon handler for editor selections [#157](https://github.com/phodal/shire/issues/157) ([bf85b08](https://github.com/phodal/shire/commit/bf85b0802a7604ddce409dc1f67affc88e213f58))
+* **editor:** add ShireFileEditorProvider for custom file editing [#178](https://github.com/phodal/shire/issues/178) ([a309063](https://github.com/phodal/shire/commit/a3090638501c360afeebaf505222328d8d9c1959))
+* **editor:** add ShirePreviewEditorProvider and enhance editor creation [#157](https://github.com/phodal/shire/issues/157) ([99058b6](https://github.com/phodal/shire/commit/99058b6b03e6749addc3823c1224381c75de4419))
+* **editor:** add ShireVariablePanel for variable display [#157](https://github.com/phodal/shire/issues/157) ([ff245f5](https://github.com/phodal/shire/commit/ff245f5f927e14aee99d5574aafec2ed8c159947))
+* **editor:** enhance variable debug panel UI and functionality [#157](https://github.com/phodal/shire/issues/157) ([c51b388](https://github.com/phodal/shire/commit/c51b388178b370be375ea9d6e048c4dbe2ad5bdb))
+* **editor:** improve UI and async handling ([42e350f](https://github.com/phodal/shire/commit/42e350fdfe3147c73ffab7216490b8a16e0bc7a8)), closes [#178](https://github.com/phodal/shire/issues/178)
+* **editor:** replace ShireFileEditor with ShireSplitEditor [#157](https://github.com/phodal/shire/issues/157) ([4b51084](https://github.com/phodal/shire/commit/4b51084becc30eb0c2235cda3f1ab2d9bb1336b0))
+* **editor:** replace variable panel with table and add refresh action [#157](https://github.com/phodal/shire/issues/157) ([1dca503](https://github.com/phodal/shire/commit/1dca503ed88d91bc6fd0b816ef350f17cf163eb0))
+* **inline-chat:** add inline chat service and integrate with gutter icon [#157](https://github.com/phodal/shire/issues/157) ([933e8d7](https://github.com/phodal/shire/commit/933e8d79e00eca2eced45f419b757381ad5cac17))
+* **inline-chat:** add LLM integration and input handling [#157](https://github.com/phodal/shire/issues/157) ([13b49e2](https://github.com/phodal/shire/commit/13b49e2f59da1d4538d16d065daba19702b983cd))
+* **inline-chat:** enhance inline chat panel with improved UI and state management [#157](https://github.com/phodal/shire/issues/157) ([a9cfd60](https://github.com/phodal/shire/commit/a9cfd60982a105c0995bb6f1cff73f6005e2b837))
+* **inline-chat:** enhance prompt handling with dynamic actions [#157](https://github.com/phodal/shire/issues/157) ([97ce772](https://github.com/phodal/shire/commit/97ce772b52f0f81cf42532c2b179a7537340dcbf))
+* **java:** add test file lookup for related classes ([680c804](https://github.com/phodal/shire/commit/680c8040b1947b40dfcac7e367da20cd1a19397b))
+* **kotlin:** add Kotlin language support for testing, refactoring, and related classes ([9f55993](https://github.com/phodal/shire/commit/9f5599354f8f34fb13ae3245dc81b49f51524e4c))
+* **parser:** add DATABASE command to code block checks [#171](https://github.com/phodal/shire/issues/171) ([8339428](https://github.com/phodal/shire/commit/83394289f9ae052d815bda627cf6b89911369f4b))
+* **prompt:** add ShirePromptBuilder for dynamic prompt generation [#157](https://github.com/phodal/shire/issues/157) ([df07fcc](https://github.com/phodal/shire/commit/df07fcc4109dbd4506c5c913f111b3e1db837e54))
+* **runner:** add streaming service support in ShireRunner [#157](https://github.com/phodal/shire/issues/157) ([58124a3](https://github.com/phodal/shire/commit/58124a3061f64f292c7e40182d651bd80383639c))
+* **runner:** add support for custom editor in ShireRunner [#178](https://github.com/phodal/shire/issues/178) ([dd139d2](https://github.com/phodal/shire/commit/dd139d25ee5ba75193010cc7c5da82fd6ab2b874))
+* **sonarlint:** move SonarLint listener to thirdparty package [#157](https://github.com/phodal/shire/issues/157) ([b3c1530](https://github.com/phodal/shire/commit/b3c15304acd7ba22fe335dac8c096b9945cc985e))
+* **sse:** enhance custom request body handling ([5a424fb](https://github.com/phodal/shire/commit/5a424fbf5dfc65cc78a718b38bc4089c7669591c))
+* **ui:** adjust editor and panel border styles [#157](https://github.com/phodal/shire/issues/157) ([ae76259](https://github.com/phodal/shire/commit/ae762595c719dca22456ac5349a54b1c86e604cf))
+* **ui:** enhance border styling and add submit button [#157](https://github.com/phodal/shire/issues/157) ([982db35](https://github.com/phodal/shire/commit/982db35ba49ff2032cefb3b24ea506c363128f06))
+
+### Reverts
+
+* Revert "chore(gradle): update Gradle wrapper  to 8.12 and try to resolve GitHub Action issue and add SPDX license" ([fcad6ba](https://github.com/phodal/shire/commit/fcad6ba533cbb0bdce9e07fb334ea826df5f3e74))
 
 ## [1.2.4](https://github.com/phodal/shire/compare/v1.2.3...v[1.2.4]) (2024-12-26)
 
@@ -809,7 +867,8 @@
 * **shell:** add shell language support plugin file ([bdc1c90](https://github.com/phodal/shire/commit/bdc1c90f10d7c2c4fb8f7157db343dd756c11352))
 * **shire:** add Shire context action group and location support ([e3df86d](https://github.com/phodal/shire/commit/e3df86d16d0c9985fec787a8e76ce553be9a9a45))
 
-[Unreleased]: https://github.com/phodal/shire/compare/v1.2.4...HEAD
+[Unreleased]: https://github.com/phodal/shire/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/phodal/shire/compare/v1.2.4...v1.3.0
 [1.2.4]: https://github.com/phodal/shire/compare/v1.2.3...v1.2.4
 [1.2.3]: https://github.com/phodal/shire/compare/v1.2.2...v1.2.3
 [1.2.2]: https://github.com/phodal/shire/compare/v1.2.1...v1.2.2
