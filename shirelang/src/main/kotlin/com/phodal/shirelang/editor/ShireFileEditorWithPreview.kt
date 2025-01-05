@@ -27,8 +27,6 @@ class ShireFileEditorWithPreview(
 
     init {
         // allow launching actions while in preview mode;
-        // FIXME: better solution IDEA-354102
-        ourEditor.editor.contentComponent.putClientProperty(ActionUtil.ALLOW_ACTION_PERFORM_WHEN_HIDDEN, true)
         preview.setMainEditor(ourEditor.editor)
         ourEditor.editor.scrollingModel.addVisibleAreaListener(MyVisibleAreaListener(), this)
     }
