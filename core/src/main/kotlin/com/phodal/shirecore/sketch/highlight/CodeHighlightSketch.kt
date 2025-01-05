@@ -31,7 +31,9 @@ import java.awt.BorderLayout
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.swing.JComponent
 
-class CodeHighlightSketch(val project: Project, val text: String, private var ideaLanguage: Language?) :
+class CodeHighlightSketch(val project: Project, val text: String, private var ideaLanguage: Language?,
+    val editorLineThreshold: Int = 6
+) :
     JBPanel<CodeHighlightSketch>(BorderLayout()), DataProvider, LangSketch {
     private var textLanguage: String? = null
 
@@ -53,7 +55,7 @@ class CodeHighlightSketch(val project: Project, val text: String, private var id
         editor.component.border = JBUI.Borders.empty(10, 0)
         editor.component.isOpaque = true
 
-        editorFragment = EditorFragment(editor)
+        editorFragment = EditorFragment(editor, editorLineThreshold)
         add(editorFragment!!.getContent(), BorderLayout.CENTER)
 
         if (ideaLanguage?.displayName != "Markdown" && ideaLanguage != PlainTextLanguage.INSTANCE) {

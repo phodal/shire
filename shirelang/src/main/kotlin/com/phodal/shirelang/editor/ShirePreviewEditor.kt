@@ -96,7 +96,6 @@ open class ShirePreviewEditor(
                     }).align(Align.FILL).resizableColumn()
 
                     cell(JBLabel("(/shire.java)")).align(Align.FILL).resizableColumn()
-                    // add refresh button for select
                     button("", object : AnAction() {
                         override fun actionPerformed(p0: AnActionEvent) {
                             rerenderShire()
@@ -147,13 +146,11 @@ open class ShirePreviewEditor(
                 }).align(Align.FILL).resizableColumn()
             }
             row {
-                highlightSketch = CodeHighlightSketch(project, "", MarkdownLanguage.INSTANCE).apply {
-                    initEditor(virtualFile.readText())
+                highlightSketch = CodeHighlightSketch(project, "", MarkdownLanguage.INSTANCE, 18).apply {
+                    initEditor("Please refresh to see the result")
                 }
-                /// hidden editor scroll bar
-                highlightSketch?.editorFragment?.editor?.settings?.apply {
-                    isUseSoftWraps = true
-                }
+                highlightSketch?.editorFragment?.setCollapsed(true)
+                highlightSketch?.editorFragment?.updateExpandCollapseLabel()
 
                 val panel = JPanel(BorderLayout())
                 panel.border = BorderFactory.createCompoundBorder(
@@ -171,8 +168,8 @@ open class ShirePreviewEditor(
     }
 
     fun updateDisplayedContent() {
-        DumbService.getInstance(project).smartInvokeLater {
-            ApplicationManager.getApplication().invokeLater {
+        ApplicationManager.getApplication().invokeLater {
+            DumbService.getInstance(project).smartInvokeLater {
                 ShireCoroutineScope.scope(project).launch {
                     try {
                         val psiFile = org.jetbrains.kotlin.asJava.classes.runReadAction {

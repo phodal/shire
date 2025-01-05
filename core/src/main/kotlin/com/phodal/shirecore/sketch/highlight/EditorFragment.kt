@@ -32,8 +32,7 @@ class EditorPadding(private val editor: Editor, pad: Int) :
 }
 
 
-class EditorFragment(var editor: EditorEx) {
-    private val editorLineThreshold = 6
+class EditorFragment(var editor: EditorEx, private val editorLineThreshold: Int = 6) {
     private val expandCollapseTextLabel: JBLabel = JBLabel("", 0).apply {
         isOpaque = true
         isVisible = false
