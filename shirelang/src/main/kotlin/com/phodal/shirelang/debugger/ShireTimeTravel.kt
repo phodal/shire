@@ -2,6 +2,7 @@ package com.phodal.shirelang.debugger
 
 import com.intellij.openapi.util.UserDataHolderBase
 import com.intellij.openapi.vfs.VirtualFile
+import kotlinx.datetime.Instant
 
 
 /**
@@ -24,6 +25,12 @@ class ShireFileSnapshot(
     val file: VirtualFile,
     val rnd: Int, // seed for random number generator
     var variables: Map<String, ResolvableVariableSnapshot>,
+    var allCode: String = "",
+    /**
+     * execute to current code line
+     */
+    var executedCode: String = "",
+    val metadata: SnapshotMetadata,  // 元数据
 ) {
     private val snapshots = mutableListOf<TimeTravelSnapshot>()
 
@@ -43,6 +50,11 @@ class ShireFileSnapshot(
     }
 }
 
+data class SnapshotMetadata(
+    val createdAt: Instant,          // 创建时间
+    val version: String,             // 版本号或其他标识
+    val file: VirtualFile           // 文件的虚拟路径
+)
 
 /**
  * Variable Snapshot will store all change flow of a variable. For example:
