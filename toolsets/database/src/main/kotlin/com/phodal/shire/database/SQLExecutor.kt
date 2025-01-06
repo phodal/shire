@@ -7,7 +7,6 @@ import com.intellij.database.console.session.DatabaseSession
 import com.intellij.database.console.session.DatabaseSessionManager
 import com.intellij.database.console.session.getSessionTitle
 import com.intellij.database.datagrid.*
-import com.intellij.database.intentions.RunQueryInConsoleIntentionAction.Manager.chooseAndRunRunners
 import com.intellij.database.model.RawDataSource
 import com.intellij.database.script.PersistenceConsoleProvider
 import com.intellij.database.settings.DatabaseSettings
@@ -63,7 +62,14 @@ object SQLExecutor {
 
             return result
         } else {
-            chooseAndRunRunners(runners, info.editor, null)
+            try {
+                val chooseAndRunRunnersMethod = Class.forName("com.intellij.database.intentions.RunQueryInConsoleIntentionAction\$Manager")
+                    .getDeclaredMethod("chooseAndRunRunners", List::class.java, EditorEx::class.java, Any::class.java)
+                chooseAndRunRunnersMethod.invoke(null, runners, info.editor, null)
+            } catch (e: Exception) {
+                println("ShireError[Database]: Failed to run query with multiple runners")
+                throw e
+            }
             return "ShireError[Database]: Currently not support multiple runners"
         }
     }
@@ -95,7 +101,7 @@ object SQLExecutor {
         val virtualFile = info.editor!!.virtualFile
         val project = info.originalFile.project
         val title = getSessionTitle(virtualFile)
-        val consumer: Consumer<in DatabaseSession> = Consumer<DatabaseSession> { newSession: DatabaseSession? ->
+        val consumer: Consumer<DatabaseSession> = Consumer<DatabaseSession> { newSession: DatabaseSession? ->
             val console = JdbcConsoleProvider.attachConsole(project, newSession!!, virtualFile)
             if (console != null) {
                 val runnable = Runnable { JdbcConsoleProvider.doRunQueryInConsole(console, info) }
@@ -146,11 +152,6 @@ object SQLExecutor {
             messageBus.dataProducer.processRequest(newConsoleRequest)
             messageBus.addConsumer(object : DataConsumer {
                 var result = mutableListOf<GridRow>()
-
-                override fun setColumns(context: GridDataRequest.Context, columns: Array<out GridColumn>) {
-                    // 空实现
-                }
-
                 override fun addRows(context: GridDataRequest.Context, rows: MutableList<out GridRow>) {
                     result += rows
                     if (rows.size < 100) {
