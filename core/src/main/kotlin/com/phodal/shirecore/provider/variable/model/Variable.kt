@@ -18,7 +18,7 @@ data class DebugValue(
             return PsiContextVariable.from(key)?.description
                 ?: ContextVariable.from(key)?.description
                 ?: SystemInfoVariable.from(key)?.description
-                ?: ConditionPsiVariable.from(key)?.description
+//                ?: ConditionPsiVariable.from(key)?.description
                 /// ...
                 ?: DatabaseToolchainVariable.from(key)?.description
                 ?: TerminalToolchainVariable.from(key)?.description
@@ -26,6 +26,21 @@ data class DebugValue(
                 ?: GradleToolchainVariable.from(key)?.description
                 ?: SonarqubeVariable.from(key)?.description
                 ?: "Unknown"
+        }
+
+        fun all(): List<Variable> {
+            val allVariables = mutableListOf<Variable>()
+            allVariables.addAll(ContextVariable.values())
+            allVariables.addAll(PsiContextVariable.all())
+            allVariables.addAll(SystemInfoVariable.values())
+//            allVariables.addAll(ConditionPsiVariable.values())
+            /// ...
+            allVariables.addAll(DatabaseToolchainVariable.values())
+            allVariables.addAll(TerminalToolchainVariable.values())
+            allVariables.addAll(VcsToolchainVariable.values())
+            allVariables.addAll(GradleToolchainVariable.values())
+            allVariables.addAll(SonarqubeVariable.values())
+            return allVariables
         }
     }
 }

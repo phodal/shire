@@ -1,16 +1,13 @@
 package com.phodal.shirelang.editor
 
-import cc.unitmesh.cf.core.context.variable.Variable
 import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBPanel
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.table.JBTable
 import com.intellij.util.ui.JBUI
-import com.phodal.shirecore.provider.variable.model.ConditionPsiVariable
 import com.phodal.shirecore.provider.variable.model.DebugValue
-import com.phodal.shirecore.provider.variable.model.PsiContextVariable
-import com.phodal.shirecore.provider.variable.model.toolchain.DatabaseToolchainVariable
+import com.phodal.shirecore.provider.variable.model.Variable
 import java.awt.BorderLayout
 import javax.swing.JPanel
 import javax.swing.ScrollPaneConstants
@@ -64,14 +61,30 @@ class ShireVariableViewPanel : JPanel(BorderLayout()) {
     fun updateVariables(variables: Map<String, Any>) {
         tableModel.rowCount = 0
 
+        val allVariables: MutableMap<String, Variable> = DebugValue.all().associateBy { it.variableName }.toMutableMap()
+
+
         variables.forEach { (key, value) ->
             val valueStr = value.toString()
             val description = DebugValue.description(key)
+
+            /// remove existing variables
+            if (allVariables.containsKey(key)) {
+                allVariables.remove(key)
+            }
 
             tableModel.addRow(java.util.Vector<String>().apply {
                 add(key)
                 add(description)
                 add(valueStr)
+            })
+        }
+
+        allVariables.forEach { (_, value) ->
+            tableModel.addRow(java.util.Vector<String>().apply {
+                add(value.variableName)
+                add(value.description)
+                add("N/A")
             })
         }
 
