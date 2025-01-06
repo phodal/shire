@@ -6,8 +6,8 @@ import com.intellij.openapi.editor.CaretModel
 import com.intellij.psi.PsiNameIdentifierOwner
 import com.phodal.shirelang.compiler.variable.resolver.base.VariableResolver
 import com.phodal.shirelang.compiler.variable.resolver.base.VariableResolverContext
-import com.phodal.shirelang.compiler.variable.ContextVariable
-import com.phodal.shirelang.compiler.variable.ContextVariable.*
+import com.phodal.shirecore.provider.variable.model.ContextVariable
+import com.phodal.shirecore.provider.variable.model.ContextVariable.*
 
 class ContextVariableResolver(
     private val context: VariableResolverContext,

@@ -6,14 +6,18 @@ import com.intellij.ui.components.JBPanel
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.table.JBTable
 import com.intellij.util.ui.JBUI
+import com.phodal.shirecore.provider.variable.model.ConditionPsiVariable
+import com.phodal.shirecore.provider.variable.model.DebugValue
+import com.phodal.shirecore.provider.variable.model.PsiContextVariable
+import com.phodal.shirecore.provider.variable.model.toolchain.DatabaseToolchainVariable
 import java.awt.BorderLayout
 import javax.swing.JPanel
 import javax.swing.ScrollPaneConstants
 import javax.swing.table.DefaultTableModel
 
-class ShireVariablePanel : JPanel(BorderLayout()) {
+class ShireVariableViewPanel : JPanel(BorderLayout()) {
     private val contentPanel = JBPanel<JBPanel<*>>(BorderLayout())
-    private val tableModel = DefaultTableModel(arrayOf("Name", "Value"), 0).apply {
+    private val tableModel = DefaultTableModel(arrayOf("Name", "Description", "Value"), 0).apply {
         background = JBColor.WHITE
     }
 
@@ -24,7 +28,7 @@ class ShireVariablePanel : JPanel(BorderLayout()) {
             setShowGrid(true)
             gridColor = JBColor.PanelBackground
             intercellSpacing = JBUI.size(0, 0)
-            
+
             val columnModel = columnModel
             columnModel.getColumn(0).preferredWidth = 150
             columnModel.getColumn(1).preferredWidth = 450
@@ -61,7 +65,13 @@ class ShireVariablePanel : JPanel(BorderLayout()) {
 
         variables.forEach { (key, value) ->
             val valueStr = value.toString()
-            tableModel.addRow(arrayOf(key, valueStr))
+            val description = DebugValue.description(key)
+
+            tableModel.addRow(java.util.Vector<String>().apply {
+                add(key)
+                add(description)
+                add(valueStr)
+            })
         }
 
         revalidate()

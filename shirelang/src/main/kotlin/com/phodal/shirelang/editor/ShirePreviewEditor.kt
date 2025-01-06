@@ -5,16 +5,15 @@ import com.intellij.lang.Language
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.application.smartReadAction
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.ScrollType
 import com.intellij.openapi.fileEditor.FileEditor
 import com.intellij.openapi.fileEditor.FileEditorState
-import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.UserDataHolder
 import com.intellij.openapi.util.UserDataHolderBase
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.openapi.vfs.readText
 import com.intellij.psi.PsiManager
 import com.intellij.ui.JBColor
 import com.intellij.ui.RoundedLineBorder
@@ -57,7 +56,7 @@ open class ShirePreviewEditor(
     )
 
     private var shireRunnerContext: ShireRunnerContext? = null
-    private val variablePanel = ShireVariablePanel()
+    private val variablePanel = ShireVariableViewPanel()
 
     private var highlightSketch: CodeHighlightSketch? = null
     private var sampleEditor: Editor? = null
@@ -169,28 +168,26 @@ open class ShirePreviewEditor(
 
     fun updateDisplayedContent() {
         ApplicationManager.getApplication().invokeLater {
-            DumbService.getInstance(project).smartInvokeLater {
-                ShireCoroutineScope.scope(project).launch {
-                    try {
-                        val psiFile = org.jetbrains.kotlin.asJava.classes.runReadAction {
-                            PsiManager.getInstance(project).findFile(virtualFile) as? ShireFile
-                        } ?: return@launch
+            ShireCoroutineScope.scope(project).launch {
+                try {
+                    val psiFile = smartReadAction(project) {
+                        PsiManager.getInstance(project).findFile(virtualFile) as? ShireFile
+                    } ?: return@launch
 
-                        shireRunnerContext = ShireRunner.compileOnly(project, psiFile, mapOf(), sampleEditor)
+                    shireRunnerContext = ShireRunner.compileOnly(project, psiFile, mapOf(), sampleEditor)
 
-                        val variables = shireRunnerContext?.compiledVariables
-                        if (variables != null) {
-                            variablePanel.updateVariables(variables)
-                        }
-
-                        highlightSketch?.updateViewText(shireRunnerContext!!.finalPrompt)
-                        highlightSketch?.repaint()
-
-                        mainPanel.revalidate()
-                        mainPanel.repaint()
-                    } catch (e: Exception) {
-                        e.printStackTrace()
+                    val variables = shireRunnerContext?.compiledVariables
+                    if (variables != null) {
+                        variablePanel.updateVariables(variables)
                     }
+
+                    highlightSketch?.updateViewText(shireRunnerContext!!.finalPrompt)
+                    highlightSketch?.repaint()
+
+                    mainPanel.revalidate()
+                    mainPanel.repaint()
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
             }
         }

@@ -1,5 +1,6 @@
 package com.phodal.shirelang.compiler.variable
 
+import com.phodal.shirecore.provider.variable.model.ContextVariable
 import com.phodal.shirecore.provider.variable.model.PsiContextVariable
 import com.phodal.shirecore.provider.variable.model.ToolchainVariable
 import com.phodal.shirecore.provider.variable.model.toolchain.VcsToolchainVariable

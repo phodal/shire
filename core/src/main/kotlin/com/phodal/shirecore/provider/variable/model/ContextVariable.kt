@@ -1,6 +1,11 @@
-package com.phodal.shirelang.compiler.variable
+package com.phodal.shirecore.provider.variable.model
 
-enum class ContextVariable(val variableName: String, val description: String) {
+enum class ContextVariable(
+    override val variableName: String,
+    override val description: String,
+    override var value: Any? = "",
+) :
+    Variable {
     SELECTION("selection", "User selection code/element's in text"),
     SELECTION_WITH_NUM("selectionWithNum", "User selection code/element's in text with line number"),
     BEFORE_CURSOR("beforeCursor", "All the text before the cursor"),
@@ -12,4 +17,10 @@ enum class ContextVariable(val variableName: String, val description: String) {
     COMMENT_SYMBOL("commentSymbol", "The comment symbol of the language, for example, `//` in Java"),
     ALL("all", "All the text")
     ;
+
+    companion object {
+        fun from(variableName: String): ContextVariable? {
+            return values().find { it.variableName == variableName }
+        }
+    }
 }
