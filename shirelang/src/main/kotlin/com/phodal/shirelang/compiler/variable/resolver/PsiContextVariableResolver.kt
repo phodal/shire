@@ -12,9 +12,7 @@ import com.phodal.shirelang.compiler.variable.resolver.base.VariableResolverCont
 /**
  * Include ToolchainVariableProvider and PsiContextVariableProvider
  */
-class PsiContextVariableResolver(
-    private val context: VariableResolverContext,
-) : VariableResolver {
+class PsiContextVariableResolver(private val context: VariableResolverContext) : VariableResolver {
     private val variableProvider: PsiContextVariableProvider
 
     init {

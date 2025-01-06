@@ -8,6 +8,7 @@ import com.phodal.shirelang.compiler.ast.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.variable.VariableTable
 import com.phodal.shirelang.compiler.variable.resolver.CompositeVariableResolver
 import com.phodal.shirelang.compiler.variable.resolver.base.VariableResolverContext
+import com.phodal.shirelang.debugger.VariableSnapshotRecorder
 
 /**
  * The `ShireTemplateCompiler` class is responsible for compiling templates in a Kotlin project.
@@ -36,7 +37,10 @@ class ShireVariableTemplateCompiler(
     }
 
     suspend fun doExecuteCompile(editor: Editor): String {
+//        val record = VariableSnapshotRecorder.getInstance(myProject)
         val additionalMap: Map<String, Any> = compileVariable(editor, customVariables)
+//        record.printSnapshot()
+
         compiledVariables = additionalMap.mapValues { it.value.toString() }
 
         val file = runReadAction {
