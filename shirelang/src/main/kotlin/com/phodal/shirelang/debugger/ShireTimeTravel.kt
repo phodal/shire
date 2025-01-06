@@ -23,18 +23,23 @@ import com.intellij.openapi.vfs.VirtualFile
 class ShireFileSnapshot(
     val file: VirtualFile,
     val rnd: Int, // seed for random number generator
-    val variables: Map<String, ResolvableVariableSnapshot>,
+    var variables: Map<String, ResolvableVariableSnapshot>,
 ) {
     private val snapshots = mutableListOf<TimeTravelSnapshot>()
-    
+
     fun takeSnapshot() {
         snapshots.add(TimeTravelSnapshot(variables.mapValues { it.value.getCurrentValue() }))
     }
-    
+
     fun replayTo(index: Int) {
         if (index < snapshots.size) {
             snapshots[index].restore(variables)
         }
+    }
+
+    fun updateVariable(variableName: String, recordFunction: RecordFunction, newValue: Any) {
+        val variable = variables[variableName] ?: return
+        variable.recordValue("new value")
     }
 }
 
@@ -56,41 +61,54 @@ class ShireFileSnapshot(
 data class VariableOperation(
     val functionName: String,
     val timestamp: Long,
-    val value: Any?
+    val value: Any?,
 )
 
 class ResolvableVariableSnapshot(
     val variableName: String,
     val sourceFiles: List<VirtualFile> = mutableListOf(),
-    val funcName: String, // todo design for function type
-    /// todo
+    val recordFunctions: List<RecordFunction>,
+    val context: ExecutionContext = ExecutionContext(),
 ) : UserDataHolderBase() {
     private val valueHistory = mutableListOf<Any>()
     private var currentValue: Any? = null
     private val operations = mutableListOf<VariableOperation>()
-    
-    fun recordValue(value: Any) {
+
+    fun recordValue(value: Any, functionIndex: Int = -1) {
         currentValue = value
         valueHistory.add(value)
+        val funcName = if (functionIndex >= 0) recordFunctions[functionIndex].name else "initial"
         operations.add(VariableOperation(funcName, System.currentTimeMillis(), value))
     }
-    
+
     fun getCurrentValue(): Any? = currentValue
-    
+
     fun getHistory(): List<Any> = valueHistory.toList()
-    
+
     fun getOperations(): List<VariableOperation> = operations.toList()
 }
+
+data class RecordFunction(
+    val name: String,
+    val args: List<String> = emptyList(),
+    val returnType: String? = null,
+)
+
+data class ExecutionContext(
+    val variables: MutableMap<String, Any> = mutableMapOf(),
+    val environment: MutableMap<String, String> = mutableMapOf(),
+    val metadata: MutableMap<String, Any> = mutableMapOf(),
+)
 
 class ResolvableVariableRecord(
     val variableName: String,
     val executedFunction: String,
     val timestamp: Long,
-    val value: Any
+    val value: Any,
 )
 
 class ResolvableVariableReplay(
-    private val records: List<ResolvableVariableRecord>
+    private val records: List<ResolvableVariableRecord>,
 ) {
     fun replayAt(timestamp: Long): Map<String, Any> {
         return records
@@ -101,7 +119,7 @@ class ResolvableVariableReplay(
 }
 
 data class TimeTravelSnapshot(
-    val variableStates: Map<String, Any?>
+    val variableStates: Map<String, Any?>,
 ) {
     fun restore(variables: Map<String, ResolvableVariableSnapshot>) {
         variableStates.forEach { (name, value) ->

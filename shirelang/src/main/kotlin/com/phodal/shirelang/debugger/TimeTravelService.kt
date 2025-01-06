@@ -8,13 +8,19 @@ import com.intellij.openapi.vfs.VirtualFile
 class TimeTravelService() {
     private val snapshots = mutableListOf<ShireFileSnapshot>()
 
-    fun createSnapshot(file: VirtualFile, variables: Map<String, ResolvableVariableSnapshot>): ShireFileSnapshot {
+    fun createOrUpdate(file: VirtualFile, variables: Map<String, ResolvableVariableSnapshot>): ShireFileSnapshot {
+        val existingSnapshot = snapshots.find { it.file == file }
+        if (existingSnapshot != null) {
+            existingSnapshot.variables = variables
+            return existingSnapshot
+        }
+
         val snapshot = ShireFileSnapshot(file, System.nanoTime().toInt(), variables)
         snapshots.add(snapshot)
         return snapshot
     }
 
-    fun replayTo(timestamp: Long) {
+    fun replayTo() {
         snapshots.forEach { snapshot ->
             snapshot.takeSnapshot()
         }
