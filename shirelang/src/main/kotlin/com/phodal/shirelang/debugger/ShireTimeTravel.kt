@@ -2,6 +2,7 @@ package com.phodal.shirelang.debugger
 
 import com.intellij.openapi.util.UserDataHolderBase
 import com.intellij.openapi.vfs.VirtualFile
+import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 
 
@@ -30,7 +31,7 @@ class ShireFileSnapshot(
      * execute to current code line
      */
     var executedCode: String = "",
-    val metadata: SnapshotMetadata,  // 元数据
+    val metadata: SnapshotMetadata = SnapshotMetadata(Clock.System.now(), "0.0.1", file),
 ) {
     private val snapshots = mutableListOf<TimeTravelSnapshot>()
 
