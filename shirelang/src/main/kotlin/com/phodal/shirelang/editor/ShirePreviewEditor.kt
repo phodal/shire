@@ -29,6 +29,7 @@ import com.phodal.shirecore.sketch.highlight.EditorFragment
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.runner.ShireRunner
 import com.phodal.shirelang.run.runner.ShireRunnerContext
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import org.intellij.plugins.markdown.lang.MarkdownLanguage
@@ -56,7 +57,7 @@ open class ShirePreviewEditor(
     )
 
     private var shireRunnerContext: ShireRunnerContext? = null
-    private val variablePanel = ShireVariableViewPanel()
+    private val variablePanel = ShireVariableViewPanel(project)
 
     private var highlightSketch: CodeHighlightSketch? = null
     private var sampleEditor: Editor? = null
@@ -168,11 +169,11 @@ open class ShirePreviewEditor(
 
     fun updateDisplayedContent() {
         ApplicationManager.getApplication().invokeLater {
-            ShireCoroutineScope.scope(project).launch {
+            ShireCoroutineScope.scope(project).async {
                 try {
                     val psiFile = smartReadAction(project) {
                         PsiManager.getInstance(project).findFile(virtualFile) as? ShireFile
-                    } ?: return@launch
+                    } ?: return@async
 
                     shireRunnerContext = ShireRunner.compileOnly(project, psiFile, mapOf(), sampleEditor)
 

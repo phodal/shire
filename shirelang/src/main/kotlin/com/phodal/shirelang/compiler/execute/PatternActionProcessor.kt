@@ -4,13 +4,16 @@ import com.intellij.openapi.project.Project
 import com.phodal.shirecore.middleware.post.PostProcessorContext
 import com.phodal.shirelang.compiler.ast.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.ast.patternaction.VariableTransform
+import com.phodal.shirelang.compiler.execute.searcher.PatternSearcher
 import com.phodal.shirelang.compiler.execute.shireql.ShireQLProcessor
+import com.phodal.shirelang.debugger.VariableSnapshotRecorder
 
 
 class PatternActionProcessor(
     override val myProject: Project,
     override val hole: HobbitHole,
-    private val variableMap: MutableMap<String, Any?>
+    private val variableMap: MutableMap<String, Any?>,
+    private val record: VariableSnapshotRecorder ? = null
 ) :
     PatternFuncProcessor(myProject, hole) {
 
@@ -30,7 +33,7 @@ class PatternActionProcessor(
 
         var input: Any = ""
         if (actionTransform.pattern.isNotBlank() && actionTransform.pattern != "any" && actionTransform.pattern != "null") {
-            input = com.phodal.shirelang.compiler.execute.searcher.PatternSearcher.findFilesByRegex(myProject, actionTransform.pattern)
+            input = PatternSearcher.findFilesByRegex(myProject, actionTransform.pattern)
                 .map { it.path }
                 .toTypedArray()
         }
@@ -52,6 +55,8 @@ class PatternActionProcessor(
      * @return The result of applying the transformations to the input as a String.
      */
     suspend fun execute(transform: VariableTransform, input: Any): String {
+        record?.addSnapshot(transform.variable, input.toString())
+
         var result = input
         val data = PostProcessorContext.getData()
         if (data?.lastTaskOutput != null && data.lastTaskOutput != "null") {
@@ -62,6 +67,7 @@ class PatternActionProcessor(
 
         transform.patternActionFuncs.forEach { action ->
             result = patternFunctionExecute(action, result, input, variableMap)
+            record?.addSnapshot(transform.variable, result, action.funcName, result.toString())
         }
 
         variableMap[transform.variable] = result

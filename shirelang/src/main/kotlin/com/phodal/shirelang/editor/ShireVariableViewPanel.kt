@@ -1,5 +1,6 @@
 package com.phodal.shirelang.editor
 
+import com.intellij.openapi.project.Project
 import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBPanel
@@ -13,11 +14,14 @@ import javax.swing.JPanel
 import javax.swing.ScrollPaneConstants
 import javax.swing.table.DefaultTableModel
 
-class ShireVariableViewPanel : JPanel(BorderLayout()) {
+class ShireVariableViewPanel(val project: Project) : JPanel(BorderLayout()) {
     private val contentPanel = JBPanel<JBPanel<*>>(BorderLayout())
     private val tableModel = DefaultTableModel(arrayOf("Name", "Description", "Value"), 0).apply {
         background = JBColor.WHITE
     }
+
+    private val snapshotViewPanel = ShireSnapshotViewPanel()
+    private val snapshotRecorder = com.phodal.shirelang.debugger.VariableSnapshotRecorder.getInstance(project)
 
     init {
         val table = JBTable(tableModel).apply {
@@ -44,6 +48,8 @@ class ShireVariableViewPanel : JPanel(BorderLayout()) {
         }
 
         add(scrollPane, BorderLayout.CENTER)
+
+        add(snapshotViewPanel, BorderLayout.SOUTH)
         setupPanel()
     }
 
@@ -63,6 +69,7 @@ class ShireVariableViewPanel : JPanel(BorderLayout()) {
 
         val allVariables: MutableMap<String, Variable> = DebugValue.all().associateBy { it.variableName }.toMutableMap()
 
+        snapshotViewPanel.updateSnapshots(snapshotRecorder.all())
 
         variables.forEach { (key, value) ->
             val valueStr = value.toString()

@@ -11,6 +11,7 @@ import com.intellij.openapi.editor.impl.EditorImpl
 import com.intellij.openapi.fileEditor.TextEditor
 import com.intellij.openapi.fileEditor.TextEditorWithPreview
 import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider
+import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 
@@ -62,18 +63,33 @@ class ShireFileEditorWithPreview(
     private fun createActionGroup(project: Project): ActionGroup {
         return DefaultActionGroup(
             object : AnAction("Show Preview", "Show Shire Prompt Preview", AllIcons.Actions.Preview) {
+                override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT
+                override fun update(e: AnActionEvent) {
+                    e.presentation.isEnabled = project != null && !DumbService.isDumb(project)
+                }
+
                 override fun actionPerformed(e: AnActionEvent) {
-                    preview.component.isVisible = true
-                    preview.rerenderShire()
+                    DumbService.getInstance(project).runWhenSmart {
+                        preview.component.isVisible = true
+                        preview.rerenderShire()
+                    }
                 }
             },
             object : AnAction("Refresh Preview", "Refresh Preview", AllIcons.Actions.Refresh) {
+                override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT
+                override fun update(e: AnActionEvent) {
+                    e.presentation.isEnabled = project != null && !DumbService.isDumb(project)
+                }
+
                 override fun actionPerformed(e: AnActionEvent) {
-                    preview.updateDisplayedContent()
+                    DumbService.getInstance(project).runWhenSmart {
+                        preview.updateDisplayedContent()
+                    }
                 }
             },
             Separator(),
             object : AnAction("Help", "Help", AllIcons.Actions.Help) {
+                override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT
                 override fun actionPerformed(e: AnActionEvent) {
                     val url = "https://shire.phodal.com/"
                     BrowserUtil.browse(url)
