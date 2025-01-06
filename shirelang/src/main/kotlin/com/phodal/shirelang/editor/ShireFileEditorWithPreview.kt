@@ -65,7 +65,7 @@ class ShireFileEditorWithPreview(
             object : AnAction("Show Preview", "Show Shire Prompt Preview", AllIcons.Actions.Preview) {
                 override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT
                 override fun update(e: AnActionEvent) {
-                    e.presentation.isEnabled = project != null && !DumbService.isDumb(project)
+                    e.presentation.isEnabled = !DumbService.isDumb(project)
                 }
 
                 override fun actionPerformed(e: AnActionEvent) {
@@ -78,7 +78,7 @@ class ShireFileEditorWithPreview(
             object : AnAction("Refresh Preview", "Refresh Preview", AllIcons.Actions.Refresh) {
                 override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT
                 override fun update(e: AnActionEvent) {
-                    e.presentation.isEnabled = project != null && !DumbService.isDumb(project)
+                    e.presentation.isEnabled = !DumbService.isDumb(project)
                 }
 
                 override fun actionPerformed(e: AnActionEvent) {

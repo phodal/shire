@@ -55,7 +55,7 @@ class PatternActionProcessor(
      * @return The result of applying the transformations to the input as a String.
      */
     suspend fun execute(transform: VariableTransform, input: Any): String {
-        record?.addSnapshot(transform.variable, input.toString())
+        record?.addSnapshot(transform.variable, input)
 
         var result = input
         val data = PostProcessorContext.getData()

@@ -72,17 +72,26 @@ class ShireSnapshotViewPanel : JPanel(BorderLayout()) {
         tableModel.dataVector.removeAllElements()
 
         snapshots.forEach { snapshot ->
+            val operation = snapshot.operations.firstOrNull()
             tableModel.addRow(
                 arrayOf(
                     snapshot.variableName,
-                    snapshot.operations.firstOrNull()?.functionName ?: "",
+                    operation?.functionName ?: "",
                     snapshot.value.toString(),
-                    snapshot.operations.firstOrNull()?.timestamp ?: ""
+                    formatTimestamp(operation?.timestamp ?: 0)
                 )
             )
         }
 
         revalidate()
         repaint()
+    }
+
+    private fun formatTimestamp(timestamp: Long): String {
+        if (timestamp == 0L) {
+            return "N/A"
+        }
+
+        return java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(timestamp)
     }
 }
