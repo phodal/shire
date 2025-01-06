@@ -5,7 +5,7 @@ import com.intellij.lang.Language
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.application.runReadAction
+import com.intellij.openapi.application.smartReadAction
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.ScrollType
 import com.intellij.openapi.fileEditor.FileEditor
@@ -21,14 +21,18 @@ import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.dsl.builder.Align
 import com.intellij.ui.dsl.builder.panel
+import com.intellij.util.ConcurrencyUtil
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
+import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.sketch.highlight.CodeHighlightSketch
 import com.phodal.shirecore.sketch.highlight.EditorFragment
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.runner.ShireRunner
 import com.phodal.shirelang.run.runner.ShireRunnerContext
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.intellij.plugins.markdown.lang.MarkdownLanguage
 import java.awt.BorderLayout
@@ -95,8 +99,8 @@ open class ShirePreviewEditor(
 
                     cell(JBLabel("(/shire.java)")).align(Align.FILL).resizableColumn()
                     button("", object : AnAction() {
-                        override fun actionPerformed(p0: AnActionEvent) {
-                            rerenderShire()
+                        override fun actionPerformed(event: AnActionEvent) {
+                            updateDisplayedContent()
                         }
                     }).also {
                         it.component.icon = AllIcons.Actions.Refresh
@@ -166,34 +170,30 @@ open class ShirePreviewEditor(
     }
 
     fun updateDisplayedContent() {
-        ApplicationManager.getApplication().invokeLaterOnWriteThread {
-            try {
-                val psiFile = runReadAction {
-                    PsiManager.getInstance(project).findFile(virtualFile) as? ShireFile
-                } ?: return@invokeLaterOnWriteThread
+        try {
+             ApplicationManager.getApplication().executeOnPooledThread {
+                runBlocking {
+                    val psiFile = smartReadAction(project) {
+                        PsiManager.getInstance(project).findFile(virtualFile) as? ShireFile
+                    } ?: return@runBlocking
 
-                shireRunnerContext = runBlocking {
-                    ShireRunner.compileOnly(project, psiFile, mapOf(), sampleEditor)
+                    shireRunnerContext = ShireRunner.compileOnly(project, psiFile, mapOf(), sampleEditor)
+
+                    val variables = shireRunnerContext?.compiledVariables
+                    if (variables != null) {
+                        variablePanel.updateVariables(variables)
+                    }
+
+                    highlightSketch?.updateViewText(shireRunnerContext!!.finalPrompt)
+                    highlightSketch?.repaint()
+
+                    mainPanel.revalidate()
+                    mainPanel.repaint()
                 }
-
-                val variables = shireRunnerContext?.compiledVariables
-                if (variables != null) {
-                    variablePanel.updateVariables(variables)
-                }
-
-                highlightSketch?.updateViewText(shireRunnerContext!!.finalPrompt)
-                highlightSketch?.repaint()
-
-                mainPanel.revalidate()
-                mainPanel.repaint()
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
-    }
-
-    fun rerenderShire() {
-        updateDisplayedContent()
     }
 
     fun setMainEditor(editor: Editor) {

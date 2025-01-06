@@ -71,7 +71,7 @@ class ShireFileEditorWithPreview(
                 override fun actionPerformed(e: AnActionEvent) {
                     DumbService.getInstance(project).runWhenSmart {
                         preview.component.isVisible = true
-                        preview.rerenderShire()
+                        preview.updateDisplayedContent()
                     }
                 }
             },
