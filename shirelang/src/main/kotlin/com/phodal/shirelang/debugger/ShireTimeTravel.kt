@@ -28,7 +28,7 @@ import kotlinx.datetime.Instant
 class ShireFileSnapshot(
     val file: VirtualFile,
     val rnd: Int, // seed for random number generator
-    var variables: Map<String, ResolvableVariableSnapshot>,
+    var variables: Map<String, UserCustomVariableSnapshot>,
     var allCode: String = "",
     /**
      * execute to current code line
@@ -80,7 +80,7 @@ data class VariableOperation(
     val value: Any?,
 )
 
-class ResolvableVariableSnapshot(
+class UserCustomVariableSnapshot(
     val variableName: String,
     val value: Any? = null,
     val className: String? = VariableResolver::class.java.name,
@@ -107,16 +107,20 @@ class ResolvableVariableSnapshot(
 
 @Service(Service.Level.PROJECT)
 class VariableSnapshotRecorder {
-    private val snapshots = mutableListOf<ResolvableVariableSnapshot>()
+    private val snapshots = mutableListOf<UserCustomVariableSnapshot>()
 
     fun addSnapshot(variables: Map<String, Any?>, trigger: VariableResolver? = null) {
         variables.forEach { (name, value) ->
-            snapshots.add(ResolvableVariableSnapshot(name, value))
+            snapshots.add(UserCustomVariableSnapshot(name, value))
         }
     }
 
     fun clear() {
         snapshots.clear()
+    }
+
+    fun all(): List<UserCustomVariableSnapshot> {
+        return snapshots
     }
 
     fun printSnapshot() {
@@ -137,7 +141,7 @@ class VariableSnapshotRecorder {
 
 @Service(Service.Level.PROJECT)
 class UserCustomVariableSnapshotRecorder {
-    private val snapshots = mutableListOf<ResolvableVariableSnapshot>()
+    private val snapshots = mutableListOf<UserCustomVariableSnapshot>()
 
     fun clear() {
         snapshots.clear()
@@ -163,7 +167,7 @@ data class ExecutionContext(
 )
 
 data class TimeTravelSnapshot(val variableStates: Map<String, Any?>) {
-    fun restore(variables: Map<String, ResolvableVariableSnapshot>) {
+    fun restore(variables: Map<String, UserCustomVariableSnapshot>) {
         variableStates.forEach { (name, value) ->
             variables[name]?.recordValue(value ?: "")
         }
