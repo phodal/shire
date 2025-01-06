@@ -1,5 +1,6 @@
 package com.phodal.shirelang.editor
 
+import cc.unitmesh.cf.core.context.variable.Variable
 import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBPanel

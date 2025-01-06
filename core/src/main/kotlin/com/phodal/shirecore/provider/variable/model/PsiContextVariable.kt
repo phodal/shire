@@ -104,5 +104,7 @@ enum class PsiContextVariable(
         fun from(variableName: String): PsiContextVariable? {
             return entries.firstOrNull { it.variableName == variableName }
         }
+
+        fun all(): List<PsiContextVariable> = entries
     }
 }
