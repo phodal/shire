@@ -65,7 +65,7 @@ enum class BuiltinCommand(
     DATABASE(
         "database",
         "Read the content of a database, /database:query\n```sql\nSELECT * FROM table\n```",
-        AllIcons.Toolwindows.ToolWindowDataView,
+        AllIcons.Toolwindows.ToolWindowHierarchy,
         true,
         true
     ),
