@@ -4,18 +4,18 @@ import com.intellij.openapi.project.Project
 import com.phodal.shirecore.middleware.post.PostProcessorContext
 import com.phodal.shirelang.compiler.ast.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.ast.patternaction.VariableTransform
-import com.phodal.shirelang.compiler.execute.searcher.PatternSearcher
 import com.phodal.shirelang.compiler.execute.shireql.ShireQLProcessor
 import com.phodal.shirelang.debugger.VariableSnapshotRecorder
 
-
-class PatternActionProcessor(
+public class PatternActionProcessor(
     override val myProject: Project,
     override val hole: HobbitHole,
-    private val variableMap: MutableMap<String, Any?>,
-    private val record: VariableSnapshotRecorder ? = null
+    private val variableMap: MutableMap<String, Any?>
 ) :
     PatternFuncProcessor(myProject, hole) {
+
+    private val record: VariableSnapshotRecorder = VariableSnapshotRecorder.getInstance(myProject)
+
 
     /**
      * We should execute the variable function with the given key and pipeline functions.
@@ -33,7 +33,7 @@ class PatternActionProcessor(
 
         var input: Any = ""
         if (actionTransform.pattern.isNotBlank() && actionTransform.pattern != "any" && actionTransform.pattern != "null") {
-            input = PatternSearcher.findFilesByRegex(myProject, actionTransform.pattern)
+            input = com.phodal.shirelang.compiler.execute.searcher.PatternSearcher.findFilesByRegex(myProject, actionTransform.pattern)
                 .map { it.path }
                 .toTypedArray()
         }
@@ -55,7 +55,7 @@ class PatternActionProcessor(
      * @return The result of applying the transformations to the input as a String.
      */
     suspend fun execute(transform: VariableTransform, input: Any): String {
-        record?.addSnapshot(transform.variable, input)
+        record.addSnapshot(transform.variable, input)
 
         var result = input
         val data = PostProcessorContext.getData()
@@ -67,7 +67,7 @@ class PatternActionProcessor(
 
         transform.patternActionFuncs.forEach { action ->
             result = patternFunctionExecute(action, result, input, variableMap)
-            record?.addSnapshot(transform.variable, result, action.funcName, result.toString())
+            record.addSnapshot(transform.variable, result, action.funcName, result)
         }
 
         variableMap[transform.variable] = result

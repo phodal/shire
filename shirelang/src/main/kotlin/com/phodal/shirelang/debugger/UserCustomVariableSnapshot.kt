@@ -58,7 +58,7 @@ class UserCustomVariableSnapshot(
 class VariableSnapshotRecorder {
     private val snapshots = mutableListOf<UserCustomVariableSnapshot>()
 
-    fun addSnapshot(variableName: String, value: Any, operation: String? = null, operationArg: String? = null) {
+    fun addSnapshot(variableName: String, value: Any, operation: String? = null, operationArg: Any? = null) {
         val operationList = mutableListOf<VariableOperation>()
         if (operation != null) {
             operationList.add(VariableOperation(operation, System.currentTimeMillis(), operationArg))

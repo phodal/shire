@@ -25,8 +25,8 @@ class ShireSnapshotViewPanel : JPanel(BorderLayout()) {
             intercellSpacing = JBUI.size(0, 0)
 
             val columnModel = columnModel
-            columnModel.getColumn(0).preferredWidth = 150
-            columnModel.getColumn(1).preferredWidth = 80
+            columnModel.getColumn(0).preferredWidth = 80
+            columnModel.getColumn(1).preferredWidth = 60
             columnModel.getColumn(2).preferredWidth = 300
             columnModel.getColumn(3).preferredWidth = 80
 

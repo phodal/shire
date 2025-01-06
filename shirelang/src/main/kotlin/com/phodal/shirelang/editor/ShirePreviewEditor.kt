@@ -5,7 +5,7 @@ import com.intellij.lang.Language
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.application.smartReadAction
+import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.ScrollType
 import com.intellij.openapi.fileEditor.FileEditor
@@ -23,15 +23,13 @@ import com.intellij.ui.dsl.builder.Align
 import com.intellij.ui.dsl.builder.panel
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
-import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.sketch.highlight.CodeHighlightSketch
 import com.phodal.shirecore.sketch.highlight.EditorFragment
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.runner.ShireRunner
 import com.phodal.shirelang.run.runner.ShireRunnerContext
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.intellij.plugins.markdown.lang.MarkdownLanguage
 import java.awt.BorderLayout
 import java.beans.PropertyChangeListener
@@ -168,12 +166,12 @@ open class ShirePreviewEditor(
     }
 
     fun updateDisplayedContent() {
-        ApplicationManager.getApplication().invokeLater {
-            ShireCoroutineScope.scope(project).async {
+        ApplicationManager.getApplication().executeOnPooledThread {
+            runBlocking {
                 try {
-                    val psiFile = smartReadAction(project) {
+                    val psiFile = runReadAction {
                         PsiManager.getInstance(project).findFile(virtualFile) as? ShireFile
-                    } ?: return@async
+                    } ?: return@runBlocking
 
                     shireRunnerContext = ShireRunner.compileOnly(project, psiFile, mapOf(), sampleEditor)
 
