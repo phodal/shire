@@ -166,28 +166,28 @@ open class ShirePreviewEditor(
     }
 
     fun updateDisplayedContent() {
-        ApplicationManager.getApplication().executeOnPooledThread {
-            runBlocking {
-                try {
-                    val psiFile = runReadAction {
-                        PsiManager.getInstance(project).findFile(virtualFile) as? ShireFile
-                    } ?: return@runBlocking
+        ApplicationManager.getApplication().invokeLaterOnWriteThread {
+            try {
+                val psiFile = runReadAction {
+                    PsiManager.getInstance(project).findFile(virtualFile) as? ShireFile
+                } ?: return@invokeLaterOnWriteThread
 
-                    shireRunnerContext = ShireRunner.compileOnly(project, psiFile, mapOf(), sampleEditor)
-
-                    val variables = shireRunnerContext?.compiledVariables
-                    if (variables != null) {
-                        variablePanel.updateVariables(variables)
-                    }
-
-                    highlightSketch?.updateViewText(shireRunnerContext!!.finalPrompt)
-                    highlightSketch?.repaint()
-
-                    mainPanel.revalidate()
-                    mainPanel.repaint()
-                } catch (e: Exception) {
-                    e.printStackTrace()
+                shireRunnerContext = runBlocking {
+                    ShireRunner.compileOnly(project, psiFile, mapOf(), sampleEditor)
                 }
+
+                val variables = shireRunnerContext?.compiledVariables
+                if (variables != null) {
+                    variablePanel.updateVariables(variables)
+                }
+
+                highlightSketch?.updateViewText(shireRunnerContext!!.finalPrompt)
+                highlightSketch?.repaint()
+
+                mainPanel.revalidate()
+                mainPanel.repaint()
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }
