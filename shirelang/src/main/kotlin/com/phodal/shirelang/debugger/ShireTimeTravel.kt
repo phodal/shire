@@ -109,7 +109,6 @@ class ResolvableVariableSnapshot(
 class VariableSnapshotRecorder {
     private val snapshots = mutableListOf<ResolvableVariableSnapshot>()
 
-    /// todo: modify to FileSnapshot
     fun addSnapshot(variables: Map<String, Any?>, trigger: VariableResolver? = null) {
         variables.forEach { (name, value) ->
             snapshots.add(ResolvableVariableSnapshot(name, value))

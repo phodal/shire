@@ -6,7 +6,7 @@ import com.phodal.shirelang.compiler.variable.resolver.base.VariableResolverCont
 import com.phodal.shirelang.debugger.VariableSnapshotRecorder
 
 class UserCustomVariableResolver(
-    private val context: VariableResolverContext
+    private val context: VariableResolverContext,
 ) : VariableResolver {
     private val record = VariableSnapshotRecorder.getInstance(context.myProject)
     override suspend fun resolve(initVariables: Map<String, Any>): Map<String, String> {
