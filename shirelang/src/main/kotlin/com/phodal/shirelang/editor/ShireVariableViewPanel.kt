@@ -43,8 +43,8 @@ class ShireVariableViewPanel(val project: Project) : JPanel(BorderLayout()) {
             ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
             ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
         ).apply {
-            minimumSize = JBUI.size(0, 200)
-            preferredSize = JBUI.size(0, 200)
+            minimumSize = JBUI.size(0, 160)
+            preferredSize = JBUI.size(0, 160)
         }
 
         add(scrollPane, BorderLayout.CENTER)

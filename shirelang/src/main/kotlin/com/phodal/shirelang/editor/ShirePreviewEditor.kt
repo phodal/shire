@@ -166,7 +166,6 @@ open class ShirePreviewEditor(
         }
 
         this.mainPanel.add(corePanel, BorderLayout.CENTER)
-//        updateDisplayedContent()
     }
 
     fun updateDisplayedContent() {

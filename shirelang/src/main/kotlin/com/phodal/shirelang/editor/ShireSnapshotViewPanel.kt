@@ -6,6 +6,7 @@ import com.intellij.ui.components.JBPanel
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.table.JBTable
 import com.intellij.util.ui.JBUI
+import com.intellij.util.ui.UIUtil
 import com.phodal.shirelang.debugger.UserCustomVariableSnapshot
 import java.awt.BorderLayout
 import javax.swing.JPanel
@@ -51,7 +52,11 @@ class ShireSnapshotViewPanel : JPanel(BorderLayout()) {
 
         val titleLabel = JBLabel("Custom Variable Snapshots").apply {
             font = JBUI.Fonts.label(14f).asBold()
-            border = JBUI.Borders.empty(4, 8)
+            fontColor = UIUtil.FontColor.BRIGHTER
+            background = JBColor(0xF5F5F5, 0x2B2D30)
+            font = JBUI.Fonts.label(14.0f).asBold()
+            border = JBUI.Borders.empty(0, 16)
+            isOpaque = true
         }
 
         contentPanel.add(titleLabel, BorderLayout.NORTH)
@@ -59,7 +64,6 @@ class ShireSnapshotViewPanel : JPanel(BorderLayout()) {
     }
 
     fun updateSnapshots(snapshots: List<UserCustomVariableSnapshot>) {
-        /// if size is 0, hide the panel
         if (snapshots.isEmpty()) {
             isVisible = false
             return
