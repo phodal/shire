@@ -24,9 +24,11 @@ class ShireProgramRunner : GenericProgramRunner<RunnerSettings>(), Disposable {
         Disposer.register(ShirePluginDisposable.getInstance(), this)
     }
 
-    override fun getRunnerId(): String = Companion.RUNNER_ID
+    override fun getRunnerId(): String = RUNNER_ID
 
-    override fun canRun(executorId: String, profile: RunProfile) = profile is ShireConfiguration
+    override fun canRun(executorId: String, profile: RunProfile): Boolean {
+        return profile is ShireConfiguration
+    }
 
     override fun doExecute(state: RunProfileState, environment: ExecutionEnvironment): RunContentDescriptor? {
         if (environment.runProfile !is ShireConfiguration) return null
