@@ -22,14 +22,6 @@ class ShireDebugSettings : XDebuggerSettings<ShireDebugSettings>("shire"), Gette
 
     var breakOnPanic: Boolean = true
     override fun createConfigurables(category: DebuggerSettingsCategory): MutableCollection<out Configurable> {
-//        when(category) {
-//            DebuggerSettingsCategory.ROOT -> TODO()
-//            DebuggerSettingsCategory.GENERAL -> TODO()
-//            DebuggerSettingsCategory.DATA_VIEWS -> TODO()
-//            DebuggerSettingsCategory.STEPPING -> TODO()
-//            DebuggerSettingsCategory.HOTSWAP -> TODO()
-//        }
-
         val config = SimpleConfigurable.create(
             "ShireDebugSettings",
             "Shire Debugger",

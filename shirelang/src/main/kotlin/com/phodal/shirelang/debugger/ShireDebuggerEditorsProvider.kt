@@ -14,7 +14,7 @@ class ShireDebuggerEditorsProvider: XDebuggerEditorsProviderBase() {
     override fun getFileType(): FileType = ShireFileType.INSTANCE
 
     override fun createExpressionCodeFragment(project: Project, text: String, context: PsiElement?, isPhysical: Boolean): PsiFile {
-        val name = "fragment" + ShireFileType.INSTANCE.defaultExtension
+        val name = "fragment" + "." + ShireFileType.INSTANCE.defaultExtension
         val viewProvider = PsiManagerEx.getInstanceEx(project).fileManager.createFileViewProvider(
             LightVirtualFile(name, ShireFileType.INSTANCE, text), isPhysical)
         return ShireFile(viewProvider)
