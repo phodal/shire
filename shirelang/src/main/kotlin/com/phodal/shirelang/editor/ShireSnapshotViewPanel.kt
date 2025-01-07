@@ -7,7 +7,7 @@ import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.table.JBTable
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
-import com.phodal.shirelang.debugger.UserCustomVariableSnapshot
+import com.phodal.shirelang.debugger.snapshot.UserCustomVariableSnapshot
 import java.awt.BorderLayout
 import javax.swing.JPanel
 import javax.swing.ScrollPaneConstants

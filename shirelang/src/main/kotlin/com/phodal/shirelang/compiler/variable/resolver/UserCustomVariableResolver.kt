@@ -3,7 +3,7 @@ package com.phodal.shirelang.compiler.variable.resolver
 import com.phodal.shirelang.compiler.execute.PatternActionProcessor
 import com.phodal.shirelang.compiler.variable.resolver.base.VariableResolver
 import com.phodal.shirelang.compiler.variable.resolver.base.VariableResolverContext
-import com.phodal.shirelang.debugger.VariableSnapshotRecorder
+import com.phodal.shirelang.debugger.snapshot.VariableSnapshotRecorder
 
 class UserCustomVariableResolver(
     private val context: VariableResolverContext,

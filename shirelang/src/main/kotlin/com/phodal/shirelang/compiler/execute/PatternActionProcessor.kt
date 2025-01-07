@@ -5,7 +5,7 @@ import com.phodal.shirecore.middleware.post.PostProcessorContext
 import com.phodal.shirelang.compiler.ast.hobbit.HobbitHole
 import com.phodal.shirelang.compiler.ast.patternaction.VariableTransform
 import com.phodal.shirelang.compiler.execute.shireql.ShireQLProcessor
-import com.phodal.shirelang.debugger.VariableSnapshotRecorder
+import com.phodal.shirelang.debugger.snapshot.VariableSnapshotRecorder
 
 public class PatternActionProcessor(
     override val myProject: Project,

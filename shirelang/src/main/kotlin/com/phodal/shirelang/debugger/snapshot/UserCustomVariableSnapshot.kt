@@ -1,4 +1,4 @@
-package com.phodal.shirelang.debugger
+package com.phodal.shirelang.debugger.snapshot
 
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.project.Project

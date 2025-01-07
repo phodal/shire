@@ -5,7 +5,6 @@ import com.intellij.psi.PsiElement
 import com.phodal.shirecore.middleware.select.SelectElementStrategy
 import com.phodal.shirelang.compiler.variable.resolver.base.VariableResolver
 import com.phodal.shirelang.compiler.variable.resolver.base.VariableResolverContext
-import com.phodal.shirelang.debugger.VariableSnapshotRecorder
 
 class CompositeVariableResolver(private val context: VariableResolverContext) : VariableResolver {
     init {

@@ -9,6 +9,7 @@ import com.intellij.ui.table.JBTable
 import com.intellij.util.ui.JBUI
 import com.phodal.shirecore.provider.variable.model.DebugValue
 import com.phodal.shirecore.provider.variable.model.Variable
+import com.phodal.shirelang.debugger.snapshot.VariableSnapshotRecorder
 import java.awt.BorderLayout
 import javax.swing.JPanel
 import javax.swing.ScrollPaneConstants
@@ -21,7 +22,7 @@ class ShireVariableViewPanel(val project: Project) : JPanel(BorderLayout()) {
     }
 
     private val snapshotViewPanel = ShireSnapshotViewPanel()
-    private val snapshotRecorder = com.phodal.shirelang.debugger.VariableSnapshotRecorder.getInstance(project)
+    private val snapshotRecorder = VariableSnapshotRecorder.getInstance(project)
 
     init {
         val table = JBTable(tableModel).apply {

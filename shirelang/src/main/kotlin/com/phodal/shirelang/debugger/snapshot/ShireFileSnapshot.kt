@@ -1,4 +1,4 @@
-package com.phodal.shirelang.debugger
+package com.phodal.shirelang.debugger.snapshot
 
 import com.intellij.openapi.vfs.VirtualFile
 import kotlinx.datetime.Clock
