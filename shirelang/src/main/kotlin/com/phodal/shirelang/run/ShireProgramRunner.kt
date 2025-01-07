@@ -1,10 +1,10 @@
 package com.phodal.shirelang.run
 
 import com.intellij.execution.ExecutionResult
-import com.phodal.shirelang.run.flow.ShireProcessProcessor
 import com.intellij.execution.configurations.RunProfile
 import com.intellij.execution.configurations.RunProfileState
 import com.intellij.execution.configurations.RunnerSettings
+import com.intellij.execution.executors.DefaultRunExecutor
 import com.intellij.execution.process.ProcessEvent
 import com.intellij.execution.runners.ExecutionEnvironment
 import com.intellij.execution.runners.GenericProgramRunner
@@ -13,6 +13,7 @@ import com.intellij.execution.ui.RunContentDescriptor
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.util.Disposer
+import com.phodal.shirelang.run.flow.ShireProcessProcessor
 import java.util.concurrent.atomic.AtomicReference
 
 class ShireProgramRunner : GenericProgramRunner<RunnerSettings>(), Disposable {
@@ -27,9 +28,10 @@ class ShireProgramRunner : GenericProgramRunner<RunnerSettings>(), Disposable {
     override fun getRunnerId(): String = RUNNER_ID
 
     override fun canRun(executorId: String, profile: RunProfile): Boolean {
-        return profile is ShireConfiguration
+        return (executorId == DefaultRunExecutor.EXECUTOR_ID) && profile is ShireConfiguration
     }
 
+    // environment.executor.id == Debug
     override fun doExecute(state: RunProfileState, environment: ExecutionEnvironment): RunContentDescriptor? {
         if (environment.runProfile !is ShireConfiguration) return null
         val shireState = state as ShireRunConfigurationProfileState

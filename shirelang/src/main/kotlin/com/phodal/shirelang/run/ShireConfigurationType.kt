@@ -15,6 +15,10 @@ class ShireConfigurationType : SimpleConfigurationType(
     ShireBundle.message("shire.line.marker.run.0", ShireLanguage.INSTANCE.id),
     NotNullLazyValue.lazy { ShireIcons.DEFAULT }
 ) {
+    override fun isDumbAware(): Boolean = true
+
+    override fun isEditableInDumbMode(): Boolean = true
+
     override fun createTemplateConfiguration(project: Project): RunConfiguration =
         ShireConfiguration(project, this, "ShireConfiguration")
 
