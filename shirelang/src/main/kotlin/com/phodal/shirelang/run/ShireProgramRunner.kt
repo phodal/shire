@@ -51,8 +51,6 @@ class ShireProgramRunner : GenericProgramRunner<RunnerSettings>(), Disposable {
                 ) {
                     environment.project.getService(ShireProcessProcessor::class.java)
                         .process(allOutput, event, scriptPath, consoleView)
-
-                    // if need, maybe we need a toggle to show the run content
                 }
             })
 
