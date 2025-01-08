@@ -17,8 +17,6 @@ class ShireStackFrame(
     val process: ShireDebugProcess,
     val project: Project,
 ) : XStackFrame(), Disposable {
-    private val myPosition: XSourcePosition? = null
-
     override fun customizePresentation(component: ColoredTextContainer) {
         VariableSnapshotRecorder.getInstance(project).all().forEach {
             component.append(it.variableName, SimpleTextAttributes.REGULAR_ATTRIBUTES)
@@ -26,14 +24,13 @@ class ShireStackFrame(
             component.append(it.value.toString(), SimpleTextAttributes.REGULAR_ATTRIBUTES)
             component.append("\n", SimpleTextAttributes.REGULAR_ATTRIBUTES)
         }
-//        VariableSnapshotRecorder.getInstance(project).addListener(object : VariableSnapshotListener {
-//            override fun onSnapshot(variableName: String, value: String, operations: List<VariableOperation>) {
-//                component.append(variableName, SimpleTextAttributes.REGULAR_ATTRIBUTES)
-//                component.append(" = ", SimpleTextAttributes.REGULAR_ATTRIBUTES)
-//                component.append(value, SimpleTextAttributes.REGULAR_ATTRIBUTES)
-//                component.append("\n", SimpleTextAttributes.REGULAR_ATTRIBUTES)
-//            }
-//        })
+
+        process.shireRunnerContext?.compiledVariables?.forEach {
+            component.append(it.key, SimpleTextAttributes.REGULAR_ATTRIBUTES)
+            component.append(" = ", SimpleTextAttributes.REGULAR_ATTRIBUTES)
+            component.append(it.value.toString(), SimpleTextAttributes.REGULAR_ATTRIBUTES)
+            component.append("\n", SimpleTextAttributes.REGULAR_ATTRIBUTES)
+        }
     }
 
     override fun computeChildren(node: XCompositeNode) {

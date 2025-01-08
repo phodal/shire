@@ -3,6 +3,7 @@ package com.phodal.shirelang.debugger
 import com.intellij.execution.process.ProcessEvent
 import com.intellij.execution.process.ProcessListener
 import com.intellij.execution.runners.ExecutionEnvironment
+import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.execution.ui.ExecutionConsole
 import com.intellij.execution.ui.RunnerLayoutUi
 import com.intellij.execution.ui.layout.PlaceInGrid
@@ -22,31 +23,47 @@ import com.intellij.xdebugger.breakpoints.XLineBreakpoint
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider
 import com.intellij.xdebugger.frame.XSuspendContext
 import com.intellij.xdebugger.ui.XDebugTabLayouter
+import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.ShireConfiguration
 import com.phodal.shirelang.run.ShireConsoleView
 import com.phodal.shirelang.run.ShireRunConfigurationProfileState
 import com.phodal.shirelang.run.ShireRunListener
+import com.phodal.shirelang.run.runner.ShireRunner
+import com.phodal.shirelang.run.runner.ShireRunnerContext
+import kotlinx.coroutines.runBlocking
 
 class ShireDebugProcess(private val session: XDebugSession, private val environment: ExecutionEnvironment) :
     XDebugProcess(session), Disposable {
     private val debuggableConfiguration: ShireConfiguration get() = session.runProfile as ShireConfiguration
-    private val runProfileState = debuggableConfiguration.getState(environment.executor, environment) as ShireRunConfigurationProfileState
+    private val runProfileState =
+        debuggableConfiguration.getState(environment.executor, environment) as ShireRunConfigurationProfileState
 
     private val connection = ApplicationManager.getApplication().messageBus.connect(this)
     private val myRequestsScheduler: Alarm
 
     init {
-        session.addSessionListener(object : XDebugSessionListener {
-            override fun stackFrameChanged() {
+        myRequestsScheduler = Alarm(Alarm.ThreadToUse.POOLED_THREAD, this)
+    }
 
+    private val breakpointHandlers = arrayOf<XBreakpointHandler<*>>(ShireBreakpointHandler(this))
+
+    override fun getBreakpointHandlers(): Array<XBreakpointHandler<*>> = breakpointHandlers
+    override fun createTabLayouter(): XDebugTabLayouter = ShireDebugTabLayouter()
+    override fun createConsole(): ExecutionConsole = runProfileState.console
+
+    var shireRunnerContext: ShireRunnerContext? = null
+
+
+    fun start() {
+        myRequestsScheduler.addRequest({
+            runBlocking {
+                val psiFile: ShireFile = ShireFile.lookup(session.project, debuggableConfiguration.getScriptPath())
+                    ?: return@runBlocking
+
+                shireRunnerContext = ShireRunner.compileOnly(session.project, psiFile, mapOf(), null)
+                session.positionReached(ShireSuspendContext(this@ShireDebugProcess, session.project))
             }
-
-            override fun sessionPaused() {
-
-            }
-        })
-
-        session.positionReached(ShireSuspendContext(this@ShireDebugProcess, session.project))
+        }, 0)
         connection.subscribe(ShireRunListener.TOPIC, object : ShireRunListener {
             override fun runFinish(
                 allOutput: String,
@@ -59,20 +76,6 @@ class ShireDebugProcess(private val session: XDebugSession, private val environm
             }
         })
 
-        myRequestsScheduler = Alarm(Alarm.ThreadToUse.POOLED_THREAD, this)
-    }
-
-
-    private val breakpointHandlers = arrayOf<XBreakpointHandler<*>>(ShireBreakpointHandler(this))
-
-    override fun getBreakpointHandlers(): Array<XBreakpointHandler<*>> = breakpointHandlers
-    override fun createTabLayouter(): XDebugTabLayouter = ShireDebugTabLayouter()
-    override fun createConsole(): ExecutionConsole = runProfileState.console
-    override fun resume(context: XSuspendContext?) {
-    }
-
-    fun start() {
-        runProfileState.execute(environment.executor, environment.runner)
         processHandler.addProcessListener(object : ProcessListener {
             override fun onTextAvailable(event: ProcessEvent, outputType: Key<*>) {
                 super.onTextAvailable(event, outputType)
@@ -83,6 +86,12 @@ class ShireDebugProcess(private val session: XDebugSession, private val environm
                 stop()
             }
         })
+
+        runProfileState.console.print("Waiting for resume...", ConsoleViewContentType.NORMAL_OUTPUT)
+    }
+
+    override fun resume(context: XSuspendContext?) {
+        runProfileState.execute(environment.executor, environment.runner)
     }
 
     override fun runToPosition(position: XSourcePosition, context: XSuspendContext?) {

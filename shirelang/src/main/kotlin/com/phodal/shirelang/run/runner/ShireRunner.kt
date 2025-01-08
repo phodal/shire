@@ -213,7 +213,7 @@ class ShireRunner(
             project: Project,
             shireFile: ShireFile,
             initVariables: Map<String, String>,
-            sampleEditor: Editor?,
+            sampleEditor: Editor? = null
         ): ShireRunnerContext {
             val parsedResult = runReadAction {
                 preAnalysisAndLocalExecute(shireFile, project, sampleEditor)
