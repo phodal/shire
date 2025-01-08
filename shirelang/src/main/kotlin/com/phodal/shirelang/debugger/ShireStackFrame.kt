@@ -10,37 +10,56 @@ import com.intellij.xdebugger.XExpression
 import com.intellij.xdebugger.XSourcePosition
 import com.intellij.xdebugger.evaluation.XDebuggerEvaluator
 import com.intellij.xdebugger.frame.*
+import com.phodal.shirelang.debugger.snapshot.UserCustomVariableSnapshot
+import com.phodal.shirelang.debugger.snapshot.VariableSnapshotRecorder
 import org.jetbrains.concurrency.Promise
 
 class ShireStackFrame(
     val process: ShireDebugProcess,
     val project: Project,
+    private val customVariable: UserCustomVariableSnapshot? = null,
 ) : XStackFrame(), Disposable {
+    private var snapshotValue: ShireDebugValue? = null
     override fun customizePresentation(component: ColoredTextContainer) {
-        component.append("Builtin variables", SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES)
-        component.setIcon(AllIcons.Debugger.Frame)
+        if (customVariable == null) {
+            component.append("init", SimpleTextAttributes.REGULAR_ATTRIBUTES)
+            component.setIcon(AllIcons.Debugger.Frame)
+            return
+        }
+
+        val variableOperation = customVariable.operations.firstOrNull()
+        if (variableOperation == null) {
+            component.append(
+                customVariable.variableName + " -> " + "init" + "(" + ")",
+                SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES
+            )
+            component.setIcon(AllIcons.Debugger.Frame)
+        } else {
+            val functionName = variableOperation.functionName
+            val value = variableOperation.value.toString()
+            snapshotValue = ShireDebugValue(customVariable.variableName, "String", value)
+            component.append(
+                customVariable.variableName + " -> " + functionName + "(" + value + ")",
+                SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES
+            )
+            component.setIcon(AllIcons.Debugger.Frame)
+        }
     }
 
     override fun computeChildren(node: XCompositeNode) {
+        val root = XValueChildrenList()
+        snapshotValue?.let {
+            root.add(it)
+        }
+
+        node.addChildren(root, false)
+
         val filteredChildren = XValueChildrenList()
         process.shireRunnerContext?.compiledVariables?.forEach {
             filteredChildren.add(ShireDebugValue(it.key, "String", it.value.toString()))
         }
 
         node.addChildren(filteredChildren, true)
-//        process.shireRunnerContext?.compiledVariables?.forEach {
-//            component.append(it.key, SimpleTextAttributes.REGULAR_ATTRIBUTES)
-//            component.append(" = ", SimpleTextAttributes.REGULAR_ATTRIBUTES)
-//            component.append(it.value.toString(), SimpleTextAttributes.REGULAR_ATTRIBUTES)
-//            component.append("\n", SimpleTextAttributes.REGULAR_ATTRIBUTES)
-//        }
-
-        //        VariableSnapshotRecorder.getInstance(project).all().forEach {
-//            component.append(it.variableName, SimpleTextAttributes.REGULAR_ATTRIBUTES)
-//            component.append(" = ", SimpleTextAttributes.REGULAR_ATTRIBUTES)
-//            component.append(it.value.toString(), SimpleTextAttributes.REGULAR_ATTRIBUTES)
-//            component.append("\n", SimpleTextAttributes.REGULAR_ATTRIBUTES)
-//        }
     }
 
     override fun getEvaluator(): XDebuggerEvaluator? {
@@ -76,7 +95,7 @@ class ShireDebugValue(
     val value: String,
 ) : XNamedValue(myName) {
     override fun computePresentation(node: XValueNode, place: XValuePlace) {
-        node.setPresentation(AllIcons.Debugger.Value, myName, myName, true)
+        node.setPresentation(AllIcons.Debugger.Value, myName, value, false)
     }
 
     override fun calculateEvaluationExpression(): Promise<XExpression> {
@@ -94,10 +113,18 @@ class ShireSuspendContext(val process: ShireDebugProcess, project: Project) : XS
 }
 
 class ExecutionStack(private val process: ShireDebugProcess, project: Project) :
-    XExecutionStack("Custom variables") {
-    private val stackFrames: List<ShireStackFrame> = listOf(
-        ShireStackFrame(process, project)
-    )
+    XExecutionStack("Variables") {
+    private val stackFrames: MutableList<ShireStackFrame> = mutableListOf()
+
+    init {
+        stackFrames.add(ShireStackFrame(process, project, null))
+        val variableSnapshots = VariableSnapshotRecorder.getInstance(project).all()
+        variableSnapshots.forEach {
+            stackFrames.add(ShireStackFrame(process, project, it))
+        }
+
+        stackFrames.reverse()
+    }
 
     override fun getTopFrame(): XStackFrame? = stackFrames.firstOrNull()
 
