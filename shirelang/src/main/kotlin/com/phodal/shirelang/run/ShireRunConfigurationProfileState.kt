@@ -4,7 +4,9 @@ import com.intellij.execution.DefaultExecutionResult
 import com.intellij.execution.ExecutionResult
 import com.intellij.execution.Executor
 import com.intellij.execution.configurations.RunProfileState
-import com.intellij.execution.process.*
+import com.intellij.execution.process.ProcessEvent
+import com.intellij.execution.process.ProcessListener
+import com.intellij.execution.process.ProcessTerminatedListener
 import com.intellij.execution.runners.ProgramRunner
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.Disposable
@@ -78,6 +80,7 @@ class ShireRunConfigurationProfileState(
                 val llmOutput = shireRunner.execute(parsedResult)
                 processAdapter.setLlmOutput(llmOutput)
 
+                processAdapter.processTerminated(ProcessEvent(processHandler, 0))
                 myProject.getService(OnStreamingService::class.java)?.onDone(myProject)
             } catch (e: Exception) {
                 console.print(

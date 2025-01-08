@@ -1,7 +1,6 @@
 package com.phodal.shirelang.debugger
 
 import com.intellij.execution.process.ProcessEvent
-import com.intellij.execution.process.ProcessListener
 import com.intellij.execution.runners.ExecutionEnvironment
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.execution.ui.ExecutionConsole
@@ -10,7 +9,6 @@ import com.intellij.execution.ui.layout.PlaceInGrid
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.util.Key
 import com.intellij.ui.content.Content
 import com.intellij.util.Alarm
 import com.intellij.xdebugger.XDebugProcess
@@ -23,10 +21,7 @@ import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider
 import com.intellij.xdebugger.frame.XSuspendContext
 import com.intellij.xdebugger.ui.XDebugTabLayouter
 import com.phodal.shirelang.psi.ShireFile
-import com.phodal.shirelang.run.ShireConfiguration
-import com.phodal.shirelang.run.ShireConsoleView
-import com.phodal.shirelang.run.ShireRunConfigurationProfileState
-import com.phodal.shirelang.run.ShireRunListener
+import com.phodal.shirelang.run.*
 import com.phodal.shirelang.run.runner.ShireRunner
 import com.phodal.shirelang.run.runner.ShireRunnerContext
 import kotlinx.coroutines.runBlocking
@@ -52,7 +47,6 @@ class ShireDebugProcess(private val session: XDebugSession, private val environm
 
     var shireRunnerContext: ShireRunnerContext? = null
 
-
     fun start() {
         myRequestsScheduler.addRequest({
             runBlocking {
@@ -63,6 +57,13 @@ class ShireDebugProcess(private val session: XDebugSession, private val environm
                 session.positionReached(ShireSuspendContext(this@ShireDebugProcess, session.project))
             }
         }, 0)
+
+        val processAdapter = ShireProcessAdapter(debuggableConfiguration, runProfileState.console)
+        processHandler.addProcessListener(processAdapter)
+        runProfileState.console.print("Waiting for resume...", ConsoleViewContentType.NORMAL_OUTPUT)
+    }
+
+    override fun resume(context: XSuspendContext?) {
         connection.subscribe(ShireRunListener.TOPIC, object : ShireRunListener {
             override fun runFinish(
                 allOutput: String,
@@ -75,10 +76,6 @@ class ShireDebugProcess(private val session: XDebugSession, private val environm
             }
         })
 
-        runProfileState.console.print("Waiting for resume...", ConsoleViewContentType.NORMAL_OUTPUT)
-    }
-
-    override fun resume(context: XSuspendContext?) {
         runProfileState.execute(environment.executor, environment.runner)
     }
 
