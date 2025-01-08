@@ -3,9 +3,27 @@ package com.phodal.shirelang.debugger
 import com.intellij.openapi.fileTypes.FileTypeRegistry
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.xdebugger.breakpoints.XBreakpointHandler
+import com.intellij.xdebugger.breakpoints.XBreakpointProperties
+import com.intellij.xdebugger.breakpoints.XLineBreakpoint
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType
 import com.phodal.shirelang.ShireFileType
 
+class ShireBreakpointHandler(val process: ShireDebugProcess) :
+    XBreakpointHandler<XLineBreakpoint<ShireBpProperties>>(ShireLineBreakpointType::class.java) {
+    override fun registerBreakpoint(breakpoint: XLineBreakpoint<ShireBpProperties>) {
+        process.addBreakpoint(breakpoint)
+    }
+
+    override fun unregisterBreakpoint(breakpoint: XLineBreakpoint<ShireBpProperties>, temporary: Boolean) {
+        process.removeBreakpoint(breakpoint)
+    }
+}
+
+class ShireBpProperties : XBreakpointProperties<ShireBpProperties>() {
+    override fun getState(): ShireBpProperties = this
+    override fun loadState(state: ShireBpProperties) {}
+}
 
 class ShireLineBreakpointType : XLineBreakpointType<ShireBpProperties>(ID, TITLE) {
     override fun canPutAt(file: VirtualFile, line: Int, project: Project): Boolean {

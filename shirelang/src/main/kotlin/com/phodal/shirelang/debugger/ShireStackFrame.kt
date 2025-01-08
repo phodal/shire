@@ -14,6 +14,28 @@ import com.phodal.shirelang.debugger.snapshot.UserCustomVariableSnapshot
 import com.phodal.shirelang.debugger.snapshot.VariableSnapshotRecorder
 import org.jetbrains.concurrency.Promise
 
+
+class ShireExecutionStack(private val process: ShireDebugProcess, project: Project) :
+    XExecutionStack("Variables") {
+    private val stackFrames: MutableList<ShireStackFrame> = mutableListOf()
+
+    init {
+        stackFrames.add(ShireStackFrame(process, project, null))
+        val variableSnapshots = VariableSnapshotRecorder.getInstance(project).all()
+        variableSnapshots.forEach {
+            stackFrames.add(ShireStackFrame(process, project, it))
+        }
+
+        stackFrames.reverse()
+    }
+
+    override fun getTopFrame(): XStackFrame? = stackFrames.firstOrNull()
+
+    override fun computeStackFrames(firstFrameIndex: Int, container: XStackFrameContainer) {
+        container.addStackFrames(stackFrames, true)
+    }
+}
+
 class ShireStackFrame(
     val process: ShireDebugProcess,
     val project: Project,
@@ -22,7 +44,7 @@ class ShireStackFrame(
     private var snapshotValue: ShireDebugValue? = null
     override fun customizePresentation(component: ColoredTextContainer) {
         if (snapshot == null) {
-            component.append("init", SimpleTextAttributes.REGULAR_ATTRIBUTES)
+            component.append("Init", SimpleTextAttributes.REGULAR_ATTRIBUTES)
             component.setIcon(AllIcons.Debugger.Frame)
             return
         }
@@ -30,7 +52,7 @@ class ShireStackFrame(
         val variableOperation = snapshot.operations.firstOrNull()
         if (variableOperation == null) {
             component.append(
-                snapshot.variableName + " -> " + "init" + "(" + ")",
+                snapshot.variableName + " -> " + "Init" + "(" + ")",
                 SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES
             )
             component.setIcon(AllIcons.Debugger.Frame)
@@ -106,35 +128,5 @@ class ShireDebugValue(
 
     override fun calculateEvaluationExpression(): Promise<XExpression> {
         return super.calculateEvaluationExpression()
-    }
-}
-
-class ShireSuspendContext(val process: ShireDebugProcess, project: Project) : XSuspendContext() {
-    private val executionStacks: Array<XExecutionStack> = arrayOf(
-        ExecutionStack(process, project)
-    )
-
-    override fun getActiveExecutionStack(): XExecutionStack? = executionStacks.firstOrNull()
-    override fun getExecutionStacks(): Array<XExecutionStack> = executionStacks
-}
-
-class ExecutionStack(private val process: ShireDebugProcess, project: Project) :
-    XExecutionStack("Variables") {
-    private val stackFrames: MutableList<ShireStackFrame> = mutableListOf()
-
-    init {
-        stackFrames.add(ShireStackFrame(process, project, null))
-        val variableSnapshots = VariableSnapshotRecorder.getInstance(project).all()
-        variableSnapshots.forEach {
-            stackFrames.add(ShireStackFrame(process, project, it))
-        }
-
-        stackFrames.reverse()
-    }
-
-    override fun getTopFrame(): XStackFrame? = stackFrames.firstOrNull()
-
-    override fun computeStackFrames(firstFrameIndex: Int, container: XStackFrameContainer) {
-        container.addStackFrames(stackFrames, true)
     }
 }

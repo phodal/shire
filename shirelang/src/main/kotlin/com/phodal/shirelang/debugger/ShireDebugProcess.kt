@@ -15,7 +15,6 @@ import com.intellij.xdebugger.XDebugProcess
 import com.intellij.xdebugger.XDebugSession
 import com.intellij.xdebugger.XSourcePosition
 import com.intellij.xdebugger.breakpoints.XBreakpointHandler
-import com.intellij.xdebugger.breakpoints.XBreakpointProperties
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider
 import com.intellij.xdebugger.frame.XSuspendContext
@@ -138,23 +137,6 @@ class ShireDebugTabLayouter(val console: ShireConsoleView) : XDebugTabLayouter()
         ui.addContent(content, 1, PlaceInGrid.bottom, false)
         return content
     }
-}
-
-
-class ShireBreakpointHandler(val process: ShireDebugProcess) :
-    XBreakpointHandler<XLineBreakpoint<ShireBpProperties>>(ShireLineBreakpointType::class.java) {
-    override fun registerBreakpoint(breakpoint: XLineBreakpoint<ShireBpProperties>) {
-        process.addBreakpoint(breakpoint)
-    }
-
-    override fun unregisterBreakpoint(breakpoint: XLineBreakpoint<ShireBpProperties>, temporary: Boolean) {
-        process.removeBreakpoint(breakpoint)
-    }
-}
-
-class ShireBpProperties : XBreakpointProperties<ShireBpProperties>() {
-    override fun getState(): ShireBpProperties = this
-    override fun loadState(state: ShireBpProperties) {}
 }
 
 
