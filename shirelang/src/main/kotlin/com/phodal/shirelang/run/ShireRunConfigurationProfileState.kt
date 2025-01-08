@@ -23,38 +23,36 @@ import kotlinx.coroutines.launch
  * It implements the RunProfileState interface.
  *
  */
-open class ShireRunConfigurationProfileState(
+class ShireRunConfigurationProfileState(
     private val myProject: Project,
     private val configuration: ShireConfiguration,
 ) : RunProfileState, Disposable {
-    private var executionConsole: ShireExecutionConsole? = null
-    var console: ShireConsoleView? = null
+    private var executionConsole: ShireExecutionConsole =
+        ShireExecutionConsole(myProject, true, configuration = configuration)
+    var console: ShireConsoleView = ShireConsoleView(executionConsole)
 
     var isShowRunContent = true
 
     override fun execute(executor: Executor?, runner: ProgramRunner<*>): ExecutionResult {
-        executionConsole = ShireExecutionConsole(myProject, true, configuration = configuration)
-        console = ShireConsoleView(executionConsole!!)
-
         val processHandler = ShireProcessHandler(configuration.name)
         ProcessTerminatedListener.attach(processHandler)
 
         val processAdapter = ShireProcessAdapter(configuration, console)
         processHandler.addProcessListener(processAdapter)
 
-        console!!.attachToProcess(processHandler)
+        console.attachToProcess(processHandler)
 
         val shireFile: ShireFile? = ShireFile.lookup(myProject, configuration.getScriptPath())
         if (shireFile == null) {
-            console!!.print("File not found: ${configuration.getScriptPath()}", ConsoleViewContentType.ERROR_OUTPUT)
+            console.print("File not found: ${configuration.getScriptPath()}", ConsoleViewContentType.ERROR_OUTPUT)
             processHandler.exitWithError()
             return DefaultExecutionResult(console, processHandler)
         }
 
         val shireRunner = ShireRunner(
-            myProject, console!!, configuration, configuration.getVariables(), processHandler
+            myProject, console, configuration, configuration.getVariables(), processHandler
         ).also {
-            console?.bindShireRunner(it)
+            console.bindShireRunner(it)
             processHandler.addProcessListener(object : ProcessListener {
                 override fun processTerminated(event: ProcessEvent) {
                     it.cancel()
@@ -74,7 +72,7 @@ open class ShireRunConfigurationProfileState(
             isShowRunContent = false
         }
 
-        console!!.print("Prepare for running ${configuration.name}...\n", ConsoleViewContentType.NORMAL_OUTPUT)
+        console.print("Prepare for running ${configuration.name}...\n", ConsoleViewContentType.NORMAL_OUTPUT)
         ShireCoroutineScope.scope(myProject).launch {
             try {
                 val llmOutput = shireRunner.execute(parsedResult)
@@ -82,11 +80,11 @@ open class ShireRunConfigurationProfileState(
 
                 myProject.getService(OnStreamingService::class.java)?.onDone(myProject)
             } catch (e: Exception) {
-                console!!.print(
+                console.print(
                     "Failed to run ${configuration.name}: ${e.message}\n",
                     ConsoleViewContentType.LOG_ERROR_OUTPUT
                 )
-                console!!.print(e.stackTraceToString(), ConsoleViewContentType.ERROR_OUTPUT)
+                console.print(e.stackTraceToString(), ConsoleViewContentType.ERROR_OUTPUT)
             }
         }
 
@@ -94,8 +92,8 @@ open class ShireRunConfigurationProfileState(
     }
 
     override fun dispose() {
-        console?.dispose()
-        executionConsole?.dispose()
+        console.dispose()
+        executionConsole.dispose()
     }
 }
 
