@@ -10,7 +10,6 @@ import com.intellij.xdebugger.XExpression
 import com.intellij.xdebugger.XSourcePosition
 import com.intellij.xdebugger.evaluation.XDebuggerEvaluator
 import com.intellij.xdebugger.frame.*
-import com.phodal.shirelang.debugger.snapshot.VariableSnapshotRecorder
 import org.jetbrains.concurrency.Promise
 
 class ShireStackFrame(
@@ -18,23 +17,30 @@ class ShireStackFrame(
     val project: Project,
 ) : XStackFrame(), Disposable {
     override fun customizePresentation(component: ColoredTextContainer) {
-        VariableSnapshotRecorder.getInstance(project).all().forEach {
-            component.append(it.variableName, SimpleTextAttributes.REGULAR_ATTRIBUTES)
-            component.append(" = ", SimpleTextAttributes.REGULAR_ATTRIBUTES)
-            component.append(it.value.toString(), SimpleTextAttributes.REGULAR_ATTRIBUTES)
-            component.append("\n", SimpleTextAttributes.REGULAR_ATTRIBUTES)
-        }
-
-        process.shireRunnerContext?.compiledVariables?.forEach {
-            component.append(it.key, SimpleTextAttributes.REGULAR_ATTRIBUTES)
-            component.append(" = ", SimpleTextAttributes.REGULAR_ATTRIBUTES)
-            component.append(it.value.toString(), SimpleTextAttributes.REGULAR_ATTRIBUTES)
-            component.append("\n", SimpleTextAttributes.REGULAR_ATTRIBUTES)
-        }
+        component.append("Builtin variables", SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES)
+        component.setIcon(AllIcons.Debugger.Frame)
     }
 
     override fun computeChildren(node: XCompositeNode) {
-        super.computeChildren(node)
+        val filteredChildren = XValueChildrenList()
+        process.shireRunnerContext?.compiledVariables?.forEach {
+            filteredChildren.add(ShireDebugValue(it.key, "String", it.value.toString()))
+        }
+
+        node.addChildren(filteredChildren, true)
+//        process.shireRunnerContext?.compiledVariables?.forEach {
+//            component.append(it.key, SimpleTextAttributes.REGULAR_ATTRIBUTES)
+//            component.append(" = ", SimpleTextAttributes.REGULAR_ATTRIBUTES)
+//            component.append(it.value.toString(), SimpleTextAttributes.REGULAR_ATTRIBUTES)
+//            component.append("\n", SimpleTextAttributes.REGULAR_ATTRIBUTES)
+//        }
+
+        //        VariableSnapshotRecorder.getInstance(project).all().forEach {
+//            component.append(it.variableName, SimpleTextAttributes.REGULAR_ATTRIBUTES)
+//            component.append(" = ", SimpleTextAttributes.REGULAR_ATTRIBUTES)
+//            component.append(it.value.toString(), SimpleTextAttributes.REGULAR_ATTRIBUTES)
+//            component.append("\n", SimpleTextAttributes.REGULAR_ATTRIBUTES)
+//        }
     }
 
     override fun getEvaluator(): XDebuggerEvaluator? {
