@@ -71,7 +71,7 @@ class ShireProgramRunner : GenericProgramRunner<RunnerSettings>(), Disposable {
     }
 
     override fun dispose() {
-        connection.dispose()
+        connection.disconnect()
     }
 
     companion object {

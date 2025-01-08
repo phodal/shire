@@ -1,12 +1,9 @@
 package com.phodal.shirelang.debugger.snapshot
 
-import com.intellij.openapi.components.Service
-import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.UserDataHolderBase
 import com.intellij.openapi.vfs.VirtualFile
 import com.phodal.shirelang.compiler.variable.resolver.base.VariableResolver
 import kotlinx.datetime.Instant
-
 
 data class SnapshotMetadata(
     val createdAt: Instant,          // 创建时间
@@ -52,48 +49,6 @@ class UserCustomVariableSnapshot(
     fun getCurrentValue(): Any? = currentValue
 
     fun getHistory(): List<Any> = valueHistory.toList()
-}
-
-@Service(Service.Level.PROJECT)
-class VariableSnapshotRecorder {
-    private val snapshots = mutableListOf<UserCustomVariableSnapshot>()
-
-    fun addSnapshot(variableName: String, value: Any, operation: String? = null, operationArg: Any? = null) {
-        val operationList = mutableListOf<VariableOperation>()
-        if (operation != null) {
-            operationList.add(VariableOperation(operation, System.currentTimeMillis(), operationArg))
-        }
-
-        val result = when (value) {
-            is Array<*> -> {
-                value.joinToString(", ")
-            }
-
-            is List<*> -> {
-                value.joinToString(", ")
-            }
-
-            else -> {
-                value.toString()
-            }
-        }
-
-        snapshots.add(UserCustomVariableSnapshot(variableName, result, operations = operationList))
-    }
-
-    fun clear() {
-        snapshots.clear()
-    }
-
-    fun all(): List<UserCustomVariableSnapshot> {
-        return snapshots
-    }
-
-    companion object {
-        fun getInstance(project: Project): VariableSnapshotRecorder {
-            return project.getService(VariableSnapshotRecorder::class.java)
-        }
-    }
 }
 
 data class ExecutionContext(

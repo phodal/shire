@@ -159,6 +159,8 @@ class ShireRunFileAction : DumbAwareAction() {
                     consoleView: ShireConsoleView?,
                 ) {
                     future.complete(llmOutput)
+                    connection.disconnect()
+                    Disposer.dispose(hintDisposable)
                 }
             })
 
