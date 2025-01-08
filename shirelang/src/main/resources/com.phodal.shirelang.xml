@@ -56,8 +56,6 @@
         <xdebugger.breakpointType implementation="com.phodal.shirelang.debugger.ShireLineBreakpointType"/>
         <xdebugger.settings implementation="com.phodal.shirelang.debugger.ShireDebugSettings"/>
 
-        <debugger.positionManagerFactory implementation="com.phodal.shirelang.debugger.ShirePositionManagerFactory"/>
-
         <runConfigurationBeforeRunProviderDelegate
                 implementation="com.phodal.shirelang.run.ShireBeforeRunProviderDelegate"/>
         <runConfigurationProducer implementation="com.phodal.shirelang.run.ShireRunConfigurationProducer"/>
