@@ -17,29 +17,29 @@ import org.jetbrains.concurrency.Promise
 class ShireStackFrame(
     val process: ShireDebugProcess,
     val project: Project,
-    private val customVariable: UserCustomVariableSnapshot? = null,
+    private val snapshot: UserCustomVariableSnapshot? = null,
 ) : XStackFrame(), Disposable {
     private var snapshotValue: ShireDebugValue? = null
     override fun customizePresentation(component: ColoredTextContainer) {
-        if (customVariable == null) {
+        if (snapshot == null) {
             component.append("init", SimpleTextAttributes.REGULAR_ATTRIBUTES)
             component.setIcon(AllIcons.Debugger.Frame)
             return
         }
 
-        val variableOperation = customVariable.operations.firstOrNull()
+        val variableOperation = snapshot.operations.firstOrNull()
         if (variableOperation == null) {
             component.append(
-                customVariable.variableName + " -> " + "init" + "(" + ")",
+                snapshot.variableName + " -> " + "init" + "(" + ")",
                 SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES
             )
             component.setIcon(AllIcons.Debugger.Frame)
         } else {
             val functionName = variableOperation.functionName
             val value = variableOperation.value.toString()
-            snapshotValue = ShireDebugValue(customVariable.variableName, "String", value)
+            snapshotValue = ShireDebugValue(snapshot.variableName, "String", value, snapshot)
             component.append(
-                customVariable.variableName + " -> " + functionName + "(" + value + ")",
+                snapshot.variableName + " -> " + functionName + "(" + value + ")",
                 SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES
             )
             component.setIcon(AllIcons.Debugger.Frame)
@@ -93,8 +93,14 @@ class ShireDebugValue(
     private val myName: String,
     val type: String = "String",
     val value: String,
+    val snapshot: UserCustomVariableSnapshot? = null,
 ) : XNamedValue(myName) {
     override fun computePresentation(node: XValueNode, place: XValuePlace) {
+        if (snapshot != null) {
+            node.setPresentation(AllIcons.Debugger.Value, myName, value, true)
+            return
+        }
+
         node.setPresentation(AllIcons.Debugger.Value, myName, value, false)
     }
 

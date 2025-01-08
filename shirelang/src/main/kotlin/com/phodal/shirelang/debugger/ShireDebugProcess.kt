@@ -15,7 +15,6 @@ import com.intellij.ui.content.Content
 import com.intellij.util.Alarm
 import com.intellij.xdebugger.XDebugProcess
 import com.intellij.xdebugger.XDebugSession
-import com.intellij.xdebugger.XDebugSessionListener
 import com.intellij.xdebugger.XSourcePosition
 import com.intellij.xdebugger.breakpoints.XBreakpointHandler
 import com.intellij.xdebugger.breakpoints.XBreakpointProperties
@@ -48,7 +47,7 @@ class ShireDebugProcess(private val session: XDebugSession, private val environm
     private val breakpointHandlers = arrayOf<XBreakpointHandler<*>>(ShireBreakpointHandler(this))
 
     override fun getBreakpointHandlers(): Array<XBreakpointHandler<*>> = breakpointHandlers
-    override fun createTabLayouter(): XDebugTabLayouter = ShireDebugTabLayouter()
+    override fun createTabLayouter(): XDebugTabLayouter = ShireDebugTabLayouter(runProfileState.console)
     override fun createConsole(): ExecutionConsole = runProfileState.console
 
     var shireRunnerContext: ShireRunnerContext? = null
@@ -76,17 +75,6 @@ class ShireDebugProcess(private val session: XDebugSession, private val environm
             }
         })
 
-        processHandler.addProcessListener(object : ProcessListener {
-            override fun onTextAvailable(event: ProcessEvent, outputType: Key<*>) {
-                super.onTextAvailable(event, outputType)
-            }
-
-            override fun processTerminated(event: ProcessEvent) {
-                super.processTerminated(event)
-                stop()
-            }
-        })
-
         runProfileState.console.print("Waiting for resume...", ConsoleViewContentType.NORMAL_OUTPUT)
     }
 
@@ -95,23 +83,23 @@ class ShireDebugProcess(private val session: XDebugSession, private val environm
     }
 
     override fun runToPosition(position: XSourcePosition, context: XSuspendContext?) {
-
+        runProfileState.execute(environment.executor, environment.runner)
     }
 
     override fun startStepOut(context: XSuspendContext?) {
-
+        runProfileState.execute(environment.executor, environment.runner)
     }
 
     override fun startStepInto(context: XSuspendContext?) {
-
+        runProfileState.execute(environment.executor, environment.runner)
     }
 
     override fun startStepOver(context: XSuspendContext?) {
-
+        runProfileState.execute(environment.executor, environment.runner)
     }
 
     override fun startForceStepInto(context: XSuspendContext?) {
-
+        runProfileState.execute(environment.executor, environment.runner)
     }
 
     override fun startPausing() {
@@ -141,7 +129,7 @@ class ShireDebugProcess(private val session: XDebugSession, private val environm
     }
 }
 
-class ShireDebugTabLayouter : XDebugTabLayouter() {
+class ShireDebugTabLayouter(val console: ShireConsoleView) : XDebugTabLayouter() {
     override fun registerConsoleContent(ui: RunnerLayoutUi, console: ExecutionConsole): Content {
         val content = ui
             .createContent(
