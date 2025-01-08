@@ -15,7 +15,7 @@ class ShireStackFrame(
 ) : XStackFrame(), Disposable {
     override fun customizePresentation(component: ColoredTextContainer) {
         // todo
-        component.append("some title", SimpleTextAttributes.REGULAR_ATTRIBUTES)
+        component.append("Variables", SimpleTextAttributes.REGULAR_ATTRIBUTES)
         component.setIcon(AllIcons.Debugger.Frame)
     }
 
@@ -40,7 +40,7 @@ class ShireSuspendContext(val process: ShireDebugProcess): XSuspendContext() {
 }
 
 class ExecutionStack(private val process: ShireDebugProcess) :
-    XExecutionStack("SomeId") {
+    XExecutionStack("Custom variables") {
     private val stackFrames: List<ShireStackFrame> = listOf(
         ShireStackFrame(process)
     )

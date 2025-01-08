@@ -19,6 +19,11 @@ object HobbitHoleParser {
         return PsiTreeUtil.getChildrenOfTypeAsList(file, ShireFrontMatterHeader::class.java).isNotEmpty()
     }
 
+    fun frontMatterOffset(file: ShireFile): Int {
+        val frontMatterHeader = PsiTreeUtil.getChildrenOfTypeAsList(file, ShireFrontMatterHeader::class.java).firstOrNull()
+        return frontMatterHeader?.textOffset ?: 0
+    }
+
     /**
      * Parses the given ShireFrontMatterHeader and returns a FrontMatterShireConfig object.
      *

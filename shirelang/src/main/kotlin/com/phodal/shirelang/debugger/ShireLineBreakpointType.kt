@@ -6,6 +6,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType
 import com.phodal.shirelang.ShireFileType
 
+
 class ShireLineBreakpointType : XLineBreakpointType<ShireBpProperties>(ID, TITLE) {
     override fun canPutAt(file: VirtualFile, line: Int, project: Project): Boolean {
         return canPutAt(project, file, line)
