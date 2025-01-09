@@ -43,57 +43,6 @@ class ShowWebviewProcessor : PostProcessor {
         val dataContext = DataManager.getInstance().dataContextFromFocusAsync.blockingGet(10000)
             ?: throw IllegalStateException("No data context")
 
-        class WebviewKeyAdapter(val textarea: JBTextArea, val currentWebview: WebViewWindow?) : KeyAdapter() {
-            var popup: JBPopup? = null
-            override fun keyPressed(e: KeyEvent) {
-                if (e.keyCode == KeyEvent.VK_ENTER) {
-                    textarea.isEditable = false
-                    currentWebview?.loadHtml("Processing...")
-                    var result = ""
-
-                    ShireCoroutineScope.scope(project).launch {
-                        val flow = LlmProvider.provider(project)
-                            ?.stream(
-                                "According user input to modify code, return new code." +
-                                        " Use input: ${textarea.text}\nCode: \n```html\n$html\n```" +
-                                        "\n" +
-                                        "Return new code: ",
-                                "",
-                                false
-                            )!!
-
-                        var popupListener: JBPopupListener? = null
-
-                        runBlocking {
-                            flow.cancelHandler {
-                                if (popup?.isDisposed == true) it.invoke("This popup has been disposed")
-                                else popup?.addListener(object : JBPopupListener {
-                                    override fun onClosed(event: LightweightWindowEvent) {
-                                        it.invoke("This popup has been closed")
-                                    }
-                                }.also { popupListener = it })
-                            }.cancellable().collect {
-                                result += it
-                            }
-
-                            popupListener?.run { popup?.removeListener(this) }
-                            textarea.isEditable = true
-                        }
-
-                        val newHtml = CodeFence.parse(result).text
-                        logger<ShowWebviewProcessor>().info("Result: $result")
-                        runInEdt {
-                            currentWebview?.loadHtml(newHtml)
-                        }
-
-                        html = newHtml
-                        textarea.text = ""
-                        continueMessage = ""
-                    }
-                }
-            }
-        }
-
         var keyAdapter: WebviewKeyAdapter? = null
 
         runInEdt {
@@ -110,7 +59,12 @@ class ShowWebviewProcessor : PostProcessor {
                         .bindText(::continueMessage)
                         .applyToComponent {
                             font = EditorFontType.getGlobalPlainFont()
-                            addKeyListener(WebviewKeyAdapter(this, webview).also { keyAdapter = it })
+                            keyAdapter = WebviewKeyAdapter(project, this, webview, html) {
+                                html = it
+                                continueMessage = ""
+                            }
+
+                            addKeyListener(keyAdapter)
                         }
                 }
             }
@@ -131,3 +85,58 @@ class ShowWebviewProcessor : PostProcessor {
         return ""
     }
 }
+
+class WebviewKeyAdapter(
+    val project: Project, val textarea: JBTextArea, val currentWebview: WebViewWindow?,
+    val html: String?,
+    val onEnter: (String) -> Unit,
+) : KeyAdapter() {
+    var popup: JBPopup? = null
+    override fun keyPressed(e: KeyEvent) {
+        if (e.keyCode == KeyEvent.VK_ENTER) {
+            textarea.isEditable = false
+            currentWebview?.loadHtml("Processing...")
+            var result = ""
+
+            ShireCoroutineScope.scope(project).launch {
+                val flow = LlmProvider.provider(project)
+                    ?.stream(
+                        "According user input to modify code, return new code." +
+                                " Use input: ${textarea.text}\nCode: \n```html\n$html\n```" +
+                                "\n" +
+                                "Return new code: ",
+                        "",
+                        false
+                    )!!
+
+                var popupListener: JBPopupListener? = null
+
+                runBlocking {
+                    flow.cancelHandler {
+                        if (popup?.isDisposed == true) it.invoke("This popup has been disposed")
+                        else popup?.addListener(object : JBPopupListener {
+                            override fun onClosed(event: LightweightWindowEvent) {
+                                it.invoke("This popup has been closed")
+                            }
+                        }.also { popupListener = it })
+                    }.cancellable().collect {
+                        result += it
+                    }
+
+                    popupListener?.run { popup?.removeListener(this) }
+                    textarea.isEditable = true
+                }
+
+                val newHtml = CodeFence.parse(result).text
+                logger<ShowWebviewProcessor>().info("Result: $result")
+                runInEdt {
+                    currentWebview?.loadHtml(newHtml)
+                }
+
+                onEnter(newHtml)
+                textarea.text = ""
+            }
+        }
+    }
+}
+
