@@ -170,7 +170,7 @@ open class ShirePreviewEditor(
 
     fun updateDisplayedContent() {
         try {
-             ApplicationManager.getApplication().executeOnPooledThread {
+            ShireCoroutineScope.scope(project).launch {
                 runBlocking {
                     val psiFile = smartReadAction(project) {
                         PsiManager.getInstance(project).findFile(virtualFile) as? ShireFile

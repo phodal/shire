@@ -19,10 +19,12 @@ import com.intellij.xdebugger.breakpoints.XLineBreakpoint
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider
 import com.intellij.xdebugger.frame.XSuspendContext
 import com.intellij.xdebugger.ui.XDebugTabLayouter
+import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.*
 import com.phodal.shirelang.run.runner.ShireRunner
 import com.phodal.shirelang.run.runner.ShireRunnerContext
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class ShireDebugProcess(private val session: XDebugSession, private val environment: ExecutionEnvironment) :
@@ -47,7 +49,7 @@ class ShireDebugProcess(private val session: XDebugSession, private val environm
     var shireRunnerContext: ShireRunnerContext? = null
 
     fun start() {
-        myRequestsScheduler.addRequest({
+        ShireCoroutineScope.scope(session.project).launch {
             runBlocking {
                 val psiFile: ShireFile = ShireFile.lookup(session.project, debuggableConfiguration.getScriptPath())
                     ?: return@runBlocking
@@ -55,7 +57,7 @@ class ShireDebugProcess(private val session: XDebugSession, private val environm
                 shireRunnerContext = ShireRunner.compileOnly(session.project, psiFile, mapOf(), null)
                 session.positionReached(ShireSuspendContext(this@ShireDebugProcess, session.project))
             }
-        }, 0)
+        }
 
         val processAdapter = ShireProcessAdapter(debuggableConfiguration, runProfileState.console)
         processHandler.addProcessListener(processAdapter)
