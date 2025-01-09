@@ -4,6 +4,8 @@
     <vendor>Phodal Huang</vendor>
     <depends>com.intellij.modules.platform</depends>
     <depends optional="true" config-file="json-contrib.xml">com.intellij.modules.json</depends>
+    <depends optional="true" config-file="openrewrite-contrib.xml">com.intellij.openRewrite</depends>
+    <depends optional="true" config-file="wiremock-contrib.xml">com.intellij.wiremock</depends>
 
     <resource-bundle>messages.ShireMainBundle</resource-bundle>
 
