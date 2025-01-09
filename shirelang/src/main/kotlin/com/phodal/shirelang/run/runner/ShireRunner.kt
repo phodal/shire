@@ -228,7 +228,6 @@ class ShireRunner(
             val service = project.getService(OnStreamingService::class.java)
             service?.onStart(project, runnerContext.finalPrompt)
             return runnerContext
-
         }
 
         fun preAnalysisAndLocalExecute(
