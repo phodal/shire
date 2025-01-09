@@ -63,8 +63,14 @@ object SQLExecutor {
             return result
         } else {
             try {
-                val chooseAndRunRunnersMethod = Class.forName("com.intellij.database.intentions.RunQueryInConsoleIntentionAction\$Manager")
-                    .getDeclaredMethod("chooseAndRunRunners", List::class.java, EditorEx::class.java, Any::class.java)
+                val chooseAndRunRunnersMethod =
+                    Class.forName("com.intellij.database.intentions.RunQueryInConsoleIntentionAction\$Manager")
+                        .getDeclaredMethod(
+                            "chooseAndRunRunners",
+                            List::class.java,
+                            EditorEx::class.java,
+                            Any::class.java
+                        )
                 chooseAndRunRunnersMethod.invoke(null, runners, info.editor, null)
             } catch (e: Exception) {
                 println("ShireError[Database]: Failed to run query with multiple runners")
@@ -150,17 +156,13 @@ object SQLExecutor {
             val messageBus = console.session.messageBus
             val newConsoleRequest = EvaluationRequest.newRequest(console, sql, dataSource.dbms)
             messageBus.dataProducer.processRequest(newConsoleRequest)
-            messageBus.addConsumer(object : DataConsumer {
+            messageBus.addConsumer(object : MyCompatDataConsumer() {
                 var result = mutableListOf<GridRow>()
                 override fun addRows(context: GridDataRequest.Context, rows: MutableList<out GridRow>) {
                     result += rows
                     if (rows.size < 100) {
                         future.complete(result.toString())
                     }
-                }
-
-                override fun afterLastRowAdded(context: GridDataRequest.Context, total: Int) {
-                    // 空实现
                 }
             })
             return@executeOnPooledThread future.get()
@@ -173,17 +175,13 @@ object SQLExecutor {
 
         val session = DatabaseSessionManager.getSession(project, localDs)
         val messageBus = session.messageBus
-        messageBus.addConsumer(object : DataConsumer {
+        messageBus.addConsumer(object : MyCompatDataConsumer() {
             var result = mutableListOf<GridRow>()
             override fun addRows(context: GridDataRequest.Context, rows: MutableList<out GridRow>) {
                 result += rows
                 if (rows.size < 100) {
                     future.complete(result.toString())
                 }
-            }
-
-            override fun afterLastRowAdded(context: GridDataRequest.Context, total: Int) {
-                // 空实现
             }
         })
 
@@ -196,5 +194,31 @@ object SQLExecutor {
     private fun createConsole(project: Project, file: LightVirtualFile): JdbcConsole? {
         val attached = JdbcConsoleProvider.findOrCreateSession(project, file) ?: return null
         return JdbcConsoleProvider.attachConsole(project, attached, file)
+    }
+
+    abstract class MyCompatDataConsumer : DataConsumer {
+        override fun setColumns(
+            context: GridDataRequest.Context,
+            subQueryIndex: Int,
+            resultSetIndex: Int,
+            columns: Array<out GridColumn>,
+            firstRowNum: Int,
+        ) {
+            // for Compatibility in IDEA 2023.2.8
+        }
+
+        override fun setColumns(
+            context: GridDataRequest.Context,
+            resultSetIndex: Int,
+            columns: Array<out GridColumn>,
+            firstRowNum: Int,
+        ) {
+            // for Compatibility in IDEA 2023.2.8
+        }
+
+
+        override fun afterLastRowAdded(context: GridDataRequest.Context, total: Int) {
+            // for Compatibility in IDEA 2023.2.8
+        }
     }
 }
