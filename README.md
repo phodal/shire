@@ -34,8 +34,8 @@ that enables communication between an LLM and control IDE for automated programm
 
 不论是组织内部的 DevOps 工具链：Jira、Confluence、SonarQube、Jenkins、GitLab、GitHub，还是各种内部 LLM 模型平台。
 
-| ![Shire Command](https://shire.run/images/shire-command.png) | 又或者在代码编辑器、终端、数据库、版本控制等等，Shire 都可以帮助你快速实现自动化编程。 |
-|--------------------------------------------------------------|------------------------------------------------|
+| 又或者在代码编辑器、终端、数据库、版本控制等等，Shire 都可以帮助你快速实现自动化编程。 | ![Shire Command](https://shire.run/images/shire-command.png) |
+|------------------------------------------------|--------------------------------------------------------------|
 
 # Customize your AI Copilot with Your IDE
 
@@ -50,7 +50,6 @@ that enables communication between an LLM and control IDE for automated programm
 
 | StreamDiff、多文件编辑、FastApply、InlineChat 等 | ![Shire Best Practice](https://shire.run/images/shire-industry-best-practise.png) |
 |-----------------------------------------|-----------------------------------------------------------------------------------|
-
 
 ## Resources
 
@@ -90,5 +89,9 @@ Bilibili
 </a>
 
 ## LICENSE
+
+Notes:
+
+StreamDiff based on Continue Dev, Inc, which is licensed under the Apache License, Version 2.0. See `LICENSE-APACHE` in this directory.
 
 This code is distributed under the MPL 2.0 license. See `LICENSE` in this directory.
