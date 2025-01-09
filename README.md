@@ -24,6 +24,37 @@ that enables communication between an LLM and control IDE for automated programm
 > precursor to Shire. DevIns aims to enable users to create AI agents tailored to their own IDEs, allowing them to build
 > their customized AI-driven development environments.
 
+---
+
+![Inline Chat](https://shire.run/images/shire-ecology-system.png)
+
+### Agentic with Tool Ecosystem, Reshaping the SDLC
+
+通过 Shire 你可以快速将你的开发工具生态与您的 IDE 进行整合，实现自动化编程。不论是组织内部的 DevOps 工具链：Jira、Confluence、SonarQube、Jenkins、GitLab、GitHub，还是各种内部 LLM 模型平台。
+
+<img align="right" width="340" src="https://shire.run/images/shire-command.png">
+
+又或者在代码编辑器、终端、数据库、版本控制等等，Shire 都可以帮助你快速实现自动化编程。
+
+---
+
+### Customize your AI Copilot with Your IDE
+
+<img align="left" width="340" src="https://shire.run/images/shire-customize-menu.png">
+
+你可以通过 Shire 语言快速将你的 IDE 变为你的专属 AI Copilot。我们内置了多种交互方式，包括：右键菜单、Alt+Enter、终端菜单、提交菜单、  
+运行面板、输入框、数据库菜单、控制台菜单、VCS 日志菜单、聊天框、内联聊天等等。
+
+---
+
+### Follow Leading Community Practices
+
+结合我们在行业的最佳洞见（[https://aise.phodal.com/](https://aise.phodal.com/)），你可以在 Shire 上体验到最佳的编程实践。
+
+<img align="right" width="340" src="https://shire.run/images/shire-industry-best-practise.png">
+
+## Resources
+
 Shire example:
 
 ![Shire Cheatsheet](docs/images/shire-sheet.svg)
@@ -52,7 +83,8 @@ Bilibili
 
 ## Thanks
 
-感谢智谱 AI 赞助的 GLM 4 Air 资源包。[【加入Z计划，和智谱AI一起创业】（点击跳转👇）](https://zhipu-ai.feishu.cn/share/base/form/shrcntPu1mUMhoapEseCJpmUUuf)
+感谢智谱 AI 赞助的 GLM 4 Air
+资源包。[【加入Z计划，和智谱AI一起创业】（点击跳转👇）](https://zhipu-ai.feishu.cn/share/base/form/shrcntPu1mUMhoapEseCJpmUUuf)
 
 <a href="https://zhipu-ai.feishu.cn/share/base/form/shrcntPu1mUMhoapEseCJpmUUuf" target="_blank">
     <img src="https://aise.phodal.com/images/zhipu-z-plan.svg" width="256px" height="auto"  alt="logo" />
