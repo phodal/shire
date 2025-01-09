@@ -18,7 +18,6 @@ class WebViewWindow {
     init {
         browser = try {
             JBCefBrowser.createBuilder()
-                .setOffScreenRendering(JBCefApp.isOffScreenRenderingModeEnabled())
                 .build()
         } catch (e: Exception) {
             JBCefBrowser()
