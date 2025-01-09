@@ -18,7 +18,7 @@ import com.phodal.shirecore.provider.shire.FileRunService
 
 class OpenRewriteFileRunService : FileRunService {
     override fun isApplicable(project: Project, file: VirtualFile): Boolean {
-        return isOpenWriteFile(project, file)
+        return file.extension == "yml" && isOpenWriteFile(project, file)
     }
 
     private fun isOpenWriteFile(project: Project, file: VirtualFile): Boolean {
