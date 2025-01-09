@@ -1,8 +1,22 @@
-# [](https://github.com/phodal/shire/compare/v1.3.0...v) (2025-01-05)
+# [](https://github.com/phodal/shire/compare/v1.3.2...v) (2025-01-09)
 
 ## [Unreleased]
 
-## [1.3.0] - 2025-01-05
+## [1.3.2](https://github.com/phodal/shire/compare/v1.3.1...v[1.3.2]) (2025-01-09)
+
+### Bug Fixes
+
+* **debugger:** restrict debug/run execution based on executor ID [#183](https://github.com/phodal/shire/issues/183) ([47d2b71](https://github.com/phodal/shire/commit/47d2b7106a3b94d2cffcc94428b23ce8cb62d885))
+
+### Features
+
+* **debugger:** add debug tab layout and session listener [#183](https://github.com/phodal/shire/issues/183) ([2053470](https://github.com/phodal/shire/commit/20534702c693ba2a72e3e8d22ab68b5672658fbd))
+* **debugger:** add Shire debugger support [#183](https://github.com/phodal/shire/issues/183) ([3b1fd51](https://github.com/phodal/shire/commit/3b1fd51d6de03ba8e41b60201e6e7b2d00596b78))
+* **debugger:** enhance debug process with variable snapshot support [#183](https://github.com/phodal/shire/issues/183) ([184e691](https://github.com/phodal/shire/commit/184e69186e765f727bcd1bbfe71c8fa29c71e034))
+* **debugger:** enhance debugger with breakpoint handling and UI improvements [#183](https://github.com/phodal/shire/issues/183) ([743f4ca](https://github.com/phodal/shire/commit/743f4ca1c2f8181e7edb6271265c051b0faca580))
+* **debugger:** enhance stack frame presentation with custom variables [#183](https://github.com/phodal/shire/issues/183) ([bfc1f10](https://github.com/phodal/shire/commit/bfc1f10ce65ced92b28e821c97316e24cb0e378d))
+
+## [1.3.1](https://github.com/phodal/shire/compare/v1.3.0...v[1.3.1]) (2025-01-06)
 
 ### Bug Fixes
 
@@ -867,8 +881,9 @@
 * **shell:** add shell language support plugin file ([bdc1c90](https://github.com/phodal/shire/commit/bdc1c90f10d7c2c4fb8f7157db343dd756c11352))
 * **shire:** add Shire context action group and location support ([e3df86d](https://github.com/phodal/shire/commit/e3df86d16d0c9985fec787a8e76ce553be9a9a45))
 
-[Unreleased]: https://github.com/phodal/shire/compare/v1.3.0...HEAD
-[1.3.0]: https://github.com/phodal/shire/compare/v1.2.4...v1.3.0
+[Unreleased]: https://github.com/phodal/shire/compare/v1.3.2...HEAD
+[1.3.2]: https://github.com/phodal/shire/compare/v1.3.1...v1.3.2
+[1.3.1]: https://github.com/phodal/shire/compare/v1.2.4...v1.3.1
 [1.2.4]: https://github.com/phodal/shire/compare/v1.2.3...v1.2.4
 [1.2.3]: https://github.com/phodal/shire/compare/v1.2.2...v1.2.3
 [1.2.2]: https://github.com/phodal/shire/compare/v1.2.1...v1.2.2
