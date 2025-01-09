@@ -16,6 +16,11 @@
 * **debugger:** enhance debugger with breakpoint handling and UI improvements [#183](https://github.com/phodal/shire/issues/183) ([743f4ca](https://github.com/phodal/shire/commit/743f4ca1c2f8181e7edb6271265c051b0faca580))
 * **debugger:** enhance stack frame presentation with custom variables [#183](https://github.com/phodal/shire/issues/183) ([bfc1f10](https://github.com/phodal/shire/commit/bfc1f10ce65ced92b28e821c97316e24cb0e378d))
 
+### Reverts
+
+* Revert "refactor(debugger): remove unused ShireDebugSettings file #183" ([c7f6f14](https://github.com/phodal/shire/commit/c7f6f1424298d5d0c2ae0f54a5ceb670a2110698)), closes [#183](https://github.com/phodal/shire/issues/183)
+* Revert "refactor(debugger): remove unused ShireDebugSettings configuration" ([358a343](https://github.com/phodal/shire/commit/358a34383d75ed7706d2d49cfbe9a6e4a650ad83))
+
 ## [1.3.1](https://github.com/phodal/shire/compare/v1.3.0...v[1.3.1]) (2025-01-06)
 
 ### Bug Fixes
