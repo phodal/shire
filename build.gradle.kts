@@ -121,14 +121,36 @@ configure(
     }
 
     dependencies {
-        compileOnly(kotlin("stdlib-jdk8"))
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1")
-        implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
+//        compileOnly(kotlin("stdlib-jdk8"))
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1") {
+            excludeKotlinDeps()
+        }
+
+        implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0") {
+            excludeKotlinDeps()
+        }
 
         intellijPlatform {
-            testFramework(TestFrameworkType.Platform)
+        }
+
+//        slf4j-simple
+        implementation("org.slf4j:slf4j-simple:1.7.36")
+    }
+
+    configurations.all {
+        resolutionStrategy {
+            eachDependency {
+                if (requested.group == "org.slf4j" && requested.name == "slf4j-api") {
+                    useVersion("1.7.36")
+                }
+                // "org.apache.velocity:velocity-engine-core:2.4.1"
+                if (requested.group == "org.apache.velocity" && requested.name == "velocity-engine-core") {
+                    useVersion("2.4.1")
+                }
+            }
         }
     }
+
 
     idea {
         module {
@@ -161,7 +183,9 @@ project(":core") {
         implementation(project(":languages:shire-json"))
 
         implementation("com.charleskorn.kaml:kaml:0.67.0")
-        implementation("org.reflections:reflections:0.10.2")
+        implementation("org.reflections:reflections:0.10.2") {
+            exclude(group = "org.slf4j", module = "slf4j-api")
+        }
 
         // chocolate factory
         // follow: https://onnxruntime.ai/docs/get-started/with-java.html
@@ -419,13 +443,16 @@ project(":shirelang") {
         }
 
         implementation("com.nfeld.jsonpathkt:jsonpathkt:2.0.1")
-        implementation("org.apache.velocity:velocity-engine-core:2.4.1")
+        implementation("org.apache.velocity:velocity-engine-core:2.4.1") {
+            exclude(group = "org.slf4j", module = "slf4j-api")
+        }
 
         // https://mvnrepository.com/artifact/com.huaban/jieba-analysis
         implementation("com.huaban:jieba-analysis:1.0.2")
 
-        implementation("cc.unitmesh:cocoa-core:1.0.0")
-
+        implementation("cc.unitmesh:cocoa-core:1.0.0") {
+            excludeKotlinDeps()
+        }
 
         // for ShireQL Schema
         implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
