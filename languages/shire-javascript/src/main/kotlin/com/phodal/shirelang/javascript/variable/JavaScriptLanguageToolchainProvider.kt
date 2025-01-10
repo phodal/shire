@@ -9,23 +9,20 @@ import com.phodal.shirelang.javascript.util.JsDependenciesSnapshot
 import com.phodal.shirelang.javascript.util.LanguageApplicableUtil
 
 class JavaScriptLanguageToolchainProvider : LanguageToolchainProvider {
-    override fun isApplicable(project: Project, creationContext: ToolchainPrepareContext): Boolean {
-        return LanguageApplicableUtil.isWebChatCreationContextSupported(creationContext.sourceFile)
+    override fun isApplicable(project: Project, context: ToolchainPrepareContext): Boolean {
+        return LanguageApplicableUtil.isWebChatCreationContextSupported(context.sourceFile)
     }
 
-    override suspend fun collect(
-        project: Project,
-        creationContext: ToolchainPrepareContext
-    ): List<ToolchainContextItem> {
+    override suspend fun collect(project: Project, context: ToolchainPrepareContext): List<ToolchainContextItem> {
         val results = mutableListOf<ToolchainContextItem>()
-        val snapshot = JsDependenciesSnapshot.create(project, creationContext.sourceFile)
+        val snapshot = JsDependenciesSnapshot.create(project, context.sourceFile)
 
-        val preferType = if (LanguageApplicableUtil.isPreferTypeScript(creationContext)) "TypeScript" else "JavaScript"
+        val preferType = if (LanguageApplicableUtil.isPreferTypeScript(context)) "TypeScript" else "JavaScript"
 
         results.add(
             ToolchainContextItem(
                 JavaScriptLanguageToolchainProvider::class,
-                "Prefer $preferType language if the used language and toolset are not defined below or in the user messages"
+                "You are working on a project that uses $preferType language"
             )
         )
 
@@ -81,7 +78,7 @@ class JavaScriptLanguageToolchainProvider : LanguageToolchainProvider {
 
     private fun collectFrameworks(
         snapshot: JsDependenciesSnapshot,
-        frameworks: List<Framework>
+        frameworks: List<Framework>,
     ): Map<String, Boolean> {
         return snapshot.packages.filter { (_, entry) ->
             entry.dependencyType == PackageJsonDependency.dependencies ||

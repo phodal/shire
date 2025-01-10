@@ -8,7 +8,7 @@ import com.intellij.openapi.project.guessProjectDir
 import com.phodal.shirecore.provider.context.BuildSystemProvider
 import com.phodal.shirecore.variable.toolchain.buildsystem.BuildSystemContext
 import com.phodal.shirelang.javascript.util.JsDependenciesSnapshot
-
+import com.phodal.shirelang.javascript.variable.JsWebFrameworks
 
 open class JavaScriptBuildSystemProvider : BuildSystemProvider() {
     override fun collect(project: Project): BuildSystemContext? {
@@ -28,6 +28,12 @@ open class JavaScriptBuildSystemProvider : BuildSystemProvider() {
             languageVersion = tsVersion.rawVersion
         }
 
+        JsWebFrameworks.entries.forEach { framework ->
+            if (snapshot.packages[framework.packageName] != null) {
+                language += " with ${framework.presentation}"
+            }
+        }
+
         var taskString = ""
         runReadAction {
             val root = PackageJsonUtil.findChildPackageJsonFile(project.guessProjectDir()) ?: return@runReadAction
@@ -41,7 +47,8 @@ open class JavaScriptBuildSystemProvider : BuildSystemProvider() {
             buildToolVersion = "",
             languageName = language,
             languageVersion = languageVersion,
-            taskString = taskString
+            taskString = taskString,
+            libraries = snapshot.mostPopularFrameworks()
         )
     }
 }
