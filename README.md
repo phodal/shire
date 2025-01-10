@@ -26,32 +26,32 @@ that enables communication between an LLM and control IDE for automated programm
 
 ---
 
-通过 Shire 你可以快速将你的开发工具生态与您的 IDE 进行整合，实现自动化编程。
+## Unite Your Dev Ecosystem, Create Your AI Copilot
 
 ![Inline Chat](https://shire.run/images/shire-ecology-system.png)
 
-# Agentic with Tool Ecosystem, Reshaping the SDLC
+### Agentic with Tool Ecosystem, Reshaping the SDLC
 
 不论是组织内部的 DevOps 工具链：Jira、Confluence、SonarQube、Jenkins、GitLab、GitHub，还是各种内部 LLM 模型平台。
 
 | 又或者在代码编辑器、终端、数据库、版本控制等等，Shire 都可以帮助你快速实现自动化编程。 | ![Shire Command](https://shire.run/images/shire-command.png) |
 |------------------------------------------------|--------------------------------------------------------------|
 
-# Customize your AI Copilot with Your IDE
+### Customize your AI Copilot with Your IDE
 
 我们内置了多种交互方式，以快速将你的 IDE 变为你的专属 AI Copilot。。
 
 | ![Shire Customize Menu](https://shire.run/images/shire-customize-menu.png) | 右键菜单、Alt+Enter、终端菜单、提交菜单、运行面板、输入框、数据库菜单、控制台菜单、VCS 日志菜单、聊天框、内联聊天等等。 |
 |----------------------------------------------------------------------------|--------------------------------------------------------------------|
 
-# Follow Leading Community Practices
+### Follow Leading Community Practices
 
 结合我们在行业的最佳洞见（[https://aise.phodal.com/](https://aise.phodal.com/)），你可以在 Shire 上体验到最佳的编程实践。
 
 | StreamDiff、多文件编辑、FastApply、InlineChat 等 | <img src="https://shire.run/images/shire-industry-best-practise.png" alt="Shire Best Practice" width="350"> |
 |-----------------------------------------|-------------------------------------------------------------------------------------------------------------|
 
-## Resources
+## Shire Resources
 
 Shire example:
 
