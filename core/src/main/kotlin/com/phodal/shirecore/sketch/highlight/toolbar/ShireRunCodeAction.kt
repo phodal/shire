@@ -3,6 +3,7 @@ package com.phodal.shirecore.sketch.highlight.toolbar
 import com.intellij.ide.scratch.ScratchRootType
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.vfs.readText
@@ -49,7 +50,9 @@ class ShireRunCodeAction : DumbAwareAction() {
                 psiFile,
             )
         } finally {
-            scratchFile.delete(this)
+            runWriteAction {
+                scratchFile.delete(this)
+            }
         }
     }
 }
