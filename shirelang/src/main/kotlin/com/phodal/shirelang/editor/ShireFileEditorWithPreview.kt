@@ -3,7 +3,6 @@ package com.phodal.shirelang.editor
 import com.intellij.icons.AllIcons
 import com.intellij.ide.BrowserUtil
 import com.intellij.openapi.actionSystem.*
-import com.intellij.openapi.actionSystem.ex.ActionUtil
 import com.intellij.openapi.editor.event.VisibleAreaEvent
 import com.intellij.openapi.editor.event.VisibleAreaListener
 import com.intellij.openapi.editor.ex.util.EditorUtil
@@ -14,6 +13,7 @@ import com.intellij.openapi.fileEditor.impl.text.TextEditorProvider
 import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
+import com.phodal.shirelang.ShireBundle
 
 class ShireFileEditorWithPreview(
     private val ourEditor: TextEditor,
@@ -36,7 +36,7 @@ class ShireFileEditorWithPreview(
         TextEditorProvider.getInstance().disposeEditor(ourEditor)
     }
 
-    inner class MyVisibleAreaListener() : VisibleAreaListener {
+    inner class MyVisibleAreaListener : VisibleAreaListener {
         private var previousLine = 0
 
         override fun visibleAreaChanged(event: VisibleAreaEvent) {
@@ -62,7 +62,7 @@ class ShireFileEditorWithPreview(
 
     private fun createActionGroup(project: Project): ActionGroup {
         return DefaultActionGroup(
-            object : AnAction("Show Preview", "Show Shire Prompt Preview", AllIcons.Actions.Preview) {
+            object : AnAction(ShireBundle.message("editor.preview"), ShireBundle.message("editor.preview.tip"), AllIcons.Actions.Preview) {
                 override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT
                 override fun update(e: AnActionEvent) {
                     e.presentation.isEnabled = !DumbService.isDumb(project)
@@ -75,7 +75,7 @@ class ShireFileEditorWithPreview(
                     }
                 }
             },
-            object : AnAction("Refresh Preview", "Refresh Preview", AllIcons.Actions.Refresh) {
+            object : AnAction(ShireBundle.message("editor.preview.refresh"), ShireBundle.message("editor.preview.refresh"), AllIcons.Actions.Refresh) {
                 override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT
                 override fun update(e: AnActionEvent) {
                     e.presentation.isEnabled = !DumbService.isDumb(project)
@@ -88,11 +88,10 @@ class ShireFileEditorWithPreview(
                 }
             },
             Separator(),
-            object : AnAction("Help", "Help", AllIcons.Actions.Help) {
+            object : AnAction(ShireBundle.message("editor.preview.help"), ShireBundle.message("editor.preview.help"), AllIcons.Actions.Help) {
                 override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT
                 override fun actionPerformed(e: AnActionEvent) {
-                    val url = "https://shire.phodal.com/"
-                    BrowserUtil.browse(url)
+                    BrowserUtil.browse(ShireBundle.message("editor.preview.help.url"))
                 }
             }
         )

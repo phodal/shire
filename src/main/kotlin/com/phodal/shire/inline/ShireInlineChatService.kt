@@ -59,8 +59,7 @@ class ShireInlineChatService : Disposable {
     fun closeInlineChat(editor: Editor) {
         val chatPanel = this.allChats[editor.virtualFile.url] ?: return
 
-        chatPanel.inlay?.dispose()
-        chatPanel.inlay = null
+        chatPanel.dispose()
 
         editor.contentComponent.remove(chatPanel)
         editor.contentComponent.revalidate()

@@ -155,7 +155,7 @@ class ShireInlineChatPanel(val editor: Editor) : JPanel(GridBagLayout()), Editor
         repaint()
     }
 
-    fun setContent(content: JComponent) {
+    private fun setContent(content: JComponent) {
         content.isOpaque = true
         ApplicationManager.getApplication().invokeLater {
             if (!this.centerPanel.isVisible) {
@@ -179,14 +179,16 @@ class ShireInlineChatPanel(val editor: Editor) : JPanel(GridBagLayout()), Editor
     }
 
     override fun dispose() {
+        inputPanel.dispose()
         inlay?.dispose()
+        inlay = null
     }
 }
 
 class ShireInlineChatInputPanel(
     val shireInlineChatPanel: ShireInlineChatPanel,
     val onSubmit: (String) -> Unit,
-) : JPanel(GridBagLayout()) {
+) : JPanel(GridBagLayout()), Disposable {
     private val textArea: JBTextArea
 
     init {
@@ -245,4 +247,8 @@ class ShireInlineChatInputPanel(
     }
 
     fun getInputComponent(): Component = textArea
+
+    override fun dispose() {
+
+    }
 }
