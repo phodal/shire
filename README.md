@@ -48,8 +48,8 @@ that enables communication between an LLM and control IDE for automated programm
 
 结合我们在行业的最佳洞见（[https://aise.phodal.com/](https://aise.phodal.com/)），你可以在 Shire 上体验到最佳的编程实践。
 
-| StreamDiff、多文件编辑、FastApply、InlineChat 等 | ![Shire Best Practice](https://shire.run/images/shire-industry-best-practise.png) |
-|-----------------------------------------|-----------------------------------------------------------------------------------|
+| StreamDiff、多文件编辑、FastApply、InlineChat 等 | <img src="https://shire.run/images/shire-industry-best-practise.png" alt="Shire Best Practice" width="350"> |
+|-----------------------------------------|-------------------------------------------------------------------------------------------------------------|
 
 ## Resources
 
