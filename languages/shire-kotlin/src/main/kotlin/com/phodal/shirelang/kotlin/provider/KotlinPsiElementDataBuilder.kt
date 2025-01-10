@@ -127,7 +127,6 @@ class KotlinPsiElementDataBuilder : PsiElementDataBuilder {
 
         return result
     }
-
 }
 
 internal fun KtStringTemplateExpression.literalContents(): String? {

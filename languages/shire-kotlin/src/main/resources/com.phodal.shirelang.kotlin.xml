@@ -34,5 +34,9 @@
 
         <shirePsiElementDataBuilder language="kotlin"
                                     implementationClass="com.phodal.shirelang.kotlin.provider.KotlinPsiElementDataBuilder"/>
+
+        <shirePsiVariableProvider
+                language="kotlin"
+                implementationClass="com.phodal.shirelang.kotlin.variable.KotlinPsiContextVariableProvider"/>
     </extensions>
 </idea-plugin>

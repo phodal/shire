@@ -22,7 +22,7 @@ class KotlinLanguageToolchainProvider : LanguageToolchainProvider {
         return listOf(
             ToolchainContextItem(
                 KotlinLanguageToolchainProvider::class,
-                "- Kotlin API version: $languageVersion"
+                "You are working on a project that uses Kotlin API version: $languageVersion"
             )
         )
     }
