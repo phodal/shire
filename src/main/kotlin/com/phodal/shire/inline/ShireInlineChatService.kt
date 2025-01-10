@@ -12,6 +12,7 @@ import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirecore.provider.ide.ShirePromptBuilder
 import com.phodal.shirecore.provider.shire.FileCreateService
 import com.phodal.shirecore.provider.shire.FileRunService
+import com.phodal.shirecore.provider.streaming.OnStreamingService
 import com.phodal.shirelang.actions.base.DynamicShireActionService
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.set

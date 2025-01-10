@@ -1,7 +1,6 @@
 package com.phodal.shirecore.middleware.builtin.ui
 
 import com.intellij.ui.JBColor
-import com.intellij.ui.jcef.JBCefApp
 import com.intellij.ui.jcef.JBCefBrowser
 import javax.swing.JComponent
 

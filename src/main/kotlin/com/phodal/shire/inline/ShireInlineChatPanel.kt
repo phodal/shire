@@ -19,6 +19,7 @@ import com.intellij.ui.components.JBTextArea
 import com.intellij.util.ui.JBUI.CurrentTheme
 import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.llm.LlmProvider
+import com.phodal.shirecore.provider.streaming.OnStreamingService
 import com.phodal.shirecore.runner.console.cancelHandler
 import com.phodal.shirecore.ui.ShirePanelView
 import com.phodal.shirecore.ui.input.ShireLineBorder

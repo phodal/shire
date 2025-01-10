@@ -6,6 +6,7 @@ import com.intellij.openapi.application.runInEdt
 import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.testFramework.LightVirtualFile
 import com.phodal.shirecore.LLM_LOGGING
 import com.phodal.shirecore.LLM_LOGGING_JSONL
 import com.phodal.shirecore.ShireConstants
@@ -24,7 +25,7 @@ import kotlinx.serialization.json.Json
  * - `result`: A private string that accumulates the streaming data received.
  */
 class LoggingStreamingService : StreamingServiceProvider {
-    private lateinit var outputDir: VirtualFile
+    private var outputDir: VirtualFile = LightVirtualFile()
     override var name: String = "logging"
 
     private var result: String = ""
