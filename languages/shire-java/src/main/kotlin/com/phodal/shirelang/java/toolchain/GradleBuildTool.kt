@@ -9,6 +9,8 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
 import com.intellij.openapi.util.NlsSafe
 import com.intellij.openapi.vfs.VirtualFile
+import com.phodal.shirecore.provider.context.BuildTool
+import com.phodal.shirecore.provider.context.CommonLibraryData
 import com.phodal.shirelang.java.impl.JAVA_TASK_COMPLETION_COMPARATOR
 import org.jetbrains.plugins.gradle.service.execution.GradleExternalTaskConfigurationType
 import org.jetbrains.plugins.gradle.service.execution.GradleRunConfiguration
@@ -17,6 +19,8 @@ import org.jetbrains.plugins.gradle.util.GradleConstants
 import org.jetbrains.plugins.gradle.util.GradleTaskData
 
 class GradleBuildTool: BuildTool {
+    override fun toolName(): String = "Gradle"
+
     override fun prepareLibraryData(project: Project): List<CommonLibraryData>? {
         val basePath = project.basePath ?: return null
         val projectData = ProjectDataManager.getInstance().getExternalProjectData(

@@ -26,4 +26,5 @@ class BuildSystemContext(
      * Please note that the actual content and usage of the `taskString` variable will vary depending on the context and requirements of the application or system using it.
      */
     val taskString: String = "",
+    val libraries: List<String> = emptyList()
 ) : TemplateContext

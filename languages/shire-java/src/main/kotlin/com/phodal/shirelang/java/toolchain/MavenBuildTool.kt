@@ -6,6 +6,8 @@ import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.externalSystem.service.ui.completion.TextCompletionInfo
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
+import com.phodal.shirecore.provider.context.BuildTool
+import com.phodal.shirecore.provider.context.CommonLibraryData
 import com.phodal.shirelang.java.impl.JAVA_TASK_COMPLETION_COMPARATOR
 import org.jetbrains.idea.maven.execution.MavenRunConfiguration
 import org.jetbrains.idea.maven.execution.MavenRunConfigurationType
@@ -14,6 +16,8 @@ import org.jetbrains.idea.maven.project.MavenProject
 import org.jetbrains.idea.maven.project.MavenProjectsManager
 
 class MavenBuildTool() : BuildTool {
+    override fun toolName(): String = "Maven"
+
     override fun prepareLibraryData(project: Project): List<CommonLibraryData> {
         val projectDependencies: List<org.jetbrains.idea.maven.model.MavenArtifact> =
             MavenProjectsManager.getInstance(project).projects.flatMap {

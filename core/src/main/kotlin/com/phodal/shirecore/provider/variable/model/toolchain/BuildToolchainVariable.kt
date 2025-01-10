@@ -5,12 +5,12 @@ import com.phodal.shirecore.provider.variable.model.ToolchainVariable
 /**
  * Enum representing variables used in the generation of code structures.
  */
-enum class GradleToolchainVariable(
+enum class BuildToolchainVariable(
     override val variableName: String,
     override var value: Any? = null,
     override val description: String = "",
 ) : ToolchainVariable {
-    GradleDependencies("projectDependencies", description = "The dependencies of the project"),
+    ProjectDependencies("projectDependencies", description = "The dependencies of the project"),
     ;
 
     companion object {
@@ -20,7 +20,7 @@ enum class GradleToolchainVariable(
          * @param variableName the variable name to search for
          * @return the PsiVariable with the given variable name
          */
-        fun from(variableName: String): GradleToolchainVariable? {
+        fun from(variableName: String): BuildToolchainVariable? {
             return values().firstOrNull { it.variableName == variableName }
         }
     }

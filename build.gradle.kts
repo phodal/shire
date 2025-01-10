@@ -239,6 +239,7 @@ project(":languages:shire-kotlin") {
         }
 
         implementation(project(":core"))
+        implementation(project(":languages:shire-java"))
     }
 }
 

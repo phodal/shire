@@ -1,4 +1,4 @@
-package com.phodal.shirelang.java.toolchain
+package com.phodal.shirecore.provider.context
 
 import com.intellij.execution.configurations.LocatableConfigurationBase
 import com.intellij.openapi.externalSystem.service.ui.completion.TextCompletionInfo
@@ -14,6 +14,8 @@ import com.intellij.openapi.vfs.VirtualFile
  * Implementations of this interface are expected to provide specific functionality for different build tools.
  */
 interface BuildTool {
+    fun toolName(): String
+
     fun prepareLibraryData(project: Project): List<CommonLibraryData>?
 
     fun collectTasks(project: Project): List<TextCompletionInfo>
@@ -21,4 +23,8 @@ interface BuildTool {
     fun configureRun(project: Project, taskName: String, virtualFile: VirtualFile?): LocatableConfigurationBase<*>?
 }
 
-data class CommonLibraryData(val groupId: String?, val artifactId: String?, val version: String?)
+data class CommonLibraryData(val groupId: String?, val artifactId: String?, val version: String?) {
+    fun prettyString(): String {
+        return "$groupId:$artifactId:$version"
+    }
+}

@@ -20,7 +20,7 @@
                 implementationClass="com.phodal.shirelang.java.impl.JavaRefactoringTool"/>
 
         <shireBuildSystemProvider
-                implementation="com.phodal.shirelang.java.impl.JavaBuildSystemProvider"/>
+                implementation="com.phodal.shirelang.java.impl.JvmBuildSystemProvider"/>
 
         <shireAutoTesting language="JAVA"
                           implementationClass="com.phodal.shirelang.java.codeedit.JavaAutoTestService"/>
@@ -33,7 +33,7 @@
                 implementationClass="com.phodal.shirelang.java.variable.JavaLanguageToolchainProvider"/>
 
         <shireRunProjectService
-                implementation="com.phodal.shirelang.java.impl.JavaRunProjectService"/>
+                implementation="com.phodal.shirelang.java.toolchain.JvmRunProjectService"/>
 
         <shireSymbolProvider implementation="com.phodal.shirelang.java.impl.JavaSymbolProvider"/>
 

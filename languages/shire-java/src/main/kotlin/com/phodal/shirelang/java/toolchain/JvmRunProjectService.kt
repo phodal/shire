@@ -1,4 +1,4 @@
-package com.phodal.shirelang.java.impl
+package com.phodal.shirelang.java.toolchain
 
 import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.codeInsight.completion.CompletionResultSet
@@ -11,10 +11,9 @@ import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.util.SmartList
 import com.phodal.shirecore.provider.shire.ProjectRunService
 import com.phodal.shirecore.runner.ConfigurationRunner
-import com.phodal.shirelang.java.toolchain.GradleBuildTool
 import icons.GradleIcons
 
-class JavaRunProjectService : ProjectRunService, ConfigurationRunner {
+class JvmRunProjectService : ProjectRunService, ConfigurationRunner {
     override fun isAvailable(project: Project): Boolean {
         return ProjectRootManager.getInstance(project).projectSdk is JavaSdk
     }
@@ -30,15 +29,15 @@ class JavaRunProjectService : ProjectRunService, ConfigurationRunner {
         result: CompletionResultSet,
     ): List<LookupElement> {
         val lookupElements: MutableList<LookupElement> = SmartList()
-        GradleBuildTool.collectGradleTasksData(project).filter {
-            !it.isTest && !it.isJvmTest
-        }.forEach {
-            val element = LookupElementBuilder.create(it.getFqnTaskName())
-                .withTypeText(it.description)
-                .withIcon(GradleIcons.Gradle)
+        GradleBuildTool.collectGradleTasksData(project)
+            .filter { !it.isTest && !it.isJvmTest }
+            .forEach {
+                val element = LookupElementBuilder.create(it.getFqnTaskName())
+                    .withTypeText(it.description)
+                    .withIcon(GradleIcons.Gradle)
 
-            lookupElements.add(PrioritizedLookupElement.withPriority(element, 99.0))
-        }
+                lookupElements.add(PrioritizedLookupElement.withPriority(element, 99.0))
+            }
 
         return lookupElements
     }

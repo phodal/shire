@@ -23,7 +23,7 @@ data class DebugValue(
                 ?: DatabaseToolchainVariable.from(key)?.description
                 ?: TerminalToolchainVariable.from(key)?.description
                 ?: VcsToolchainVariable.from(key)?.description
-                ?: GradleToolchainVariable.from(key)?.description
+                ?: BuildToolchainVariable.from(key)?.description
                 ?: SonarqubeVariable.from(key)?.description
                 ?: "Unknown"
         }
@@ -38,7 +38,7 @@ data class DebugValue(
             allVariables.addAll(DatabaseToolchainVariable.values())
             allVariables.addAll(TerminalToolchainVariable.values())
             allVariables.addAll(VcsToolchainVariable.values())
-            allVariables.addAll(GradleToolchainVariable.values())
+            allVariables.addAll(BuildToolchainVariable.values())
             allVariables.addAll(SonarqubeVariable.values())
             return allVariables
         }

@@ -11,7 +11,7 @@ import com.intellij.psi.PsiJavaFile
 import com.phodal.shirecore.provider.context.LanguageToolchainProvider
 import com.phodal.shirecore.provider.context.ToolchainContextItem
 import com.phodal.shirecore.provider.context.ToolchainPrepareContext
-import com.phodal.shirelang.java.toolchain.JavaLanguageDetector
+import com.phodal.shirelang.java.toolchain.JvmLanguageDetector
 
 class JavaLanguageToolchainProvider : LanguageToolchainProvider {
     override fun isApplicable(project: Project, context: ToolchainPrepareContext): Boolean {
@@ -42,7 +42,7 @@ class JavaLanguageToolchainProvider : LanguageToolchainProvider {
     ): ToolchainContextItem? {
         val psiFile = context.sourceFile as? PsiJavaFile ?: return null
 
-        val languageLevel = JavaLanguageDetector.detectLanguageLevel(project, psiFile) ?: return null
+        val languageLevel = JvmLanguageDetector.detectLanguageLevel(project, psiFile) ?: return null
 
         val prompt = "You are working on a project that uses Java SDK version $languageLevel."
 
