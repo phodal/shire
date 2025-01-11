@@ -72,7 +72,7 @@ class ShireVariableViewPanel(val project: Project) : JPanel(BorderLayout()) {
 
         snapshotViewPanel.updateSnapshots(snapshotRecorder.all())
 
-        variables.forEach { (key, value) ->
+        variables.toSortedMap().forEach { (key, value) ->
             val valueStr = value.toString()
             val description = DebugValue.description(key)
 

@@ -124,7 +124,7 @@ class CodeHighlightSketch(val project: Project, val text: String, private var id
             return createCodeViewerEditor(project, file, document, disposable, isShowLineNo)
         }
 
-        private fun createCodeViewerEditor(
+        fun createCodeViewerEditor(
             project: Project,
             file: LightVirtualFile,
             document: Document,

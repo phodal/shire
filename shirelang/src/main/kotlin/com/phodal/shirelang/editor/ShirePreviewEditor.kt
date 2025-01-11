@@ -4,43 +4,48 @@ import com.intellij.icons.AllIcons
 import com.intellij.lang.Language
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.smartReadAction
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.ScrollType
+import com.intellij.openapi.editor.ex.EditorEx
+import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.fileEditor.FileEditor
 import com.intellij.openapi.fileEditor.FileEditorState
+import com.intellij.openapi.fileTypes.LanguageFileType
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.UserDataHolder
 import com.intellij.openapi.util.UserDataHolderBase
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiManager
+import com.intellij.testFramework.LightVirtualFile
 import com.intellij.ui.JBColor
 import com.intellij.ui.RoundedLineBorder
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.dsl.builder.Align
 import com.intellij.ui.dsl.builder.panel
-import com.intellij.util.ConcurrencyUtil
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
 import com.phodal.shirecore.ShireCoroutineScope
 import com.phodal.shirecore.sketch.highlight.CodeHighlightSketch
 import com.phodal.shirecore.sketch.highlight.EditorFragment
+import com.phodal.shirecore.utils.markdown.CodeFenceLanguage
 import com.phodal.shirelang.psi.ShireFile
 import com.phodal.shirelang.run.runner.ShireRunner
 import com.phodal.shirelang.run.runner.ShireRunnerContext
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.intellij.plugins.markdown.lang.MarkdownLanguage
 import java.awt.BorderLayout
+import java.awt.event.MouseAdapter
+import java.awt.event.MouseEvent
 import java.beans.PropertyChangeListener
 import javax.swing.BorderFactory
 import javax.swing.JComponent
 import javax.swing.JPanel
 import javax.swing.ScrollPaneConstants
+import javax.swing.SwingConstants
 
 /**
  * Display shire file render prompt and have a sample file as view
@@ -74,6 +79,8 @@ open class ShirePreviewEditor(
         }
     """.trimIndent()
 
+    private var editorPanel: JPanel? = null
+
     init {
         val corePanel = panel {
             row {
@@ -97,7 +104,18 @@ open class ShirePreviewEditor(
                         isOpaque = true
                     }).align(Align.FILL).resizableColumn()
 
-                    cell(JBLabel("(/shire.java)")).align(Align.FILL).resizableColumn()
+                    cell(JBLabel("(/shire.java)", AllIcons.Actions.Edit, SwingConstants.LEADING).also {
+                        it.addMouseListener(object : MouseAdapter(){
+                            override fun mouseClicked(e: MouseEvent?) {
+                                FileFilterPopup(project) { file ->
+                                    it.text = "(${file.name})"
+                                    language = (file.fileType as? LanguageFileType)?.language
+                                    updatePreviewEditor(file)
+                                }.show(it)
+                            }
+                        })
+
+                    }).align(Align.FILL).resizableColumn()
                     button("", object : AnAction() {
                         override fun actionPerformed(event: AnActionEvent) {
                             updateDisplayedContent()
@@ -115,15 +133,13 @@ open class ShirePreviewEditor(
                         this@ShirePreviewEditor
                     )
 
-                    editor.isViewer = false
-                    editor.settings.isLineNumbersShown = true
+                    setSampleEditor(editor) {
+                        editorPanel = JPanel(BorderLayout()).apply {
+                            add(it, BorderLayout.CENTER)
+                            cell(this).align(Align.FILL).resizableColumn()
+                        }
+                    }
 
-                    val editorFragment = EditorFragment(editor)
-                    editorFragment.setCollapsed(true)
-                    editorFragment.updateExpandCollapseLabel()
-
-                    this@ShirePreviewEditor.sampleEditor = editor
-                    cell(editorFragment.getContent()).align(Align.FILL).resizableColumn()
                 }
             }
             row {
@@ -159,7 +175,7 @@ open class ShirePreviewEditor(
                     BorderFactory.createEmptyBorder(12, 12, 12, 12),
                     RoundedLineBorder(JBColor.border(), 8, 1)
                 )
-                panel.add(highlightSketch, BorderLayout.CENTER)
+                highlightSketch?.let { panel.add(it, BorderLayout.CENTER) }
 
                 cell(panel).align(Align.FILL)
             }
@@ -209,6 +225,44 @@ open class ShirePreviewEditor(
 
         val position = highlightEditor.offsetToLogicalPosition(offset)
         highlightEditor.scrollingModel.scrollTo(position, ScrollType.MAKE_VISIBLE)
+    }
+
+    private fun updatePreviewEditor(file: VirtualFile) {
+        FileDocumentManager.getInstance().getDocument(file)?.text?.let { text ->
+
+            val f = object : LightVirtualFile(
+                file.name,
+                language ?: CodeFenceLanguage.findLanguage("Plain text"),
+                text
+            ) {
+                override fun getPath() = file.path
+            }
+
+            val document = FileDocumentManager.getInstance().getDocument(f) ?: return@let
+
+            val editor = CodeHighlightSketch.createCodeViewerEditor(
+                project, f, document, this
+            )
+
+            setSampleEditor(editor) {
+                editorPanel?.removeAll()
+                editorPanel?.add(it, BorderLayout.CENTER)
+            }
+            updateDisplayedContent()
+        }
+    }
+
+    private fun setSampleEditor(editor: EditorEx, consume: (JComponent) -> Unit) {
+        editor.isViewer = false
+        editor.settings.isLineNumbersShown = true
+
+        val editorFragment = EditorFragment(editor)
+        editorFragment.setCollapsed(true)
+        editorFragment.updateExpandCollapseLabel()
+
+        sampleEditor = editor
+
+        consume(editorFragment.getContent())
     }
 
     override fun getComponent(): JComponent = visualPanel
