@@ -69,6 +69,7 @@ enum class BuiltinCommand(
         true,
         true
     ),
+    DIR("dir", "List files and directories in a tree-like structure", AllIcons.Actions.ProjectDirectory, true, true),
     ;
 
     companion object {

@@ -374,6 +374,11 @@ class ShireSyntaxAnalyzer(
                 val shireCode: String? = lookupNextCode(used)?.text
                 DatabaseShireCommand(myProject, prop, shireCode)
             }
+
+            BuiltinCommand.DIR -> {
+                result.isLocalCommand = true
+                DirShireCommand(myProject, prop)
+            }
         }
 
         val execResult = runBlocking {

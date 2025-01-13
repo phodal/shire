@@ -207,8 +207,6 @@
     <extensions defaultExtensionNs="com.phodal">
         <shirePromptBuilder implementation="com.phodal.shirelang.provider.ShireActionPromptBuilder"/>
 
-        <shireFileRunService implementation="com.phodal.shirelang.runner.ShellFileRunService"/>
-
         <shireFileRunService implementation="com.phodal.shirelang.runner.ShireFileRunService"/>
 
         <shireFileCreateService
