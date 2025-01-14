@@ -6,7 +6,6 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogPanel
 import com.intellij.openapi.ui.NullableComponent
 import com.intellij.openapi.ui.SimpleToolWindowPanel
-import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.components.panels.VerticalLayout
 import com.intellij.ui.dsl.builder.AlignX
@@ -69,6 +68,10 @@ class ShirePanelView(val project: Project, showInput: Boolean = true) : SimpleTo
         contentPanel.add(scrollPanel, BorderLayout.CENTER)
 
         if (showInput) {
+            shireInput.also {
+                border = JBUI.Borders.empty(8)
+            }
+
             contentPanel.add(shireInput, BorderLayout.SOUTH)
         }
 
@@ -99,7 +102,6 @@ class ShirePanelView(val project: Project, showInput: Boolean = true) : SimpleTo
 
             codeBlockViewer.editorFragment?.setCollapsed(true)
             codeBlockViewer.editorFragment!!.updateExpandCollapseLabel()
-            codeBlockViewer.editorFragment!!.editor.backgroundColor = JBColor(0xF7FAFDF, 0x2d2f30)
 
             val panel = panel {
                 row {

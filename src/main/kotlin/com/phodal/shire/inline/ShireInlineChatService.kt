@@ -1,21 +1,14 @@
 package com.phodal.shire.inline
 
-import com.intellij.lang.Language
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.wm.IdeFocusManager
 import com.phodal.shirecore.config.ShireActionLocation
 import com.phodal.shirecore.provider.ide.ShirePromptBuilder
-import com.phodal.shirecore.provider.shire.FileCreateService
-import com.phodal.shirecore.provider.shire.FileRunService
-import com.phodal.shirecore.provider.streaming.OnStreamingService
-import com.phodal.shirelang.actions.base.DynamicShireActionService
 import java.util.concurrent.ConcurrentHashMap
-import kotlin.collections.set
 
 @Service(Service.Level.APP)
 class ShireInlineChatService : Disposable {
