@@ -53,7 +53,7 @@ class LocalSearchInsCommand(val myProject: Project, private val scope: String, v
         val result = mutableMapOf<VirtualFile, List<String>>()
 
         ProjectFileIndex.getInstance(project).iterateContent { file ->
-            if (!file.canBeAdded() || !ProjectFileIndex.getInstance(project).isInContent(file)) {
+            if (!file.canBeAdded(project) || !ProjectFileIndex.getInstance(project).isInContent(file)) {
                 return@iterateContent true
             }
 
