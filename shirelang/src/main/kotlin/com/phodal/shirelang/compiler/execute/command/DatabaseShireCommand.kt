@@ -9,8 +9,7 @@ class DatabaseShireCommand(val myProject: Project, private val prop: String, pri
 
     override suspend fun doExecute(): String {
         val args = if (codeContent != null) {
-            val code = CodeFence.parse(codeContent).text
-            listOf(code)
+            listOf(codeContent)
         } else {
             listOf()
         }

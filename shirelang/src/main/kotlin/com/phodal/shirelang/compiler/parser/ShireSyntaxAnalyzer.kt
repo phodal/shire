@@ -309,7 +309,7 @@ class ShireSyntaxAnalyzer(
                 if (shireCode == null) {
                     PrintShireCommand("/" + commandNode.commandName + ":" + prop)
                 } else {
-                    WriteShireCommand(myProject, prop, shireCode.text, used)
+                    WriteShireCommand(myProject, prop, shireCode.codeText(), used)
                 }
             }
 
@@ -319,7 +319,7 @@ class ShireSyntaxAnalyzer(
                 if (shireCode == null) {
                     PrintShireCommand("/" + commandNode.commandName + ":" + prop)
                 } else {
-                    PatchShireCommand(myProject, prop, shireCode.text)
+                    PatchShireCommand(myProject, prop, shireCode.codeText())
                 }
             }
 
@@ -329,7 +329,7 @@ class ShireSyntaxAnalyzer(
                 if (shireCode == null) {
                     PrintShireCommand("/" + commandNode.commandName + ":" + prop)
                 } else {
-                    CommitShireCommand(myProject, shireCode.text)
+                    CommitShireCommand(myProject, shireCode.codeText())
                 }
             }
 

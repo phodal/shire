@@ -22,8 +22,6 @@ class WriteShireCommand(val myProject: Project, val argument: String, val conten
     private val pathSeparator = "/"
 
     override suspend fun doExecute(): String {
-        val content = CodeFence.parse(content).text
-
         val range: LineInfo? = LineInfo.fromString(used.text)
         val filepath = argument.split("#")[0]
         val projectDir = myProject.guessProjectDir() ?: return "$SHIRE_ERROR: Project directory not found"

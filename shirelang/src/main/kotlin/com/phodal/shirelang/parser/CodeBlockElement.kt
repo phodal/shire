@@ -14,6 +14,7 @@ import com.intellij.psi.tree.IElementType
 import com.intellij.psi.util.*
 import com.phodal.shirelang.psi.ShireExpr
 import com.phodal.shirelang.psi.ShireTypes
+import com.phodal.shirecore.utils.markdown.CodeFence
 
 class CodeBlockElement(node: ASTNode) : ASTWrapperPsiElement(node), PsiLanguageInjectionHost,
     InjectionBackgroundSuppressor {
@@ -39,6 +40,10 @@ class CodeBlockElement(node: ASTNode) : ASTWrapperPsiElement(node), PsiLanguageI
 
     fun getLanguageId(): PsiElement? {
         return findChildByType(ShireTypes.LANGUAGE_ID)
+    }
+
+    fun codeText(): String {
+        return CodeFence.parse(this.text).text
     }
 
     fun isShireTemplateCodeBlock(): Boolean {
