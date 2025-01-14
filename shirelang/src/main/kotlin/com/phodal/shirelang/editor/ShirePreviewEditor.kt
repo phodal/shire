@@ -105,7 +105,7 @@ open class ShirePreviewEditor(
                     }).align(Align.FILL).resizableColumn()
 
                     cell(JBLabel("(/shire.java)", AllIcons.Actions.Edit, SwingConstants.LEADING).also {
-                        it.addMouseListener(object : MouseAdapter(){
+                        it.addMouseListener(object : MouseAdapter() {
                             override fun mouseClicked(e: MouseEvent?) {
                                 FileFilterPopup(project) { file ->
                                     it.text = "(${file.name})"
@@ -230,18 +230,15 @@ open class ShirePreviewEditor(
     private fun updatePreviewEditor(file: VirtualFile) {
         FileDocumentManager.getInstance().getDocument(file)?.text?.let { text ->
 
-            val f = object : LightVirtualFile(
-                file.name,
-                language ?: CodeFenceLanguage.findLanguage("Plain text"),
-                text
-            ) {
+            val language = language ?: CodeFenceLanguage.findLanguage("Plain text")
+            val lightFile = object : LightVirtualFile(file.name, language, text) {
                 override fun getPath() = file.path
             }
 
-            val document = FileDocumentManager.getInstance().getDocument(f) ?: return@let
+            val document = FileDocumentManager.getInstance().getDocument(lightFile) ?: return@let
 
             val editor = CodeHighlightSketch.createCodeViewerEditor(
-                project, f, document, this
+                project, lightFile, document, this
             )
 
             setSampleEditor(editor) {
