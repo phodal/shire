@@ -50,9 +50,9 @@ class ShireRunCodeAction : DumbAwareAction() {
                 psiFile,
             )
         } finally {
-            runWriteAction {
-                scratchFile.delete(this)
-            }
+//            runWriteAction {
+//                scratchFile.delete(this)
+//            }
         }
     }
 }
