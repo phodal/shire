@@ -19,11 +19,13 @@ import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.fileTypes.PlainTextLanguage
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
+import com.intellij.openapi.util.text.StringUtil
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.testFramework.LightVirtualFile
 import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBPanel
 import com.intellij.util.concurrency.annotations.RequiresReadLock
+import com.intellij.util.ui.JBEmptyBorder
 import com.intellij.util.ui.JBUI
 import com.phodal.shirecore.sketch.LangSketch
 import com.phodal.shirecore.utils.markdown.CodeFenceLanguage
@@ -31,8 +33,9 @@ import java.awt.BorderLayout
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.swing.JComponent
 
-class CodeHighlightSketch(val project: Project, val text: String, private var ideaLanguage: Language?,
-    val editorLineThreshold: Int = 6
+class CodeHighlightSketch(
+    val project: Project, val text: String, private var ideaLanguage: Language?,
+    val editorLineThreshold: Int = 6,
 ) :
     JBPanel<CodeHighlightSketch>(BorderLayout()), DataProvider, LangSketch {
     private var textLanguage: String? = null
@@ -52,16 +55,17 @@ class CodeHighlightSketch(val project: Project, val text: String, private var id
 
         val editor = createCodeViewerEditor(project, text, ideaLanguage, this)
 
-        editor.component.border = JBUI.Borders.empty(10, 0)
+        border = JBEmptyBorder(8)
+        layout = BorderLayout(JBUI.scale(8), 0)
+        background = JBColor(0xEAEEF7, 0x2d2f30)
+
         editor.component.isOpaque = true
 
         editorFragment = EditorFragment(editor, editorLineThreshold)
         add(editorFragment!!.getContent(), BorderLayout.CENTER)
 
-        if (ideaLanguage?.displayName != "Markdown" && ideaLanguage != PlainTextLanguage.INSTANCE) {
+        if (textLanguage != null && textLanguage?.lowercase() != "markdown") {
             setupActionBar(project, editor)
-        } else {
-            editor.backgroundColor = JBColor.PanelBackground
         }
     }
 
@@ -83,7 +87,7 @@ class CodeHighlightSketch(val project: Project, val text: String, private var id
 
         WriteCommandAction.runWriteCommandAction(project) {
             val document = editorFragment?.editor?.document
-            val normalizedText = com.intellij.openapi.util.text.StringUtil.convertLineSeparators(text)
+            val normalizedText = StringUtil.convertLineSeparators(text)
             document?.replaceString(0, document.textLength, normalizedText)
         }
     }
@@ -103,7 +107,11 @@ class CodeHighlightSketch(val project: Project, val text: String, private var id
         ): EditorEx {
             var editorText = text
             val language = ideaLanguage ?: CodeFenceLanguage.findLanguage("Plain text")
-            val ext = CodeFenceLanguage.lookupFileExt(language.displayName)
+            val ext = if (language.displayName == "Plain text") {
+                CodeFenceLanguage.lookupFileExt(language.displayName)
+            } else {
+                language.associatedFileType?.defaultExtension ?: "Unknown"
+            }
             /// check text easyline starts with Lineno and :, for example: 1:
             var isShowLineNo = true
             editorText.lines().forEach {
@@ -124,7 +132,7 @@ class CodeHighlightSketch(val project: Project, val text: String, private var id
             return createCodeViewerEditor(project, file, document, disposable, isShowLineNo)
         }
 
-        fun createCodeViewerEditor(
+        private fun createCodeViewerEditor(
             project: Project,
             file: LightVirtualFile,
             document: Document,

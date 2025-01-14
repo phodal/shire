@@ -20,7 +20,7 @@ import com.phodal.shirecore.provider.shire.FileRunService
 
 class HttpClientFileRunService : FileRunService {
     override fun isApplicable(project: Project, file: VirtualFile): Boolean {
-        return PsiManager.getInstance(project).findFile(file) is HttpRequestPsiFile
+        return file.extension == "http"
     }
 
     override fun runConfigurationClass(project: Project): Class<out RunProfile> {

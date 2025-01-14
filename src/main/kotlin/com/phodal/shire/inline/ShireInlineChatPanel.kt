@@ -68,52 +68,36 @@ class ShireInlineChatPanel(val editor: Editor) : JPanel(GridBagLayout()), Editor
     init {
         border = BorderFactory.createCompoundBorder(
             BorderFactory.createCompoundBorder(
-                BorderFactory.createEmptyBorder(12, 12, 12, 12),
-                RoundedLineBorder(JBColor.LIGHT_GRAY, 18, 1)
+                BorderFactory.createEmptyBorder(0, 0, 0, 0),
+                RoundedLineBorder(JBColor.LIGHT_GRAY, 12, 1)
             ),
             BorderFactory.createCompoundBorder(
                 ShireLineBorder(JBColor.border(), 1, true, 8),
-                BorderFactory.createMatteBorder(10, 10, 10, 10, JBColor.PanelBackground)
+                BorderFactory.createMatteBorder(6, 8, 6, 8, JBColor.border())
             )
         )
 
         isOpaque = false
-        cursor = Cursor.getPredefinedCursor(0)
 
         val c = GridBagConstraints()
         c.gridx = 0
         c.gridy = 0
         c.weightx = 1.0
-        c.fill = 2
-        add(inputPanel, c)
+        c.fill = GridBagConstraints.HORIZONTAL
+        add(this.inputPanel, c)
 
-        val cancelPresentation = Presentation("Cancel")
-        cancelPresentation.icon = AllIcons.Actions.Cancel
-        val cancelButton = ActionButton(
-            DumbAwareAction.create {
-                ShireInlineChatService.getInstance().closeInlineChat(editor)
-            },
-            cancelPresentation, "", Dimension(24, 20)
-        )
-        cancelButton.isOpaque = true
-        cancelButton.background = JBColor.PanelBackground
-        c.gridx = 1
-        c.weightx = 0.0
-        c.fill = 1
-        add(cancelButton, c)
-
-        val jPanel = JPanel(BorderLayout())
-        jPanel.isVisible = false
-        jPanel.addMouseListener(object : MouseAdapter() {
-            override fun mouseClicked(e: MouseEvent) {
-                IdeFocusManager.getInstance(editor.project).requestFocus(inputPanel.getInputComponent(), true)
-            }
-        })
-        this.centerPanel = jPanel
+        this.centerPanel = JPanel(BorderLayout()).apply {
+            isOpaque = false
+            this.addMouseListener(object : MouseAdapter() {
+                override fun mouseClicked(e: MouseEvent) {
+                    IdeFocusManager.getInstance(editor.project).requestFocus(inputPanel.getInputComponent(), true)
+                }
+            })
+        }
 
         c.gridx = 0
         c.gridy = 1
-        c.fill = 1
+        c.fill = GridBagConstraints.BOTH
         add(this.centerPanel, c)
 
         this.inAllChildren { child ->
