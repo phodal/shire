@@ -1,6 +1,22 @@
-# [](https://github.com/phodal/shire/compare/v1.3.2...v) (2025-01-09)
+# [](https://github.com/phodal/shire/compare/v1.3.3...v) (2025-01-14)
 
 ## [Unreleased]
+
+## [1.3.3](https://github.com/phodal/shire/compare/v1.3.2...v[1.3.3]) (2025-01-14)
+
+### Bug Fixes
+
+* **compiler:** update file validation in LocalSearchInsCommand ([fb26400](https://github.com/phodal/shire/commit/fb264003c10e968d8177a1c11d2543e651c9d1f8))
+* **run-code:** wrap scratch file deletion in runWriteAction ([5271cd7](https://github.com/phodal/shire/commit/5271cd7072d1ac33535c07ecaeda5fb229e1edfd))
+
+### Features
+
+* **commands:** add local search, related symbol, and open file commands ([7e7de3b](https://github.com/phodal/shire/commit/7e7de3b5174e8b6f9959ad5ceff28684a37d426e))
+* **editor:** Add file selection support in preview editor ([07140f3](https://github.com/phodal/shire/commit/07140f3597d46a62a08dcf8feb1e7fe7361fe507))
+* **kotlin:** add KotlinPsiContextVariableProvider ([512cb3a](https://github.com/phodal/shire/commit/512cb3a11c088ac9dee1791ef28afc8e2dc75792))
+* **markdown:** add support for Shire code fence parsing ([b72753c](https://github.com/phodal/shire/commit/b72753c50581c4eb0cb24acefecda3907d0dad39))
+* **parser:** add support for `DIR` command to list directory contents ([8d0ddc9](https://github.com/phodal/shire/commit/8d0ddc940e36245f6e049e60a5e34afe9a87a3dc))
+* **streaming:** integrate OnStreamingService into ShireInlineChat ([23858b1](https://github.com/phodal/shire/commit/23858b103a00d3b11abb62741ebb3c045a5a45b6))
 
 ## [1.3.2](https://github.com/phodal/shire/compare/v1.3.1...v[1.3.2]) (2025-01-09)
 
@@ -886,7 +902,8 @@
 * **shell:** add shell language support plugin file ([bdc1c90](https://github.com/phodal/shire/commit/bdc1c90f10d7c2c4fb8f7157db343dd756c11352))
 * **shire:** add Shire context action group and location support ([e3df86d](https://github.com/phodal/shire/commit/e3df86d16d0c9985fec787a8e76ce553be9a9a45))
 
-[Unreleased]: https://github.com/phodal/shire/compare/v1.3.2...HEAD
+[Unreleased]: https://github.com/phodal/shire/compare/v1.3.3...HEAD
+[1.3.3]: https://github.com/phodal/shire/compare/v1.3.2...v1.3.3
 [1.3.2]: https://github.com/phodal/shire/compare/v1.3.1...v1.3.2
 [1.3.1]: https://github.com/phodal/shire/compare/v1.2.4...v1.3.1
 [1.2.4]: https://github.com/phodal/shire/compare/v1.2.3...v1.2.4
