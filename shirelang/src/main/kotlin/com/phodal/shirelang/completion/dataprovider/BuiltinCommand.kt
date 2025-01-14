@@ -70,6 +70,21 @@ enum class BuiltinCommand(
         true
     ),
     DIR("dir", "List files and directories in a tree-like structure", AllIcons.Actions.ProjectDirectory, true, true),
+    LOCAL_SEARCH(
+        "localSearch",
+        "Search text in the project will return 5 line before and after",
+        AllIcons.Actions.Search,
+        true,
+        true
+    ),
+    RELATED(
+        "related",
+        "Get related content by the current file",
+        AllIcons.Actions.Find,
+        true,
+        true
+    ),
+    OPEN("open", "Open a file in the editor", AllIcons.Actions.MenuOpen, false),
     ;
 
     companion object {

@@ -379,6 +379,22 @@ class ShireSyntaxAnalyzer(
                 result.isLocalCommand = true
                 DirShireCommand(myProject, prop)
             }
+
+            BuiltinCommand.LOCAL_SEARCH -> {
+                result.isLocalCommand = true
+                val shireCode: String? = lookupNextCode(used)?.text
+                LocalSearchInsCommand(myProject, prop, shireCode)
+            }
+
+            BuiltinCommand.RELATED -> {
+                result.isLocalCommand = true
+                RelatedSymbolInsCommand(myProject, prop)
+            }
+
+            BuiltinCommand.OPEN -> {
+                result.isLocalCommand = true
+                OpenInsCommand(myProject, prop)
+            }
         }
 
         val execResult = runBlocking {
