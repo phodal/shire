@@ -1,6 +1,7 @@
 package com.phodal.shirecore.utils.markdown
 
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
+import kotlin.collections.get
 
 class CodeFenceTest : BasePlatformTestCase() {
 
@@ -141,5 +142,85 @@ class CodeFenceTest : BasePlatformTestCase() {
         assertEquals(last.text, "HELLO")
         assertEquals(last.ideaLanguage.displayName, "Markdown")
         assertEquals(true, last.isComplete)
+    }
+
+
+    fun testShouldParseHtmlCode() {
+        val content = """
+// patch to call tools for step 3 with DevIns language, should use DevIns code fence
+<shire>
+/patch:src/main/index.html
+```patch
+// the index.html code
+```
+</shire>
+""".trimIndent()
+        val code = CodeFence.parse(content)
+        assertEquals(
+            code.text, """
+/patch:src/main/index.html
+```patch
+// the index.html code
+```
+""".trimIndent()
+        )
+        assertTrue(code.isComplete)
+    }
+
+    fun testShouldParseUndoneHtmlCode() {
+        val content = """
+// patch to call tools for step 3 with DevIns language, should use DevIns code fence
+<shire>
+/patch:src/main/index.html
+```patch
+// the index.html code
+```
+""".trimIndent()
+        val code = CodeFence.parse(content)
+        assertFalse(code.isComplete)
+        assertEquals(
+            code.text, """
+/patch:src/main/index.html
+```patch
+// the index.html code
+```
+""".trimIndent()
+        )
+    }
+
+    /// parse all with shires
+    fun testShouldParseAllWithDevin() {
+        val content = """
+            |<shire>
+            |// the index.html code
+            |</shire>
+            |
+            |```java
+            |public class HelloWorld {
+            |    public static void main(String[] args) {
+            |        System.out.println("Hello, World");
+            |    }
+            |}
+            |```
+        """.trimMargin()
+
+        val codeFences = CodeFence.parseAll(content)
+        assertEquals(codeFences.size, 3)
+        assertEquals(
+            codeFences[0].text, """
+            |// the index.html code
+        """.trimMargin()
+        )
+        assertTrue(codeFences[0].isComplete)
+        assertEquals(
+            codeFences[2].text, """
+            |public class HelloWorld {
+            |    public static void main(String[] args) {
+            |        System.out.println("Hello, World");
+            |    }
+            |}
+        """.trimMargin()
+        )
+        assertTrue(codeFences[2].isComplete)
     }
 }
