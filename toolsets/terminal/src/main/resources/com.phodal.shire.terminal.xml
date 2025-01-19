@@ -8,5 +8,7 @@
         <shireTerminalExecutor implementation="com.phodal.shire.terminal.ShireTerminalExecutor"/>
 
         <shireToolchainVariableProvider implementation="com.phodal.shire.terminal.TerminalToolchainVariableProvider"/>
+
+        <shireLangSketchProvider implementation="com.phodal.shire.terminal.sketch.TerminalLangSketchProvider"/>
     </extensions>
 </idea-plugin>
