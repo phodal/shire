@@ -6,6 +6,8 @@ import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiManager
+import com.phodal.shirecore.ShirelangNotifications
+import com.phodal.shirecore.findFile
 import com.phodal.shirecore.lookupFile
 import com.phodal.shirecore.relativePath
 
@@ -17,32 +19,52 @@ import com.phodal.shirecore.relativePath
  *
  */
 class FileShireCommand(private val myProject: Project, private val prop: String) : ShireCommand {
-    private val logger = logger<FileShireCommand>()
-
     override suspend fun doExecute(): String? {
+        val output = StringBuilder()
+
+        val range: LineInfo? = LineInfo.fromString(prop)
+
         // prop name can be src/file.name#L1-L2
-        val virtualFile = file(myProject, prop)
+        val filepath = prop.split("#")[0]
+        var virtualFile: VirtualFile? = myProject.lookupFile(filepath)
+
         if (virtualFile == null) {
-            logger.warn("File not found: $prop")
-            return null
+            val filename = filepath.split("/").last()
+            virtualFile = myProject.findFile(filename)
         }
 
-        val content = virtualFile.contentsToByteArray().toString(Charsets.UTF_8)
-
-        val fileContent = LineInfo.fromString(prop)?.splitContent(content) ?: content
-        val language = PsiManager.getInstance(myProject).findFile(virtualFile)?.language
-        val lang = language?.displayName ?: "plaintext"
-
-        val relativePath = virtualFile.relativePath(myProject)
-
-        val commentPrefix = language?.let { LanguageCommenters.INSTANCE.forLanguage(it).lineCommentPrefix } ?: "//"
-
-        return buildString {
-            append("\n```$lang\n")
-            append("$commentPrefix file path $relativePath\n")
-            append(fileContent)
-            append("\n```\n")
+        val contentsToByteArray = virtualFile?.contentsToByteArray()
+        if (contentsToByteArray == null) {
+            ShirelangNotifications.warn(myProject, "File not found: $prop")
+            /// not show error message to just notify
+            return "File not found: $prop"
         }
+
+        contentsToByteArray.let { bytes ->
+            val lang = virtualFile.let {
+                PsiManager.getInstance(myProject).findFile(it!!)?.language?.displayName
+            } ?: ""
+
+            val content = bytes.toString(Charsets.UTF_8)
+            val fileContent = if (range != null) {
+                val subContent = try {
+                    content.split("\n").slice(range.startLine - 1 until range.endLine)
+                        .joinToString("\n")
+                } catch (e: StringIndexOutOfBoundsException) {
+                    content
+                }
+
+                subContent
+            } else {
+                content
+            }
+
+            output.append("\n```$lang\n")
+            output.append(fileContent)
+            output.append("\n```\n")
+        }
+
+        return output.toString()
     }
 
     companion object {
