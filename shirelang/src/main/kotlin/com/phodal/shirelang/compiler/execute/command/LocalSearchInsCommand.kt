@@ -1,9 +1,13 @@
 package com.phodal.shirelang.compiler.execute.command
 
+import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ProjectFileIndex
 import com.intellij.openapi.vfs.VirtualFile
 import com.phodal.shirecore.canBeAdded
+import com.phodal.shirecore.relativePath
+import kotlin.collections.component1
+import kotlin.collections.component2
 
 /**
  * Todo: Spike different search API in Intellij
@@ -18,7 +22,7 @@ import com.phodal.shirecore.canBeAdded
  * ```
  *
  */
-class LocalSearchInsCommand(val myProject: Project, private val scope: String, val text: String?) : ShireCommand {
+class LocalSearchInsCommandLocalSearchInsCommand(val myProject: Project, private val scope: String, val text: String?) : ShireCommand {
     private val MAX_LINE_SIZE = 180
     private val OVERLAP = 4
 
@@ -29,11 +33,11 @@ class LocalSearchInsCommand(val myProject: Project, private val scope: String, v
             throw IllegalArgumentException("Text length should be more than 4")
         }
 
-        val textSearch = search(myProject, text, OVERLAP)
+        val textSearch = runReadAction { search(myProject, text, OVERLAP) }
         return textSearch.map { (file, lines) ->
-            val filePath = file.path
+            val filePath = file.relativePath(myProject)
             val linesWithContext = lines.joinToString("\n")
-            "$filePath\n$linesWithContext"
+            "file: $filePath\n$linesWithContext"
         }.joinToString("\n")
     }
 
@@ -57,6 +61,10 @@ class LocalSearchInsCommand(val myProject: Project, private val scope: String, v
                 return@iterateContent true
             }
 
+            if (ProjectFileIndex.getInstance(project).isUnderIgnored(file)) return@iterateContent true
+            /// skip for .idea/
+            if (file.path.contains(".idea")) return@iterateContent true
+
             val content = file.contentsToByteArray().toString(Charsets.UTF_8).lines()
             val matchedIndices = content.withIndex()
                 .filter { (_, line) ->
@@ -68,7 +76,9 @@ class LocalSearchInsCommand(val myProject: Project, private val scope: String, v
                 val linesWithContext = matchedIndices.flatMap { index ->
                     val start = (index - overlap).coerceAtLeast(0)
                     val end = (index + overlap).coerceAtMost(content.size - 1)
-                    content.subList(start, end + 1)
+                    content.subList(start, end + 1).mapIndexed { offset, line ->
+                        "${start + offset + 1} $line"
+                    }
                 }.distinct()
 
                 result[file] = linesWithContext
