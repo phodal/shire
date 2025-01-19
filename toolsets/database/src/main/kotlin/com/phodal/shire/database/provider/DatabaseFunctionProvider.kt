@@ -2,12 +2,15 @@ package com.phodal.shire.database.provider
 
 import com.intellij.database.model.DasTable
 import com.intellij.database.model.RawDataSource
+import com.intellij.database.util.DasUtil
+import com.intellij.database.util.DbUtil
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.phodal.shire.database.DatabaseSchemaAssistant
 import com.phodal.shirecore.provider.function.ToolchainFunctionProvider
 
 enum class DatabaseFunction(val funName: String) {
+    Schema("schema"),
     Table("table"),
     Column("column"),
     Query("query")
@@ -22,7 +25,7 @@ enum class DatabaseFunction(val funName: String) {
 
 class DatabaseFunctionProvider : ToolchainFunctionProvider {
     override fun isApplicable(project: Project, funcName: String): Boolean {
-        return DatabaseFunction.entries.any { it.funName == funcName }
+        return DatabaseFunction.values().any { it.funName == funcName }
     }
 
     override fun execute(
@@ -35,10 +38,27 @@ class DatabaseFunctionProvider : ToolchainFunctionProvider {
             ?: throw IllegalArgumentException("Shire[Database]: Invalid Database function name")
 
         return when (databaseFunction) {
+            DatabaseFunction.Schema -> listSchemas(args, project)
             DatabaseFunction.Table -> executeTableFunction(args, project)
             DatabaseFunction.Column -> executeColumnFunction(args, project)
             DatabaseFunction.Query -> executeSqlFunction(args, project)
         }
+    }
+
+    private fun listSchemas(args: List<Any>, project: Project): Any {
+        val dataSources = DbUtil.getDataSources(project)
+        if (dataSources.isEmpty) return ""
+
+        return dataSources.mapNotNull {
+            val tableSchema = DasUtil.getTables(it).toList().mapNotNull<DasTable, String> {
+                if (it.dasParent?.name == "information_schema") return@mapNotNull null
+                DatabaseSchemaAssistant.getTableColumn(it)
+            }
+
+            if (tableSchema.isEmpty()) return@mapNotNull null
+            val name = it.name.substringBeforeLast('@')
+            "DATABASE NAME: ${name};\n${tableSchema.joinToString("\n")}"
+        }.joinToString("\n")
     }
 
     private fun executeTableFunction(args: List<Any>, project: Project): Any {
@@ -89,9 +109,14 @@ class DatabaseFunctionProvider : ToolchainFunctionProvider {
     private fun executeColumnFunction(args: List<Any>, project: Project): Any {
         if (args.isEmpty()) {
             val allTables = DatabaseSchemaAssistant.getAllTables(project)
-            return allTables.map {
+            val map = allTables.map {
                 DatabaseSchemaAssistant.getTableColumn(it)
             }
+            return """
+                |```sql
+                |${map.joinToString("\n")}
+                |```
+            """.trimMargin()
         }
 
         when (val first = args[0]) {
