@@ -383,7 +383,7 @@ class ShireSyntaxAnalyzer(
             BuiltinCommand.LOCAL_SEARCH -> {
                 result.isLocalCommand = true
                 val shireCode: String? = lookupNextCode(used)?.text
-                LocalSearchInsCommand(myProject, prop, shireCode)
+                LocalSearchShireCommand(myProject, prop, shireCode)
             }
 
             BuiltinCommand.RELATED -> {
@@ -393,7 +393,7 @@ class ShireSyntaxAnalyzer(
 
             BuiltinCommand.OPEN -> {
                 result.isLocalCommand = true
-                OpenInsCommand(myProject, prop)
+                OpenShireCommand(myProject, prop)
             }
         }
 

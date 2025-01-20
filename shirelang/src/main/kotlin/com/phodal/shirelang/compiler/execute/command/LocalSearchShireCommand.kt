@@ -22,7 +22,7 @@ import kotlin.collections.component2
  * ```
  *
  */
-class LocalSearchInsCommandLocalSearchInsCommand(val myProject: Project, private val scope: String, val text: String?) : ShireCommand {
+class LocalSearchShireCommand(val myProject: Project, private val scope: String, val text: String?) : ShireCommand {
     private val MAX_LINE_SIZE = 180
     private val OVERLAP = 4
 
