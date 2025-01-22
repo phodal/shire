@@ -193,7 +193,10 @@ project(":core") {
 //        implementation("ai.djl.huggingface:tokenizers:0.29.0")
 
         implementation("cc.unitmesh:document:1.0.0")
-        implementation("cc.unitmesh:cocoa-core:1.0.0")
+        implementation("cc.unitmesh:cocoa-core:1.0.0") {
+            exclude(group = "org.jetbrains.kotlinx", module = "kotlinx-coroutines-core")
+            excludeKotlinDeps()
+        }
 
         // custom agent deps
         implementation("com.nfeld.jsonpathkt:jsonpathkt:2.0.1")
