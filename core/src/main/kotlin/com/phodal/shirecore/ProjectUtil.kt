@@ -1,6 +1,7 @@
 package com.phodal.shirecore
 
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.fileTypes.FileTypeManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
@@ -18,9 +19,16 @@ fun Project.lookupFile(path: String): VirtualFile? {
     return VirtualFileManager.getInstance().findFileByUrl("file://${realpath?.toAbsolutePath()}")
 }
 
-fun Project.findFile(filename: String): VirtualFile? {
+fun Project.findFile(filename: String, caseSensitively: Boolean = true): VirtualFile? {
     ApplicationManager.getApplication().assertReadAccessAllowed()
-    return FilenameIndex.getVirtualFilesByName(filename, ProjectScope.getProjectScope(this)).firstOrNull()
+    val currentTask = ApplicationManager.getApplication().executeOnPooledThread<VirtualFile?> {
+        val searchedFiles = runReadAction {
+            FilenameIndex.getVirtualFilesByName(filename, caseSensitively, ProjectScope.getProjectScope(this))
+        }
+        return@executeOnPooledThread searchedFiles.firstOrNull()
+    }
+
+    return currentTask.get()
 }
 
 fun VirtualFile.canBeAdded(project: Project): Boolean {

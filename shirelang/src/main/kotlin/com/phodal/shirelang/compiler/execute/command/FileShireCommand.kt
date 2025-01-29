@@ -1,15 +1,13 @@
 package com.phodal.shirelang.compiler.execute.command
 
-import com.intellij.lang.LanguageCommenters
-import com.phodal.shirelang.compiler.ast.LineInfo
-import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.vfs.readText
 import com.intellij.psi.PsiManager
 import com.phodal.shirecore.ShirelangNotifications
 import com.phodal.shirecore.findFile
 import com.phodal.shirecore.lookupFile
-import com.phodal.shirecore.relativePath
+import com.phodal.shirelang.compiler.ast.LineInfo
 
 /**
  * FileAutoCommand is responsible for reading a file and returning its contents.
@@ -20,8 +18,6 @@ import com.phodal.shirecore.relativePath
  */
 class FileShireCommand(private val myProject: Project, private val prop: String) : ShireCommand {
     override suspend fun doExecute(): String? {
-        val output = StringBuilder()
-
         val range: LineInfo? = LineInfo.fromString(prop)
 
         // prop name can be src/file.name#L1-L2
@@ -30,40 +26,35 @@ class FileShireCommand(private val myProject: Project, private val prop: String)
 
         if (virtualFile == null) {
             val filename = filepath.split("/").last()
-            virtualFile = myProject.findFile(filename)
+            virtualFile = myProject.findFile(filename, false)
         }
 
-        val contentsToByteArray = virtualFile?.contentsToByteArray()
-        if (contentsToByteArray == null) {
+        val content = virtualFile?.readText()
+        if (content == null) {
             ShirelangNotifications.warn(myProject, "File not found: $prop")
             /// not show error message to just notify
             return "File not found: $prop"
         }
 
-        contentsToByteArray.let { bytes ->
-            val lang = virtualFile.let {
-                PsiManager.getInstance(myProject).findFile(it!!)?.language?.displayName
-            } ?: ""
+        val lang = PsiManager.getInstance(myProject).findFile(virtualFile)?.language?.displayName ?: ""
 
-            val content = bytes.toString(Charsets.UTF_8)
-            val fileContent = if (range != null) {
-                val subContent = try {
-                    content.split("\n").slice(range.startLine - 1 until range.endLine)
-                        .joinToString("\n")
-                } catch (e: StringIndexOutOfBoundsException) {
-                    content
-                }
-
-                subContent
-            } else {
+        val fileContent = if (range == null) {
+            content
+        } else {
+            try {
+                content.split("\n").slice(range.startLine - 1 until range.endLine)
+                    .joinToString("\n")
+            } catch (e: StringIndexOutOfBoundsException) {
                 content
             }
-
-            output.append("\n```$lang\n")
-            output.append(fileContent)
-            output.append("\n```\n")
         }
 
+        val output = StringBuilder()
+        // add file path
+        output.append("// File: $prop\n")
+        output.append("\n```$lang\n")
+        output.append(fileContent)
+        output.append("\n```\n")
         return output.toString()
     }
 
