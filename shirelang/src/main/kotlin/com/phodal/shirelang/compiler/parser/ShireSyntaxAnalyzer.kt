@@ -395,6 +395,13 @@ class ShireSyntaxAnalyzer(
                 result.isLocalCommand = true
                 OpenShireCommand(myProject, prop)
             }
+
+            BuiltinCommand.RIPGREP_SEARCH -> {
+                result.isLocalCommand = true
+                val shireCode: String? = lookupNextCode(used)?.text
+                RipgrepSearchShireCommand(myProject, prop, shireCode)
+            }
+
         }
 
         val execResult = runBlocking {

@@ -85,6 +85,7 @@ enum class BuiltinCommand(
         true
     ),
     OPEN("open", "Open a file in the editor", AllIcons.Actions.MenuOpen, false),
+    RIPGREP_SEARCH("ripgrepSearch", "Search text in the project with ripgrep", AllIcons.Actions.Regex, false, true),
     ;
 
     companion object {
@@ -103,5 +104,17 @@ enum class BuiltinCommand(
         }
 
         fun fromString(agentName: String): BuiltinCommand? = values().find { it.commandName == agentName }
+
+        val READ_COMMANDS = setOf(
+            DIR,
+            LOCAL_SEARCH,
+            FILE,
+            REV,
+            STRUCTURE,
+            SYMBOL,
+            DATABASE,
+            RELATED,
+            RIPGREP_SEARCH
+        )
     }
 }
