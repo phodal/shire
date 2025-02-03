@@ -6,6 +6,7 @@ import com.intellij.openapi.roots.ProjectFileIndex
 import com.intellij.openapi.vfs.VirtualFile
 import com.phodal.shirecore.canBeAdded
 import com.phodal.shirecore.relativePath
+import com.phodal.shirelang.completion.dataprovider.BuiltinCommand
 import kotlin.collections.component1
 import kotlin.collections.component2
 
@@ -23,6 +24,8 @@ import kotlin.collections.component2
  *
  */
 class LocalSearchShireCommand(val myProject: Project, private val scope: String, val text: String?) : ShireCommand {
+    override val commandName = BuiltinCommand.LOCAL_SEARCH
+
     private val MAX_LINE_SIZE = 180
     private val OVERLAP = 4
 

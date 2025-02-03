@@ -9,6 +9,7 @@ import com.phodal.shirecore.lookupFile
 import com.phodal.shirecore.provider.shire.ShireSymbolProvider
 import com.phodal.shirelang.compiler.ast.LineInfo
 import com.phodal.shirelang.compiler.parser.SHIRE_ERROR
+import com.phodal.shirelang.completion.dataprovider.BuiltinCommand
 import com.phodal.shirelang.psi.ShireUsed
 
 /**
@@ -23,6 +24,8 @@ import com.phodal.shirelang.psi.ShireUsed
  * and move the cursor to line 10, column 8.
  */
 class GotoShireCommand(val myProject: Project, private val argument: String, val used: ShireUsed) : ShireCommand {
+    override val commandName = BuiltinCommand.GOTO
+
     override suspend fun doExecute(): String {
         if (argument.contains(".")) {
             return gotoSymbol()

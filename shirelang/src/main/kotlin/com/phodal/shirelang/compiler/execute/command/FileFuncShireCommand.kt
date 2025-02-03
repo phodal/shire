@@ -6,8 +6,11 @@ import com.intellij.openapi.roots.ProjectFileIndex
 import com.intellij.openapi.vfs.VirtualFile
 import com.phodal.shirelang.completion.dataprovider.FileFunc
 import com.phodal.shirecore.canBeAdded
+import com.phodal.shirelang.completion.dataprovider.BuiltinCommand
 
 class FileFuncShireCommand(val myProject: Project, private val prop: String) : ShireCommand {
+    override val commandName = BuiltinCommand.FILE_FUNC
+
     override suspend fun doExecute(): String {
         val (functionName, args) = parseRegex(prop)
             ?: return """$SHIRE_ERROR: file-func is not in the format @file-func:<functionName>(<arg1>, <arg2>, ...)

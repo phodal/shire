@@ -6,6 +6,7 @@ import com.intellij.openapi.roots.ProjectFileIndex
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiManager
 import com.phodal.shirecore.lookupFile
+import com.phodal.shirelang.completion.dataprovider.BuiltinCommand
 
 /**
  * The `DirShireCommand` class is responsible for listing files and directories in a tree-like structure for a given directory path within a project.
@@ -29,6 +30,8 @@ import com.phodal.shirecore.lookupFile
  * @param dir The path of the directory to list.
  */
 class DirShireCommand(private val myProject: Project, private val dir: String) : ShireCommand {
+    override val commandName = BuiltinCommand.DIR
+
     private val output = StringBuilder()
 
     override suspend fun doExecute(): String? {

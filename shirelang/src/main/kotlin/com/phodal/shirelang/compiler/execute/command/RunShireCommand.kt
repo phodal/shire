@@ -7,6 +7,7 @@ import com.phodal.shirecore.lookupFile
 import com.phodal.shirecore.provider.TestingService
 import com.phodal.shirecore.provider.shire.ProjectRunService
 import com.phodal.shirelang.compiler.parser.SHIRE_ERROR
+import com.phodal.shirelang.completion.dataprovider.BuiltinCommand
 
 /**
  * The `RunAutoCommand` class is responsible for executing an auto command on a given project.
@@ -16,6 +17,8 @@ import com.phodal.shirelang.compiler.parser.SHIRE_ERROR
  *
  */
 class RunShireCommand(val myProject: Project, private val argument: String) : ShireCommand {
+    override val commandName = BuiltinCommand.RUN
+
     override suspend fun doExecute(): String {
         val task = ProjectRunService.all().mapNotNull { projectRun ->
             val hasTasks = projectRun.tasks(myProject).any { task -> task.contains(argument) }

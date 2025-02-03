@@ -10,9 +10,12 @@ import com.intellij.openapi.vcs.changes.patch.ApplyPatchDefaultExecutor
 import com.intellij.openapi.vcs.changes.patch.MatchPatchPaths
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.util.containers.MultiMap
+import com.phodal.shirelang.completion.dataprovider.BuiltinCommand
 
 class PatchShireCommand(val myProject: Project, private val prop: String, private val codeContent: String) :
     ShireCommand {
+    override val commandName = BuiltinCommand.PATCH
+
     override suspend fun doExecute(): String {
         FileDocumentManager.getInstance().saveAllDocuments()
 

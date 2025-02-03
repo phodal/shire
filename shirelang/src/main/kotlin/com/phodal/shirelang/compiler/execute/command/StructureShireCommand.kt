@@ -7,15 +7,17 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.phodal.shirecore.provider.codemodel.FileStructureProvider
+import com.phodal.shirelang.completion.dataprovider.BuiltinCommand
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class StructureShireCommand(val myProject: Project, val prop: String) : ShireCommand {
-    private val logger = logger<StructureShireCommand>()
+    override val commandName = BuiltinCommand.STRUCTURE
+
     override suspend fun doExecute(): String? {
         val virtualFile = FileShireCommand.file(myProject, prop)
         if (virtualFile == null) {
-            logger.warn("File not found: $prop")
+            logger<StructureShireCommand>().warn("File not found: $prop")
             return null
         }
 

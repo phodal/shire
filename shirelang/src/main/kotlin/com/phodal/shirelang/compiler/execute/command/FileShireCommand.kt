@@ -8,6 +8,7 @@ import com.phodal.shirecore.ShirelangNotifications
 import com.phodal.shirecore.findFile
 import com.phodal.shirecore.lookupFile
 import com.phodal.shirelang.compiler.ast.LineInfo
+import com.phodal.shirelang.completion.dataprovider.BuiltinCommand
 
 /**
  * FileAutoCommand is responsible for reading a file and returning its contents.
@@ -17,6 +18,8 @@ import com.phodal.shirelang.compiler.ast.LineInfo
  *
  */
 class FileShireCommand(private val myProject: Project, private val prop: String) : ShireCommand {
+    override val commandName = BuiltinCommand.FILE
+
     override suspend fun doExecute(): String? {
         val range: LineInfo? = LineInfo.fromString(prop)
 

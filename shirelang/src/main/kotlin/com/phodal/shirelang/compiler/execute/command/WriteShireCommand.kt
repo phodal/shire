@@ -16,9 +16,12 @@ import com.intellij.psi.PsiManager
 import com.phodal.shirecore.lookupFile
 import com.phodal.shirelang.psi.ShireUsed
 import com.phodal.shirecore.utils.markdown.CodeFence
+import com.phodal.shirelang.completion.dataprovider.BuiltinCommand
 
 class WriteShireCommand(val myProject: Project, val argument: String, val content: String, private val used: ShireUsed) :
     ShireCommand {
+    override val commandName = BuiltinCommand.WRITE
+
     private val pathSeparator = "/"
 
     override suspend fun doExecute(): String {

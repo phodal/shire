@@ -8,6 +8,7 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.phodal.shirelang.completion.dataprovider.BuiltinRefactorCommand
 import com.phodal.shirecore.provider.shire.RefactoringTool
+import com.phodal.shirelang.completion.dataprovider.BuiltinCommand
 import com.phodal.shirelang.psi.ShireFile
 
 /**
@@ -48,6 +49,8 @@ import com.phodal.shirelang.psi.ShireFile
  */
 class RefactorShireCommand(val myProject: Project, private val argument: String, private val textSegment: String) :
     ShireCommand {
+    override val commandName = BuiltinCommand.REFACTOR
+
     override suspend fun doExecute(): String? {
         var currentEditFile: PsiFile? = null
         val editor = FileEditorManager.getInstance(myProject).selectedTextEditor

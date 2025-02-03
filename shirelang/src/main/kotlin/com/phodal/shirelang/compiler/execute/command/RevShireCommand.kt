@@ -2,6 +2,7 @@ package com.phodal.shirelang.compiler.execute.command
 
 import com.intellij.openapi.project.Project
 import com.phodal.shirecore.provider.shire.RevisionProvider
+import com.phodal.shirelang.completion.dataprovider.BuiltinCommand
 
 /**
  * RevAutoCommand is used to execute a command that retrieves the committed change list for a given revision using Git.
@@ -11,6 +12,8 @@ import com.phodal.shirecore.provider.shire.RevisionProvider
  *
  */
 class RevShireCommand(private val myProject: Project, private val revision: String) : ShireCommand {
+    override val commandName = BuiltinCommand.REV
+
     override suspend fun doExecute(): String {
         return RevisionProvider.provide()?.let {
             val changes = it.fetchChanges(myProject, revision)
