@@ -1,6 +1,17 @@
-# [](https://github.com/phodal/shire/compare/v1.3.3...v) (2025-01-14)
+# [](https://github.com/phodal/shire/compare/v1.3.4...v) (2025-02-05)
 
 ## [Unreleased]
+
+## [1.3.4](https://github.com/phodal/shire/compare/v1.3.3...v[1.3.4]) (2025-02-05)
+
+### Features
+
+* **command:** add isApplicable method to ShireCommand ([4857af8](https://github.com/phodal/shire/commit/4857af8de1afb8301881ecaf71c5f0fed3145bd5))
+* **commands:** add commandName property to all ShireCommand implementations ([08fc7f3](https://github.com/phodal/shire/commit/08fc7f38a14151d2b9d8444829d21065812758b7))
+* **commands:** enhance command descriptions and add enableInSketch flag ([0f88b46](https://github.com/phodal/shire/commit/0f88b4661598efb0a8577d47a45cc827e251e958))
+* **database:** add schema function and simplify toolchain provider ([05acdae](https://github.com/phodal/shire/commit/05acdaedd0312df00d08a99c7a8180208af0f3b7))
+* **search:** add ripgrep search command ([bafff1b](https://github.com/phodal/shire/commit/bafff1b3747ef7d9cc4cc9073d3987a36adeff6c))
+* **terminal:** add terminal sketch provider for bash support ([1148dc8](https://github.com/phodal/shire/commit/1148dc868a3c8cc71ac98be4caca00eac6500a28))
 
 ## [1.3.3](https://github.com/phodal/shire/compare/v1.3.2...v[1.3.3]) (2025-01-14)
 
@@ -902,7 +913,8 @@
 * **shell:** add shell language support plugin file ([bdc1c90](https://github.com/phodal/shire/commit/bdc1c90f10d7c2c4fb8f7157db343dd756c11352))
 * **shire:** add Shire context action group and location support ([e3df86d](https://github.com/phodal/shire/commit/e3df86d16d0c9985fec787a8e76ce553be9a9a45))
 
-[Unreleased]: https://github.com/phodal/shire/compare/v1.3.3...HEAD
+[Unreleased]: https://github.com/phodal/shire/compare/v1.3.4...HEAD
+[1.3.4]: https://github.com/phodal/shire/compare/v1.3.3...v1.3.4
 [1.3.3]: https://github.com/phodal/shire/compare/v1.3.2...v1.3.3
 [1.3.2]: https://github.com/phodal/shire/compare/v1.3.1...v1.3.2
 [1.3.1]: https://github.com/phodal/shire/compare/v1.2.4...v1.3.1
