@@ -1,7 +1,6 @@
 package com.phodal.shirelang.javascript.framework
 
 import com.intellij.lang.javascript.JavaScriptFileType
-import com.intellij.lang.javascript.TypeScriptJSXFileType
 import com.intellij.lang.javascript.dialects.ECMA6LanguageDialect
 import com.intellij.lang.javascript.dialects.TypeScriptJSXLanguageDialect
 import com.intellij.lang.javascript.psi.JSFile
@@ -36,8 +35,8 @@ class ReactPage(private val project: Project): ComponentProvider {
         val psiManager = PsiManager.getInstance(project)
 
         val virtualFiles =
-            FileTypeIndex.getFiles(JavaScriptFileType.INSTANCE, searchScope) +
-                    FileTypeIndex.getFiles(TypeScriptJSXFileType.INSTANCE, searchScope)
+            FileTypeIndex.getFiles(JavaScriptFileType.INSTANCE, searchScope)
+//                    FileTypeIndex.getFiles(TypeScriptJSXFileType.INSTANCE, searchScope)
 //                    FileTypeIndex.getFiles(JSXHarmonyFileType.INSTANCE, searchScope)
 
         val root = project.guessProjectDir()!!
