@@ -1,7 +1,9 @@
 package com.phodal.shirelang.java.codemodel
 
-import com.intellij.openapi.application.ReadAction
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.runReadAction
+import com.intellij.openapi.progress.ProgressManager
+import com.intellij.openapi.progress.util.ProgressIndicatorBase
 import com.intellij.psi.*
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.search.SearchScope
@@ -9,6 +11,7 @@ import com.intellij.psi.search.searches.MethodReferencesSearch
 import com.intellij.psi.search.searches.ReferencesSearch
 import com.phodal.shirecore.provider.codemodel.ClassStructureProvider
 import com.phodal.shirecore.provider.codemodel.model.ClassStructure
+
 
 class JavaClassStructureProvider : ClassStructureProvider {
     override fun build(psiElement: PsiElement, gatherUsages: Boolean): ClassStructure? {
@@ -52,8 +55,9 @@ class JavaClassStructureProvider : ClassStructureProvider {
             val project = nameIdentifierOwner.project
             val searchScope = GlobalSearchScope.allScope(project) as SearchScope
 
-            return ReadAction.compute<List<PsiReference>, Exception> {
-                when (nameIdentifierOwner) {
+            var results = emptyList<PsiReference>()
+            ProgressManager.getInstance().runProcess(Runnable {
+                results = when (nameIdentifierOwner) {
                     is PsiMethod -> {
                         MethodReferencesSearch.search(nameIdentifierOwner, searchScope, true)
                     }
@@ -62,7 +66,8 @@ class JavaClassStructureProvider : ClassStructureProvider {
                         ReferencesSearch.search((nameIdentifierOwner as PsiElement), searchScope, true)
                     }
                 }.findAll().map { it as PsiReference }
-            }
+            }, ProgressIndicatorBase())
+            return results
         }
     }
 }

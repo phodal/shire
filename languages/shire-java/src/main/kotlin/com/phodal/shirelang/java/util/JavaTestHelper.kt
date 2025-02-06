@@ -1,5 +1,7 @@
 package com.phodal.shirelang.java.util
 
+import com.intellij.openapi.progress.ProgressManager
+import com.intellij.openapi.progress.util.ProgressIndicatorBase
 import com.intellij.openapi.project.Project
 import com.intellij.psi.*
 import com.intellij.psi.search.GlobalSearchScope
@@ -106,17 +108,19 @@ object JavaTestHelper {
         val searchScope = ProjectScope.getAllScope(project)
         val callers: MutableList<PsiMethod> = ArrayList()
 
-        val references = ReferencesSearch.search(method, searchScope, true).findAll()
+        ProgressManager.getInstance().runProcess(Runnable {
+            val references = ReferencesSearch.search(method, searchScope, true).findAll()
 
-        for (reference in references) {
-            val element = reference.element
-            if (element is PsiMethodCallExpression) {
-                val callerMethod = element.resolveMethod()
-                if (callerMethod != null) {
-                    callers.add(callerMethod)
+            for (reference in references) {
+                val element = reference.element
+                if (element is PsiMethodCallExpression) {
+                    val callerMethod = element.resolveMethod()
+                    if (callerMethod != null) {
+                        callers.add(callerMethod)
+                    }
                 }
             }
-        }
+        }, ProgressIndicatorBase())
 
         return callers
     }
@@ -130,16 +134,18 @@ object JavaTestHelper {
     fun findCallees(project: Project, method: PsiMethod): List<PsiMethod> {
         val searchScope = ProjectScope.getAllScope(project)
         val callees: MutableList<PsiMethod> = ArrayList()
-
-        MethodReferencesSearch.search(method, searchScope, true).forEach { reference: PsiReference ->
-            val element = reference.element
-            if (element is PsiMethodCallExpression) {
-                val resolvedMethod = element.resolveMethod()
-                if (resolvedMethod != null) {
-                    callees.add(resolvedMethod)
+        ProgressManager.getInstance().runProcess(Runnable {
+            MethodReferencesSearch.search(method, searchScope, true).forEach { reference: PsiReference ->
+                val element = reference.element
+                if (element is PsiMethodCallExpression) {
+                    val resolvedMethod = element.resolveMethod()
+                    if (resolvedMethod != null) {
+                        callees.add(resolvedMethod)
+                    }
                 }
             }
-        }
+
+        }, ProgressIndicatorBase())
 
         return callees
     }
