@@ -53,7 +53,7 @@ class JavaClassStructureProvider : ClassStructureProvider {
          */
         fun findUsages(nameIdentifierOwner: PsiNameIdentifierOwner): List<PsiReference> {
             val project = nameIdentifierOwner.project
-            val searchScope = GlobalSearchScope.allScope(project) as SearchScope
+            val searchScope = GlobalSearchScope.allScope(project)
 
             var results = emptyList<PsiReference>()
             ProgressManager.getInstance().runProcess(Runnable {
