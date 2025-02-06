@@ -3,6 +3,7 @@ package com.phodal.shirelang.java.util
 import com.intellij.openapi.project.Project
 import com.intellij.psi.*
 import com.intellij.psi.search.GlobalSearchScope
+import com.intellij.psi.search.ProjectScope
 import com.intellij.psi.search.PsiShortNamesCache
 import com.intellij.psi.search.searches.ClassInheritorsSearch
 import com.intellij.psi.search.searches.MethodReferencesSearch
@@ -33,11 +34,15 @@ object JavaTestHelper {
                     .filter { isMethodCallFromInheritedClass(it, searchScope) }
                     .joinToString("\n") { it.text }
             }
+
             else -> ""
         }
     }
 
-    private fun isMethodCallFromInheritedClass(callExpression: PsiMethodCallExpression, searchScope: GlobalSearchScope): Boolean {
+    private fun isMethodCallFromInheritedClass(
+        callExpression: PsiMethodCallExpression,
+        searchScope: GlobalSearchScope,
+    ): Boolean {
         val resolvedMethod = callExpression.resolveMethod() ?: return false
         val containingClass = resolvedMethod.containingClass ?: return false
 
@@ -97,14 +102,14 @@ object JavaTestHelper {
      * @param method the method for which callers need to be found
      * @return a list of PsiMethod objects representing the callers of the given method
      */
-    fun findCallers(method: PsiMethod): List<PsiMethod> {
+    fun findCallers(project: Project, method: PsiMethod): List<PsiMethod> {
+        val searchScope = ProjectScope.getAllScope(project)
         val callers: MutableList<PsiMethod> = ArrayList()
 
-        val references = ReferencesSearch.search(method).findAll()
+        val references = ReferencesSearch.search(method, searchScope, true).findAll()
 
         for (reference in references) {
             val element = reference.element
-
             if (element is PsiMethodCallExpression) {
                 val callerMethod = element.resolveMethod()
                 if (callerMethod != null) {
@@ -122,10 +127,11 @@ object JavaTestHelper {
      * @param method the method for which callees need to be found
      * @return a list of PsiMethod objects representing the methods called by the given method
      */
-    fun findCallees(method: PsiMethod): List<PsiMethod> {
+    fun findCallees(project: Project, method: PsiMethod): List<PsiMethod> {
+        val searchScope = ProjectScope.getAllScope(project)
         val callees: MutableList<PsiMethod> = ArrayList()
 
-        MethodReferencesSearch.search(method).forEach(Consumer { reference: PsiReference ->
+        MethodReferencesSearch.search(method, searchScope, true).forEach { reference: PsiReference ->
             val element = reference.element
             if (element is PsiMethodCallExpression) {
                 val resolvedMethod = element.resolveMethod()
@@ -133,7 +139,7 @@ object JavaTestHelper {
                     callees.add(resolvedMethod)
                 }
             }
-        })
+        }
 
         return callees
     }

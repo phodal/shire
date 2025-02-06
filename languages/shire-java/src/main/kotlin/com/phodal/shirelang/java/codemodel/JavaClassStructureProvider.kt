@@ -1,5 +1,6 @@
 package com.phodal.shirelang.java.codemodel
 
+import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.application.runReadAction
 import com.intellij.psi.*
 import com.intellij.psi.search.GlobalSearchScope
@@ -51,15 +52,17 @@ class JavaClassStructureProvider : ClassStructureProvider {
             val project = nameIdentifierOwner.project
             val searchScope = GlobalSearchScope.allScope(project) as SearchScope
 
-            return when (nameIdentifierOwner) {
-                is PsiMethod -> {
-                    MethodReferencesSearch.search(nameIdentifierOwner, searchScope, true)
-                }
+            return ReadAction.compute<List<PsiReference>, Exception> {
+                when (nameIdentifierOwner) {
+                    is PsiMethod -> {
+                        MethodReferencesSearch.search(nameIdentifierOwner, searchScope, true)
+                    }
 
-                else -> {
-                    ReferencesSearch.search((nameIdentifierOwner as PsiElement), searchScope, true)
-                }
-            }.findAll().map { it as PsiReference }
+                    else -> {
+                        ReferencesSearch.search((nameIdentifierOwner as PsiElement), searchScope, true)
+                    }
+                }.findAll().map { it as PsiReference }
+            }
         }
     }
 }

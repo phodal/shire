@@ -30,7 +30,7 @@ class JavaPsiContextVariableProvider : PsiContextVariableProvider {
             CURRENT_CLASS_NAME -> clazz?.name ?: ""
             CURRENT_CLASS_CODE -> sourceFile.text
             CURRENT_METHOD_NAME -> (psiElement as? PsiMethod)?.name ?: ""
-            CURRENT_METHOD_CODE -> (psiElement as? PsiMethod)?.body?.text ?: ""
+            CURRENT_METHOD_CODE -> (psiElement as? PsiMethod)?.text ?: ""
             RELATED_CLASSES -> JavaRelatedClassesProvider().lookup(psiElement.parent).joinToString("\n") { it.text }
             SIMILAR_TEST_CASE -> JavaTestHelper.searchSimilarTestCases(psiElement).joinToString("\n") { it.text }
             IS_NEED_CREATE_FILE -> TestFinderHelper.findClassesForTest(psiElement).isEmpty()
@@ -39,12 +39,12 @@ class JavaPsiContextVariableProvider : PsiContextVariableProvider {
             CODE_SMELL -> CodeSmellCollector.collectElementProblemAsSting(psiElement, project, editor)
             METHOD_CALLER -> {
                 if (psiElement !is PsiMethod) return ""
-                return JavaTestHelper.findCallers(psiElement).joinToString("\n") { it.text }
+                return JavaTestHelper.findCallers(project, psiElement).joinToString("\n") { it.text }
             }
 
             CALLED_METHOD -> {
                 if (psiElement !is PsiMethod) return ""
-                return JavaTestHelper.findCallees(psiElement).joinToString("\n") { it.text }
+                return JavaTestHelper.findCallees(project, psiElement).joinToString("\n") { it.text }
             }
 
             SIMILAR_CODE -> return SimilarChunksSearch.createQuery(psiElement) ?: ""
