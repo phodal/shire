@@ -39,12 +39,12 @@ class JavaPsiContextVariableProvider : PsiContextVariableProvider {
             CODE_SMELL -> CodeSmellCollector.collectElementProblemAsSting(psiElement, project, editor)
             METHOD_CALLER -> {
                 if (psiElement !is PsiMethod) return ""
-                return JavaTestHelper.findCallers(project, psiElement).joinToString("\n") { it.text }
+                return JavaTestHelper.findCallers(project, psiElement).joinToString("\n\n")
             }
 
             CALLED_METHOD -> {
                 if (psiElement !is PsiMethod) return ""
-                return JavaTestHelper.findCallees(project, psiElement).joinToString("\n") { it.text }
+                return JavaTestHelper.findCallees(project, psiElement).joinToString("\n\n")
             }
 
             SIMILAR_CODE -> return SimilarChunksSearch.createQuery(psiElement) ?: ""

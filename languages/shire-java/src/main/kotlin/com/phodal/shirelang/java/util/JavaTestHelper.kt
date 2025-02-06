@@ -102,8 +102,7 @@ object JavaTestHelper {
      * @param method the method for which callees need to be found
      * @return a list of PsiMethod objects representing the methods called by the given method
      */
-    fun findCallees(project: Project, method: PsiMethod): List<PsiMethod> {
-        val callees: MutableList<PsiMethod> = ArrayList()
+    fun findCallees(project: Project, method: PsiMethod): List<String> {
         val calledMethods = mutableSetOf<PsiMethod>()
         method.accept(object : JavaRecursiveElementVisitor() {
             override fun visitMethodCallExpression(expression: PsiMethodCallExpression) {
@@ -112,8 +111,15 @@ object JavaTestHelper {
             }
         })
 
-        callees.addAll(calledMethods)
-        return callees.distinct()
+        return calledMethods
+            .mapNotNull {
+                val containingClass = it.containingClass ?: return@mapNotNull null
+                if (!ProjectScope.getProjectScope(project).contains(containingClass.containingFile.virtualFile)) {
+                    return@mapNotNull null
+                }
+
+                "ClassName: ${containingClass.qualifiedName}\nMethodText:\n${it.text}"
+            }
     }
 
     /**
@@ -122,7 +128,7 @@ object JavaTestHelper {
      * @param method the method for which callers need to be found
      * @return a list of PsiMethod objects representing the callers of the given method
      */
-    fun findCallers(project: Project, method: PsiMethod): List<PsiMethod> {
+    fun findCallers(project: Project, method: PsiMethod): List<String> {
         val callers: MutableList<PsiMethod> = ArrayList()
 
         ProgressManager.getInstance().runProcess(Runnable {
@@ -134,6 +140,12 @@ object JavaTestHelper {
             }
         }, ProgressIndicatorBase())
 
-        return callers.distinct()
+        val psiMethods = callers.distinct()
+
+        return psiMethods
+            .mapNotNull {
+                val containingClass = it.containingClass ?: return@mapNotNull null
+                "ClassName: ${containingClass.qualifiedName}\nMethodText:\n${it.text}"
+            }
     }
 }
