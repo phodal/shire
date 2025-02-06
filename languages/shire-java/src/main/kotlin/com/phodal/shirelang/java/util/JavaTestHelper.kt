@@ -9,11 +9,9 @@ import com.intellij.psi.search.ProjectScope
 import com.intellij.psi.search.PsiShortNamesCache
 import com.intellij.psi.search.searches.ClassInheritorsSearch
 import com.intellij.psi.search.searches.MethodReferencesSearch
-import com.intellij.psi.search.searches.ReferencesSearch
 import com.intellij.psi.util.*
-import com.phodal.shirecore.search.tokenizer.CodeNamingTokenizer
 import com.phodal.shirecore.search.algorithm.TfIdf
-import java.util.function.Consumer
+import com.phodal.shirecore.search.tokenizer.CodeNamingTokenizer
 
 
 object JavaTestHelper {
@@ -99,54 +97,43 @@ object JavaTestHelper {
     }
 
     /**
-     * Finds all the callers of a given method.
-     *
-     * @param method the method for which callers need to be found
-     * @return a list of PsiMethod objects representing the callers of the given method
-     */
-    fun findCallers(project: Project, method: PsiMethod): List<PsiMethod> {
-        val searchScope = ProjectScope.getAllScope(project)
-        val callers: MutableList<PsiMethod> = ArrayList()
-
-        ProgressManager.getInstance().runProcess(Runnable {
-            val references = ReferencesSearch.search(method, searchScope, true).findAll()
-
-            for (reference in references) {
-                val element = reference.element
-                if (element is PsiMethodCallExpression) {
-                    val callerMethod = element.resolveMethod()
-                    if (callerMethod != null) {
-                        callers.add(callerMethod)
-                    }
-                }
-            }
-        }, ProgressIndicatorBase())
-
-        return callers
-    }
-
-    /**
      * Finds all the methods called by the given method.
      *
      * @param method the method for which callees need to be found
      * @return a list of PsiMethod objects representing the methods called by the given method
      */
     fun findCallees(project: Project, method: PsiMethod): List<PsiMethod> {
-        val searchScope = ProjectScope.getAllScope(project)
         val callees: MutableList<PsiMethod> = ArrayList()
+        val calledMethods = mutableSetOf<PsiMethod>()
+        method.accept(object : JavaRecursiveElementVisitor() {
+            override fun visitMethodCallExpression(expression: PsiMethodCallExpression) {
+                super.visitMethodCallExpression(expression)
+                calledMethods.add(expression.resolveMethod() ?: return)
+            }
+        })
+
+        callees.addAll(calledMethods)
+        return callees.distinct()
+    }
+
+    /**
+     * Finds all the callers of a given method.
+     *
+     * @param method the method for which callers need to be found
+     * @return a list of PsiMethod objects representing the callers of the given method
+     */
+    fun findCallers(project: Project, method: PsiMethod): List<PsiMethod> {
+        val callers: MutableList<PsiMethod> = ArrayList()
+
         ProgressManager.getInstance().runProcess(Runnable {
-            MethodReferencesSearch.search(method, searchScope, true).forEach { reference: PsiReference ->
-                val element = reference.element
-                if (element is PsiMethodCallExpression) {
-                    val resolvedMethod = element.resolveMethod()
-                    if (resolvedMethod != null) {
-                        callees.add(resolvedMethod)
-                    }
+            val references = MethodReferencesSearch.search(method, method.useScope, true).findAll()
+            for (reference in references) {
+                PsiTreeUtil.getParentOfType(reference.element, PsiMethod::class.java)?.let {
+                    callers.add(it)
                 }
             }
-
         }, ProgressIndicatorBase())
 
-        return callees
+        return callers.distinct()
     }
 }
