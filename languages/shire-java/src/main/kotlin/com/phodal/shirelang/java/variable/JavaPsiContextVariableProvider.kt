@@ -49,7 +49,7 @@ class JavaPsiContextVariableProvider : PsiContextVariableProvider {
 
             SIMILAR_CODE -> return SimilarChunksSearch.createQuery(psiElement) ?: ""
             STRUCTURE -> clazz?.let {
-                JavaClassStructureProvider().build(it, true)?.toString() ?: ""
+                JavaClassStructureProvider().build(it, true)?.format() ?: ""
             } ?: ""
 
             FRAMEWORK_CONTEXT -> return collectFrameworkContext(psiElement, project)

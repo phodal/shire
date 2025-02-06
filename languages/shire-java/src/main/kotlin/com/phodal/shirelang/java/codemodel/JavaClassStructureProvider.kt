@@ -1,6 +1,5 @@
 package com.phodal.shirelang.java.codemodel
 
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.runReadAction
 import com.intellij.psi.*
 import com.intellij.psi.search.GlobalSearchScope
@@ -9,7 +8,6 @@ import com.intellij.psi.search.searches.MethodReferencesSearch
 import com.intellij.psi.search.searches.ReferencesSearch
 import com.phodal.shirecore.provider.codemodel.ClassStructureProvider
 import com.phodal.shirecore.provider.codemodel.model.ClassStructure
-import com.phodal.shirecore.provider.codemodel.model.MethodStructure
 
 class JavaClassStructureProvider : ClassStructureProvider {
     override fun build(psiElement: PsiElement, gatherUsages: Boolean): ClassStructure? {
@@ -21,27 +19,25 @@ class JavaClassStructureProvider : ClassStructureProvider {
             }
         }
 
-        return ApplicationManager.getApplication().executeOnPooledThread<ClassStructure> {
-            runReadAction {
-                val fields = psiElement.fields.toList()
-                val methods = psiElement.methods.toList()
+        return runReadAction {
+            val fields = psiElement.fields.toList()
+            val methods = psiElement.methods.toList()
 
-                val usages =
-                    if (gatherUsages) Companion.findUsages(psiElement as PsiNameIdentifierOwner) else emptyList()
+            val usages =
+                if (gatherUsages) findUsages(psiElement as PsiNameIdentifierOwner) else emptyList()
 
-                val annotations: List<String> = psiElement.annotations.mapNotNull {
-                    it.text
-                }
-
-                ClassStructure(
-                    psiElement, psiElement.text, psiElement.name,
-                    displayName = psiElement.qualifiedName,
-                    methods, fields, supers,
-                    annotations,
-                    usages
-                )
+            val annotations: List<String> = psiElement.annotations.mapNotNull {
+                it.text
             }
-        }.get()
+
+            ClassStructure(
+                psiElement, psiElement.text, psiElement.name,
+                displayName = psiElement.qualifiedName,
+                methods, fields, supers,
+                annotations,
+                usages
+            )
+        }
     }
 
     companion object {
