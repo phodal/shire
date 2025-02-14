@@ -459,7 +459,7 @@ project(":shirelang") {
         }
 
         // for ShireQL Schema
-        implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
+        implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.2")
 
         implementation(kotlin("reflect"))
         implementation(project(":core"))
