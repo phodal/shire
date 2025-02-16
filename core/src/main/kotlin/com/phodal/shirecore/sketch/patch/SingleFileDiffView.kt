@@ -8,7 +8,9 @@ import com.intellij.diff.editor.DiffEditorTabFilesManager
 import com.intellij.diff.requests.SimpleDiffRequest
 import com.intellij.icons.AllIcons
 import com.intellij.lang.Language
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.runInEdt
+import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.command.undo.UndoManager
 import com.intellij.openapi.diff.impl.patch.TextFilePatch
 import com.intellij.openapi.diff.impl.patch.apply.GenericPatchApplier
@@ -18,6 +20,8 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogPanel
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.readText
+import com.intellij.psi.PsiManager
+import com.intellij.testFramework.LightVirtualFile
 import com.intellij.ui.DarculaColors
 import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBLabel
@@ -25,8 +29,10 @@ import com.intellij.ui.components.panels.VerticalLayout
 import com.intellij.ui.dsl.builder.AlignX
 import com.intellij.ui.dsl.builder.RightGap
 import com.intellij.ui.dsl.builder.panel
+import com.intellij.util.LocalTimeCounter
 import com.phodal.shirecore.ShireCoreBundle
 import com.phodal.shirecore.sketch.LangSketch
+import com.phodal.shirecore.sketch.lint.SketchCodeInspection
 import java.awt.BorderLayout
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
@@ -38,19 +44,22 @@ import javax.swing.JPanel
 
 class SingleFileDiffView(
     private val myProject: Project,
-    private val virtualFile: VirtualFile,
+    private val currentFile: VirtualFile,
     val patch: TextFilePatch,
 ) : LangSketch {
     private val mainPanel: JPanel = JPanel(VerticalLayout(5))
     private val myHeaderPanel: JPanel = JPanel(BorderLayout())
     private var filePanel: DialogPanel? = null
     var diffFile: ChainDiffVirtualFile? = null
+    private val oldCode = currentFile.readText()
+    private val appliedPatch = GenericPatchApplier.apply(oldCode, patch.hunks)
+    private val newCode = appliedPatch?.patchedText ?: ""
 
     init {
         val contentPanel = JPanel(BorderLayout())
         val actions = createActionButtons()
-        val filepathLabel = JBLabel(virtualFile.name).apply {
-            icon = virtualFile.fileType.icon
+        val filepathLabel = JBLabel(currentFile.name).apply {
+            icon = currentFile.fileType.icon
             border = BorderFactory.createEmptyBorder(2, 10, 2, 10)
 
             addMouseListener(object : MouseAdapter() {
@@ -58,7 +67,7 @@ class SingleFileDiffView(
                     val isShowDiffSuccess = showDiff()
                     if (isShowDiffSuccess) return
 
-                    FileEditorManager.getInstance(myProject).openFile(virtualFile, true)
+                    FileEditorManager.getInstance(myProject).openFile(currentFile, true)
                 }
 
                 override fun mouseEntered(e: MouseEvent) {
@@ -94,6 +103,20 @@ class SingleFileDiffView(
 
         mainPanel.add(myHeaderPanel)
         mainPanel.add(contentPanel)
+
+        ApplicationManager.getApplication().executeOnPooledThread {
+            lintCheckForNewCode(currentFile)
+        }
+    }
+
+    fun lintCheckForNewCode(currentFile: VirtualFile) {
+        if (newCode.isEmpty()) return
+        val newFile = LightVirtualFile(currentFile, newCode, LocalTimeCounter.currentTime())
+        val psiFile = runReadAction { PsiManager.getInstance(myProject).findFile(newFile) } ?: return
+        val errors = SketchCodeInspection.runInspections(myProject, psiFile, currentFile)
+        if (errors.isNotEmpty()) {
+            SketchCodeInspection.showErrors(errors, this@SingleFileDiffView.mainPanel)
+        }
     }
 
     private fun showDiff(): Boolean {
@@ -102,13 +125,13 @@ class SingleFileDiffView(
             return true
         }
 
-        val document = FileDocumentManager.getInstance().getDocument(virtualFile) ?: return false
+        val document = FileDocumentManager.getInstance().getDocument(currentFile) ?: return false
         val appliedPatch = GenericPatchApplier.apply(document.text, patch.hunks)
             ?: return false
 
         val newText = appliedPatch.patchedText
         val diffFactory = DiffContentFactoryEx.getInstanceEx()
-        val currentDocContent = diffFactory.create(myProject, virtualFile)
+        val currentDocContent = diffFactory.create(myProject, currentFile)
         val newDocContent = diffFactory.create(newText)
 
         val diffRequest =
@@ -120,7 +143,7 @@ class SingleFileDiffView(
                 "AI generated"
             )
 
-        val producer = SimpleDiffRequestProducer.create(virtualFile.path) {
+        val producer = SimpleDiffRequestProducer.create(currentFile.path) {
             diffRequest
         }
 
@@ -141,7 +164,7 @@ class SingleFileDiffView(
 
     private fun createActionButtons(): List<JButton> {
         val undoManager = UndoManager.getInstance(myProject)
-        val fileEditor = FileEditorManager.getInstance(myProject).getSelectedEditor(virtualFile)
+        val fileEditor = FileEditorManager.getInstance(myProject).getSelectedEditor(currentFile)
 
         val rollback = JButton(AllIcons.Actions.Rollback).apply {
             toolTipText = ShireCoreBundle.message("sketch.patch.action.rollback.tooltip")
@@ -162,7 +185,7 @@ class SingleFileDiffView(
         return listOf(rollback)
     }
 
-    override fun getViewText(): String = virtualFile.readText()
+    override fun getViewText(): String = currentFile.readText()
 
     override fun updateViewText(text: String) {}
 
