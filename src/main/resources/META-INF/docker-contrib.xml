@@ -1,0 +1,7 @@
+<!-- Defines IDEA IDE-specific contributions and implementations. -->
+<idea-plugin>
+    <extensions defaultExtensionNs="com.phodal">
+        <shireLanguageToolchainProvider language="Dockerfile"
+                                        implementationClass="com.phodal.shire.docker.DockerContextProvider"/>
+    </extensions>
+</idea-plugin>

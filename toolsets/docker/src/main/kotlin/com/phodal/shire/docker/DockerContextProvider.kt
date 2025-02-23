@@ -1,9 +1,8 @@
-package com.phodal.shire.container
+package com.phodal.shire.docker
 
 import com.intellij.docker.DockerFileSearch
 import com.intellij.docker.dockerFile.parser.psi.DockerFileFromCommand
 import com.intellij.openapi.application.runReadAction
-import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VfsUtilCore
 import com.intellij.openapi.vfs.VirtualFile

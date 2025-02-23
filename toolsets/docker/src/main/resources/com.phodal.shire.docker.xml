@@ -1,0 +1,6 @@
+<idea-plugin package="com.phodal.shire.docker">
+    <!--suppress PluginXmlValidity -->
+    <dependencies>
+        <plugin id="Docker"/>
+    </dependencies>
+</idea-plugin>

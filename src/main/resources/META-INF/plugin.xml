@@ -6,6 +6,7 @@
     <depends optional="true" config-file="json-contrib.xml">com.intellij.modules.json</depends>
     <depends optional="true" config-file="openrewrite-contrib.xml">com.intellij.openRewrite</depends>
     <depends optional="true" config-file="wiremock-contrib.xml">com.intellij.wiremock</depends>
+    <depends optional="true" config-file="docker-contrib.xml">Docker</depends>
 
     <resource-bundle>messages.ShireMainBundle</resource-bundle>
 
@@ -33,6 +34,7 @@
         <module name="com.phodal.shire.openrewrite"/>
         <module name="com.phodal.shire.mermaid"/>
         <module name="com.phodal.shire.plantuml"/>
+        <module name="com.phodal.shire.docker"/>
     </content>
 
     <extensions defaultExtensionNs="com.intellij">
