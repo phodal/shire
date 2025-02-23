@@ -26,5 +26,6 @@ include(
     "toolsets:mock",
     "toolsets:openrewrite",
     "toolsets:mermaid",
+    "toolsets:docker",
 //    "toolsets:uitest",
 )

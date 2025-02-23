@@ -1,0 +1,11 @@
+<idea-plugin package="com.phodal.shire.container">
+    <!--suppress PluginXmlValidity -->
+    <dependencies>
+        <plugin id="Docker"/>
+    </dependencies>
+
+    <extensions defaultExtensionNs="com.phodal">
+        <shireLanguageToolchainProvider language="Dockerfile"
+                                        implementationClass="com.phodal.shire.container.DockerContextProvider"/>
+    </extensions>
+</idea-plugin>

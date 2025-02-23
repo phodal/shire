@@ -21,6 +21,7 @@
             <option value="$PROJECT_DIR$/shirelang" />
             <option value="$PROJECT_DIR$/toolsets" />
             <option value="$PROJECT_DIR$/toolsets/database" />
+            <option value="$PROJECT_DIR$/toolsets/docker" />
             <option value="$PROJECT_DIR$/toolsets/git" />
             <option value="$PROJECT_DIR$/toolsets/httpclient" />
             <option value="$PROJECT_DIR$/toolsets/mermaid" />

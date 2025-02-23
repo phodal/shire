@@ -435,6 +435,17 @@ project(":toolsets:mermaid") {
     }
 }
 
+project(":toolsets:docker") {
+    dependencies {
+        intellijPlatform {
+            intellijIde(prop("ideaVersion"))
+            intellijPlugins(ideaPlugins + "Docker")
+        }
+
+        implementation(project(":core"))
+    }
+}
+
 project(":shirelang") {
     apply {
         plugin("org.jetbrains.grammarkit")
@@ -647,6 +658,7 @@ project(":") {
             pluginModule(implementation(project(":toolsets:openrewrite")))
             pluginModule(implementation(project(":toolsets:plantuml")))
             pluginModule(implementation(project(":toolsets:mermaid")))
+            pluginModule(implementation(project(":toolsets:docker")))
 
             testFramework(TestFrameworkType.Bundled)
         }
