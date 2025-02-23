@@ -122,7 +122,6 @@
                   implements="com.phodal.shirecore.provider.codemodel.VariableStructureProvider"/>
         </extensionPoint>
 
-
         <!-- PSI DATA Builder -->
         <extensionPoint qualifiedName="com.phodal.shirePsiElementDataBuilder"
                         beanClass="com.intellij.lang.LanguageExtensionPoint" dynamic="true">
@@ -135,7 +134,6 @@
                         interface="com.phodal.shirecore.provider.variable.ToolchainVariableProvider"
                         dynamic="true">
         </extensionPoint>
-
 
         <!-- Toolchain Function Provider -->
         <extensionPoint qualifiedName="com.phodal.shireToolchainFunctionProvider"
