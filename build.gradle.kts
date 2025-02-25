@@ -134,7 +134,7 @@ configure(
         }
 
 //        slf4j-simple
-        implementation("org.slf4j:slf4j-simple:1.7.36")
+        implementation("org.slf4j:slf4j-simple:2.0.17")
     }
 
     configurations.all {
