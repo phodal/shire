@@ -17,8 +17,8 @@ kaml = "com.charleskorn.kaml:kaml:0.72.0"
 
 # org.reflections:reflections:0.10.2
 reflections = "org.reflections:reflections:0.10.2"
-# "org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0"
-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0"
+# "org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1"
+serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1"
 
 [plugins]
 changelog = { id = "org.jetbrains.changelog", version.ref = "changelog" }
