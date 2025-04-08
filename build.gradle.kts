@@ -122,7 +122,7 @@ configure(
 
     dependencies {
 //        compileOnly(kotlin("stdlib-jdk8"))
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1") {
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2") {
             excludeKotlinDeps()
         }
 
@@ -333,7 +333,7 @@ project(":toolsets:git") {
 
         implementation(project(":core"))
 
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1")
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
     }
 }
 
