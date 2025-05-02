@@ -26,7 +26,6 @@ class ShireSyntaxLineMarkerProvider : LineMarkerProvider {
             }
         }
 
-
         when (element.functionStatement?.functionBody?.firstChild) {
             is ShireQueryStatement -> {
                 return LineMarkerInfo(leafElement, leafElement.textRange, ShireIcons.PsiExpr, null, null, LEFT)
