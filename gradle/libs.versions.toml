@@ -2,7 +2,7 @@
 # libraries
 
 # plugins
-kotlin = "2.1.20"
+kotlin = "2.1.21"
 changelog = "2.2.1"
 gradleIntelliJPlugin = "2.0.1"
 qodana = "2025.1.1"
