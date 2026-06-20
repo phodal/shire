@@ -12,7 +12,6 @@ nav_order: 6
 支持的工具链：
 
 - Git
-- SonarQube
 - Maven, Gradle（TODO）
 
 ## Git
@@ -26,16 +25,6 @@ Git 工具链提供以下变量：
 - `currentBranch`，当前分支的名称。
 - `historyCommitMessages`，当前提交的提交消息。
 - `diff`，当前选中 commit 的 diff 信息。
-
-## SonarQube
-
-{: .label .label-red }
-Require: [Sonarlint plugin](https://plugins.jetbrains.com/plugin/7973-sonarlint)
-
-SonarQube 工具链提供以下变量：
-
-- `sonarIssues`，当前文件的 SonarQube 中的问题列表。
-- `sonarResults`，当前文件的 SonarQube 中的结果，含有问题的详细信息。
 
 ## ProjectDependencies (TBC)
 

@@ -172,14 +172,6 @@
 
         </action>
 
-        <action id="ShireSonarLintAction"
-                class="com.phodal.shirelang.actions.external.ShireSonarLintAction"
-                icon="com.phodal.shirelang.ShireIcons.DEFAULT"
-                text="Shire SonarLint Action"
-                description="Shire SonarLint action">
-
-        </action>
-
         <action id="ShireVcsLogAction"
                 class="com.phodal.shirelang.actions.vcs.ShireVcsLogAction"
                 icon="com.phodal.shirelang.ShireIcons.DEFAULT"

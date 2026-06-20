@@ -2,6 +2,18 @@
 
 ## [Unreleased]
 
+## [1.3.7] - 2026-06-20
+
+### Bug Fixes
+
+* **compatibility:** fix IntelliJ Platform 253/261 verifier issues for optional modules, HTTP client cURL parsing, Python PSI, and VCS notifications
+
+## [1.3.6] - 2026-06-20
+
+### Bug Fixes
+
+* **compatibility:** support IntelliJ Platform 261 and remove the deprecated SonarLint integration
+
 ## [1.3.4](https://github.com/phodal/shire/compare/v1.3.3...v[1.3.4]) (2025-02-05)
 
 ### Features
@@ -913,7 +925,9 @@
 * **shell:** add shell language support plugin file ([bdc1c90](https://github.com/phodal/shire/commit/bdc1c90f10d7c2c4fb8f7157db343dd756c11352))
 * **shire:** add Shire context action group and location support ([e3df86d](https://github.com/phodal/shire/commit/e3df86d16d0c9985fec787a8e76ce553be9a9a45))
 
-[Unreleased]: https://github.com/phodal/shire/compare/v1.3.4...HEAD
+[Unreleased]: https://github.com/phodal/shire/compare/v1.3.7...HEAD
+[1.3.7]: https://github.com/phodal/shire/compare/v1.3.6...v1.3.7
+[1.3.6]: https://github.com/phodal/shire/compare/v1.3.4...v1.3.6
 [1.3.4]: https://github.com/phodal/shire/compare/v1.3.3...v1.3.4
 [1.3.3]: https://github.com/phodal/shire/compare/v1.3.2...v1.3.3
 [1.3.2]: https://github.com/phodal/shire/compare/v1.3.1...v1.3.2

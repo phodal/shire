@@ -9,7 +9,9 @@ import org.jetbrains.intellij.platform.gradle.extensions.IntelliJPlatformTesting
 import org.jetbrains.intellij.platform.gradle.tasks.RunIdeTask
 import org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginTask
 import org.jetbrains.intellij.platform.gradle.utils.extensionProvider
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.gradle.api.tasks.compile.JavaCompile
 import java.util.*
 
 fun properties(key: String) = providers.gradleProperty(key)
@@ -120,12 +122,17 @@ configure(
         }
     }
 
+    tasks.withType<JavaCompile>().configureEach {
+        sourceCompatibility = prop("javaVersion")
+        targetCompatibility = prop("javaVersion")
+    }
+
+    tasks.withType<KotlinCompile>().configureEach {
+        compilerOptions.jvmTarget.set(JvmTarget.fromTarget(prop("javaVersion")))
+    }
+
     dependencies {
 //        compileOnly(kotlin("stdlib-jdk8"))
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2") {
-            excludeKotlinDeps()
-        }
-
         implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1") {
             excludeKotlinDeps()
         }
@@ -333,7 +340,6 @@ project(":toolsets:git") {
 
         implementation(project(":core"))
 
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
     }
 }
 
@@ -363,17 +369,6 @@ project(":toolsets:terminal") {
         intellijPlatform {
             intellijIde(prop("ideaVersion"))
             intellijPlugins(ideaPlugins)
-        }
-
-        implementation(project(":core"))
-    }
-}
-
-project(":toolsets:sonarqube") {
-    dependencies {
-        intellijPlatform {
-            intellijIde(prop("ideaVersion"))
-            intellijPlugins(ideaPlugins + prop("sonarPlugin"))
         }
 
         implementation(project(":core"))
@@ -596,13 +591,13 @@ project(":") {
 
         pluginVerification {
             freeArgs = listOf("-mute", "TemplateWordInPluginId,ForbiddenPluginIdPrefix")
-            failureLevel = listOf(VerifyPluginTask.FailureLevel.MISSING_DEPENDENCIES)
+            failureLevel = listOf(
+                VerifyPluginTask.FailureLevel.COMPATIBILITY_PROBLEMS,
+            )
             ides {
                 select {
-                    sinceBuild = "242"
-                    untilBuild = "243"
-////                    sinceBuild = prop("pluginSinceBuild")
-////                    untilBuild = prop("pluginUntilBuild")
+                    sinceBuild = prop("pluginSinceBuild")
+                    untilBuild = prop("pluginUntilBuild")
                 }
             }
         }
@@ -652,7 +647,6 @@ project(":") {
             pluginModule(implementation(project(":toolsets:git")))
             pluginModule(implementation(project(":toolsets:httpclient")))
             pluginModule(implementation(project(":toolsets:terminal")))
-            pluginModule(implementation(project(":toolsets:sonarqube")))
             pluginModule(implementation(project(":toolsets:database")))
             pluginModule(implementation(project(":toolsets:mock")))
             pluginModule(implementation(project(":toolsets:openrewrite")))

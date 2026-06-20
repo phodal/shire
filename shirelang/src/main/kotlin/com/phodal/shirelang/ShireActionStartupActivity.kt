@@ -8,7 +8,6 @@ import com.intellij.openapi.application.smartReadAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.ProjectActivity
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.openapi.wm.ex.ToolWindowManagerListener
 import com.intellij.psi.PsiManager
 import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.ProjectScope
@@ -20,7 +19,6 @@ import com.phodal.shirelang.actions.ShireFileChangesProvider
 import com.phodal.shirelang.actions.base.DynamicShireActionService
 import com.phodal.shirelang.actions.copyPaste.PasteManagerService
 import com.phodal.shirelang.compiler.ast.hobbit.HobbitHole
-import com.phodal.shirelang.thirdparty.ShireSonarLintToolWindowListener
 import com.phodal.shirelang.psi.ShireFile
 
 
@@ -45,9 +43,6 @@ class ShireActionStartupActivity : ProjectActivity {
             attachTerminalAction()
             attachDatabaseAction()
             attachVcsLogAction()
-
-            // attache extension actions, like SonarLint
-            attachExtensionActions(project)
         }
     }
 
@@ -100,10 +95,6 @@ class ShireActionStartupActivity : ProjectActivity {
         }
     }
 
-    private fun attachExtensionActions(project: Project) {
-        project.messageBus.connect().subscribe(ToolWindowManagerListener.TOPIC, ShireSonarLintToolWindowListener());
-    }
-
     companion object {
         private fun obtainShireFiles(project: Project): List<ShireFile> {
             ApplicationManager.getApplication().assertReadAccessAllowed()
@@ -132,4 +123,3 @@ class ShireActionStartupActivity : ProjectActivity {
         }
     }
 }
-

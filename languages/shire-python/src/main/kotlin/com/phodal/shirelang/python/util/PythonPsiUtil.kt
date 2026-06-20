@@ -6,6 +6,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.concurrency.annotations.RequiresReadLock
+import com.jetbrains.python.psi.LanguageLevel
 import com.jetbrains.python.psi.*
 import com.jetbrains.python.psi.types.PyType
 import com.jetbrains.python.psi.types.TypeEvalContext
@@ -71,7 +72,7 @@ object PythonPsiUtil {
     }
 
     private fun makeEllipsisExpression(project: Project): PyExpression {
-        return PyElementGenerator.getInstance(project).createEllipsis()
+        return PyElementGenerator.getInstance(project).createExpressionFromText(LanguageLevel.getDefault(), "...")
     }
 
     @RequiresReadLock

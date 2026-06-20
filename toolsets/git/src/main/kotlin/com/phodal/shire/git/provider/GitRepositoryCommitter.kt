@@ -2,6 +2,7 @@
 package com.phodal.shire.git.provider
 
 import com.intellij.execution.process.ProcessOutputTypes
+import com.intellij.notification.Notification
 import com.intellij.notification.NotificationAction
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.help.HelpManager
@@ -160,4 +161,7 @@ private class GitGpgCommitException(cause: VcsException) : VcsException(cause), 
         get() = listOf(NotificationAction.createSimple(GitBundle.message("gpg.error.see.documentation.link.text")) {
             HelpManager.getInstance().invokeHelp(GitBundle.message("gpg.jb.manual.link"))
         })
+
+    @Suppress("unused")
+    fun getActions(notification: Notification): List<NotificationAction> = actions
 }

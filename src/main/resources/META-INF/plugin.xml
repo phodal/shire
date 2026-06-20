@@ -14,27 +14,26 @@
     <xi:include href="/com.phodal.shire.json.xml" xpointer="xpointer(/idea-plugin/*)"/>
 
     <content>
-        <module name="com.phodal.shirelang"/>
-        <module name="com.phodal.shirelang.java"/>
-        <module name="com.phodal.shirelang.javascript"/>
-        <module name="com.phodal.shirelang.python"/>
-        <module name="com.phodal.shirelang.kotlin"/>
-        <module name="com.phodal.shirelang.go"/>
-        <module name="com.phodal.shirelang.markdown"/>
-        <module name="com.phodal.shirelang.proto"/>
+        <module name="com.phodal.shirelang" loading="optional"/>
+        <module name="com.phodal.shirelang.java" loading="optional"/>
+        <module name="com.phodal.shirelang.javascript" loading="optional"/>
+        <module name="com.phodal.shirelang.python" loading="optional"/>
+        <module name="com.phodal.shirelang.kotlin" loading="optional"/>
+        <module name="com.phodal.shirelang.go" loading="optional"/>
+        <module name="com.phodal.shirelang.markdown" loading="optional"/>
+        <module name="com.phodal.shirelang.proto" loading="optional"/>
 
 <!--        <module name="com.phodal.shire.json"/>-->
 
-        <module name="com.phodal.shire.httpclient"/>
-        <module name="com.phodal.shire.terminal"/>
-        <module name="com.phodal.shire.database"/>
-        <module name="com.phodal.shire.git"/>
-        <module name="com.phodal.shire.mock"/>
-        <module name="com.phodal.shire.sonarqube"/>
-        <module name="com.phodal.shire.openrewrite"/>
-        <module name="com.phodal.shire.mermaid"/>
-        <module name="com.phodal.shire.plantuml"/>
-        <module name="com.phodal.shire.docker"/>
+        <module name="com.phodal.shire.httpclient" loading="optional"/>
+        <module name="com.phodal.shire.terminal" loading="optional"/>
+        <module name="com.phodal.shire.database" loading="optional"/>
+        <module name="com.phodal.shire.git" loading="optional"/>
+        <module name="com.phodal.shire.mock" loading="optional"/>
+        <module name="com.phodal.shire.openrewrite" loading="optional"/>
+        <module name="com.phodal.shire.mermaid" loading="optional"/>
+        <module name="com.phodal.shire.plantuml" loading="optional"/>
+        <module name="com.phodal.shire.docker" loading="optional"/>
     </content>
 
     <extensions defaultExtensionNs="com.intellij">

@@ -7,7 +7,6 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import com.intellij.util.io.outputStream
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.ensureActive
 import java.io.IOException
@@ -24,8 +23,6 @@ import kotlin.collections.toMutableList
 import kotlin.concurrent.read
 import kotlin.concurrent.write
 import kotlin.io.buffered
-import kotlin.io.path.exists
-import kotlin.io.path.inputStream
 import kotlin.io.use
 import kotlin.text.contains
 import kotlin.text.intern
@@ -103,7 +100,7 @@ class LocalEmbeddingIndexFileManager(root: Path, private val dimensions: Int = D
         ensureActive()
         lock.read {
             ensureActive()
-            if (!idsPath.exists() || !embeddingsPath.exists()) return@coroutineScope null
+            if (!Files.exists(idsPath) || !Files.exists(embeddingsPath)) return@coroutineScope null
             val ids = try {
                 mapper.readValue<List<String>>(idsPath.toFile()).map { it.intern() }.toMutableList()
             }
@@ -111,7 +108,7 @@ class LocalEmbeddingIndexFileManager(root: Path, private val dimensions: Int = D
                 return@coroutineScope null
             }
             val buffer = ByteArray(EMBEDDING_ELEMENT_SIZE)
-            embeddingsPath.inputStream().buffered().use { input ->
+            Files.newInputStream(embeddingsPath).buffered().use { input ->
                 ids to ids.map {
                     ensureActive()
                     FloatArray(dimensions) {
@@ -125,7 +122,7 @@ class LocalEmbeddingIndexFileManager(root: Path, private val dimensions: Int = D
 
     fun saveIds(ids: List<String>) = lock.write {
         withNotEnoughSpaceCheck {
-            idsPath.outputStream().buffered().use { output ->
+            Files.newOutputStream(idsPath).buffered().use { output ->
                 mapper.writer(prettyPrinter).writeValue(output, ids)
             }
         }
@@ -136,13 +133,13 @@ class LocalEmbeddingIndexFileManager(root: Path, private val dimensions: Int = D
         lock.write {
             ensureActive()
             withNotEnoughSpaceCheck {
-                idsPath.outputStream().buffered().use { output ->
+                Files.newOutputStream(idsPath).buffered().use { output ->
                     mapper.writer(prettyPrinter).writeValue(output, ids)
                 }
             }
             val buffer = ByteBuffer.allocate(EMBEDDING_ELEMENT_SIZE)
             withNotEnoughSpaceCheck {
-                embeddingsPath.outputStream().buffered().use { output ->
+                Files.newOutputStream(embeddingsPath).buffered().use { output ->
                     embeddings.forEach { embedding ->
                         ensureActive()
                         embedding.forEach {

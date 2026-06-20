@@ -20,7 +20,6 @@ include(
     "toolsets:git",
     "toolsets:httpclient",
     "toolsets:terminal",
-    "toolsets:sonarqube",
     "toolsets:plantuml",
     "toolsets:database",
     "toolsets:mock",

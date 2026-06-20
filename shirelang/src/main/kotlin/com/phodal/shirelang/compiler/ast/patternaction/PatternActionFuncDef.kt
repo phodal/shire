@@ -302,7 +302,7 @@ enum class PatternActionFuncDef(val funcName: String, val description: String, v
 
     TOOLCHAIN_FUNCTION(
         "toolchain",
-        "Toolchain functions are defined by the different IDEA plugins. Supports JetBrains' plugin: Database, Shell Script plugin etc, Community plugin: SonarLint etc.",
+        "Toolchain functions are defined by the different IDEA plugins. Supports JetBrains plugins such as Database and Shell Script.",
         """
         | 
         | 

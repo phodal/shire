@@ -103,7 +103,6 @@ Test:
 - [MockServer: WireMock](https://github.com/shire-lang/shire-demo/blob/master/.shire/api/mock/gen-mock.shire) AI to generate mock server with WireMock and auto start mock server.
 - [PlantUML: with remote Agent](https://github.com/shire-lang/shire-demo/blob/master/.shire/toolchain/puml/plantuml-remote.shire) use remote agent to generate PlantUML code.
 - [Mermaid: with remote Agent](https://github.com/shire-lang/shire-demo/blob/master/.shire/toolchain/mermaid.shire) use remote agent to generate Mermaid code.
-- [Sonarlint: fix issue](https://github.com/shire-lang/shire-demo/blob/master/.shire/toolchain/sonarfix.shire) use Sonarlint to fix issue.
 
 ## Shire Resources
 

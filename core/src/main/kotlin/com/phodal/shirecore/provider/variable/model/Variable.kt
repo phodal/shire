@@ -24,7 +24,6 @@ data class DebugValue(
                 ?: TerminalToolchainVariable.from(key)?.description
                 ?: VcsToolchainVariable.from(key)?.description
                 ?: BuildToolchainVariable.from(key)?.description
-                ?: SonarqubeVariable.from(key)?.description
                 ?: "Unknown"
         }
 
@@ -39,7 +38,6 @@ data class DebugValue(
             allVariables.addAll(TerminalToolchainVariable.values())
             allVariables.addAll(VcsToolchainVariable.values())
             allVariables.addAll(BuildToolchainVariable.values())
-            allVariables.addAll(SonarqubeVariable.values())
             return allVariables
         }
     }

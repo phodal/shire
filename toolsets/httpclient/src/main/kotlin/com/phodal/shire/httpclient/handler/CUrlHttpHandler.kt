@@ -3,12 +3,12 @@ package com.phodal.shire.httpclient.handler
 import com.intellij.execution.console.ConsoleViewWrapperBase
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.execution.ui.RunContentManager
-import com.intellij.httpClient.converters.curl.parser.CurlParser
 import com.intellij.httpClient.execution.RestClientRequest
 import com.intellij.httpClient.http.request.HttpRequestCollectionProvider
 import com.intellij.httpClient.http.request.notification.HttpClientWhatsNewContentService
 import com.intellij.ide.scratch.ScratchUtil
 import com.intellij.ide.scratch.ScratchesSearchScope
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
@@ -22,8 +22,8 @@ import com.phodal.shirecore.provider.http.HttpHandlerType
 import com.phodal.shire.json.ShireEnvReader
 import com.phodal.shire.json.ShireEnvVariableFiller
 import okhttp3.OkHttpClient
-import com.intellij.openapi.application.ApplicationManager
 import okhttp3.Request
+import java.lang.reflect.Modifier
 
 class CUrlHttpHandler : HttpHandler {
     override fun isApplicable(type: HttpHandlerType): Boolean = type == HttpHandlerType.CURL
@@ -49,9 +49,9 @@ class CUrlHttpHandler : HttpHandler {
 
                 val enVariables: List<Set<String>> = ShireEnvReader.fetchEnvironmentVariables(envName, scope)
                 filledShell = ShireEnvVariableFiller.fillVariables(content, enVariables, envObject, processVariables)
-                restClientRequest = CurlParser().parseToRestClientRequest(filledShell)
+                restClientRequest = parseRestClientRequest(filledShell)
 
-                CUrlConverter.convert(restClientRequest!!)
+                restClientRequest?.let { CUrlConverter.convert(it) }
             }
         }.get()
 
@@ -112,5 +112,36 @@ class CUrlHttpHandler : HttpHandler {
         }
 
         return projectScope
+    }
+
+    private fun parseRestClientRequest(curl: String): RestClientRequest? = runCatching {
+        val parserClass = CUrlHttpHandler::class.java.classLoader.loadClass(CURL_PARSER_CLASS)
+        val parseMethod = (parserClass.methods.asSequence() + parserClass.declaredMethods.asSequence())
+            .firstOrNull {
+                it.name == "parseToRestClientRequest" &&
+                        it.parameterTypes.size == 1 &&
+                        it.parameterTypes[0] == String::class.java
+            } ?: return null
+
+        parseMethod.isAccessible = true
+        val target = if (Modifier.isStatic(parseMethod.modifiers)) null else createCurlParser(parserClass)
+        parseMethod.invoke(target, curl) as? RestClientRequest
+    }.getOrNull()
+
+    private fun createCurlParser(parserClass: Class<*>): Any? {
+        runCatching {
+            val instance = parserClass.getDeclaredField("INSTANCE")
+            instance.isAccessible = true
+            instance.get(null)
+        }.getOrNull()?.let { return it }
+
+        return parserClass.declaredConstructors
+            .firstOrNull { it.parameterCount == 0 }
+            ?.also { it.isAccessible = true }
+            ?.newInstance()
+    }
+
+    companion object {
+        private const val CURL_PARSER_CLASS = "com.intellij.httpClient.converters.curl.parser.CurlParser"
     }
 }
