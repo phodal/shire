@@ -11,6 +11,7 @@ import org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginTask
 import org.jetbrains.intellij.platform.gradle.utils.extensionProvider
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.gradle.api.file.DuplicatesStrategy
 import org.gradle.api.tasks.compile.JavaCompile
 import java.util.*
 
@@ -54,7 +55,7 @@ val ideaPlugins = listOf(
     "JavaScript",
     "org.jetbrains.kotlin",
     "com.jetbrains.restClient"
-) + if (ideaPlatformVersion == 243) {
+) + if (ideaPlatformVersion >= 243) {
     listOf(prop("jsonPlugin"))
 } else {
     emptyList()
@@ -91,7 +92,7 @@ configure(
     dependencies {
         testOutput(sourceSets.test.get().output.classesDirs)
 
-        if (ideaPlatformVersion == 243) {
+        if (ideaPlatformVersion >= 243) {
             testImplementation("junit:junit:4.13.2")
             testImplementation("org.opentest4j:opentest4j:1.3.0")
         }
@@ -303,11 +304,11 @@ project(":languages:shire-json") {
     dependencies {
         intellijPlatform {
             intellijIde(prop("ideaVersion"))
-            if (ideaPlatformVersion == 243) {
+            if (ideaPlatformVersion >= 243) {
                 plugins(prop("jsonPlugin"))
             }
 
-            intellijPlugins(ideaPlugins + if (ideaPlatformVersion == 243) "com.intellij.modules.json" else "")
+            intellijPlugins(ideaPlugins + if (ideaPlatformVersion >= 243) "com.intellij.modules.json" else "")
         }
     }
 
@@ -643,7 +644,7 @@ project(":") {
             pluginModule(implementation(project(":languages:shire-markdown")))
             pluginModule(implementation(project(":languages:shire-proto")))
 
-//            pluginModule(implementation(project(":languages:shire-json")))
+            pluginModule(implementation(project(":languages:shire-json")))
             pluginModule(implementation(project(":toolsets:git")))
             pluginModule(implementation(project(":toolsets:httpclient")))
             pluginModule(implementation(project(":toolsets:terminal")))
@@ -724,6 +725,36 @@ project(":") {
             })
         }
 
+        processResources {
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+            listOf(
+                ":core",
+                ":languages:shire-json",
+                ":shirelang",
+                ":languages:shire-java",
+                ":languages:shire-javascript",
+                ":languages:shire-python",
+                ":languages:shire-kotlin",
+                ":languages:shire-go",
+                ":languages:shire-markdown",
+                ":languages:shire-proto",
+                ":toolsets:git",
+                ":toolsets:httpclient",
+                ":toolsets:terminal",
+                ":toolsets:database",
+                ":toolsets:mock",
+                ":toolsets:openrewrite",
+                ":toolsets:plantuml",
+                ":toolsets:mermaid",
+                ":toolsets:docker",
+            ).forEach { modulePath ->
+                from(project(modulePath).file("src/main/resources")) {
+                    include("*.xml")
+                }
+            }
+        }
+
         val newName = "intellij-shire-" + prop("ideaVersion") + "-" + prop("pluginVersion")
 
         publishPlugin {
@@ -796,7 +827,7 @@ fun String.toTypeWithVersion(): TypeWithVersion {
 
 fun IntelliJPlatformDependenciesExtension.intellijIde(versionWithCode: String) {
     val (type, version) = versionWithCode.toTypeWithVersion()
-    create(type, version, useInstaller = false)
+    create(type, version)
 }
 
 fun IntelliJPlatformDependenciesExtension.intellijPlugins(vararg notations: String) {

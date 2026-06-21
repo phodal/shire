@@ -10,10 +10,10 @@
 
     <resource-bundle>messages.ShireMainBundle</resource-bundle>
 
-    <xi:include href="/com.phodal.shirecore.xml" xpointer="xpointer(/idea-plugin/*)"/>
-    <xi:include href="/com.phodal.shire.json.xml" xpointer="xpointer(/idea-plugin/*)"/>
-
     <content>
+        <module name="com.phodal.shirecore" loading="required"/>
+        <module name="com.phodal.shire.json" loading="optional"/>
+
         <module name="com.phodal.shirelang" loading="optional"/>
         <module name="com.phodal.shirelang.java" loading="optional"/>
         <module name="com.phodal.shirelang.javascript" loading="optional"/>
@@ -22,9 +22,6 @@
         <module name="com.phodal.shirelang.go" loading="optional"/>
         <module name="com.phodal.shirelang.markdown" loading="optional"/>
         <module name="com.phodal.shirelang.proto" loading="optional"/>
-
-<!--        <module name="com.phodal.shire.json"/>-->
-
         <module name="com.phodal.shire.httpclient" loading="optional"/>
         <module name="com.phodal.shire.terminal" loading="optional"/>
         <module name="com.phodal.shire.database" loading="optional"/>
