@@ -5,7 +5,7 @@ import org.jetbrains.annotations.Nls
 
 class RunnerResult(
     val status: RunnerStatus,
-    @Nls(capitalization = Nls.Capitalization.Sentence) val message: String = "",
+    @Nls val message: String = "",
     val details: String? = null,
     val diff: CheckResultDiff? = null,
 ) {

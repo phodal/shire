@@ -25,7 +25,7 @@ import com.phodal.shirelang.javascript.util.JSPsiUtil
 class JSPsiContextVariableProvider : PsiContextVariableProvider {
     override fun resolve(variable: PsiContextVariable, project: Project, editor: Editor, psiElement: PsiElement?): Any {
         if (psiElement == null) return ""
-        if(!psiElement.language.isKindOf(JavascriptLanguage.INSTANCE)) return ""
+        if (!psiElement.language.isKindOf(JavascriptLanguage)) return ""
 
         val underTestElement = JSPsiUtil.getElementToTest(psiElement) ?: return ""
         val sourceFile = underTestElement.containingFile as? JSFile ?: return ""

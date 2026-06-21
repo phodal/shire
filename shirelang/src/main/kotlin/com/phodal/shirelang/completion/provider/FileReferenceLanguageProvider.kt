@@ -46,7 +46,7 @@ class FileReferenceLanguageProvider : CompletionProvider<CompletionParameters>()
 
     private fun buildElement(
         virtualFile: VirtualFile,
-        basePath: @NonNls String,
+        @NonNls basePath: String,
         priority: Double,
     ): LookupElement {
         val removePrefix = virtualFile.path.removePrefix(basePath)

@@ -10,7 +10,7 @@ import com.phodal.shirecore.provider.context.ToolchainPrepareContext
 
 object LanguageApplicableUtil {
     fun isJavaScriptApplicable(language: Language) =
-        language.isKindOf(JavascriptLanguage.INSTANCE) || language.isKindOf(HTMLLanguage.INSTANCE)
+        language.isKindOf(JavascriptLanguage) || language.isKindOf(HTMLLanguage.INSTANCE)
 
     fun isPreferTypeScript(context: ToolchainPrepareContext): Boolean {
         val sourceFile = context.sourceFile ?: return false

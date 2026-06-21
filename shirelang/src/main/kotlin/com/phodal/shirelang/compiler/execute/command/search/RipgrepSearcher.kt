@@ -85,7 +85,7 @@ object RipgrepSearcher {
         regex: String? = null,
         filePattern: String? = null,
         directory: String? = null,
-        basePath: @SystemIndependent @NonNls String? = null,
+        @NonNls basePath: @SystemIndependent String? = null,
     ): GeneralCommandLine {
         val cmd = GeneralCommandLine(rgPath.toString())
         cmd.withWorkDirectory(basePath)

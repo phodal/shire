@@ -45,7 +45,8 @@ class ShireRunFileAction : DumbAwareAction() {
     }
 
     companion object {
-        const val ID: @NonNls String = "runShireFileAction"
+        @NonNls
+        const val ID: String = "runShireFileAction"
 
         fun createRunConfig(e: AnActionEvent): RunnerAndConfigurationSettings? {
             val context = ConfigurationContext.getFromContext(e.dataContext, e.place)

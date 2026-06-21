@@ -29,10 +29,10 @@ class TypeScriptRefactoringTool : RefactoringTool {
 
         val searchScope = ProjectScope.getProjectScope(project)
 
-        val jsFiles = FileTypeIndex.getFiles(JavaScriptFileType.INSTANCE, searchScope)
+        val jsFiles = FileTypeIndex.getFiles(JavaScriptFileType, searchScope)
             .mapNotNull { PsiManager.getInstance(project).findFile(it) as? JSFile }
 
-        val tsFiles = FileTypeIndex.getFiles(JavaScriptFileType.INSTANCE, searchScope)
+        val tsFiles = FileTypeIndex.getFiles(JavaScriptFileType, searchScope)
             .mapNotNull { PsiManager.getInstance(project).findFile(it) as? JSFile }
 
         val files = jsFiles + tsFiles

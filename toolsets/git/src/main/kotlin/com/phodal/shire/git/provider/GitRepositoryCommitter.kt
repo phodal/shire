@@ -57,7 +57,7 @@ internal class GitRepositoryCommitter(val repository: GitRepository, private val
     }
 
     private fun runWithMessageFile(
-      project: Project, root: VirtualFile, message: @NonNls String,
+      project: Project, root: VirtualFile, @NonNls message: String,
       task: ThrowableConsumer<in File, out VcsException>,
     ) {
         val messageFile = try {

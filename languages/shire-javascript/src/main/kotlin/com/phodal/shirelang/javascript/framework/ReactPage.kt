@@ -35,7 +35,7 @@ class ReactPage(private val project: Project): ComponentProvider {
         val psiManager = PsiManager.getInstance(project)
 
         val virtualFiles =
-            FileTypeIndex.getFiles(JavaScriptFileType.INSTANCE, searchScope)
+            FileTypeIndex.getFiles(JavaScriptFileType, searchScope)
 //                    FileTypeIndex.getFiles(TypeScriptJSXFileType.INSTANCE, searchScope)
 //                    FileTypeIndex.getFiles(JSXHarmonyFileType.INSTANCE, searchScope)
 
@@ -140,4 +140,3 @@ class ReactPage(private val project: Project): ComponentProvider {
         }
     }
 }
-

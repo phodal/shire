@@ -207,17 +207,6 @@ object SQLExecutor {
             // for Compatibility in IDEA 2023.2.8
         }
 
-        /// will remove in latest version, so we need to use reflection to call this method in future
-        override fun setColumns(
-            context: GridDataRequest.Context,
-            resultSetIndex: Int,
-            columns: Array<out GridColumn>,
-            firstRowNum: Int,
-        ) {
-            // for Compatibility in IDEA 2023.2.8
-        }
-
-
         override fun afterLastRowAdded(context: GridDataRequest.Context, total: Int) {
             // for Compatibility in IDEA 2023.2.8
         }

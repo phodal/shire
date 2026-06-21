@@ -62,8 +62,10 @@ class FileFilterPopup(project: Project, onSelect: (VirtualFile) -> Unit) {
 
         textField.addDocumentListener(object : DocumentListener {
             override fun documentChanged(e: com.intellij.openapi.editor.event.DocumentEvent) {
-                if (e.oldLength > e.newLength && textField.editor != null) {
-                    AutoPopupController.getInstance(project).autoPopupMemberLookup(textField.editor) { true }
+                if (e.oldLength > e.newLength) {
+                    textField.editor?.let { editor ->
+                        AutoPopupController.getInstance(project).autoPopupMemberLookup(editor) { true }
+                    }
                 }
             }
         })
