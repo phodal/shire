@@ -24,6 +24,26 @@ that enables communication between an LLM and control IDE for automated programm
 > precursor to Shire. DevIns aims to enable users to create AI agents tailored to their own IDEs, allowing them to build
 > their customized AI-driven development environments.
 
+## Development
+
+The default local IntelliJ Platform line is `252`, aligned with `/Users/phodal/ai/auto-dev/mpp-idea` so Gradle can reuse
+the same local IDEA artifacts instead of downloading a separate IDE for Shire.
+
+```bash
+./gradlew buildPlugin verifyPluginStructure
+./gradlew runIdea
+```
+
+The default configuration uses `IU-2025.2.6.2`, `pluginSinceBuild=252.28539`, and `pluginUntilBuild=261.*`. Older
+compatibility profiles are still available explicitly, for example:
+
+```bash
+./gradlew -PideaPlatformVersion=241 buildPlugin verifyPluginStructure
+```
+
+Avoid broad `verifyPlugin` runs during normal local development unless Marketplace compatibility verification is needed,
+because they download additional IDE versions into the shared Gradle cache.
+
 ---
 
 ## Unite Your Dev Ecosystem, Create Your AI Copilot
